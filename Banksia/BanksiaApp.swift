@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import SwiftData
 
 @main
 struct BanksiaApp: App {
@@ -16,5 +15,8 @@ struct BanksiaApp: App {
             ContentView()
         }
         .modelContainer(for: Conversation.self)
+        .commands {
+            SidebarCommands()
+        }
     }
 }
