@@ -30,9 +30,6 @@ extension Conversation {
         modelContext.insert(GPTResponse.response_01)
         modelContext.insert(GPTResponse.response_02)
         modelContext.insert(GPTResponse.response_03)
-        
-        
-
     }
     
     static func reloadSampleData(modelContext: ModelContext) {

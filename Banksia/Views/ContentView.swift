@@ -9,10 +9,10 @@ import SwiftUI
 import SwiftData
 
 struct ContentView: View {
-    @State private var navHandler = NavHandler()
+    @State private var bk = BanksiaHandler()
     var body: some View {
         TwoColumnContentView()
-            .environment(navHandler)
+            .environment(bk)
     }
 }
 

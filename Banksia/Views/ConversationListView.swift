@@ -10,14 +10,14 @@ import SwiftData
 
 struct ConversationListView: View {
     
-    @Environment(NavHandler.self) private var navHandler
+    @Environment(BanksiaHandler.self) private var bk
     @Environment(\.modelContext) private var modelContext
     @Query(sort: \Conversation.name) private var conversations: [Conversation]
     @State private var isEditorPresented = false
     
     var body: some View {
-        @Bindable var navHandler = navHandler
-        List(selection: $navHandler.selectedConversation) {
+        @Bindable var bk = bk
+        List(selection: $bk.selectedConversation) {
             ForEach(conversations) { conversation in
                 NavigationLink(conversation.name, value: conversation)
                     .contextMenu {
@@ -46,18 +46,20 @@ struct ConversationListView: View {
             ToolbarItem(placement: .primaryAction) {
                 AddConversationButton(isActive: $isEditorPresented)
             }
+            
         }
     }
     
     private func removeConversations(at indexSet: IndexSet) {
         for index in indexSet {
             let conversationToDelete = conversations[index]
-            if navHandler.selectedConversation?.persistentModelID == conversationToDelete.persistentModelID {
-                navHandler.selectedConversation = nil
+            if bk.selectedConversation?.persistentModelID == conversationToDelete.persistentModelID {
+                bk.selectedConversation = nil
             }
             modelContext.delete(conversationToDelete)
         }
     } // END remove conversations
+    
 }
 
 private struct AddConversationButton: View {
@@ -67,8 +69,8 @@ private struct AddConversationButton: View {
         Button {
             isActive = true
         } label: {
-            Label("Add an animal", systemImage: "plus")
-                .help("Add an animal")
+            Label("Add a conversation", systemImage: "plus")
+                .help("Add a conversation")
         }
     }
 }
@@ -76,15 +78,14 @@ private struct AddConversationButton: View {
 #Preview("ConversationListView") {
     ModelContainerPreview(ModelContainer.sample) {
         NavigationStack {
-            ConversationListView()
-                .environment(NavHandler())
+            ConversationListView().environment(BanksiaHandler())
         }
     }
 }
 
 #Preview("No selected conversation") {
     ModelContainerPreview(ModelContainer.sample) {
-        ConversationListView()
+        ConversationListView().environment(BanksiaHandler())
     }
 }
 

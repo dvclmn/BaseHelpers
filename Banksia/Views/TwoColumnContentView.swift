@@ -9,36 +9,45 @@ import SwiftUI
 import SwiftData
 
 struct TwoColumnContentView: View {
-    @Environment(NavHandler.self) private var navHandler
+    @Environment(BanksiaHandler.self) private var bk
     @Environment(\.modelContext) private var modelContext
     
     var body: some View {
-        @Bindable var navHandler = navHandler
-        NavigationSplitView(columnVisibility: $navHandler.columnVisibility) {
+        @Bindable var bk = bk
+        NavigationSplitView(columnVisibility: $bk.columnVisibility) {
             ConversationListView()
-                .navigationTitle(navHandler.sidebarTitle)
-                .toolbar {
-                    ToolbarItem(placement: .primaryAction) {
-                        Button(action: {
-                            Conversation.insertSampleData(modelContext: modelContext)
-                            try? modelContext.save()
-                                    }) {
-                                        Label("Add sample data", systemImage: "sparkles")
-                                    } // END button
-                    }
-                    
-                } // END toolbar
+                .navigationTitle(bk.sidebarTitle)
+                .navigationSplitViewColumnWidth(min: 180, ideal: 220, max: 260)
         } detail: {
             NavigationStack {
-                ConversationDetailView(conversation: navHandler.selectedConversation)
+                ConversationDetailView(conversation: bk.selectedConversation)
             }
         }
+        .toolbar {
+            ToolbarItem() {
+                Button(action: {
+                    Conversation.insertSampleData(modelContext: modelContext)
+                    try? modelContext.save()
+                            }) {
+                                Label("Add sample data", systemImage: "sparkles")
+                            } // END button
+            } // END add sample data
+            
+            ToolbarItem() {
+                Button(action: {
+                    bk.deleteAll(for: modelContext)
+                    try? modelContext.save()
+                            }) {
+                                Label("Remove all", systemImage: "rays")
+                            } // END button
+            } // END delete all
+        } // END toolbar
     }
 }
 
 #Preview {
     ModelContainerPreview(ModelContainer.sample) {
         TwoColumnContentView()
-            .environment(NavHandler())
+            .environment(BanksiaHandler())
     }
 }

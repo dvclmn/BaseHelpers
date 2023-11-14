@@ -12,7 +12,7 @@ struct ConversationDetailView: View {
     var conversation: Conversation?
     @State private var isDeleting = false
     @Environment(\.modelContext) private var modelContext
-    @Environment(NavHandler.self) private var navHandler
+    @Environment(BanksiaHandler.self) private var bk
     
     var body: some View {
         if let conversation {
@@ -30,12 +30,12 @@ struct ConversationDetailView: View {
                     }
                 }
         } else {
-            ContentUnavailableView("Select an animal", systemImage: "pawprint")
+            ContentUnavailableView("Select a conversation", systemImage: "message")
         }
     }
     
     private func delete(_ conversation: Conversation) {
-        navHandler.selectedConversation = nil
+        bk.selectedConversation = nil
         modelContext.delete(conversation)
     }
 }
@@ -85,6 +85,6 @@ private struct ConversationDetailContentView: View {
 #Preview {
     ModelContainerPreview(ModelContainer.sample) {
         ConversationDetailView(conversation: .plants)
-            .environment(NavHandler())
+            .environment(BanksiaHandler())
     }
 }

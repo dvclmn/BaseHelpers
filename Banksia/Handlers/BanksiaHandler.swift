@@ -1,5 +1,5 @@
 //
-//  NavHandler.swift
+//  BanksiaHandler.swift
 //  Banksia
 //
 //  Created by Dave Coleman on 14/11/2023.
@@ -8,7 +8,7 @@
 import SwiftUI
 
 @Observable
-class NavHandler {
+class BanksiaHandler {
     var selectedConversation: Conversation?
     var columnVisibility: NavigationSplitViewVisibility
     
