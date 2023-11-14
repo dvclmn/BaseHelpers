@@ -49,20 +49,42 @@ private struct ConversationDetailContentView: View {
                 .font(.title)
                 .padding()
             
-            List {
-                HStack {
-                    Text("Conversation")
-                    Spacer()
-                    Text("\(conversation.name)")
-                }
-            }
-        }
+            ScrollView {
+                        LazyVStack(spacing: 12) {
+                            if let prompts = conversation.prompts {
+                                ForEach(prompts, id: \.timestamp) { userPrompt in
+                                    VStack(alignment: .leading) {
+                                        Text(userPrompt.content)
+                                            .padding()
+                                            .background(Color.blue.opacity(0.2))
+                                            .cornerRadius(10)
+                                            .frame(maxWidth: .infinity, alignment: .leading)
+                                        
+                                        if let response = userPrompt.response {
+                                            Text(response.content)
+                                                .padding()
+                                                .background(Color.green.opacity(0.2))
+                                                .cornerRadius(10)
+                                                .frame(maxWidth: .infinity, alignment: .trailing)
+                                        }
+                                    }
+                                } // END ForEach
+                                
+                            } else {
+                                let _ = print("No prompts found")
+                                Text("No prompts found")
+                            } // END prompts check
+                        } // END lazy vstack
+                        .padding()
+                    } // END scrollview
+            .border(Color.green)
+        } // END Vstack
     }
 }
 
 #Preview {
     ModelContainerPreview(ModelContainer.sample) {
-        ConversationDetailView(conversation: .appKitDrawing)
+        ConversationDetailView(conversation: .plants)
             .environment(NavHandler())
     }
 }
