@@ -17,6 +17,17 @@ struct TwoColumnContentView: View {
         NavigationSplitView(columnVisibility: $navHandler.columnVisibility) {
             ConversationListView()
                 .navigationTitle(navHandler.sidebarTitle)
+                .toolbar {
+                    ToolbarItem(placement: .primaryAction) {
+                        Button(action: {
+                            Conversation.insertSampleData(modelContext: modelContext)
+                            try? modelContext.save()
+                                    }) {
+                                        Label("Add sample data", systemImage: "sparkles")
+                                    } // END button
+                    }
+                    
+                } // END toolbar
         } detail: {
             NavigationStack {
                 ConversationDetailView(conversation: navHandler.selectedConversation)

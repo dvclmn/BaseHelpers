@@ -1,9 +1,9 @@
 /*
-See the LICENSE.txt file for this sample’s licensing information.
-
-Abstract:
-A view that displays the details of an animal.
-*/
+ See the LICENSE.txt file for this sample’s licensing information.
+ 
+ Abstract:
+ A view that displays the details of an animal.
+ */
 
 import SwiftUI
 import SwiftData
@@ -13,7 +13,7 @@ struct ConversationDetailView: View {
     @State private var isDeleting = false
     @Environment(\.modelContext) private var modelContext
     @Environment(NavHandler.self) private var navHandler
-
+    
     var body: some View {
         if let conversation {
             ConversationDetailContentView(conversation: conversation)
@@ -42,7 +42,7 @@ struct ConversationDetailView: View {
 
 private struct ConversationDetailContentView: View {
     let conversation: Conversation
-
+    
     var body: some View {
         VStack {
             Text(conversation.name)
@@ -50,33 +50,33 @@ private struct ConversationDetailContentView: View {
                 .padding()
             
             ScrollView {
-                        LazyVStack(spacing: 12) {
-                            if let prompts = conversation.prompts {
-                                ForEach(prompts, id: \.timestamp) { userPrompt in
-                                    VStack(alignment: .leading) {
-                                        Text(userPrompt.content)
-                                            .padding()
-                                            .background(Color.blue.opacity(0.2))
-                                            .cornerRadius(10)
-                                            .frame(maxWidth: .infinity, alignment: .leading)
-                                        
-                                        if let response = userPrompt.response {
-                                            Text(response.content)
-                                                .padding()
-                                                .background(Color.green.opacity(0.2))
-                                                .cornerRadius(10)
-                                                .frame(maxWidth: .infinity, alignment: .trailing)
-                                        }
-                                    }
-                                } // END ForEach
+                LazyVStack(spacing: 12) {
+                    if let prompts = conversation.prompts {
+                        ForEach(prompts, id: \.timestamp) { userPrompt in
+                            VStack(alignment: .leading) {
+                                Text(userPrompt.content)
+                                    .padding()
+                                    .background(Color.blue.opacity(0.2))
+                                    .cornerRadius(10)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
                                 
-                            } else {
-                                let _ = print("No prompts found")
-                                Text("No prompts found")
-                            } // END prompts check
-                        } // END lazy vstack
-                        .padding()
-                    } // END scrollview
+                                if let response = userPrompt.response {
+                                    Text(response.content)
+                                        .padding()
+                                        .background(Color.green.opacity(0.2))
+                                        .cornerRadius(10)
+                                        .frame(maxWidth: .infinity, alignment: .trailing)
+                                }
+                            }
+                        } // END ForEach
+                        
+                    } else {
+                        
+                        Text("No prompts found")
+                    } // END prompts check
+                } // END lazy vstack
+                .padding()
+            } // END scrollview
             .border(Color.green)
         } // END Vstack
     }

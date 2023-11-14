@@ -9,19 +9,11 @@ import SwiftUI
 
 @Observable
 class NavHandler {
-    var selectedAnimalCategoryName: String?
     var selectedConversation: Conversation?
     var columnVisibility: NavigationSplitViewVisibility
     
     var sidebarTitle = "Conversation"
     
-//    var contentListTitle: String {
-//        if let selectedAnimalCategoryName {
-//            selectedAnimalCategoryName
-//        } else {
-//            ""
-//        }
-//    }
     
     init(
         selectedConversation: Conversation? = nil,

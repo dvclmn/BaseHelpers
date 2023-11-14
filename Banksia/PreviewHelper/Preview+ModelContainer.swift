@@ -15,6 +15,9 @@ extension ModelContainer {
         Task { @MainActor in
             Conversation.insertSampleData(modelContext: container.mainContext)
         }
+        print("Schema: \(schema)")
+        print("Configuration: \(configuration)")
+        print("Container: \(container)")
         return container
     }
 }

@@ -1,58 +1,54 @@
-/*
-See the LICENSE.txt file for this sample’s licensing information.
-
-Abstract:
-A view that displays a list of animal categories.
-*/
+//
+//  ConversationListView.swift
+//  Banksia
+//
+//  Created by Dave Coleman on 14/11/2023.
+//
 
 import SwiftUI
 import SwiftData
 
 struct ConversationListView: View {
+    
     @Environment(NavHandler.self) private var navHandler
     @Environment(\.modelContext) private var modelContext
     @Query(sort: \Conversation.name) private var conversations: [Conversation]
-    @State private var isReloadPresented = false
-
+    @State private var isEditorPresented = false
+    
     var body: some View {
         @Bindable var navHandler = navHandler
-        
         List(selection: $navHandler.selectedConversation) {
             ForEach(conversations) { conversation in
                 NavigationLink(conversation.name, value: conversation)
+                    .contextMenu {
+                        Button(action: {
+                            
+                        }){
+                            Text("Delete")
+                        }
+                    }
             }
             .onDelete(perform: removeConversations)
-            
         }
-        .alert("Reload Sample Data?", isPresented: $isReloadPresented) {
-            Button("Yes, reload sample data", role: .destructive) {
-                reloadSampleData()
-            }
-        } message: {
-            Text("Reloading the sample data deletes all changes to the current data.")
+        .sheet(isPresented: $isEditorPresented) {
+            ConversationEditor(conversation: nil)
         }
         .overlay {
             if conversations.isEmpty {
                 ContentUnavailableView {
-                    Label("No animals in this category", systemImage: "pawprint")
+                    Label("No conversations", systemImage: "pawprint")
                 } description: {
-                    Text("Add something")
+                    AddConversationButton(isActive: $isEditorPresented)
                 }
             }
         }
-        .task {
-            if conversations.isEmpty {
-                Conversation.insertSampleData(modelContext: modelContext)
+        .toolbar {
+            ToolbarItem(placement: .primaryAction) {
+                AddConversationButton(isActive: $isEditorPresented)
             }
         }
     }
     
-    @MainActor
-    private func reloadSampleData() {
-        navHandler.selectedConversation = nil
-        navHandler.selectedAnimalCategoryName = nil
-        Conversation.reloadSampleData(modelContext: modelContext)
-    }
     private func removeConversations(at indexSet: IndexSet) {
         for index in indexSet {
             let conversationToDelete = conversations[index]
@@ -61,8 +57,7 @@ struct ConversationListView: View {
             }
             modelContext.delete(conversationToDelete)
         }
-    }
-    
+    } // END remove conversations
 }
 
 private struct AddConversationButton: View {
@@ -72,38 +67,27 @@ private struct AddConversationButton: View {
         Button {
             isActive = true
         } label: {
-            Label("Add a conversation", systemImage: "plus")
-                .help("Add a conversation")
+            Label("Add an animal", systemImage: "plus")
+                .help("Add an animal")
         }
     }
 }
 
-private struct ListConversations: View {
-    var conversations: [Conversation]
-    
-    var body: some View {
-        ForEach(conversations) { conversation in
-            NavigationLink(conversation.name, value: conversation.name)
-        }
-    }
-}
-
-#Preview("AnimalCategoryListView") {
+#Preview("ConversationListView") {
     ModelContainerPreview(ModelContainer.sample) {
         NavigationStack {
             ConversationListView()
+                .environment(NavHandler())
         }
-        .environment(NavHandler())
     }
 }
 
-#Preview("ListCategories") {
+#Preview("No selected conversation") {
     ModelContainerPreview(ModelContainer.sample) {
-        NavigationStack {
-            List {
-                ListConversations(conversations: [.plants, .childcare, .appKitDrawing] )
-            }
-        }
-        .environment(NavHandler())
+        ConversationListView()
     }
+}
+
+#Preview("AddConversationButton") {
+    AddConversationButton(isActive: .constant(false))
 }

@@ -12,7 +12,7 @@ struct ContentView: View {
     @State private var navHandler = NavHandler()
     var body: some View {
         TwoColumnContentView()
-                    .environment(navHandler)
+            .environment(navHandler)
     }
 }
 
