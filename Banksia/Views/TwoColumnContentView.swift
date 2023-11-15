@@ -20,7 +20,7 @@ struct TwoColumnContentView: View {
                 .navigationSplitViewColumnWidth(min: 180, ideal: 220, max: 260)
         } detail: {
             NavigationStack {
-                ConversationDetailView(conversation: bk.selectedConversation)
+                ConversationDetailView(conversation: bk.currentConversation)
             }
         }
         .toolbar {

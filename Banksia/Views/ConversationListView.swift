@@ -16,7 +16,7 @@ struct ConversationListView: View {
     
     var body: some View {
         @Bindable var bk = bk
-        List(selection: $bk.selectedConversation) {
+        List(selection: $bk.currentConversation) {
             ForEach(conversations) { conversation in
                 NavigationLink(conversation.name, value: conversation)
                     .contextMenu {
@@ -50,38 +50,17 @@ struct ConversationListView: View {
     private func removeConversations(at indexSet: IndexSet) {
         for index in indexSet {
             let conversationToDelete = conversations[index]
-            if bk.selectedConversation?.persistentModelID == conversationToDelete.persistentModelID {
-                bk.selectedConversation = nil
+            if bk.currentConversation?.persistentModelID == conversationToDelete.persistentModelID {
+                bk.currentConversation = nil
             }
             modelContext.delete(conversationToDelete)
         }
     } // END remove conversations
     
 }
-
-//private struct AddConversationButton: View {
-//    @Binding var isActive: Bool
-//    
-//    var body: some View {
-//        Button {
-//            isActive = true
-//        } label: {
-//            Label("Add a conversation", systemImage: "plus")
-//                .help("Add a conversation")
-//        }
-//    }
-//}
-
-#Preview("ConversationListView") {
+#Preview {
     ModelContainerPreview(ModelContainer.sample) {
-        NavigationStack {
-            ConversationListView().environment(BanksiaHandler())
-        }
-    }
-}
-
-#Preview("No selected conversation") {
-    ModelContainerPreview(ModelContainer.sample) {
-        ConversationListView().environment(BanksiaHandler())
+        TwoColumnContentView()
+            .environment(BanksiaHandler())
     }
 }

@@ -9,18 +9,25 @@ import SwiftUI
 
 @Observable
 class BanksiaHandler {
-    var selectedConversation: Conversation?
-    var columnVisibility: NavigationSplitViewVisibility
+    var currentConversation: Conversation? = nil
+    var columnVisibility: NavigationSplitViewVisibility = .automatic
     
     var sidebarTitle = "Conversation"
     
     
-    init(
-        selectedConversation: Conversation? = nil,
-         columnVisibility: NavigationSplitViewVisibility = .automatic
-    ) {
-        self.selectedConversation = selectedConversation
-        self.columnVisibility = columnVisibility
+    init() {
+        saveAPIKeyToKeychainForDebugging()
     }
+    
+    func saveAPIKeyToKeychainForDebugging() {
+            let apiKey = "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" // Replace this with your actual debugging API key
+            let savedSuccessfully = KeychainHandler.set(apiKey, forKey: "OpenAIKey")
+            
+            if savedSuccessfully {
+                print("Debugging API key saved successfully to Keychain.")
+            } else {
+                print("Failed to save debugging API key to Keychain.")
+            }
+        }
 }
 

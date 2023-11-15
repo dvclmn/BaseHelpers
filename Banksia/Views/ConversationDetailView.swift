@@ -35,7 +35,7 @@ struct ConversationDetailView: View {
     }
     
     private func delete(_ conversation: Conversation) {
-        bk.selectedConversation = nil
+        bk.currentConversation = nil
         modelContext.delete(conversation)
     }
 }
@@ -45,29 +45,23 @@ private struct ConversationDetailContentView: View {
     
     var body: some View {
         
-        VStack {
+        ScrollView(.vertical) {
             Text(conversation.name)
                 .font(.title)
                 .padding()
-            
-            ScrollView {
-                LazyVStack(spacing: 12) {
-                    
-                    ForEach(conversation.messages.sorted(by: { $0.timestamp < $1.timestamp }), id: \.timestamp) { message in
-                            VStack(alignment: .leading) {
-                                Text(message.content)
-                                    .padding()
-                                    .background(Color(message.isUser ? .blue : .gray))
-                                    .cornerRadius(10)
-                                    .frame(maxWidth: .infinity, alignment: .leading)
-                            }
-                        } // END ForEach
-                        
-                } // END lazy vstack
-                .padding()
-            } // END scrollview
-            .border(Color.green)
-        } // END Vstack
+            LazyVStack(spacing: 12) {
+                ForEach(conversation.messages.sorted(by: { $0.timestamp < $1.timestamp }), id: \.timestamp) { message in
+                    VStack(alignment: .leading) {
+                        Text(message.content)
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(Color(message.isUser ? .blue : .gray))
+                            .cornerRadius(10)
+                    }
+                } // END ForEach
+            } // END lazy vstack
+            .padding()
+        } // END scrollview
     }
 }
 

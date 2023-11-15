@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F6081DF72B04847600A78D64 /* KeychainHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6081DF62B04847600A78D64 /* KeychainHandler.swift */; };
+		F6081DF92B0485EA00A78D64 /* NetworkHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6081DF82B0485EA00A78D64 /* NetworkHandler.swift */; };
+		F6081DFB2B048AE300A78D64 /* APIResponseHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6081DFA2B048AE300A78D64 /* APIResponseHandler.swift */; };
 		F64F8E032B02136D00C72E51 /* ModelContainerPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = F64F8E022B02136D00C72E51 /* ModelContainerPreview.swift */; };
 		F64F8E052B0213AF00C72E51 /* Preview+ModelContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F64F8E042B0213AF00C72E51 /* Preview+ModelContainer.swift */; };
 		F64F8E082B02140F00C72E51 /* SampleData+Conversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F64F8E072B02140F00C72E51 /* SampleData+Conversation.swift */; };
@@ -25,6 +28,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		F6081DF62B04847600A78D64 /* KeychainHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainHandler.swift; sourceTree = "<group>"; };
+		F6081DF82B0485EA00A78D64 /* NetworkHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkHandler.swift; sourceTree = "<group>"; };
+		F6081DFA2B048AE300A78D64 /* APIResponseHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIResponseHandler.swift; sourceTree = "<group>"; };
 		F64F8E022B02136D00C72E51 /* ModelContainerPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelContainerPreview.swift; sourceTree = "<group>"; };
 		F64F8E042B0213AF00C72E51 /* Preview+ModelContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Preview+ModelContainer.swift"; sourceTree = "<group>"; };
 		F64F8E072B02140F00C72E51 /* SampleData+Conversation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SampleData+Conversation.swift"; sourceTree = "<group>"; };
@@ -90,6 +96,9 @@
 				F64F8E1F2B03082100C72E51 /* BanksiaHandler.swift */,
 				F64F8E0E2B021BF700C72E51 /* RichTextHandler.swift */,
 				F64F8E2D2B04254100C72E51 /* ConversationHandler.swift */,
+				F6081DF62B04847600A78D64 /* KeychainHandler.swift */,
+				F6081DF82B0485EA00A78D64 /* NetworkHandler.swift */,
+				F6081DFA2B048AE300A78D64 /* APIResponseHandler.swift */,
 			);
 			path = Handlers;
 			sourceTree = "<group>";
@@ -206,10 +215,13 @@
 				F64F8E2A2B03222200C72E51 /* ConversationListView.swift in Sources */,
 				F64F8E202B03082100C72E51 /* BanksiaHandler.swift in Sources */,
 				F64F8E222B03090600C72E51 /* ContentView.swift in Sources */,
+				F6081DF92B0485EA00A78D64 /* NetworkHandler.swift in Sources */,
 				F64F8E312B042A2700C72E51 /* UtilityFunctions.swift in Sources */,
 				F64F8E0F2B021BF700C72E51 /* RichTextHandler.swift in Sources */,
+				F6081DF72B04847600A78D64 /* KeychainHandler.swift in Sources */,
 				F64F8E262B0309D300C72E51 /* ConversationDetailView.swift in Sources */,
 				F6A7BEED2B01C57400D3CE25 /* TwoColumnContentView.swift in Sources */,
+				F6081DFB2B048AE300A78D64 /* APIResponseHandler.swift in Sources */,
 				F64F8E082B02140F00C72E51 /* SampleData+Conversation.swift in Sources */,
 				F6A7BEEF2B01C57400D3CE25 /* DataModel.swift in Sources */,
 				F64F8E0C2B0214A000C72E51 /* SampleData+Messages.swift in Sources */,
