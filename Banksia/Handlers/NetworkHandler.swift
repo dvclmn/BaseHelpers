@@ -16,8 +16,6 @@ extension BanksiaHandler {
             return
         }
         
-        print("API key: \(apiKey)")
-        
         let url = URL(string: "https://api.openai.com/v1/engines/text-davinci-003/completions")!
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
@@ -38,19 +36,53 @@ extension BanksiaHandler {
             }
             
             // Handle the response data
-            if let data = data {
-                do {
-                    let decodedResponse = try JSONDecoder().decode(APIResponseHandler.self, from: data)
-                    if let textResponse = decodedResponse.choices.first?.text {
-                        // Call the completion handler with the text response
-                        completion(.success(textResponse))
-                    } else {
-                        completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Invalid response format."])))
-                    }
-                } catch {
-                    completion(.failure(error))
+            guard let data = data else {
+                completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "No data received."])))
+                print("guard let data = data was not successful")
+                return
+            }
+            do {
+                let decodedResponse = try JSONDecoder().decode(APIResponse.self, from: data)
+                if let textResponse = decodedResponse.choices.first?.message.content {
+                    // Call the completion handler with the text response
+                    completion(.success(textResponse))
+                    
+                    // Save the JSON response to a file
+                    self.saveJSONResponseToFile(jsonData: data, usage: decodedResponse.usage)
+                } else {
+                    completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Invalid response format."])))
                 }
+            } catch {
+                completion(.failure(error))
+                print("guard let data = data was not successful, here's the error: \(error)")
             }
         }.resume() // Don't forget to call resume() to start the task
+    }
+    
+    private func saveJSONResponseToFile(jsonData: Data, usage: APIUsage) {
+        DispatchQueue.global(qos: .background).async {
+            do {
+                // Convert the raw data to a pretty-printed JSON format for readability
+                let jsonObject = try JSONSerialization.jsonObject(with: jsonData, options: [])
+                let prettyJSONData = try JSONSerialization.data(withJSONObject: jsonObject, options: .prettyPrinted)
+                
+                // Create a unique file name for each response using a timestamp
+                let dateFormatter = DateFormatter()
+                dateFormatter.dateFormat = "yyyyMMddHHmmssSSS"
+                let dateString = dateFormatter.string(from: Date())
+                let fileName = "Response-\(dateString).json"
+                
+                // Get the documents directory path
+                let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+                let fileURL = documentsDirectory.appendingPathComponent(fileName)
+                
+                // Write the pretty-printed JSON data to the file
+                try prettyJSONData.write(to: fileURL, options: .atomicWrite)
+                
+                print("Saved JSON response to \(fileURL)")
+            } catch {
+                print("Error saving JSON response to file: \(error)")
+            }
+        }
     }
 }

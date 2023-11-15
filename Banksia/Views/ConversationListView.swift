@@ -14,38 +14,41 @@ struct ConversationListView: View {
     @Environment(\.modelContext) private var modelContext
     @Query(sort: \Conversation.name) private var conversations: [Conversation]
     
+    var isDeleting: Bool
+    
     var body: some View {
         @Bindable var bk = bk
         List(selection: $bk.currentConversation) {
             ForEach(conversations) { conversation in
                 NavigationLink(conversation.name, value: conversation)
                     .contextMenu {
-                        Button(action: {
-                            
-                        }){
-                            Text("Delete")
+                        Button { bk.deleteConversation(conversation, modelContext: modelContext) } label: {
+                            Label("Delete \(conversation.name)", systemImage: "trash")
+                                .help("Delete the animal")
                         }
                     }
             }
-            .onDelete(perform: removeConversations)
         }
         .overlay {
             if conversations.isEmpty {
                 ContentUnavailableView {
                     Label("No conversations", systemImage: "pawprint")
                 } description: {
-//                    AddConversationButton(isActive: $isEditorPresented)
-                    Text("Add a button here")
+                    HandyButton(label: "New conversation", icon: "plus") {
+                        bk.newConversation(for: modelContext)
+                    }
                 }
             }
         }
-//        .toolbar {
-//            ToolbarItem(placement: .primaryAction) {
-//                AddConversationButton(isActive: $isEditorPresented)
-//            }
-//            
-//        }
-    }
+        .toolbar {
+            ToolbarItem(placement: .automatic) {
+                HandyButton(label: "New conversation", icon: "plus") {
+                    bk.newConversation(for: modelContext)
+                }
+            }
+            
+        }
+    } // END view body
     
     private func removeConversations(at indexSet: IndexSet) {
         for index in indexSet {
@@ -57,7 +60,10 @@ struct ConversationListView: View {
         }
     } // END remove conversations
     
-}
+} // END view struct
+
+
+
 #Preview {
     ModelContainerPreview(ModelContainer.sample) {
         TwoColumnContentView()

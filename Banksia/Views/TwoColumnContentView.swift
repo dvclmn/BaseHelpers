@@ -12,15 +12,17 @@ struct TwoColumnContentView: View {
     @Environment(BanksiaHandler.self) private var bk
     @Environment(\.modelContext) private var modelContext
     
+    @State private var isDeleting: Bool = false
+    
     var body: some View {
         @Bindable var bk = bk
         NavigationSplitView(columnVisibility: $bk.columnVisibility) {
-            ConversationListView()
+            ConversationListView(isDeleting: isDeleting)
                 .navigationTitle(bk.sidebarTitle)
                 .navigationSplitViewColumnWidth(min: 180, ideal: 220, max: 260)
         } detail: {
             NavigationStack {
-                ConversationDetailView(conversation: bk.currentConversation)
+                ConversationDetailView(conversation: bk.currentConversation, isDeleting: isDeleting)
             }
         }
         .toolbar {

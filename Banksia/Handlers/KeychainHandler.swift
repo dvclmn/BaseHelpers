@@ -20,6 +20,7 @@ class KeychainHandler {
             SecItemDelete(query as CFDictionary)
             return SecItemAdd(query as CFDictionary, nil) == errSecSuccess
         }
+        print("Couldn't do the keychain thing")
         return false
     }
     

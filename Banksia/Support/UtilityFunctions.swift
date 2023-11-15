@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 extension ShapeStyle where Self == Color {
     static var random: Color {
@@ -16,3 +17,16 @@ extension ShapeStyle where Self == Color {
         )
     }
 }
+
+struct HandyButton: View {
+    
+    var label: String
+    var icon: String
+    let action: () -> Void
+    
+    var body: some View {
+        Button(action: action) {
+            Label(label, systemImage: icon)
+        } // END button
+    }
+} // END

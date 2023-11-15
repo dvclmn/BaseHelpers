@@ -9,6 +9,27 @@ import SwiftUI
 import SwiftData
 
 extension BanksiaHandler {
+    
+    func newConversation(for modelContext: ModelContext) {
+        // Create a new conversation object
+        let newConversation = Conversation(name: "New conversation")
+        
+        modelContext.insert(newConversation)
+        // Save the new conversation to the persistent store
+        do {
+            try modelContext.save()
+            // Set the newly created conversation as the current conversation
+            currentConversation = newConversation
+        } catch {
+            print("Failed to save new conversation: \(error)")
+        }
+    }
+    
+    func deleteConversation(_ conversation: Conversation, modelContext: ModelContext) {
+        currentConversation = nil
+        modelContext.delete(conversation)
+    }
+    
     func deleteAll(for modelContext: ModelContext) {
         do {
             try modelContext.delete(model: Conversation.self)

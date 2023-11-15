@@ -10,9 +10,10 @@ import SwiftData
 
 struct ConversationDetailView: View {
     var conversation: Conversation?
-    @State private var isDeleting = false
     @Environment(\.modelContext) private var modelContext
     @Environment(BanksiaHandler.self) private var bk
+    
+    var isDeleting: Bool
     
     @State private var prompt: String = ""
     
@@ -45,31 +46,18 @@ struct ConversationDetailView: View {
                 } // END user text field hstack
             } // END Vstack
             .navigationTitle("\(conversation.name)")
-            .toolbar {
-                Button { isDeleting = true } label: {
-                    Label("Delete \(conversation.name)", systemImage: "trash")
-                        .help("Delete the animal")
-                }
-            }
-            .alert("Delete \(conversation.name)?", isPresented: $isDeleting) {
-                Button("Yes, delete \(conversation.name)", role: .destructive) {
-                    delete(conversation)
-                }
-            }
+            
         } else {
             ContentUnavailableView("Select a conversation", systemImage: "message")
         }
     }
     
-    private func delete(_ conversation: Conversation) {
-        bk.currentConversation = nil
-        modelContext.delete(conversation)
-    }
+    
 }
 
 #Preview {
     ModelContainerPreview(ModelContainer.sample) {
-        ConversationDetailView(conversation: .plants)
+        ConversationDetailView(conversation: .plants, isDeleting: false)
             .environment(BanksiaHandler())
     }
 }
