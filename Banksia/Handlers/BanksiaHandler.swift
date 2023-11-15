@@ -20,7 +20,7 @@ class BanksiaHandler {
     }
     
     func saveAPIKeyToKeychainForDebugging() {
-            let apiKey = "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" // Replace this with your actual debugging API key
+            let apiKey = "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"
             let savedSuccessfully = KeychainHandler.set(apiKey, forKey: "OpenAIKey")
             
             if savedSuccessfully {

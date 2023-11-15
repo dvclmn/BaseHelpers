@@ -12,10 +12,11 @@ extension BanksiaHandler {
     func fetchResponse(prompt: String, completion: @escaping (Result<String, Error>) -> Void) {
         guard let apiKey = KeychainHandler.get(forKey: "OpenAIKey") else {
             completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "API key not found."])))
+            print("Couldn't get the key")
             return
         }
         
-        print(apiKey.debugDescription)
+        print("API key: \(apiKey)")
         
         let url = URL(string: "https://api.openai.com/v1/engines/text-davinci-003/completions")!
         var request = URLRequest(url: url)
@@ -36,25 +37,20 @@ extension BanksiaHandler {
                 return
             }
             
-            guard let data = data else {
-                completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "No data received."])))
-                return
-            }
-            
-            do {
-                let decodedResponse = try JSONDecoder().decode(APIResponseHandler.self, from: data)
-                if let textResponse = decodedResponse.choices.first?.text {
-                    if let conversation = self.currentConversation {
-                        let message = Message(content: textResponse, isUser: false, conversation: conversation)
+            // Handle the response data
+            if let data = data {
+                do {
+                    let decodedResponse = try JSONDecoder().decode(APIResponseHandler.self, from: data)
+                    if let textResponse = decodedResponse.choices.first?.text {
+                        // Call the completion handler with the text response
+                        completion(.success(textResponse))
                     } else {
-                        print("No conversation selected")
+                        completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Invalid response format."])))
                     }
-                } else {
-                    completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Invalid response format."])))
+                } catch {
+                    completion(.failure(error))
                 }
-            } catch {
-                completion(.failure(error))
             }
-        }.resume()
+        }.resume() // Don't forget to call resume() to start the task
     }
 }

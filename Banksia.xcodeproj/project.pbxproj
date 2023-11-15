@@ -94,11 +94,11 @@
 			isa = PBXGroup;
 			children = (
 				F64F8E1F2B03082100C72E51 /* BanksiaHandler.swift */,
-				F64F8E0E2B021BF700C72E51 /* RichTextHandler.swift */,
-				F64F8E2D2B04254100C72E51 /* ConversationHandler.swift */,
-				F6081DF62B04847600A78D64 /* KeychainHandler.swift */,
 				F6081DF82B0485EA00A78D64 /* NetworkHandler.swift */,
+				F6081DF62B04847600A78D64 /* KeychainHandler.swift */,
 				F6081DFA2B048AE300A78D64 /* APIResponseHandler.swift */,
+				F64F8E2D2B04254100C72E51 /* ConversationHandler.swift */,
+				F64F8E0E2B021BF700C72E51 /* RichTextHandler.swift */,
 			);
 			path = Handlers;
 			sourceTree = "<group>";
@@ -171,7 +171,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1500;
-				LastUpgradeCheck = 1500;
+				LastUpgradeCheck = 1510;
 				TargetAttributes = {
 					F6A7BEE62B01C57400D3CE25 = {
 						CreatedOnToolsVersion = 15.0.1;
@@ -269,6 +269,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -332,6 +333,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -362,6 +364,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Banksia/Preview Content\"";
 				DEVELOPMENT_TEAM = F2W5BX3D7F;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -392,6 +395,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Banksia/Preview Content\"";
 				DEVELOPMENT_TEAM = F2W5BX3D7F;
 				ENABLE_HARDENED_RUNTIME = YES;
