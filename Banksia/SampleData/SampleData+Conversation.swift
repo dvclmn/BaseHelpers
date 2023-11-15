@@ -30,6 +30,16 @@ extension Conversation {
         modelContext.insert(GPTResponse.response_01)
         modelContext.insert(GPTResponse.response_02)
         modelContext.insert(GPTResponse.response_03)
+        
+        plants.messages.append(contentsOf: [
+            UserPrompt.prompt_01 as Message,
+            GPTResponse.response_01 as Message,
+            UserPrompt.prompt_02 as Message,
+            GPTResponse.response_02 as Message,
+            UserPrompt.prompt_03 as Message,
+            GPTResponse.response_03 as Message,
+        ])
+        
     }
     
     static func reloadSampleData(modelContext: ModelContext) {

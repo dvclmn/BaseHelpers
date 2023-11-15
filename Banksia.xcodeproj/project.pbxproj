@@ -16,13 +16,12 @@
 		F64F8E222B03090600C72E51 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F64F8E212B03090600C72E51 /* ContentView.swift */; };
 		F64F8E262B0309D300C72E51 /* ConversationDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F64F8E252B0309D300C72E51 /* ConversationDetailView.swift */; };
 		F64F8E2A2B03222200C72E51 /* ConversationListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F64F8E292B03222200C72E51 /* ConversationListView.swift */; };
-		F64F8E2C2B03239500C72E51 /* ConversationEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F64F8E2B2B03239500C72E51 /* ConversationEditor.swift */; };
 		F64F8E2E2B04254100C72E51 /* ConversationHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F64F8E2D2B04254100C72E51 /* ConversationHandler.swift */; };
+		F64F8E312B042A2700C72E51 /* UtilityFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F64F8E302B042A2700C72E51 /* UtilityFunctions.swift */; };
 		F6A7BEEB2B01C57400D3CE25 /* BanksiaApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A7BEEA2B01C57400D3CE25 /* BanksiaApp.swift */; };
 		F6A7BEED2B01C57400D3CE25 /* TwoColumnContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A7BEEC2B01C57400D3CE25 /* TwoColumnContentView.swift */; };
 		F6A7BEEF2B01C57400D3CE25 /* DataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A7BEEE2B01C57400D3CE25 /* DataModel.swift */; };
 		F6A7BEF12B01C57500D3CE25 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F6A7BEF02B01C57500D3CE25 /* Assets.xcassets */; };
-		F6A7BEF42B01C57500D3CE25 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F6A7BEF32B01C57500D3CE25 /* Preview Assets.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,14 +34,13 @@
 		F64F8E212B03090600C72E51 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		F64F8E252B0309D300C72E51 /* ConversationDetailView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConversationDetailView.swift; sourceTree = "<group>"; };
 		F64F8E292B03222200C72E51 /* ConversationListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationListView.swift; sourceTree = "<group>"; };
-		F64F8E2B2B03239500C72E51 /* ConversationEditor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConversationEditor.swift; sourceTree = "<group>"; };
 		F64F8E2D2B04254100C72E51 /* ConversationHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationHandler.swift; sourceTree = "<group>"; };
+		F64F8E302B042A2700C72E51 /* UtilityFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityFunctions.swift; sourceTree = "<group>"; };
 		F6A7BEE72B01C57400D3CE25 /* Banksia.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Banksia.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F6A7BEEA2B01C57400D3CE25 /* BanksiaApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BanksiaApp.swift; sourceTree = "<group>"; };
 		F6A7BEEC2B01C57400D3CE25 /* TwoColumnContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwoColumnContentView.swift; sourceTree = "<group>"; };
 		F6A7BEEE2B01C57400D3CE25 /* DataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataModel.swift; sourceTree = "<group>"; };
 		F6A7BEF02B01C57500D3CE25 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		F6A7BEF32B01C57500D3CE25 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		F6A7BEF52B01C57500D3CE25 /* Banksia.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Banksia.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -82,7 +80,6 @@
 				F6A7BEEC2B01C57400D3CE25 /* TwoColumnContentView.swift */,
 				F64F8E292B03222200C72E51 /* ConversationListView.swift */,
 				F64F8E252B0309D300C72E51 /* ConversationDetailView.swift */,
-				F64F8E2B2B03239500C72E51 /* ConversationEditor.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -95,6 +92,14 @@
 				F64F8E2D2B04254100C72E51 /* ConversationHandler.swift */,
 			);
 			path = Handlers;
+			sourceTree = "<group>";
+		};
+		F64F8E2F2B042A0300C72E51 /* Support */ = {
+			isa = PBXGroup;
+			children = (
+				F64F8E302B042A2700C72E51 /* UtilityFunctions.swift */,
+			);
+			path = Support;
 			sourceTree = "<group>";
 		};
 		F6A7BEDE2B01C57400D3CE25 = {
@@ -122,19 +127,11 @@
 				F64F8E0D2B0214CC00C72E51 /* Views */,
 				F64F8E062B0213FA00C72E51 /* SampleData */,
 				F64F8E012B02135800C72E51 /* PreviewHelper */,
+				F64F8E2F2B042A0300C72E51 /* Support */,
 				F6A7BEF02B01C57500D3CE25 /* Assets.xcassets */,
 				F6A7BEF52B01C57500D3CE25 /* Banksia.entitlements */,
-				F6A7BEF22B01C57500D3CE25 /* Preview Content */,
 			);
 			path = Banksia;
-			sourceTree = "<group>";
-		};
-		F6A7BEF22B01C57500D3CE25 /* Preview Content */ = {
-			isa = PBXGroup;
-			children = (
-				F6A7BEF32B01C57500D3CE25 /* Preview Assets.xcassets */,
-			);
-			path = "Preview Content";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -195,7 +192,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F6A7BEF42B01C57500D3CE25 /* Preview Assets.xcassets in Resources */,
 				F6A7BEF12B01C57500D3CE25 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -210,12 +206,12 @@
 				F64F8E2A2B03222200C72E51 /* ConversationListView.swift in Sources */,
 				F64F8E202B03082100C72E51 /* BanksiaHandler.swift in Sources */,
 				F64F8E222B03090600C72E51 /* ContentView.swift in Sources */,
+				F64F8E312B042A2700C72E51 /* UtilityFunctions.swift in Sources */,
 				F64F8E0F2B021BF700C72E51 /* RichTextHandler.swift in Sources */,
 				F64F8E262B0309D300C72E51 /* ConversationDetailView.swift in Sources */,
 				F6A7BEED2B01C57400D3CE25 /* TwoColumnContentView.swift in Sources */,
 				F64F8E082B02140F00C72E51 /* SampleData+Conversation.swift in Sources */,
 				F6A7BEEF2B01C57400D3CE25 /* DataModel.swift in Sources */,
-				F64F8E2C2B03239500C72E51 /* ConversationEditor.swift in Sources */,
 				F64F8E0C2B0214A000C72E51 /* SampleData+Messages.swift in Sources */,
 				F64F8E032B02136D00C72E51 /* ModelContainerPreview.swift in Sources */,
 				F64F8E052B0213AF00C72E51 /* Preview+ModelContainer.swift in Sources */,

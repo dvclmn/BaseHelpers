@@ -25,6 +25,12 @@ struct TwoColumnContentView: View {
         }
         .toolbar {
             ToolbarItem() {
+                Circle()
+                    .fill(Color.random)
+                    .frame(width:8, height:8)
+                    .padding(8)
+            }
+            ToolbarItem() {
                 Button(action: {
                     Conversation.insertSampleData(modelContext: modelContext)
                     try? modelContext.save()

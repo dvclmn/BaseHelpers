@@ -51,22 +51,14 @@ private struct ConversationDetailContentView: View {
             
             ScrollView {
                 LazyVStack(spacing: 12) {
-                    if let prompts = conversation.prompts {
-                        ForEach(prompts, id: \.timestamp) { userPrompt in
+                    if let messages = conversation.messages {
+                        ForEach(messages, id: \.timestamp) { message in
                             VStack(alignment: .leading) {
-                                Text(userPrompt.content)
+                                Text(message.content)
                                     .padding()
                                     .background(Color.blue.opacity(0.2))
                                     .cornerRadius(10)
                                     .frame(maxWidth: .infinity, alignment: .leading)
-                                
-                                if let response = userPrompt.response {
-                                    Text(response.content)
-                                        .padding()
-                                        .background(Color.green.opacity(0.2))
-                                        .cornerRadius(10)
-                                        .frame(maxWidth: .infinity, alignment: .trailing)
-                                }
                             }
                         } // END ForEach
                         

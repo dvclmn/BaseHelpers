@@ -14,7 +14,8 @@ final class Conversation {
     var created = Date()
     
     @Relationship(deleteRule: .cascade, inverse: \UserPrompt.conversation)
-    var prompts: [UserPrompt]?
+//    var prompts: [UserPrompt]?
+    var messages: [Message] = []
     
     init(name: String) {
         self.name = name
@@ -22,20 +23,24 @@ final class Conversation {
 } // END Conversation
 
 @Model
-final class UserPrompt {
+final class UserPrompt: Message {
     var timestamp = Date()
     var content: String
-    var conversation: Conversation
+    @Relationship var conversation: Conversation
     var response: GPTResponse?
     
     init(content: String, conversation: Conversation) {
         self.content = content
         self.conversation = conversation
     }
+    
+    func getContent() -> String {
+        return "UserPrompt: \(content)"
+    }
 } // END UserPrompt
 
 @Model
-final class GPTResponse {
+final class GPTResponse: Message {
     var timestamp = Date()
     var content: String
     var prompt: UserPrompt
@@ -44,6 +49,13 @@ final class GPTResponse {
         self.content = content
         self.prompt = prompt
     }
+    func getContent() -> String {
+        return "GPTResponse: \(content)"
+    }
 } // END GPTResponse
 
+protocol Message {
+    var timestamp: Date { get }
+    func getContent() -> String
+}
 

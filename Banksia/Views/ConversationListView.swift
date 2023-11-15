@@ -13,7 +13,6 @@ struct ConversationListView: View {
     @Environment(BanksiaHandler.self) private var bk
     @Environment(\.modelContext) private var modelContext
     @Query(sort: \Conversation.name) private var conversations: [Conversation]
-    @State private var isEditorPresented = false
     
     var body: some View {
         @Bindable var bk = bk
@@ -30,24 +29,22 @@ struct ConversationListView: View {
             }
             .onDelete(perform: removeConversations)
         }
-        .sheet(isPresented: $isEditorPresented) {
-            ConversationEditor(conversation: nil)
-        }
         .overlay {
             if conversations.isEmpty {
                 ContentUnavailableView {
                     Label("No conversations", systemImage: "pawprint")
                 } description: {
-                    AddConversationButton(isActive: $isEditorPresented)
+//                    AddConversationButton(isActive: $isEditorPresented)
+                    Text("Add a button here")
                 }
             }
         }
-        .toolbar {
-            ToolbarItem(placement: .primaryAction) {
-                AddConversationButton(isActive: $isEditorPresented)
-            }
-            
-        }
+//        .toolbar {
+//            ToolbarItem(placement: .primaryAction) {
+//                AddConversationButton(isActive: $isEditorPresented)
+//            }
+//            
+//        }
     }
     
     private func removeConversations(at indexSet: IndexSet) {
@@ -62,18 +59,18 @@ struct ConversationListView: View {
     
 }
 
-private struct AddConversationButton: View {
-    @Binding var isActive: Bool
-    
-    var body: some View {
-        Button {
-            isActive = true
-        } label: {
-            Label("Add a conversation", systemImage: "plus")
-                .help("Add a conversation")
-        }
-    }
-}
+//private struct AddConversationButton: View {
+//    @Binding var isActive: Bool
+//    
+//    var body: some View {
+//        Button {
+//            isActive = true
+//        } label: {
+//            Label("Add a conversation", systemImage: "plus")
+//                .help("Add a conversation")
+//        }
+//    }
+//}
 
 #Preview("ConversationListView") {
     ModelContainerPreview(ModelContainer.sample) {
@@ -87,8 +84,4 @@ private struct AddConversationButton: View {
     ModelContainerPreview(ModelContainer.sample) {
         ConversationListView().environment(BanksiaHandler())
     }
-}
-
-#Preview("AddConversationButton") {
-    AddConversationButton(isActive: .constant(false))
 }
