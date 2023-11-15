@@ -9,7 +9,7 @@ import SwiftData
 
 extension ModelContainer {
     static var sample: () throws -> ModelContainer = {
-        let schema = Schema([Conversation.self, UserPrompt.self, GPTResponse.self])
+        let schema = Schema([Conversation.self, Message.self])
         let configuration = ModelConfiguration(isStoredInMemoryOnly: true)
         let container = try ModelContainer(for: schema, configurations: [configuration])
         Task { @MainActor in

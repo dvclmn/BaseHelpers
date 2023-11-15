@@ -22,23 +22,14 @@ extension Conversation {
         modelContext.insert(childcare)
         
         // Add the user prompts to the model context.
-        modelContext.insert(UserPrompt.prompt_01)
-        modelContext.insert(UserPrompt.prompt_02)
-        modelContext.insert(UserPrompt.prompt_03)
+        modelContext.insert(Message.prompt_01)
+        modelContext.insert(Message.prompt_02)
+        modelContext.insert(Message.prompt_03)
         
         // Add the GPT repsonses to the model context.
-        modelContext.insert(GPTResponse.response_01)
-        modelContext.insert(GPTResponse.response_02)
-        modelContext.insert(GPTResponse.response_03)
-        
-        plants.messages.append(contentsOf: [
-            UserPrompt.prompt_01 as Message,
-            GPTResponse.response_01 as Message,
-            UserPrompt.prompt_02 as Message,
-            GPTResponse.response_02 as Message,
-            UserPrompt.prompt_03 as Message,
-            GPTResponse.response_03 as Message,
-        ])
+        modelContext.insert(Message.response_01)
+        modelContext.insert(Message.response_02)
+        modelContext.insert(Message.response_03)
         
     }
     

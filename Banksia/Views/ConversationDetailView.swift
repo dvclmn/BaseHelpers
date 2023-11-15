@@ -44,6 +44,7 @@ private struct ConversationDetailContentView: View {
     let conversation: Conversation
     
     var body: some View {
+        
         VStack {
             Text(conversation.name)
                 .font(.title)
@@ -51,21 +52,18 @@ private struct ConversationDetailContentView: View {
             
             ScrollView {
                 LazyVStack(spacing: 12) {
-                    if let messages = conversation.messages {
-                        ForEach(messages, id: \.timestamp) { message in
+                    
+                    ForEach(conversation.messages.sorted(by: { $0.timestamp < $1.timestamp }), id: \.timestamp) { message in
                             VStack(alignment: .leading) {
                                 Text(message.content)
                                     .padding()
-                                    .background(Color.blue.opacity(0.2))
+                                    .background(Color(message.isUser ? .blue : .gray))
                                     .cornerRadius(10)
                                     .frame(maxWidth: .infinity, alignment: .leading)
                             }
                         } // END ForEach
                         
-                    } else {
-                        
-                        Text("No prompts found")
-                    } // END prompts check
+                    
                 } // END lazy vstack
                 .padding()
             } // END scrollview

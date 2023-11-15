@@ -13,8 +13,7 @@ final class Conversation {
     var name: String
     var created = Date()
     
-    @Relationship(deleteRule: .cascade, inverse: \UserPrompt.conversation)
-//    var prompts: [UserPrompt]?
+    @Relationship(deleteRule: .cascade, inverse: \Message.conversation)
     var messages: [Message] = []
     
     init(name: String) {
@@ -23,39 +22,16 @@ final class Conversation {
 } // END Conversation
 
 @Model
-final class UserPrompt: Message {
-    var timestamp = Date()
+final class Message {
+    @Attribute(.unique) var timestamp: Date
     var content: String
+    var isUser: Bool
     @Relationship var conversation: Conversation
-    var response: GPTResponse?
     
-    init(content: String, conversation: Conversation) {
+    init(timestamp: Date = .now, content: String, isUser: Bool = true, conversation: Conversation) {
+        self.timestamp = timestamp
         self.content = content
+        self.isUser = isUser
         self.conversation = conversation
     }
-    
-    func getContent() -> String {
-        return "UserPrompt: \(content)"
-    }
-} // END UserPrompt
-
-@Model
-final class GPTResponse: Message {
-    var timestamp = Date()
-    var content: String
-    var prompt: UserPrompt
-    
-    init(content: String, prompt: UserPrompt) {
-        self.content = content
-        self.prompt = prompt
-    }
-    func getContent() -> String {
-        return "GPTResponse: \(content)"
-    }
-} // END GPTResponse
-
-protocol Message {
-    var timestamp: Date { get }
-    func getContent() -> String
-}
-
+} // END Message

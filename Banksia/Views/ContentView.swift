@@ -15,8 +15,8 @@ struct ContentView: View {
             .environment(bk)
     }
 }
-
-#Preview {
-    ContentView()
-        .modelContainer(try! ModelContainer.sample())
-}
+//
+//#Preview {
+//    ContentView()
+//        .modelContainer(try! ModelContainer.sample())
+//}
