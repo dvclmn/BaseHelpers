@@ -31,6 +31,15 @@ extension Conversation {
         modelContext.insert(Message.response_02)
         modelContext.insert(Message.response_03)
         
+        let messages: [Message] = [
+            Message.prompt_01,
+            Message.response_01,
+            Message.prompt_02,
+            Message.response_02,
+            Message.prompt_03,
+            Message.response_03
+        ]
+        plants.messages = messages
     }
     
     static func reloadSampleData(modelContext: ModelContext) {

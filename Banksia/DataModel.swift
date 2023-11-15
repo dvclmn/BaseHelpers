@@ -13,7 +13,7 @@ final class Conversation {
     var name: String
     var created = Date()
     
-    @Relationship(deleteRule: .cascade, inverse: \Message.conversation)
+    @Relationship(deleteRule: .cascade)
     var messages: [Message] = []
     
     init(name: String) {
@@ -26,7 +26,7 @@ final class Message {
     @Attribute(.unique) var timestamp: Date
     var content: String
     var isUser: Bool
-    @Relationship var conversation: Conversation
+    var conversation: Conversation
     
     init(timestamp: Date = .now, content: String, isUser: Bool = true, conversation: Conversation) {
         self.timestamp = timestamp

@@ -63,7 +63,6 @@ private struct ConversationDetailContentView: View {
                             }
                         } // END ForEach
                         
-                    
                 } // END lazy vstack
                 .padding()
             } // END scrollview
