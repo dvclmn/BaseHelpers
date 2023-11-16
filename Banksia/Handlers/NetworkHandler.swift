@@ -9,25 +9,30 @@ import Foundation
 
 extension BanksiaHandler {
     
-    func fetchResponse(prompt: String, completion: @escaping (Result<String, Error>) -> Void) {
+    func fetchResponse(prompt: String, completion: @escaping (Result<String, Error>) -> Void, isTest: Bool = false) {
+        
         guard let apiKey = KeychainHandler.get(forKey: "OpenAIKey") else {
             completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "API key not found."])))
-            print("Couldn't get the key")
             return
         }
         
-        let url = URL(string: "https://api.openai.com/v1/engines/text-davinci-003/completions")!
+        let url = URL(string: "https://api.openai.com/v1/chat/completions")!
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.addValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         
         let body: [String: Any] = [
-            "prompt": prompt,
-            "max_tokens": 150
+            "model": myModel.value, // Specify the model you are using
+            "messages": [
+                ["role": "user", "content": prompt]
+            ],
+            "temperature": temperature // You can adjust the temperature as needed
         ]
         
+        
         request.httpBody = try? JSONSerialization.data(withJSONObject: body, options: [])
+        
         
         URLSession.shared.dataTask(with: request) { data, response, error in
             if let error = error {
@@ -41,21 +46,34 @@ extension BanksiaHandler {
                 print("guard let data = data was not successful")
                 return
             }
-            do {
-                let decodedResponse = try JSONDecoder().decode(APIResponse.self, from: data)
-                if let textResponse = decodedResponse.choices.first?.message.content {
-                    // Call the completion handler with the text response
-                    completion(.success(textResponse))
-                    
-                    // Save the JSON response to a file
-                    self.saveJSONResponseToFile(jsonData: data, usage: decodedResponse.usage)
-                } else {
-                    completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Invalid response format."])))
+            
+            if isTest {
+                
+                if let jsonString = String(data: data, encoding: .utf8) {
+                        completion(.success(jsonString)) // Pass the jsonString instead of data
+                    } else {
+                        completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Data could not be decoded into a string."])))
+                    }
+                
+            } else {
+                do {
+                    let decodedResponse = try JSONDecoder().decode(APIResponse.self, from: data)
+                    if let textResponse = decodedResponse.choices.first?.message.content {
+                        // Call the completion handler with the text response
+                        completion(.success(textResponse))
+                        
+                        // Save the JSON response to a file
+                        self.saveJSONResponseToFile(jsonData: data, usage: decodedResponse.usage)
+                    } else {
+                        completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Invalid response format."])))
+                    }
+                } catch {
+                    completion(.failure(error))
+                    print("guard let data = data was not successful, here's the error: \(error)")
                 }
-            } catch {
-                completion(.failure(error))
-                print("guard let data = data was not successful, here's the error: \(error)")
             }
+            
+            
         }.resume() // Don't forget to call resume() to start the task
     }
     
@@ -84,5 +102,9 @@ extension BanksiaHandler {
                 print("Error saving JSON response to file: \(error)")
             }
         }
-    }
-}
+    } // END save JSON file
+    
+    
+    
+    
+} // END BanksiaHandler extension

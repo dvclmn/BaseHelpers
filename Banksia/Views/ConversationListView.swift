@@ -10,14 +10,13 @@ import SwiftData
 
 struct ConversationListView: View {
     
-    @Environment(BanksiaHandler.self) private var bk
+    @EnvironmentObject var bk: BanksiaHandler
     @Environment(\.modelContext) private var modelContext
     @Query(sort: \Conversation.name) private var conversations: [Conversation]
     
     var isDeleting: Bool
     
     var body: some View {
-        @Bindable var bk = bk
         List(selection: $bk.currentConversation) {
             ForEach(conversations) { conversation in
                 NavigationLink(conversation.name, value: conversation)
@@ -67,6 +66,6 @@ struct ConversationListView: View {
 #Preview {
     ModelContainerPreview(ModelContainer.sample) {
         TwoColumnContentView()
-            .environment(BanksiaHandler())
+            .environmentObject(BanksiaHandler())
     }
 }

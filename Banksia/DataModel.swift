@@ -58,8 +58,8 @@ struct APIResponse: Codable {
     let object: String
     let created: Int
     let model: String
-    let usage: APIUsage
     let choices: [Choice]
+    let usage: APIUsage
 }
 
 struct APIUsage: Codable {

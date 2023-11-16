@@ -7,12 +7,23 @@
 
 import SwiftUI
 
-@Observable
-class BanksiaHandler {
-    var currentConversation: Conversation? = nil
-    var columnVisibility: NavigationSplitViewVisibility = .automatic
+//@Observable
+class BanksiaHandler: ObservableObject {
+    @Published var currentConversation: Conversation? = nil
+    @Published var columnVisibility: NavigationSplitViewVisibility = .automatic
     
-    var sidebarTitle = "Conversation"
+    @AppStorage("globalTextSize") var globalTextSize: Double = 1.0
+    @AppStorage("myTemperature") var temperature: Double = 0.5
+    
+    @AppStorage("myModel") var modelString: String = AIModel.gpt_4.value
+    var myModel: AIModel {
+        get { AIModel(rawValue: modelString) ?? .gpt_4 }
+        set { modelString = newValue.value }
+    }
+    
+    /// Corner radius
+    let cornerRadiusSmall: CGFloat = 4
+    let cornerRadiusLarge: CGFloat = 6
     
     
     init() {
@@ -20,14 +31,14 @@ class BanksiaHandler {
     }
     
     func saveAPIKeyToKeychainForDebugging() {
-            let apiKey = "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"
-            let savedSuccessfully = KeychainHandler.set(apiKey, forKey: "OpenAIKey")
-            
-            if savedSuccessfully {
-                print("Debugging API key saved successfully to Keychain.")
-            } else {
-                print("Failed to save debugging API key to Keychain.")
-            }
+        let apiKey = "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"
+        let savedSuccessfully = KeychainHandler.set(apiKey, forKey: "OpenAIKey")
+        
+        if savedSuccessfully {
+            print("Debugging API key saved successfully to Keychain.")
+        } else {
+            print("Failed to save debugging API key to Keychain.")
         }
+    }
 }
 

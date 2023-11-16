@@ -8,6 +8,29 @@
 import SwiftUI
 import SwiftData
 
+/// https://platform.openai.com/docs/models for more info
+enum AIModel: String, Codable, CaseIterable {
+    case gpt_4
+    case gpt_3_5
+    
+    var name: String {
+        switch self {
+        case .gpt_4:
+            return "GPT-4"
+        case .gpt_3_5:
+            return "GPT-3.5 Turbo"
+        }
+    }
+    var value: String {
+        switch self {
+        case .gpt_4:
+            return "gpt-4"
+        case .gpt_3_5:
+            return "gpt-3.5-turbo"
+        }
+    }
+} // END AIModel
+
 extension BanksiaHandler {
     
     func newConversation(for modelContext: ModelContext) {
@@ -37,6 +60,20 @@ extension BanksiaHandler {
             print("Failed to clear Conversations.")
         }
     } // END delete all
+    
+    func testAPIFetch() {
+        fetchResponse(prompt: "Your prompt here", completion:  { result in
+            switch result {
+            case .success(let data):
+                // Handle the raw data, or save it to a file for inspection
+                
+                print("Raw data received:\n\(data)")
+            case .failure(let error):
+                // Handle the error
+                print("Error fetching API response: \(error)")
+            }
+        }, isTest: true)
+    }
     
     func sendMessage(userMessage: String) {
         // Trim the message to remove leading and trailing whitespaces and newlines
@@ -76,4 +113,6 @@ extension BanksiaHandler {
             print("Message is empty, nothing to send")
         } // END check for empty message
     } // END send message
-}
+    
+
+} // END BanksiaHandler extension

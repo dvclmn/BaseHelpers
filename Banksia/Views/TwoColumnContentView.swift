@@ -9,16 +9,15 @@ import SwiftUI
 import SwiftData
 
 struct TwoColumnContentView: View {
-    @Environment(BanksiaHandler.self) private var bk
+    @EnvironmentObject var bk: BanksiaHandler
     @Environment(\.modelContext) private var modelContext
     
     @State private var isDeleting: Bool = false
     
     var body: some View {
-        @Bindable var bk = bk
         NavigationSplitView(columnVisibility: $bk.columnVisibility) {
             ConversationListView(isDeleting: isDeleting)
-                .navigationTitle(bk.sidebarTitle)
+                .navigationTitle("Conversations")
                 .navigationSplitViewColumnWidth(min: 180, ideal: 220, max: 260)
         } detail: {
             NavigationStack {
@@ -36,18 +35,27 @@ struct TwoColumnContentView: View {
                 Button(action: {
                     Conversation.insertSampleData(modelContext: modelContext)
                     try? modelContext.save()
-                            }) {
-                                Label("Add sample data", systemImage: "sparkles")
-                            } // END button
+                }) {
+                    Label("Add sample data", systemImage: "sparkles")
+                } // END button
             } // END add sample data
+            
+            ToolbarItem() {
+                Button(action: {
+                    bk.testAPIFetch()
+                }) {
+                    Label("Test API call", systemImage: "cursorarrow.rays")
+                } // END button
+            } // END add sample data
+            
             
             ToolbarItem() {
                 Button(action: {
                     bk.deleteAll(for: modelContext)
                     try? modelContext.save()
-                            }) {
-                                Label("Remove all", systemImage: "rays")
-                            } // END button
+                }) {
+                    Label("Remove all", systemImage: "rays")
+                } // END button
             } // END delete all
         } // END toolbar
     }
@@ -56,6 +64,6 @@ struct TwoColumnContentView: View {
 #Preview {
     ModelContainerPreview(ModelContainer.sample) {
         TwoColumnContentView()
-            .environment(BanksiaHandler())
+            .environmentObject(BanksiaHandler())
     }
 }

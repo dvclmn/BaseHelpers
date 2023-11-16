@@ -10,8 +10,8 @@ import SwiftData
 
 struct ConversationDetailView: View {
     var conversation: Conversation?
+    @EnvironmentObject var bk: BanksiaHandler
     @Environment(\.modelContext) private var modelContext
-    @Environment(BanksiaHandler.self) private var bk
     
     var isDeleting: Bool
     
@@ -58,6 +58,6 @@ struct ConversationDetailView: View {
 #Preview {
     ModelContainerPreview(ModelContainer.sample) {
         ConversationDetailView(conversation: .plants, isDeleting: false)
-            .environment(BanksiaHandler())
+            .environmentObject(BanksiaHandler())
     }
 }

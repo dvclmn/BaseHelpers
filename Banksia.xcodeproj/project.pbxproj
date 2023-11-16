@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		F6081DF72B04847600A78D64 /* KeychainHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6081DF62B04847600A78D64 /* KeychainHandler.swift */; };
 		F6081DF92B0485EA00A78D64 /* NetworkHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6081DF82B0485EA00A78D64 /* NetworkHandler.swift */; };
+		F636A11C2B05B23D00C24891 /* GeneralSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F636A11B2B05B23D00C24891 /* GeneralSettingsView.swift */; };
 		F64F8E032B02136D00C72E51 /* ModelContainerPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = F64F8E022B02136D00C72E51 /* ModelContainerPreview.swift */; };
 		F64F8E052B0213AF00C72E51 /* Preview+ModelContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F64F8E042B0213AF00C72E51 /* Preview+ModelContainer.swift */; };
 		F64F8E082B02140F00C72E51 /* SampleData+Conversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F64F8E072B02140F00C72E51 /* SampleData+Conversation.swift */; };
@@ -24,11 +25,15 @@
 		F6A7BEED2B01C57400D3CE25 /* TwoColumnContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A7BEEC2B01C57400D3CE25 /* TwoColumnContentView.swift */; };
 		F6A7BEEF2B01C57400D3CE25 /* DataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A7BEEE2B01C57400D3CE25 /* DataModel.swift */; };
 		F6A7BEF12B01C57500D3CE25 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F6A7BEF02B01C57500D3CE25 /* Assets.xcassets */; };
+		F6FA92EF2B052B9800D1D9B8 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6FA92EE2B052B9800D1D9B8 /* SettingsView.swift */; };
+		F6FA92F12B0530D400D1D9B8 /* TextStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6FA92F02B0530D400D1D9B8 /* TextStyles.swift */; };
+		F6FA92F32B059EA900D1D9B8 /* PreferencesHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6FA92F22B059EA900D1D9B8 /* PreferencesHandler.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		F6081DF62B04847600A78D64 /* KeychainHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainHandler.swift; sourceTree = "<group>"; };
 		F6081DF82B0485EA00A78D64 /* NetworkHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkHandler.swift; sourceTree = "<group>"; };
+		F636A11B2B05B23D00C24891 /* GeneralSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralSettingsView.swift; sourceTree = "<group>"; };
 		F64F8E022B02136D00C72E51 /* ModelContainerPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelContainerPreview.swift; sourceTree = "<group>"; };
 		F64F8E042B0213AF00C72E51 /* Preview+ModelContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Preview+ModelContainer.swift"; sourceTree = "<group>"; };
 		F64F8E072B02140F00C72E51 /* SampleData+Conversation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SampleData+Conversation.swift"; sourceTree = "<group>"; };
@@ -46,6 +51,9 @@
 		F6A7BEEE2B01C57400D3CE25 /* DataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataModel.swift; sourceTree = "<group>"; };
 		F6A7BEF02B01C57500D3CE25 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F6A7BEF52B01C57500D3CE25 /* Banksia.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Banksia.entitlements; sourceTree = "<group>"; };
+		F6FA92EE2B052B9800D1D9B8 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		F6FA92F02B0530D400D1D9B8 /* TextStyles.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextStyles.swift; sourceTree = "<group>"; };
+		F6FA92F22B059EA900D1D9B8 /* PreferencesHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesHandler.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,6 +67,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		F636A11A2B05B22F00C24891 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				F6FA92EE2B052B9800D1D9B8 /* SettingsView.swift */,
+				F636A11B2B05B23D00C24891 /* GeneralSettingsView.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
 		F64F8E012B02135800C72E51 /* PreviewHelper */ = {
 			isa = PBXGroup;
 			children = (
@@ -84,6 +101,7 @@
 				F6A7BEEC2B01C57400D3CE25 /* TwoColumnContentView.swift */,
 				F64F8E292B03222200C72E51 /* ConversationListView.swift */,
 				F64F8E252B0309D300C72E51 /* ConversationDetailView.swift */,
+				F636A11A2B05B22F00C24891 /* Settings */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -96,6 +114,7 @@
 				F6081DF62B04847600A78D64 /* KeychainHandler.swift */,
 				F64F8E2D2B04254100C72E51 /* ConversationHandler.swift */,
 				F64F8E0E2B021BF700C72E51 /* RichTextHandler.swift */,
+				F6FA92F22B059EA900D1D9B8 /* PreferencesHandler.swift */,
 			);
 			path = Handlers;
 			sourceTree = "<group>";
@@ -103,6 +122,7 @@
 		F64F8E2F2B042A0300C72E51 /* Support */ = {
 			isa = PBXGroup;
 			children = (
+				F6FA92F02B0530D400D1D9B8 /* TextStyles.swift */,
 				F64F8E302B042A2700C72E51 /* UtilityFunctions.swift */,
 			);
 			path = Support;
@@ -156,6 +176,8 @@
 			dependencies = (
 			);
 			name = Banksia;
+			packageProductDependencies = (
+			);
 			productName = Banksia;
 			productReference = F6A7BEE72B01C57400D3CE25 /* Banksia.app */;
 			productType = "com.apple.product-type.application";
@@ -184,6 +206,8 @@
 				Base,
 			);
 			mainGroup = F6A7BEDE2B01C57400D3CE25;
+			packageReferences = (
+			);
 			productRefGroup = F6A7BEE82B01C57400D3CE25 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -214,12 +238,16 @@
 				F64F8E222B03090600C72E51 /* ContentView.swift in Sources */,
 				F6081DF92B0485EA00A78D64 /* NetworkHandler.swift in Sources */,
 				F64F8E312B042A2700C72E51 /* UtilityFunctions.swift in Sources */,
+				F6FA92EF2B052B9800D1D9B8 /* SettingsView.swift in Sources */,
+				F636A11C2B05B23D00C24891 /* GeneralSettingsView.swift in Sources */,
 				F64F8E0F2B021BF700C72E51 /* RichTextHandler.swift in Sources */,
 				F6081DF72B04847600A78D64 /* KeychainHandler.swift in Sources */,
 				F64F8E262B0309D300C72E51 /* ConversationDetailView.swift in Sources */,
 				F6A7BEED2B01C57400D3CE25 /* TwoColumnContentView.swift in Sources */,
+				F6FA92F32B059EA900D1D9B8 /* PreferencesHandler.swift in Sources */,
 				F64F8E082B02140F00C72E51 /* SampleData+Conversation.swift in Sources */,
 				F6A7BEEF2B01C57400D3CE25 /* DataModel.swift in Sources */,
+				F6FA92F12B0530D400D1D9B8 /* TextStyles.swift in Sources */,
 				F64F8E0C2B0214A000C72E51 /* SampleData+Messages.swift in Sources */,
 				F64F8E032B02136D00C72E51 /* ModelContainerPreview.swift in Sources */,
 				F64F8E052B0213AF00C72E51 /* Preview+ModelContainer.swift in Sources */,
