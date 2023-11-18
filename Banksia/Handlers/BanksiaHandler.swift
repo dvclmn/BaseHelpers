@@ -10,6 +10,7 @@ import SwiftUI
 //@Observable
 class BanksiaHandler: ObservableObject {
     @Published var currentConversation: Conversation? = nil
+    @AppStorage("myCurrentConversation") var currentConversationIndex: Int = 0
     @Published var columnVisibility: NavigationSplitViewVisibility = .automatic
     
     @AppStorage("globalTextSize") var globalTextSize: Double = 1.0
@@ -22,8 +23,8 @@ class BanksiaHandler: ObservableObject {
     }
     
     /// Corner radius
-    let cornerRadiusSmall: CGFloat = 4
-    let cornerRadiusLarge: CGFloat = 6
+    let cornerRadiusSmall: CGFloat = 6
+    let cornerRadiusLarge: CGFloat = 10
     
     
     init() {

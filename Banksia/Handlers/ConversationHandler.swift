@@ -8,7 +8,6 @@
 import SwiftUI
 import SwiftData
 
-/// https://platform.openai.com/docs/models for more info
 enum AIModel: String, Codable, CaseIterable {
     case gpt_4
     case gpt_3_5

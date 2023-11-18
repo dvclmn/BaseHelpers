@@ -7,6 +7,17 @@
 
 import Foundation
 
+enum OpenAI: String {
+    case url
+    
+    var value: String {
+        switch self {
+        case .url:
+            return "https://api.openai.com/v1/chat/completions"
+        }
+    }
+}
+
 extension BanksiaHandler {
     
     func fetchResponse(prompt: String, completion: @escaping (Result<String, Error>) -> Void, isTest: Bool = false) {
@@ -16,7 +27,7 @@ extension BanksiaHandler {
             return
         }
         
-        let url = URL(string: "https://api.openai.com/v1/chat/completions")!
+        let url = URL(string: OpenAI.url.value)!
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.addValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
@@ -50,20 +61,19 @@ extension BanksiaHandler {
             if isTest {
                 
                 if let jsonString = String(data: data, encoding: .utf8) {
-                        completion(.success(jsonString)) // Pass the jsonString instead of data
-                    } else {
-                        completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Data could not be decoded into a string."])))
-                    }
+                    completion(.success(jsonString)) // Pass the jsonString instead of data
+                } else {
+                    completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Data could not be decoded into a string."])))
+                }
                 
             } else {
                 do {
                     let decodedResponse = try JSONDecoder().decode(APIResponse.self, from: data)
                     if let textResponse = decodedResponse.choices.first?.message.content {
                         // Call the completion handler with the text response
+                        
                         completion(.success(textResponse))
                         
-                        // Save the JSON response to a file
-                        self.saveJSONResponseToFile(jsonData: data, usage: decodedResponse.usage)
                     } else {
                         completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Invalid response format."])))
                     }
@@ -77,32 +87,7 @@ extension BanksiaHandler {
         }.resume() // Don't forget to call resume() to start the task
     }
     
-    private func saveJSONResponseToFile(jsonData: Data, usage: APIUsage) {
-        DispatchQueue.global(qos: .background).async {
-            do {
-                // Convert the raw data to a pretty-printed JSON format for readability
-                let jsonObject = try JSONSerialization.jsonObject(with: jsonData, options: [])
-                let prettyJSONData = try JSONSerialization.data(withJSONObject: jsonObject, options: .prettyPrinted)
-                
-                // Create a unique file name for each response using a timestamp
-                let dateFormatter = DateFormatter()
-                dateFormatter.dateFormat = "yyyyMMddHHmmssSSS"
-                let dateString = dateFormatter.string(from: Date())
-                let fileName = "Response-\(dateString).json"
-                
-                // Get the documents directory path
-                let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-                let fileURL = documentsDirectory.appendingPathComponent(fileName)
-                
-                // Write the pretty-printed JSON data to the file
-                try prettyJSONData.write(to: fileURL, options: .atomicWrite)
-                
-                print("Saved JSON response to \(fileURL)")
-            } catch {
-                print("Error saving JSON response to file: \(error)")
-            }
-        }
-    } // END save JSON file
+    
     
     
     
