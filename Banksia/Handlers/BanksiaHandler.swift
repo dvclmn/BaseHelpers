@@ -9,9 +9,10 @@ import SwiftUI
 
 //@Observable
 class BanksiaHandler: ObservableObject {
-    @Published var currentConversation: Conversation? = nil
-    @AppStorage("myCurrentConversation") var currentConversationIndex: Int = 0
+    @Published var currentConversations: Set<Conversation>?
     @Published var columnVisibility: NavigationSplitViewVisibility = .automatic
+    
+    @Published var isOptionKey: Bool = false
     
     @AppStorage("globalTextSize") var globalTextSize: Double = 1.0
     @AppStorage("myTemperature") var temperature: Double = 0.5
@@ -29,6 +30,7 @@ class BanksiaHandler: ObservableObject {
     
     init() {
         saveAPIKeyToKeychainForDebugging()
+        
     }
     
     func saveAPIKeyToKeychainForDebugging() {

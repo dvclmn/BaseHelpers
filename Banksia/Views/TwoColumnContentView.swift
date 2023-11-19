@@ -21,7 +21,7 @@ struct TwoColumnContentView: View {
                 .navigationSplitViewColumnWidth(min: 180, ideal: 220, max: 260)
         } detail: {
             NavigationStack {
-                ConversationDetailView(conversation: bk.currentConversation, isDeleting: isDeleting)
+                ConversationDetailView(isDeleting: isDeleting)
             }
         }
         .toolbar {
@@ -32,12 +32,10 @@ struct TwoColumnContentView: View {
                     .padding(8)
             }
             ToolbarItem() {
-                Button(action: {
+                HandyButton(label: "Add sample data", icon: "sparkles") {
                     Conversation.insertSampleData(modelContext: modelContext)
                     try? modelContext.save()
-                }) {
-                    Label("Add sample data", systemImage: "sparkles")
-                } // END button
+                }
             } // END add sample data
             
             ToolbarItem() {

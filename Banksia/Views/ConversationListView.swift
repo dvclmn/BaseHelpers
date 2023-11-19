@@ -17,7 +17,7 @@ struct ConversationListView: View {
     var isDeleting: Bool
     
     var body: some View {
-        List(selection: $bk.currentConversation) {
+        List(selection: $bk.currentConversations) {
             ForEach(conversations) { conversation in
                 NavigationLink(conversation.name, value: conversation)
                     .contextMenu {
@@ -48,16 +48,6 @@ struct ConversationListView: View {
             
         }
     } // END view body
-    
-    private func removeConversations(at indexSet: IndexSet) {
-        for index in indexSet {
-            let conversationToDelete = conversations[index]
-            if bk.currentConversation?.persistentModelID == conversationToDelete.persistentModelID {
-                bk.currentConversation = nil
-            }
-            modelContext.delete(conversationToDelete)
-        }
-    } // END remove conversations
     
 } // END view struct
 

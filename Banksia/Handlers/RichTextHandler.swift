@@ -52,11 +52,12 @@ struct RichTextView: NSViewRepresentable {
         
         let attributedString = NSMutableAttributedString(string: textView.string)
         
-                textView.autoresizingMask = [.width, .height]
         // Example styling rule: turn text red if it contains "red"
-        if textView.string.contains("red") {
-            attributedString.addAttribute(.foregroundColor, value: NSColor.red, range: NSRange(location: 0, length: attributedString.length))
-        }
+//        if textView.string.contains("red") {
+//            attributedString.addAttribute(.foregroundColor, value: NSColor.red, range: NSRange(location: 0, length: attributedString.length))
+//        }
+        
+        attributedString.addAttribute(.foregroundColor, value: NSColor.white, range: NSRange(location: 0, length: attributedString.length))
         textView.textStorage?.setAttributedString(attributedString)
     }
 }
