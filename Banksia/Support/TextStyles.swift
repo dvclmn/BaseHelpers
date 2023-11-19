@@ -18,6 +18,7 @@ enum Typography {
     case small
     case code
     case icon
+    case displayIcon
 }
 
 struct TypographyModifier: ViewModifier {
@@ -53,6 +54,8 @@ struct TypographyModifier: ViewModifier {
             content.font(.system(size: fontSize * CGFloat(bk.globalTextSize), weight: fontWeight, design: .monospaced)).opacity(textOpacity)
         case .icon:
             content.font(.system(size: fontSize * CGFloat(bk.globalTextSize), weight: fontWeight, design: .default)).opacity(textOpacity)
+        case .displayIcon:
+            content.font(.system(size: fontSize * CGFloat(bk.globalTextSize), weight: fontWeight, design: .default)).opacity(textOpacity)
         } // END switch
     } // END view body
     private func defaultFontSize(for style: Typography) -> CGFloat {
@@ -66,6 +69,7 @@ struct TypographyModifier: ViewModifier {
         case .small: return 13
         case .code: return 15
         case .icon: return 20
+        case .displayIcon: return 48
         }
     } // END default font size
     
@@ -87,6 +91,7 @@ struct TypographyModifier: ViewModifier {
         case .small: return .medium
         case .code: return .medium
         case .icon: return .regular
+        case .displayIcon: return .regular
         }
     } // END default weight
     

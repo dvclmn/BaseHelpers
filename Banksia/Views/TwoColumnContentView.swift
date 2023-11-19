@@ -15,7 +15,7 @@ struct TwoColumnContentView: View {
     @State private var isDeleting: Bool = false
     
     var body: some View {
-        NavigationSplitView(columnVisibility: $bk.columnVisibility) {
+        NavigationSplitView(columnVisibility: $bk.sidebarVisibility) {
             ConversationListView(isDeleting: isDeleting)
                 .navigationTitle("Conversations")
                 .navigationSplitViewColumnWidth(min: 180, ideal: 220, max: 260)

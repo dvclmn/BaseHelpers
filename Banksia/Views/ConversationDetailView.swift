@@ -48,8 +48,8 @@ struct ConversationDetailView: View {
     
     var body: some View {
         
-        if let conversationSet = bk.currentConversations, conversationSet.count == 1 {
-                            let conversation = conversationSet.first!
+        if bk.currentConversations.count == 1 {
+                            let conversation = bk.currentConversations.first!
             VStack(spacing:0) {
                 ScrollView(.vertical) {
                     //                    Text(conversation.name)
@@ -98,7 +98,7 @@ struct ConversationDetailView: View {
 
 #Preview(traits: .fixedLayout(width: 600, height: 500)) {
     ModelContainerPreview(ModelContainer.sample) {
-        ConversationDetailView(conversation: [.plants], isDeleting: false)
+        ConversationDetailView(isDeleting: false)
             .environmentObject(BanksiaHandler())
     }
 }

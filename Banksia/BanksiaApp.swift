@@ -15,7 +15,7 @@ struct BanksiaApp: App {
             ContentView()
                 .environmentObject(bk)
         }
-        .modelContainer(for: Conversation.self)
+        .modelContainer(for: [Conversation.self, Message.self], isUndoEnabled: true)
         .commands {
             SidebarCommands()
         }

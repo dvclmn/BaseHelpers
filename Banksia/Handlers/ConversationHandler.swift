@@ -85,7 +85,7 @@ extension BanksiaHandler {
         }
         
         // Ensure there is a single current conversation selected, return early if not
-        guard let currentConversations = currentConversations, currentConversations.count == 1 else {
+        guard currentConversations.count == 1 else {
             print("Multiple conversations selected or no conversation selected.")
             return
         }

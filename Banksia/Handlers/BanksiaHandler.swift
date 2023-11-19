@@ -9,8 +9,8 @@ import SwiftUI
 
 //@Observable
 class BanksiaHandler: ObservableObject {
-    @Published var currentConversations: Set<Conversation>?
-    @Published var columnVisibility: NavigationSplitViewVisibility = .automatic
+    @Published var currentConversations: Set<Conversation> = []
+    @Published var sidebarVisibility: NavigationSplitViewVisibility = .automatic
     
     @Published var isOptionKey: Bool = false
     
