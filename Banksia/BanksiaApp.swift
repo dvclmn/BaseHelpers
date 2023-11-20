@@ -14,17 +14,19 @@ struct BanksiaApp: App {
         WindowGroup {
             ContentView()
                 .environmentObject(bk)
+                .preferredColorScheme(.dark)
         }
         .modelContainer(for: [Conversation.self, Message.self], isUndoEnabled: true)
         .commands {
             SidebarCommands()
         }
         
+#if os(macOS)
         Settings {
             SettingsView()
                 .environmentObject(bk)
         }
+#endif
     }
-    
     
 }

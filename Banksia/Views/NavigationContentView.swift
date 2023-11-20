@@ -65,9 +65,9 @@ struct NavigationContentView: View {
     }
 }
 
-#Preview {
-    ModelContainerPreview(ModelContainer.sample) {
-        NavigationContentView()
-            .environmentObject(BanksiaHandler())
-    }
-}
+//#Preview {
+//    ModelContainerPreview(ModelContainer.sample) {
+//        NavigationContentView()
+//            .environmentObject(BanksiaHandler())
+//    }
+//}

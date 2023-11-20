@@ -14,23 +14,21 @@ final class Conversation {
     var created = Date()
     var tokens: Int?
     
-    @Relationship(deleteRule: .cascade)
+    @Relationship(deleteRule: .cascade, inverse: \Message.conversation)
     var messages: [Message] = []
     
-    init(name: String, tokens: Int? = nil) {
+    init(name: String) {
         self.name = name
-        self.tokens = tokens
     }
 } // END Conversation
 
 @Model
 final class Message {
-    @Attribute(.unique) var timestamp: Date
+    @Attribute(.unique) var timestamp = Date()
     var content: String
     var tokens: Int?
     var isUser: Bool
     var conversation: Conversation
-    
     
     init(timestamp: Date = .now, content: String, tokens: Int? = nil, isUser: Bool = true, conversation: Conversation) {
         self.timestamp = timestamp
