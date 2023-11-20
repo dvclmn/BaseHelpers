@@ -23,17 +23,13 @@ struct NavigationContentView: View {
             } // END list
             .navigationTitle("Conversations")
             .navigationSplitViewColumnWidth(min: 180, ideal: 220, max: 260)
-            .overlay {
-                if conversations.isEmpty {
-                    ContentUnavailableView {
-                        Label("Time to start a new conversation", systemImage: "message")
-                    } description: {
-                        HandyButton(label: "Add conversation", icon: "plus") {
-                            bk.newConversation(for: modelContext)
-                        }
-                    }
-                }
-            }
+            .onAppear(perform: {
+                bk.totalConversations = conversations.count
+            })
+            .onChange(of: conversations.count, {
+                bk.totalConversations = conversations.count
+            })
+            // Sidebar toolbar
             .toolbar {
                 ToolbarItem(placement: .automatic) {
                     HandyButton(label: "New conversation", icon: "plus") {
@@ -44,6 +40,7 @@ struct NavigationContentView: View {
         } detail: {
             ConversationView()
         }
+        // Detail view toolbar
         .toolbar {
             ToolbarItem() {
                 Circle()
@@ -59,15 +56,35 @@ struct NavigationContentView: View {
                 }
             } // END add sample data
             
+            ToolbarItem() {
+                switch bk.conversationState {
+                case .blank:
+                    EmptyView()
+                case .none:
+                    EmptyView()
+                case .single:
+                    if let conversation = bk.currentConversations.first {
+                        HandyButton(label: "Delete \(conversation.name)", icon: "trash") {
+                            bk.deleteConversations([conversation], modelContext: modelContext)
+                        }                        
+                    }
+                case .multiple:
+                    HandyButton(label: "Delete all conversations", icon: "trash.fill") {
+                        bk.deleteConversations(bk.currentConversations, modelContext: modelContext)
+                    }
+                }
+                
+            } // END delete
+            
         } // END toolbar
         
         
     }
 }
 
-//#Preview {
-//    ModelContainerPreview(ModelContainer.sample) {
-//        NavigationContentView()
-//            .environmentObject(BanksiaHandler())
-//    }
-//}
+#Preview {
+    ModelContainerPreview(ModelContainer.sample) {
+        NavigationContentView()
+            .environmentObject(BanksiaHandler())
+    }
+}

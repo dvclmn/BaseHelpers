@@ -10,37 +10,51 @@ import SwiftData
 
 struct ConversationView: View {
     @EnvironmentObject var bk: BanksiaHandler
+    @Environment(\.modelContext) private var modelContext
     
     var body: some View {
         
         VStack {
-            if bk.currentConversations.count > 1 {
-                Text("Multiple conversations selected")
-            } else if bk.currentConversations.isEmpty {
-                
-                VStack(alignment: .center) {
-                    Text("🕳️")
-                        .font(.system(size: 48))
-                        .padding(.bottom,6)
-                    Text("Nothing selected")
-                        .font(.largeTitle)
-                        .opacity(0.8)
-                        .padding(.bottom,4)
-                    Text("Select a conversation on the left to get started.")
-                        .opacity(0.4)
-                        .padding(.bottom,40)
+            switch bk.conversationState {
+            case .blank:
+                ConversationStateView(
+                    emoji: bk.conversationState.randomEmoji(),
+                    title: bk.conversationState.randomTitle(),
+                    message: bk.conversationState.randomMessage(),
+                    actionLabel: "Create conversation",
+                    actionIcon: "plus") {
+                    bk.newConversation(for: modelContext)
                 }
-            } else if let conversation = bk.currentConversations.first {
-                Text(conversation.name)
+            case .none:
+                ConversationStateView(
+                    emoji: bk.conversationState.randomEmoji(),
+                    title: bk.conversationState.randomTitle(),
+                    message: bk.conversationState.randomMessage()
+                )
+            case .single:
+                if let conversation = bk.currentConversations.first {
+                    Text(conversation.name)
+                }
+            case .multiple:
+                ConversationStateView(
+                    emoji: bk.conversationState.randomEmoji(),
+                    title: bk.conversationState.randomTitle(),
+                    message: bk.conversationState.randomMessage(),
+                    actionLabel: "Delete conversations",
+                    actionIcon: "trash"
+                ) {
+                    bk.deleteConversations(bk.currentConversations, modelContext: modelContext)
+                }
             }
         }
+        
         
     }
 }
 
-//#Preview {
-//    ModelContainerPreview(ModelContainer.sample) {
-//        NavigationContentView()
-//            .environmentObject(BanksiaHandler())
-//    }
-//}
+#Preview {
+    ModelContainerPreview(ModelContainer.sample) {
+        NavigationContentView()
+            .environmentObject(BanksiaHandler())
+    }
+}

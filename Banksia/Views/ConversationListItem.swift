@@ -34,7 +34,6 @@ struct ConversationListItem: View {
         .swipeActions(edge: .trailing) {
             Button(role: .destructive) {
                 modelContext.delete(conversation)
-                bk.currentConversations = []
                 do {
                     try modelContext.save()
                 } catch {
@@ -47,6 +46,6 @@ struct ConversationListItem: View {
     }
 }
 
-//#Preview {
-//    ConversationListItem(conversation: .plants)
-//}
+#Preview {
+    ConversationListItem(conversation: .plants)
+}

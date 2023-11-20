@@ -8,27 +8,98 @@
 import SwiftUI
 import SwiftData
 
-enum AIModel: String, Codable, CaseIterable {
-    case gpt_4
-    case gpt_3_5
+enum ConversationState {
+    case blank
+    case none
+    case single
+    case multiple
+
+    init(totalConversations: Int, selectedConversations: Set<Conversation>) {
+        if totalConversations == 0 {
+            self = .blank
+        } else {
+            switch selectedConversations.count {
+            case 0:
+                self = .none
+            case 1:
+                self = .single
+            default:
+                self = .multiple
+            }
+        } // END empty conversations check
+    } // END init
     
-    var name: String {
+    var emoji: [String] {
         switch self {
-        case .gpt_4:
-            return "GPT-4"
-        case .gpt_3_5:
-            return "GPT-3.5 Turbo"
+        case .blank:
+            return ["🕸️", "🎃", "🌴", "🌵"]
+        case .none:
+            return ["🫧", "👠", "🪨", "🪸"]
+        case .single:
+            return []
+        case .multiple:
+            return ["💃", "🪶", "🐝", "🍌", "🦎"]
         }
-    }
-    var value: String {
+    } // END emoji
+    
+    var title: [String] {
         switch self {
-        case .gpt_4:
-            return "gpt-4"
-        case .gpt_3_5:
-            return "gpt-3.5-turbo"
+        case .blank:
+            return [
+                "Begin a new conversation",
+                "Time to start a chat",
+                "No conversations here"
+            ]
+        case .none:
+            return [
+                "Nothing selected",
+                "No conversations selected",
+                "Select a conversation"
+            ]
+        case .single:
+            return []
+        case .multiple:
+            return [
+                "Multiple conversations",
+                "Multiple chats selected",
+                "A few conversations selected"
+            ]
         }
+    } // END title
+    
+    var message: [String] {
+        switch self {
+        case .blank:
+            return [
+                "You have no conversations. Create a new one to get started.",
+                "It's as good a time as any to create a conversation."
+            ]
+        case .none:
+            return [
+                "Make a selection from the list in the sidebar.",
+                "You can pick something from the sidebar on the left."
+            ]
+        case .single:
+            return []
+        case .multiple:
+            return [
+                "You can delete them, or select other options from the toolbar above."
+            ]
+        }
+    } // END title
+    
+    func randomEmoji() -> String {
+        self.emoji.randomElement() ?? ""
     }
-} // END AIModel
+    func randomTitle() -> String {
+        self.title.randomElement() ?? ""
+    }
+    func randomMessage() -> String {
+        self.message.randomElement() ?? ""
+    }
+    
+} // END coversation state
+
 
 extension BanksiaHandler {
     
@@ -47,12 +118,15 @@ extension BanksiaHandler {
         }
     }
     
-    func deleteConversation(_ conversation: Conversation, modelContext: ModelContext) {
+    func deleteConversations(_ conversations: Set<Conversation>, modelContext: ModelContext) {
         currentConversations = []
-        modelContext.delete(conversation)
+        for conversation in conversations {
+            modelContext.delete(conversation)
+        }
     }
     
     func deleteAll(for modelContext: ModelContext) {
+        currentConversations = []
         do {
             try modelContext.delete(model: Conversation.self)
         } catch {
@@ -60,19 +134,7 @@ extension BanksiaHandler {
         }
     } // END delete all
     
-    func testAPIFetch() {
-        fetchResponse(prompt: "Your prompt here", completion:  { result in
-            switch result {
-            case .success(let data):
-                // Handle the raw data, or save it to a file for inspection
-                
-                print("Raw data received:\n\(data)")
-            case .failure(let error):
-                // Handle the error
-                print("Error fetching API response: \(error)")
-            }
-        }, isTest: true)
-    }
+
     
     func sendMessage(userMessage: String) {
         // Trim the message to remove leading and trailing whitespaces and newlines

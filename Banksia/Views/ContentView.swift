@@ -15,8 +15,8 @@ struct ContentView: View {
     }
 }
 
-//#Preview {
-//    ContentView()
-//        .environmentObject(BanksiaHandler())
-//        .modelContainer(try! ModelContainer.sample())
-//}
+#Preview {
+    ContentView()
+        .environmentObject(BanksiaHandler())
+        .modelContainer(try! ModelContainer.sample())
+}

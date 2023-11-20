@@ -20,6 +20,20 @@ enum OpenAI: String {
 
 extension BanksiaHandler {
     
+    func testAPIFetch() {
+        fetchResponse(prompt: "Your prompt here", completion:  { result in
+            switch result {
+            case .success(let data):
+                // Handle the raw data, or save it to a file for inspection
+                
+                print("Raw data received:\n\(data)")
+            case .failure(let error):
+                // Handle the error
+                print("Error fetching API response: \(error)")
+            }
+        }, isTest: true)
+    }
+    
     func fetchResponse(prompt: String, completion: @escaping (Result<String, Error>) -> Void, isTest: Bool = false) {
         
         guard let apiKey = KeychainHandler.get(forKey: "OpenAIKey") else {

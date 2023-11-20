@@ -14,7 +14,7 @@ final class Conversation {
     var created = Date()
     var tokens: Int?
     
-    @Relationship(deleteRule: .cascade, inverse: \Message.conversation)
+    @Relationship(deleteRule: .cascade)
     var messages: [Message] = []
     
     init(name: String) {
