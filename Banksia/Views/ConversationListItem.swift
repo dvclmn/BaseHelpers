@@ -19,6 +19,7 @@ struct ConversationListItem: View {
     var body: some View {
         NavigationLink(value: conversation) {
             TextField("Conversation name", text: $conversation.name)
+                .fontStyle(.body)
                 .focused($isFieldFocused)
                 .onChange(of: isFieldFocused) {
                     if conversation.name.isEmpty {
@@ -48,4 +49,5 @@ struct ConversationListItem: View {
 
 #Preview {
     ConversationListItem(conversation: .plants)
+        .environmentObject(BanksiaHandler())
 }

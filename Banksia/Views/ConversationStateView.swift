@@ -41,7 +41,5 @@ struct ConversationStateView: View {
 }
 
 #Preview {
-    ConversationStateView(emoji: "🕳️", title: "Nothing selected", message: "Make a selection on the left", actionLabel: "New chat", actionIcon: "plus") {
-        EmptyView()
-    }
+    ConversationStateView(emoji: "🕳️", title: "Nothing selected", message: "Make a selection on the left", actionLabel: "New chat", actionIcon: "plus")
 }

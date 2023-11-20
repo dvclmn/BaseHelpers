@@ -9,16 +9,17 @@
 import SwiftUI
 
 enum Typography {
-    case heading1
-    case heading2
-    case heading3
+    case largeTitle
+    case title1
+    case title2
+    case title3
+    case headline
     case body
-    case bold
-    case italic
-    case small
-    case code
-    case icon
-    case displayIcon
+    case callout
+    case subheadline
+    case footnote
+    case caption1
+    case caption2
 }
 
 struct TypographyModifier: ViewModifier {
@@ -26,79 +27,81 @@ struct TypographyModifier: ViewModifier {
     var style: Typography
     var size: CGFloat?
     var weight: Font.Weight?
+    var design: Font.Design?
     var opacity: Double?
     
     @ViewBuilder
     func body(content: Content) -> some View {
-        let defaultSize = defaultFontSize(for: style)
-        let fontSize = size ?? defaultSize
+        let fontSize = size ?? defaultFontSize(for: style)
+        let lineHeight = size ?? defaultLineHeight(for: style)
         let fontWeight = weight ?? defaultWeight(for: style)
+        let fontDesign = design ?? .default
         let textOpacity = opacity ?? defaultOpacity(for: style)
         
         switch style {
-        case .heading1:
-            content.font(.system(size: fontSize * CGFloat(bk.globalTextSize), weight: fontWeight, design: .default)).opacity(textOpacity)
-        case .heading2:
-            content.font(.system(size: fontSize * CGFloat(bk.globalTextSize), weight: fontWeight, design: .default)).opacity(textOpacity)
-        case .heading3:
-            content.font(.system(size: fontSize * CGFloat(bk.globalTextSize), weight: fontWeight, design: .default)).opacity(textOpacity)
-        case .body:
-            content.font(.system(size: fontSize * CGFloat(bk.globalTextSize), weight: fontWeight, design: .default)).opacity(textOpacity)
-        case .bold:
-            content.font(.system(size: fontSize * CGFloat(bk.globalTextSize), weight: fontWeight, design: .default)).opacity(textOpacity)
-        case .italic:
-            content.font(.system(size: fontSize * CGFloat(bk.globalTextSize), weight: fontWeight, design: .default)).italic().opacity(textOpacity)
-        case .small:
-            content.font(.system(size: fontSize * CGFloat(bk.globalTextSize), weight: fontWeight, design: .default)).opacity(textOpacity)
-        case .code:
-            content.font(.system(size: fontSize * CGFloat(bk.globalTextSize), weight: fontWeight, design: .monospaced)).opacity(textOpacity)
-        case .icon:
-            content.font(.system(size: fontSize * CGFloat(bk.globalTextSize), weight: fontWeight, design: .default)).opacity(textOpacity)
-        case .displayIcon:
-            content.font(.system(size: fontSize * CGFloat(bk.globalTextSize), weight: fontWeight, design: .default)).opacity(textOpacity)
+        default:
+            content.font(.system(size: fontSize * CGFloat(bk.globalTextSize), weight: fontWeight, design: fontDesign)).lineSpacing(lineHeight).opacity(textOpacity)
         } // END switch
     } // END view body
     private func defaultFontSize(for style: Typography) -> CGFloat {
         switch style {
-        case .heading1: return 34
-        case .heading2: return 28
-        case .heading3: return 22
+        case .largeTitle: return 26
+        case .title1: return 22
+        case .title2: return 17
+        case .title3: return 15
+        case .headline: return 13
+        case .body: return 13
+        case .callout: return 12
+        case .subheadline: return 11
+        case .footnote: return 10
+        case .caption1: return 10
+        case .caption2: return 10
+        }
+    } // END default font size
+    
+    private func defaultLineHeight(for style: Typography) -> CGFloat {
+        switch style {
+        case .largeTitle: return 32
+        case .title1: return 26
+        case .title2: return 22
+        case .title3: return 20
+        case .headline: return 16
         case .body: return 16
-        case .bold: return 16
-        case .italic: return 16
-        case .small: return 13
-        case .code: return 15
-        case .icon: return 20
-        case .displayIcon: return 48
+        case .callout: return 15
+        case .subheadline: return 14
+        case .footnote: return 13
+        case .caption1: return 13
+        case .caption2: return 13
         }
     } // END default font size
     
     private func defaultOpacity(for style: Typography) -> Double {
         switch style {
-        case .small: return 0.5
+        case .caption1: return 1.0
         default: return 1.0
         }
     } // END default opacity
     
     private func defaultWeight(for style: Typography) -> Font.Weight {
         switch style {
-        case .heading1: return .heavy
-        case .heading2: return .bold
-        case .heading3: return .medium
+        case .largeTitle: return .regular
+        case .title1: return .regular
+        case .title2: return .regular
+        case .title3: return .regular
+        case .headline: return .bold
         case .body: return .regular
-        case .bold: return .bold
-        case .italic: return .regular
-        case .small: return .medium
-        case .code: return .medium
-        case .icon: return .regular
-        case .displayIcon: return .regular
+        case .callout: return .regular
+        case .subheadline: return .regular
+        case .footnote: return .regular
+        case .caption1: return .regular
+        case .caption2: return .medium
         }
     } // END default weight
     
 } // END TypographyModifier
 
 extension View {
-    func fontStyle(_ style: Typography, size: CGFloat? = nil, weight: Font.Weight? = nil, opacity: Double? = nil) -> some View {
-        self.modifier(TypographyModifier(style: style, size: size, weight: weight, opacity: opacity))
+    func fontStyle(_ style: Typography, size: CGFloat? = nil, weight: Font.Weight? = nil, design: Font.Design? = nil, opacity: Double? = nil) -> some View {
+        self.modifier(TypographyModifier(style: style, size: size, weight: weight, design: design, opacity: opacity))
     }
 }

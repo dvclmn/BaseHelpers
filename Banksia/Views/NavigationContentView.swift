@@ -22,7 +22,7 @@ struct NavigationContentView: View {
                 } // END foreach
             } // END list
             .navigationTitle("Conversations")
-            .navigationSplitViewColumnWidth(min: 180, ideal: 220, max: 260)
+            .navigationSplitViewColumnWidth(min: 200, ideal: 260, max: 320)
             .onAppear(perform: {
                 bk.totalConversations = conversations.count
             })

@@ -33,7 +33,7 @@ struct ConversationView: View {
                 )
             case .single:
                 if let conversation = bk.currentConversations.first {
-                    Text(conversation.name)
+                    MessagesView(conversation: conversation)
                 }
             case .multiple:
                 ConversationStateView(

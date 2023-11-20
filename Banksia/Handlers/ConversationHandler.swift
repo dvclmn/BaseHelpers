@@ -34,7 +34,7 @@ enum ConversationState {
         case .blank:
             return ["🕸️", "🎃", "🌴", "🌵"]
         case .none:
-            return ["🫧", "👠", "🪨", "🪸"]
+            return ["🫧", "👠", "🪨", "🪸", "🕳️"]
         case .single:
             return []
         case .multiple:
@@ -112,10 +112,11 @@ extension BanksiaHandler {
         do {
             try modelContext.save()
             // Set the newly created conversation as the current conversation
-            currentConversations = [newConversation]
         } catch {
             print("Failed to save new conversation: \(error)")
         }
+        currentConversations = []
+        currentConversations = [newConversation]
     }
     
     func deleteConversations(_ conversations: Set<Conversation>, modelContext: ModelContext) {
