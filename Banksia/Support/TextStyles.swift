@@ -28,7 +28,6 @@ struct TypographyModifier: ViewModifier {
     var size: CGFloat?
     var weight: Font.Weight?
     var design: Font.Design?
-    var opacity: Double?
     
     @ViewBuilder
     func body(content: Content) -> some View {
@@ -36,11 +35,10 @@ struct TypographyModifier: ViewModifier {
         let lineHeight = size ?? defaultLineHeight(for: style)
         let fontWeight = weight ?? defaultWeight(for: style)
         let fontDesign = design ?? .default
-        let textOpacity = opacity ?? defaultOpacity(for: style)
         
         switch style {
         default:
-            content.font(.system(size: fontSize * CGFloat(bk.globalTextSize), weight: fontWeight, design: fontDesign)).lineSpacing(lineHeight).opacity(textOpacity)
+            content.font(.system(size: fontSize * CGFloat(bk.globalTextSize), weight: fontWeight, design: fontDesign)).lineSpacing(lineHeight)
         } // END switch
     } // END view body
     private func defaultFontSize(for style: Typography) -> CGFloat {
@@ -75,13 +73,6 @@ struct TypographyModifier: ViewModifier {
         }
     } // END default font size
     
-    private func defaultOpacity(for style: Typography) -> Double {
-        switch style {
-        case .caption1: return 1.0
-        default: return 1.0
-        }
-    } // END default opacity
-    
     private func defaultWeight(for style: Typography) -> Font.Weight {
         switch style {
         case .largeTitle: return .regular
@@ -102,6 +93,6 @@ struct TypographyModifier: ViewModifier {
 
 extension View {
     func fontStyle(_ style: Typography, size: CGFloat? = nil, weight: Font.Weight? = nil, design: Font.Design? = nil, opacity: Double? = nil) -> some View {
-        self.modifier(TypographyModifier(style: style, size: size, weight: weight, design: design, opacity: opacity))
+        self.modifier(TypographyModifier(style: style, size: size, weight: weight, design: design))
     }
 }

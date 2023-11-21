@@ -31,6 +31,17 @@ struct HandyButton: View {
     }
 } // END
 
+struct VisualEffectView : NSViewRepresentable {
+    func makeNSView(context: Context) -> NSView {
+        let view = NSVisualEffectView()
+        view.blendingMode = .behindWindow
+        view.state = .active
+        view.material = .underWindowBackground
+        return view
+    }
+    func updateNSView(_ view: NSView, context: Context) { }
+}
+
 // MARK: corner radius border
 fileprivate struct ModifierCornerRadiusWithBorder: ViewModifier {
     var radius: CGFloat

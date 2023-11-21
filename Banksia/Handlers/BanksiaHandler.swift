@@ -44,7 +44,7 @@ class BanksiaHandler: ObservableObject {
         let savedSuccessfully = KeychainHandler.set(apiKey, forKey: "OpenAIKey")
         
         if savedSuccessfully {
-            print("Debugging API key saved successfully to Keychain.")
+//            print("Debugging API key saved successfully to Keychain.")
         } else {
             print("Failed to save debugging API key to Keychain.")
         }

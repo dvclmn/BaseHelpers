@@ -15,9 +15,17 @@ struct ConversationListItem: View {
     @State private var oldName: String = ""
     @State private var newName: String = ""
     
+    @State private var iconPickerShowing: Bool = false
+    
     @Bindable var conversation: Conversation
     var body: some View {
         NavigationLink(value: conversation) {
+            HandyButton(label: "", icon: conversation.icon ?? "") {
+                iconPickerShowing.toggle()
+            }
+            .popover(isPresented: $iconPickerShowing, content: {
+                IconPickerView(conversation: conversation)
+            })
             TextField("Conversation name", text: $conversation.name)
                 .fontStyle(.body)
                 .focused($isFieldFocused)

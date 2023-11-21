@@ -101,6 +101,9 @@ enum ConversationState {
 } // END coversation state
 
 
+
+
+
 extension BanksiaHandler {
     
     func newConversation(for modelContext: ModelContext) {

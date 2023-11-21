@@ -20,13 +20,14 @@ struct ConversationStateView: View {
     var body: some View {
         VStack(alignment: .center) {
             Text(emoji)
-                .font(.system(size: 48))
+                .fontStyle(.largeTitle, size: 48)
                 .padding(.bottom,6)
             Text(title)
-                .font(.largeTitle)
+                .fontStyle(.largeTitle)
                 .opacity(0.8)
                 .padding(.bottom,4)
             Text(message)
+                .fontStyle(.body)
                 .opacity(0.4)
                 .padding(.bottom,14)
             if let action = action, let actionLabel = actionLabel, let actionIcon = actionIcon {
@@ -42,4 +43,5 @@ struct ConversationStateView: View {
 
 #Preview {
     ConversationStateView(emoji: "🕳️", title: "Nothing selected", message: "Make a selection on the left", actionLabel: "New chat", actionIcon: "plus")
+        .environmentObject(BanksiaHandler())
 }

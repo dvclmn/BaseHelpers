@@ -23,6 +23,7 @@ struct MessagesView: View {
                     ForEach(conversation.messages.sorted(by: { $0.timestamp < $1.timestamp }), id: \.timestamp) { message in
                         VStack(alignment: .leading) {
                             Text(message.content)
+                                .fontStyle(.body)
                                 .frame(maxWidth: .infinity)
                                 .padding()
                                 .background(Color(message.isUser ? .blue : .gray))

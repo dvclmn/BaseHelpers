@@ -11,14 +11,16 @@ import SwiftData
 @Model
 final class Conversation {
     var name: String
+    var icon: String?
     var created = Date()
     var tokens: Int?
     
     @Relationship(deleteRule: .cascade)
     var messages: [Message] = []
     
-    init(name: String) {
+    init(name: String, icon: String = "") {
         self.name = name
+        self.icon = icon
     }
 } // END Conversation
 
