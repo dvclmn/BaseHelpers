@@ -30,7 +30,8 @@ struct IconPickerView: View {
                 LazyVGrid(
                     columns: columns,
                     alignment: .center,
-                    spacing: 10
+                    spacing: 10,
+                    pinnedViews: PinnedScrollableViews
                 ) {
                     ForEach(ConversationIcon.icons.filter { icon in
                         iconSearch.isEmpty || icon.name.contains(iconSearch) || icon.searchTerms.contains(where: { $0.contains(iconSearch) })
