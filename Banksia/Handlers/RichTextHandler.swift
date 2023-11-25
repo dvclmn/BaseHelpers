@@ -13,15 +13,21 @@ struct RichTextView: NSViewRepresentable {
     @Binding var text: String
     
     func makeNSView(context: Context) -> NSTextView {
+        let scrollView = NSScrollView()
         let textView = NSTextView()
         textView.delegate = context.coordinator
+        scrollView.documentView = textView
+        scrollView.hasVerticalScroller = true
+        
+//        textView.translatesAutoresizingMaskIntoConstraints = false
+        
+//        textView.heightAnchor.constraint(greaterThanOrEqualToConstant: 300).isActive = true
         
         // Enable layer for the text view and set border properties
         textView.wantsLayer = true
         textView.layer?.borderColor = NSColor.orange.cgColor // Set to your preferred border color
         textView.layer?.borderWidth = 2.0 // Set to your preferred border width
         textView.layer?.cornerRadius = 5 // Optional: if you want rounded corners
-        
         
         return textView
     }

@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ConversationStateView: View {
+    @Environment(BanksiaHandler.self) private var bk
     @Environment(\.modelContext) private var modelContext
     
     var emoji: String
@@ -43,5 +44,5 @@ struct ConversationStateView: View {
 
 #Preview {
     ConversationStateView(emoji: "🕳️", title: "Nothing selected", message: "Make a selection on the left", actionLabel: "New chat", actionIcon: "plus")
-        .environmentObject(BanksiaHandler())
+        .environment(BanksiaHandler())
 }

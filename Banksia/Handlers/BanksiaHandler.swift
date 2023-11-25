@@ -7,28 +7,23 @@
 
 import SwiftUI
 
-//@Observable
-class BanksiaHandler: ObservableObject {
-    @Published var currentConversations: Set<Conversation> = []
-    @Published var totalConversations: Int = 0
+@Observable
+class BanksiaHandler {
+    var currentConversations: Set<Conversation> = []
+    var totalConversations: Int = 0
+    
+    var currentModel: AIModel = .gpt_4
+    var currentTemperature: Double = 0.5
+    var currentTextScale: Double = 1
     
     var conversationState: ConversationState {
         ConversationState(totalConversations: totalConversations, selectedConversations: currentConversations)
     }
     
-    @Published var sidebarVisibility: NavigationSplitViewVisibility = .automatic
+    var sidebarVisibility: NavigationSplitViewVisibility = .automatic
     
-    @Published var isOptionKey: Bool = false
-    
-    @AppStorage("globalTextSize") var globalTextSize: Double = 1.0
-    @AppStorage("myTemperature") var temperature: Double = 0.5
-    
-    @AppStorage("myModel") var modelString: String = AIModel.gpt_4.value
-    var myModel: AIModel {
-        get { AIModel(rawValue: modelString) ?? .gpt_4 }
-        set { modelString = newValue.value }
-    }
-    
+    var isOptionKey: Bool = false
+
     /// Corner radius
     let cornerRadiusSmall: CGFloat = 6
     let cornerRadiusLarge: CGFloat = 10

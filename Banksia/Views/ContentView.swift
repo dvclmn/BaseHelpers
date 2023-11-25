@@ -10,13 +10,16 @@ import SwiftData
 
 struct ContentView: View {
     
+    
+    
     var body: some View {
         NavigationContentView()
+            
     }
 }
 
 #Preview {
     ContentView()
-        .environmentObject(BanksiaHandler())
+        .environment(BanksiaHandler())
         .modelContainer(try! ModelContainer.sample())
 }

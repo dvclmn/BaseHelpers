@@ -9,7 +9,7 @@ import SwiftUI
 
 struct SettingsView: View {
     
-    @EnvironmentObject var bk: BanksiaHandler
+    @Environment(BanksiaHandler.self) private var bk
     
     var body: some View {
         
@@ -35,5 +35,5 @@ struct SettingsView: View {
 
 #Preview {
     SettingsView()
-        .environmentObject(BanksiaHandler())
+        .environment(BanksiaHandler())
 }

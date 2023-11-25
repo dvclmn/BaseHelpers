@@ -9,12 +9,13 @@ import SwiftUI
 import SwiftData
 
 struct NavigationContentView: View {
-    @EnvironmentObject var bk: BanksiaHandler
+    @Environment(BanksiaHandler.self) private var bk
     @Environment(\.modelContext) private var modelContext
     @Environment(\.undoManager) var undoManager
-    @Query(sort: \Conversation.name) private var conversations: [Conversation]
+    @Query(sort: \Conversation.created) private var conversations: [Conversation]
     
     var body: some View {
+        @Bindable var bk = bk
         NavigationSplitView(columnVisibility: $bk.sidebarVisibility) {
             List(selection: $bk.currentConversations) {
                 ForEach(conversations) { conversation in
@@ -58,10 +59,6 @@ struct NavigationContentView: View {
             
             ToolbarItem() {
                 switch bk.conversationState {
-                case .blank:
-                    EmptyView()
-                case .none:
-                    EmptyView()
                 case .single:
                     if let conversation = bk.currentConversations.first {
                         HandyButton(label: "Delete \(conversation.name)", icon: "trash") {
@@ -72,6 +69,8 @@ struct NavigationContentView: View {
                     HandyButton(label: "Delete all conversations", icon: "trash.fill") {
                         bk.deleteConversations(bk.currentConversations, modelContext: modelContext)
                     }
+                default:
+                    EmptyView()
                 }
                 
             } // END delete
@@ -85,6 +84,6 @@ struct NavigationContentView: View {
 #Preview {
     ModelContainerPreview(ModelContainer.sample) {
         NavigationContentView()
-            .environmentObject(BanksiaHandler())
+            .environment(BanksiaHandler())
     }
 }

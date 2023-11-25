@@ -11,9 +11,9 @@ import Foundation
 import SwiftData
 
 extension Conversation {
-    static let plants = Conversation(name: "Identifying plants")
-    static let appKitDrawing = Conversation(name: "AppKit for drawing in SwiftUI")
-    static let childcare = Conversation(name: "How to raise kids")
+    static let plants = Conversation(created: Date().addingTimeInterval(-600), name: "Identifying plants", icon: "leaf")
+    static let appKitDrawing = Conversation(created: Date().addingTimeInterval(-500), name: "AppKit for drawing in SwiftUI", icon: "leaf")
+    static let childcare = Conversation(created: Date().addingTimeInterval(-400), name: "How to raise kids", icon: "leaf")
 
     static func insertSampleData(modelContext: ModelContext) {
         // Add the conversations to the model context.

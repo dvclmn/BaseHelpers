@@ -11,7 +11,6 @@
 		F6081DF92B0485EA00A78D64 /* NetworkHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6081DF82B0485EA00A78D64 /* NetworkHandler.swift */; };
 		F636A11C2B05B23D00C24891 /* GeneralSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F636A11B2B05B23D00C24891 /* GeneralSettingsView.swift */; };
 		F64F8E032B02136D00C72E51 /* ModelContainerPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = F64F8E022B02136D00C72E51 /* ModelContainerPreview.swift */; };
-		F64F8E052B0213AF00C72E51 /* Preview+ModelContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F64F8E042B0213AF00C72E51 /* Preview+ModelContainer.swift */; };
 		F64F8E082B02140F00C72E51 /* SampleData+Conversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F64F8E072B02140F00C72E51 /* SampleData+Conversation.swift */; };
 		F64F8E0C2B0214A000C72E51 /* SampleData+Messages.swift in Sources */ = {isa = PBXBuildFile; fileRef = F64F8E0B2B0214A000C72E51 /* SampleData+Messages.swift */; };
 		F64F8E0F2B021BF700C72E51 /* RichTextHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F64F8E0E2B021BF700C72E51 /* RichTextHandler.swift */; };
@@ -21,10 +20,12 @@
 		F64F8E312B042A2700C72E51 /* UtilityFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F64F8E302B042A2700C72E51 /* UtilityFunctions.swift */; };
 		F697B8662B0B47610091CE79 /* GPTHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F697B8652B0B47610091CE79 /* GPTHandler.swift */; };
 		F697B8682B0B48160091CE79 /* ConversationStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F697B8672B0B48160091CE79 /* ConversationStateView.swift */; };
+		F6A6566A2B1290D60018689F /* ToolbarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A656692B1290D60018689F /* ToolbarView.swift */; };
 		F6A7BEEB2B01C57400D3CE25 /* BanksiaApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A7BEEA2B01C57400D3CE25 /* BanksiaApp.swift */; };
 		F6A7BEEF2B01C57400D3CE25 /* DataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A7BEEE2B01C57400D3CE25 /* DataModel.swift */; };
 		F6A7BEF12B01C57500D3CE25 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F6A7BEF02B01C57500D3CE25 /* Assets.xcassets */; };
 		F6C161DF2B0CEE9700F4AB62 /* IconHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6C161DE2B0CEE9700F4AB62 /* IconHandler.swift */; };
+		F6C161E12B0F63B800F4AB62 /* banksia_icons.json in Resources */ = {isa = PBXBuildFile; fileRef = F6C161E02B0F63B800F4AB62 /* banksia_icons.json */; };
 		F6E8269F2B0BDD6E0047477D /* MessagesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6E8269E2B0BDD6E0047477D /* MessagesView.swift */; };
 		F6E826A12B0BF3630047477D /* IconPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6E826A02B0BF3630047477D /* IconPickerView.swift */; };
 		F6F3930F2B09CF85005046F4 /* NavigationContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6F3930E2B09CF85005046F4 /* NavigationContentView.swift */; };
@@ -39,7 +40,6 @@
 		F6081DF82B0485EA00A78D64 /* NetworkHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkHandler.swift; sourceTree = "<group>"; };
 		F636A11B2B05B23D00C24891 /* GeneralSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralSettingsView.swift; sourceTree = "<group>"; };
 		F64F8E022B02136D00C72E51 /* ModelContainerPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelContainerPreview.swift; sourceTree = "<group>"; };
-		F64F8E042B0213AF00C72E51 /* Preview+ModelContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Preview+ModelContainer.swift"; sourceTree = "<group>"; };
 		F64F8E072B02140F00C72E51 /* SampleData+Conversation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SampleData+Conversation.swift"; sourceTree = "<group>"; };
 		F64F8E0B2B0214A000C72E51 /* SampleData+Messages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SampleData+Messages.swift"; sourceTree = "<group>"; };
 		F64F8E0E2B021BF700C72E51 /* RichTextHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RichTextHandler.swift; sourceTree = "<group>"; };
@@ -49,12 +49,14 @@
 		F64F8E302B042A2700C72E51 /* UtilityFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityFunctions.swift; sourceTree = "<group>"; };
 		F697B8652B0B47610091CE79 /* GPTHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GPTHandler.swift; sourceTree = "<group>"; };
 		F697B8672B0B48160091CE79 /* ConversationStateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationStateView.swift; sourceTree = "<group>"; };
+		F6A656692B1290D60018689F /* ToolbarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolbarView.swift; sourceTree = "<group>"; };
 		F6A7BEE72B01C57400D3CE25 /* Banksia.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Banksia.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F6A7BEEA2B01C57400D3CE25 /* BanksiaApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BanksiaApp.swift; sourceTree = "<group>"; };
 		F6A7BEEE2B01C57400D3CE25 /* DataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataModel.swift; sourceTree = "<group>"; };
 		F6A7BEF02B01C57500D3CE25 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F6A7BEF52B01C57500D3CE25 /* Banksia.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Banksia.entitlements; sourceTree = "<group>"; };
 		F6C161DE2B0CEE9700F4AB62 /* IconHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconHandler.swift; sourceTree = "<group>"; };
+		F6C161E02B0F63B800F4AB62 /* banksia_icons.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = banksia_icons.json; path = Working/banksia_icons.json; sourceTree = SOURCE_ROOT; };
 		F6E8269E2B0BDD6E0047477D /* MessagesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesView.swift; sourceTree = "<group>"; };
 		F6E826A02B0BF3630047477D /* IconPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconPickerView.swift; sourceTree = "<group>"; };
 		F6F3930E2B09CF85005046F4 /* NavigationContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationContentView.swift; sourceTree = "<group>"; };
@@ -89,7 +91,6 @@
 			isa = PBXGroup;
 			children = (
 				F64F8E022B02136D00C72E51 /* ModelContainerPreview.swift */,
-				F64F8E042B0213AF00C72E51 /* Preview+ModelContainer.swift */,
 			);
 			path = PreviewHelper;
 			sourceTree = "<group>";
@@ -111,8 +112,7 @@
 				F6F393122B0A06B4005046F4 /* ConversationListItem.swift */,
 				F6F393102B09DB7D005046F4 /* ConversationView.swift */,
 				F6E8269E2B0BDD6E0047477D /* MessagesView.swift */,
-				F697B8672B0B48160091CE79 /* ConversationStateView.swift */,
-				F6E826A02B0BF3630047477D /* IconPickerView.swift */,
+				F6A6566B2B1290E60018689F /* Components */,
 				F636A11A2B05B22F00C24891 /* Settings */,
 			);
 			path = Views;
@@ -135,10 +135,21 @@
 		F64F8E2F2B042A0300C72E51 /* Support */ = {
 			isa = PBXGroup;
 			children = (
+				F6C161E02B0F63B800F4AB62 /* banksia_icons.json */,
 				F6FA92F02B0530D400D1D9B8 /* TextStyles.swift */,
 				F64F8E302B042A2700C72E51 /* UtilityFunctions.swift */,
 			);
 			path = Support;
+			sourceTree = "<group>";
+		};
+		F6A6566B2B1290E60018689F /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				F697B8672B0B48160091CE79 /* ConversationStateView.swift */,
+				F6E826A02B0BF3630047477D /* IconPickerView.swift */,
+				F6A656692B1290D60018689F /* ToolbarView.swift */,
+			);
+			path = Components;
 			sourceTree = "<group>";
 		};
 		F6A7BEDE2B01C57400D3CE25 = {
@@ -236,6 +247,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F6C161E12B0F63B800F4AB62 /* banksia_icons.json in Resources */,
 				F6A7BEF12B01C57500D3CE25 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -247,6 +259,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F6A7BEEB2B01C57400D3CE25 /* BanksiaApp.swift in Sources */,
+				F6A7BEEF2B01C57400D3CE25 /* DataModel.swift in Sources */,
 				F64F8E202B03082100C72E51 /* BanksiaHandler.swift in Sources */,
 				F697B8662B0B47610091CE79 /* GPTHandler.swift in Sources */,
 				F6F393132B0A06B4005046F4 /* ConversationListItem.swift in Sources */,
@@ -256,20 +270,18 @@
 				F6FA92EF2B052B9800D1D9B8 /* SettingsView.swift in Sources */,
 				F636A11C2B05B23D00C24891 /* GeneralSettingsView.swift in Sources */,
 				F6F3930F2B09CF85005046F4 /* NavigationContentView.swift in Sources */,
+				F6A6566A2B1290D60018689F /* ToolbarView.swift in Sources */,
 				F64F8E0F2B021BF700C72E51 /* RichTextHandler.swift in Sources */,
 				F6F393112B09DB7D005046F4 /* ConversationView.swift in Sources */,
 				F6C161DF2B0CEE9700F4AB62 /* IconHandler.swift in Sources */,
 				F6081DF72B04847600A78D64 /* KeychainHandler.swift in Sources */,
 				F697B8682B0B48160091CE79 /* ConversationStateView.swift in Sources */,
 				F64F8E082B02140F00C72E51 /* SampleData+Conversation.swift in Sources */,
-				F6A7BEEF2B01C57400D3CE25 /* DataModel.swift in Sources */,
 				F6FA92F12B0530D400D1D9B8 /* TextStyles.swift in Sources */,
 				F64F8E0C2B0214A000C72E51 /* SampleData+Messages.swift in Sources */,
 				F64F8E032B02136D00C72E51 /* ModelContainerPreview.swift in Sources */,
-				F64F8E052B0213AF00C72E51 /* Preview+ModelContainer.swift in Sources */,
 				F6E8269F2B0BDD6E0047477D /* MessagesView.swift in Sources */,
 				F6E826A12B0BF3630047477D /* IconPickerView.swift in Sources */,
-				F6A7BEEB2B01C57400D3CE25 /* BanksiaApp.swift in Sources */,
 				F64F8E2E2B04254100C72E51 /* ConversationHandler.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -426,11 +438,11 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = dvclmn.Banksia;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = "1,2,7";
 			};
 			name = Debug;
 		};
@@ -463,11 +475,11 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = dvclmn.Banksia;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = "1,2,7";
 			};
 			name = Release;
 		};

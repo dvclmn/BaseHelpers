@@ -5,6 +5,7 @@
 //  Created by Dave Coleman on 15/11/2023.
 //
 
+import Foundation
 import SwiftUI
 import SwiftData
 
@@ -99,9 +100,6 @@ enum ConversationState {
     }
     
 } // END coversation state
-
-
-
 
 
 extension BanksiaHandler {

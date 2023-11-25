@@ -48,11 +48,11 @@ extension BanksiaHandler {
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         
         let body: [String: Any] = [
-            "model": myModel.value, // Specify the model you are using
+            "model": currentModel, // Specify the model you are using
             "messages": [
                 ["role": "user", "content": prompt]
             ],
-            "temperature": temperature // You can adjust the temperature as needed
+            "temperature": currentTemperature // You can adjust the temperature as needed
         ]
         
         

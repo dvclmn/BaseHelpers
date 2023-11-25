@@ -9,7 +9,7 @@ import SwiftUI
 import SwiftData
 
 struct ConversationView: View {
-    @EnvironmentObject var bk: BanksiaHandler
+    @Environment(BanksiaHandler.self) private var bk
     @Environment(\.modelContext) private var modelContext
     
     var body: some View {
@@ -46,7 +46,7 @@ struct ConversationView: View {
                     bk.deleteConversations(bk.currentConversations, modelContext: modelContext)
                 }
             }
-        }
+        } // END vstack
         
         
     }
@@ -55,6 +55,6 @@ struct ConversationView: View {
 #Preview {
     ModelContainerPreview(ModelContainer.sample) {
         NavigationContentView()
-            .environmentObject(BanksiaHandler())
+            .environment(BanksiaHandler())
     }
 }

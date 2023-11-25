@@ -6,17 +6,21 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct GeneralSettingsView: View {
-    @EnvironmentObject var bk: BanksiaHandler
+    @Environment(BanksiaHandler.self) private var bk
+    @Environment(\.modelContext) private var modelContext
+    
     var body: some View {
+        @Bindable var bk = bk
+        
         VStack(alignment:.leading) {
-            
             
             Text("Select GPT model")
                 .fontStyle(.body)
                 .padding(.bottom, 6)
-            Picker("GPT model", selection: $bk.myModel) {
+            Picker("GPT model", selection: $bk.currentModel) {
                 ForEach(AIModel.allCases.reversed(), id: \.self) { model in
                     Text(model.name).tag(model.value)
                         .fontStyle(.body)
@@ -32,7 +36,7 @@ struct GeneralSettingsView: View {
                 .fontStyle(.body)
                 .padding(.bottom, 6)
             Slider(
-                value: $bk.temperature,
+                value: $bk.currentTemperature,
                 in: 0.0...1.0,
                 step: 0.1
             )
@@ -48,12 +52,10 @@ struct GeneralSettingsView: View {
                 Image(systemName: "textformat.size.smaller")
                     .fontStyle(.title2)
                 Slider(
-                    value: $bk.globalTextSize,
+                    value: $bk.currentTextScale,
                     in: 0.8...1.2,
                     step: 0.1
-                ).onChange(of: bk.globalTextSize) { oldValue, newValue in
-                    print("UI scale value changed from \(oldValue) to: \(newValue)")
-                }
+                )
                 Image(systemName: "textformat.size.larger")
                     .fontStyle(.title2)
                 
@@ -63,5 +65,6 @@ struct GeneralSettingsView: View {
 }
 
 #Preview {
-    SettingsView().environmentObject(BanksiaHandler())
+    SettingsView()
+        .environment(BanksiaHandler())
 }

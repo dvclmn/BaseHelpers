@@ -9,16 +9,14 @@ import SwiftUI
 
 struct MessagesView: View {
     var conversation: Conversation
-    @EnvironmentObject var bk: BanksiaHandler
+    @Environment(BanksiaHandler.self) private var bk
+    @Environment(\.modelContext) private var modelContext
     
     @State private var prompt: String = ""
     
     var body: some View {
         VStack {
             ScrollView(.vertical) {
-                Text(conversation.name)
-                    .fontStyle(.largeTitle)
-                    .padding()
                 LazyVStack(spacing: 12) {
                     ForEach(conversation.messages.sorted(by: { $0.timestamp < $1.timestamp }), id: \.timestamp) { message in
                         VStack(alignment: .leading) {
@@ -37,6 +35,8 @@ struct MessagesView: View {
             HStack {
                 #if os(macOS)
                 RichTextView(text: $prompt)
+                    .frame(minHeight: 200, maxHeight: 400)
+                    .border(Color.green)
                 #elseif os(iOS)
                 TextField("Butts", text: $prompt)
                 #endif
@@ -51,5 +51,5 @@ struct MessagesView: View {
 
 #Preview {
     MessagesView(conversation: .childcare)
-        .environmentObject(BanksiaHandler())
+        .environment(BanksiaHandler())
 }

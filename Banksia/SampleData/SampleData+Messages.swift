@@ -61,4 +61,3 @@ extension Message {
     To resolve this, you need to adjust the logic to consider the direction of the zoom increment. Here's how you can modify the clampZoomLevel function.
     """, isUser: false, conversation: .plants)
 }
-

@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ConversationListItem: View {
-    @EnvironmentObject var bk: BanksiaHandler
+    @Environment(BanksiaHandler.self) private var bk
     @Environment(\.modelContext) private var modelContext
     
     @FocusState private var isFieldFocused: Bool
@@ -23,9 +23,9 @@ struct ConversationListItem: View {
             HandyButton(label: "", icon: conversation.icon ?? "") {
                 iconPickerShowing.toggle()
             }
-            .popover(isPresented: $iconPickerShowing, content: {
-                IconPickerView(conversation: conversation)
-            })
+//            .popover(isPresented: $iconPickerShowing, content: {
+//                IconPickerView(conversation: conversation)
+//            })
             TextField("Conversation name", text: $conversation.name)
                 .fontStyle(.body)
                 .focused($isFieldFocused)
@@ -57,5 +57,5 @@ struct ConversationListItem: View {
 
 #Preview {
     ConversationListItem(conversation: .plants)
-        .environmentObject(BanksiaHandler())
+        .environment(BanksiaHandler())
 }

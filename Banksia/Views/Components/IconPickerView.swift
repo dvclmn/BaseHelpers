@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct IconPickerView: View {
+    @Environment(BanksiaHandler.self) private var bk
+    @Environment(\.modelContext) private var modelContext
     
     var conversation: Conversation
     var iconWidth: Double = 50
@@ -16,10 +18,11 @@ struct IconPickerView: View {
         Array(repeating: GridItem(.fixed(iconWidth)), count: 5)
     }
     @State private var hoveredIcons: Set<String> = []
-    
     @State private var iconSearch: String = ""
     
     var body: some View {
+        
+        let icons = bk.loadIcons()
         
         VStack {
             TextField("Search Icons", text: $iconSearch)
@@ -31,9 +34,9 @@ struct IconPickerView: View {
                     columns: columns,
                     alignment: .center,
                     spacing: 10,
-                    pinnedViews: PinnedScrollableViews
+                    pinnedViews: [.sectionHeaders]
                 ) {
-                    ForEach(ConversationIcon.icons.filter { icon in
+                    ForEach(icons.filter { icon in
                         iconSearch.isEmpty || icon.name.contains(iconSearch) || icon.searchTerms.contains(where: { $0.contains(iconSearch) })
                     }, id: \.self) { icon in
                         Image(systemName: icon.name)
@@ -51,6 +54,7 @@ struct IconPickerView: View {
                             }
                             .onTapGesture(perform: {
                                 conversation.icon = icon.name
+                                try? modelContext.save()
                             })
                     }
                 } // END lazy grid
@@ -59,11 +63,15 @@ struct IconPickerView: View {
             
         } // END Vstack
         .frame(maxHeight:300)
+#if os(macOS)
         .background(VisualEffectView())
+#endif
     }
+    
 }
 
 #Preview {
-    IconPickerView(conversation: .appKitDrawing).environmentObject(BanksiaHandler())
+    IconPickerView(conversation: .plants)
+        .environment(BanksiaHandler())
     
 }

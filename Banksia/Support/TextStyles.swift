@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 enum Typography {
     case largeTitle
@@ -23,7 +24,8 @@ enum Typography {
 }
 
 struct TypographyModifier: ViewModifier {
-    @EnvironmentObject var bk: BanksiaHandler
+    @Environment(BanksiaHandler.self) private var bk
+    
     var style: Typography
     var size: CGFloat?
     var weight: Font.Weight?
@@ -38,7 +40,7 @@ struct TypographyModifier: ViewModifier {
         
         switch style {
         default:
-            content.font(.system(size: fontSize * CGFloat(bk.globalTextSize), weight: fontWeight, design: fontDesign)).lineSpacing(lineHeight)
+            content.font(.system(size: fontSize * CGFloat(bk.currentTextScale), weight: fontWeight, design: fontDesign)).lineSpacing(lineHeight)
         } // END switch
     } // END view body
     private func defaultFontSize(for style: Typography) -> CGFloat {
