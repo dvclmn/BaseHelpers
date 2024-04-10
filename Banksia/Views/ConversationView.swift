@@ -32,9 +32,20 @@ struct ConversationView: View {
                     message: bk.conversationState.randomMessage()
                 )
             case .single:
-                if let conversation = bk.currentConversations.first {
-                    MessagesView(conversation: conversation)
+                
+                
+                if let conversationID = bk.selectedConversations.first {
+                    
+                    let activeConversationPredicate = #Predicate<Conversation> { conversation in
+                        
+                            conversation.persistentModelID == conversationID
+                    }
+                    
+                    MessagesView(filter: activeConversationPredicate)
                 }
+                
+                
+                
             case .multiple:
                 ConversationStateView(
                     emoji: bk.conversationState.randomEmoji(),
@@ -43,7 +54,7 @@ struct ConversationView: View {
                     actionLabel: "Delete conversations",
                     actionIcon: "trash"
                 ) {
-                    bk.deleteConversations(bk.currentConversations, modelContext: modelContext)
+//                    bk.deleteConversations(bk.selectedConversations, modelContext: modelContext)
                 }
             }
         } // END vstack
@@ -54,7 +65,7 @@ struct ConversationView: View {
 
 #Preview {
     ModelContainerPreview(ModelContainer.sample) {
-        NavigationContentView()
+        ContentView()
             .environment(BanksiaHandler())
     }
 }

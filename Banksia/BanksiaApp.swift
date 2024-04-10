@@ -12,11 +12,11 @@ import SwiftData
 struct BanksiaApp: App {
     
     @State private var bk = BanksiaHandler()
+    @StateObject private var pref = Preferences()
     
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
-            Conversation.self,
-            UserPrefs.self
+            Conversation.self
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
@@ -42,6 +42,7 @@ struct BanksiaApp: App {
         Settings {
             SettingsView()
                 .environment(bk)
+                .environmentObject(pref)
         }
 #endif
     }

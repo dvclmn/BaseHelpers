@@ -26,7 +26,7 @@ extension BanksiaHandler {
         
         print("Let's fetch a response from GPT")
         
-        let requestBody = RequestBody(model: currentModel.value, messages: [RequestMessage(role: "user", content: prompt)], temperature: currentTemperature)
+        let requestBody = RequestBody(model: pref.gptModel.value, messages: [RequestMessage(role: "user", content: prompt)], temperature: pref.gptTemperature)
         
         let request = try makeURLRequest(from: OpenAI.chatURL, requestType: .post, bearerToken: apiKey, body: requestBody)
         

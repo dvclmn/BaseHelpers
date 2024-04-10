@@ -9,13 +9,24 @@ import Foundation
 import SwiftUI
 import SwiftData
 
+//class ConversationHandler {
+//    
+//    let bk = BanksiaHandler()
+//    
+//    static let activeConversationPredicate: Predicate<Conversation> = #Predicate<Conversation> {
+//        if let conversationID = bk.selectedConversations.first {
+//            
+//        }
+//    }
+//}
+
 enum ConversationState {
     case blank
     case none
     case single
     case multiple
 
-    init(totalConversations: Int, selectedConversations: Set<Conversation>) {
+    init(totalConversations: Int, selectedConversations: Set<Conversation.ID>) {
         if totalConversations == 0 {
             self = .blank
         } else {
@@ -105,30 +116,30 @@ enum ConversationState {
 extension BanksiaHandler {
     
     func newConversation(for modelContext: ModelContext) {
-        // Create a new conversation object
+
         let newConversation = Conversation(name: "New conversation")
         
         modelContext.insert(newConversation)
-        // Save the new conversation to the persistent store
+        
         do {
             try modelContext.save()
-            // Set the newly created conversation as the current conversation
+
         } catch {
             print("Failed to save new conversation: \(error)")
         }
-        currentConversations = []
-        currentConversations = [newConversation]
+        selectedConversations = []
+        selectedConversations = [newConversation.persistentModelID]
     }
     
     func deleteConversations(_ conversations: Set<Conversation>, modelContext: ModelContext) {
-        currentConversations = []
+        selectedConversations = []
         for conversation in conversations {
             modelContext.delete(conversation)
         }
     }
     
     func deleteAll(for modelContext: ModelContext) {
-        currentConversations = []
+        selectedConversations = []
         do {
             try modelContext.delete(model: Conversation.self)
         } catch {

@@ -6,18 +6,19 @@
 //
 
 import SwiftUI
+import SwiftData
 
 @Observable
 class BanksiaHandler {
-    var currentConversations: Set<Conversation> = []
+    
+    let pref = Preferences()
+    
+    var selectedConversations: Set<Conversation.ID> = []
+    
     var totalConversations: Int = 0
-    
-    var currentModel: AIModel = .gpt_4_turbo
-    var currentTemperature: Double = 0.5
-    var currentTextScale: Double = 1
-    
+
     var conversationState: ConversationState {
-        ConversationState(totalConversations: totalConversations, selectedConversations: currentConversations)
+        ConversationState(totalConversations: totalConversations, selectedConversations: selectedConversations)
     }
     
     var sidebarVisibility: NavigationSplitViewVisibility = .automatic
@@ -26,10 +27,6 @@ class BanksiaHandler {
     
     var isResponseLoading: Bool = false
 
-    /// Corner radius
-    let cornerRadiusSmall: CGFloat = 6
-    let cornerRadiusLarge: CGFloat = 10
-    
     
     init() {
 //        saveAPIKeyToKeychainForDebugging()
