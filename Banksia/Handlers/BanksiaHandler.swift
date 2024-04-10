@@ -23,6 +23,8 @@ class BanksiaHandler {
     var sidebarVisibility: NavigationSplitViewVisibility = .automatic
     
     var isOptionKey: Bool = false
+    
+    var isResponseLoading: Bool = false
 
     /// Corner radius
     let cornerRadiusSmall: CGFloat = 6
@@ -31,7 +33,7 @@ class BanksiaHandler {
     
     init() {
 //        saveAPIKeyToKeychainForDebugging()
-        
+
     }
     
     func saveAPIKeyToKeychainForDebugging() {

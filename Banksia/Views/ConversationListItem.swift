@@ -27,7 +27,6 @@ struct ConversationListItem: View {
                 IconPickerView(conversation: conversation)
             })
             TextField("Conversation name", text: $conversation.name)
-                .fontStyle(.body)
                 .focused($isFieldFocused)
                 .onChange(of: isFieldFocused) {
                     if conversation.name.isEmpty {

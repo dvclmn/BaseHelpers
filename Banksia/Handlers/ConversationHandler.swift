@@ -135,53 +135,7 @@ extension BanksiaHandler {
             print("Failed to clear Conversations.")
         }
     } // END delete all
-    
 
-    
-    func sendMessage(userMessage: String) {
-        // Trim the message to remove leading and trailing whitespaces and newlines
-        let trimmedMessage = userMessage.trimmingCharacters(in: .whitespacesAndNewlines)
-        
-        // Check if the trimmed message is empty and return early if it is
-        guard !trimmedMessage.isEmpty else {
-            print("Message is empty, nothing to send")
-            return
-        }
-        
-        // Ensure there is a single current conversation selected, return early if not
-        guard currentConversations.count == 1 else {
-            print("Multiple conversations selected or no conversation selected.")
-            return
-        }
-        
-        // Since we know there's exactly one conversation, we can safely access the first element
-        guard let currentConversation = currentConversations.first else { return }
-        
-        // Create a Message object for the user's message and append it to the conversation
-        let userMessageObject = Message(content: "Q: \(trimmedMessage)", isUser: true, conversation: currentConversation)
-        currentConversation.messages.append(userMessageObject)
-        print("Message: \(userMessageObject.content)")
-        
-        // Fetch the response from the server or API
-        fetchResponse(prompt: trimmedMessage) { result in
-            // Handle the response on the main thread to update the UI
-            DispatchQueue.main.async {
-                switch result {
-                case .success(let textResponse):
-                    print("Got a reponse from GPT: \(textResponse)")
-                    // Create a Message object for the response and append it to the conversation
-                    let responseMessage = Message(content: "A: \(textResponse)", isUser: false, conversation: currentConversation)
-                    currentConversation.messages.append(responseMessage)
-                case .failure(let error):
-                    print("Error getting response.")
-                    // Handle the error case by appending an error message to the conversation
-                    let errorMessage = Message(content: "Error: \(error)", isUser: false, conversation: currentConversation)
-                    currentConversation.messages.append(errorMessage)
-                }
-                // Update the UI or save changes to the data model here if necessary
-            } // END Dispatch queue
-        } // END fetch response
-    } // END send message
     
 
 } // END BanksiaHandler extension

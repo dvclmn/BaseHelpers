@@ -71,7 +71,11 @@ struct NavigationContentView: View {
             } // END delete
             
         } // END toolbar
-        
+        .onAppear {
+            if let firstConversation = conversations.first {
+                bk.currentConversations = [firstConversation]
+            }
+        }
         
     }
 }
@@ -80,5 +84,7 @@ struct NavigationContentView: View {
     ModelContainerPreview(ModelContainer.sample) {
         NavigationContentView()
             .environment(BanksiaHandler())
+            .frame(width: 600, height: 700)
+        
     }
 }

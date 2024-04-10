@@ -7,6 +7,53 @@
 
 import Foundation
 
+struct OpenAI {
+    
+    static let chatURL: String = "https://api.openai.com/v1/chat/completions"
+}
+
+struct RequestBody: Codable {
+    let model: String
+    let messages: [RequestMessage]
+    let temperature: Double
+}
+
+struct RequestMessage: Codable {
+    let role: String
+    let content: String
+}
+
+
+struct GPTReponse: Codable {
+    
+    let id: String
+    let object: String
+    let created: Int
+    let model: String
+    let choices: [GPTChoice]
+    let usage: APIUsage
+    let system_fingerprint: String
+}
+
+struct GPTChoice: Codable {
+    let index: Int
+    let message: GPTMessage
+    let finish_reason: String
+}
+struct GPTMessage: Codable {
+    let role: String
+    let content: String
+}
+
+
+struct APIUsage: Codable {
+    let prompt_tokens: Int
+    let completion_tokens: Int
+    let total_tokens: Int
+    
+}
+
+
 enum AIModel: String, Codable, CaseIterable {
     case gpt_4_turbo
     case gpt_4

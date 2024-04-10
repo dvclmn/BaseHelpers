@@ -7,103 +7,121 @@
 
 import Foundation
 
-enum OpenAI: String {
-    case url
-    
-    var value: String {
-        switch self {
-        case .url:
-            return "https://api.openai.com/v1/chat/completions"
-        }
-    }
+enum KeychainError: Error {
+    case couldNotFindItem
 }
+
 
 extension BanksiaHandler {
     
-    func testAPIFetch() {
-        fetchResponse(prompt: "Your prompt here", completion:  { result in
-            switch result {
-            case .success(let data):
-                // Handle the raw data, or save it to a file for inspection
-                
-                print("Raw data received:\n\(data)")
-            case .failure(let error):
-                // Handle the error
-                print("Error fetching API response: \(error)")
-            }
-        }, isTest: true)
-    }
     
-    func fetchResponse(prompt: String, completion: @escaping (Result<String, Error>) -> Void, isTest: Bool = false) {
+    func fetchGPTResponse<T: Decodable>(prompt: String) async throws -> T {
+        
+        isResponseLoading = true
         
         guard let apiKey = KeychainHandler.get(forKey: "OpenAIKey") else {
-            completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "API key not found."])))
-            return
+            print("Couldn't get the api key from keychain")
+            throw KeychainError.couldNotFindItem
         }
         
-        let url = URL(string: OpenAI.url.value)!
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.addValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        print("Let's fetch a response from GPT")
         
-        let body: [String: Any] = [
-            "model": currentModel, // Specify the model you are using
-            "messages": [
-                ["role": "user", "content": prompt]
-            ],
-            "temperature": currentTemperature // You can adjust the temperature as needed
-        ]
+        let requestBody = RequestBody(model: currentModel.value, messages: [RequestMessage(role: "user", content: prompt)], temperature: currentTemperature)
         
+        let request = try makeURLRequest(from: OpenAI.chatURL, requestType: .post, bearerToken: apiKey, body: requestBody)
         
-        request.httpBody = try? JSONSerialization.data(withJSONObject: body, options: [])
+        print("Request: '\(request)'")
         
+        let decoder = JSONDecoder()
         
-        URLSession.shared.dataTask(with: request) { data, response, error in
-            if let error = error {
-                completion(.failure(error))
-                return
-            }
-            
-            // Handle the response data
-            guard let data = data else {
-                completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "No data received."])))
-                print("guard let data = data was not successful")
-                return
-            }
-            
-            if isTest {
-                
-                if let jsonString = String(data: data, encoding: .utf8) {
-                    completion(.success(jsonString)) // Pass the jsonString instead of data
-                } else {
-                    completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Data could not be decoded into a string."])))
-                }
-                
-            } else {
-                do {
-                    let decodedResponse = try JSONDecoder().decode(APIResponse.self, from: data)
-                    if let textResponse = decodedResponse.choices.first?.message.content {
-                        // Call the completion handler with the text response
-                        
-                        completion(.success(textResponse))
-                        
-                    } else {
-                        completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Invalid response format."])))
-                    }
-                } catch {
-                    completion(.failure(error))
-                    print("guard let data = data was not successful, here's the error: \(error)")
-                }
-            }
-            
-            
-        }.resume() // Don't forget to call resume() to start the task
+        let data = try await fetch(request: request)
+        
+        isResponseLoading = false
+        
+        return try decoder.decode(T.self, from: data)
     }
     
+    func makeURLRequest(from urlString: String, requestType: APIRequestType = .get, clientID: String? = nil, bearerToken: String? = nil, body: RequestBody? = nil) throws -> URLRequest {
+        print("Let's create a valid URLRequest for url: '\(urlString)', of type: '\(requestType.rawValue)', with body: \(String(describing: body))")
+        guard let url = URL(string: urlString) else {
+            throw APIError.badURL
+        }
+        var request = URLRequest(url: url)
+        request.httpMethod = requestType.rawValue
+        if let clientID = clientID {
+            request.addValue(clientID, forHTTPHeaderField: "Client-ID")
+        }
+        if let bearerToken = bearerToken {
+            request.addValue("Bearer \(bearerToken)", forHTTPHeaderField: "Authorization")
+        }
+        if let body = body {
+            
+            let encoder = JSONEncoder()
+            let bodyData = try encoder.encode(body)
+            request.httpBody = bodyData
+            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        }
+        return request
+    }
     
-    
-    
+    // MARK: - Generic API fetch
+    /// Makes a network request and decodes the JSON response
+    func fetch(request: URLRequest) async throws -> Data {
+        print("Going to fetch and return data for request '\(request)'")
+        do {
+            let (data, response) = try await URLSession.shared.data(for: request)
+            
+            // Ensure the response is valid
+            guard let httpResponse = response as? HTTPURLResponse else {
+                throw APIError.unknownStatusCode
+            }
+            
+            print("Reponse: \(httpResponse)")
+            
+            switch httpResponse.statusCode {
+            case 200...299:
+                print("Looks like the fetch request worked. This function will now send the raw data to be processed.")
+                return data
+            case 400:
+                print("Bad Request: \(data.debugDescription)")
+                throw APIError.badRequest(data)
+            default:
+                print("Unknown status code")
+                throw APIError.otherError(URLError(.badServerResponse))
+            }
+        } catch let error as URLError {
+            switch error.code {
+            case .notConnectedToInternet,
+                    .networkConnectionLost,
+                    .dnsLookupFailed,
+                    .cannotFindHost,
+                    .cannotConnectToHost:
+                
+                throw APIError.noInternetConnection
+            default:
+                // Other URLError cases.
+                throw APIError.otherError(error)
+            }
+        } catch {
+            // Non-URLError cases.
+            throw APIError.otherError(error)
+        } // END do/catch
+    } // END API fetch
     
     
 } // END BanksiaHandler extension
+
+
+enum APIRequestType: String {
+    case get = "GET"
+    case post = "POST"
+}
+
+enum APIError: Error {
+    case unknownStatusCode
+    case badURL
+    case badRequest(Data)
+    case otherError(Error)
+    case decodingError(Error)
+    case noInternetConnection
+}

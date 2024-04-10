@@ -21,14 +21,13 @@ struct ConversationStateView: View {
     var body: some View {
         VStack(alignment: .center) {
             Text(emoji)
-                .fontStyle(.largeTitle, size: 48)
+                .font(.title)
                 .padding(.bottom,6)
             Text(title)
-                .fontStyle(.largeTitle)
+                .font(.title)
                 .opacity(0.8)
                 .padding(.bottom,4)
             Text(message)
-                .fontStyle(.body)
                 .opacity(0.4)
                 .padding(.bottom,14)
             if let action = action, let actionLabel = actionLabel, let actionIcon = actionIcon {

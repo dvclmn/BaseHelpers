@@ -32,7 +32,6 @@
 		F6F393112B09DB7D005046F4 /* ConversationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6F393102B09DB7D005046F4 /* ConversationView.swift */; };
 		F6F393132B0A06B4005046F4 /* ConversationListItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6F393122B0A06B4005046F4 /* ConversationListItem.swift */; };
 		F6FA92EF2B052B9800D1D9B8 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6FA92EE2B052B9800D1D9B8 /* SettingsView.swift */; };
-		F6FA92F12B0530D400D1D9B8 /* TextStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6FA92F02B0530D400D1D9B8 /* TextStyles.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -64,7 +63,6 @@
 		F6F393122B0A06B4005046F4 /* ConversationListItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationListItem.swift; sourceTree = "<group>"; };
 		F6F393142B0A1784005046F4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		F6FA92EE2B052B9800D1D9B8 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
-		F6FA92F02B0530D400D1D9B8 /* TextStyles.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextStyles.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -136,7 +134,6 @@
 			isa = PBXGroup;
 			children = (
 				F6C161E02B0F63B800F4AB62 /* banksia_icons.json */,
-				F6FA92F02B0530D400D1D9B8 /* TextStyles.swift */,
 				F64F8E302B042A2700C72E51 /* UtilityFunctions.swift */,
 			);
 			path = Support;
@@ -277,7 +274,6 @@
 				F6081DF72B04847600A78D64 /* KeychainHandler.swift in Sources */,
 				F697B8682B0B48160091CE79 /* ConversationStateView.swift in Sources */,
 				F64F8E082B02140F00C72E51 /* SampleData+Conversation.swift in Sources */,
-				F6FA92F12B0530D400D1D9B8 /* TextStyles.swift in Sources */,
 				F64F8E0C2B0214A000C72E51 /* SampleData+Messages.swift in Sources */,
 				F64F8E032B02136D00C72E51 /* ModelContainerPreview.swift in Sources */,
 				F6E8269F2B0BDD6E0047477D /* MessagesView.swift in Sources */,

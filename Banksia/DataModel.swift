@@ -15,8 +15,7 @@ final class Conversation {
     var icon: String?
     var tokens: Int?
     
-    @Relationship(deleteRule: .cascade)
-    var messages: [Message] = []
+    @Relationship(deleteRule: .cascade, inverse: \Message.conversation) var messages: [Message]? = []
     
     init(
         created: Date = .now,
@@ -37,14 +36,14 @@ final class Message {
     var content: String
     var tokens: Int?
     var isUser: Bool
-    var conversation: Conversation
+    var conversation: Conversation?
     
     init(
         timestamp: Date = .now,
         content: String,
         tokens: Int? = 0,
         isUser: Bool = true,
-        conversation: Conversation = Conversation(name: "Example fallback")
+        conversation: Conversation? = nil
     ) {
         self.timestamp = timestamp
         self.content = content
@@ -68,41 +67,5 @@ final class UserPrefs {
         self.textScale = textScale
         self.gptTemperature = gptTemperature
         self.gptModel = gptModel
-    }
-}
-
-struct APIResponse: Codable {
-    struct Choice: Codable {
-        let message: Message
-        let finishReason: String
-        let index: Int
-        
-        enum CodingKeys: String, CodingKey {
-            case message
-            case finishReason = "finish_reason"
-            case index
-        }
-    }
-    struct Message: Codable {
-        let role: String
-        let content: String
-    }
-    let id: String
-    let object: String
-    let created: Int
-    let model: String
-    let choices: [Choice]
-    let usage: APIUsage
-}
-
-struct APIUsage: Codable {
-    let promptTokens: Int
-    let completionTokens: Int
-    let totalTokens: Int
-    
-    enum CodingKeys: String, CodingKey {
-        case promptTokens = "prompt_tokens"
-        case completionTokens = "completion_tokens"
-        case totalTokens = "total_tokens"
     }
 }

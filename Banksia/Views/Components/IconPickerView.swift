@@ -41,7 +41,6 @@ struct IconPickerView: View {
                     }, id: \.self) { icon in
                         Image(systemName: icon.name)
                             .symbolRenderingMode(.hierarchical)
-                            .fontStyle(.title1)
                             .frame(width: iconWidth, height: iconWidth)
                             .background(hoveredIcons.contains(icon.name) ? Color.gray.opacity(0.2) : Color.clear)
                             .clipShape(.rect(cornerRadius: 12))
