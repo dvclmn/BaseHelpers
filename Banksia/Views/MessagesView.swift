@@ -34,15 +34,17 @@ struct MessagesView: View {
             
             HStack {
                 #if os(macOS)
-                RichTextView(text: $prompt)
+                TextEditor(text: $prompt)
+//                RichTextView(text: $prompt)
                     .frame(minHeight: 200, maxHeight: 400)
-                    .border(Color.green)
+                    
                 #elseif os(iOS)
                 TextField("Butts", text: $prompt)
                 #endif
                 Button("Send") {
                     bk.sendMessage(userMessage: prompt)
                 }
+                .keyboardShortcut(.return, modifiers: .command)
             } // END user text field hstack
         } // END Vstack
         .navigationTitle("\(conversation.name)")

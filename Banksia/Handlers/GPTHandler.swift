@@ -8,23 +8,28 @@
 import Foundation
 
 enum AIModel: String, Codable, CaseIterable {
+    case gpt_4_turbo
     case gpt_4
     case gpt_3_5
     
     var name: String {
         switch self {
+        case .gpt_4_turbo:
+            "GPT-4-Turbo"
         case .gpt_4:
-            return "GPT-4"
+            "GPT-4"
         case .gpt_3_5:
-            return "GPT-3.5 Turbo"
+            "GPT-3.5 Turbo"
         }
     }
     var value: String {
         switch self {
+        case .gpt_4_turbo:
+            "gpt-4-turbo"
         case .gpt_4:
-            return "gpt-4"
+            "gpt-4"
         case .gpt_3_5:
-            return "gpt-3.5-turbo"
+            "gpt-3.5-turbo"
         }
     }
 } // END AIModel

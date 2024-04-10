@@ -12,7 +12,7 @@ class BanksiaHandler {
     var currentConversations: Set<Conversation> = []
     var totalConversations: Int = 0
     
-    var currentModel: AIModel = .gpt_4
+    var currentModel: AIModel = .gpt_4_turbo
     var currentTemperature: Double = 0.5
     var currentTextScale: Double = 1
     
@@ -30,7 +30,7 @@ class BanksiaHandler {
     
     
     init() {
-        saveAPIKeyToKeychainForDebugging()
+//        saveAPIKeyToKeychainForDebugging()
         
     }
     

@@ -155,11 +155,12 @@ extension BanksiaHandler {
         }
         
         // Since we know there's exactly one conversation, we can safely access the first element
-        let currentConversation = currentConversations.first!
+        guard let currentConversation = currentConversations.first else { return }
         
         // Create a Message object for the user's message and append it to the conversation
         let userMessageObject = Message(content: "Q: \(trimmedMessage)", isUser: true, conversation: currentConversation)
         currentConversation.messages.append(userMessageObject)
+        print("Message: \(userMessageObject.content)")
         
         // Fetch the response from the server or API
         fetchResponse(prompt: trimmedMessage) { result in
@@ -167,12 +168,14 @@ extension BanksiaHandler {
             DispatchQueue.main.async {
                 switch result {
                 case .success(let textResponse):
+                    print("Got a reponse from GPT: \(textResponse)")
                     // Create a Message object for the response and append it to the conversation
                     let responseMessage = Message(content: "A: \(textResponse)", isUser: false, conversation: currentConversation)
                     currentConversation.messages.append(responseMessage)
                 case .failure(let error):
+                    print("Error getting response.")
                     // Handle the error case by appending an error message to the conversation
-                    let errorMessage = Message(content: "Error: \(error.localizedDescription)", isUser: false, conversation: currentConversation)
+                    let errorMessage = Message(content: "Error: \(error)", isUser: false, conversation: currentConversation)
                     currentConversation.messages.append(errorMessage)
                 }
                 // Update the UI or save changes to the data model here if necessary

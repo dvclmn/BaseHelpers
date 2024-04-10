@@ -23,9 +23,9 @@ struct ConversationListItem: View {
             HandyButton(label: "", icon: conversation.icon ?? "") {
                 iconPickerShowing.toggle()
             }
-//            .popover(isPresented: $iconPickerShowing, content: {
-//                IconPickerView(conversation: conversation)
-//            })
+            .popover(isPresented: $iconPickerShowing, content: {
+                IconPickerView(conversation: conversation)
+            })
             TextField("Conversation name", text: $conversation.name)
                 .fontStyle(.body)
                 .focused($isFieldFocused)

@@ -35,9 +35,9 @@ extension ModelContainer {
     static var sample: () throws -> ModelContainer = {
         let schema = Schema([Conversation.self])
         let container = try ModelContainer(for: schema)
-        Task { @MainActor in
-            Conversation.insertSampleData(modelContext: container.mainContext)
-        }
+//        Task { @MainActor in
+//            Conversation.insertSampleData(modelContext: container.mainContext)
+//        }
         return container
     }
 }

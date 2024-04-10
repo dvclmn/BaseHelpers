@@ -18,7 +18,12 @@ final class Conversation {
     @Relationship(deleteRule: .cascade)
     var messages: [Message] = []
     
-    init(created: Date = .now, name: String, icon: String = "", tokens: Int = 0) {
+    init(
+        created: Date = .now,
+        name: String,
+        icon: String = "",
+        tokens: Int = 0
+    ) {
         self.created = created
         self.name = name
         self.icon = icon
@@ -34,7 +39,13 @@ final class Message {
     var isUser: Bool
     var conversation: Conversation
     
-    init(timestamp: Date = .now, content: String, tokens: Int? = 0, isUser: Bool = true, conversation: Conversation = Conversation(name: "Example fallback")) {
+    init(
+        timestamp: Date = .now,
+        content: String,
+        tokens: Int? = 0,
+        isUser: Bool = true,
+        conversation: Conversation = Conversation(name: "Example fallback")
+    ) {
         self.timestamp = timestamp
         self.content = content
         self.tokens = tokens
@@ -49,7 +60,11 @@ final class UserPrefs {
     var gptTemperature: Double
     var gptModel: AIModel
     
-    init(textScale: Double = 1.0, gptTemperature: Double = 0.5, gptModel: AIModel = AIModel.gpt_4) {
+    init(
+        textScale: Double = 1.0,
+        gptTemperature: Double = 0.5,
+        gptModel: AIModel = AIModel.gpt_4
+    ) {
         self.textScale = textScale
         self.gptTemperature = gptTemperature
         self.gptModel = gptModel

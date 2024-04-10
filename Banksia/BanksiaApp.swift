@@ -10,7 +10,9 @@ import SwiftData
 
 @main
 struct BanksiaApp: App {
+    
     @State private var bk = BanksiaHandler()
+    
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             Conversation.self,

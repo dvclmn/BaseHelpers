@@ -10,12 +10,14 @@ import SwiftData
 
 struct NavigationContentView: View {
     @Environment(BanksiaHandler.self) private var bk
-    @Environment(\.modelContext) private var modelContext
+    @Environment(\.modelContext) var modelContext
     @Environment(\.undoManager) var undoManager
     @Query(sort: \Conversation.created) private var conversations: [Conversation]
     
     var body: some View {
+        
         @Bindable var bk = bk
+        
         NavigationSplitView(columnVisibility: $bk.sidebarVisibility) {
             List(selection: $bk.currentConversations) {
                 ForEach(conversations) { conversation in
@@ -43,13 +45,6 @@ struct NavigationContentView: View {
         }
         // Detail view toolbar
         .toolbar {
-            ToolbarItem() {
-                Circle()
-                    .fill(Color.random)
-                    .frame(width:8, height:8)
-                    .padding(8)
-            } // view changed tester
-            
             ToolbarItem() {
                 HandyButton(label: "Add sample data", icon: "sparkles") {
                     Conversation.insertSampleData(modelContext: modelContext)
