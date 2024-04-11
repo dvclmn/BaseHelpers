@@ -36,6 +36,9 @@
 		F6D6E2E12BC82257000D2051 /* EditorCore in Frameworks */ = {isa = PBXBuildFile; productRef = F6D6E2E02BC82257000D2051 /* EditorCore */; };
 		F6D6E2E32BC82257000D2051 /* EditorUI in Frameworks */ = {isa = PBXBuildFile; productRef = F6D6E2E22BC82257000D2051 /* EditorUI */; };
 		F6D6E2E52BC82790000D2051 /* MarkdownEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6D6E2E42BC82790000D2051 /* MarkdownEditor.swift */; };
+		F6D6E2E72BC82C86000D2051 /* GrammarHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6D6E2E62BC82C86000D2051 /* GrammarHandler.swift */; };
+		F6D6E2E92BC82CAA000D2051 /* ThemeHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6D6E2E82BC82CAA000D2051 /* ThemeHandler.swift */; };
+		F6D6E2EB2BC82CFE000D2051 /* ExampleText.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6D6E2EA2BC82CFE000D2051 /* ExampleText.swift */; };
 		F6E8269F2B0BDD6E0047477D /* MessagesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6E8269E2B0BDD6E0047477D /* MessagesView.swift */; };
 		F6E826A12B0BF3630047477D /* IconPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6E826A02B0BF3630047477D /* IconPickerView.swift */; };
 		F6F393112B09DB7D005046F4 /* ConversationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6F393102B09DB7D005046F4 /* ConversationView.swift */; };
@@ -71,6 +74,9 @@
 		F6D6E2D52BC805E9000D2051 /* SingleMessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleMessageView.swift; sourceTree = "<group>"; };
 		F6D6E2DA2BC80AA2000D2051 /* MessageInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageInputView.swift; sourceTree = "<group>"; };
 		F6D6E2E42BC82790000D2051 /* MarkdownEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkdownEditor.swift; sourceTree = "<group>"; };
+		F6D6E2E62BC82C86000D2051 /* GrammarHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrammarHandler.swift; sourceTree = "<group>"; };
+		F6D6E2E82BC82CAA000D2051 /* ThemeHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeHandler.swift; sourceTree = "<group>"; };
+		F6D6E2EA2BC82CFE000D2051 /* ExampleText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleText.swift; sourceTree = "<group>"; };
 		F6E8269E2B0BDD6E0047477D /* MessagesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesView.swift; sourceTree = "<group>"; };
 		F6E826A02B0BF3630047477D /* IconPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconPickerView.swift; sourceTree = "<group>"; };
 		F6F393102B09DB7D005046F4 /* ConversationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationView.swift; sourceTree = "<group>"; };
@@ -124,6 +130,8 @@
 			isa = PBXGroup;
 			children = (
 				F6D6E2E42BC82790000D2051 /* MarkdownEditor.swift */,
+				F6D6E2E62BC82C86000D2051 /* GrammarHandler.swift */,
+				F6D6E2E82BC82CAA000D2051 /* ThemeHandler.swift */,
 				F6A5E1B92BC6F3D70018B1B5 /* StyleHandler.swift */,
 				F6A5E1B62BC6EE480018B1B5 /* PreferencesHandler.swift */,
 				F64F8E1F2B03082100C72E51 /* BanksiaHandler.swift */,
@@ -140,6 +148,7 @@
 		F64F8E2F2B042A0300C72E51 /* Support */ = {
 			isa = PBXGroup;
 			children = (
+				F6D6E2EA2BC82CFE000D2051 /* ExampleText.swift */,
 				F6C161E02B0F63B800F4AB62 /* banksia_icons.json */,
 				F64F8E302B042A2700C72E51 /* UtilityFunctions.swift */,
 			);
@@ -285,8 +294,10 @@
 				F6A5E1BA2BC6F3D80018B1B5 /* StyleHandler.swift in Sources */,
 				F6A7BEEF2B01C57400D3CE25 /* DataModel.swift in Sources */,
 				F6A5E1B52BC6E5A40018B1B5 /* ToolbarView.swift in Sources */,
+				F6D6E2E92BC82CAA000D2051 /* ThemeHandler.swift in Sources */,
 				F6A5E1B72BC6EE480018B1B5 /* PreferencesHandler.swift in Sources */,
 				F64F8E202B03082100C72E51 /* BanksiaHandler.swift in Sources */,
+				F6D6E2EB2BC82CFE000D2051 /* ExampleText.swift in Sources */,
 				F697B8662B0B47610091CE79 /* GPTHandler.swift in Sources */,
 				F6F393132B0A06B4005046F4 /* ConversationListItem.swift in Sources */,
 				F64F8E222B03090600C72E51 /* ContentView.swift in Sources */,
@@ -306,6 +317,7 @@
 				F6A5E1B32BC6E4E90018B1B5 /* SidebarView.swift in Sources */,
 				F6E8269F2B0BDD6E0047477D /* MessagesView.swift in Sources */,
 				F6E826A12B0BF3630047477D /* IconPickerView.swift in Sources */,
+				F6D6E2E72BC82C86000D2051 /* GrammarHandler.swift in Sources */,
 				F64F8E2E2B04254100C72E51 /* ConversationHandler.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

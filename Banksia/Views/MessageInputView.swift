@@ -9,8 +9,8 @@ import SwiftUI
 import SwiftData
 //import CodeEditor
 //import Highlightr
-import SwiftDown
-import EditorCore
+//import SwiftDown
+//import EditorCore
 import EditorUI
 
 
@@ -21,6 +21,7 @@ struct MessageInputView: View {
 //    let highlightr = Highlightr()
     
     @State private var prompt: String = ""
+    
 //    @State private var theme    = CodeEditor.ThemeName.pojoaque
     
     var conversation: Conversation
@@ -28,7 +29,7 @@ struct MessageInputView: View {
     var body: some View {
         
         
-//        EditorTextViewRepresentable(text: $prompt)
+        EditorTextViewRepresentable(text: $prompt)
         
         
         
@@ -51,7 +52,7 @@ struct MessageInputView: View {
 //            .scrollContentBackground(.hidden)
             
             
-            SwiftDownEditor(text: $prompt)
+//            SwiftDownEditor(text: $prompt)
 
             
             
@@ -79,8 +80,8 @@ struct MessageInputView: View {
         .padding()
         .background(.black.opacity(0.4))
         .onAppear {
-            self.prompt = Message.prompt_02.content
-            
+//            self.prompt = Message.prompt_02.content
+            self.prompt = bigText
         }
     }
     
