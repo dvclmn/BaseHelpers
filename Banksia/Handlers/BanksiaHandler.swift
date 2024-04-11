@@ -21,7 +21,7 @@ class BanksiaHandler {
         ConversationState(totalConversations: totalConversations, selectedConversations: selectedConversations)
     }
     
-    var sidebarVisibility: NavigationSplitViewVisibility = .automatic
+    var sidebarVisibility: NavigationSplitViewVisibility = .detailOnly
     
     var isOptionKey: Bool = false
     

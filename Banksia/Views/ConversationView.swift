@@ -67,5 +67,6 @@ struct ConversationView: View {
     ModelContainerPreview(ModelContainer.sample) {
         ContentView()
             .environment(BanksiaHandler())
+        .frame(width: 600, height: 700)
     }
 }

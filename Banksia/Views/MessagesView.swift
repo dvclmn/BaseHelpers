@@ -16,7 +16,7 @@ struct MessagesView: View {
     
     @State private var prompt: String = ""
     
-    
+
     init(filter: Predicate<Conversation>? = nil) {
         
         if let filter = filter {
@@ -27,38 +27,50 @@ struct MessagesView: View {
     }
     
     var body: some View {
-        
+
 
         VStack(spacing: 0) {
             if let messages = conversations.first?.messages {
-                ScrollViewReader { proxy in
+                
+                
+                
+                ScrollViewReader { scrollProxy in
+                    
                     ScrollView(.vertical) {
                         LazyVStack(spacing: 12) {
-                            ForEach(messages.sorted(by: { $0.timestamp < $1.timestamp })) { message in
-                                VStack(alignment: .leading) {
-                                    Text(message.content)
-                                        .frame(maxWidth: .infinity)
-                                        .padding()
-                                        .background(Color(message.isUser ? .blue : .gray))
-                                        .cornerRadius(10)
+                            ForEach(messages.sorted(by: { $0.timestamp < $1.timestamp }), id: \.timestamp) { message in
+                                
+                                SingleMessageView(message: message)
+                                
+                                .onChange(of: messages.count) {
+                                    withAnimation(Styles.animation){
+                                        scrollProxy.scrollTo("bottom")
+                                    }
                                 }
-                                .id(message.id)
                             } // END ForEach
+                            Text("Bottom").id("bottom")
+                                .opacity(0)
                         } // END lazy vstack
+                        .scrollTargetLayout()
                         .padding()
                         
-                        .onChange(of: messages.count) {
-                            proxy.scrollTo(messages.count - 1)
-                        }
                     } // END scrollview
-                    .onAppear {
-                        if let latest = messages.last {
-                            proxy.scrollTo(latest.id)
+                    .defaultScrollAnchor(.bottom)
+                    .overlay(alignment: .bottomTrailing) {
+                        Button {
+                            withAnimation(Styles.animation){
+                                scrollProxy.scrollTo("bottom")
+                            }
+                        } label: {
+                            Label("Scroll to bottom", systemImage: Icons.arrowDown)
+                                .labelStyle(.iconOnly)
                         }
+                        .padding()
                     }
+                } // END scroll reader
                     
                     
-                } // END scrollviuew reader
+                
             } else {
                 Text("No messages yet")
             } // END messages check
@@ -141,6 +153,6 @@ struct MessagesView: View {
     ModelContainerPreview(ModelContainer.sample) {
         ContentView()
             .environment(BanksiaHandler())
-            .frame(width: 600, height: 700)
+            .frame(width: 700, height: 700)
     }
 }
