@@ -11,37 +11,49 @@ struct ConversationStateView: View {
     @Environment(BanksiaHandler.self) private var bk
     @Environment(\.modelContext) private var modelContext
     
-    var emoji: String
-    var title: String
-    var message: String
-    var actionLabel: String?
-    var actionIcon: String?
-    var action: (() -> Void)?
+//    var emoji: String
+//    var title: String
+//    var message: String
+//    var actionLabel: String?
+//    var actionIcon: String?
+//    var action: (() -> Void)?
     
     var body: some View {
-        VStack(alignment: .center) {
-            Text(emoji)
-                .font(.title)
-                .padding(.bottom,6)
-            Text(title)
-                .font(.title)
-                .opacity(0.8)
-                .padding(.bottom,4)
-            Text(message)
-                .opacity(0.4)
-                .padding(.bottom,14)
-            if let action = action, let actionLabel = actionLabel, let actionIcon = actionIcon {
-                
-                HandyButton(label: actionLabel, icon: actionIcon, action: action)
-            } // END actions check
+        
+        switch bk.selectionState {
+        case .blank:
+            Text("No conversations created at all")
+        case .single:
+            EmptyView()
+        case .multiple:
+            VStack(alignment: .center) {
+                Text(bk.selectionState.randomEmoji())
+                    .font(.title)
+                    .padding(.bottom,6)
+                Text(bk.selectionState.randomTitle())
+                    .font(.title)
+                    .opacity(0.8)
+                    .padding(.bottom,4)
+                Text(bk.selectionState.randomMessage())
+                    .opacity(0.4)
+                    .padding(.bottom,14)
+//                if let action = action, let actionLabel = actionLabel, let actionIcon = actionIcon {
+//                    
+//                    HandyButton(label: actionLabel, icon: actionIcon, action: action)
+//                } // END actions check
+            }
+            .padding(.bottom,40)
+        case .none:
+            Text("None selected")
         }
-        .padding(.bottom,40)
+        
+        
         
         
     }
 }
 
 #Preview {
-    ConversationStateView(emoji: "🕳️", title: "Nothing selected", message: "Make a selection on the left", actionLabel: "New chat", actionIcon: "plus")
+    ConversationStateView()
         .environment(BanksiaHandler())
 }

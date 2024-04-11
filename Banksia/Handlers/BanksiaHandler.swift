@@ -16,16 +16,28 @@ class BanksiaHandler {
     var selectedConversations: Set<Conversation.ID> = []
     
     var totalConversations: Int = 0
-
-    var conversationState: ConversationState {
-        ConversationState(totalConversations: totalConversations, selectedConversations: selectedConversations)
-    }
+    
+    var activeConversation: Conversation? = nil
     
     var sidebarVisibility: NavigationSplitViewVisibility = .detailOnly
     
     var isOptionKey: Bool = false
     
     var isResponseLoading: Bool = false
+    
+    var selectionState: ConversationState {
+        if selectedConversations.count <= 0 {
+            return .none
+        } else if selectedConversations.count == 1 {
+            return .single
+        } else if selectedConversations.count > 1 {
+            return .multiple
+        } else if totalConversations <= 0 {
+            return .blank
+        } else {
+            return .none
+        }
+    }
 
     
     init() {

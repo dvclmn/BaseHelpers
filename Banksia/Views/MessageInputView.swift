@@ -49,7 +49,7 @@ struct MessageInputView: View {
     }
     
     private func testScroll(conversation: Conversation) {
-        let newMessage = Message(content: "Hello, this is a new message")
+        let newMessage = Message(content: prompt)
         modelContext.insert(newMessage)
         newMessage.conversation = conversation
     }

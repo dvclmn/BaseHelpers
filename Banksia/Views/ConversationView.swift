@@ -12,61 +12,78 @@ struct ConversationView: View {
     @Environment(BanksiaHandler.self) private var bk
     @Environment(\.modelContext) private var modelContext
     
+    @Query private var conversations: [Conversation]
+    
+    init(filter: Predicate<Conversation>? = nil) {
+            
+            if let filter = filter {
+                _conversations = Query(filter: filter)
+            } else {
+                _conversations = Query()
+            }
+        }
+    
+    
     var body: some View {
         
-        VStack {
-            switch bk.conversationState {
-            case .blank:
-                ConversationStateView(
-                    emoji: bk.conversationState.randomEmoji(),
-                    title: bk.conversationState.randomTitle(),
-                    message: bk.conversationState.randomMessage(),
-                    actionLabel: "Create conversation",
-                    actionIcon: "plus") {
-                    bk.newConversation(for: modelContext)
-                }
-            case .none:
-                ConversationStateView(
-                    emoji: bk.conversationState.randomEmoji(),
-                    title: bk.conversationState.randomTitle(),
-                    message: bk.conversationState.randomMessage()
-                )
-            case .single:
+        VStack(spacing: 0) {
+            if let messages = conversations.first?.messages {
                 
-                
-                if let conversationID = bk.selectedConversations.first {
+                ScrollViewReader { scrollProxy in
                     
-                    let activeConversationPredicate = #Predicate<Conversation> { conversation in
+                    ScrollView(.vertical) {
+                        LazyVStack(spacing: 12) {
+                            ForEach(messages.sorted(by: { $0.timestamp < $1.timestamp }), id: \.timestamp) { message in
+                                
+                                SingleMessageView(message: message)
+                                
+                                    .onChange(of: messages.count) {
+                                        withAnimation(Styles.animation){
+                                            scrollProxy.scrollTo("bottom")
+                                        }
+                                    }
+                            } // END ForEach
+                            Text("Bottom").id("bottom")
+                                .opacity(0)
+                        } // END lazy vstack
+                        .scrollTargetLayout()
+                        .padding()
                         
-                            conversation.persistentModelID == conversationID
+                    } // END scrollview
+                    .defaultScrollAnchor(.bottom)
+                    .overlay(alignment: .bottomTrailing) {
+                        Button {
+                            withAnimation(Styles.animation){
+                                scrollProxy.scrollTo("bottom")
+                            }
+                        } label: {
+                            Label("Scroll to bottom", systemImage: Icons.arrowDown)
+                                .labelStyle(.iconOnly)
+                        }
+                        .padding()
                     }
-                    
-                    MessagesView(filter: activeConversationPredicate)
-                }
+                } // END scroll reader
                 
                 
                 
-            case .multiple:
-                ConversationStateView(
-                    emoji: bk.conversationState.randomEmoji(),
-                    title: bk.conversationState.randomTitle(),
-                    message: bk.conversationState.randomMessage(),
-                    actionLabel: "Delete conversations",
-                    actionIcon: "trash"
-                ) {
-//                    bk.deleteConversations(bk.selectedConversations, modelContext: modelContext)
-                }
+            } else {
+                Text("No messages yet")
+            } // END messages check
+            if let conversation = conversations.first {
+                MessageInputView(conversation: conversation)
             }
-        } // END vstack
-        
-        
+            
+        } // END Vstack
+//        .navigationTitle(conversation.name)
     }
+    
 }
+
 
 #Preview {
     ModelContainerPreview(ModelContainer.sample) {
-        ContentView()
+        ConversationView()
             .environment(BanksiaHandler())
-        .frame(width: 600, height: 700)
+            .frame(width: 600, height: 700)
     }
 }
