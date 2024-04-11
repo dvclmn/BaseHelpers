@@ -12,35 +12,43 @@ import EditorUI
 struct EditorTextViewRepresentable: NSViewRepresentable {
     @Binding var text: String
     
-    // This function creates the NSView that your representable wraps.
-    func makeNSView(context: Context) -> EditorTextView {
+    func makeNSView(context: Context) -> NSScrollView {
+        
+        let scrollView = NSScrollView()
         let textView = EditorTextView()
         
-        // Perform initial setup based on your viewDidLoad configuration.
         textView.insertionPointColor = .systemBlue
         textView.string = text
         textView.selectedTextAttributes.removeValue(forKey: .foregroundColor)
         textView.linkTextAttributes?.removeValue(forKey: .foregroundColor)
         
-        // Initialize your Parser and Editor
         let parser = Parser(grammars: [exampleGrammar, basicSwiftGrammar, readMeExampleGrammar])
-        parser.shouldDebug = false
         let editor = Editor(textView: textView, parser: parser, baseGrammar: readMeExampleGrammar, theme: exampleTheme)
         
-        // Subscribe to tokens or perform additional editor setup as needed.
         editor.subscribe(toToken: "action") { (res) in
             for (str, range) in res {
                 print(str, range)
             }
         }
         
-        return textView
+        scrollView.hasVerticalScroller = true
+        scrollView.documentView = textView
+        scrollView.drawsBackground = false // Prevent the scrollView from drawing its background
+        textView.autoresizingMask = [.width, .height]
+        textView.isVerticallyResizable = true
+        textView.isHorizontallyResizable = false
+        textView.minSize = NSSize(width: 0, height: scrollView.bounds.height)
+        textView.maxSize = NSSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude)
+        textView.drawsBackground = false
+        
+        return scrollView
     }
     
-    func updateNSView(_ nsView: EditorTextView, context: Context) {
-        // Update the text if it has changed outside the NSTextView
-        if nsView.string != text {
-            nsView.string = text
+    func updateNSView(_ nsView: NSScrollView, context: Context) {
+        guard let textView = nsView.documentView as? EditorTextView else { return }
+        
+        if textView.string != text {
+            textView.string = text
         }
     }
     
@@ -57,7 +65,6 @@ struct EditorTextViewRepresentable: NSViewRepresentable {
         }
         
         func textDidChange(_ notification: Notification) {
-            // Update the binding when the text changes
             if let textView = notification.object as? EditorTextView {
                 parent.text = textView.string
             }

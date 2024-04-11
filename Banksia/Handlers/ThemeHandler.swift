@@ -63,7 +63,7 @@ let exampleTheme = Theme(name: "basic", settings: [
         ItalicThemeAttribute()
     ]),
     ThemeSetting(scope: "markup.mono", parentScopes: [], attributes: [
-        BackgroundColorThemeAttribute(color: .gray, roundingStyle: .quarter),
+        BackgroundColorThemeAttribute(color: .systemPink, roundingStyle: .quarter),
     ]),
     ThemeSetting(scope: "action", parentScopes: [], attributes: [
         ActionThemeAttribute(actionId: "test", handler: { str, range  in

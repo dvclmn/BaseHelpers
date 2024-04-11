@@ -69,6 +69,7 @@ struct ConversationView: View {
             } else {
                 Text("No messages yet")
             } // END messages check
+            
             if let conversation = conversations.first {
                 MessageInputView(conversation: conversation)
             }

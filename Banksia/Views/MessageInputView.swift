@@ -18,70 +18,66 @@ struct MessageInputView: View {
     @Environment(BanksiaHandler.self) private var bk
     @Environment(\.modelContext) private var modelContext
     
-//    let highlightr = Highlightr()
     
     @State private var prompt: String = ""
     
-//    @State private var theme    = CodeEditor.ThemeName.pojoaque
+    @State private var text: String = "Your initial text here"
+    @State private var editorHeight: CGFloat = 300 // Initial height of the editor
+    
+    
+    //    @State private var theme    = CodeEditor.ThemeName.pojoaque
     
     var conversation: Conversation
     
     var body: some View {
         
         
-        EditorTextViewRepresentable(text: $prompt)
-        
-        
-        
-        HStack(alignment: .bottom) {
-            
-//            Picker("Theme", selection: $theme) {
-//                ForEach(CodeEditor.availableThemes) { theme in
-//                    Text("\(theme.rawValue.capitalized)")
-//                        .tag(theme)
-//                }
-//            }
-////            .pickerStyle(.radioGroup)
-//            
-//            CodeEditor(
-//                source: $prompt,
-//                language: .markdown,
-//                theme: theme
-//            )
-//            .background(.clear)
-//            .scrollContentBackground(.hidden)
+        VStack(spacing: 0) {
             
             
-//            SwiftDownEditor(text: $prompt)
-
+            Rectangle()
+                .fill(.blue)
+                .frame(height: 6)
+            
+                .background(Color.gray.opacity(0.5)) // Visual feedback
+                .gesture(
+                    DragGesture(minimumDistance: 0) // React to drag gestures with no minimum distance
+                        .onChanged { gesture in
+                            // Adjust the editorHeight based on the drag amount
+                            editorHeight += gesture.translation.height * -1
+                            
+                            // Optionally, enforce minimum and maximum height constraints
+                            editorHeight = min(max(editorHeight, 100), 600) // Example min/max height
+                        }
+                )
             
             
-            //            TextEditor(text: $prompt)
-            //                .fixedSize(horizontal: false, vertical: true)
-            //                .frame(minHeight: 80, alignment: .top)
-            //                .padding(.trailing)
-            //                .font(.system(size: 14))
-            //                .scrollContentBackground(.hidden)
-            //                RichTextView(text: $prompt)
-            //                    .frame(minHeight: 200, maxHeight: 400)
-            
-            
-            Button(bk.isResponseLoading ? "Loading…" : "Send") {
+            HStack(alignment: .bottom) {
+                //            ScrollView(.vertical) {
+                EditorTextViewRepresentable(text: $prompt)
+                //            }
+                    .frame(height: editorHeight)
                 
-                testScroll(conversation: conversation)
-                
-                //                    Task {
-                //                        await sendMessage(userMessage: prompt)
-                //                    }
+                Button(bk.isResponseLoading ? "Loading…" : "Send") {
+                    
+                    testScroll(conversation: conversation)
+                    
+                    //                    Task {
+                    //                        await sendMessage(userMessage: prompt)
+                    //                    }
+                }
+                .disabled(prompt.isEmpty)
+                .keyboardShortcut(.return, modifiers: .command)
+            } // END user text field hstack
+            .padding()
+            .background(.black.opacity(0.4))
+            .onAppear {
+                //            self.prompt = Message.prompt_02.content
+                self.prompt = bigText
             }
-            .disabled(prompt.isEmpty)
-            .keyboardShortcut(.return, modifiers: .command)
-        } // END user text field hstack
-        .padding()
-        .background(.black.opacity(0.4))
-        .onAppear {
-//            self.prompt = Message.prompt_02.content
-            self.prompt = bigText
+            
+            
+            
         }
     }
     
