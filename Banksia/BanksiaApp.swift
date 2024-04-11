@@ -36,6 +36,7 @@ struct BanksiaApp: App {
         .modelContainer(sharedModelContainer)
         .commands {
             SidebarCommands()
+            TextFormattingCommands()
         }
         
 #if os(macOS)

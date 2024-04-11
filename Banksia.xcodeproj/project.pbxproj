@@ -32,6 +32,10 @@
 		F6D6E2D62BC805E9000D2051 /* SingleMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6D6E2D52BC805E9000D2051 /* SingleMessageView.swift */; };
 		F6D6E2D92BC80A75000D2051 /* CodeEditor in Frameworks */ = {isa = PBXBuildFile; productRef = F6D6E2D82BC80A75000D2051 /* CodeEditor */; };
 		F6D6E2DB2BC80AA2000D2051 /* MessageInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6D6E2DA2BC80AA2000D2051 /* MessageInputView.swift */; };
+		F6D6E2DE2BC81EE6000D2051 /* SwiftDown in Frameworks */ = {isa = PBXBuildFile; productRef = F6D6E2DD2BC81EE6000D2051 /* SwiftDown */; };
+		F6D6E2E12BC82257000D2051 /* EditorCore in Frameworks */ = {isa = PBXBuildFile; productRef = F6D6E2E02BC82257000D2051 /* EditorCore */; };
+		F6D6E2E32BC82257000D2051 /* EditorUI in Frameworks */ = {isa = PBXBuildFile; productRef = F6D6E2E22BC82257000D2051 /* EditorUI */; };
+		F6D6E2E52BC82790000D2051 /* MarkdownEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6D6E2E42BC82790000D2051 /* MarkdownEditor.swift */; };
 		F6E8269F2B0BDD6E0047477D /* MessagesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6E8269E2B0BDD6E0047477D /* MessagesView.swift */; };
 		F6E826A12B0BF3630047477D /* IconPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6E826A02B0BF3630047477D /* IconPickerView.swift */; };
 		F6F393112B09DB7D005046F4 /* ConversationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6F393102B09DB7D005046F4 /* ConversationView.swift */; };
@@ -66,6 +70,7 @@
 		F6C161E02B0F63B800F4AB62 /* banksia_icons.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = banksia_icons.json; path = Working/banksia_icons.json; sourceTree = SOURCE_ROOT; };
 		F6D6E2D52BC805E9000D2051 /* SingleMessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleMessageView.swift; sourceTree = "<group>"; };
 		F6D6E2DA2BC80AA2000D2051 /* MessageInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageInputView.swift; sourceTree = "<group>"; };
+		F6D6E2E42BC82790000D2051 /* MarkdownEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkdownEditor.swift; sourceTree = "<group>"; };
 		F6E8269E2B0BDD6E0047477D /* MessagesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesView.swift; sourceTree = "<group>"; };
 		F6E826A02B0BF3630047477D /* IconPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconPickerView.swift; sourceTree = "<group>"; };
 		F6F393102B09DB7D005046F4 /* ConversationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationView.swift; sourceTree = "<group>"; };
@@ -79,6 +84,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F6D6E2DE2BC81EE6000D2051 /* SwiftDown in Frameworks */,
+				F6D6E2E32BC82257000D2051 /* EditorUI in Frameworks */,
+				F6D6E2E12BC82257000D2051 /* EditorCore in Frameworks */,
 				F6D6E2D92BC80A75000D2051 /* CodeEditor in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -115,6 +123,7 @@
 		F64F8E102B02200400C72E51 /* Handlers */ = {
 			isa = PBXGroup;
 			children = (
+				F6D6E2E42BC82790000D2051 /* MarkdownEditor.swift */,
 				F6A5E1B92BC6F3D70018B1B5 /* StyleHandler.swift */,
 				F6A5E1B62BC6EE480018B1B5 /* PreferencesHandler.swift */,
 				F64F8E1F2B03082100C72E51 /* BanksiaHandler.swift */,
@@ -207,6 +216,9 @@
 			name = Banksia;
 			packageProductDependencies = (
 				F6D6E2D82BC80A75000D2051 /* CodeEditor */,
+				F6D6E2DD2BC81EE6000D2051 /* SwiftDown */,
+				F6D6E2E02BC82257000D2051 /* EditorCore */,
+				F6D6E2E22BC82257000D2051 /* EditorUI */,
 			);
 			productName = Banksia;
 			productReference = F6A7BEE72B01C57400D3CE25 /* Banksia.app */;
@@ -238,6 +250,8 @@
 			mainGroup = F6A7BEDE2B01C57400D3CE25;
 			packageReferences = (
 				F6D6E2D72BC80A75000D2051 /* XCRemoteSwiftPackageReference "CodeEditor" */,
+				F6D6E2DC2BC81EE6000D2051 /* XCRemoteSwiftPackageReference "SwiftDown" */,
+				F6D6E2DF2BC82257000D2051 /* XCRemoteSwiftPackageReference "Editor" */,
 			);
 			productRefGroup = F6A7BEE82B01C57400D3CE25 /* Products */;
 			projectDirPath = "";
@@ -266,6 +280,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F6D6E2D62BC805E9000D2051 /* SingleMessageView.swift in Sources */,
+				F6D6E2E52BC82790000D2051 /* MarkdownEditor.swift in Sources */,
 				F6A7BEEB2B01C57400D3CE25 /* BanksiaApp.swift in Sources */,
 				F6A5E1BA2BC6F3D80018B1B5 /* StyleHandler.swift in Sources */,
 				F6A7BEEF2B01C57400D3CE25 /* DataModel.swift in Sources */,
@@ -528,6 +543,22 @@
 				minimumVersion = 1.2.4;
 			};
 		};
+		F6D6E2DC2BC81EE6000D2051 /* XCRemoteSwiftPackageReference "SwiftDown" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/qeude/SwiftDown.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.4.1;
+			};
+		};
+		F6D6E2DF2BC82257000D2051 /* XCRemoteSwiftPackageReference "Editor" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/mattDavo/Editor";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -535,6 +566,21 @@
 			isa = XCSwiftPackageProductDependency;
 			package = F6D6E2D72BC80A75000D2051 /* XCRemoteSwiftPackageReference "CodeEditor" */;
 			productName = CodeEditor;
+		};
+		F6D6E2DD2BC81EE6000D2051 /* SwiftDown */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F6D6E2DC2BC81EE6000D2051 /* XCRemoteSwiftPackageReference "SwiftDown" */;
+			productName = SwiftDown;
+		};
+		F6D6E2E02BC82257000D2051 /* EditorCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F6D6E2DF2BC82257000D2051 /* XCRemoteSwiftPackageReference "Editor" */;
+			productName = EditorCore;
+		};
+		F6D6E2E22BC82257000D2051 /* EditorUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F6D6E2DF2BC82257000D2051 /* XCRemoteSwiftPackageReference "Editor" */;
+			productName = EditorUI;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
