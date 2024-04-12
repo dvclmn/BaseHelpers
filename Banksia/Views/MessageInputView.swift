@@ -24,11 +24,11 @@ struct MessageInputView: View {
             
             HStack(alignment: .bottom, spacing: 0) {
 
-                EditorTextViewRepresentable(text: $prompt)
+                ScrollView(.vertical) {
+                    EditorTextViewRepresentable(text: $prompt)
+                }
                     .frame(height: pref.editorHeight)
-                    .onChange(of: prompt) {
-                        print(prompt)
-                    }
+
                 
                 Button(bk.isResponseLoading ? "Loading…" : "Send") {
                     
@@ -62,10 +62,10 @@ struct MessageInputView: View {
             }
             
             .background(.black.opacity(0.4))
-//            .onAppear {
-//                //            self.prompt = Message.prompt_02.content
-//                self.prompt = bigText
-//            }
+            .onAppear {
+                //            self.prompt = Message.prompt_02.content
+                self.prompt = bigText
+            }
             
             
             
