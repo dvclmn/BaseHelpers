@@ -20,26 +20,28 @@ struct EditorTextViewRepresentable: NSViewRepresentable {
         textView.insertionPointColor = .systemBlue
         textView.string = text
         textView.selectedTextAttributes.removeValue(forKey: .foregroundColor)
-        textView.linkTextAttributes?.removeValue(forKey: .foregroundColor)
+//        textView.linkTextAttributes?.removeValue(forKey: .foregroundColor)
         
-        let parser = Parser(grammars: [exampleGrammar, basicSwiftGrammar, readMeExampleGrammar])
-        let editor = Editor(textView: textView, parser: parser, baseGrammar: readMeExampleGrammar, theme: exampleTheme)
-        
-        editor.subscribe(toToken: "action") { (res) in
-            for (str, range) in res {
-                print(str, range)
-            }
-        }
+        textView.delegate = context.coordinator
+        let parser = Parser(grammars: [exampleGrammar, basicSwiftGrammar])
+        parser.shouldDebug = false
+        let editor = Editor(textView: textView, parser: parser, baseGrammar: exampleGrammar, theme: exampleTheme)
         
         scrollView.hasVerticalScroller = true
         scrollView.documentView = textView
-        scrollView.drawsBackground = false // Prevent the scrollView from drawing its background
+        scrollView.drawsBackground = false
         textView.autoresizingMask = [.width, .height]
         textView.isVerticallyResizable = true
         textView.isHorizontallyResizable = false
         textView.minSize = NSSize(width: 0, height: scrollView.bounds.height)
         textView.maxSize = NSSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude)
         textView.drawsBackground = false
+        
+        editor.subscribe(toToken: "action") { (res) in
+            for (str, range) in res {
+                print(str, range)
+            }
+        }
         
         return scrollView
     }
@@ -68,6 +70,11 @@ struct EditorTextViewRepresentable: NSViewRepresentable {
             if let textView = notification.object as? EditorTextView {
                 parent.text = textView.string
             }
+        }
+        
+        func textViewDidChangeSelection(_ notification: Notification) {
+            guard let textView = notification.object as? EditorTextView else { return }
+            
         }
     }
 }

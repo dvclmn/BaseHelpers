@@ -31,6 +31,7 @@ struct BanksiaApp: App {
         WindowGroup {
             ContentView()
                 .environment(bk)
+                .environmentObject(pref)
                 .preferredColorScheme(.dark)
         }
         .modelContainer(sharedModelContainer)

@@ -7,56 +7,45 @@
 
 import SwiftUI
 import SwiftData
-//import CodeEditor
-//import Highlightr
-//import SwiftDown
-//import EditorCore
 import EditorUI
 
 
 struct MessageInputView: View {
     @Environment(BanksiaHandler.self) private var bk
+    @EnvironmentObject var pref: Preferences
     @Environment(\.modelContext) private var modelContext
     
     
     @State private var prompt: String = ""
     
-    @State private var text: String = "Your initial text here"
-    @State private var editorHeight: CGFloat = 300 // Initial height of the editor
-    
-    
-    //    @State private var theme    = CodeEditor.ThemeName.pojoaque
-    
     var conversation: Conversation
     
     var body: some View {
         
-        
         VStack(spacing: 0) {
             
-            
             Rectangle()
-                .fill(.blue)
-                .frame(height: 6)
-            
-                .background(Color.gray.opacity(0.5)) // Visual feedback
+                .fill(.blue.opacity(0.0))
+                .offset(y: 5)
+                .frame(height: 10)
+                .contentShape(Rectangle())
                 .gesture(
                     DragGesture(minimumDistance: 0) // React to drag gestures with no minimum distance
                         .onChanged { gesture in
                             // Adjust the editorHeight based on the drag amount
-                            editorHeight += gesture.translation.height * -1
+                            pref.editorHeight += gesture.translation.height * -1
                             
                             // Optionally, enforce minimum and maximum height constraints
-                            editorHeight = min(max(editorHeight, 100), 600) // Example min/max height
+                            pref.editorHeight = min(max(pref.editorHeight, 100), 600) // Example min/max height
                         }
                 )
-            
+                .cursor(.resizeUpDown)
+
             
             HStack(alignment: .bottom) {
-                //            ScrollView(.vertical) {
+
                 EditorTextViewRepresentable(text: $prompt)
-                //            }
-                    .frame(height: editorHeight)
+                    .frame(height: pref.editorHeight)
                 
                 Button(bk.isResponseLoading ? "Loading…" : "Send") {
                     
@@ -68,8 +57,9 @@ struct MessageInputView: View {
                 }
                 .disabled(prompt.isEmpty)
                 .keyboardShortcut(.return, modifiers: .command)
+                .padding()
             } // END user text field hstack
-            .padding()
+            
             .background(.black.opacity(0.4))
             .onAppear {
                 //            self.prompt = Message.prompt_02.content
@@ -124,8 +114,13 @@ struct MessageInputView: View {
 
 #Preview {
     ModelContainerPreview(ModelContainer.sample) {
-        MessageInputView(conversation: Conversation.appKitDrawing)
+        
+        VStack {
+            Spacer()
+            MessageInputView(conversation: Conversation.appKitDrawing)
+        }
     }
     .environment(BanksiaHandler())
-    .frame(width: 700, height: 700)
+    .environmentObject(Preferences())
+    .frame(width: 560, height: 700)
 }
