@@ -13,7 +13,7 @@ struct MessageInputView: View {
     @EnvironmentObject var pref: Preferences
     @Environment(\.modelContext) private var modelContext
     
-//    @State private var prompt: String = ""
+//    @State private var pref.userPrompt: String = ""
     
     var conversation: Conversation
     
@@ -34,16 +34,16 @@ struct MessageInputView: View {
                 //                }
 //                    .frame(height: pref.editorHeight)
 //                    .onChange(of: prompt) {
-//                        pref.userPrompt = prompt
+//                        pref.pref.userPrompt = prompt
 //                    }
                 
                 
                 Button(bk.isResponseLoading ? "Loading…" : "Send") {
                     
-                    //                    testScroll(conversation: conversation)
+//                                        testScroll()
                     
                     Task {
-                        await sendMessage(userMessage: pref.userPrompt)
+                        await sendMessage()
                     }
                 }
                 .disabled(pref.userPrompt.isEmpty)
@@ -76,26 +76,26 @@ struct MessageInputView: View {
             //            }
             
 //                        .onAppear {
-//                            if !pref.userPrompt.isEmpty {
-//                                prompt = pref.userPrompt
+//                            if !pref.pref.userPrompt.isEmpty {
+//                                prompt = pref.pref.userPrompt
 //                            }
 //                        }
 //                        .onDisappear {
 //                            if !prompt.isEmpty {
-//                                pref.userPrompt = prompt
+//                                pref.pref.userPrompt = prompt
 //                            }
 //                        }
         }
         
     }
     
-    //    private func testScroll(conversation: Conversation) {
-    //        let newMessage = Message(content: prompt)
-    //        modelContext.insert(newMessage)
-    //        newMessage.conversation = conversation
-    //    }
-    //
-    private func sendMessage(userMessage: String) async {
+        private func testScroll() {
+            let newMessage = Message(content: pref.userPrompt)
+            modelContext.insert(newMessage)
+            newMessage.conversation = conversation
+        }
+    
+    private func sendMessage() async {
         
 //        let exampleMessage: String = """
 //
@@ -122,18 +122,12 @@ struct MessageInputView: View {
         // Trim the message to remove leading and trailing whitespaces and newlines
 //        let trimmedMessage = userMessage.trimmingCharacters(in: .whitespacesAndNewlines)
         
-        // Check if the trimmed message is empty and return early if it is
-        guard !userMessage.isEmpty else {
-            print("Message is empty, nothing to send")
-            return
-        }
         
         // Create a Message object for the user's message and append it to the conversation
         let newUserMessage = Message(content: pref.userPrompt, isUser: true)
         
         modelContext.insert(newUserMessage)
-        conversation.messages?.append(newUserMessage)
-        pref.userPrompt = ""
+        newUserMessage.conversation = conversation
         
         do {
             
@@ -148,6 +142,8 @@ struct MessageInputView: View {
         } catch {
             print("Error getting GPT response ")
         }
+        
+        pref.userPrompt = ""
         
     } // END send message
     

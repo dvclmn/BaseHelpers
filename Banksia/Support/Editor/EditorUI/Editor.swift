@@ -272,8 +272,7 @@ extension Editor: NSTextViewDelegate {
     public func textView(_ textView: NSTextView, clickedOnLink link: Any, at charIndex: Int) -> Bool {
         var linkRange = NSRange(location: 0, length: 0)
         
-        guard let id = link as? String,
-            let handler = textView.attributedString().attribute(ActionThemeAttribute.HandlerKey, at: charIndex, effectiveRange: &linkRange) as? ActionThemeAttribute.Handler,
+        guard let handler = textView.attributedString().attribute(ActionThemeAttribute.HandlerKey, at: charIndex, effectiveRange: &linkRange) as? ActionThemeAttribute.Handler,
             linkRange.length > 0 else {
             return false
         }
