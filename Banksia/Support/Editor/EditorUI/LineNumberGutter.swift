@@ -12,7 +12,7 @@ import UIKit
 
 
 #elseif os(macOS)
-
+import AppKit
 import Cocoa
 
 /// A line number ruler view.

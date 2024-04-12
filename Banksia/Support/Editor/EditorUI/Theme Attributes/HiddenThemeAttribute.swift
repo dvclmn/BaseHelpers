@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import EditorCore
+
 
 public class HiddenThemeAttribute: TokenThemeAttribute {
     

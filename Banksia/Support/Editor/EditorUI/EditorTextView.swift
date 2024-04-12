@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import EditorCore
+
 
 // MARK: - iOS
 #if os(iOS)

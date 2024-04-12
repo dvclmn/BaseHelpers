@@ -9,10 +9,11 @@ import Foundation
 
 #if os(iOS)
 import UIKit
-public typealias Pasteboard = UIPasteboard
-public typealias PasteboardType = UIPasteboard.Type
+public typealias EditorPasteboard = UIPasteboard
+public typealias EditorPasteboardType = UIPasteboard.Type
 #elseif os(macOS)
 import Cocoa
-public typealias Pasteboard = NSPasteboard
-public typealias PasteboardType = NSPasteboard.PasteboardType
+import AppKit
+public typealias EditorPasteboard = NSPasteboard
+public typealias EditorPasteboardType = NSPasteboard.PasteboardType
 #endif

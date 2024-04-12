@@ -15,8 +15,6 @@
 //
 
 import Foundation
-import EditorCore
-import EditorUI
 
 //struct GrammarHandler {
 

@@ -7,16 +7,13 @@
 
 import SwiftUI
 import SwiftData
-import EditorUI
-
 
 struct MessageInputView: View {
     @Environment(BanksiaHandler.self) private var bk
     @EnvironmentObject var pref: Preferences
     @Environment(\.modelContext) private var modelContext
     
-    
-    @State private var prompt: String = ""
+    @State private var prompt: String = "_Italic_ *Bold* _Italic and *bold*_ *Bold and _italic_*"
     
     var conversation: Conversation
     
@@ -61,10 +58,10 @@ struct MessageInputView: View {
             } // END user text field hstack
             
             .background(.black.opacity(0.4))
-            .onAppear {
-                //            self.prompt = Message.prompt_02.content
-                self.prompt = bigText
-            }
+//            .onAppear {
+//                //            self.prompt = Message.prompt_02.content
+//                self.prompt = bigText
+//            }
             
             
             

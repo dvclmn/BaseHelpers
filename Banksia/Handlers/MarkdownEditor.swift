@@ -6,8 +6,6 @@
 //
 
 import SwiftUI
-import EditorCore
-import EditorUI
 
 struct EditorTextViewRepresentable: NSViewRepresentable {
     @Binding var text: String
@@ -24,7 +22,7 @@ struct EditorTextViewRepresentable: NSViewRepresentable {
         
         textView.delegate = context.coordinator
         let parser = Parser(grammars: [exampleGrammar, basicSwiftGrammar])
-        parser.shouldDebug = false
+//        parser.shouldDebug = true
         let editor = Editor(textView: textView, parser: parser, baseGrammar: exampleGrammar, theme: exampleTheme)
         
         scrollView.hasVerticalScroller = true
@@ -73,8 +71,8 @@ struct EditorTextViewRepresentable: NSViewRepresentable {
         }
         
         func textViewDidChangeSelection(_ notification: Notification) {
-            guard let textView = notification.object as? EditorTextView else { return }
-            
-        }
-    }
+            guard let textView = notification.object as? NSTextView else { return }
+            let cursorPosition = textView.selectedRange().location
+            // Log or check conditionally showing/hiding logic
+        }    }
 }

@@ -6,14 +6,14 @@
 //
 
 import Foundation
-import EditorCore
+
 
 public class ColorThemeAttribute: TokenThemeAttribute {
     
     public let key = "color"
-    public let color: Color
+    public let color: EditorColor
     
-    public init(color: Color) {
+    public init(color: EditorColor) {
         self.color = color
     }
     

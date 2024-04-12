@@ -6,21 +6,22 @@
 //
 
 import Foundation
-import EditorCore
+
 
 #if os(iOS)
 import UIKit
 #elseif os(macOS)
 import Cocoa
+import AppKit
 #endif
 
 public class UnderlineThemeAttribute: TokenThemeAttribute {
     
     public let key = "underline-color"
-    public let color: Color
+    public let color: EditorColor
     public let style: NSUnderlineStyle
     
-    public init(color: Color, style: NSUnderlineStyle = .single) {
+    public init(color: EditorColor, style: NSUnderlineStyle = .single) {
         self.color = color
         self.style = style
     }

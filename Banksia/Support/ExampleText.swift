@@ -20,6 +20,8 @@ let bigText = """
 
 Links: [Hello](https://www.google.com)
 
+_Italic_ *Bold* _Italic and *bold*_ *Bold and _italic_*
+
 # Headers
 
 ```
@@ -664,7 +666,7 @@ And string interpolation: \\"\\(Wow cat dog)\\"
 Links: [Hello](https://www.google.com)
 
 ```Swift
-import EditorCore
+
 
 let grammar = Grammar(scopeName: "source.example")
 ```

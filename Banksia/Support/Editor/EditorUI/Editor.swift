@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import EditorCore
 
 // MARK: - iOS
 #if os(iOS)
@@ -162,6 +161,7 @@ extension Editor: UITextViewDelegate {
 // MARK: - macOS
 #elseif os(macOS)
 import Cocoa
+import AppKit
 
 public class Editor: NSObject {
     
@@ -330,7 +330,7 @@ extension Editor: NSLayoutManagerDelegate {
     }
     
     // Inspiration from: https://stackoverflow.com/a/57697139
-    public func layoutManager(_ layoutManager: NSLayoutManager, shouldGenerateGlyphs glyphs: UnsafePointer<CGGlyph>, properties props: UnsafePointer<NSLayoutManager.GlyphProperty>, characterIndexes charIndexes: UnsafePointer<Int>, font aFont: Font, forGlyphRange glyphRange: NSRange) -> Int {
+    public func layoutManager(_ layoutManager: NSLayoutManager, shouldGenerateGlyphs glyphs: UnsafePointer<CGGlyph>, properties props: UnsafePointer<NSLayoutManager.GlyphProperty>, characterIndexes charIndexes: UnsafePointer<Int>, font aFont: EditorFont, forGlyphRange glyphRange: NSRange) -> Int {
 
         guard let storage = layoutManager.textStorage else {
             return 0

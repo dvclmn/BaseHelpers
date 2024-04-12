@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import EditorCore
+
 #if os(iOS)
 import UIKit
 #elseif os(macOS)

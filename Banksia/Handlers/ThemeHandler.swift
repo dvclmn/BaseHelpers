@@ -8,26 +8,7 @@
 
 
 import Foundation
-import EditorCore
-import EditorUI
 
-#if os(iOS)
-import UIKit
-
-public extension Font {
-    class func monospacedFont(ofSize size: CGFloat) -> Font {
-        return .monospacedSystemFont(ofSize: size, weight: .regular)
-    }
-}
-#elseif os(macOS)
-import Cocoa
-
-public extension Font {
-    class func monospacedFont(ofSize size: CGFloat) -> Font {
-        return Font(name: "SpaceMono-Regular", size: size)!
-    }
-}
-#endif
 
 //struct ThemeHandler {
     let exampleTheme = Theme(name: "basic", settings: [
@@ -52,7 +33,7 @@ public extension Font {
         ThemeSetting(scope: "variable", parentScopes: [], attributes: []),
         ThemeSetting(scope: "source", parentScopes: [], attributes: [
 //            ColorThemeAttribute(color: .exampleTextColor),
-            FontThemeAttribute(font: .monospacedFont(ofSize: 18)),
+            FontThemeAttribute(font: .systemFont(ofSize: 18)),
             LigatureThemeAttribute(ligature: 0),
             FirstLineHeadIndentThemeAttribute(value: 48),
             TailIndentThemeAttribute(value: -30),
@@ -88,19 +69,19 @@ public extension Font {
             HiddenThemeAttribute(hidden: true)
         ]),
         ThemeSetting(scope: "markup.heading.1", parentScopes: [], attributes: [
-            FontThemeAttribute(font: .monospacedFont(ofSize: 25)),
+            FontThemeAttribute(font: .systemFont(ofSize: 24)),
             FirstLineHeadIndentThemeAttribute(value: 18)
         ]),
         ThemeSetting(scope: "markup.heading.2", parentScopes: [], attributes: [
-            FontThemeAttribute(font: .monospacedFont(ofSize: 22)),
+            FontThemeAttribute(font: .systemFont(ofSize: 22)),
             FirstLineHeadIndentThemeAttribute(value: 8)
         ]),
         ThemeSetting(scope: "markup.heading.3", parentScopes: [], attributes: [
-            FontThemeAttribute(font: .monospacedFont(ofSize: 20)),
+            FontThemeAttribute(font: .systemFont(ofSize: 20)),
             FirstLineHeadIndentThemeAttribute(value: 0)
         ]),
         ThemeSetting(scope: "markup.center", parentScopes: [], attributes: [
-            BackgroundColorThemeAttribute(color: Color.gray, roundingStyle: .quarter, coloringStyle: .line),
+            BackgroundColorThemeAttribute(color: EditorColor.gray, roundingStyle: .quarter, coloringStyle: .line),
         ]),
         ThemeSetting(scope: "markup.center.content", parentScopes: [], attributes: [
             TextAlignmentThemeAttribute(value: .center)
@@ -149,26 +130,3 @@ public extension Font {
 //            BackgroundColorThemeAttribute(color: .codeBackgroundColor, roundingStyle: .full, coloringStyle: .line)
         ])
     ])
-
-
-    let readMeExampleTheme = Theme(name: "basic", settings: [
-        ThemeSetting(scope: "comment", parentScopes: [], attributes: [
-            ColorThemeAttribute(color: .systemGreen)
-        ]),
-        ThemeSetting(scope: "keyword", parentScopes: [], attributes: [
-            ColorThemeAttribute(color: .systemBlue)
-        ]),
-        ThemeSetting(scope: "string", parentScopes: [], attributes: [
-            ColorThemeAttribute(color: .systemRed)
-        ]),
-        ThemeSetting(scope: "source", parentScopes: [], attributes: [
-//            ColorThemeAttribute(color: .exampleTextColor),
-            FontThemeAttribute(font: .monospacedFont(ofSize: 18)),
-            TailIndentThemeAttribute(value: -30)
-        ]),
-        ThemeSetting(scope: "comment.keyword", parentScopes: [], attributes: [
-            ColorThemeAttribute(color: .systemTeal)
-        ])
-    ])
-
-//}

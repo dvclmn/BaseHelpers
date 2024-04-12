@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import EditorCore
+
 
 // MARK: - iOS
 #if os(iOS)
@@ -121,6 +121,7 @@ public class EditorLayoutManager: NSLayoutManager {
 // MARK: - macOS
 #elseif os(macOS)
 import Cocoa
+import AppKit
 
 public typealias Point = NSPoint
 public typealias Rect = NSRect
@@ -223,7 +224,7 @@ public class EditorLayoutManager: NSLayoutManager {
     }
     
     // Adapted from: https://stackoverflow.com/a/44303971
-    func fillRoundedBackgroundRectArray(_ rectArray: UnsafePointer<Rect>, count rectCount: Int, color: Color, cornerRadius: CGFloat) {
+    func fillRoundedBackgroundRectArray(_ rectArray: UnsafePointer<Rect>, count rectCount: Int, color: EditorColor, cornerRadius: CGFloat) {
         
         let path = getRoundedBackgroundPath(rectArray, count: rectCount, cornerRadius: cornerRadius)
 
@@ -284,7 +285,7 @@ public class EditorLayoutManager: NSLayoutManager {
 // MARK: - Common
 extension EditorLayoutManager {
     
-    func fillRoundedBackgroundRect(_ rect: Rect, color: Color, cornerRadius: CGFloat) {
+    func fillRoundedBackgroundRect(_ rect: Rect, color: EditorColor, cornerRadius: CGFloat) {
         let path = CGMutablePath()
 
         path.addRect(rect.insetBy(dx: cornerRadius, dy: cornerRadius))

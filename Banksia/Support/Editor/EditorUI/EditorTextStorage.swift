@@ -6,11 +6,12 @@
 //
 
 import Foundation
-import EditorCore
+
 
 #if os(iOS)
 import UIKit
 #elseif os(macOS)
+import AppKit
 import Cocoa
 #endif
 
@@ -69,7 +70,7 @@ public class EditorTextStorage: NSTextStorage {
         fatalError("\(#function) is not supported")
     }
     
-    required init?(pasteboardPropertyList propertyList: Any, ofType type: PasteboardType) {
+    required init?(pasteboardPropertyList propertyList: Any, ofType type: EditorPasteboardType) {
         fatalError("\(#function) is not supported")
     }
     

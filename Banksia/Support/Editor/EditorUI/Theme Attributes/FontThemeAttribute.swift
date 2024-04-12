@@ -6,14 +6,14 @@
 //
 
 import Foundation
-import EditorCore
+
 
 public class FontThemeAttribute: TokenThemeAttribute {
     
     public let key = "font-style"
-    public let font: Font
+    public let font: EditorFont
     
-    public init(font: Font) {
+    public init(font: EditorFont) {
         self.font = font
     }
     

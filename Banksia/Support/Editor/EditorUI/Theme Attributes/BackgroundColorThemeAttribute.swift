@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import EditorCore
+
 
 #if os(iOS)
 import UIKit
@@ -60,7 +60,7 @@ public class BackgroundColorThemeAttribute: TokenThemeAttribute {
     public var coloringStyle: ColoringStyle
     public let roundedBackground: RoundedBackground
     
-    public init(color: Color, roundingStyle: RoundingStyle = .none, coloringStyle: ColoringStyle = .textOnly) {
+    public init(color: EditorColor, roundingStyle: RoundingStyle = .none, coloringStyle: ColoringStyle = .textOnly) {
         self.color = color
         self.roundingStyle = roundingStyle
         self.coloringStyle = coloringStyle
