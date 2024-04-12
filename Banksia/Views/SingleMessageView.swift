@@ -11,13 +11,13 @@ import SwiftData
 struct SingleMessageView: View {
     
     @State private var isHovering: Bool = false
-
+    
     var message: Message
     
     var body: some View {
         VStack {
             VStack {
-                
+
                 Text(message.content)
                     .frame(maxWidth:.infinity, alignment: .leading)
                     .padding()
@@ -41,7 +41,6 @@ struct SingleMessageView: View {
                             .padding(8)
                         }
                     }
-                
             }
             .frame(maxWidth: 500)
             .background(Color(message.isUser ? .blue : .gray).opacity(0.2))
@@ -68,6 +67,6 @@ struct SingleMessageView: View {
 #Preview {
     ModelContainerPreview(ModelContainer.sample) {
         SingleMessageView(message: Message.prompt_02)
-        .frame(width: 700, height: 700)
+            .frame(width: 700, height: 700)
     }
 }

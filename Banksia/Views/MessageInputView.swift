@@ -26,6 +26,9 @@ struct MessageInputView: View {
 
                 EditorTextViewRepresentable(text: $prompt)
                     .frame(height: pref.editorHeight)
+                    .onChange(of: prompt) {
+                        print(prompt)
+                    }
                 
                 Button(bk.isResponseLoading ? "Loading…" : "Send") {
                     
