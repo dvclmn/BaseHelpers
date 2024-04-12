@@ -19,16 +19,23 @@ extension BanksiaHandler {
         
         isResponseLoading = true
         
-        guard let apiKey = KeychainHandler.get(forKey: "OpenAIKey") else {
-            print("Couldn't get the api key from keychain")
-            throw KeychainError.couldNotFindItem
-        }
+//        guard let apiKey = KeychainHandler.get(forKey: "OpenAIKey") else {
+//            print("Couldn't get the api key from keychain")
+//            throw KeychainError.couldNotFindItem
+//        }
         
         print("Let's fetch a response from GPT")
         
-        let requestBody = RequestBody(model: pref.gptModel.value, messages: [RequestMessage(role: "user", content: prompt)], temperature: pref.gptTemperature)
+        let requestBody = RequestBody(
+            model: pref.gptModel.value,
+            messages: [
+                RequestMessage(role: "system", content: pref.systemPrompt),
+                RequestMessage(role: "user", content: prompt)
+            ],
+            temperature: pref.gptTemperature
+        )
         
-        let request = try makeURLRequest(from: OpenAI.chatURL, requestType: .post, bearerToken: apiKey, body: requestBody)
+        let request = try makeURLRequest(from: OpenAI.chatURL, requestType: .post, bearerToken: "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", body: requestBody)
         
         print("Request: '\(request)'")
         

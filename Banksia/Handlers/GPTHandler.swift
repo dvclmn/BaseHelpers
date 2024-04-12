@@ -72,7 +72,7 @@ enum AIModel: String, Codable, CaseIterable {
     var value: String {
         switch self {
         case .gpt_4_turbo:
-            "gpt-4-turbo"
+            "gpt-4-turbo-2024-04-09"
         case .gpt_4:
             "gpt-4"
         case .gpt_3_5:

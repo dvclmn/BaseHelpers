@@ -38,6 +38,7 @@ struct BanksiaApp: App {
         .commands {
             SidebarCommands()
             TextFormattingCommands()
+            TextEditingCommands()
         }
         
 #if os(macOS)

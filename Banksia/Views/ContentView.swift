@@ -53,23 +53,23 @@ struct ContentView: View {
             if let firstConversation = conversations.first {
                 bk.selectedConversations = [firstConversation.persistentModelID]
             }
-            getActiveConversation()
+//            getActiveConversation()
         }
         .onChange(of: bk.selectedConversations) {
-            getActiveConversation()
+//            getActiveConversation()
         }
         .background(.contentBackground)
         
     }
     
-    private func getActiveConversation() {
-        print("Let's get the active conversation")
-        if let conversationID = bk.selectedConversations.first {
-            let conversation = conversations.first(where: {$0.persistentModelID == conversationID})
-            print("The active conversation is: \(String(describing: conversation?.name))")
-            bk.activeConversation = conversation
-        }
-    }
+//    private func getActiveConversation() {
+//        print("Let's get the active conversation")
+//        if let conversationID = bk.selectedConversations.first {
+//            let conversation = conversations.first(where: {$0.persistentModelID == conversationID})
+//            print("The active conversation is: \(String(describing: conversation?.name))")
+//            bk.activeConversation = conversation
+//        }
+//    }
 }
 
 #Preview {

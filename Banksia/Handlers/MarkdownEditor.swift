@@ -46,7 +46,6 @@ struct EditorTextViewRepresentable: NSViewRepresentable {
             self.parent = parent
             super.init()
             self.parser = Parser(grammars: [exampleGrammar, basicSwiftGrammar, readMeExampleGrammar])
-            
         }
         
         func textDidChange(_ notification: Notification) {
@@ -78,7 +77,7 @@ class SizableTextview: EditorTextView {
         }
         layoutManager.ensureLayout(for: container)
         var size = layoutManager.usedRect(for: container).size
-//        size.width = Style.contentWidth // Constrain the width to your fixed maxWidth
+        size.width = 400
         return size
     }
     override func didChangeText() {

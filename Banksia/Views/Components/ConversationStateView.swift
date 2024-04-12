@@ -19,33 +19,33 @@ struct ConversationStateView: View {
 //    var action: (() -> Void)?
     
     var body: some View {
-        
-        switch bk.selectionState {
-        case .blank:
-            Text("No conversations created at all")
-        case .single:
-            EmptyView()
-        case .multiple:
-            VStack(alignment: .center) {
-                Text(bk.selectionState.randomEmoji())
-                    .font(.title)
-                    .padding(.bottom,6)
-                Text(bk.selectionState.randomTitle())
-                    .font(.title)
-                    .opacity(0.8)
-                    .padding(.bottom,4)
-                Text(bk.selectionState.randomMessage())
-                    .opacity(0.4)
-                    .padding(.bottom,14)
-//                if let action = action, let actionLabel = actionLabel, let actionIcon = actionIcon {
-//                    
-//                    HandyButton(label: actionLabel, icon: actionIcon, action: action)
-//                } // END actions check
-            }
-            .padding(.bottom,40)
-        case .none:
-            Text("None selected")
-        }
+  EmptyView()
+//        switch bk.selectionState {
+//        case .blank:
+//            Text("No conversations created at all")
+//        case .single:
+//            EmptyView()
+//        case .multiple:
+//            VStack(alignment: .center) {
+//                Text(bk.selectionState.randomEmoji())
+//                    .font(.title)
+//                    .padding(.bottom,6)
+//                Text(bk.selectionState.randomTitle())
+//                    .font(.title)
+//                    .opacity(0.8)
+//                    .padding(.bottom,4)
+//                Text(bk.selectionState.randomMessage())
+//                    .opacity(0.4)
+//                    .padding(.bottom,14)
+////                if let action = action, let actionLabel = actionLabel, let actionIcon = actionIcon {
+////                    
+////                    HandyButton(label: actionLabel, icon: actionIcon, action: action)
+////                } // END actions check
+//            }
+//            .padding(.bottom,40)
+//        case .none:
+//            Text("None selected")
+//        }
         
         
         
