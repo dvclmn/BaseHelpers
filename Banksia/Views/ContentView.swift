@@ -58,6 +58,7 @@ struct ContentView: View {
         .onChange(of: bk.selectedConversations) {
             getActiveConversation()
         }
+        .background(.contentBackground)
         
     }
     
@@ -74,6 +75,7 @@ struct ContentView: View {
 #Preview {
     ContentView()
         .environment(BanksiaHandler())
+        .environmentObject(Preferences())
         .modelContainer(try! ModelContainer.sample())
         .frame(width: 600, height: 700)
 }

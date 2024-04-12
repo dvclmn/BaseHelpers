@@ -57,13 +57,13 @@ struct ConversationView: View {
                                 scrollProxy.scrollTo("bottom")
                             }
                         } label: {
-                            Label("Scroll to bottom", systemImage: Icons.arrowDown)
+                            Label("Scroll to bottom", systemImage: Icons.arrowDown.icon)
                                 .labelStyle(.iconOnly)
                         }
                         .padding()
                     }
                 } // END scroll reader
-                
+                .cursor(.arrow)
                 
                 
             } else {
@@ -85,6 +85,7 @@ struct ConversationView: View {
     ModelContainerPreview(ModelContainer.sample) {
         ConversationView()
             .environment(BanksiaHandler())
+            .environmentObject(Preferences())
             .frame(width: 600, height: 700)
     }
 }

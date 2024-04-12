@@ -32,8 +32,8 @@ import Foundation
         ThemeSetting(scope: "support", parentScopes: [], attributes: []),
         ThemeSetting(scope: "variable", parentScopes: [], attributes: []),
         ThemeSetting(scope: "source", parentScopes: [], attributes: [
-//            ColorThemeAttribute(color: .exampleTextColor),
-            FontThemeAttribute(font: .systemFont(ofSize: 18)),
+            ColorThemeAttribute(color: .white),
+            FontThemeAttribute(font: .systemFont(ofSize: 15)),
             LigatureThemeAttribute(ligature: 0),
             FirstLineHeadIndentThemeAttribute(value: 48),
             TailIndentThemeAttribute(value: -30),

@@ -13,7 +13,7 @@ struct MessageInputView: View {
     @EnvironmentObject var pref: Preferences
     @Environment(\.modelContext) private var modelContext
     
-    @State private var prompt: String = "_Italic_ *Bold* _Italic and *bold*_ *Bold and _italic_*"
+    @State private var prompt: String = ""
     
     var conversation: Conversation
     
@@ -21,25 +21,8 @@ struct MessageInputView: View {
         
         VStack(spacing: 0) {
             
-            Rectangle()
-                .fill(.blue.opacity(0.0))
-                .offset(y: 5)
-                .frame(height: 10)
-                .contentShape(Rectangle())
-                .gesture(
-                    DragGesture(minimumDistance: 0) // React to drag gestures with no minimum distance
-                        .onChanged { gesture in
-                            // Adjust the editorHeight based on the drag amount
-                            pref.editorHeight += gesture.translation.height * -1
-                            
-                            // Optionally, enforce minimum and maximum height constraints
-                            pref.editorHeight = min(max(pref.editorHeight, 100), 600) // Example min/max height
-                        }
-                )
-                .cursor(.resizeUpDown)
-
             
-            HStack(alignment: .bottom) {
+            HStack(alignment: .bottom, spacing: 0) {
 
                 EditorTextViewRepresentable(text: $prompt)
                     .frame(height: pref.editorHeight)
@@ -56,6 +39,24 @@ struct MessageInputView: View {
                 .keyboardShortcut(.return, modifiers: .command)
                 .padding()
             } // END user text field hstack
+            .overlay(alignment: .top) {
+                Rectangle()
+                    .fill(.blue.opacity(0.0))
+                    .frame(height: 10)
+                    .contentShape(Rectangle())
+                    .gesture(
+                        DragGesture(minimumDistance: 0) // React to drag gestures with no minimum distance
+                            .onChanged { gesture in
+                                // Adjust the editorHeight based on the drag amount
+                                pref.editorHeight += gesture.translation.height * -1
+                                
+                                // Optionally, enforce minimum and maximum height constraints
+                                pref.editorHeight = min(max(pref.editorHeight, 100), 600) // Example min/max height
+                            }
+                    )
+                    .cursor(.resizeUpDown)
+
+            }
             
             .background(.black.opacity(0.4))
 //            .onAppear {
@@ -66,6 +67,7 @@ struct MessageInputView: View {
             
             
         }
+        
     }
     
     private func testScroll(conversation: Conversation) {
@@ -114,7 +116,7 @@ struct MessageInputView: View {
         
         VStack {
             Spacer()
-            MessageInputView(conversation: Conversation.appKitDrawing)
+            ConversationView()
         }
     }
     .environment(BanksiaHandler())

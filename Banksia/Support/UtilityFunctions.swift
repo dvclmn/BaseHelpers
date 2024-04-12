@@ -96,3 +96,31 @@ extension View {
         }
     }
 }
+
+
+
+// MARK: - Copy to clipboard
+protocol PasteboardCopying {
+    func setString(_ string: String)
+}
+
+#if canImport(AppKit)
+import AppKit
+
+extension NSPasteboard: PasteboardCopying {
+    func setString(_ string: String) {
+        clearContents()
+        setString(string, forType: .string)
+    }
+}
+#endif
+
+#if canImport(UIKit)
+import UIKit
+
+extension UIPasteboard: PasteboardCopying {
+    func setString(_ string: String) {
+        self.string = string
+    }
+}
+#endif
