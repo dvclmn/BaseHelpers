@@ -26,6 +26,8 @@
 		F6A7BEEB2B01C57400D3CE25 /* BanksiaApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A7BEEA2B01C57400D3CE25 /* BanksiaApp.swift */; };
 		F6A7BEEF2B01C57400D3CE25 /* DataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A7BEEE2B01C57400D3CE25 /* DataModel.swift */; };
 		F6A7BEF12B01C57500D3CE25 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F6A7BEF02B01C57500D3CE25 /* Assets.xcassets */; };
+		F6AD361A2BCAC55100B7AADD /* MarkdownUI in Frameworks */ = {isa = PBXBuildFile; productRef = F6AD36192BCAC55100B7AADD /* MarkdownUI */; };
+		F6AD361D2BCAC87900B7AADD /* Theme+MarkdownUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6AD361C2BCAC87900B7AADD /* Theme+MarkdownUI.swift */; };
 		F6C161DF2B0CEE9700F4AB62 /* IconHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6C161DE2B0CEE9700F4AB62 /* IconHandler.swift */; };
 		F6C161E12B0F63B800F4AB62 /* banksia_icons.json in Resources */ = {isa = PBXBuildFile; fileRef = F6C161E02B0F63B800F4AB62 /* banksia_icons.json */; };
 		F6D6E2D62BC805E9000D2051 /* SingleMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6D6E2D52BC805E9000D2051 /* SingleMessageView.swift */; };
@@ -120,6 +122,7 @@
 		F6A7BEEE2B01C57400D3CE25 /* DataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataModel.swift; sourceTree = "<group>"; };
 		F6A7BEF02B01C57500D3CE25 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F6A7BEF52B01C57500D3CE25 /* Banksia.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Banksia.entitlements; sourceTree = "<group>"; };
+		F6AD361C2BCAC87900B7AADD /* Theme+MarkdownUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Theme+MarkdownUI.swift"; sourceTree = "<group>"; };
 		F6C161DE2B0CEE9700F4AB62 /* IconHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconHandler.swift; sourceTree = "<group>"; };
 		F6C161E02B0F63B800F4AB62 /* banksia_icons.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = banksia_icons.json; path = Working/banksia_icons.json; sourceTree = SOURCE_ROOT; };
 		F6D6E2D52BC805E9000D2051 /* SingleMessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleMessageView.swift; sourceTree = "<group>"; };
@@ -198,6 +201,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F6AD361A2BCAC55100B7AADD /* MarkdownUI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -251,6 +255,7 @@
 		F64F8E2F2B042A0300C72E51 /* Support */ = {
 			isa = PBXGroup;
 			children = (
+				F6AD361B2BCAC85600B7AADD /* MarkdownUI */,
 				F6D6E2EC2BC91C40000D2051 /* Editor */,
 				F6D6E2EA2BC82CFE000D2051 /* ExampleText.swift */,
 				F6C161E02B0F63B800F4AB62 /* banksia_icons.json */,
@@ -309,6 +314,14 @@
 				F6A7BEF52B01C57500D3CE25 /* Banksia.entitlements */,
 			);
 			path = Banksia;
+			sourceTree = "<group>";
+		};
+		F6AD361B2BCAC85600B7AADD /* MarkdownUI */ = {
+			isa = PBXGroup;
+			children = (
+				F6AD361C2BCAC87900B7AADD /* Theme+MarkdownUI.swift */,
+			);
+			path = MarkdownUI;
 			sourceTree = "<group>";
 		};
 		F6D6E2EC2BC91C40000D2051 /* Editor */ = {
@@ -416,6 +429,7 @@
 			);
 			name = Banksia;
 			packageProductDependencies = (
+				F6AD36192BCAC55100B7AADD /* MarkdownUI */,
 			);
 			productName = Banksia;
 			productReference = F6A7BEE72B01C57400D3CE25 /* Banksia.app */;
@@ -446,6 +460,7 @@
 			);
 			mainGroup = F6A7BEDE2B01C57400D3CE25;
 			packageReferences = (
+				F6AD36182BCAC55100B7AADD /* XCRemoteSwiftPackageReference "swift-markdown-ui" */,
 			);
 			productRefGroup = F6A7BEE82B01C57400D3CE25 /* Products */;
 			projectDirPath = "";
@@ -553,6 +568,7 @@
 				F6D6E3362BC91CE0000D2051 /* ParagraphSpacingAfterThemeAttribute.swift in Sources */,
 				F6D6E2E72BC82C86000D2051 /* GrammarHandler.swift in Sources */,
 				F6D6E35D2BC91CE0000D2051 /* ThemeTrieElement.swift in Sources */,
+				F6AD361D2BCAC87900B7AADD /* Theme+MarkdownUI.swift in Sources */,
 				F6D6E3582BC91CE0000D2051 /* ScopeName.swift in Sources */,
 				F6D6E34A2BC91CE0000D2051 /* Font.swift in Sources */,
 				F6D6E34D2BC91CE0000D2051 /* IncludeRulePattern.swift in Sources */,
@@ -786,6 +802,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		F6AD36182BCAC55100B7AADD /* XCRemoteSwiftPackageReference "swift-markdown-ui" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/gonzalezreal/swift-markdown-ui.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.3.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		F6AD36192BCAC55100B7AADD /* MarkdownUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F6AD36182BCAC55100B7AADD /* XCRemoteSwiftPackageReference "swift-markdown-ui" */;
+			productName = MarkdownUI;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = F6A7BEDF2B01C57400D3CE25 /* Project object */;
 }

@@ -23,7 +23,7 @@ public class Editor: NSObject {
     
     var _grammar: Grammar
     
-    var _theme: Theme
+    var _theme: EditorTheme
     
     var parser: Parser {
         _parser
@@ -33,7 +33,7 @@ public class Editor: NSObject {
         _grammar
     }
     
-    var theme: Theme {
+    var theme: EditorTheme {
         _theme
     }
     
@@ -47,7 +47,7 @@ public class Editor: NSObject {
         textView: EditorTextView,
         parser: Parser,
         baseGrammar: Grammar,
-        theme: Theme,
+        theme: EditorTheme,
         notificationCenter: NotificationCenter = .default)
     {
         self.textView = textView
@@ -65,7 +65,7 @@ public class Editor: NSObject {
         didHighlightSyntax(textView: textView)
     }
     
-    public func replace(parser: Parser, baseGrammar: Grammar, theme: Theme) {
+    public func replace(parser: Parser, baseGrammar: Grammar, theme: EditorTheme) {
         _parser = parser
         _grammar = baseGrammar
         _theme = theme
@@ -175,7 +175,7 @@ public class Editor: NSObject {
     
     var _grammar: Grammar
     
-    var _theme: Theme
+    var _theme: EditorTheme
     
     var parser: Parser {
         _parser
@@ -185,7 +185,7 @@ public class Editor: NSObject {
         _grammar
     }
     
-    var theme: Theme {
+    var theme: EditorTheme {
         _theme
     }
     
@@ -199,7 +199,7 @@ public class Editor: NSObject {
         textView: EditorTextView,
         parser: Parser,
         baseGrammar: Grammar,
-        theme: Theme,
+        theme: EditorTheme,
         notificationCenter: NotificationCenter = .default)
     {
         self.textView = textView
@@ -219,7 +219,7 @@ public class Editor: NSObject {
         notificationCenter.addObserver(self, selector: #selector(textViewDidChange(_:)), name: NSText.didChangeNotification, object: textView)
     }
     
-    public func replace(parser: Parser, baseGrammar: Grammar, theme: Theme) {
+    public func replace(parser: Parser, baseGrammar: Grammar, theme: EditorTheme) {
         _parser = parser
         _grammar = baseGrammar
         _theme = theme

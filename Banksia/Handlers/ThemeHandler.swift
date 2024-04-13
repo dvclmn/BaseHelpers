@@ -11,7 +11,7 @@ import Foundation
 
 
 //struct ThemeHandler {
-    let exampleTheme = Theme(name: "basic", settings: [
+    let exampleTheme = EditorTheme(name: "basic", settings: [
         ThemeSetting(scope: "comment", parentScopes: [], attributes: [
             ColorThemeAttribute(color: .systemGreen)
         ]),

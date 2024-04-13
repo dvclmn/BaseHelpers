@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class Theme {
+public class EditorTheme {
     
     var name: String
     
@@ -16,7 +16,7 @@ public class Theme {
     public init(name: String, settings: [ThemeSetting]) {
         self.name = name
         
-        self.root = Theme.createTrie(settings: settings)
+        self.root = EditorTheme.createTrie(settings: settings)
     }
     
     static func sortSettings(settings: [ThemeSetting]) -> [ThemeSetting] {

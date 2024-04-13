@@ -7,7 +7,7 @@
 
 import Foundation
 
-public extension Theme {
+public extension EditorTheme {
     
-    static let `default` = Theme(name: "", settings: [])
+    static let `default` = EditorTheme(name: "", settings: [])
 }

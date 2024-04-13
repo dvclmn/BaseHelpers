@@ -26,7 +26,7 @@ public class Parser {
     public func tokenize(
         line: String,
         state: LineState,
-        withTheme theme: Theme = .default,
+        withTheme theme: EditorTheme = .default,
         inRange range: NSRange? = nil
     ) -> TokenizeResult {
         debug("Tokenizing line: \(line)")

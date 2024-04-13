@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftData
+import MarkdownUI
 
 struct SingleMessageView: View {
     
@@ -17,34 +18,41 @@ struct SingleMessageView: View {
     var body: some View {
         VStack {
             VStack {
-
-                Text(message.content)
-                    .frame(maxWidth:.infinity, alignment: .leading)
-                    .padding()
-                    .id(message.timestamp)
-                    .contextMenu {
+                
+                Markdown {
+                    message.content
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding()
+                .background(Color(message.isUser ? .blue : .gray).opacity(0.2))
+                .clipShape(RoundedRectangle(cornerRadius: Styles.roundingMedium))
+                .markdownTheme(.gitHubCustom)
+                .padding()
+                .id(message.timestamp)
+                
+                .contextMenu {
+                    Button {
+                        
+                    } label: {
+                        Label("Delete message", systemImage: Icons.arrowDown.icon)
+                    }
+                }
+                .textSelection(.enabled)
+                .overlay(alignment: .topTrailing) {
+                    if isHovering {
                         Button {
-                            
+                            copyToClipboard(message.content)
                         } label: {
-                            Label("Delete message", systemImage: Icons.arrowDown.icon)
+                            Label("Copy text", systemImage: Icons.copy.icon)
+                                .labelStyle(.iconOnly)
                         }
+                        .padding(8)
                     }
-                    .textSelection(.enabled)
-                    .overlay(alignment: .topTrailing) {
-                        if isHovering {
-                            Button {
-                                copyToClipboard(message.content)
-                            } label: {
-                                Label("Copy text", systemImage: Icons.copy.icon)
-                                    .labelStyle(.iconOnly)
-                            }
-                            .padding(8)
-                        }
-                    }
+                }
             }
             .frame(maxWidth: 500)
-            .background(Color(message.isUser ? .blue : .gray).opacity(0.2))
-            .clipShape(RoundedRectangle(cornerRadius: Styles.roundingMedium))
+            
+            
             .onHover { hovering in
                 isHovering = hovering
             }
