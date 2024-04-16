@@ -19,7 +19,6 @@ class BanksiaHandler {
     
     var sidebarVisibility: NavigationSplitViewVisibility = .detailOnly
     
-    var isResponseLoading: Bool = false
     
 //    var selectionState: ConversationState {
 //        if selectedConversations.count <= 0 {

@@ -74,6 +74,7 @@ struct ContentView: View {
 
 #Preview {
     ContentView()
+        .environment(ConversationHandler())
         .environment(BanksiaHandler())
         .environmentObject(Preferences())
         .modelContainer(try! ModelContainer.sample())

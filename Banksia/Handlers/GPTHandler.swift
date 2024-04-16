@@ -80,3 +80,8 @@ enum AIModel: String, Codable, CaseIterable {
         }
     }
 } // END AIModel
+
+enum GPTError: Error  {
+    case couldNotGetLastResponse
+    case failedToFetchResponse
+}

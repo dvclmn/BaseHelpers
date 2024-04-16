@@ -9,23 +9,113 @@ import Foundation
 import SwiftUI
 import SwiftData
 
-//class ConversationHandler {
-//    
-//    let bk = BanksiaHandler()
-//    
-//    static let activeConversationPredicate: Predicate<Conversation> = #Predicate<Conversation> {
-//        if let conversationID = bk.selectedConversations.first {
-//            
-//        }
-//    }
-//}
+@Observable
+final class ConversationHandler {
+    
+    let bk = BanksiaHandler()
+    let pref = Preferences()
+    
+    var searchText: String = ""
+    var isSearching: Bool = false
+    
+    var messageHistory: String = ""
+    
+    var isResponseLoading: Bool = false
+    
+    func createMessageHistory(for conversation: Conversation) async {
+        
+        guard let messages = conversation.messages, !messages.isEmpty else {
+            messageHistory = ""
+            print("No message in conversation")
+            return
+        }
+        
+        let maxMessageContextCount: Int = 6
+        let latestQueryDecorator: String = "Latest Query:\n"
+        let conversationHistoryDecorator: String = "Conversation History:\n"
+        
+        guard messages.count > 1 else {
+            let singleMessage = messages[0].content
+            messageHistory = latestQueryDecorator + singleMessage
+            print("Only single message in conversation: \(messageHistory)")
+            return
+        }
+        
+        let contextMessages: [Message] = messages.suffix(maxMessageContextCount + 1)
+        messageHistory = messages.map { $0.content }.joined(separator: "\n")
+        
+        let historicalContext = contextMessages
+            .dropLast()
+            .map { $0.content }
+            .joined(separator: "\n")
+        
+        /// Special formatting for the most recent message
+        if let mostRecentMessage = contextMessages.last {
+            messageHistory =
+            conversationHistoryDecorator + historicalContext + latestQueryDecorator + mostRecentMessage.content
+            
+            print("Final message history: \(messageHistory)")
+            
+        } else {
+            messageHistory = "Historical Context:\n\(historicalContext)"
+        }
+        
+    } // END createMessageHistory
+    
+
+    
+    func fetchGPTResponse(for conversation: Conversation) async throws -> Message {
+        print("|--- fetchGPTResponse --->")
+        do {
+            let response: GPTReponse = try await fetchGPTResponse(prompt: messageHistory)
+            print("Received GPT response")
+            
+            guard let firstMessage = response.choices.first else {
+                throw GPTError.couldNotGetLastResponse
+            }
+            print("Retrieved last message")
+            
+            let responseMessage = Message(content: firstMessage.message.content, type: .assistant, conversation: conversation)
+            
+            return responseMessage
+            
+        } catch {
+            throw GPTError.failedToFetchResponse
+        }
+    }
+    
+    func createMessage(_ response: String, with type: MessageType, for conversation: Conversation) -> Message {
+        print("|--- createMessage --->")
+        
+        let timeStamp = Date.now
+        
+        let formattedResponse: String = "Message type: \(type). Timestamp: \(timeStamp). Conversation ID: \(conversation.id). Message content: \(response)"
+        print("Message created: " + formattedResponse)
+        
+        let newMessage = Message(
+            timestamp: timeStamp,
+            content: formattedResponse,
+            type: type,
+            conversation: conversation
+        )
+        
+        return newMessage
+    }
+    
+    
+    //    static let activeConversationPredicate: Predicate<Conversation> = #Predicate<Conversation> {
+    //        if let conversationID = bk.selectedConversations.first {
+    //
+    //        }
+    //    }
+}
 
 enum ConversationState {
     case blank
     case none
     case single
     case multiple
-
+    
     init(totalConversations: Int, selectedConversations: Set<Conversation.ID>) {
         if totalConversations == 0 {
             self = .blank
@@ -116,14 +206,14 @@ enum ConversationState {
 extension BanksiaHandler {
     
     func newConversation(for modelContext: ModelContext) {
-
+        
         let newConversation = Conversation(name: "New conversation")
         
         modelContext.insert(newConversation)
         
         do {
             try modelContext.save()
-
+            
         } catch {
             print("Failed to save new conversation: \(error)")
         }
@@ -146,7 +236,7 @@ extension BanksiaHandler {
             print("Failed to clear Conversations.")
         }
     } // END delete all
-
     
-
+    
+    
 } // END BanksiaHandler extension

@@ -12,8 +12,7 @@ enum KeychainError: Error {
 }
 
 
-extension BanksiaHandler {
-    
+extension ConversationHandler {
     
     func fetchGPTResponse<T: Decodable>(prompt: String) async throws -> T {
         

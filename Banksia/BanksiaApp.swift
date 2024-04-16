@@ -12,6 +12,7 @@ import SwiftData
 struct BanksiaApp: App {
     
     @State private var bk = BanksiaHandler()
+    @State private var conv = ConversationHandler()
     @StateObject private var pref = Preferences()
     
     var sharedModelContainer: ModelContainer = {
@@ -31,6 +32,7 @@ struct BanksiaApp: App {
         WindowGroup {
             ContentView()
                 .environment(bk)
+                .environment(conv)
                 .environmentObject(pref)
                 .preferredColorScheme(.dark)
         }

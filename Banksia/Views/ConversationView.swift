@@ -10,30 +10,44 @@ import SwiftData
 
 struct ConversationView: View {
     @Environment(BanksiaHandler.self) private var bk
+    @Environment(ConversationHandler.self) private var conv
     @Environment(\.modelContext) private var modelContext
     
     @Query private var conversations: [Conversation]
     
     init(filter: Predicate<Conversation>? = nil) {
-            
-            if let filter = filter {
-                _conversations = Query(filter: filter)
-            } else {
-                _conversations = Query()
-            }
+        
+        if let filter = filter {
+            _conversations = Query(filter: filter)
+        } else {
+            _conversations = Query()
         }
+    }
     
     
     var body: some View {
         
+        @Bindable var conv = conv
+        
         VStack(spacing: 0) {
             if let messages = conversations.first?.messages {
+                
+                var searchResults: [Message] {
+                    messages.filter { message in
+                        if conv.searchText.count > 1 {
+                            return message.content.localizedCaseInsensitiveContains(conv.searchText)
+                        } else {
+                            return true
+                        }
+                    }
+                }
                 
                 ScrollViewReader { scrollProxy in
                     
                     ScrollView(.vertical) {
                         LazyVStack(spacing: 12) {
-                            ForEach(messages.sorted(by: { $0.timestamp < $1.timestamp }), id: \.timestamp) { message in
+                            ForEach(searchResults.sorted(by: { $0.timestamp < $1.timestamp }), id: \.timestamp) { message in
+                                
                                 
                                 SingleMessageView(message: message)
                                 
@@ -50,6 +64,7 @@ struct ConversationView: View {
                         .padding()
                         
                     } // END scrollview
+                    .searchable(text: $conv.searchText, isPresented: $conv.isSearching, prompt: Text("Search messages"))
                     .defaultScrollAnchor(.bottom)
                     .overlay(alignment: .bottomTrailing) {
                         Button {
@@ -75,7 +90,7 @@ struct ConversationView: View {
             }
             
         } // END Vstack
-//        .navigationTitle(conversation.name)
+        //        .navigationTitle(conversation.name)
     }
     
 }
@@ -85,6 +100,7 @@ struct ConversationView: View {
     ModelContainerPreview(ModelContainer.sample) {
         ConversationView()
             .environment(BanksiaHandler())
+            .environment(ConversationHandler())
             .environmentObject(Preferences())
             .frame(width: 600, height: 700)
     }

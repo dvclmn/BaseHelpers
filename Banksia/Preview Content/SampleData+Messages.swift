@@ -25,7 +25,7 @@ extension Message {
     1. *Parent-Child Relationship:* Since you're planning to have the Conversation class as the main container, ensure that each UserPrompt and GPTResponse has a reference to its parent Conversation. This helps maintain the context of each entry and makes it easier to query all related prompts and responses for a given conversation.
     2. *Handling Edits and Deletions:* Consider how your model will handle edits or deletions. If a user edits a prompt or a response, how will this affect the sequence? Will you keep a history of changes, or will the edit simply replace the original?
     3. *Consistency and Integrity:* Ensure that the sequence of prompts and responses remains consistent and integral, especially if your application allows concurrent interactions or modifications to the conversation.
-    """, isUser: false, conversation: .plants)
+    """, type: .assistant, conversation: .plants)
     
     static let response_02 = Message(timestamp: Date().addingTimeInterval(-570), content: """
     ```swift
@@ -54,10 +54,10 @@ extension Message {
     The increment is determined based on whether the user is zooming in or out.
     The zoomClampActive is set to true if the new zoom level is outside the clamped range or if the currentZoomLevel is already at the zoomMin or zoomMax.
     This approach should ensure that zoomClampActive is set to true every time the user attempts to zoom beyond the allowed range, including when already at the minimum or maximum zoom level.
-    """, isUser: false, conversation: .plants)
+    """, type: .assistant, conversation: .plants)
     static let response_03 = Message(timestamp: Date().addingTimeInterval(-550), content: """
     The issue you're encountering with `zoomClampActive` being set to `true` even when the action is within the clamp's permissible range is likely due to how the comparison is made in the `clampZoomLevel` function. Specifically, the issue arises because the comparison checks if the clamped value is different from the new value, without considering the direction of the change (zooming in or out).
 
     To resolve this, you need to adjust the logic to consider the direction of the zoom increment. Here's how you can modify the clampZoomLevel function.
-    """, isUser: false, conversation: .plants)
+    """, type: .assistant, conversation: .plants)
 }

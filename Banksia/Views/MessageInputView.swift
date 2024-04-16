@@ -9,43 +9,42 @@ import SwiftUI
 import SwiftData
 
 struct MessageInputView: View {
+    @Environment(ConversationHandler.self) private var conv
     @Environment(BanksiaHandler.self) private var bk
     @EnvironmentObject var pref: Preferences
     @Environment(\.modelContext) private var modelContext
     
-    @State private var isTextHidden: Bool = false
+    @FocusState private var isFocused
     
     var conversation: Conversation
     
     var body: some View {
         
-        
         VStack(spacing: 0) {
-            
             
             HStack(alignment: .bottom, spacing: 0) {
                 
                 TextEditor(text: $pref.userPrompt)
-                    .disabled(isTextHidden)
-                    .foregroundStyle(isTextHidden ? .cyan : .primary.opacity(0.8))
+                    .disabled(conv.isResponseLoading)
+                    .focused($isFocused)
                     .font(.system(size: 15))
                     .padding()
                     .scrollContentBackground(.hidden)
                 //                ScrollView(.vertical) {
                 //                    EditorTextViewRepresentable(text: $prompt)
                 //                }
-                                    .frame(height: pref.editorHeight)
-                //                    .onChange(of: prompt) {
-                //                        pref.pref.userPrompt = prompt
-                //                    }
+                    .frame(height: pref.editorHeight)
+
+                    .onChange(of: conv.isResponseLoading) {
+                        isFocused = !conv.isResponseLoading
+                    }
                 
-                
-                Button(bk.isResponseLoading ? "Loading…" : "Send") {
+                Button(conv.isResponseLoading ? "Loading…" : "Send") {
                     
                     //                                        testScroll()
                     Task {
-                        await sendPromptToGPT(pref.userPrompt)
-                        pref.userPrompt = ""
+                        await sendMessage(for: conversation)
+                        
                     }
                 }
                 .disabled(pref.userPrompt.isEmpty)
@@ -72,51 +71,49 @@ struct MessageInputView: View {
             }
             
             .background(.black.opacity(0.4))
-            //            .onAppear {
-            //                //            self.prompt = Message.prompt_02.content
-            //                self.prompt = bigText
-            //            }
+            .onAppear {
+                //            self.prompt = Message.prompt_02.content
+                //                            if isPreview {
+                //                                pref.userPrompt = bigText
+                //                            }
+            }
             
             
         }
         
     }
     
-    private func testScroll() {
-        let newMessage = Message(content: pref.userPrompt)
-        modelContext.insert(newMessage)
-        newMessage.conversation = conversation
-    }
+//    private func testScroll() {
+//        let newMessage = Message(content: pref.userPrompt)
+//        modelContext.insert(newMessage)
+//        newMessage.conversation = conversation
+//    }
     
-
-    private func sendPromptToGPT(_ prompt: String) async {
+    private func sendMessage(for conversation: Conversation) async {
         
-        self.isTextHidden = true
+        /// Save user message, so we can clear the input field
+        let messageContents = pref.userPrompt
+        pref.userPrompt = ""
         
-        let newUserMessage = Message(content: prompt, isUser: true)
-        
+        /// Create new `Message` object and add to database
+        let newUserMessage = conv.createMessage(messageContents, with: .user, for: conversation)
         modelContext.insert(newUserMessage)
-        newUserMessage.conversation = conversation
-
+        
+        /// Construct the message history for GPT context
+        await conv.createMessageHistory(for: conversation)
         
         do {
+            let response: Message = try await conv.fetchGPTResponse(for: conversation)
+            modelContext.insert(response)
             
-            let response: GPTReponse = try await bk.fetchGPTResponse(prompt: prompt)
-            
-            guard let firstMessage = response.choices.first else { return }
-            
-            let responseMessage = Message(content: firstMessage.message.content, isUser: false)
-            modelContext.insert(responseMessage)
-            conversation.messages?.append(responseMessage)
             
         } catch {
-            print("Error getting GPT response ")
+            print("Error getting GPT response")
         }
         
-        isTextHidden = false
-        
-    } // END send message
+    }
     
+
 }
 
 #Preview {
@@ -127,6 +124,7 @@ struct MessageInputView: View {
             ConversationView()
         }
     }
+    .environment(ConversationHandler())
     .environment(BanksiaHandler())
     .environmentObject(Preferences())
     .frame(width: 560, height: 700)
