@@ -14,6 +14,7 @@ final class Conversation: Identifiable {
     var name: String = ""
     var icon: String? = nil
     var tokens: Int? = nil
+    var prompt: String? = nil
     
     @Relationship(deleteRule: .cascade, inverse: \Message.conversation) var messages: [Message]? = []
     
@@ -24,6 +25,7 @@ final class Conversation: Identifiable {
         name: String = "",
         icon: String? = nil,
         tokens: Int? = nil,
+        prompt: String? = nil,
         messages: [Message]? = [],
         history: String = ""
         
@@ -32,6 +34,7 @@ final class Conversation: Identifiable {
         self.name = name
         self.icon = icon
         self.tokens = tokens
+        self.prompt = prompt
         self.messages = messages
         self.history = history
     }
@@ -42,14 +45,14 @@ final class Message {
     var timestamp: Date = Date.now
     var content: String = ""
     var tokens: Int? = nil
-    var type: MessageType? = nil
+    var type: MessageType = MessageType.user
     var conversation: Conversation? = nil
     
     init(
         timestamp: Date = .now,
         content: String = "",
         tokens: Int? = nil,
-        type: MessageType? = nil,
+        type: MessageType = MessageType.user,
         conversation: Conversation? = nil
     ) {
         self.timestamp = timestamp
@@ -60,16 +63,16 @@ final class Message {
     }
 } // END Message
 
-enum MessageType: String, Codable {
+enum MessageType: Codable {
     case user
     case assistant
     
     var name: String {
         switch self {
         case .user:
-            "User"
+            return "User"
         case .assistant:
-            "Assistant"
+            return "Assistant"
         }
     }
 }

@@ -8,6 +8,27 @@
 import SwiftUI
 import SwiftData
 
+// MARK: - Optional bindings
+/// By SwiftfulThinking
+extension Optional where Wrapped == String {
+    var _boundString: String? {
+        get {
+            return self
+        }
+        set {
+            self = newValue
+        }
+    }
+    public var boundString: String {
+        get {
+            return _boundString ?? ""
+        }
+        set {
+            _boundString = newValue.isEmpty ? nil : newValue
+        }
+    }
+}
+
 extension ShapeStyle where Self == Color {
     static var random: Color {
         Color(

@@ -13,10 +13,10 @@ struct ToolbarView: ToolbarContent {
     
     var body: some ToolbarContent {
         ToolbarItem() {
-            HandyButton(label: "Add sample data", icon: "sparkles") {
-                Conversation.insertSampleData(modelContext: modelContext)
-                try? modelContext.save()
-            }
+//            HandyButton(label: "Add sample data", icon: "sparkles") {
+//                Conversation.insertSampleData(modelContext: modelContext)
+//                try? modelContext.save()
+//            }
         } // END add sample data
         
 //        ToolbarItem() {

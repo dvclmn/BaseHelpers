@@ -85,22 +85,6 @@ struct SingleMessageView: View {
         .frame(maxWidth: .infinity, alignment: message.type == .user ? .trailing : .leading)
     }
     
-    private func highlight() -> AttributedString {
-        
-        var attributedString = AttributedString(message.content)
-        
-        // Specify the attributes for the highlighted text
-        let highlightAttributes = AttributeContainer()
-            .foregroundColor(.red)
-        
-        var searchHightlight = attributedString.range(of: conv.searchText, options: .caseInsensitive)
-        
-        
-        
-        
-        return attributedString
-    }
-    
     private func copyToClipboard(_ text: String) {
         let pasteboard: PasteboardCopying
 #if canImport(AppKit)

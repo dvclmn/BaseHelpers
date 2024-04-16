@@ -11,6 +11,10 @@ struct Styles {
     static let cornerRadiusSmall:       CGFloat = 6
     static let cornerRadiusLarge:       CGFloat = 10
     
+    static let paddingToMatchForm:      Double = 22
+    static let paddingGenerous:         Double = 28
+    static let paddingContainer:        Double = 48
+    
     /// Animation
     static let animationQuick:          Animation = .easeOut(duration: 0.08)
     static let animation:               Animation = .easeOut(duration: 0.2)
@@ -57,6 +61,7 @@ enum Icons: String, CaseIterable, Identifiable, Codable {
     case plusSquare         = "plus.app"
     case info               = "info.circle"
     case popup              = "text.bubble"
+    case message            = "bubble"
     case image              = "photo"
     case imageMulti         = "photo.on.rectangle.angled"
     case options            = "slider.horizontal.3"
@@ -110,6 +115,7 @@ enum Icons: String, CaseIterable, Identifiable, Codable {
     case door               = "door.left.hand.open"
     case expand             = "arrow.down.left.and.arrow.up.right"
     case logOut             = "rectangle.portrait.and.arrow.right"
+    case token              = "hockey.puck"
     
     
     // APIs

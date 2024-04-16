@@ -100,10 +100,11 @@ struct MessageInputView: View {
         modelContext.insert(newUserMessage)
         
         /// Construct the message history for GPT context
-        await conv.createMessageHistory(for: conversation)
+        await conv.createMessageHistory(for: conversation, latestMessage: newUserMessage)
         
         do {
             let response: Message = try await conv.fetchGPTResponse(for: conversation)
+            
             modelContext.insert(response)
             
             

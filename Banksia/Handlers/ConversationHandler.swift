@@ -18,11 +18,13 @@ final class ConversationHandler {
     var searchText: String = ""
     var isSearching: Bool = false
     
+    var isResponseLoading: Bool = false
+
+    /// This history should only be sent to GPT, not be saved to a Conversation. The Conversation has it's own array of Messages
     var messageHistory: String = ""
     
-    var isResponseLoading: Bool = false
     
-    func createMessageHistory(for conversation: Conversation) async {
+    func createMessageHistory(for conversation: Conversation, latestMessage: Message) async {
         
         guard let messages = conversation.messages, !messages.isEmpty else {
             messageHistory = ""
@@ -31,34 +33,30 @@ final class ConversationHandler {
         }
         
         let maxMessageContextCount: Int = 6
-        let latestQueryDecorator: String = "Latest Query:\n"
-        let conversationHistoryDecorator: String = "Conversation History:\n"
         
-        guard messages.count > 1 else {
-            let singleMessage = messages[0].content
-            messageHistory = latestQueryDecorator + singleMessage
-            print("Only single message in conversation: \(messageHistory)")
-            return
-        }
+        let queryID: String = latestMessage.persistentModelID.hashValue.description
         
-        let contextMessages: [Message] = messages.suffix(maxMessageContextCount + 1)
-        messageHistory = messages.map { $0.content }.joined(separator: "\n")
+        let queryHeading: String = "# BEGIN Query #\(queryID)"
+        let latestQueryDecorator: String = "## Latest Query"
+        let conversationHistoryDecorator: String = "## Conversation History"
+        let queryFooter: String = "END Query #\(queryID)"
         
-        let historicalContext = contextMessages
-            .dropLast()
-            .map { $0.content }
-            .joined(separator: "\n")
+        let historicalMessages: [Message] = messages.suffix(maxMessageContextCount).dropLast()
         
-        /// Special formatting for the most recent message
-        if let mostRecentMessage = contextMessages.last {
-            messageHistory =
-            conversationHistoryDecorator + historicalContext + latestQueryDecorator + mostRecentMessage.content
-            
-            print("Final message history: \(messageHistory)")
-            
-        } else {
-            messageHistory = "Historical Context:\n\(historicalContext)"
-        }
+        let historyFormatted: String = historicalMessages.map { formatMessageForGPT($0) }.joined(separator: "\n")
+        
+        let latestMessageFormatted: String = formatMessageForGPT(latestMessage)
+        
+        messageHistory = """
+        \(queryHeading)
+        \(latestQueryDecorator)
+        \(latestMessageFormatted)
+        \(conversationHistoryDecorator)
+        \(historyFormatted)
+        \(queryFooter)
+        """
+
+        print(messageHistory)
         
     } // END createMessageHistory
     
@@ -77,6 +75,7 @@ final class ConversationHandler {
             
             let responseMessage = Message(content: firstMessage.message.content, type: .assistant, conversation: conversation)
             
+            print(">--- END fetchGPTResponse ---|\n")
             return responseMessage
             
         } catch {
@@ -87,27 +86,34 @@ final class ConversationHandler {
     func createMessage(_ response: String, with type: MessageType, for conversation: Conversation) -> Message {
         print("|--- createMessage --->")
         
-        let timeStamp = Date.now
-        
-        let formattedResponse: String = "Message type: \(type). Timestamp: \(timeStamp). Conversation ID: \(conversation.id). Message content: \(response)"
-        print("Message created: " + formattedResponse)
-        
         let newMessage = Message(
-            timestamp: timeStamp,
-            content: formattedResponse,
+            content: response,
             type: type,
             conversation: conversation
         )
-        
+        print(">--- END createMessage ---|\n")
         return newMessage
     }
     
     
-    //    static let activeConversationPredicate: Predicate<Conversation> = #Predicate<Conversation> {
-    //        if let conversationID = bk.selectedConversations.first {
-    //
-    //        }
-    //    }
+    func formatMessageForGPT(_ message: Message) -> String {
+        print("|--- formatMessageForGPT --->")
+        
+        let timeStamp: String = "### Timestamp: \(Date.now)"
+        let type: String = "### Author: \(message.type.name)"
+        let conversationID: String = "### Conversation ID: \(message.conversation?.persistentModelID.hashValue.description ?? "No Conversation ID")"
+        let content: String = "### Query content:\n\n\(message.content)"
+        
+        let formattedMessage: String = """
+        \(timeStamp)
+        \(type)
+        \(conversationID)
+        \(content)
+        """
+        print(">--- END formatMessageForGPT ---|\n")
+        return formattedMessage
+    }
+    
 }
 
 enum ConversationState {
