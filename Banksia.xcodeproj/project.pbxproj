@@ -19,7 +19,6 @@
 		F64F8E312B042A2700C72E51 /* UtilityFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F64F8E302B042A2700C72E51 /* UtilityFunctions.swift */; };
 		F6795C7D2BCE70920093BC9C /* ConversationEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6795C7C2BCE70920093BC9C /* ConversationEditorView.swift */; };
 		F6795C7F2BCE7A4D0093BC9C /* GlobalConversationSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6795C7E2BCE7A4D0093BC9C /* GlobalConversationSettingsView.swift */; };
-		F6795C852BCE87410093BC9C /* GlobalStyles in Frameworks */ = {isa = PBXBuildFile; productRef = F6795C842BCE87410093BC9C /* GlobalStyles */; };
 		F697B8662B0B47610091CE79 /* GPTHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F697B8652B0B47610091CE79 /* GPTHandler.swift */; };
 		F697B8682B0B48160091CE79 /* ConversationStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F697B8672B0B48160091CE79 /* ConversationStateView.swift */; };
 		F6A5E1B32BC6E4E90018B1B5 /* SidebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A5E1B22BC6E4E90018B1B5 /* SidebarView.swift */; };
@@ -97,6 +96,7 @@
 		F6D6E3602BC91CE0000D2051 /* TokenizeResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6D6E3262BC91CE0000D2051 /* TokenizeResult.swift */; };
 		F6D6E3612BC91CE0000D2051 /* TokenThemeAttribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6D6E3272BC91CE0000D2051 /* TokenThemeAttribute.swift */; };
 		F6D94E562BCE969200E59BE0 /* Utilities in Frameworks */ = {isa = PBXBuildFile; productRef = F6D94E552BCE969200E59BE0 /* Utilities */; };
+		F6E4BC672BCEE2DD00BFD550 /* Styles in Frameworks */ = {isa = PBXBuildFile; productRef = F6E4BC662BCEE2DD00BFD550 /* Styles */; };
 		F6E8269F2B0BDD6E0047477D /* MessagesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6E8269E2B0BDD6E0047477D /* MessagesView.swift */; };
 		F6E826A12B0BF3630047477D /* IconPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6E826A02B0BF3630047477D /* IconPickerView.swift */; };
 		F6F393112B09DB7D005046F4 /* ConversationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6F393102B09DB7D005046F4 /* ConversationView.swift */; };
@@ -117,7 +117,6 @@
 		F64F8E302B042A2700C72E51 /* UtilityFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityFunctions.swift; sourceTree = "<group>"; };
 		F6795C7C2BCE70920093BC9C /* ConversationEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationEditorView.swift; sourceTree = "<group>"; };
 		F6795C7E2BCE7A4D0093BC9C /* GlobalConversationSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalConversationSettingsView.swift; sourceTree = "<group>"; };
-		F6795C802BCE7BE10093BC9C /* FormLabels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormLabels.swift; sourceTree = "<group>"; };
 		F697B8652B0B47610091CE79 /* GPTHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GPTHandler.swift; sourceTree = "<group>"; };
 		F697B8672B0B48160091CE79 /* ConversationStateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationStateView.swift; sourceTree = "<group>"; };
 		F6A5E1B22BC6E4E90018B1B5 /* SidebarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarView.swift; sourceTree = "<group>"; };
@@ -210,7 +209,7 @@
 			files = (
 				F6AD361A2BCAC55100B7AADD /* MarkdownUI in Frameworks */,
 				F6D94E562BCE969200E59BE0 /* Utilities in Frameworks */,
-				F6795C852BCE87410093BC9C /* GlobalStyles in Frameworks */,
+				F6E4BC672BCEE2DD00BFD550 /* Styles in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -266,7 +265,6 @@
 		F64F8E2F2B042A0300C72E51 /* Support */ = {
 			isa = PBXGroup;
 			children = (
-				F6795C802BCE7BE10093BC9C /* FormLabels.swift */,
 				F6AD361B2BCAC85600B7AADD /* MarkdownUI */,
 				F6D6E2EC2BC91C40000D2051 /* Editor */,
 				F6D6E2EA2BC82CFE000D2051 /* ExampleText.swift */,
@@ -442,8 +440,8 @@
 			name = Banksia;
 			packageProductDependencies = (
 				F6AD36192BCAC55100B7AADD /* MarkdownUI */,
-				F6795C842BCE87410093BC9C /* GlobalStyles */,
 				F6D94E552BCE969200E59BE0 /* Utilities */,
+				F6E4BC662BCEE2DD00BFD550 /* Styles */,
 			);
 			productName = Banksia;
 			productReference = F6A7BEE72B01C57400D3CE25 /* Banksia.app */;
@@ -475,8 +473,8 @@
 			mainGroup = F6A7BEDE2B01C57400D3CE25;
 			packageReferences = (
 				F6AD36182BCAC55100B7AADD /* XCRemoteSwiftPackageReference "swift-markdown-ui" */,
-				F6795C832BCE87410093BC9C /* XCLocalSwiftPackageReference "../_ Swift Packages/GlobalStyles" */,
 				F6D94E542BCE969200E59BE0 /* XCLocalSwiftPackageReference "../_ Swift Packages/Utilities" */,
+				F6E4BC652BCEE2DD00BFD550 /* XCLocalSwiftPackageReference "../_ Swift Packages/Styles" */,
 			);
 			productRefGroup = F6A7BEE82B01C57400D3CE25 /* Products */;
 			projectDirPath = "";
@@ -822,13 +820,13 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		F6795C832BCE87410093BC9C /* XCLocalSwiftPackageReference "../_ Swift Packages/GlobalStyles" */ = {
-			isa = XCLocalSwiftPackageReference;
-			relativePath = "../_ Swift Packages/GlobalStyles";
-		};
 		F6D94E542BCE969200E59BE0 /* XCLocalSwiftPackageReference "../_ Swift Packages/Utilities" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = "../_ Swift Packages/Utilities";
+		};
+		F6E4BC652BCEE2DD00BFD550 /* XCLocalSwiftPackageReference "../_ Swift Packages/Styles" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = "../_ Swift Packages/Styles";
 		};
 /* End XCLocalSwiftPackageReference section */
 
@@ -844,10 +842,6 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		F6795C842BCE87410093BC9C /* GlobalStyles */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = GlobalStyles;
-		};
 		F6AD36192BCAC55100B7AADD /* MarkdownUI */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = F6AD36182BCAC55100B7AADD /* XCRemoteSwiftPackageReference "swift-markdown-ui" */;
@@ -856,6 +850,10 @@
 		F6D94E552BCE969200E59BE0 /* Utilities */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Utilities;
+		};
+		F6E4BC662BCEE2DD00BFD550 /* Styles */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Styles;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

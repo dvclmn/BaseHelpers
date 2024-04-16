@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Styles
 
 struct ConversationListItem: View {
     @Environment(BanksiaHandler.self) private var bk

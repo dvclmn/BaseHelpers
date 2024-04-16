@@ -19,6 +19,10 @@ class BanksiaHandler {
     
     var sidebarVisibility: NavigationSplitViewVisibility = .detailOnly
     
+    var isConversationEditorShowing: Bool = false
+    var isGlobalConversationPreferencesShowing: Bool = false
+    var isEditingLongFormText: Bool = false
+    
     
 //    var selectionState: ConversationState {
 //        if selectedConversations.count <= 0 {

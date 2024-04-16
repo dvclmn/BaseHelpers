@@ -45,10 +45,6 @@ struct ContentView: View {
             
         }
         // Detail view toolbar
-        .toolbar {
-            ToolbarView()
-            
-        } // END toolbar
         .onAppear {
             if let firstConversation = conversations.first {
                 bk.selectedConversations = [firstConversation.persistentModelID]

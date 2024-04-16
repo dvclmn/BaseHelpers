@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftData
+import Styles
 
 struct ConversationView: View {
     @Environment(BanksiaHandler.self) private var bk
@@ -14,8 +15,6 @@ struct ConversationView: View {
     @Environment(\.modelContext) private var modelContext
     
     @Query private var conversations: [Conversation]
-    
-    @State private var isConversationEditorShowing: Bool = false
     
     init(filter: Predicate<Conversation>? = nil) {
         
@@ -30,6 +29,7 @@ struct ConversationView: View {
     var body: some View {
         
         @Bindable var conv = conv
+        @Bindable var bk = bk
         
         if let conversation = conversations.first {
             VStack(spacing: 0) {
@@ -97,13 +97,13 @@ struct ConversationView: View {
             .toolbar {
                 ToolbarItem {
                     Button {
-                        isConversationEditorShowing.toggle()
+                        bk.isConversationEditorShowing.toggle()
                     } label: {
                         Label("Edit conversation prompt", systemImage: Icons.edit.icon)
                     }
                 }
             }
-            .sheet(isPresented: $isConversationEditorShowing, content: {
+            .sheet(isPresented: $bk.isConversationEditorShowing, content: {
                 ConversationEditorView(conversation: conversation)
             })
             

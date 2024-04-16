@@ -6,11 +6,7 @@
 //
 
 import SwiftUI
-import GlobalStyles
-
-typealias Styles = GlobalStyles.Styles
-typealias FormLabel = GlobalStyles.FormLabel
-typealias Icons = GlobalStyles.Icons
+import Styles
 
 extension Styles {
     static let cornerRadiusSmall:       CGFloat = 6

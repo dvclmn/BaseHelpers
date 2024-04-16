@@ -8,6 +8,7 @@
 import SwiftUI
 import SwiftData
 import MarkdownUI
+import Styles
 
 struct SingleMessageView: View {
     @Environment(BanksiaHandler.self) private var bk

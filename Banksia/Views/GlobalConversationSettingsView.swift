@@ -6,11 +6,13 @@
 //
 
 import SwiftUI
-import GlobalStyles
+import Styles
 import Utilities
 
 struct GlobalConversationSettingsView: View {
     @EnvironmentObject var pref: Preferences
+    
+    @State private var isEditingLongFormText: Bool = false
     
     var body: some View {
         ScrollView(.vertical) {
@@ -29,27 +31,31 @@ struct GlobalConversationSettingsView: View {
                     }
                     
                     FormLabel(label: "System-wide prompt", icon: Icons.text.icon, message: "This will be included for each message in each conversation.") {
-                        VStack(alignment: .trailing) {
+                        
+                        VStack(alignment: .leading, spacing: 14) {
                             TextField("", text: pref.$systemPrompt, prompt: Text("System prompt"), axis: .vertical)
+                                .multilineTextAlignment(.leading)
                                 .lineLimit(4)
-                            if pref.systemPrompt.isEmpty {
+                            if !pref.systemPrompt.isEmpty {
                                 Button {
-                                    
+                                    isEditingLongFormText.toggle()
                                 } label: {
                                     Label("Expand", systemImage: Icons.expand.icon)
                                 }
                                 .labelBackground()
 
-                                
-                                
                             }
                         }
+                        .padding(.top, 8)
                         
                     }
                     .onAppear {
                         if isPreview {
                             pref.systemPrompt = Message.prompt_01.content
                         }
+                    }
+                    .sheet(isPresented: $isEditingLongFormText) {
+                        TextEditor(text: pref.$systemPrompt)
                     }
                     
                     
