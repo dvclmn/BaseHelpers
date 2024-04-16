@@ -20,8 +20,10 @@ struct ConversationListItem: View {
     @Bindable var conversation: Conversation
     var body: some View {
         NavigationLink(value: conversation) {
-            HandyButton(label: "", icon: conversation.icon ?? "") {
+            Button {
                 iconPickerShowing.toggle()
+            } label: {
+                Label("Pick icon", systemImage: Icons.message.icon)
             }
             .popover(isPresented: $iconPickerShowing, content: {
                 IconPickerView(conversation: conversation)

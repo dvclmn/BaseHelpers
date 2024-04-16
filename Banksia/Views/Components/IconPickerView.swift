@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Utilities
 
 struct IconPickerView: View {
     @Environment(BanksiaHandler.self) private var bk
@@ -62,9 +63,6 @@ struct IconPickerView: View {
             
         } // END Vstack
         .frame(maxHeight:300)
-#if os(macOS)
-        .background(VisualEffectView())
-#endif
     }
     
 }

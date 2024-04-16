@@ -34,8 +34,11 @@ struct SidebarView: View {
         // Sidebar toolbar
         .toolbar {
             ToolbarItem(placement: .automatic) {
-                HandyButton(label: "New conversation", icon: "plus") {
+
+                Button {
                     bk.newConversation(for: modelContext)
+                } label: {
+                    Label("New conversation", systemImage: Icons.plus.icon)
                 }
             }
         }
