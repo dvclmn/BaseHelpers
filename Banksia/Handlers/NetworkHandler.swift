@@ -48,7 +48,7 @@ extension ConversationHandler {
     }
     
     func makeURLRequest(from urlString: String, requestType: APIRequestType = .get, clientID: String? = nil, bearerToken: String? = nil, body: RequestBody? = nil) throws -> URLRequest {
-        print("Let's create a valid URLRequest for url: '\(urlString)', of type: '\(requestType.rawValue)', with body: \(String(describing: body))")
+//        print("Let's create a valid URLRequest for url: '\(urlString)', of type: '\(requestType.rawValue)', with body: \(String(describing: body))")
         guard let url = URL(string: urlString) else {
             throw APIError.badURL
         }

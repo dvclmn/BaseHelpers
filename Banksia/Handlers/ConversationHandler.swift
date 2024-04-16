@@ -36,10 +36,11 @@ final class ConversationHandler {
         
         let queryID: String = latestMessage.persistentModelID.hashValue.description
         
-        let queryHeading: String = "# BEGIN Query #\(queryID)"
-        let latestQueryDecorator: String = "## Latest Query"
-        let conversationHistoryDecorator: String = "## Conversation History"
-        let queryFooter: String = "END Query #\(queryID)"
+        
+        let queryHeading: String = "\n\n# ||---- BEGIN Query #\(queryID) ---->> \n"
+        let latestQueryDecorator: String = "## Latest Query\n"
+        let conversationHistoryDecorator: String = "## Conversation History\n"
+        let queryFooter: String = "\n# >>---- END Query #\(queryID) ----||\n\n"
         
         let historicalMessages: [Message] = messages.suffix(maxMessageContextCount).dropLast()
         

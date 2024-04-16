@@ -16,16 +16,13 @@ struct SingleMessageView: View {
     
     @State private var isHovering: Bool = false
     
-    
-    
     var message: Message
     
     var body: some View {
-
+        
         var match: [String] {
             return [conv.searchText].filter { message.content.localizedCaseInsensitiveContains($0) }
         }
-        
         
         var highlighted: AttributedString {
             var result = AttributedString(message.content)
@@ -33,7 +30,6 @@ struct SingleMessageView: View {
                 let ranges = message.content.ranges(of: $0, options: [.caseInsensitive])
                 ranges.forEach { range in
                     result[range].backgroundColor = .orange.opacity(0.2)
-                    result[range].inlinePresentationIntent = .stronglyEmphasized
                 }
             }
             return result
@@ -99,9 +95,9 @@ struct SingleMessageView: View {
 
 #Preview {
     ModelContainerPreview(ModelContainer.sample) {
-        SingleMessageView(message: Message.prompt_02)
+        SingleMessageView(message: Message.response_02)
             .environment(BanksiaHandler())
             .environment(ConversationHandler())
-            .frame(width: 700, height: 700)
+            .frame(width: 500, height: 700)
     }
 }

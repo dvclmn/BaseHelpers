@@ -71,12 +71,12 @@ struct MessageInputView: View {
             }
             
             .background(.black.opacity(0.4))
-            .onAppear {
+            
                 //            self.prompt = Message.prompt_02.content
                 //                            if isPreview {
                 //                                pref.userPrompt = bigText
                 //                            }
-            }
+            
             
             
         }
