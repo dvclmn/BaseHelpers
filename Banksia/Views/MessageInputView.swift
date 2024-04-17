@@ -22,7 +22,7 @@ struct MessageInputView: View {
     
     @State private var isHoveringHeightAdjustor: Bool = false
     
-    let minInputHeight: Double = 100
+    let minInputHeight: Double = 200
     let maxInputHeight: Double = 600
     
     
@@ -40,28 +40,21 @@ struct MessageInputView: View {
         
         VStack(spacing: 0) {
             
+
+            
             VStack(alignment: .leading, spacing: 0) {
                 
-                TextEditor(text: $userPrompt)
-                    .disabled(conv.isResponseLoading)
-                    .focused($isFocused)
-                    .font(.system(size: 15))
-                    .foregroundStyle(.primary.opacity(0.9))
+//                TextEditor(text: $userPrompt)
+                ScrollView(.vertical) {
+                    StylableTextEditor(text: $userPrompt)
+                        .focused($isFocused)
+                }
                     .padding(.top)
                     .padding(.horizontal)
                     .scrollContentBackground(.hidden)
                     .scrollIndicators(.hidden)
-                //                ScrollView(.vertical) {
-                //                    EditorTextViewRepresentable(text: $prompt)
-                //                }
-                
-                
-                //                    .frame(height: editorHeight ?? 100)
                     .frame(minHeight: editorHeight ?? minInputHeight, maxHeight: editorHeight ?? maxInputHeight)
                     .fixedSize(horizontal: false, vertical: true)
-                //                    .lineLimit(10)
-                
-                
                     .onChange(of: conv.isResponseLoading) {
                         isFocused = !conv.isResponseLoading
                     }
@@ -122,10 +115,13 @@ struct MessageInputView: View {
                     Toggle(isOn: $conv.isTesting, label: {
                         Text("Test mode")
                     })
+                    .foregroundStyle(conv.isTesting ? .secondary : .quaternary)
                     .disabled(conv.isResponseLoading)
-                    .foregroundStyle(.secondary)
                     .toggleStyle(.switch)
                     .controlSize(.mini)
+                    .tint(.secondary)
+                    .animation(Styles.animationQuick, value: conv.isTesting)
+                    
                     Button(conv.isResponseLoading ? "Loading…" : "Send") {
                         
                         //                                        testScroll()
@@ -144,7 +140,7 @@ struct MessageInputView: View {
                 .padding(.bottom, 14)
                 .background(.ultraThinMaterial)
             }
-
+            
             
             
             

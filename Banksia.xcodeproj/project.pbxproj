@@ -99,6 +99,7 @@
 		F6E4BC692BCF0ABD00BFD550 /* ScrollTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6E4BC682BCF0ABD00BFD550 /* ScrollTest.swift */; };
 		F6E4BC6B2BCFD1E100BFD550 /* QuickNavView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6E4BC6A2BCFD1E100BFD550 /* QuickNavView.swift */; };
 		F6E4BC6D2BCFDAC900BFD550 /* MenuCommands.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6E4BC6C2BCFDAC900BFD550 /* MenuCommands.swift */; };
+		F6E4BC6F2BD02D9800BFD550 /* StylableTextEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6E4BC6E2BD02D9800BFD550 /* StylableTextEditor.swift */; };
 		F6E8269F2B0BDD6E0047477D /* MessagesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6E8269E2B0BDD6E0047477D /* MessagesView.swift */; };
 		F6E826A12B0BF3630047477D /* IconPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6E826A02B0BF3630047477D /* IconPickerView.swift */; };
 		F6F393112B09DB7D005046F4 /* ConversationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6F393102B09DB7D005046F4 /* ConversationView.swift */; };
@@ -198,6 +199,7 @@
 		F6E4BC682BCF0ABD00BFD550 /* ScrollTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ScrollTest.swift; path = Banksia/ScrollTest.swift; sourceTree = "<group>"; };
 		F6E4BC6A2BCFD1E100BFD550 /* QuickNavView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickNavView.swift; sourceTree = "<group>"; };
 		F6E4BC6C2BCFDAC900BFD550 /* MenuCommands.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuCommands.swift; sourceTree = "<group>"; };
+		F6E4BC6E2BD02D9800BFD550 /* StylableTextEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StylableTextEditor.swift; sourceTree = "<group>"; };
 		F6E8269E2B0BDD6E0047477D /* MessagesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesView.swift; sourceTree = "<group>"; };
 		F6E826A02B0BF3630047477D /* IconPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconPickerView.swift; sourceTree = "<group>"; };
 		F6F393102B09DB7D005046F4 /* ConversationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationView.swift; sourceTree = "<group>"; };
@@ -253,6 +255,7 @@
 		F64F8E102B02200400C72E51 /* Handlers */ = {
 			isa = PBXGroup;
 			children = (
+				F6E4BC6E2BD02D9800BFD550 /* StylableTextEditor.swift */,
 				F6D6E2E42BC82790000D2051 /* MarkdownEditor.swift */,
 				F6D6E2E62BC82C86000D2051 /* GrammarHandler.swift */,
 				F6D6E2E82BC82CAA000D2051 /* ThemeHandler.swift */,
@@ -522,6 +525,7 @@
 				F6D6E34B2BC91CE0000D2051 /* Grammar.swift in Sources */,
 				F6A7BEEF2B01C57400D3CE25 /* DataModel.swift in Sources */,
 				F6A5E1B52BC6E5A40018B1B5 /* ToolbarView.swift in Sources */,
+				F6E4BC6F2BD02D9800BFD550 /* StylableTextEditor.swift in Sources */,
 				F6D6E2E92BC82CAA000D2051 /* ThemeHandler.swift in Sources */,
 				F6A5E1B72BC6EE480018B1B5 /* PreferencesHandler.swift in Sources */,
 				F6D6E3612BC91CE0000D2051 /* TokenThemeAttribute.swift in Sources */,
