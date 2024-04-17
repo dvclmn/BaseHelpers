@@ -17,67 +17,86 @@ import Foundation
 import SwiftUI
 import Cocoa
 
-struct StylableTextEditor: NSViewRepresentable {
+import SwiftUI
+
+struct StylableTextEditorRepresentable: NSViewRepresentable {
     @Binding var text: String
     
     func makeCoordinator() -> Coordinator {
-        return Coordinator(self)
+        Coordinator(self)
     }
     
-    func makeNSView(context: Context) -> SizableTextEditor {
-        let textView = SizableTextEditor()
-//        context.coordinator.setupEditor(for: textView)
+    func makeNSView(context: Context) -> StylableTextEditor {
+        let textView = StylableTextEditor()
         textView.delegate = context.coordinator
         textView.invalidateIntrinsicContentSize()
-        textView.drawsBackground = false
-        textView.allowsUndo = true
         textView.string = text
         textView.font = .systemFont(ofSize: 15)
-        
+        textView.drawsBackground = false
+        textView.allowsUndo = true
         return textView
     }
     
-    func updateNSView(_ textView: SizableTextEditor, context: Context) {
+    func updateNSView(_ textView: StylableTextEditor, context: Context) {
         if textView.string != text {
             textView.string = text
             textView.invalidateIntrinsicContentSize()
+            textView.applyStyles()
         }
+        
     }
     
     class Coordinator: NSObject, NSTextViewDelegate {
-        var parent: StylableTextEditor
+        var parent: StylableTextEditorRepresentable
         
-        init(_ parent: StylableTextEditor) {
+        init(_ parent: StylableTextEditorRepresentable) {
             self.parent = parent
             super.init()
-            
         }
         
         func textDidChange(_ notification: Notification) {
-            guard let textView = notification.object as? SizableTextEditor else { return }
-            
+            guard let textView = notification.object as? StylableTextEditor else { return }
             DispatchQueue.main.async {
                 self.parent.text = textView.string
                 textView.invalidateIntrinsicContentSize()
             }
         }
-        
-
     }
 }
 
-class SizableTextEditor: NSTextView {
+class StylableTextEditor: NSTextView {
     override var intrinsicContentSize: NSSize {
         guard let layoutManager = self.layoutManager, let container = self.textContainer else {
             return super.intrinsicContentSize
         }
         layoutManager.ensureLayout(for: container)
-        var size = layoutManager.usedRect(for: container).size
-        size.width = 400
-        return size
+        return layoutManager.usedRect(for: container).size
     }
+    
+    func applyStyles() {
+        guard let textStorage = self.textStorage else { return }
+        
+        let selectedRange = self.selectedRange()
+        let text = NSMutableAttributedString(attributedString: textStorage)
+        
+        // Regular expression to find code blocks
+        let pattern = "(```\\n)(.*?)(\\n```)"
+        let regex = try! NSRegularExpression(pattern: pattern, options: [.dotMatchesLineSeparators])
+        let range = NSRange(location: 0, length: text.length)
+        
+        regex.enumerateMatches(in: text.string, options: [], range: range) { match, _, _ in
+            guard let matchRange = match?.range(at: 2) else { return } // match at index 2 is the code content
+            text.addAttribute(.foregroundColor, value: NSColor.systemPurple, range: matchRange)
+            text.addAttribute(.font, value: NSFont.monospacedSystemFont(ofSize: 12, weight: .regular), range: matchRange)
+            text.addAttribute(.backgroundColor, value: NSColor.black.withAlphaComponent(0.1), range: matchRange)
+        }
+        
+        textStorage.setAttributedString(text)
+        self.setSelectedRange(selectedRange) // Restore the selected range
+    }
+    
     override func didChangeText() {
         super.didChangeText()
-        self.invalidateIntrinsicContentSize()
+        applyStyles()
     }
 }

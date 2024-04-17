@@ -46,7 +46,8 @@ struct MessageInputView: View {
                 
 //                TextEditor(text: $userPrompt)
                 ScrollView(.vertical) {
-                    StylableTextEditor(text: $userPrompt)
+                    StylableTextEditorRepresentable(text: $userPrompt)
+                        .border(Color.green)
                         .focused($isFocused)
                 }
                     .padding(.top)
@@ -57,6 +58,7 @@ struct MessageInputView: View {
                     .fixedSize(horizontal: false, vertical: true)
                     .onChange(of: conv.isResponseLoading) {
                         isFocused = !conv.isResponseLoading
+                        editorHeight = nil
                     }
                     .overlay(alignment: .top) {
                         GeometryReader { geo in
