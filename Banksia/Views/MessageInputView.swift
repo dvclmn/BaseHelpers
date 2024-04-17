@@ -47,15 +47,15 @@ struct MessageInputView: View {
 //                TextEditor(text: $userPrompt)
                 ScrollView(.vertical) {
                     StylableTextEditorRepresentable(text: $userPrompt)
-                        .border(Color.green)
+                        .frame(minHeight: editorHeight ?? minInputHeight, maxHeight: editorHeight ?? maxInputHeight)
                         .focused($isFocused)
                 }
                     .padding(.top)
+                    .frame(minHeight: editorHeight ?? minInputHeight, maxHeight: editorHeight ?? maxInputHeight)
+                    .fixedSize(horizontal: false, vertical: true)
                     .padding(.horizontal)
                     .scrollContentBackground(.hidden)
                     .scrollIndicators(.hidden)
-                    .frame(minHeight: editorHeight ?? minInputHeight, maxHeight: editorHeight ?? maxInputHeight)
-                    .fixedSize(horizontal: false, vertical: true)
                     .onChange(of: conv.isResponseLoading) {
                         isFocused = !conv.isResponseLoading
                         editorHeight = nil
@@ -81,9 +81,6 @@ struct MessageInputView: View {
                                         
                                         
                                             .onChanged { gesture in
-                                                
-                                                print(gesture.startLocation)
-                                                print(gesture.translation)
                                                 
                                                 editorHeight = trackedEditorHeight
                                                 
@@ -149,11 +146,11 @@ struct MessageInputView: View {
             .background(.black.opacity(0.3))
             
             //            self.prompt = Message.prompt_02.content
-            .onAppear {
-                if isPreview {
-                    userPrompt = bigText
-                }
-            }
+//            .onAppear {
+//                if isPreview {
+//                    userPrompt = bigText
+//                }
+//            }
             
             
             

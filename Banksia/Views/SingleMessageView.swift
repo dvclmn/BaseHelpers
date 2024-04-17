@@ -16,7 +16,9 @@ struct SingleMessageView: View {
     
     @State private var isHovering: Bool = false
     
-    var message: Message
+    @Bindable var message: Message
+    
+    let messageMaxWidth: Double = 500
     
     var body: some View {
         
@@ -42,22 +44,22 @@ struct SingleMessageView: View {
                 //                Markdown {
                 //                    message.content
                 //                }
-                Text(highlighted)
-                    .frame(maxWidth: .infinity, alignment: .leading)
+//                Text(highlighted)
+                StylableTextEditorRepresentable(text: $message.content, isEditable: false)
                     .padding()
+                    .frame(maxWidth: messageMaxWidth, alignment: .leading)
                     .background(Color(message.type == .user ? .blue : .gray).opacity(0.2))
                     .clipShape(RoundedRectangle(cornerRadius: Styles.roundingMedium))
-                    .markdownTheme(.gitHubCustom)
-                    .padding()
+//                    .markdownTheme(.gitHubCustom)
                     .id(message.timestamp)
                 
-                    .contextMenu {
-                        Button {
-                            
-                        } label: {
-                            Label("Delete message", systemImage: Icons.arrowDown.icon)
-                        }
-                    }
+//                    .contextMenu {
+//                        Button {
+//                            
+//                        } label: {
+//                            Label("Delete message", systemImage: Icons.arrowDown.icon)
+//                        }
+//                    }
                     .textSelection(.enabled)
                     .overlay(alignment: .topTrailing) {
                         if isHovering {
@@ -71,14 +73,16 @@ struct SingleMessageView: View {
                         }
                     }
             }
-            .frame(maxWidth: 500)
+            .frame(maxWidth: messageMaxWidth)
+            .padding()
+            
             
             
             .onHover { hovering in
                 isHovering = hovering
             }
         }
-        .font(.system(size: 14))
+//        .font(.system(size: 14))
         .frame(maxWidth: .infinity, alignment: message.type == .user ? .trailing : .leading)
     }
     

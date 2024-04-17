@@ -14,16 +14,17 @@ enum KeychainError: Error {
 
 extension ConversationHandler {
     
-    func fetchGPTResponse<T: Decodable>(prompt: String) async throws -> T {
+    func fetchGPTResponse<T: Decodable>(prompt: String, isTest: Bool = false) async throws -> T {
         
         isResponseLoading = true
         
-//        guard let apiKey = KeychainHandler.get(forKey: "OpenAIKey") else {
-//            print("Couldn't get the api key from keychain")
-//            throw KeychainError.couldNotFindItem
-//        }
+        //        guard let apiKey = KeychainHandler.get(forKey: "OpenAIKey") else {
+        //            print("Couldn't get the api key from keychain")
+        //            throw KeychainError.couldNotFindItem
+        //        }
         
         print("Let's fetch a response from GPT")
+        
         
         let requestBody = RequestBody(
             model: pref.gptModel.value,
@@ -37,11 +38,12 @@ extension ConversationHandler {
         // TODO: Rashly storing my API key right here, will need to move it asap
         let request = try makeURLRequest(from: OpenAI.chatURL, requestType: .post, bearerToken: "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", body: requestBody)
         
-//        print("Request: '\(request)'")
+        let data = try await fetch(request: request)
+        
+        
         
         let decoder = JSONDecoder()
         
-        let data = try await fetch(request: request)
         
         isResponseLoading = false
         
@@ -49,7 +51,7 @@ extension ConversationHandler {
     }
     
     func makeURLRequest(from urlString: String, requestType: APIRequestType = .get, clientID: String? = nil, bearerToken: String? = nil, body: RequestBody? = nil) throws -> URLRequest {
-//        print("Let's create a valid URLRequest for url: '\(urlString)', of type: '\(requestType.rawValue)', with body: \(String(describing: body))")
+        //        print("Let's create a valid URLRequest for url: '\(urlString)', of type: '\(requestType.rawValue)', with body: \(String(describing: body))")
         guard let url = URL(string: urlString) else {
             throw APIError.badURL
         }
@@ -74,7 +76,7 @@ extension ConversationHandler {
     // MARK: - Generic API fetch
     /// Makes a network request and decodes the JSON response
     func fetch(request: URLRequest) async throws -> Data {
-//        print("Going to fetch and return data for request '\(request)'")
+        //        print("Going to fetch and return data for request '\(request)'")
         do {
             let (data, response) = try await URLSession.shared.data(for: request)
             
@@ -83,7 +85,7 @@ extension ConversationHandler {
                 throw APIError.unknownStatusCode
             }
             
-//            print("Reponse: \(httpResponse)")
+            //            print("Reponse: \(httpResponse)")
             
             switch httpResponse.statusCode {
             case 200...299:

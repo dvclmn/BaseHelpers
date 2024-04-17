@@ -21,6 +21,7 @@ import SwiftUI
 
 struct StylableTextEditorRepresentable: NSViewRepresentable {
     @Binding var text: String
+    var isEditable: Bool = true
     
     func makeCoordinator() -> Coordinator {
         Coordinator(self)
@@ -31,6 +32,7 @@ struct StylableTextEditorRepresentable: NSViewRepresentable {
         textView.delegate = context.coordinator
         textView.invalidateIntrinsicContentSize()
         textView.string = text
+        textView.isEditable = isEditable
         textView.font = .systemFont(ofSize: 15)
         textView.drawsBackground = false
         textView.allowsUndo = true
@@ -42,6 +44,9 @@ struct StylableTextEditorRepresentable: NSViewRepresentable {
             textView.string = text
             textView.invalidateIntrinsicContentSize()
             textView.applyStyles()
+        }
+        if textView.isEditable != isEditable {
+            textView.isEditable = isEditable
         }
         
     }
@@ -77,6 +82,7 @@ class StylableTextEditor: NSTextView {
         guard let textStorage = self.textStorage else { return }
         
         let selectedRange = self.selectedRange()
+        
         let text = NSMutableAttributedString(attributedString: textStorage)
         
         // Regular expression to find code blocks
