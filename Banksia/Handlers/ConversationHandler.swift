@@ -123,11 +123,11 @@ enum ConversationState {
     case single
     case multiple
     
-    init(totalConversations: Int, selectedConversations: Set<Conversation.ID>) {
+    init(totalConversations: Int, selectedConversation: Set<Conversation.ID>) {
         if totalConversations == 0 {
             self = .blank
         } else {
-            switch selectedConversations.count {
+            switch selectedConversation.count {
             case 0:
                 self = .none
             case 1:
@@ -224,19 +224,18 @@ extension BanksiaHandler {
         } catch {
             print("Failed to save new conversation: \(error)")
         }
-        selectedConversations = []
-        selectedConversations = [newConversation.persistentModelID]
+        selectedConversation = newConversation.persistentModelID
     }
     
     func deleteConversations(_ conversations: Set<Conversation>, modelContext: ModelContext) {
-        selectedConversations = []
+        selectedConversation = nil
         for conversation in conversations {
             modelContext.delete(conversation)
         }
     }
     
     func deleteAll(for modelContext: ModelContext) {
-        selectedConversations = []
+        selectedConversation = nil
         do {
             try modelContext.delete(model: Conversation.self)
         } catch {

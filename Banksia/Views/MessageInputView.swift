@@ -14,6 +14,9 @@ struct MessageInputView: View {
     @EnvironmentObject var pref: Preferences
     @Environment(\.modelContext) private var modelContext
     
+    @SceneStorage("userPrompt") var userPrompt: String = ""
+    @SceneStorage("editorHeight") var editorHeight: Double = 300
+    
     @FocusState private var isFocused
     
     var conversation: Conversation
@@ -24,7 +27,7 @@ struct MessageInputView: View {
             
             HStack(alignment: .bottom, spacing: 0) {
                 
-                TextEditor(text: $pref.userPrompt)
+                TextEditor(text: $userPrompt)
                     .disabled(conv.isResponseLoading)
                     .focused($isFocused)
                     .font(.system(size: 15))
@@ -33,7 +36,7 @@ struct MessageInputView: View {
                 //                ScrollView(.vertical) {
                 //                    EditorTextViewRepresentable(text: $prompt)
                 //                }
-                    .frame(height: pref.editorHeight)
+                    .frame(height: editorHeight)
 
                     .onChange(of: conv.isResponseLoading) {
                         isFocused = !conv.isResponseLoading
@@ -47,7 +50,7 @@ struct MessageInputView: View {
                         
                     }
                 }
-                .disabled(pref.userPrompt.isEmpty)
+                .disabled(userPrompt.isEmpty)
                 .keyboardShortcut(.return, modifiers: .command)
                 .padding()
             } // END user text field hstack
@@ -60,10 +63,10 @@ struct MessageInputView: View {
                         DragGesture(minimumDistance: 0) // React to drag gestures with no minimum distance
                             .onChanged { gesture in
                                 // Adjust the editorHeight based on the drag amount
-                                pref.editorHeight += gesture.translation.height * -1
+                                editorHeight += gesture.translation.height * -1
                                 
                                 // Optionally, enforce minimum and maximum height constraints
-                                pref.editorHeight = min(max(pref.editorHeight, 100), 600) // Example min/max height
+                                editorHeight = min(max(editorHeight, 100), 600) // Example min/max height
                             }
                     )
                     .cursor(.resizeUpDown)
@@ -92,8 +95,8 @@ struct MessageInputView: View {
     private func sendMessage(for conversation: Conversation) async {
         
         /// Save user message, so we can clear the input field
-        let messageContents = pref.userPrompt
-        pref.userPrompt = ""
+        let messageContents = userPrompt
+        userPrompt = ""
         
         /// Create new `Message` object and add to database
         let newUserMessage = conv.createMessage(messageContents, with: .user, for: conversation)
@@ -122,7 +125,7 @@ struct MessageInputView: View {
         
         VStack {
             Spacer()
-            ConversationView()
+            ConversationView(conversation: Conversation.childcare)
         }
     }
     .environment(ConversationHandler())

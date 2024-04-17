@@ -41,7 +41,7 @@ final class Conversation: Identifiable {
 } // END Conversation
 
 @Model
-final class Message {
+final class Message: Identifiable {
     var timestamp: Date = Date.now
     var content: String = ""
     var tokens: Int? = nil

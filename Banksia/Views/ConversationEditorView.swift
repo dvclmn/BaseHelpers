@@ -7,12 +7,14 @@
 
 import SwiftUI
 import Styles
+import Utilities
 
 struct ConversationEditorView: View {
     
     @Bindable var conversation: Conversation
     
     var body: some View {
+        
         
         ScrollView(.vertical) {
             VStack(alignment: .leading) {
@@ -21,37 +23,37 @@ struct ConversationEditorView: View {
                     .padding(.top)
                     .padding(.horizontal, Styles.paddingToMatchForm)
                     .padding(.bottom, -8)
-                    Form {
-                        LabeledContent {
-                            TextField("", text: $conversation.name, prompt: Text("Enter name"))
-
-                        } label: {
-                            Label("Name", systemImage: Icons.title.icon)
-                        }
+                Form {
+                    LabeledContent {
+                        TextField("", text: $conversation.name, prompt: Text("Enter name"))
                         
-                        LabeledContent {
-                            TextField("", text: $conversation.prompt.boundString, prompt: Text("Provide conversation-wide prompt"))
-
-                        } label: {
-                            Label("Prompt", systemImage: Icons.text.icon)
-                        }
+                    } label: {
+                        Label("Name", systemImage: Icons.title.icon)
+                    }
+                    
+                    LabeledContent {
+                        TextField("", text: $conversation.prompt.boundString, prompt: Text("Provide conversation-wide prompt"))
                         
-                        LabeledContent {
-                            Text("\(conversation.messages?.count ?? 0)")
-
-                        } label: {
-                            Label("Messages", systemImage: Icons.message.icon)
-                        }
+                    } label: {
+                        Label("Prompt", systemImage: Icons.text.icon)
+                    }
+                    
+                    LabeledContent {
+                        Text("\(conversation.messages?.count ?? 0)")
                         
-                        LabeledContent {
-                            Text("\(conversation.tokens ?? 0)")
-
-                        } label: {
-                            Label("Tokens used", systemImage: Icons.token.icon)
-                        }
-
-                    } // END form
-                    .formStyle(.grouped)
+                    } label: {
+                        Label("Messages", systemImage: Icons.message.icon)
+                    }
+                    
+                    LabeledContent {
+                        Text("\(conversation.tokens ?? 0)")
+                        
+                    } label: {
+                        Label("Tokens used", systemImage: Icons.token.icon)
+                    }
+                    
+                } // END form
+                .formStyle(.grouped)
             } // END main vstack
             .frame(maxWidth:.infinity, maxHeight:.infinity, alignment: .leading)
             .padding(Styles.paddingGenerous - Styles.paddingToMatchForm)
@@ -59,9 +61,9 @@ struct ConversationEditorView: View {
         } // END scroll view
         .scrollContentBackground(.hidden)
         .background(.contentBackground)
-//        .background(.ultraThinMaterial)
+        //        .background(.ultraThinMaterial)
         .frame(minWidth: 340 , minHeight: 400)
-        
+    
     }
 }
 

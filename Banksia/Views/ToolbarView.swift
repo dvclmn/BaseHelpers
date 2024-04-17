@@ -22,14 +22,14 @@ struct ToolbarView: ToolbarContent {
 //        ToolbarItem() {
 //            switch bk.conversationState {
 //            case .single:
-//                if let conversation = bk.selectedConversations.first {
+//                if let conversation = bk.selectedConversation.first {
 //                    HandyButton(label: "Delete \(conversation.name)", icon: "trash") {
 //                        bk.deleteConversations([conversation], modelContext: modelContext)
 //                    }
 //                }
 //            case .multiple:
 //                HandyButton(label: "Delete all conversations", icon: "trash.fill") {
-//                    bk.deleteConversations(bk.selectedConversations, modelContext: modelContext)
+//                    bk.deleteConversations(bk.selectedConversation, modelContext: modelContext)
 //                }
 //            default:
 //                EmptyView()

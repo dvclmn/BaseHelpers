@@ -97,6 +97,7 @@
 		F6D6E3612BC91CE0000D2051 /* TokenThemeAttribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6D6E3272BC91CE0000D2051 /* TokenThemeAttribute.swift */; };
 		F6D94E562BCE969200E59BE0 /* Utilities in Frameworks */ = {isa = PBXBuildFile; productRef = F6D94E552BCE969200E59BE0 /* Utilities */; };
 		F6E4BC672BCEE2DD00BFD550 /* Styles in Frameworks */ = {isa = PBXBuildFile; productRef = F6E4BC662BCEE2DD00BFD550 /* Styles */; };
+		F6E4BC692BCF0ABD00BFD550 /* ScrollTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6E4BC682BCF0ABD00BFD550 /* ScrollTest.swift */; };
 		F6E8269F2B0BDD6E0047477D /* MessagesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6E8269E2B0BDD6E0047477D /* MessagesView.swift */; };
 		F6E826A12B0BF3630047477D /* IconPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6E826A02B0BF3630047477D /* IconPickerView.swift */; };
 		F6F393112B09DB7D005046F4 /* ConversationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6F393102B09DB7D005046F4 /* ConversationView.swift */; };
@@ -194,6 +195,7 @@
 		F6D6E3252BC91CE0000D2051 /* TokenizedLine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TokenizedLine.swift; sourceTree = "<group>"; };
 		F6D6E3262BC91CE0000D2051 /* TokenizeResult.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TokenizeResult.swift; sourceTree = "<group>"; };
 		F6D6E3272BC91CE0000D2051 /* TokenThemeAttribute.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TokenThemeAttribute.swift; sourceTree = "<group>"; };
+		F6E4BC682BCF0ABD00BFD550 /* ScrollTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ScrollTest.swift; path = Banksia/ScrollTest.swift; sourceTree = "<group>"; };
 		F6E8269E2B0BDD6E0047477D /* MessagesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesView.swift; sourceTree = "<group>"; };
 		F6E826A02B0BF3630047477D /* IconPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconPickerView.swift; sourceTree = "<group>"; };
 		F6F393102B09DB7D005046F4 /* ConversationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationView.swift; sourceTree = "<group>"; };
@@ -297,6 +299,7 @@
 		F6A7BEDE2B01C57400D3CE25 = {
 			isa = PBXGroup;
 			children = (
+				F6E4BC682BCF0ABD00BFD550 /* ScrollTest.swift */,
 				F6A7BEE92B01C57400D3CE25 /* Banksia */,
 				F6A7BEE82B01C57400D3CE25 /* Products */,
 			);
@@ -573,6 +576,7 @@
 				F6D6E3512BC91CE0000D2051 /* NSRange+Shifted.swift in Sources */,
 				F6D6E35C2BC91CE0000D2051 /* ThemeSetting.swift in Sources */,
 				F6D6E33F2BC91CE0000D2051 /* EditorLayoutManager.swift in Sources */,
+				F6E4BC692BCF0ABD00BFD550 /* ScrollTest.swift in Sources */,
 				F6D6E3402BC91CE0000D2051 /* EditorTextStorage.swift in Sources */,
 				F6D6E35A2BC91CE0000D2051 /* Theme+Default.swift in Sources */,
 				F6E826A12B0BF3630047477D /* IconPickerView.swift in Sources */,

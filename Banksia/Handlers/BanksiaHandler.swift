@@ -13,7 +13,7 @@ class BanksiaHandler {
     
     let pref = Preferences()
     
-    var selectedConversations: Set<Conversation.ID> = []
+    var selectedConversation: Conversation.ID? = nil
     
     var totalConversations: Int = 0
     
@@ -23,20 +23,6 @@ class BanksiaHandler {
     var isGlobalConversationPreferencesShowing: Bool = false
     var isEditingLongFormText: Bool = false
     
-    
-//    var selectionState: ConversationState {
-//        if selectedConversations.count <= 0 {
-//            return .none
-//        } else if selectedConversations.count == 1 {
-//            return .single
-//        } else if selectedConversations.count > 1 {
-//            return .multiple
-//        } else if totalConversations <= 0 {
-//            return .blank
-//        } else {
-//            return .none
-//        }
-//    }
 
 }
 

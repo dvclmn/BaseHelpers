@@ -16,8 +16,6 @@ struct ContentView: View {
     
     @Query(sort: \Conversation.created) private var conversations: [Conversation]
     
-    
-    
     var body: some View {
         
         @Bindable var bk = bk
@@ -28,15 +26,12 @@ struct ContentView: View {
             
         } detail: {
             
-            if let conversationID = bk.selectedConversations.first {
+            if let currentConversation = conversations.first(where: {$0.id == bk.selectedConversation}) {
                 
-                let activeConversationPredicate = #Predicate<Conversation> { conversation in
-                    
-                    conversation.persistentModelID == conversationID
-                }
-                
-                ConversationView(filter: activeConversationPredicate)
+                ConversationView(conversation: currentConversation)
             }
+            
+            
             
             
             
@@ -47,11 +42,11 @@ struct ContentView: View {
         // Detail view toolbar
         .onAppear {
             if let firstConversation = conversations.first {
-                bk.selectedConversations = [firstConversation.persistentModelID]
+                bk.selectedConversation = firstConversation.persistentModelID
             }
 //            getActiveConversation()
         }
-        .onChange(of: bk.selectedConversations) {
+        .onChange(of: bk.selectedConversation) {
 //            getActiveConversation()
         }
         .background(.contentBackground)
@@ -60,7 +55,7 @@ struct ContentView: View {
     
 //    private func getActiveConversation() {
 //        print("Let's get the active conversation")
-//        if let conversationID = bk.selectedConversations.first {
+//        if let conversationID = bk.selectedConversation.first {
 //            let conversation = conversations.first(where: {$0.persistentModelID == conversationID})
 //            print("The active conversation is: \(String(describing: conversation?.name))")
 //            bk.activeConversation = conversation

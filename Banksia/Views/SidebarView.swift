@@ -20,7 +20,7 @@ struct SidebarView: View {
         @Bindable var bk = bk
         
         VStack {
-            List(selection: $bk.selectedConversations) {
+            List(selection: $bk.selectedConversation) {
                 ForEach(conversations) { conversation in
                     ConversationListItem(conversation: conversation)
                 } // END foreach
@@ -61,7 +61,7 @@ struct SidebarView: View {
     NavigationSplitView {
         SidebarView(conversations: [Conversation.appKitDrawing, Conversation.childcare])
     } detail: {
-        ConversationView()
+        ConversationView(conversation: Conversation.appKitDrawing)
     }
     .environment(BanksiaHandler())
     .environment(ConversationHandler())
