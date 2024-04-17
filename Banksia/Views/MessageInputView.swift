@@ -7,6 +7,8 @@
 
 import SwiftUI
 import SwiftData
+import Styles
+import Utilities
 
 struct MessageInputView: View {
     @Environment(ConversationHandler.self) private var conv
@@ -15,7 +17,18 @@ struct MessageInputView: View {
     @Environment(\.modelContext) private var modelContext
     
     @SceneStorage("userPrompt") var userPrompt: String = ""
-    @SceneStorage("editorHeight") var editorHeight: Double = 300
+    
+    @SceneStorage("editorHeight") var editorHeight: Double?
+    
+    @State private var isHoveringHeightAdjustor: Bool = false
+    
+    let minInputHeight: Double = 100
+    let maxInputHeight: Double = 600
+    
+    
+    @State private var trackedEditorHeight: Double = 0
+    @GestureState private var dragState = CGSize.zero
+    
     
     @FocusState private var isFocused
     
@@ -23,62 +36,126 @@ struct MessageInputView: View {
     
     var body: some View {
         
+        @Bindable var conv = conv
+        
         VStack(spacing: 0) {
             
-            HStack(alignment: .bottom, spacing: 0) {
+            VStack(alignment: .leading, spacing: 0) {
                 
                 TextEditor(text: $userPrompt)
                     .disabled(conv.isResponseLoading)
                     .focused($isFocused)
                     .font(.system(size: 15))
-                    .padding()
+                    .foregroundStyle(.primary.opacity(0.9))
+                    .padding(.top)
+                    .padding(.horizontal)
                     .scrollContentBackground(.hidden)
+                    .scrollIndicators(.hidden)
                 //                ScrollView(.vertical) {
                 //                    EditorTextViewRepresentable(text: $prompt)
                 //                }
-                    .frame(height: editorHeight)
-
+                
+                
+                //                    .frame(height: editorHeight ?? 100)
+                    .frame(minHeight: editorHeight ?? minInputHeight, maxHeight: editorHeight ?? maxInputHeight)
+                    .fixedSize(horizontal: false, vertical: true)
+                //                    .lineLimit(10)
+                
+                
                     .onChange(of: conv.isResponseLoading) {
                         isFocused = !conv.isResponseLoading
                     }
-                
-                Button(conv.isResponseLoading ? "Loading…" : "Send") {
-                    
-                    //                                        testScroll()
-                    Task {
-                        await sendMessage(for: conversation)
+                    .overlay(alignment: .top) {
+                        GeometryReader { geo in
+                            //                            HStack {
+                            //                                Text("\(geo.size.height)")
+                            //                                Text("Tracked height: \(trackedEditorHeight)")
+                            //                            }
+                            Rectangle()
+                                .fill(.blue.opacity(!isHoveringHeightAdjustor ? 0.3 : 0.0))
+                                .frame(height: 10)
+                                .contentShape(Rectangle())
+                                .gesture(
+                                    ExclusiveGesture(
+                                        TapGesture(count: 2)
+                                            .onEnded {
+                                                editorHeight = nil
+                                            }
+                                        ,
+                                        DragGesture(minimumDistance: 0)
+                                        
+                                        
+                                            .onChanged { gesture in
+                                                
+                                                print(gesture.startLocation)
+                                                print(gesture.translation)
+                                                
+                                                editorHeight = trackedEditorHeight
+                                                
+                                                editorHeight? += gesture.translation.height * -1
+                                                editorHeight = min(max(editorHeight ?? 0, minInputHeight), maxInputHeight)
+                                                
+                                            }
+                                    )
+                                    
+                                ) // END exclusive gesture
+                                .cursor(.resizeUpDown)
+                            //                                .onHover { hovering in
+                            //                                    withAnimation(Styles.animation) {
+                            //                                        isHoveringHeightAdjustor = hovering
+                            //                                    }
+                            //                                }
+                                .task(id: geo.size.height) {
+                                    trackedEditorHeight = geo.size.height
+                                }
+                        } // END geo
                         
                     }
-                }
-                .disabled(userPrompt.isEmpty)
-                .keyboardShortcut(.return, modifiers: .command)
-                .padding()
-            } // END user text field hstack
-            .overlay(alignment: .top) {
-                Rectangle()
-                    .fill(.blue.opacity(0.0))
-                    .frame(height: 10)
-                    .contentShape(Rectangle())
-                    .gesture(
-                        DragGesture(minimumDistance: 0) // React to drag gestures with no minimum distance
-                            .onChanged { gesture in
-                                // Adjust the editorHeight based on the drag amount
-                                editorHeight += gesture.translation.height * -1
-                                
-                                // Optionally, enforce minimum and maximum height constraints
-                                editorHeight = min(max(editorHeight, 100), 600) // Example min/max height
-                            }
-                    )
-                    .cursor(.resizeUpDown)
                 
+                
+                
+                
+            } // END user text field hstack
+            .overlay(alignment: .bottom) {
+                HStack(spacing: 16) {
+                    Spacer()
+                    Toggle(isOn: $conv.isTesting, label: {
+                        Text("Test mode")
+                    })
+                    .disabled(conv.isResponseLoading)
+                    .foregroundStyle(.secondary)
+                    .toggleStyle(.switch)
+                    .controlSize(.mini)
+                    Button(conv.isResponseLoading ? "Loading…" : "Send") {
+                        
+                        //                                        testScroll()
+                        Task {
+                            conv.isResponseLoading = true
+                            await sendMessage(for: conversation)
+                            conv.isResponseLoading = false
+                            
+                        }
+                    }
+                    .disabled(userPrompt.isEmpty)
+                    .keyboardShortcut(.return, modifiers: .command)
+                }
+                .padding(.horizontal, 14)
+                .padding(.top, 12)
+                .padding(.bottom, 14)
+                .background(.ultraThinMaterial)
             }
+
             
-            .background(.black.opacity(0.4))
             
-                //            self.prompt = Message.prompt_02.content
-                //                            if isPreview {
-                //                                pref.userPrompt = bigText
-                //                            }
+            
+            .background(.black.opacity(0.3))
+            
+            //            self.prompt = Message.prompt_02.content
+            .onAppear {
+                if isPreview {
+                    userPrompt = bigText
+                }
+            }
             
             
             
@@ -86,11 +163,11 @@ struct MessageInputView: View {
         
     }
     
-//    private func testScroll() {
-//        let newMessage = Message(content: pref.userPrompt)
-//        modelContext.insert(newMessage)
-//        newMessage.conversation = conversation
-//    }
+    //    private func testScroll() {
+    //        let newMessage = Message(content: pref.userPrompt)
+    //        modelContext.insert(newMessage)
+    //        newMessage.conversation = conversation
+    //    }
     
     private func sendMessage(for conversation: Conversation) async {
         
@@ -117,7 +194,7 @@ struct MessageInputView: View {
         
     }
     
-
+    
 }
 
 #Preview {
@@ -132,4 +209,5 @@ struct MessageInputView: View {
     .environment(BanksiaHandler())
     .environmentObject(Preferences())
     .frame(width: 560, height: 700)
+    .background(.contentBackground)
 }

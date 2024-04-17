@@ -18,7 +18,11 @@ final class ConversationHandler {
     var searchText: String = ""
     var isSearching: Bool = false
     
+    var isTesting: Bool = true
+    
     var isResponseLoading: Bool = false
+    
+    var isRequestingNewConversation: Bool = false
 
     /// This history should only be sent to GPT, not be saved to a Conversation. The Conversation has it's own array of Messages
     var messageHistory: String = ""
@@ -32,17 +36,19 @@ final class ConversationHandler {
             return
         }
         
-        let maxMessageContextCount: Int = 6
+        let sortedMessages = messages.sorted { $0.timestamp > $1.timestamp }
+
+        let maxMessageContextCount: Int = 8
         
         let queryID: String = latestMessage.persistentModelID.hashValue.description
-        
         
         let queryHeading: String = "\n\n# ||---- BEGIN Query #\(queryID) ---->> \n"
         let latestQueryDecorator: String = "## Latest Query\n"
         let conversationHistoryDecorator: String = "## Conversation History\n"
         let queryFooter: String = "\n# >>---- END Query #\(queryID) ----||\n\n"
         
-        let historicalMessages: [Message] = messages.suffix(maxMessageContextCount).dropLast()
+        
+        let historicalMessages: [Message] = sortedMessages.suffix(maxMessageContextCount).dropLast() /// Drop last, to exclude the message I *just* sent
         
         let historyFormatted: String = historicalMessages.map { formatMessageForGPT($0) }.joined(separator: "\n")
         
@@ -62,7 +68,6 @@ final class ConversationHandler {
     } // END createMessageHistory
     
 
-    
     func fetchGPTResponse(for conversation: Conversation) async throws -> Message {
         print("|--- fetchGPTResponse --->")
         do {
@@ -100,10 +105,10 @@ final class ConversationHandler {
     func formatMessageForGPT(_ message: Message) -> String {
         print("|--- formatMessageForGPT --->")
         
-        let timeStamp: String = "### Timestamp: \(Date.now)"
-        let type: String = "### Author: \(message.type.name)"
-        let conversationID: String = "### Conversation ID: \(message.conversation?.persistentModelID.hashValue.description ?? "No Conversation ID")"
-        let content: String = "### Query content:\n\n\(message.content)"
+        let timeStamp: String = "Timestamp: \(Date.now)"
+        let type: String = "Author: \(message.type.name)"
+        let conversationID: String = "Conversation ID: \(message.conversation?.persistentModelID.hashValue.description ?? "No Conversation ID")"
+        let content: String = "Message:\n\(message.content)"
         
         let formattedMessage: String = """
         \(timeStamp)
@@ -209,40 +214,3 @@ enum ConversationState {
     
 } // END coversation state
 
-
-extension BanksiaHandler {
-    
-    func newConversation(for modelContext: ModelContext) {
-        
-        let newConversation = Conversation(name: "New conversation")
-        
-        modelContext.insert(newConversation)
-        
-        do {
-            try modelContext.save()
-            
-        } catch {
-            print("Failed to save new conversation: \(error)")
-        }
-        selectedConversation = newConversation.persistentModelID
-    }
-    
-    func deleteConversations(_ conversations: Set<Conversation>, modelContext: ModelContext) {
-        selectedConversation = nil
-        for conversation in conversations {
-            modelContext.delete(conversation)
-        }
-    }
-    
-    func deleteAll(for modelContext: ModelContext) {
-        selectedConversation = nil
-        do {
-            try modelContext.delete(model: Conversation.self)
-        } catch {
-            print("Failed to clear Conversations.")
-        }
-    } // END delete all
-    
-    
-    
-} // END BanksiaHandler extension

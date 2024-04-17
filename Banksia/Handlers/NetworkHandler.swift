@@ -34,9 +34,10 @@ extension ConversationHandler {
             temperature: pref.gptTemperature
         )
         
+        // TODO: Rashly storing my API key right here, will need to move it asap
         let request = try makeURLRequest(from: OpenAI.chatURL, requestType: .post, bearerToken: "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", body: requestBody)
         
-        print("Request: '\(request)'")
+//        print("Request: '\(request)'")
         
         let decoder = JSONDecoder()
         
@@ -73,7 +74,7 @@ extension ConversationHandler {
     // MARK: - Generic API fetch
     /// Makes a network request and decodes the JSON response
     func fetch(request: URLRequest) async throws -> Data {
-        print("Going to fetch and return data for request '\(request)'")
+//        print("Going to fetch and return data for request '\(request)'")
         do {
             let (data, response) = try await URLSession.shared.data(for: request)
             
@@ -82,7 +83,7 @@ extension ConversationHandler {
                 throw APIError.unknownStatusCode
             }
             
-            print("Reponse: \(httpResponse)")
+//            print("Reponse: \(httpResponse)")
             
             switch httpResponse.statusCode {
             case 200...299:

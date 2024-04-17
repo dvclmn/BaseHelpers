@@ -19,6 +19,8 @@ class BanksiaHandler {
     
     var sidebarVisibility: NavigationSplitViewVisibility = .detailOnly
     
+    var isQuickNavShowing: Bool = false
+    
     var isConversationEditorShowing: Bool = false
     var isGlobalConversationPreferencesShowing: Bool = false
     var isEditingLongFormText: Bool = false

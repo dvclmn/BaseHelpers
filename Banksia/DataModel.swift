@@ -11,7 +11,7 @@ import SwiftData
 @Model
 final class Conversation: Identifiable {
     var created: Date = Date.now
-    var name: String = ""
+    var name: String = "New conversation"
     var icon: String? = nil
     var tokens: Int? = nil
     var prompt: String? = nil
@@ -22,7 +22,7 @@ final class Conversation: Identifiable {
     
     init(
         created: Date = Date.now,
-        name: String = "",
+        name: String = "New conversation",
         icon: String? = nil,
         tokens: Int? = nil,
         prompt: String? = nil,

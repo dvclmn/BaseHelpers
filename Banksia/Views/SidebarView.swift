@@ -11,6 +11,7 @@ import Styles
 struct SidebarView: View {
     
     @Environment(BanksiaHandler.self) private var bk
+    @Environment(ConversationHandler.self) private var conv
     @Environment(\.modelContext) var modelContext
     
     var conversations: [Conversation]
@@ -30,7 +31,7 @@ struct SidebarView: View {
             .toolbar {
                 ToolbarItem {
                     Button {
-                        bk.newConversation(for: modelContext)
+                        conv.isRequestingNewConversation = true
                     } label: {
                         Label("New conversation", systemImage: Icons.plus.icon)
                     }

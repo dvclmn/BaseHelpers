@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		F6081DF72B04847600A78D64 /* KeychainHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6081DF62B04847600A78D64 /* KeychainHandler.swift */; };
 		F6081DF92B0485EA00A78D64 /* NetworkHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6081DF82B0485EA00A78D64 /* NetworkHandler.swift */; };
 		F636A11C2B05B23D00C24891 /* GeneralSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F636A11B2B05B23D00C24891 /* GeneralSettingsView.swift */; };
 		F64F8E032B02136D00C72E51 /* ModelContainerPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = F64F8E022B02136D00C72E51 /* ModelContainerPreview.swift */; };
@@ -98,6 +97,8 @@
 		F6D94E562BCE969200E59BE0 /* Utilities in Frameworks */ = {isa = PBXBuildFile; productRef = F6D94E552BCE969200E59BE0 /* Utilities */; };
 		F6E4BC672BCEE2DD00BFD550 /* Styles in Frameworks */ = {isa = PBXBuildFile; productRef = F6E4BC662BCEE2DD00BFD550 /* Styles */; };
 		F6E4BC692BCF0ABD00BFD550 /* ScrollTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6E4BC682BCF0ABD00BFD550 /* ScrollTest.swift */; };
+		F6E4BC6B2BCFD1E100BFD550 /* QuickNavView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6E4BC6A2BCFD1E100BFD550 /* QuickNavView.swift */; };
+		F6E4BC6D2BCFDAC900BFD550 /* MenuCommands.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6E4BC6C2BCFDAC900BFD550 /* MenuCommands.swift */; };
 		F6E8269F2B0BDD6E0047477D /* MessagesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6E8269E2B0BDD6E0047477D /* MessagesView.swift */; };
 		F6E826A12B0BF3630047477D /* IconPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6E826A02B0BF3630047477D /* IconPickerView.swift */; };
 		F6F393112B09DB7D005046F4 /* ConversationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6F393102B09DB7D005046F4 /* ConversationView.swift */; };
@@ -106,7 +107,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		F6081DF62B04847600A78D64 /* KeychainHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainHandler.swift; sourceTree = "<group>"; };
 		F6081DF82B0485EA00A78D64 /* NetworkHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkHandler.swift; sourceTree = "<group>"; };
 		F636A11B2B05B23D00C24891 /* GeneralSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralSettingsView.swift; sourceTree = "<group>"; };
 		F64F8E022B02136D00C72E51 /* ModelContainerPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelContainerPreview.swift; sourceTree = "<group>"; };
@@ -196,6 +196,8 @@
 		F6D6E3262BC91CE0000D2051 /* TokenizeResult.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TokenizeResult.swift; sourceTree = "<group>"; };
 		F6D6E3272BC91CE0000D2051 /* TokenThemeAttribute.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TokenThemeAttribute.swift; sourceTree = "<group>"; };
 		F6E4BC682BCF0ABD00BFD550 /* ScrollTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ScrollTest.swift; path = Banksia/ScrollTest.swift; sourceTree = "<group>"; };
+		F6E4BC6A2BCFD1E100BFD550 /* QuickNavView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickNavView.swift; sourceTree = "<group>"; };
+		F6E4BC6C2BCFDAC900BFD550 /* MenuCommands.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuCommands.swift; sourceTree = "<group>"; };
 		F6E8269E2B0BDD6E0047477D /* MessagesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesView.swift; sourceTree = "<group>"; };
 		F6E826A02B0BF3630047477D /* IconPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconPickerView.swift; sourceTree = "<group>"; };
 		F6F393102B09DB7D005046F4 /* ConversationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationView.swift; sourceTree = "<group>"; };
@@ -230,6 +232,8 @@
 		F64F8E0D2B0214CC00C72E51 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				F6E4BC6C2BCFDAC900BFD550 /* MenuCommands.swift */,
+				F6E4BC6A2BCFD1E100BFD550 /* QuickNavView.swift */,
 				F6795C7E2BCE7A4D0093BC9C /* GlobalConversationSettingsView.swift */,
 				F6795C7C2BCE70920093BC9C /* ConversationEditorView.swift */,
 				F64F8E212B03090600C72E51 /* ContentView.swift */,
@@ -256,7 +260,6 @@
 				F6A5E1B62BC6EE480018B1B5 /* PreferencesHandler.swift */,
 				F64F8E1F2B03082100C72E51 /* BanksiaHandler.swift */,
 				F6081DF82B0485EA00A78D64 /* NetworkHandler.swift */,
-				F6081DF62B04847600A78D64 /* KeychainHandler.swift */,
 				F64F8E2D2B04254100C72E51 /* ConversationHandler.swift */,
 				F697B8652B0B47610091CE79 /* GPTHandler.swift */,
 				F6C161DE2B0CEE9700F4AB62 /* IconHandler.swift */,
@@ -554,7 +557,6 @@
 				F6D6E3472BC91CE0000D2051 /* BeginEndRule.swift in Sources */,
 				F6D6E2DB2BC80AA2000D2051 /* MessageInputView.swift in Sources */,
 				F6D6E3392BC91CE0000D2051 /* TailIndentThemeAttribute.swift in Sources */,
-				F6081DF72B04847600A78D64 /* KeychainHandler.swift in Sources */,
 				F6D6E3502BC91CE0000D2051 /* MatchRule.swift in Sources */,
 				F697B8682B0B48160091CE79 /* ConversationStateView.swift in Sources */,
 				F64F8E082B02140F00C72E51 /* SampleData+Conversation.swift in Sources */,
@@ -563,6 +565,7 @@
 				F6D6E3602BC91CE0000D2051 /* TokenizeResult.swift in Sources */,
 				F6D6E3532BC91CE0000D2051 /* Parser.swift in Sources */,
 				F6D6E3352BC91CE0000D2051 /* LineHeightThemeAttribute.swift in Sources */,
+				F6E4BC6B2BCFD1E100BFD550 /* QuickNavView.swift in Sources */,
 				F64F8E0C2B0214A000C72E51 /* SampleData+Messages.swift in Sources */,
 				F64F8E032B02136D00C72E51 /* ModelContainerPreview.swift in Sources */,
 				F6D6E3492BC91CE0000D2051 /* Color.swift in Sources */,
@@ -581,6 +584,7 @@
 				F6D6E35A2BC91CE0000D2051 /* Theme+Default.swift in Sources */,
 				F6E826A12B0BF3630047477D /* IconPickerView.swift in Sources */,
 				F6D6E3482BC91CE0000D2051 /* Capture.swift in Sources */,
+				F6E4BC6D2BCFDAC900BFD550 /* MenuCommands.swift in Sources */,
 				F6D6E3562BC91CE0000D2051 /* Rule.swift in Sources */,
 				F6D6E33C2BC91CE0000D2051 /* ThemeAttribute+Error.swift in Sources */,
 				F6D6E32B2BC91CE0000D2051 /* BoldThemeAttribute.swift in Sources */,

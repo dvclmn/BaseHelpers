@@ -37,11 +37,19 @@ struct BanksiaApp: App {
                 .preferredColorScheme(.dark)
         }
         .modelContainer(sharedModelContainer)
+//        .commands {
+//            SidebarCommands()
+//            TextFormattingCommands()
+//            TextEditingCommands()
+//        }
+#if os(macOS)
         .commands {
-            SidebarCommands()
-            TextFormattingCommands()
-            TextEditingCommands()
+            MenuCommands(
+                bk: $bk,
+                conv: $conv
+            )
         }
+#endif
         
 #if os(macOS)
         Settings {

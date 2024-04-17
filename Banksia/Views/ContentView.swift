@@ -7,12 +7,14 @@
 
 import SwiftUI
 import SwiftData
+import Utilities
 
 struct ContentView: View {
     
     @Environment(\.modelContext) var modelContext
     @Environment(\.undoManager) var undoManager
     @Environment(BanksiaHandler.self) private var bk
+    @Environment(ConversationHandler.self) private var conv
     
     @Query(sort: \Conversation.created) private var conversations: [Conversation]
     
@@ -26,20 +28,39 @@ struct ContentView: View {
             
         } detail: {
             
-            if let currentConversation = conversations.first(where: {$0.id == bk.selectedConversation}) {
+            ZStack {
                 
-                ConversationView(conversation: currentConversation)
+                
+                if let currentConversation = conversations.first(where: {$0.id == bk.selectedConversation}) {
+                    
+                    @Bindable var currentConversation = currentConversation
+                    
+                    ConversationView(conversation: currentConversation)
+                        .navigationTitle(currentConversation.name)
+                }
+                
+                
+                if bk.isQuickNavShowing {
+                    QuickNavView()
+                }
+                
+                
+                
             }
-            
-            
-            
-            
-            
+//            .onAppear {
+//                if isPreview {
+//                    bk.isQuickNavShowing = true
+//                }
+//            }
             
             
             
         }
-        // Detail view toolbar
+        .onChange(of: conv.isRequestingNewConversation) {
+            let newConversation = Conversation()
+            modelContext.insert(newConversation)
+            bk.selectedConversation = newConversation.persistentModelID
+        }
         .onAppear {
             if let firstConversation = conversations.first {
                 bk.selectedConversation = firstConversation.persistentModelID
