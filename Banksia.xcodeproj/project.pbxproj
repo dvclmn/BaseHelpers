@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		F6081DF92B0485EA00A78D64 /* NetworkHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6081DF82B0485EA00A78D64 /* NetworkHandler.swift */; };
+		F635C17E2BD0F41100E4EA4A /* SmoothGradient in Frameworks */ = {isa = PBXBuildFile; productRef = F635C17D2BD0F41100E4EA4A /* SmoothGradient */; };
 		F636A11C2B05B23D00C24891 /* GeneralSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F636A11B2B05B23D00C24891 /* GeneralSettingsView.swift */; };
 		F64F8E032B02136D00C72E51 /* ModelContainerPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = F64F8E022B02136D00C72E51 /* ModelContainerPreview.swift */; };
 		F64F8E082B02140F00C72E51 /* SampleData+Conversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F64F8E072B02140F00C72E51 /* SampleData+Conversation.swift */; };
@@ -28,7 +29,6 @@
 		F6A7BEEF2B01C57400D3CE25 /* DataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A7BEEE2B01C57400D3CE25 /* DataModel.swift */; };
 		F6A7BEF12B01C57500D3CE25 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F6A7BEF02B01C57500D3CE25 /* Assets.xcassets */; };
 		F6AD361A2BCAC55100B7AADD /* MarkdownUI in Frameworks */ = {isa = PBXBuildFile; productRef = F6AD36192BCAC55100B7AADD /* MarkdownUI */; };
-		F6AD361D2BCAC87900B7AADD /* Theme+MarkdownUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6AD361C2BCAC87900B7AADD /* Theme+MarkdownUI.swift */; };
 		F6C161DF2B0CEE9700F4AB62 /* IconHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6C161DE2B0CEE9700F4AB62 /* IconHandler.swift */; };
 		F6C161E12B0F63B800F4AB62 /* banksia_icons.json in Resources */ = {isa = PBXBuildFile; fileRef = F6C161E02B0F63B800F4AB62 /* banksia_icons.json */; };
 		F6D6E2D62BC805E9000D2051 /* SingleMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6D6E2D52BC805E9000D2051 /* SingleMessageView.swift */; };
@@ -72,7 +72,6 @@
 		F6A7BEEE2B01C57400D3CE25 /* DataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataModel.swift; sourceTree = "<group>"; };
 		F6A7BEF02B01C57500D3CE25 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F6A7BEF52B01C57500D3CE25 /* Banksia.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Banksia.entitlements; sourceTree = "<group>"; };
-		F6AD361C2BCAC87900B7AADD /* Theme+MarkdownUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Theme+MarkdownUI.swift"; sourceTree = "<group>"; };
 		F6C161DE2B0CEE9700F4AB62 /* IconHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconHandler.swift; sourceTree = "<group>"; };
 		F6C161E02B0F63B800F4AB62 /* banksia_icons.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = banksia_icons.json; path = Working/banksia_icons.json; sourceTree = SOURCE_ROOT; };
 		F6D6E2D52BC805E9000D2051 /* SingleMessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleMessageView.swift; sourceTree = "<group>"; };
@@ -82,6 +81,7 @@
 		F6E4BC6A2BCFD1E100BFD550 /* QuickNavView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickNavView.swift; sourceTree = "<group>"; };
 		F6E4BC6C2BCFDAC900BFD550 /* MenuCommands.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuCommands.swift; sourceTree = "<group>"; };
 		F6E4BC6E2BD02D9800BFD550 /* StylableTextEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StylableTextEditor.swift; sourceTree = "<group>"; };
+		F6E4BC752BD0DA5000BFD550 /* AttributedStringReference.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttributedStringReference.swift; sourceTree = "<group>"; };
 		F6E8269E2B0BDD6E0047477D /* MessagesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesView.swift; sourceTree = "<group>"; };
 		F6E826A02B0BF3630047477D /* IconPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconPickerView.swift; sourceTree = "<group>"; };
 		F6F393102B09DB7D005046F4 /* ConversationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationView.swift; sourceTree = "<group>"; };
@@ -95,6 +95,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F635C17E2BD0F41100E4EA4A /* SmoothGradient in Frameworks */,
 				F6AD361A2BCAC55100B7AADD /* MarkdownUI in Frameworks */,
 				F6D94E562BCE969200E59BE0 /* Utilities in Frameworks */,
 				F6E4BC722BD0D93A00BFD550 /* EditorCore in Frameworks */,
@@ -154,7 +155,7 @@
 		F64F8E2F2B042A0300C72E51 /* Support */ = {
 			isa = PBXGroup;
 			children = (
-				F6AD361B2BCAC85600B7AADD /* MarkdownUI */,
+				F6E4BC752BD0DA5000BFD550 /* AttributedStringReference.swift */,
 				F6D6E2EA2BC82CFE000D2051 /* ExampleText.swift */,
 				F6C161E02B0F63B800F4AB62 /* banksia_icons.json */,
 				F64F8E302B042A2700C72E51 /* UtilityFunctions.swift */,
@@ -215,14 +216,6 @@
 			path = Banksia;
 			sourceTree = "<group>";
 		};
-		F6AD361B2BCAC85600B7AADD /* MarkdownUI */ = {
-			isa = PBXGroup;
-			children = (
-				F6AD361C2BCAC87900B7AADD /* Theme+MarkdownUI.swift */,
-			);
-			path = MarkdownUI;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -245,6 +238,7 @@
 				F6E4BC662BCEE2DD00BFD550 /* Styles */,
 				F6E4BC712BD0D93A00BFD550 /* EditorCore */,
 				F6E4BC732BD0D93A00BFD550 /* EditorUI */,
+				F635C17D2BD0F41100E4EA4A /* SmoothGradient */,
 			);
 			productName = Banksia;
 			productReference = F6A7BEE72B01C57400D3CE25 /* Banksia.app */;
@@ -279,6 +273,7 @@
 				F6D94E542BCE969200E59BE0 /* XCLocalSwiftPackageReference "../_ Swift Packages/Utilities" */,
 				F6E4BC652BCEE2DD00BFD550 /* XCLocalSwiftPackageReference "../_ Swift Packages/Styles" */,
 				F6E4BC702BD0D93A00BFD550 /* XCLocalSwiftPackageReference "../_ Swift Packages/Editor" */,
+				F635C17C2BD0F41100E4EA4A /* XCRemoteSwiftPackageReference "SmoothGradient" */,
 			);
 			productRefGroup = F6A7BEE82B01C57400D3CE25 /* Products */;
 			projectDirPath = "";
@@ -336,7 +331,6 @@
 				F6E4BC692BCF0ABD00BFD550 /* ScrollTest.swift in Sources */,
 				F6E826A12B0BF3630047477D /* IconPickerView.swift in Sources */,
 				F6E4BC6D2BCFDAC900BFD550 /* MenuCommands.swift in Sources */,
-				F6AD361D2BCAC87900B7AADD /* Theme+MarkdownUI.swift in Sources */,
 				F6795C7F2BCE7A4D0093BC9C /* GlobalConversationSettingsView.swift in Sources */,
 				F64F8E2E2B04254100C72E51 /* ConversationHandler.swift in Sources */,
 			);
@@ -582,6 +576,14 @@
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		F635C17C2BD0F41100E4EA4A /* XCRemoteSwiftPackageReference "SmoothGradient" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/raymondjavaxx/SmoothGradient";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
 		F6AD36182BCAC55100B7AADD /* XCRemoteSwiftPackageReference "swift-markdown-ui" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/gonzalezreal/swift-markdown-ui.git";
@@ -593,6 +595,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		F635C17D2BD0F41100E4EA4A /* SmoothGradient */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F635C17C2BD0F41100E4EA4A /* XCRemoteSwiftPackageReference "SmoothGradient" */;
+			productName = SmoothGradient;
+		};
 		F6AD36192BCAC55100B7AADD /* MarkdownUI */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = F6AD36182BCAC55100B7AADD /* XCRemoteSwiftPackageReference "swift-markdown-ui" */;

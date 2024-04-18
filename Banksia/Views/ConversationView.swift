@@ -70,11 +70,9 @@ struct ConversationView: View {
                     //                            .padding()
                     
                 } // END scrollview
-                
-                                        .searchable(text: $conv.searchText, isPresented: $conv.isSearching, prompt: Text("Search messages"))
-//                                        .scrollPosition(id: message.timestamp)
-                                        .defaultScrollAnchor(.bottom)
-                
+                .searchable(text: $conv.searchText, isPresented: $conv.isSearching, prompt: Text("Search messages"))
+                //                                        .scrollPosition(id: message.timestamp)
+                .defaultScrollAnchor(.bottom)
                 
                 //                        .defaultScrollAnchor(.top)
                 
@@ -202,7 +200,7 @@ struct ConversationView: View {
             .environment(BanksiaHandler())
             .environment(ConversationHandler())
             .environmentObject(Preferences())
-            .frame(width: 400, height: 700)
+            .frame(width: 480, height: 700)
         
     }
 }

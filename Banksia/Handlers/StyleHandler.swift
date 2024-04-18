@@ -21,4 +21,6 @@ extension Styles {
     
     static let iconWidth:               Double = 20
     
+    static let paddingText:             Double = 24
+    
 }

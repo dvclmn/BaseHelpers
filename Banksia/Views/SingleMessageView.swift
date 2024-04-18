@@ -7,8 +7,8 @@
 
 import SwiftUI
 import SwiftData
-import MarkdownUI
 import Styles
+import Utilities
 
 struct SingleMessageView: View {
     @Environment(BanksiaHandler.self) private var bk
@@ -18,7 +18,7 @@ struct SingleMessageView: View {
     
     @Bindable var message: Message
     
-    let messageMaxWidth: Double = 500
+    let messageMaxWidth: Double = 300
     
     var body: some View {
         
@@ -41,14 +41,15 @@ struct SingleMessageView: View {
         VStack {
             VStack {
                 
+                
                 //                Markdown {
                 //                    message.content
                 //                }
 //                Text(highlighted)
-                StylableTextEditorRepresentable(text: $message.content)
+                StylableTextEditorRepresentable(text: $message.content, isEditable: false)
                     .padding()
-                    .frame(maxWidth: messageMaxWidth, alignment: .leading)
-                    .background(Color(message.type == .user ? .blue : .gray).opacity(0.2))
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .background(Color(message.type == .user ? .blue : .gray).opacity(0.1))
                     .clipShape(RoundedRectangle(cornerRadius: Styles.roundingMedium))
 //                    .markdownTheme(.gitHubCustom)
                     .id(message.timestamp)
@@ -72,9 +73,9 @@ struct SingleMessageView: View {
                             .padding(8)
                         }
                     }
+                    
             }
-            .frame(maxWidth: messageMaxWidth)
-            .padding()
+            .padding(Styles.paddingText)
             
             
             

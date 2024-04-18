@@ -60,4 +60,67 @@ extension Message {
 
     To resolve this, you need to adjust the logic to consider the direction of the zoom increment. Here's how you can modify the clampZoomLevel function.
     """, type: .assistant, conversation: .plants)
+    static let response_04 = Message(timestamp: Date().addingTimeInterval(-550), content: """
+    To address the issue of text wrapping and view sizing in your SwiftUI macOS application, you need to ensure that the `NSTextView` properly reports its size to the SwiftUI layout system. The problem you're experiencing with `maxWidth: .infinite` not constraining the view to the parent's width is likely due to the intrinsic content size calculation in your `NSTextView` subclass.
+
+    Here’s an updated approach to handle the sizing of your `NSTextView` within SwiftUI:
+
+    ### Step 1: Update the `intrinsicContentSize` in `StylableTextEditor`
+    You need to modify the `intrinsicContentSize` to ensure that it respects the available width, especially when `maxWidth: .infinite` is set. This involves calculating the height of the text when it is constrained to a particular width.
+
+    ```swift
+    class StylableTextEditor: NSTextView {
+        override var intrinsicContentSize: NSSize {
+            guard let layoutManager = self.layoutManager, let container = self.textContainer else {
+                return super.intrinsicContentSize
+            }
+            
+            container.containerSize = NSSize(width: self.bounds.width, height: CGFloat.greatestFiniteMagnitude)
+            layoutManager.ensureLayout(for: container)
+            
+            let rect = layoutManager.usedRect(for: container)
+            return NSSize(width: NSView.noIntrinsicMetric, height: rect.height)
+        }
+    }
+    ```
+
+    ### Step 2: Update the SwiftUI wrapper to handle resizing
+    Ensure that the SwiftUI view wrapper for your `NSTextView` properly updates the frame of the `NSTextView` when the SwiftUI view's frame changes. This can be done by updating the `updateNSView` method:
+
+    ```swift
+    func updateNSView(_ nsView: StylableTextEditor, context: Context) {
+        nsView.string = text // ensure the text is up-to-date
+        nsView.frame = CGRect(origin: .zero, size: context.coordinator.size)
+        nsView.needsLayout = true
+    }
+    ```
+
+    ### Step 3: Coordinator for size updates
+    Use a Coordinator to handle size updates and communicate them back to SwiftUI, if necessary.
+
+    ```swift
+    class Coordinator {
+        var size = CGSize(width: 0, height: 0)
+        
+        func updateSize(_ newSize: CGSize) {
+            size = newSize
+            // You can use this method to update the state in SwiftUI if needed
+        }
+    }
+    ```
+
+    ### Step 4: Adjust SwiftUI view settings
+    Make sure that your SwiftUI view that hosts this `NSViewRepresentable` properly sets the frame or uses `.fixedSize()` if you want to ignore the parent's constraints:
+
+    ```swift
+    struct MyTextViewWrapper: View {
+        var body: some View {
+            MyNSTextViewRepresentable()
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+        }
+    }
+    ```
+
+    This setup should help ensure that the `NSTextView` respects the width constraints provided by SwiftUI and wraps the text accordingly. Make sure to test these changes thoroughly to see how they affect the layout in different scenarios.
+    """)
 }

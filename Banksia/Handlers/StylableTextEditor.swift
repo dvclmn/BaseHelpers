@@ -29,31 +29,41 @@ struct StylableTextEditorRepresentable: NSViewRepresentable {
     }
     
     func makeNSView(context: Context) -> StylableTextEditor {
+        
+        /// Nothing in here seems to be causing the jumping to bottom whilst typing. Probably because this doesn't change when the view updates, it just sets it up
         let textView = StylableTextEditor()
         textView.delegate = context.coordinator
         textView.invalidateIntrinsicContentSize()
         textView.string = text
         textView.isEditable = isEditable
-        textView.font = .systemFont(ofSize: 15)
         textView.drawsBackground = false
         textView.allowsUndo = true
+        textView.setNeedsDisplay(textView.bounds)
+        textView.applyStyles()
         
         return textView
     }
     
     func updateNSView(_ textView: StylableTextEditor, context: Context) {
+        
+        /// This below line was causing the cursor to jump to the bottom every time the text changed
+        //        textView.frame = CGRect(origin: .zero, size: context.coordinator.size)
+        textView.needsLayout = true
+        
         if textView.string != text {
             textView.string = text
             textView.invalidateIntrinsicContentSize()
+            
             textView.applyStyles()
         }
         if textView.isEditable != isEditable {
             textView.isEditable = isEditable
         }
-        
     }
     
     class Coordinator: NSObject, NSTextViewDelegate {
+        
+        var size = CGSize(width: 0, height: 0)
         var parent: StylableTextEditorRepresentable
         
         init(_ parent: StylableTextEditorRepresentable) {
@@ -67,7 +77,14 @@ struct StylableTextEditorRepresentable: NSViewRepresentable {
                 self.parent.text = textView.string
                 textView.invalidateIntrinsicContentSize()
             }
+        } // Text did change
+        
+        func updateSize(_ newSize: CGSize) {
+            size = newSize
+            // You can use this method to update the state in SwiftUI if needed
         }
+        
+        
     }
 }
 
@@ -76,35 +93,40 @@ class StylableTextEditor: NSTextView {
         guard let layoutManager = self.layoutManager, let container = self.textContainer else {
             return super.intrinsicContentSize
         }
+        container.containerSize = NSSize(width: self.bounds.width, height: CGFloat.greatestFiniteMagnitude)
         layoutManager.ensureLayout(for: container)
-        return layoutManager.usedRect(for: container).size
+        
+        let rect = layoutManager.usedRect(for: container)
+        return NSSize(width: NSView.noIntrinsicMetric, height: rect.height)
     }
     
+    
+    
     func applyStyles() {
-        guard let textStorage = self.textStorage else { return }
+        guard let textStorage = self.textStorage else {
+            print("Text storage not available for styling")
+            return
+        }
+        
+        //        print("Applying styles to text: \(textStorage.string)")
         
         let selectedRange = self.selectedRange()
         
-        let text = NSMutableAttributedString(attributedString: textStorage)
         
-        // Patterns and their respective styles
-        let patterns: [String] = [
-            "`.*?`",
-            "(```\\n)(.*?)(\\n```)"
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.lineSpacing = 4.5 // example line spacing
+        
+        let attributes: [NSAttributedString.Key: Any] = [
+            .font: NSFont.systemFont(ofSize: 15, weight: .medium),
+            .foregroundColor: NSColor.textColor,
+            .paragraphStyle: paragraphStyle
         ]
         
-        // Apply each pattern and style
-        for (pattern, (foregroundColor, font, backgroundColor)) in patterns {
-            let regex = try! NSRegularExpression(pattern: pattern, options: [.dotMatchesLineSeparators])
-            let range = NSRange(location: 0, length: text.length)
-            
-            regex.enumerateMatches(in: text.string, options: [], range: range) { match, _, _ in
-                guard let matchRange = match?.range(at: 1) else { return }
-                text.addAttribute(.foregroundColor, value: foregroundColor, range: matchRange)
-                text.addAttribute(.font, value: font, range: matchRange)
-                text.addAttribute(.backgroundColor, value: backgroundColor, range: matchRange)
-            }
-        }
+        let attributedString = NSAttributedString(string: textStorage.string, attributes: attributes)
+        textStorage.setAttributedString(attributedString)
+        
+
+        let text = NSMutableAttributedString(attributedString: textStorage)
         
         let inlineCode = "`.*?`"
         let codeBlockPattern = "(```\\n)(.*?)(\\n```)"
@@ -122,7 +144,7 @@ class StylableTextEditor: NSTextView {
         }
         
         textStorage.setAttributedString(text)
-        self.setSelectedRange(selectedRange) // Restore the selected range
+        self.setSelectedRange(selectedRange)
     }
     
     override func didChangeText() {
