@@ -52,7 +52,8 @@ struct MessageInputView: View {
                 //                TextEditor(text: $userPrompt)
                 ScrollView(.vertical) {
                     StylableTextEditorRepresentable(text: $userPrompt)
-                        .frame(maxHeight: .infinity)
+                        .frame(minHeight: minInputHeight, maxHeight: .infinity)
+//                        .border(Color.green.opacity(0.2))
 //                        .focused($isFocused)
                 }
                 .frame(minHeight: editorHeight ?? minInputHeight, maxHeight: editorHeight ?? maxInputHeight)
@@ -69,7 +70,7 @@ struct MessageInputView: View {
                 //                    }
                 //                }
                 //                    .fixedSize(horizontal: false, vertical: true)
-                .background(isTesting ? .purple.opacity(0.02) : .black.opacity(0.3))
+//                .background(isTesting ? .purple.opacity(0.02) : .black.opacity(0.3))
                 .padding(.top, 18 + inputHeightControlSize)
                 .padding(.horizontal, Styles.paddingText)
                 .scrollContentBackground(.hidden)
@@ -78,6 +79,7 @@ struct MessageInputView: View {
                     isFocused = !conv.isResponseLoading
                     editorHeight = nil
                 }
+                .background(.plum)
                 .overlay(alignment: .top) {
                     GeometryReader { geo in
                         //                            HStack {
@@ -166,13 +168,9 @@ struct MessageInputView: View {
             
             
             
-            
-            
-            
-            //            self.prompt = Message.prompt_02.content
             .onAppear {
                 if isPreview {
-                    userPrompt = Message.response_04.content
+                    userPrompt = ExampleText.basicMarkdown
                 }
             }
             
@@ -182,11 +180,6 @@ struct MessageInputView: View {
         
     }
     
-    //    private func testScroll() {
-    //        let newMessage = Message(content: pref.userPrompt)
-    //        modelContext.insert(newMessage)
-    //        newMessage.conversation = conversation
-    //    }
     
     private func sendMessage(for conversation: Conversation) async {
         

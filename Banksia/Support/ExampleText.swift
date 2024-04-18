@@ -17,6 +17,16 @@
 import Foundation
 
 struct ExampleText {
+    
+    static let basicMarkdown: String = """
+        I will build a library of `Message` objects, as `[String]`, and can you write me up a *function* that simply selects one of the **paragraphs** (i.e. items in the array), and returns it?
+        
+        ```
+        func updateNSView(_ nsView: NSTextView, context: Context) {
+            nsView.textStorage?.setAttributedString(text)
+        }
+        ```
+        """
     static let paragraphs: [String] = [
         """
         *** Test Response ***

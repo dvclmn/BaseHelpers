@@ -17,10 +17,13 @@
 		F64F8E222B03090600C72E51 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F64F8E212B03090600C72E51 /* ContentView.swift */; };
 		F64F8E2E2B04254100C72E51 /* ConversationHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F64F8E2D2B04254100C72E51 /* ConversationHandler.swift */; };
 		F64F8E312B042A2700C72E51 /* UtilityFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F64F8E302B042A2700C72E51 /* UtilityFunctions.swift */; };
+		F668E1AC2BD15EA7006FB5ED /* Styles in Frameworks */ = {isa = PBXBuildFile; productRef = F668E1AB2BD15EA7006FB5ED /* Styles */; };
+		F668E1AF2BD15EB2006FB5ED /* Utilities in Frameworks */ = {isa = PBXBuildFile; productRef = F668E1AE2BD15EB2006FB5ED /* Utilities */; };
 		F6795C7D2BCE70920093BC9C /* ConversationEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6795C7C2BCE70920093BC9C /* ConversationEditorView.swift */; };
 		F6795C7F2BCE7A4D0093BC9C /* GlobalConversationSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6795C7E2BCE7A4D0093BC9C /* GlobalConversationSettingsView.swift */; };
 		F697B8662B0B47610091CE79 /* GPTHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F697B8652B0B47610091CE79 /* GPTHandler.swift */; };
 		F697B8682B0B48160091CE79 /* ConversationStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F697B8672B0B48160091CE79 /* ConversationStateView.swift */; };
+		F6988DC12BD1597800D20E4C /* MapTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6988DC02BD1597800D20E4C /* MapTest.swift */; };
 		F6A5E1B32BC6E4E90018B1B5 /* SidebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A5E1B22BC6E4E90018B1B5 /* SidebarView.swift */; };
 		F6A5E1B52BC6E5A40018B1B5 /* ToolbarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A5E1B42BC6E5A40018B1B5 /* ToolbarView.swift */; };
 		F6A5E1B72BC6EE480018B1B5 /* PreferencesHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A5E1B62BC6EE480018B1B5 /* PreferencesHandler.swift */; };
@@ -34,8 +37,6 @@
 		F6D6E2D62BC805E9000D2051 /* SingleMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6D6E2D52BC805E9000D2051 /* SingleMessageView.swift */; };
 		F6D6E2DB2BC80AA2000D2051 /* MessageInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6D6E2DA2BC80AA2000D2051 /* MessageInputView.swift */; };
 		F6D6E2EB2BC82CFE000D2051 /* ExampleText.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6D6E2EA2BC82CFE000D2051 /* ExampleText.swift */; };
-		F6D94E562BCE969200E59BE0 /* Utilities in Frameworks */ = {isa = PBXBuildFile; productRef = F6D94E552BCE969200E59BE0 /* Utilities */; };
-		F6E4BC672BCEE2DD00BFD550 /* Styles in Frameworks */ = {isa = PBXBuildFile; productRef = F6E4BC662BCEE2DD00BFD550 /* Styles */; };
 		F6E4BC692BCF0ABD00BFD550 /* ScrollTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6E4BC682BCF0ABD00BFD550 /* ScrollTest.swift */; };
 		F6E4BC6B2BCFD1E100BFD550 /* QuickNavView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6E4BC6A2BCFD1E100BFD550 /* QuickNavView.swift */; };
 		F6E4BC6D2BCFDAC900BFD550 /* MenuCommands.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6E4BC6C2BCFDAC900BFD550 /* MenuCommands.swift */; };
@@ -63,6 +64,7 @@
 		F6795C7E2BCE7A4D0093BC9C /* GlobalConversationSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalConversationSettingsView.swift; sourceTree = "<group>"; };
 		F697B8652B0B47610091CE79 /* GPTHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GPTHandler.swift; sourceTree = "<group>"; };
 		F697B8672B0B48160091CE79 /* ConversationStateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationStateView.swift; sourceTree = "<group>"; };
+		F6988DC02BD1597800D20E4C /* MapTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MapTest.swift; path = Banksia/MapTest.swift; sourceTree = "<group>"; };
 		F6A5E1B22BC6E4E90018B1B5 /* SidebarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarView.swift; sourceTree = "<group>"; };
 		F6A5E1B42BC6E5A40018B1B5 /* ToolbarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolbarView.swift; sourceTree = "<group>"; };
 		F6A5E1B62BC6EE480018B1B5 /* PreferencesHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesHandler.swift; sourceTree = "<group>"; };
@@ -95,12 +97,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F668E1AC2BD15EA7006FB5ED /* Styles in Frameworks */,
+				F668E1AF2BD15EB2006FB5ED /* Utilities in Frameworks */,
 				F635C17E2BD0F41100E4EA4A /* SmoothGradient in Frameworks */,
 				F6AD361A2BCAC55100B7AADD /* MarkdownUI in Frameworks */,
-				F6D94E562BCE969200E59BE0 /* Utilities in Frameworks */,
 				F6E4BC722BD0D93A00BFD550 /* EditorCore in Frameworks */,
 				F6E4BC742BD0D93A00BFD550 /* EditorUI in Frameworks */,
-				F6E4BC672BCEE2DD00BFD550 /* Styles in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -186,6 +188,7 @@
 		F6A7BEDE2B01C57400D3CE25 = {
 			isa = PBXGroup;
 			children = (
+				F6988DC02BD1597800D20E4C /* MapTest.swift */,
 				F6E4BC682BCF0ABD00BFD550 /* ScrollTest.swift */,
 				F6A7BEE92B01C57400D3CE25 /* Banksia */,
 				F6A7BEE82B01C57400D3CE25 /* Products */,
@@ -234,11 +237,11 @@
 			name = Banksia;
 			packageProductDependencies = (
 				F6AD36192BCAC55100B7AADD /* MarkdownUI */,
-				F6D94E552BCE969200E59BE0 /* Utilities */,
-				F6E4BC662BCEE2DD00BFD550 /* Styles */,
 				F6E4BC712BD0D93A00BFD550 /* EditorCore */,
 				F6E4BC732BD0D93A00BFD550 /* EditorUI */,
 				F635C17D2BD0F41100E4EA4A /* SmoothGradient */,
+				F668E1AB2BD15EA7006FB5ED /* Styles */,
+				F668E1AE2BD15EB2006FB5ED /* Utilities */,
 			);
 			productName = Banksia;
 			productReference = F6A7BEE72B01C57400D3CE25 /* Banksia.app */;
@@ -270,10 +273,10 @@
 			mainGroup = F6A7BEDE2B01C57400D3CE25;
 			packageReferences = (
 				F6AD36182BCAC55100B7AADD /* XCRemoteSwiftPackageReference "swift-markdown-ui" */,
-				F6D94E542BCE969200E59BE0 /* XCLocalSwiftPackageReference "../_ Swift Packages/Utilities" */,
-				F6E4BC652BCEE2DD00BFD550 /* XCLocalSwiftPackageReference "../_ Swift Packages/Styles" */,
 				F6E4BC702BD0D93A00BFD550 /* XCLocalSwiftPackageReference "../_ Swift Packages/Editor" */,
 				F635C17C2BD0F41100E4EA4A /* XCRemoteSwiftPackageReference "SmoothGradient" */,
+				F668E1AA2BD15EA7006FB5ED /* XCLocalSwiftPackageReference "../_ Swift Packages/Styles" */,
+				F668E1AD2BD15EB2006FB5ED /* XCLocalSwiftPackageReference "../_ Swift Packages/Utilities" */,
 			);
 			productRefGroup = F6A7BEE82B01C57400D3CE25 /* Products */;
 			projectDirPath = "";
@@ -301,6 +304,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F6988DC12BD1597800D20E4C /* MapTest.swift in Sources */,
 				F6D6E2D62BC805E9000D2051 /* SingleMessageView.swift in Sources */,
 				F6795C7D2BCE70920093BC9C /* ConversationEditorView.swift in Sources */,
 				F6A7BEEB2B01C57400D3CE25 /* BanksiaApp.swift in Sources */,
@@ -561,13 +565,13 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		F6D94E542BCE969200E59BE0 /* XCLocalSwiftPackageReference "../_ Swift Packages/Utilities" */ = {
-			isa = XCLocalSwiftPackageReference;
-			relativePath = "../_ Swift Packages/Utilities";
-		};
-		F6E4BC652BCEE2DD00BFD550 /* XCLocalSwiftPackageReference "../_ Swift Packages/Styles" */ = {
+		F668E1AA2BD15EA7006FB5ED /* XCLocalSwiftPackageReference "../_ Swift Packages/Styles" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = "../_ Swift Packages/Styles";
+		};
+		F668E1AD2BD15EB2006FB5ED /* XCLocalSwiftPackageReference "../_ Swift Packages/Utilities" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = "../_ Swift Packages/Utilities";
 		};
 		F6E4BC702BD0D93A00BFD550 /* XCLocalSwiftPackageReference "../_ Swift Packages/Editor" */ = {
 			isa = XCLocalSwiftPackageReference;
@@ -600,18 +604,18 @@
 			package = F635C17C2BD0F41100E4EA4A /* XCRemoteSwiftPackageReference "SmoothGradient" */;
 			productName = SmoothGradient;
 		};
+		F668E1AB2BD15EA7006FB5ED /* Styles */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Styles;
+		};
+		F668E1AE2BD15EB2006FB5ED /* Utilities */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Utilities;
+		};
 		F6AD36192BCAC55100B7AADD /* MarkdownUI */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = F6AD36182BCAC55100B7AADD /* XCRemoteSwiftPackageReference "swift-markdown-ui" */;
 			productName = MarkdownUI;
-		};
-		F6D94E552BCE969200E59BE0 /* Utilities */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = Utilities;
-		};
-		F6E4BC662BCEE2DD00BFD550 /* Styles */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = Styles;
 		};
 		F6E4BC712BD0D93A00BFD550 /* EditorCore */ = {
 			isa = XCSwiftPackageProductDependency;

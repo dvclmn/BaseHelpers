@@ -38,27 +38,26 @@ final class ConversationHandler {
         
         let sortedMessages = messages.sorted { $0.timestamp < $1.timestamp }
         
-        let maxMessageContextCount: Int = 5
+        let maxMessageContextCount: Int = 8
         
-        let queryID: String = latestMessage.persistentModelID.hashValue.description
         
-        let historicalMessages: [Message] = sortedMessages.suffix(maxMessageContextCount).dropLast() /// Drop last, to exclude the message I *just* sent
+        let historicalMessages: [Message] = sortedMessages.suffix(maxMessageContextCount).dropLast()
         
-        let queryHeading: String = "\n\n# |---- BEGIN Query #\(queryID) ----> \n"
-        let latestQueryDecorator: String = "## Latest Query\n"
+        let reSortedMessages = historicalMessages.sorted(by: {$0.timestamp > $1.timestamp})
+        let historyFormatted: String = reSortedMessages.map {
+            formatMessageForGPT($0)
+        }.joined(separator: "\n\n")
+        
         let latestMessageFormatted: String = "\(formatMessageForGPT(latestMessage))\n\n"
-        let conversationHistoryDecorator: String = "## Conversation History\n"
-        let historyFormatted: String = historicalMessages.map { formatMessageForGPT($0) }.joined(separator: "BUTTS \n")
-        let queryFooter: String = "\n# >---- END Query #\(queryID) ----|\n\n"
+        let historyHeading: String = "## Conversation History\n"
+
+        let queryID: String = latestMessage.persistentModelID.hashValue.description
+        let queryFooter: String = "\n--- END Query #\(queryID) ---\n\n"
         
-        
-        
-        
+
         messageHistory = """
-        \(queryHeading)
-        \(latestQueryDecorator)
         \(latestMessageFormatted)
-        \(conversationHistoryDecorator)
+        \(historyHeading)
         \(historyFormatted)
         \(queryFooter)
         """
@@ -69,6 +68,30 @@ final class ConversationHandler {
     
     func getRandomParagraph() -> String {
         ExampleText.paragraphs.randomElement() ?? "No paragraphs available"
+    }
+    
+    func formatMessageForGPT(_ message: Message) -> String {
+        print("|--- formatMessageForGPT --->")
+        
+        let messageID: String = message.persistentModelID.hashValue.description
+        
+        let messageBegin: String = "\n\n### Message ID: \(messageID)\n"
+        let timeStamp: String = "*Timestamp:* \(message.timestamp.formatted(.dateTime.year().month().day().hour().minute().second()))"
+        let type: String = "*Author:* \(message.type.name)"
+        let conversationID: String = "*Conversation ID:* \(message.conversation?.persistentModelID.hashValue.description ?? "No Conversation ID")"
+        let content: String = "*Message:*\n\n\(message.content)"
+        let messageEnd: String = "\n --- END Message ID: \(messageID) --- \n\n"
+        
+        let formattedMessage: String = """
+        \(messageBegin)
+        \(timeStamp)
+        \(type)
+        \(conversationID)
+        \(content)
+        \(messageEnd)
+        """
+        print(">--- END formatMessageForGPT ---|\n")
+        return formattedMessage
     }
     
     
@@ -90,7 +113,9 @@ final class ConversationHandler {
                 
                 responseMessage = Message(content: firstMessage.message.content, type: .assistant, conversation: conversation)
             } else {
-                responseMessage = Message(content: getRandomParagraph(), type: .assistant, conversation: conversation)
+//                responseMessage = Message(content: getRandomParagraph(), type: .assistant, conversation: conversation)
+                
+                responseMessage = Message(content: "Short test message. Timestamp: \(Date.now)", type: .assistant, conversation: conversation)
             }
             
             print(">--- END fetchGPTResponse ---|\n")
@@ -114,27 +139,7 @@ final class ConversationHandler {
     }
     
     
-    func formatMessageForGPT(_ message: Message) -> String {
-        print("|--- formatMessageForGPT --->")
-        
-        let messageBegin: String = "\n\n# |--- BEGIN Message ---> \n"
-        let timeStamp: String = "Timestamp: \(Date.now)"
-        let type: String = "Author: \(message.type.name)"
-        let conversationID: String = "Conversation ID: \(message.conversation?.persistentModelID.hashValue.description ?? "No Conversation ID")"
-        let content: String = "Message:\n\(message.content)"
-        let messageEnd: String = "\n# >--- END Message ---|\n\n"
-        
-        let formattedMessage: String = """
-        \(messageBegin)
-        \(timeStamp)
-        \(type)
-        \(conversationID)
-        \(content)
-        \(messageEnd)
-        """
-        print(">--- END formatMessageForGPT ---|\n")
-        return formattedMessage
-    }
+    
     
 }
 

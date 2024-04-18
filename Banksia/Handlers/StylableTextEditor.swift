@@ -18,11 +18,13 @@ import SwiftUI
 import Cocoa
 
 import SwiftUI
+import Styles
 
 struct StylableTextEditorRepresentable: NSViewRepresentable {
     @Binding var text: String
     var isEditable: Bool = true
     var maxWidth: Double = 500
+    var fontSize: Double = 15
     
     func makeCoordinator() -> Coordinator {
         Coordinator(self)
@@ -89,6 +91,34 @@ struct StylableTextEditorRepresentable: NSViewRepresentable {
 }
 
 class StylableTextEditor: NSTextView {
+    
+//    let fontSize: Double = 15
+//    var fontSize: Double
+    
+//    init(fontSize: Double) {
+//        // Create a default text container
+//        let container = NSTextContainer(size: CGSize(width: 100, height: 100)) // Adjust the size as needed
+//        
+//        // Initialize the layout manager
+//        let layoutManager = NSLayoutManager()
+//        
+//        // Initialize the text storage (you've already done this)
+//        let textStorage = NSTextStorage(string: "Initial text content")
+//        
+//        // Add the text container to the layout manager
+//        layoutManager.addTextContainer(container)
+//        
+//        // Set other properties as needed
+//        self.fontSize = fontSize
+//        
+//        // Call the superclass's designated initializer
+//        super.init(frame: .zero, textContainer: container)
+//        
+//    }
+    
+//    required init?(coder: NSCoder) {
+//        fatalError("init(coder:) has not been implemented")
+//    }
     override var intrinsicContentSize: NSSize {
         guard let layoutManager = self.layoutManager, let container = self.textContainer else {
             return super.intrinsicContentSize
@@ -108,44 +138,91 @@ class StylableTextEditor: NSTextView {
             return
         }
         
-        //        print("Applying styles to text: \(textStorage.string)")
-        
         let selectedRange = self.selectedRange()
         
+        print(selectedRange.location)
+        print(selectedRange.length)
         
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineSpacing = 4.5 // example line spacing
         
-        let attributes: [NSAttributedString.Key: Any] = [
-            .font: NSFont.systemFont(ofSize: 15, weight: .medium),
-            .foregroundColor: NSColor.textColor,
+        let baseAttributes: [NSAttributedString.Key: Any] = [
+            .font: NSFont.systemFont(ofSize: Styles.fontSize, weight: .regular),
+            .foregroundColor: NSColor.textColor.withAlphaComponent(0.9),
             .paragraphStyle: paragraphStyle
         ]
         
-        let attributedString = NSAttributedString(string: textStorage.string, attributes: attributes)
-        textStorage.setAttributedString(attributedString)
+        let attributedString = NSMutableAttributedString(string: textStorage.string, attributes: baseAttributes)
         
+        
+        /// Bold
+        let boldRegex = try! NSRegularExpression(pattern: "\\*(.*?)\\*", options: [])
 
-        let text = NSMutableAttributedString(attributedString: textStorage)
-        
-        let inlineCode = "`.*?`"
-        let codeBlockPattern = "(```\\n)(.*?)(\\n```)"
-        
-        let regex = try! NSRegularExpression(pattern: codeBlockPattern, options: [.dotMatchesLineSeparators])
-        let range = NSRange(location: 0, length: text.length)
-        
-        regex.enumerateMatches(in: text.string, options: [], range: range) { match, _, _ in
+        boldRegex.enumerateMatches(
+            in: attributedString.string,
+            options: [],
+            range: NSRange(location: 0, length: attributedString.length)
+        ) { match, _, _ in
+            guard let boldContent = match?.range(at: 1) else { return }
             
-            guard let matchRange = match?.range(at: 2) else { return }
+            let boldSyntax = NSRange(location: boldContent.location - 1, length: boldContent.length + 2)
+
+            // Check if the caret position is within the bold content range
+            if NSIntersectionRange(selectedRange, boldSyntax).length < 2 {
+                // Caret is inside the bold range (show syntax characters in gray)
+                attributedString.addAttributes([
+                    .foregroundColor: NSColor.gray,
+                ], range: boldSyntax)
+            } else {
+                // Caret is outside the bold range (show syntax characters in blue)
+                attributedString.addAttributes([
+                    .foregroundColor: NSColor.blue,
+                ], range: boldSyntax)
+            }
+
+            // Apply special attribute styles to the asterisks
+            attributedString.addAttributes([
+                .foregroundColor: NSColor.textColor.withAlphaComponent(0.9),
+                .font: NSFont.systemFont(ofSize: Styles.fontSize, weight: .bold)
+            ], range: boldContent)
+        }
+
+        
+        /// Inline code
+        let inlineCodeRegex = try! NSRegularExpression(pattern: "`.*?`", options: [])
+        
+        inlineCodeRegex.enumerateMatches(
+            in: attributedString.string,
+            options: [],
+            range: NSRange(location: 0, length: attributedString.length)
+        ) { match, flags, unsafePointer in
             
-            text.addAttribute(.foregroundColor, value: NSColor.systemPurple, range: matchRange)
-            text.addAttribute(.font, value: NSFont.monospacedSystemFont(ofSize: 12, weight: .regular), range: matchRange)
-            text.addAttribute(.backgroundColor, value: NSColor.black.withAlphaComponent(0.1), range: matchRange)
+            guard let matchRange = match?.range else { return }
+            
+            attributedString.addAttributes([
+                .foregroundColor: NSColor.systemPurple,
+                .font: NSFont.monospacedSystemFont(ofSize: Styles.fontSize, weight: .regular)
+            ], range: matchRange)
         }
         
-        textStorage.setAttributedString(text)
+        
+        /// Code block
+        let codeBlockRegex = try! NSRegularExpression(pattern: "(```\\n)(.*?)(\\n```)", options: [.dotMatchesLineSeparators])
+        codeBlockRegex.enumerateMatches(in: attributedString.string, options: [], range: NSRange(location: 0, length: attributedString.length)) { match, _, _ in
+            guard let matchRange = match?.range(at: 2) else { return }
+            attributedString.addAttributes([
+                .foregroundColor: NSColor.systemPurple,
+                .font: NSFont.monospacedSystemFont(ofSize: Styles.fontSize, weight: .regular),
+                .backgroundColor: NSColor.white.withAlphaComponent(0.1)
+            ], range: matchRange)
+        }
+        
+        textStorage.setAttributedString(attributedString)
         self.setSelectedRange(selectedRange)
     }
+    
+    
+    
     
     override func didChangeText() {
         super.didChangeText()
