@@ -143,14 +143,22 @@ struct MessageInputView: View {
             
             
             
-            .background(.black.opacity(0.3))
+            .background(conv.isTesting ? .purple.opacity(0.02) : .black.opacity(0.3))
+            
             
             //            self.prompt = Message.prompt_02.content
-//            .onAppear {
-//                if isPreview {
-//                    userPrompt = bigText
-//                }
-//            }
+            .onAppear {
+                if isPreview {
+                    userPrompt = """
+                    ```
+                    Code block example
+                    And another line
+                    ```
+                    
+                    Also `inline code hopefully working`, we'll see
+                    """
+                }
+            }
             
             
             

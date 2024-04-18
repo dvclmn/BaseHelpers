@@ -74,13 +74,13 @@ final class ConversationHandler {
     }
     
     
-    func fetchGPTResponse(for conversation: Conversation, isTest: Bool = false) async throws -> Message {
+    func fetchGPTResponse(for conversation: Conversation) async throws -> Message {
         print("|--- fetchGPTResponse --->")
         do {
             
             var responseMessage: Message
             
-            if !isTest {
+            if !isTesting {
                 let gptResponse: GPTReponse = try await fetchGPTResponse(prompt: messageHistory)
                 print("Received GPT response")
                 

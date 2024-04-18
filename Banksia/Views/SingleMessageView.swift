@@ -45,7 +45,7 @@ struct SingleMessageView: View {
                 //                    message.content
                 //                }
 //                Text(highlighted)
-                StylableTextEditorRepresentable(text: $message.content, isEditable: false)
+                StylableTextEditorRepresentable(text: $message.content)
                     .padding()
                     .frame(maxWidth: messageMaxWidth, alignment: .leading)
                     .background(Color(message.type == .user ? .blue : .gray).opacity(0.2))
@@ -60,7 +60,7 @@ struct SingleMessageView: View {
 //                            Label("Delete message", systemImage: Icons.arrowDown.icon)
 //                        }
 //                    }
-                    .textSelection(.enabled)
+//                    .textSelection(.enabled)
                     .overlay(alignment: .topTrailing) {
                         if isHovering {
                             Button {

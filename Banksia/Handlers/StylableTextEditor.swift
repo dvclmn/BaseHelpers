@@ -22,6 +22,7 @@ import SwiftUI
 struct StylableTextEditorRepresentable: NSViewRepresentable {
     @Binding var text: String
     var isEditable: Bool = true
+    var maxWidth: Double = 500
     
     func makeCoordinator() -> Coordinator {
         Coordinator(self)
@@ -36,6 +37,7 @@ struct StylableTextEditorRepresentable: NSViewRepresentable {
         textView.font = .systemFont(ofSize: 15)
         textView.drawsBackground = false
         textView.allowsUndo = true
+        
         return textView
     }
     
@@ -85,13 +87,35 @@ class StylableTextEditor: NSTextView {
         
         let text = NSMutableAttributedString(attributedString: textStorage)
         
-        // Regular expression to find code blocks
-        let pattern = "(```\\n)(.*?)(\\n```)"
-        let regex = try! NSRegularExpression(pattern: pattern, options: [.dotMatchesLineSeparators])
+        // Patterns and their respective styles
+        let patterns: [String] = [
+            "`.*?`",
+            "(```\\n)(.*?)(\\n```)"
+        ]
+        
+        // Apply each pattern and style
+        for (pattern, (foregroundColor, font, backgroundColor)) in patterns {
+            let regex = try! NSRegularExpression(pattern: pattern, options: [.dotMatchesLineSeparators])
+            let range = NSRange(location: 0, length: text.length)
+            
+            regex.enumerateMatches(in: text.string, options: [], range: range) { match, _, _ in
+                guard let matchRange = match?.range(at: 1) else { return }
+                text.addAttribute(.foregroundColor, value: foregroundColor, range: matchRange)
+                text.addAttribute(.font, value: font, range: matchRange)
+                text.addAttribute(.backgroundColor, value: backgroundColor, range: matchRange)
+            }
+        }
+        
+        let inlineCode = "`.*?`"
+        let codeBlockPattern = "(```\\n)(.*?)(\\n```)"
+        
+        let regex = try! NSRegularExpression(pattern: codeBlockPattern, options: [.dotMatchesLineSeparators])
         let range = NSRange(location: 0, length: text.length)
         
         regex.enumerateMatches(in: text.string, options: [], range: range) { match, _, _ in
-            guard let matchRange = match?.range(at: 2) else { return } // match at index 2 is the code content
+            
+            guard let matchRange = match?.range(at: 2) else { return }
+            
             text.addAttribute(.foregroundColor, value: NSColor.systemPurple, range: matchRange)
             text.addAttribute(.font, value: NSFont.monospacedSystemFont(ofSize: 12, weight: .regular), range: matchRange)
             text.addAttribute(.backgroundColor, value: NSColor.black.withAlphaComponent(0.1), range: matchRange)
