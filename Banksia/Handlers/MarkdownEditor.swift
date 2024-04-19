@@ -9,22 +9,11 @@ import Foundation
 import SwiftUI
 import Styles
 
-
-
-enum FontDesign: CaseIterable {
-    case system
-    case mono
-}
-
-enum MarkdownComponent {
-    case content
-    case syntax
-    
-}
-enum MarkdownSyntax {
+enum MarkdownSyntax: CaseIterable {
     case base
     case h1
     case h2
+    case h3
     case bold
     case italic
     case boldItalic
@@ -38,7 +27,9 @@ enum MarkdownSyntax {
         case .h1:
             "^#(.*)"
         case .h2:
-            "^##(.*)"
+            "(?m)^##(.*)"
+        case .h3:
+            "(?m)^###(.*)"
         case .bold:
             "\\*\\*(.*?)\\*\\*"
         case .italic:
@@ -52,15 +43,6 @@ enum MarkdownSyntax {
         }
     }
     
-//    func component(_ component: MarkdownComponent) {
-//        switch component {
-//        case .content:
-//
-//        case .syntax:
-//            <#code#>
-//        }
-//    } // END component
-
     var contentRange: Int {
         switch self {
         case .codeBlock: 2
@@ -71,6 +53,7 @@ enum MarkdownSyntax {
         switch self {
         case .h1: -1
         case .h2: -2
+        case .h3: -3
         case .bold: -2
         case .italic: -1
         case .boldItalic: -1
@@ -90,78 +73,117 @@ enum MarkdownSyntax {
         default: 0
         }
     }
-}
-
-func setupStyle(for syntax: MarkdownSyntax) {
     
+    var fontSize: Double {
+        switch self {
+        case .h1:
+            28
+        case .h2:
+            24
+        case .h3:
+            18
+        case .inlineCode, .codeBlock:
+            14
+        default: 15
+        }
+    }
     
+    var contentAttributes: MarkdownStyleAttributes {
+        switch self {
+        case .base:
+            MarkdownStyleAttributes()
+            
+        case .h1:
+            MarkdownStyleAttributes(
+                fontSize: self.fontSize
+            )
+            
+        case .h2:
+            MarkdownStyleAttributes(
+                fontSize: self.fontSize
+            )
+            
+        case .h3:
+            MarkdownStyleAttributes(
+                fontSize: self.fontSize,
+                fontWeight: .medium
+            )
+            
+        case .bold:
+            MarkdownStyleAttributes(
+                fontWeight: .bold,
+                foregroundOpacity: 1.0
+            )
+        case .italic:
+            MarkdownStyleAttributes(isItalic: true)
+            
+        case .boldItalic:
+            MarkdownStyleAttributes(
+                fontWeight: .bold,
+                isItalic: true
+            )
+        case .inlineCode, .codeBlock:
+            MarkdownStyleAttributes(
+                fontWeight: .medium,
+                isMono: true,
+                foregroundColor: .eggplant
+            )
+            
+        }
+    } // END content attributes
+    
+    var syntaxAttributes: MarkdownStyleAttributes {
+        switch self {
+        case .base:
+            MarkdownStyleAttributes(
+                foregroundOpacity: 0.3
+            )
+        case .h1:
+            MarkdownStyleAttributes(
+                fontSize: self.fontSize,
+                fontWeight: .light,
+                foregroundOpacity: 0.3
+            )
+        case .h2:
+            MarkdownStyleAttributes(
+                fontSize: self.fontSize,
+                fontWeight: .light,
+                foregroundOpacity: 0.3
+            )
+        case .h3:
+            MarkdownStyleAttributes(
+                fontSize: self.fontSize,
+                fontWeight: .light,
+                foregroundOpacity: 0.3
+            )
+        case .bold, .italic, .boldItalic:
+            MarkdownStyleAttributes(foregroundOpacity: 0.3)
+        case.inlineCode, .codeBlock:
+            MarkdownStyleAttributes(
+                fontWeight: .bold,
+                foregroundOpacity: 0.2,
+                backgroundColour: .white
+            )
+            
+        }
+    }
 }
-
 
 
 
 struct MarkdownStyleAttributes {
     var fontSize: Double = 15
     var fontWeight: NSFont.Weight = .regular
-    var fontDesign: FontDesign = .system
+    var isMono: Bool = false
+    var isItalic: Bool = false
     var foregroundColor: NSColor = .textColor
-    var foregroundOpacity: Double = 1.0
+    var foregroundOpacity: Double = 0.8
     var backgroundColour: NSColor = .clear
-    
-    static let defaultSyntaxStyle = MarkdownStyleAttributes(foregroundOpacity: 0.2)
-    
-    
-    
-    static let h1Content =  MarkdownStyleAttributes(fontSize: 28)
-    static let h1Syntax =   MarkdownStyleAttributes(fontSize: 28, fontWeight: .medium)
-    
-    static let h2Content =   MarkdownStyleAttributes(fontSize: 28, fontWeight: .medium)
-    static let h2Syntax =   MarkdownStyleAttributes(fontSize: 28, fontWeight: .medium)
+    var backgroundOpacity: Double = 0.1
 }
 
 
-//enum MarkdownStyle {
-//    case content
-//    case syntax
-//
-//
-//    var fontSize: Double {
-//        switch self {
-//        case .base:
-//            return Styles.fontSize
-//        case .h1:
-//            return 28
-//        case .bold:
-//            return 24
-//        case .italic:
-//            return Styles.fontSize
-//        case .inlineCode:
-//            return Styles.fontSizeMono
-//        }
-//    }
-//
-//    var fontWeight: NSFont.Weight {
-//        switch self {
-//        case .base:
-//            return .regular
-//        case .h1:
-//            return .regular
-//        case .bold:
-//            return .bold
-//        case .italic:
-//            return .medium
-//        case .inlineCode:
-//            return .medium
-//        }
-//    }
-//
-//} // END markdown syntax
-
-
-
 class StylableTextEditor: NSTextView {
-    
-    let defaultForegroundColour = NSColor.white.withAlphaComponent(0.8)
     
     override var intrinsicContentSize: NSSize {
         guard let layoutManager = self.layoutManager, let container = self.textContainer else {
@@ -174,13 +196,42 @@ class StylableTextEditor: NSTextView {
         return NSSize(width: NSView.noIntrinsicMetric, height: rect.height)
     }
     
+    
+    func setupStyle(for style: MarkdownStyleAttributes) -> [NSAttributedString.Key: Any] {
+        
+        let bodyDescriptor = NSFontDescriptor.preferredFontDescriptor(forTextStyle: .body)
+        
+        var contentFont: NSFont? {
+            if style.isMono {
+                return NSFont.monospacedSystemFont(ofSize: style.fontSize, weight: style.fontWeight)
+            } else if style.isItalic {
+                return NSFont(descriptor: bodyDescriptor.withSymbolicTraits(.italic), size: style.fontSize)
+            } else {
+                return NSFont.systemFont(ofSize: style.fontSize, weight: style.fontWeight)
+            }
+        }
+        
+        if let font = contentFont {
+            
+            let attributes: [NSAttributedString.Key: Any] = [
+                .font: font as Any,
+                .foregroundColor: style.foregroundColor.withAlphaComponent(style.foregroundOpacity),
+                .backgroundColor: style.backgroundColour.withAlphaComponent(style.backgroundOpacity)
+            ]
+            return attributes
+        } else {
+            return [:]
+        }
+
+    } // END set text style
+
+    
     func applyStyles() {
         
         guard let textStorage = self.textStorage else {
             print("Text storage not available for styling")
             return
         }
-        
         
         let selectedRange = self.selectedRange()
         
@@ -197,163 +248,25 @@ class StylableTextEditor: NSTextView {
         //            .paragraphStyle: paragraphStyle
         //        ]
         
-        let attributedString = NSMutableAttributedString(string: textStorage.string, attributes: setTextStyle(for: .base))
+        let attributedString = NSMutableAttributedString(string: textStorage.string, attributes: setupStyle(for: MarkdownSyntax.base.contentAttributes))
         
+        for syntax in MarkdownSyntax.allCases {
+            styleText(
+                withRegex: syntax.regex,
+                textAttributes: setupStyle(for: syntax.contentAttributes),
+                syntaxAttributes: setupStyle(for: syntax.syntaxAttributes),
+                contentRange: syntax.contentRange,
+                syntaxRangeLocation: syntax.syntaxRangeLocation,
+                syntaxRangeLength: syntax.syntaxRangeLength,
+                withString: attributedString
+            )
+        }
         
+        self.setSelectedRange(selectedRange)
     }
-    
-    
-    
-    //        let attributedString = NSMutableAttributedString(string: self.textStorage?.string)
-    
-    
-    // MARK: - H1
-    
-    styleText(
-        withRegex: "^#(.*)",
-        textAttributes: setTextStyle(
-            fontSize: h1FontSize,
-            fontweight: .medium
-        ),
-        syntaxAttributes: setTextStyle(
-            fontSize: h1FontSize,
-            fontweight: .light,
-            foregroundOpacity: 0.2
-        ),
-        syntaxRangeLocation: -1,
-        withString: attributedString
-        
-    )
-    
-    // MARK: - H2
-    
-    
-    
-    styleText(
-        withRegex: "^##(.*)",
-        regexOptions: [.anchorsMatchLines],
-        textAttributes: [
-            .font: NSFont.systemFont(ofSize: h2FontSize, weight: .medium),
-            .foregroundColor: defaultForegroundColour
-        ],
-        syntaxAttributes: setTextStyle(
-            fontSize: h1FontSize,
-            fontweight: .light,
-            foregroundOpacity: 0.2
-        ),
-        syntaxRangeLocation: -2,
-        withString: attributedString
-        
-    )
-    
-    
-    // MARK: - Bold
-    
-    styleText(
-        withRegex: "\\*\\*(.*?)\\*\\*",
-        textAttributes: [
-            .font: NSFont.boldSystemFont(ofSize: Styles.fontSize),
-            .foregroundColor: defaultForegroundColour,
-            
-        ],
-        syntaxAttributes: [
-            .foregroundColor: NSColor.white.withAlphaComponent(0.3)
-        ],
-        syntaxRangeLocation: -2,
-        syntaxRangeLength: 4,
-        withString: attributedString
-        
-    )
-    
-    
-    
-    
-    // MARK: - Italic
-    
-    let italicFont = NSFont(descriptor: bodyFontDescriptor.withSymbolicTraits(.italic), size: Styles.fontSize)
-    
-    styleText(
-        withRegex: "\\*(.*?)\\*",
-        textAttributes: [
-            .font: italicFont as Any,
-            .foregroundColor: defaultForegroundColour,
-            
-            
-        ],
-        syntaxAttributes: [
-            .foregroundColor: NSColor.textColor.withAlphaComponent(0.3)
-        ],
-        syntaxRangeLocation: -1,
-        syntaxRangeLength: 2,
-        withString: attributedString
-    )
-    
-    
-    // MARK: - Bold Italic
-    
-    let boldItalicFontDescriptor = NSFont(descriptor: bodyFontDescriptor.withSymbolicTraits([.italic, .bold]), size: Styles.fontSize)
-    
-    styleText(
-        withRegex: "\\*\\*\\*(.*?)\\*\\*\\*",
-        textAttributes: [
-            .font: boldItalicFontDescriptor as Any,
-            .foregroundColor: defaultForegroundColour,
-            
-            
-        ],
-        syntaxAttributes: [
-            .foregroundColor: NSColor.textColor.withAlphaComponent(0.3)
-        ],
-        syntaxRangeLocation: -1,
-        syntaxRangeLength: 2,
-        withString: attributedString
-    )
-    
-    
-    
-    // MARK: - Inline code
-    styleText(
-        withRegex: "`(?!`)(.*?)`",
-        textAttributes: [
-            .foregroundColor: NSColor.eggplant,
-            .font: NSFont.monospacedSystemFont(ofSize: Styles.fontSizeMono, weight: .medium),
-            
-        ],
-        syntaxAttributes: [
-            .foregroundColor: NSColor.white.withAlphaComponent(0.2),
-            .backgroundColor: NSColor.white.withAlphaComponent(0.05),
-            .font: NSFont.systemFont(ofSize: Styles.fontSize, weight: .bold)
-        ],
-        syntaxRangeLocation: -1,
-        syntaxRangeLength: 2,
-        withString: attributedString
-    )
-    
-    // MARK: - Code block
-    styleText(
-        withRegex: "(```\\n)(.*?)(\\n```)",
-        regexOptions: [.dotMatchesLineSeparators],
-        textAttributes: [
-            .foregroundColor: NSColor.eggplant,
-            .font: NSFont.monospacedSystemFont(ofSize: Styles.fontSizeMono, weight: .medium),
-        ],
-        syntaxAttributes: [
-            .foregroundColor: NSColor.white.withAlphaComponent(0.2),
-            .backgroundColor: NSColor.white.withAlphaComponent(0.035),
-            .font: NSFont.systemFont(ofSize: Styles.fontSize, weight: .bold)
-        ],
-        contentRange: 2,
-        syntaxRangeLocation: -4,
-        syntaxRangeLength: 9,
-        withString: attributedString
-    )
-    
-    
-    self.setSelectedRange(selectedRange)
-    
-    
+
     func styleText(
-        withRegex regexString: String,
+        withRegex regexString: String?,
         regexOptions: NSRegularExpression.Options = [],
         textAttributes: [NSAttributedString.Key: Any],
         syntaxAttributes: [NSAttributedString.Key: Any],
@@ -370,21 +283,24 @@ class StylableTextEditor: NSTextView {
         
         let range = NSRange(location: 0, length: attributedString.length)
         
-        let regex = try! NSRegularExpression(pattern: regexString, options: regexOptions)
-        
-        regex.enumerateMatches(
-            in: attributedString.string,
-            options: [],
-            range: range
-        ) { match, _, _ in
+        if let regexString = regexString {
+            let regex = try! NSRegularExpression(pattern: regexString, options: regexOptions)
             
-            guard let range = match?.range(at: contentRange) else { return }
-            
-            let syntaxRange = NSRange(location: range.location + syntaxRangeLocation, length: range.length + syntaxRangeLength)
-            
-            attributedString.addAttributes(syntaxAttributes, range: syntaxRange)
-            attributedString.addAttributes(textAttributes, range: range)
+            regex.enumerateMatches(
+                in: attributedString.string,
+                options: [],
+                range: range
+            ) { match, _, _ in
+                
+                guard let range = match?.range(at: contentRange) else { return }
+                
+                let syntaxRange = NSRange(location: range.location + syntaxRangeLocation, length: range.length + syntaxRangeLength)
+                
+                attributedString.addAttributes(syntaxAttributes, range: syntaxRange)
+                attributedString.addAttributes(textAttributes, range: range)
+            }
         }
+        
         
         textStorage.setAttributedString(attributedString)
     } // END style text

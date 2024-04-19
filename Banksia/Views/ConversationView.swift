@@ -117,7 +117,7 @@ struct ConversationView: View {
             
             MessageInputView(conversation: conversation)
             
-            
+                
             
         } // END Vstack
         .toolbar {

@@ -16,8 +16,6 @@ import Foundation
 
 import SwiftUI
 import Cocoa
-
-import SwiftUI
 import Styles
 
 struct StylableTextEditorRepresentable: NSViewRepresentable {
