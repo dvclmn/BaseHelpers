@@ -221,6 +221,6 @@ struct MessageInputView: View {
     .environment(ConversationHandler())
     .environment(BanksiaHandler())
     .environmentObject(Preferences())
-    .frame(width: 560, height: 700)
+    .frame(width: 380, height: 700)
     .background(.contentBackground)
 }

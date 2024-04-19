@@ -17,6 +17,7 @@
 		F64F8E222B03090600C72E51 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F64F8E212B03090600C72E51 /* ContentView.swift */; };
 		F64F8E2E2B04254100C72E51 /* ConversationHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F64F8E2D2B04254100C72E51 /* ConversationHandler.swift */; };
 		F64F8E312B042A2700C72E51 /* UtilityFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F64F8E302B042A2700C72E51 /* UtilityFunctions.swift */; };
+		F663C2682BD25FC0000D8F5F /* MarkdownEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F663C2672BD25FC0000D8F5F /* MarkdownEditor.swift */; };
 		F668E1AC2BD15EA7006FB5ED /* Styles in Frameworks */ = {isa = PBXBuildFile; productRef = F668E1AB2BD15EA7006FB5ED /* Styles */; };
 		F668E1AF2BD15EB2006FB5ED /* Utilities in Frameworks */ = {isa = PBXBuildFile; productRef = F668E1AE2BD15EB2006FB5ED /* Utilities */; };
 		F6795C7D2BCE70920093BC9C /* ConversationEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6795C7C2BCE70920093BC9C /* ConversationEditorView.swift */; };
@@ -60,6 +61,7 @@
 		F64F8E212B03090600C72E51 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		F64F8E2D2B04254100C72E51 /* ConversationHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationHandler.swift; sourceTree = "<group>"; };
 		F64F8E302B042A2700C72E51 /* UtilityFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityFunctions.swift; sourceTree = "<group>"; };
+		F663C2672BD25FC0000D8F5F /* MarkdownEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkdownEditor.swift; sourceTree = "<group>"; };
 		F6795C7C2BCE70920093BC9C /* ConversationEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationEditorView.swift; sourceTree = "<group>"; };
 		F6795C7E2BCE7A4D0093BC9C /* GlobalConversationSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalConversationSettingsView.swift; sourceTree = "<group>"; };
 		F697B8652B0B47610091CE79 /* GPTHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GPTHandler.swift; sourceTree = "<group>"; };
@@ -142,6 +144,7 @@
 		F64F8E102B02200400C72E51 /* Handlers */ = {
 			isa = PBXGroup;
 			children = (
+				F663C2672BD25FC0000D8F5F /* MarkdownEditor.swift */,
 				F6E4BC6E2BD02D9800BFD550 /* StylableTextEditor.swift */,
 				F6A5E1B92BC6F3D70018B1B5 /* StyleHandler.swift */,
 				F6A5E1B62BC6EE480018B1B5 /* PreferencesHandler.swift */,
@@ -309,6 +312,7 @@
 				F6795C7D2BCE70920093BC9C /* ConversationEditorView.swift in Sources */,
 				F6A7BEEB2B01C57400D3CE25 /* BanksiaApp.swift in Sources */,
 				F6A5E1BA2BC6F3D80018B1B5 /* StyleHandler.swift in Sources */,
+				F663C2682BD25FC0000D8F5F /* MarkdownEditor.swift in Sources */,
 				F6A7BEEF2B01C57400D3CE25 /* DataModel.swift in Sources */,
 				F6A5E1B52BC6E5A40018B1B5 /* ToolbarView.swift in Sources */,
 				F6E4BC6F2BD02D9800BFD550 /* StylableTextEditor.swift in Sources */,
