@@ -20,12 +20,35 @@ enum MarkdownSyntax: CaseIterable {
     case inlineCode
     case codeBlock
     
+    var originalSyntax: String? {
+        switch self {
+        case .h1:
+            "#"
+        case .h2:
+            "##"
+        case .h3:
+            "###"
+        case .bold:
+            "**"
+        case .italic:
+            "*"
+        case .boldItalic:
+            "***"
+        case .inlineCode:
+            "`"
+        case .codeBlock:
+            "```"
+        default:
+            nil
+        }
+    }
+    
     var regex: String? {
         switch self {
         case .base:
             nil
         case .h1:
-            "^#(.*)"
+            "(?m)^#(.*)"
         case .h2:
             "(?m)^##(.*)"
         case .h3:
@@ -33,13 +56,36 @@ enum MarkdownSyntax: CaseIterable {
         case .bold:
             "\\*\\*(.*?)\\*\\*"
         case .italic:
-            "\\*(?!\\*)(.*?)\\*(?!\\*)"
+            "\\*(.*?)\\*"
         case .boldItalic:
             "\\*\\*\\*(.*?)\\*\\*\\*"
         case .inlineCode:
             "`(?!`)(.*?)`"
         case .codeBlock:
-            "(```\\n)(.*?)(\\n```)"
+            "(?s)(```\\n)(.*?)(\\n```)"
+        }
+    }
+    
+    var hideSyntax: Bool {
+        switch self {
+        case .base:
+            false
+        case .h1:
+            true
+        case .h2:
+            false
+        case .h3:
+            false
+        case .bold:
+            false
+        case .italic:
+            false
+        case .boldItalic:
+            false
+        case .inlineCode:
+            false
+        case .codeBlock:
+            false
         }
     }
     
@@ -59,7 +105,7 @@ enum MarkdownSyntax: CaseIterable {
         case .boldItalic: -1
         case .inlineCode: -1
         case .codeBlock: -4
-        default: 1
+        default: 0
         }
     }
     
@@ -111,8 +157,7 @@ enum MarkdownSyntax: CaseIterable {
             
         case .bold:
             MarkdownStyleAttributes(
-                fontWeight: .bold,
-                foregroundOpacity: 1.0
+                fontWeight: .bold
             )
         case .italic:
             MarkdownStyleAttributes(isItalic: true)
@@ -124,9 +169,11 @@ enum MarkdownSyntax: CaseIterable {
             )
         case .inlineCode, .codeBlock:
             MarkdownStyleAttributes(
+                fontSize: self.fontSize,
                 fontWeight: .medium,
                 isMono: true,
-                foregroundColor: .eggplant
+                foregroundColor: .eggplant,
+                backgroundColour: .white
             )
             
         }
@@ -135,9 +182,7 @@ enum MarkdownSyntax: CaseIterable {
     var syntaxAttributes: MarkdownStyleAttributes {
         switch self {
         case .base:
-            MarkdownStyleAttributes(
-                foregroundOpacity: 0.3
-            )
+            MarkdownStyleAttributes()
         case .h1:
             MarkdownStyleAttributes(
                 fontSize: self.fontSize,
@@ -179,7 +224,7 @@ struct MarkdownStyleAttributes {
     var foregroundColor: NSColor = .textColor
     var foregroundOpacity: Double = 0.8
     var backgroundColour: NSColor = .clear
-    var backgroundOpacity: Double = 0.1
+    var backgroundOpacity: Double = 0.07
 }
 
 
@@ -212,7 +257,6 @@ class StylableTextEditor: NSTextView {
         }
         
         if let font = contentFont {
-            
             let attributes: [NSAttributedString.Key: Any] = [
                 .font: font as Any,
                 .foregroundColor: style.foregroundColor.withAlphaComponent(style.foregroundOpacity),
@@ -222,9 +266,9 @@ class StylableTextEditor: NSTextView {
         } else {
             return [:]
         }
-
+        
     } // END set text style
-
+    
     
     func applyStyles() {
         
@@ -236,18 +280,6 @@ class StylableTextEditor: NSTextView {
         let selectedRange = self.selectedRange()
         
         // MARK: - Set initial styles (First!)
-        
-        //        let bodyFontDescriptor = NSFontDescriptor.preferredFontDescriptor(forTextStyle: .body)
-        //
-        //        let paragraphStyle = NSMutableParagraphStyle()
-        //        paragraphStyle.lineSpacing = 4.5 // example line spacing
-        //
-        //        let baseAttributes: [NSAttributedString.Key: Any] = [
-        //            .font: NSFont.systemFont(ofSize: Styles.fontSize, weight: .regular),
-        //            .foregroundColor: defaultForegroundColour,
-        //            .paragraphStyle: paragraphStyle
-        //        ]
-        
         let attributedString = NSMutableAttributedString(string: textStorage.string, attributes: setupStyle(for: MarkdownSyntax.base.contentAttributes))
         
         for syntax in MarkdownSyntax.allCases {
@@ -258,21 +290,22 @@ class StylableTextEditor: NSTextView {
                 contentRange: syntax.contentRange,
                 syntaxRangeLocation: syntax.syntaxRangeLocation,
                 syntaxRangeLength: syntax.syntaxRangeLength,
+                hideSyntax: syntax.hideSyntax,
                 withString: attributedString
             )
         }
         
         self.setSelectedRange(selectedRange)
     }
-
+    
     func styleText(
         withRegex regexString: String?,
-        regexOptions: NSRegularExpression.Options = [],
         textAttributes: [NSAttributedString.Key: Any],
         syntaxAttributes: [NSAttributedString.Key: Any],
-        contentRange: Int = 1,
-        syntaxRangeLocation: Int = 0,
-        syntaxRangeLength: Int = 0,
+        contentRange: Int,
+        syntaxRangeLocation: Int,
+        syntaxRangeLength: Int,
+        hideSyntax: Bool,
         withString attributedString: NSMutableAttributedString
     ) {
         guard let textStorage = self.textStorage else {
@@ -284,7 +317,8 @@ class StylableTextEditor: NSTextView {
         let range = NSRange(location: 0, length: attributedString.length)
         
         if let regexString = regexString {
-            let regex = try! NSRegularExpression(pattern: regexString, options: regexOptions)
+            
+            let regex = try! NSRegularExpression(pattern: regexString, options: [])
             
             regex.enumerateMatches(
                 in: attributedString.string,
@@ -298,9 +332,9 @@ class StylableTextEditor: NSTextView {
                 
                 attributedString.addAttributes(syntaxAttributes, range: syntaxRange)
                 attributedString.addAttributes(textAttributes, range: range)
+                
             }
         }
-        
         
         textStorage.setAttributedString(attributedString)
     } // END style text
