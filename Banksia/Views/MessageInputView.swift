@@ -171,6 +171,7 @@ struct MessageInputView: View {
             .onAppear {
                 if isPreview {
                     userPrompt = ExampleText.basicMarkdown
+                    editorHeight = 500
                 }
             }
             
