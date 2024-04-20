@@ -67,7 +67,7 @@ class MarkdownEditor: NSTextView {
             return
         }
         
-//        let documentRange = NSRange(location: 0, length: textStorage.string.count)
+        //        let documentRange = NSRange(location: 0, length: textStorage.string.count)
         //        print("Document word count: \(documentRange.length)")
         
         for syntax in MarkdownSyntax.allCases {
@@ -81,9 +81,9 @@ class MarkdownEditor: NSTextView {
                 for match in syntaxMatches {
                     
                     if match.range.contains(range.lowerBound) {
-                                                print("Cursor is within \(syntax.name)")
+                        print("Cursor is within \(syntax.name)")
                     } else {
-                                                print("No reported selection matches for \(syntax.name)")
+                        print("No reported selection matches for \(syntax.name)")
                     }
                     
                 }
@@ -91,7 +91,6 @@ class MarkdownEditor: NSTextView {
             
         } // END loop markdown syntax
     } // END assess selecred range
-    
     
     func applyStyles() {
         
@@ -106,25 +105,18 @@ class MarkdownEditor: NSTextView {
         let attributedString = NSMutableAttributedString(string: textStorage.string, attributes: [:])
         
         /// Default/base styles
-        styleText(
-            textAttributes: setupStyle(for: MarkdownStyleAttributes()),
-            syntaxAttributes: [:],
-            selectedRange: selectedRange,
-            withString: attributedString
-        )
-        let syntaxList = MarkdownSyntax.allCases
-//        let syntaxList = MarkdownSyntax.allCases.drop {$0.name == "codeBlock"}
-        /// Default/base styles
+        let documentRange = NSRange(location: 0, length: attributedString.length)
+        let baseAttributes = setupStyle(for: MarkdownStyleAttributes())
+        attributedString.addAttributes(baseAttributes, range: documentRange)
+        textStorage.setAttributedString(attributedString)
         
+        
+        let syntaxList = MarkdownSyntax.allCases
+        //        let syntaxList = MarkdownSyntax.allCases.filter {$0.name == "codeBlock"}
         for syntax in syntaxList {
             styleText(
-                withRegex: syntax.regex,
-                textAttributes: setupStyle(for: syntax.contentAttributes),
-                syntaxAttributes: setupStyle(for: syntax.syntaxAttributes),
+                for: syntax,
                 selectedRange: selectedRange,
-                syntaxCharacters: syntax.syntaxCharacters,
-                syntaxSymmetrical: syntax.syntaxSymmetrical,
-                hideSyntax: syntax.hideSyntax,
                 withString: attributedString
             )
         }
@@ -133,13 +125,8 @@ class MarkdownEditor: NSTextView {
     }
     
     func styleText(
-        withRegex regexLiteral: Regex<(Substring, Substring)>? = nil,
-        textAttributes: [NSAttributedString.Key: Any],
-        syntaxAttributes: [NSAttributedString.Key: Any] = [:],
+        for syntax: MarkdownSyntax,
         selectedRange: NSRange,
-        syntaxCharacters: Int = 1,
-        syntaxSymmetrical: Bool = true,
-        hideSyntax: Bool = false,
         withString attributedString: NSMutableAttributedString
     ) {
         guard let textStorage = self.textStorage else {
@@ -147,9 +134,14 @@ class MarkdownEditor: NSTextView {
             return
         }
         
-        let documentRange = NSRange(location: 0, length: attributedString.length)
+        let regexLiteral: Regex<(Substring, Substring)> = syntax.regex
+        let contentAttributes = setupStyle(for: syntax.contentAttributes)
+        let syntaxAttributes = setupStyle(for: syntax.syntaxAttributes)
+        let syntaxCharacters: Int = syntax.syntaxCharacters
+        let syntaxSymmetrical: Bool = syntax.syntaxSymmetrical
+        let hideSyntax: Bool = syntax.hideSyntax
         
-        if let regexLiteral = regexLiteral {
+        
             
             let string = attributedString.string
             let matches = string.matches(of: regexLiteral)
@@ -159,22 +151,30 @@ class MarkdownEditor: NSTextView {
                 print("Range location: \(range.location), Range length: \(range.length)")
                 
                 
-                
-                
+                /// Content range
                 let contentLocation = max(0, range.location + syntaxCharacters)
+                
                 let contentLength = min(range.length - (syntaxSymmetrical ? 2 : 1) * syntaxCharacters, attributedString.length - contentLocation)
                 
                 let contentRange = NSRange(location: contentLocation, length: contentLength)
-
+                
+                
+                /// Opening syntax range
                 let startSyntaxLocation = range.location
+                
                 let startSyntaxLength = min(syntaxCharacters, attributedString.length - startSyntaxLocation)
                 
                 let startSyntaxRange = NSRange(location: startSyntaxLocation, length: startSyntaxLength)
-
+                
+                
+                /// Closing syntax range
                 let endSyntaxLocation = max(0, range.location + range.length - syntaxCharacters)
-                let endSyntaxLength = min(syntaxCharacters, attributedString.length - endSyntaxLocation)
+                
+                let endSyntaxLength = min(syntax == .codeBlock ? syntaxCharacters + 1 : syntaxCharacters, attributedString.length - endSyntaxLocation)
+                
                 let endSyntaxRange = NSRange(location: endSyntaxLocation, length: endSyntaxLength)
-
+                
+                /// Apply attributes
                 if attributedString.length >= startSyntaxRange.upperBound {
                     attributedString.addAttributes(syntaxAttributes, range: startSyntaxRange)
                 }
@@ -182,28 +182,27 @@ class MarkdownEditor: NSTextView {
                     attributedString.addAttributes(syntaxAttributes, range: endSyntaxRange)
                 }
                 if attributedString.length >= contentRange.upperBound {
-                    attributedString.addAttributes(textAttributes, range: contentRange)
+                    attributedString.addAttributes(contentAttributes, range: contentRange)
                 }
-
+                
                 
                 print("\n\n")
             }
             
-        } else {
-            attributedString.addAttributes(textAttributes, range: documentRange)
+            
+            
+            textStorage.setAttributedString(attributedString)
+            
+        } // END style text
+        
+        
+        
+        
+        
+        override func didChangeText() {
+            super.didChangeText()
+            applyStyles()
         }
-        
-        
-        textStorage.setAttributedString(attributedString)
-        
-    } // END style text
-    
-    
-    
-    
-    
-    override func didChangeText() {
-        super.didChangeText()
-        applyStyles()
     }
-}
+    
+    

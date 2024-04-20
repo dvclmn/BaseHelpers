@@ -13,7 +13,6 @@ struct MarkdownDefaults {
     static let fontSize: Double = 15
 }
 
-
 enum MarkdownSyntax: String, CaseIterable {
     case h1
     case h2
@@ -49,7 +48,7 @@ enum MarkdownSyntax: String, CaseIterable {
 //            return /`(.*?)`/
             return /`([^`]+)(?!``)`(?!`)/
         case .codeBlock:
-            return /```(.*?)```/
+            return /(?m)^```([\s\S]*?)```/
         }
     }
     

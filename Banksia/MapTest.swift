@@ -125,7 +125,7 @@ struct MapTest: View {
     func formatMessageForGPT(_ message: MessageTest) -> String {
         print("|--- formatMessageForGPT --->")
         
-        let messageID: String = message.id.description
+//        let messageID: String = message.id.description
         
         let messageBegin: String = "\n# Message \n"
         let timeStamp: String = "*Timestamp:* \(message.timestamp)"
