@@ -28,27 +28,28 @@ enum MarkdownSyntax: String, CaseIterable {
     var name: String {
         self.rawValue
     }
-    
-    var regex: Regex<(Substring, content: Substring)> {
+    /// https://swiftregex.com
+    var regex: Regex<(Substring, Substring)> {
         switch self {
         case .h1:
-            return /#(?<content>.*)/
+            return /#(.*)/
         case .h2:
-            return /##(?<content>.*)/
+            return /##(.*)/
         case .h3:
-            return /###(?<content>.*)/
+            return /###(.*)/
         case .bold:
-            return /\*\*(?<content>.*?)\*\*/
+            return /\*\*(.*?)\*\*/
         case .italic:
-            return /\*(?<content>.*?)\*/
+            return /\*(.*?)\*/
         case .boldItalic:
-            return /\*\*\*(?<content>.*?)\*\*\*/
+            return /\*\*\*(.*?)\*\*\*/
         case .strikethrough:
-            return /\~\~(?<content>.*?)\~\~/
+            return /\~\~(.*?)\~\~/
         case .inlineCode:
-            return /`(?<content>.*?)`/
+//            return /`(.*?)`/
+            return /`([^`]+)(?!``)`(?!`)/
         case .codeBlock:
-            return /```(?<content>.*?)```/
+            return /```(.*?)```/
         }
     }
     
@@ -92,7 +93,7 @@ enum MarkdownSyntax: String, CaseIterable {
         case .boldItalic: 3
         case .strikethrough: 2
         case .inlineCode: 1
-        case .codeBlock: 4
+        case .codeBlock: 3
         }
     }
     var syntaxSymmetrical: Bool {

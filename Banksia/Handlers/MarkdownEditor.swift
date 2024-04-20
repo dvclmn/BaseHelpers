@@ -81,9 +81,9 @@ class MarkdownEditor: NSTextView {
                 for match in syntaxMatches {
                     
                     if match.range.contains(range.lowerBound) {
-                        //                        print("Cursor is within \(syntax.name)")
+                                                print("Cursor is within \(syntax.name)")
                     } else {
-                        //                        print("No reported selection matches for \(syntax.name)")
+                                                print("No reported selection matches for \(syntax.name)")
                     }
                     
                 }
@@ -112,8 +112,8 @@ class MarkdownEditor: NSTextView {
             selectedRange: selectedRange,
             withString: attributedString
         )
-        
-        let syntaxList = MarkdownSyntax.allCases.drop {$0.name == "codeBlock"}
+        let syntaxList = MarkdownSyntax.allCases
+//        let syntaxList = MarkdownSyntax.allCases.drop {$0.name == "codeBlock"}
         /// Default/base styles
         
         for syntax in syntaxList {
@@ -133,7 +133,7 @@ class MarkdownEditor: NSTextView {
     }
     
     func styleText(
-        withRegex regexLiteral: Regex<(Substring, content: Substring)>? = nil,
+        withRegex regexLiteral: Regex<(Substring, Substring)>? = nil,
         textAttributes: [NSAttributedString.Key: Any],
         syntaxAttributes: [NSAttributedString.Key: Any] = [:],
         selectedRange: NSRange,
@@ -154,41 +154,37 @@ class MarkdownEditor: NSTextView {
             let string = attributedString.string
             let matches = string.matches(of: regexLiteral)
             
-            /// The below did actually worked, where `regexLiteral` was type `Regex<(Substring, content: Substring)>` and value `/\*\*(?<content>.*?)\*\*/`
-            //            if let match = string.firstMatch(of: regexLiteral) {
-            //                print("Content substring: \(match.content)")
-            //            }
-            
-            //            for match in matches {
-            //
-            //                let range = NSRange(match.range, in: string)
-            //                print("Range location: \(range.location), Range length: \(range.length)")
-            //
-            //                let contentRange = NSRange(location: range.location + contentRangeLocation, length: range.length + contentRangeLength)
-            //                print("Content range location: \(contentRange.location), Content range length: \(contentRange.length)")
-            //
-            //                let syntaxRange = NSRange(location: range.location + syntaxRangeLocation, length: range.length + syntaxRangeLength)
-            //                print("Syntax range location: \(syntaxRange.location), Syntax range length: \(syntaxRange.length)")
-            //
-            //                attributedString.addAttributes(syntaxAttributes, range: syntaxRange)
-            //                attributedString.addAttributes(textAttributes, range: contentRange)
-            //            }
-            
             for match in matches {
                 let range = NSRange(match.range, in: string)
                 print("Range location: \(range.location), Range length: \(range.length)")
                 
                 
                 
-                let contentRange = NSRange(location: range.location + syntaxCharacters, length: syntaxSymmetrical ? (range.length - syntaxCharacters) - syntaxCharacters : (range.length - syntaxCharacters))
                 
-                let startSyntaxRange = NSRange(location: range.location, length: syntaxCharacters)
+                let contentLocation = max(0, range.location + syntaxCharacters)
+                let contentLength = min(range.length - (syntaxSymmetrical ? 2 : 1) * syntaxCharacters, attributedString.length - contentLocation)
                 
-                let endSyntaxRange = NSRange(location: range.location + range.length - syntaxCharacters, length: syntaxCharacters)
+                let contentRange = NSRange(location: contentLocation, length: contentLength)
+
+                let startSyntaxLocation = range.location
+                let startSyntaxLength = min(syntaxCharacters, attributedString.length - startSyntaxLocation)
                 
-                attributedString.addAttributes(syntaxAttributes, range: startSyntaxRange)
-                attributedString.addAttributes(syntaxAttributes, range: endSyntaxRange)
-                attributedString.addAttributes(textAttributes, range: contentRange)
+                let startSyntaxRange = NSRange(location: startSyntaxLocation, length: startSyntaxLength)
+
+                let endSyntaxLocation = max(0, range.location + range.length - syntaxCharacters)
+                let endSyntaxLength = min(syntaxCharacters, attributedString.length - endSyntaxLocation)
+                let endSyntaxRange = NSRange(location: endSyntaxLocation, length: endSyntaxLength)
+
+                if attributedString.length >= startSyntaxRange.upperBound {
+                    attributedString.addAttributes(syntaxAttributes, range: startSyntaxRange)
+                }
+                if attributedString.length >= endSyntaxRange.upperBound {
+                    attributedString.addAttributes(syntaxAttributes, range: endSyntaxRange)
+                }
+                if attributedString.length >= contentRange.upperBound {
+                    attributedString.addAttributes(textAttributes, range: contentRange)
+                }
+
                 
                 print("\n\n")
             }
