@@ -67,56 +67,27 @@ class MarkdownEditor: NSTextView {
             return
         }
         
-        let documentRange = NSRange(location: 0, length: textStorage.string.count)
-        print("Document word count: \(documentRange.length)")
+//        let documentRange = NSRange(location: 0, length: textStorage.string.count)
+        //        print("Document word count: \(documentRange.length)")
         
         for syntax in MarkdownSyntax.allCases {
             
             let string = textStorage.string
             
             if let range = Range(selectedRange, in: string) {
-            
+                
                 let syntaxMatches = string.matches(of: syntax.regex)
                 
                 for match in syntaxMatches {
                     
-                    //                let matchedRange = NSRange(match., in: textStorage.string)
-                    //                guard let matchedRange = match?.range(at: 0) else { return }
                     if match.range.contains(range.lowerBound) {
-                        print("Cursor is within \(syntax.name)")
+                        //                        print("Cursor is within \(syntax.name)")
                     } else {
-                        print("No reported selection matches for \(syntax.name)")
+                        //                        print("No reported selection matches for \(syntax.name)")
                     }
                     
-                    //                if NSLocationInRange(selectedRange.location, match.range) {
-                    //                    print("Cursor is within \(syntax.name)")
-                    //                } else {
-                    //                    print("No reported selection matches for \(syntax.name)")
-                    //                }
-                    
-//                    print("Here are some matches: \(match.output)")
                 }
             }
-            
-            
-            //            guard let regex = try? NSRegularExpression(pattern: syntax.regex, options: []) else {
-            //                    print("There was an issue making the `NSRegularExpression`")
-            //                    return
-            //                }
-            //                regex.enumerateMatches(
-            //                    in: textStorage.string,
-            //                    options: [],
-            //                    range: documentRange
-            //                ) { match, flags, unsafePointer in
-            //
-            //                    guard let matchedRange = match?.range(at: 0) else { return }
-            //                    if NSLocationInRange(selectedRange.location, matchedRange) {
-            //                        print("Cursor is within \(syntax.name)")
-            //                    } else {
-            //                        print("No reported selection matches for \(syntax.name)")
-            //                    }
-            //
-            //                } // END enumerate matches
             
         } // END loop markdown syntax
     } // END assess selecred range
@@ -132,17 +103,27 @@ class MarkdownEditor: NSTextView {
         let selectedRange = self.selectedRange()
         
         // MARK: - Set initial styles (First!)
-        let attributedString = NSMutableAttributedString(string: textStorage.string, attributes: setupStyle(for: MarkdownStyleAttributes()))
+        let attributedString = NSMutableAttributedString(string: textStorage.string, attributes: [:])
         
-        for syntax in MarkdownSyntax.allCases {
+        /// Default/base styles
+        styleText(
+            textAttributes: setupStyle(for: MarkdownStyleAttributes()),
+            syntaxAttributes: [:],
+            selectedRange: selectedRange,
+            withString: attributedString
+        )
+        
+        let syntaxList = MarkdownSyntax.allCases.drop {$0.name == "codeBlock"}
+        /// Default/base styles
+        
+        for syntax in syntaxList {
             styleText(
                 withRegex: syntax.regex,
                 textAttributes: setupStyle(for: syntax.contentAttributes),
                 syntaxAttributes: setupStyle(for: syntax.syntaxAttributes),
                 selectedRange: selectedRange,
-                contentRange: syntax.contentRange,
-                syntaxRangeLocation: syntax.syntaxRangeLocation,
-                syntaxRangeLength: syntax.syntaxRangeLength,
+                syntaxCharacters: syntax.syntaxCharacters,
+                syntaxSymmetrical: syntax.syntaxSymmetrical,
                 hideSyntax: syntax.hideSyntax,
                 withString: attributedString
             )
@@ -152,14 +133,13 @@ class MarkdownEditor: NSTextView {
     }
     
     func styleText(
-        withRegex regexLiteral: Regex<(Substring, Substring)>,
+        withRegex regexLiteral: Regex<(Substring, content: Substring)>? = nil,
         textAttributes: [NSAttributedString.Key: Any],
-        syntaxAttributes: [NSAttributedString.Key: Any],
+        syntaxAttributes: [NSAttributedString.Key: Any] = [:],
         selectedRange: NSRange,
-        contentRange: Int,
-        syntaxRangeLocation: Int,
-        syntaxRangeLength: Int,
-        hideSyntax: Bool,
+        syntaxCharacters: Int = 1,
+        syntaxSymmetrical: Bool = true,
+        hideSyntax: Bool = false,
         withString attributedString: NSMutableAttributedString
     ) {
         guard let textStorage = self.textStorage else {
@@ -167,51 +147,59 @@ class MarkdownEditor: NSTextView {
             return
         }
         
-        //        let documentRange = NSRange(location: 0, length: attributedString.length)
+        let documentRange = NSRange(location: 0, length: attributedString.length)
         
-        let matches = textStorage.string.matches(of: regexLiteral)
-        
-        for match in matches {
+        if let regexLiteral = regexLiteral {
             
-            print("Here are some matches: \(match.output)")
+            let string = attributedString.string
+            let matches = string.matches(of: regexLiteral)
+            
+            /// The below did actually worked, where `regexLiteral` was type `Regex<(Substring, content: Substring)>` and value `/\*\*(?<content>.*?)\*\*/`
+            //            if let match = string.firstMatch(of: regexLiteral) {
+            //                print("Content substring: \(match.content)")
+            //            }
+            
+            //            for match in matches {
+            //
+            //                let range = NSRange(match.range, in: string)
+            //                print("Range location: \(range.location), Range length: \(range.length)")
+            //
+            //                let contentRange = NSRange(location: range.location + contentRangeLocation, length: range.length + contentRangeLength)
+            //                print("Content range location: \(contentRange.location), Content range length: \(contentRange.length)")
+            //
+            //                let syntaxRange = NSRange(location: range.location + syntaxRangeLocation, length: range.length + syntaxRangeLength)
+            //                print("Syntax range location: \(syntaxRange.location), Syntax range length: \(syntaxRange.length)")
+            //
+            //                attributedString.addAttributes(syntaxAttributes, range: syntaxRange)
+            //                attributedString.addAttributes(textAttributes, range: contentRange)
+            //            }
+            
+            for match in matches {
+                let range = NSRange(match.range, in: string)
+                print("Range location: \(range.location), Range length: \(range.length)")
+                
+                
+                
+                let contentRange = NSRange(location: range.location + syntaxCharacters, length: syntaxSymmetrical ? (range.length - syntaxCharacters) - syntaxCharacters : (range.length - syntaxCharacters))
+                
+                let startSyntaxRange = NSRange(location: range.location, length: syntaxCharacters)
+                
+                let endSyntaxRange = NSRange(location: range.location + range.length - syntaxCharacters, length: syntaxCharacters)
+                
+                attributedString.addAttributes(syntaxAttributes, range: startSyntaxRange)
+                attributedString.addAttributes(syntaxAttributes, range: endSyntaxRange)
+                attributedString.addAttributes(textAttributes, range: contentRange)
+                
+                print("\n\n")
+            }
+            
+        } else {
+            attributedString.addAttributes(textAttributes, range: documentRange)
         }
-        
-        //            let string = String(attributedString.string)
-        
-        
-        //        for match in regexString. {
-        //                let matchedRange = NSRange(match[contentRange].bounds, in: string)!
-        //                let syntaxRange = NSRange(location: matchedRange.location + syntaxRangeLocation, length: matchedRange.length + syntaxRangeLength)
-        //
-        //                attributedString.addAttributes(syntaxAttributes, range: syntaxRange)
-        //                attributedString.addAttributes(textAttributes, range: matchedRange)
-        //            }
-        //
-        //            guard let regex = try? NSRegularExpression(pattern: regexString, options: []) else {
-        //
-        //                print("There was an issue making the `NSRegularExpression`")
-        //                return
-        //            }
-        //
-        //            regex.enumerateMatches(
-        //                in: attributedString.string,
-        //                options: [],
-        //                range: documentRange
-        //            ) { match, flags, unsafePointer in
-        //
-        //                guard let matchedRange = match?.range(at: contentRange) else { return }
-        //
-        //                let syntaxRange = NSRange(location: matchedRange.location + syntaxRangeLocation, length: matchedRange.length + syntaxRangeLength)
-        //
-        //                attributedString.addAttributes(syntaxAttributes, range: syntaxRange)
-        //                attributedString.addAttributes(textAttributes, range: matchedRange)
-        //
-        //
-        //
-        //            }
         
         
         textStorage.setAttributedString(attributedString)
+        
     } // END style text
     
     

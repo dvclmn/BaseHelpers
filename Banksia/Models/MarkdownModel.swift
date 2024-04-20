@@ -9,6 +9,10 @@ import Foundation
 import SwiftUI
 import Styles
 
+struct MarkdownDefaults {
+    static let fontSize: Double = 15
+}
+
 
 enum MarkdownSyntax: String, CaseIterable {
     case h1
@@ -25,26 +29,26 @@ enum MarkdownSyntax: String, CaseIterable {
         self.rawValue
     }
     
-    var regex: Regex<(Substring, Substring)> {
+    var regex: Regex<(Substring, content: Substring)> {
         switch self {
         case .h1:
-            return /#(.*)/
+            return /#(?<content>.*)/
         case .h2:
-            return /##(.*)/
+            return /##(?<content>.*)/
         case .h3:
-            return /###(.*)/
+            return /###(?<content>.*)/
         case .bold:
-            return /\*\*(.*?)\*\*/
+            return /\*\*(?<content>.*?)\*\*/
         case .italic:
-            return /\*(.*?)\*/
+            return /\*(?<content>.*?)\*/
         case .boldItalic:
-            return /\*\*\*(.*?)\*\*\*/
+            return /\*\*\*(?<content>.*?)\*\*\*/
         case .strikethrough:
-            return /\~\~(.*?)\~\~/
+            return /\~\~(?<content>.*?)\~\~/
         case .inlineCode:
-            return /`(?!`)(.*?)`/
+            return /`(?<content>.*?)`/
         case .codeBlock:
-            return /```(.*?)```/
+            return /```(?<content>.*?)```/
         }
     }
     
@@ -70,39 +74,35 @@ enum MarkdownSyntax: String, CaseIterable {
             false
         }
     }
-    
-    var contentRange: Int {
+    /// Used to specify the capture group to target, for styling.
+    /// 0 = entire match (all groups), 1 = first group, 2 = second group, and so on
+//    var captureGroup: Int {
+//        switch self {
+//        case .codeBlock: 2
+//        default: 1
+//        }
+//    }
+    var syntaxCharacters: Int {
         switch self {
-        case .codeBlock: 2
-        default: 1
+        case .h1: 1
+        case .h2: 2
+        case .h3: 3
+        case .bold: 2
+        case .italic: 1
+        case .boldItalic: 3
+        case .strikethrough: 2
+        case .inlineCode: 1
+        case .codeBlock: 4
         }
     }
-    var syntaxRangeLocation: Int {
+    var syntaxSymmetrical: Bool {
         switch self {
-        case .h1: -1
-        case .h2: -2
-        case .h3: -3
-        case .bold: -2
-        case .italic: -1
-        case .boldItalic: -1
-        case .strikethrough: -2
-        case .inlineCode: -1
-        case .codeBlock: -4
+        case .h1, .h2, .h3:
+            false
+        default:
+            true
         }
     }
-    
-    var syntaxRangeLength: Int {
-        switch self {
-        case .bold: 4
-        case .italic: 2
-        case .boldItalic: 2
-        case .strikethrough: 4
-        case .inlineCode: 2
-        case .codeBlock: 9
-        default: 0
-        }
-    }
-    
     var fontSize: Double {
         switch self {
         case .h1:
@@ -113,7 +113,7 @@ enum MarkdownSyntax: String, CaseIterable {
             18
         case .inlineCode, .codeBlock:
             14
-        default: 15
+        default: MarkdownDefaults.fontSize
         }
     }
     
@@ -197,7 +197,7 @@ enum MarkdownSyntax: String, CaseIterable {
 
 
 struct MarkdownStyleAttributes {
-    var fontSize: Double = 15
+    var fontSize: Double = MarkdownDefaults.fontSize
     var fontWeight: NSFont.Weight = .regular
     var isMono: Bool = false
     var isItalic: Bool = false
