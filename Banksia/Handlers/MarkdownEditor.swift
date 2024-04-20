@@ -9,226 +9,8 @@ import Foundation
 import SwiftUI
 import Styles
 
-enum MarkdownSyntax: CaseIterable {
-    case base
-    case h1
-    case h2
-    case h3
-    case bold
-    case italic
-    case boldItalic
-    case inlineCode
-    case codeBlock
-    
-    var originalSyntax: String? {
-        switch self {
-        case .h1:
-            "#"
-        case .h2:
-            "##"
-        case .h3:
-            "###"
-        case .bold:
-            "**"
-        case .italic:
-            "*"
-        case .boldItalic:
-            "***"
-        case .inlineCode:
-            "`"
-        case .codeBlock:
-            "```"
-        default:
-            nil
-        }
-    }
-    
-    var regex: String? {
-        switch self {
-        case .base:
-            nil
-        case .h1:
-            "(?m)^#(.*)"
-        case .h2:
-            "(?m)^##(.*)"
-        case .h3:
-            "(?m)^###(.*)"
-        case .bold:
-            "\\*\\*(.*?)\\*\\*"
-        case .italic:
-            "\\*(.*?)\\*"
-        case .boldItalic:
-            "\\*\\*\\*(.*?)\\*\\*\\*"
-        case .inlineCode:
-            "`(?!`)(.*?)`"
-        case .codeBlock:
-            "(?s)(```\\n)(.*?)(\\n```)"
-        }
-    }
-    
-    var hideSyntax: Bool {
-        switch self {
-        case .base:
-            false
-        case .h1:
-            true
-        case .h2:
-            false
-        case .h3:
-            false
-        case .bold:
-            false
-        case .italic:
-            false
-        case .boldItalic:
-            false
-        case .inlineCode:
-            false
-        case .codeBlock:
-            false
-        }
-    }
-    
-    var contentRange: Int {
-        switch self {
-        case .codeBlock: 2
-        default: 1
-        }
-    }
-    var syntaxRangeLocation: Int {
-        switch self {
-        case .h1: -1
-        case .h2: -2
-        case .h3: -3
-        case .bold: -2
-        case .italic: -1
-        case .boldItalic: -1
-        case .inlineCode: -1
-        case .codeBlock: -4
-        default: 0
-        }
-    }
-    
-    var syntaxRangeLength: Int {
-        switch self {
-        case .bold: 4
-        case .italic: 2
-        case .boldItalic: 2
-        case .inlineCode: 2
-        case .codeBlock: 9
-        default: 0
-        }
-    }
-    
-    var fontSize: Double {
-        switch self {
-        case .h1:
-            28
-        case .h2:
-            24
-        case .h3:
-            18
-        case .inlineCode, .codeBlock:
-            14
-        default: 15
-        }
-    }
-    
-    var contentAttributes: MarkdownStyleAttributes {
-        switch self {
-        case .base:
-            MarkdownStyleAttributes()
-            
-        case .h1:
-            MarkdownStyleAttributes(
-                fontSize: self.fontSize
-            )
-            
-        case .h2:
-            MarkdownStyleAttributes(
-                fontSize: self.fontSize
-            )
-            
-        case .h3:
-            MarkdownStyleAttributes(
-                fontSize: self.fontSize,
-                fontWeight: .medium
-            )
-            
-        case .bold:
-            MarkdownStyleAttributes(
-                fontWeight: .bold
-            )
-        case .italic:
-            MarkdownStyleAttributes(isItalic: true)
-            
-        case .boldItalic:
-            MarkdownStyleAttributes(
-                fontWeight: .bold,
-                isItalic: true
-            )
-        case .inlineCode, .codeBlock:
-            MarkdownStyleAttributes(
-                fontSize: self.fontSize,
-                fontWeight: .medium,
-                isMono: true,
-                foregroundColor: .eggplant,
-                backgroundColour: .white
-            )
-            
-        }
-    } // END content attributes
-    
-    var syntaxAttributes: MarkdownStyleAttributes {
-        switch self {
-        case .base:
-            MarkdownStyleAttributes()
-        case .h1:
-            MarkdownStyleAttributes(
-                fontSize: self.fontSize,
-                fontWeight: .light,
-                foregroundOpacity: 0.3
-            )
-        case .h2:
-            MarkdownStyleAttributes(
-                fontSize: self.fontSize,
-                fontWeight: .light,
-                foregroundOpacity: 0.3
-            )
-        case .h3:
-            MarkdownStyleAttributes(
-                fontSize: self.fontSize,
-                fontWeight: .light,
-                foregroundOpacity: 0.3
-            )
-        case .bold, .italic, .boldItalic:
-            MarkdownStyleAttributes(foregroundOpacity: 0.3)
-        case.inlineCode, .codeBlock:
-            MarkdownStyleAttributes(
-                fontWeight: .bold,
-                foregroundOpacity: 0.2,
-                backgroundColour: .white
-            )
-            
-        }
-    }
-}
 
-
-
-struct MarkdownStyleAttributes {
-    var fontSize: Double = 15
-    var fontWeight: NSFont.Weight = .regular
-    var isMono: Bool = false
-    var isItalic: Bool = false
-    var foregroundColor: NSColor = .textColor
-    var foregroundOpacity: Double = 0.8
-    var backgroundColour: NSColor = .clear
-    var backgroundOpacity: Double = 0.07
-}
-
-
-class StylableTextEditor: NSTextView {
+class MarkdownEditor: NSTextView {
     
     override var intrinsicContentSize: NSSize {
         guard let layoutManager = self.layoutManager, let container = self.textContainer else {
@@ -256,18 +38,58 @@ class StylableTextEditor: NSTextView {
             }
         }
         
+        
         if let font = contentFont {
-            let attributes: [NSAttributedString.Key: Any] = [
+            var attributes: [NSAttributedString.Key: Any] = [
                 .font: font as Any,
                 .foregroundColor: style.foregroundColor.withAlphaComponent(style.foregroundOpacity),
-                .backgroundColor: style.backgroundColour.withAlphaComponent(style.backgroundOpacity)
+                .backgroundColor: style.backgroundColour.withAlphaComponent(style.backgroundOpacity),
+                .strikethroughStyle: NSUnderlineStyle.single.rawValue,
+                .strikethroughColor: NSColor.textColor.withAlphaComponent(0.7)
             ]
+            
+            if !style.hasStrike {
+                attributes.removeValue(forKey: .strikethroughStyle)
+            }
+            
             return attributes
+            
         } else {
             return [:]
         }
         
     } // END set text style
+    
+    func assessSelectedRange(_ selectedRange: NSRange) {
+        
+        guard let textStorage = self.textStorage else {
+            print("Text storage not available for styling")
+            return
+        }
+        
+        let pattern = "\\*\\*(.*?)\\*\\*"
+        let documentRange = NSRange(location: 0, length: textStorage.string.count)
+        
+        guard let regex = try? NSRegularExpression(pattern: pattern, options: []) else {
+            print("There was an issue making the `NSRegularExpression`")
+            return
+        }
+        
+        regex.enumerateMatches(
+            in: textStorage.string,
+            options: [],
+            range: documentRange
+        ) { match, flags, unsafePointer in
+            
+            guard let matchedRange = match?.range(at: 0) else { return }
+            
+            if NSLocationInRange(selectedRange.location, matchedRange) {
+                print("Cursor is within a bold pattern")
+            }
+            
+        } // END enumerate matches
+        
+    } // END assess selecred range
     
     
     func applyStyles() {
@@ -287,6 +109,7 @@ class StylableTextEditor: NSTextView {
                 withRegex: syntax.regex,
                 textAttributes: setupStyle(for: syntax.contentAttributes),
                 syntaxAttributes: setupStyle(for: syntax.syntaxAttributes),
+                selectedRange: selectedRange,
                 contentRange: syntax.contentRange,
                 syntaxRangeLocation: syntax.syntaxRangeLocation,
                 syntaxRangeLength: syntax.syntaxRangeLength,
@@ -302,6 +125,7 @@ class StylableTextEditor: NSTextView {
         withRegex regexString: String?,
         textAttributes: [NSAttributedString.Key: Any],
         syntaxAttributes: [NSAttributedString.Key: Any],
+        selectedRange: NSRange,
         contentRange: Int,
         syntaxRangeLocation: Int,
         syntaxRangeLength: Int,
@@ -313,25 +137,30 @@ class StylableTextEditor: NSTextView {
             return
         }
         
-        
-        let range = NSRange(location: 0, length: attributedString.length)
+        let documentRange = NSRange(location: 0, length: attributedString.length)
         
         if let regexString = regexString {
             
-            let regex = try! NSRegularExpression(pattern: regexString, options: [])
+            guard let regex = try? NSRegularExpression(pattern: regexString, options: []) else {
+                
+                print("There was an issue making the `NSRegularExpression`")
+                return
+            }
             
             regex.enumerateMatches(
                 in: attributedString.string,
                 options: [],
-                range: range
-            ) { match, _, _ in
+                range: documentRange
+            ) { match, flags, unsafePointer in
                 
-                guard let range = match?.range(at: contentRange) else { return }
+                guard let matchedRange = match?.range(at: contentRange) else { return }
                 
-                let syntaxRange = NSRange(location: range.location + syntaxRangeLocation, length: range.length + syntaxRangeLength)
+                let syntaxRange = NSRange(location: matchedRange.location + syntaxRangeLocation, length: matchedRange.length + syntaxRangeLength)
                 
                 attributedString.addAttributes(syntaxAttributes, range: syntaxRange)
-                attributedString.addAttributes(textAttributes, range: range)
+                attributedString.addAttributes(textAttributes, range: matchedRange)
+                
+                
                 
             }
         }

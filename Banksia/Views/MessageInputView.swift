@@ -51,7 +51,7 @@ struct MessageInputView: View {
                 
                 //                TextEditor(text: $userPrompt)
                 ScrollView(.vertical) {
-                    StylableTextEditorRepresentable(text: $userPrompt)
+                    EditorRepresentable(text: $userPrompt)
                         .frame(minHeight: minInputHeight, maxHeight: .infinity)
 //                        .border(Color.green.opacity(0.2))
 //                        .focused($isFocused)

@@ -1,5 +1,5 @@
 //
-//  StylableTextEditor.swift
+//  MarkdownEditor.swift
 //  Banksia
 //
 //  Created by Dave Coleman on 17/4/2024.
@@ -18,7 +18,7 @@ import SwiftUI
 import Cocoa
 import Styles
 
-struct StylableTextEditorRepresentable: NSViewRepresentable {
+struct EditorRepresentable: NSViewRepresentable {
     @Binding var text: String
     var isEditable: Bool = true
     var maxWidth: Double = 500
@@ -28,10 +28,10 @@ struct StylableTextEditorRepresentable: NSViewRepresentable {
         Coordinator(self)
     }
     
-    func makeNSView(context: Context) -> StylableTextEditor {
+    func makeNSView(context: Context) -> MarkdownEditor {
         
         /// Nothing in here seems to be causing the jumping to bottom whilst typing. Probably because this doesn't change when the view updates, it just sets it up
-        let textView = StylableTextEditor()
+        let textView = MarkdownEditor()
         textView.delegate = context.coordinator
         textView.invalidateIntrinsicContentSize()
         textView.string = text
@@ -39,21 +39,17 @@ struct StylableTextEditorRepresentable: NSViewRepresentable {
         textView.drawsBackground = false
         textView.allowsUndo = true
         textView.setNeedsDisplay(textView.bounds)
-        textView.applyStyles()
         
         return textView
     }
     
-    func updateNSView(_ textView: StylableTextEditor, context: Context) {
+    func updateNSView(_ textView: MarkdownEditor, context: Context) {
         
-        /// This below line was causing the cursor to jump to the bottom every time the text changed
-        //        textView.frame = CGRect(origin: .zero, size: context.coordinator.size)
         textView.needsLayout = true
         
         if textView.string != text {
             textView.string = text
             textView.invalidateIntrinsicContentSize()
-            
             textView.applyStyles()
         }
         if textView.isEditable != isEditable {
@@ -64,27 +60,40 @@ struct StylableTextEditorRepresentable: NSViewRepresentable {
     class Coordinator: NSObject, NSTextViewDelegate {
         
         var size = CGSize(width: 0, height: 0)
-        var parent: StylableTextEditorRepresentable
+        var parent: EditorRepresentable
         
-        init(_ parent: StylableTextEditorRepresentable) {
+        init(_ parent: EditorRepresentable) {
             self.parent = parent
             super.init()
         }
         
+        /// This function actually does not handle any refreshing of the text styles. It just ensures the layout gets redrawn and the text updates, on text edit
         func textDidChange(_ notification: Notification) {
-            guard let textView = notification.object as? StylableTextEditor else { return }
+            guard let textView = notification.object as? MarkdownEditor else { return }
             DispatchQueue.main.async {
                 self.parent.text = textView.string
                 textView.invalidateIntrinsicContentSize()
             }
-        } // Text did change
+        } // END Text did change
+        
+        func textViewDidChangeSelection(_ notification: Notification) {
+            guard let textView = notification.object as? MarkdownEditor else { return }
+            
+            DispatchQueue.main.async {
+                let selectedRange = textView.selectedRange
+                textView.assessSelectedRange(selectedRange)
+
+                print("Selected Range:\nLocation: \(selectedRange.location)\nLength: \(selectedRange.length)\n\n")
+            }
+            
+        } // END changed selection
+
         
         func updateSize(_ newSize: CGSize) {
             size = newSize
             // You can use this method to update the state in SwiftUI if needed
         }
         
-        
-    }
-}
+    } // END coordinator
+} // END NSViewRepresentable
 

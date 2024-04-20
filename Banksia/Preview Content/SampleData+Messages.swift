@@ -65,11 +65,11 @@ extension Message {
 
     Here’s an updated approach to handle the sizing of your `NSTextView` within SwiftUI:
 
-    ### Step 1: Update the `intrinsicContentSize` in `StylableTextEditor`
+    ### Step 1: Update the `intrinsicContentSize` in `MarkdownEditor`
     You need to modify the `intrinsicContentSize` to ensure that it respects the available width, especially when `maxWidth: .infinite` is set. This involves calculating the height of the text when it is constrained to a particular width.
 
     ```swift
-    class StylableTextEditor: NSTextView {
+    class MarkdownEditor: NSTextView {
         override var intrinsicContentSize: NSSize {
             guard let layoutManager = self.layoutManager, let container = self.textContainer else {
                 return super.intrinsicContentSize
@@ -88,7 +88,7 @@ extension Message {
     Ensure that the SwiftUI view wrapper for your `NSTextView` properly updates the frame of the `NSTextView` when the SwiftUI view's frame changes. This can be done by updating the `updateNSView` method:
 
     ```swift
-    func updateNSView(_ nsView: StylableTextEditor, context: Context) {
+    func updateNSView(_ nsView: MarkdownEditor, context: Context) {
         nsView.string = text // ensure the text is up-to-date
         nsView.frame = CGRect(origin: .zero, size: context.coordinator.size)
         nsView.needsLayout = true

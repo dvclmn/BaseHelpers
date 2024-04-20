@@ -46,7 +46,7 @@ struct SingleMessageView: View {
                 //                    message.content
                 //                }
 //                Text(highlighted)
-                StylableTextEditorRepresentable(text: $message.content, isEditable: false)
+                EditorRepresentable(text: $message.content, isEditable: false)
                     .padding()
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .background(Color(message.type == .user ? .blue : .gray).opacity(0.1))
