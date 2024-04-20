@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 import Styles
-
+import Highlightr
 
 class MarkdownEditor: NSTextView {
     
@@ -121,8 +121,12 @@ class MarkdownEditor: NSTextView {
             )
         }
         
+        
+        
         self.setSelectedRange(selectedRange)
     }
+    
+    
     
     func styleText(
         for syntax: MarkdownSyntax,
@@ -139,70 +143,88 @@ class MarkdownEditor: NSTextView {
         let syntaxAttributes = setupStyle(for: syntax.syntaxAttributes)
         let syntaxCharacters: Int = syntax.syntaxCharacters
         let syntaxSymmetrical: Bool = syntax.syntaxSymmetrical
-        let hideSyntax: Bool = syntax.hideSyntax
+//        let hideSyntax: Bool = syntax.hideSyntax
         
         
+        
+        let string = attributedString.string
+        let matches = string.matches(of: regexLiteral)
+        
+        for match in matches {
+            let range = NSRange(match.range, in: string)
+            print("Range location: \(range.location), Range length: \(range.length)")
             
-            let string = attributedString.string
-            let matches = string.matches(of: regexLiteral)
             
-            for match in matches {
-                let range = NSRange(match.range, in: string)
-                print("Range location: \(range.location), Range length: \(range.length)")
+            
+            /// Content range
+            let contentLocation = max(0, range.location + syntaxCharacters)
+            
+            let contentLength = min(range.length - (syntaxSymmetrical ? 2 : 1) * syntaxCharacters, attributedString.length - contentLocation)
+            
+            let contentRange = NSRange(location: contentLocation, length: contentLength)
+            
+            
+            
+            
+            /// Opening syntax range
+            let startSyntaxLocation = range.location
+            
+            let startSyntaxLength = min(syntaxCharacters, attributedString.length - startSyntaxLocation)
+            
+            let startSyntaxRange = NSRange(location: startSyntaxLocation, length: startSyntaxLength)
+            
+            
+            /// Closing syntax range
+            let endSyntaxLocation = max(0, range.location + range.length - syntaxCharacters)
+            
+            let endSyntaxLength = min(syntax == .codeBlock ? syntaxCharacters + 1 : syntaxCharacters, attributedString.length - endSyntaxLocation)
+            
+            let endSyntaxRange = NSRange(location: endSyntaxLocation, length: endSyntaxLength)
+            
+            /// Apply attributes
+            if attributedString.length >= startSyntaxRange.upperBound {
+                attributedString.addAttributes(syntaxAttributes, range: startSyntaxRange)
+            }
+            if attributedString.length >= endSyntaxRange.upperBound {
+                attributedString.addAttributes(syntaxAttributes, range: endSyntaxRange)
+            }
+            if attributedString.length >= contentRange.upperBound {
+                attributedString.addAttributes(contentAttributes, range: contentRange)
+            }
+            
+            if syntax == .codeBlock {
                 
+                let highlightr = Highlightr()
+                highlightr?.setTheme(to: "paraiso-dark")
+                let code: String = String(match.output.1)
+                    // You can omit the second parameter to use automatic language detection.
+                let highlightedCode = highlightr?.highlight(code, as: "swift")
                 
-                /// Content range
-                let contentLocation = max(0, range.location + syntaxCharacters)
-                
-                let contentLength = min(range.length - (syntaxSymmetrical ? 2 : 1) * syntaxCharacters, attributedString.length - contentLocation)
-                
-                let contentRange = NSRange(location: contentLocation, length: contentLength)
-                
-                
-                /// Opening syntax range
-                let startSyntaxLocation = range.location
-                
-                let startSyntaxLength = min(syntaxCharacters, attributedString.length - startSyntaxLocation)
-                
-                let startSyntaxRange = NSRange(location: startSyntaxLocation, length: startSyntaxLength)
-                
-                
-                /// Closing syntax range
-                let endSyntaxLocation = max(0, range.location + range.length - syntaxCharacters)
-                
-                let endSyntaxLength = min(syntax == .codeBlock ? syntaxCharacters + 1 : syntaxCharacters, attributedString.length - endSyntaxLocation)
-                
-                let endSyntaxRange = NSRange(location: endSyntaxLocation, length: endSyntaxLength)
-                
-                /// Apply attributes
-                if attributedString.length >= startSyntaxRange.upperBound {
-                    attributedString.addAttributes(syntaxAttributes, range: startSyntaxRange)
+//                attributedString.addAttributes(syntaxAttributes, range: startSyntaxRange)
+                if let highlightedCode = highlightedCode {
+                    attributedString.replaceCharacters(in: contentRange, with: highlightedCode)
                 }
-                if attributedString.length >= endSyntaxRange.upperBound {
-                    attributedString.addAttributes(syntaxAttributes, range: endSyntaxRange)
-                }
-                if attributedString.length >= contentRange.upperBound {
-                    attributedString.addAttributes(contentAttributes, range: contentRange)
-                }
                 
-                
-                print("\n\n")
             }
             
             
-            
-            textStorage.setAttributedString(attributedString)
-            
-        } // END style text
-        
-        
-        
-        
-        
-        override func didChangeText() {
-            super.didChangeText()
-            applyStyles()
+            print("\n\n")
         }
+        
+        
+        
+        textStorage.setAttributedString(attributedString)
+        
+    } // END style text
+    
+    
+    
+    
+    
+    override func didChangeText() {
+        super.didChangeText()
+        applyStyles()
     }
-    
-    
+}
+
+
