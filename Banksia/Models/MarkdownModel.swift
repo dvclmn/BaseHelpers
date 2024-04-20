@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 import Styles
 
-enum MarkdownSyntax: CaseIterable {
+enum MarkdownSyntax: String, CaseIterable {
     case base
     case h1
     case h2
@@ -20,6 +20,10 @@ enum MarkdownSyntax: CaseIterable {
     case strikethrough
     case inlineCode
     case codeBlock
+    
+    var name: String {
+        self.rawValue
+    }
     
     var originalSyntax: String? {
         switch self {

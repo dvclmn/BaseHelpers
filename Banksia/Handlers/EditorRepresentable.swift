@@ -39,6 +39,7 @@ struct EditorRepresentable: NSViewRepresentable {
         textView.drawsBackground = false
         textView.allowsUndo = true
         textView.setNeedsDisplay(textView.bounds)
+        textView.applyStyles()
         
         return textView
     }

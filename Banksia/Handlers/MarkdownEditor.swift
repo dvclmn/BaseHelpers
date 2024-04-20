@@ -67,28 +67,43 @@ class MarkdownEditor: NSTextView {
             return
         }
         
-        let pattern = "\\*\\*(.*?)\\*\\*"
         let documentRange = NSRange(location: 0, length: textStorage.string.count)
+        print("Document word count: \(documentRange.length)")
         
-        guard let regex = try? NSRegularExpression(pattern: pattern, options: []) else {
-            print("There was an issue making the `NSRegularExpression`")
-            return
-        }
+        let syntaxWithRegex = MarkdownSyntax.allCases.filter {$0.regex != nil}
+        let syntaxWithoutRegex = MarkdownSyntax.allCases.filter {$0.regex == nil}
+
+        print("'\(syntaxWithoutRegex.count)' syntax items without regex: \(syntaxWithoutRegex)")
         
-        regex.enumerateMatches(
-            in: textStorage.string,
-            options: [],
-            range: documentRange
-        ) { match, flags, unsafePointer in
+        print("'\(syntaxWithRegex.count)' syntax items with regex: \(syntaxWithRegex)")
+
+        for syntax in syntaxWithRegex {
             
-            guard let matchedRange = match?.range(at: 0) else { return }
-            
-            if NSLocationInRange(selectedRange.location, matchedRange) {
-                print("Cursor is within a bold pattern")
+            if let pattern = syntax.regex {
+                
+                guard let regex = try? NSRegularExpression(pattern: pattern, options: []) else {
+                    print("There was an issue making the `NSRegularExpression`")
+                    return
+                }
+                regex.enumerateMatches(
+                    in: textStorage.string,
+                    options: [],
+                    range: documentRange
+                ) { match, flags, unsafePointer in
+                    
+                    guard let matchedRange = match?.range(at: 0) else { return }
+                    
+                    if NSLocationInRange(selectedRange.location, matchedRange) {
+                        print("Cursor is within \(syntax.name)")
+                    } else {
+                        print("No reported selection matches")
+                    }
+                    
+                } // END enumerate matches
+            } else {
+                print("No regex pattern associated with this selection")
             }
-            
-        } // END enumerate matches
-        
+        } // END loop markdown syntax
     } // END assess selecred range
     
     
