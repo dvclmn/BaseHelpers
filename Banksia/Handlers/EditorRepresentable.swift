@@ -84,7 +84,7 @@ struct EditorRepresentable: NSViewRepresentable {
                 let selectedRange = textView.selectedRange
                 textView.assessSelectedRange(selectedRange)
 
-                print("Selected Range:\nLocation: \(selectedRange.location)\nLength: \(selectedRange.length)\n\n")
+//                print("Selected Range:\nLocation: \(selectedRange.location)\nLength: \(selectedRange.length)\n\n")
             }
             
         } // END changed selection

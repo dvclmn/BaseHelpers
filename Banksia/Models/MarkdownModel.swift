@@ -9,8 +9,8 @@ import Foundation
 import SwiftUI
 import Styles
 
+
 enum MarkdownSyntax: String, CaseIterable {
-    case base
     case h1
     case h2
     case h3
@@ -25,58 +25,31 @@ enum MarkdownSyntax: String, CaseIterable {
         self.rawValue
     }
     
-    var originalSyntax: String? {
+    var regex: Regex<(Substring, Substring)> {
         switch self {
         case .h1:
-            "#"
+            return /#(.*)/
         case .h2:
-            "##"
+            return /##(.*)/
         case .h3:
-            "###"
+            return /###(.*)/
         case .bold:
-            "**"
+            return /\*\*(.*?)\*\*/
         case .italic:
-            "*"
+            return /\*(.*?)\*/
         case .boldItalic:
-            "***"
-        case .inlineCode:
-            "`"
-        case .codeBlock:
-            "```"
-        default:
-            nil
-        }
-    }
-    
-    var regex: String? {
-        switch self {
-        case .base:
-            nil
-        case .h1:
-            "(?m)^#(.*)"
-        case .h2:
-            "(?m)^##(.*)"
-        case .h3:
-            "(?m)^###(.*)"
-        case .bold:
-            "\\*\\*(.*?)\\*\\*"
-        case .italic:
-            "\\*(.*?)\\*"
-        case .boldItalic:
-            "\\*\\*\\*(.*?)\\*\\*\\*"
+            return /\*\*\*(.*?)\*\*\*/
         case .strikethrough:
-            "\\~\\~(.*?)\\~\\~"
+            return /\~\~(.*?)\~\~/
         case .inlineCode:
-            "`(?!`)(.*?)`"
+            return /`(?!`)(.*?)`/
         case .codeBlock:
-            "(?s)(```\\n)(.*?)(\\n```)"
+            return /```(.*?)```/
         }
     }
     
     var hideSyntax: Bool {
         switch self {
-        case .base:
-            false
         case .h1:
             true
         case .h2:
@@ -115,7 +88,6 @@ enum MarkdownSyntax: String, CaseIterable {
         case .strikethrough: -2
         case .inlineCode: -1
         case .codeBlock: -4
-        default: 0
         }
     }
     
@@ -147,9 +119,6 @@ enum MarkdownSyntax: String, CaseIterable {
     
     var contentAttributes: MarkdownStyleAttributes {
         switch self {
-        case .base:
-            MarkdownStyleAttributes()
-            
         case .h1:
             MarkdownStyleAttributes(
                 fontSize: self.fontSize
@@ -195,8 +164,6 @@ enum MarkdownSyntax: String, CaseIterable {
     
     var syntaxAttributes: MarkdownStyleAttributes {
         switch self {
-        case .base:
-            MarkdownStyleAttributes()
         case .h1:
             MarkdownStyleAttributes(
                 fontSize: self.fontSize,
@@ -227,7 +194,6 @@ enum MarkdownSyntax: String, CaseIterable {
         }
     }
 }
-
 
 
 struct MarkdownStyleAttributes {

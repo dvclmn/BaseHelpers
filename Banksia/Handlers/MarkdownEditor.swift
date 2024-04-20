@@ -70,39 +70,54 @@ class MarkdownEditor: NSTextView {
         let documentRange = NSRange(location: 0, length: textStorage.string.count)
         print("Document word count: \(documentRange.length)")
         
-        let syntaxWithRegex = MarkdownSyntax.allCases.filter {$0.regex != nil}
-        let syntaxWithoutRegex = MarkdownSyntax.allCases.filter {$0.regex == nil}
-
-        print("'\(syntaxWithoutRegex.count)' syntax items without regex: \(syntaxWithoutRegex)")
-        
-        print("'\(syntaxWithRegex.count)' syntax items with regex: \(syntaxWithRegex)")
-
-        for syntax in syntaxWithRegex {
+        for syntax in MarkdownSyntax.allCases {
             
-            if let pattern = syntax.regex {
+            let string = textStorage.string
+            
+            if let range = Range(selectedRange, in: string) {
+            
+                let syntaxMatches = string.matches(of: syntax.regex)
                 
-                guard let regex = try? NSRegularExpression(pattern: pattern, options: []) else {
-                    print("There was an issue making the `NSRegularExpression`")
-                    return
-                }
-                regex.enumerateMatches(
-                    in: textStorage.string,
-                    options: [],
-                    range: documentRange
-                ) { match, flags, unsafePointer in
+                for match in syntaxMatches {
                     
-                    guard let matchedRange = match?.range(at: 0) else { return }
-                    
-                    if NSLocationInRange(selectedRange.location, matchedRange) {
+                    //                let matchedRange = NSRange(match., in: textStorage.string)
+                    //                guard let matchedRange = match?.range(at: 0) else { return }
+                    if match.range.contains(range.lowerBound) {
                         print("Cursor is within \(syntax.name)")
                     } else {
-                        print("No reported selection matches")
+                        print("No reported selection matches for \(syntax.name)")
                     }
                     
-                } // END enumerate matches
-            } else {
-                print("No regex pattern associated with this selection")
+                    //                if NSLocationInRange(selectedRange.location, match.range) {
+                    //                    print("Cursor is within \(syntax.name)")
+                    //                } else {
+                    //                    print("No reported selection matches for \(syntax.name)")
+                    //                }
+                    
+//                    print("Here are some matches: \(match.output)")
+                }
             }
+            
+            
+            //            guard let regex = try? NSRegularExpression(pattern: syntax.regex, options: []) else {
+            //                    print("There was an issue making the `NSRegularExpression`")
+            //                    return
+            //                }
+            //                regex.enumerateMatches(
+            //                    in: textStorage.string,
+            //                    options: [],
+            //                    range: documentRange
+            //                ) { match, flags, unsafePointer in
+            //
+            //                    guard let matchedRange = match?.range(at: 0) else { return }
+            //                    if NSLocationInRange(selectedRange.location, matchedRange) {
+            //                        print("Cursor is within \(syntax.name)")
+            //                    } else {
+            //                        print("No reported selection matches for \(syntax.name)")
+            //                    }
+            //
+            //                } // END enumerate matches
+            
         } // END loop markdown syntax
     } // END assess selecred range
     
@@ -117,7 +132,7 @@ class MarkdownEditor: NSTextView {
         let selectedRange = self.selectedRange()
         
         // MARK: - Set initial styles (First!)
-        let attributedString = NSMutableAttributedString(string: textStorage.string, attributes: setupStyle(for: MarkdownSyntax.base.contentAttributes))
+        let attributedString = NSMutableAttributedString(string: textStorage.string, attributes: setupStyle(for: MarkdownStyleAttributes()))
         
         for syntax in MarkdownSyntax.allCases {
             styleText(
@@ -137,7 +152,7 @@ class MarkdownEditor: NSTextView {
     }
     
     func styleText(
-        withRegex regexString: String?,
+        withRegex regexLiteral: Regex<(Substring, Substring)>,
         textAttributes: [NSAttributedString.Key: Any],
         syntaxAttributes: [NSAttributedString.Key: Any],
         selectedRange: NSRange,
@@ -152,33 +167,49 @@ class MarkdownEditor: NSTextView {
             return
         }
         
-        let documentRange = NSRange(location: 0, length: attributedString.length)
+        //        let documentRange = NSRange(location: 0, length: attributedString.length)
         
-        if let regexString = regexString {
+        let matches = textStorage.string.matches(of: regexLiteral)
+        
+        for match in matches {
             
-            guard let regex = try? NSRegularExpression(pattern: regexString, options: []) else {
-                
-                print("There was an issue making the `NSRegularExpression`")
-                return
-            }
-            
-            regex.enumerateMatches(
-                in: attributedString.string,
-                options: [],
-                range: documentRange
-            ) { match, flags, unsafePointer in
-                
-                guard let matchedRange = match?.range(at: contentRange) else { return }
-                
-                let syntaxRange = NSRange(location: matchedRange.location + syntaxRangeLocation, length: matchedRange.length + syntaxRangeLength)
-                
-                attributedString.addAttributes(syntaxAttributes, range: syntaxRange)
-                attributedString.addAttributes(textAttributes, range: matchedRange)
-                
-                
-                
-            }
+            print("Here are some matches: \(match.output)")
         }
+        
+        //            let string = String(attributedString.string)
+        
+        
+        //        for match in regexString. {
+        //                let matchedRange = NSRange(match[contentRange].bounds, in: string)!
+        //                let syntaxRange = NSRange(location: matchedRange.location + syntaxRangeLocation, length: matchedRange.length + syntaxRangeLength)
+        //
+        //                attributedString.addAttributes(syntaxAttributes, range: syntaxRange)
+        //                attributedString.addAttributes(textAttributes, range: matchedRange)
+        //            }
+        //
+        //            guard let regex = try? NSRegularExpression(pattern: regexString, options: []) else {
+        //
+        //                print("There was an issue making the `NSRegularExpression`")
+        //                return
+        //            }
+        //
+        //            regex.enumerateMatches(
+        //                in: attributedString.string,
+        //                options: [],
+        //                range: documentRange
+        //            ) { match, flags, unsafePointer in
+        //
+        //                guard let matchedRange = match?.range(at: contentRange) else { return }
+        //
+        //                let syntaxRange = NSRange(location: matchedRange.location + syntaxRangeLocation, length: matchedRange.length + syntaxRangeLength)
+        //
+        //                attributedString.addAttributes(syntaxAttributes, range: syntaxRange)
+        //                attributedString.addAttributes(textAttributes, range: matchedRange)
+        //
+        //
+        //
+        //            }
+        
         
         textStorage.setAttributedString(attributedString)
     } // END style text
