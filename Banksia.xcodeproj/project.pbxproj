@@ -11,8 +11,9 @@
 		F635C17E2BD0F41100E4EA4A /* SmoothGradient in Frameworks */ = {isa = PBXBuildFile; productRef = F635C17D2BD0F41100E4EA4A /* SmoothGradient */; };
 		F636A11C2B05B23D00C24891 /* GeneralSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F636A11B2B05B23D00C24891 /* GeneralSettingsView.swift */; };
 		F639D8B82BD3C3650035226E /* MarkdownModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F639D8B72BD3C3650035226E /* MarkdownModel.swift */; };
-		F639D8BB2BD44E2E0035226E /* Highlightr in Frameworks */ = {isa = PBXBuildFile; productRef = F639D8BA2BD44E2E0035226E /* Highlightr */; };
-		F639D8C12BD4F03D0035226E /* HighlightSwift in Frameworks */ = {isa = PBXBuildFile; productRef = F639D8C02BD4F03D0035226E /* HighlightSwift */; };
+		F639D8C52BD517AF0035226E /* xcode.min.css in Resources */ = {isa = PBXBuildFile; fileRef = F639D8C42BD517AF0035226E /* xcode.min.css */; };
+		F639D8C82BD518330035226E /* Highlightr in Frameworks */ = {isa = PBXBuildFile; productRef = F639D8C72BD518330035226E /* Highlightr */; };
+		F639D8CA2BD51B2A0035226E /* CodeSyntaxTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = F639D8C92BD51B2A0035226E /* CodeSyntaxTheme.swift */; };
 		F64F8E032B02136D00C72E51 /* ModelContainerPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = F64F8E022B02136D00C72E51 /* ModelContainerPreview.swift */; };
 		F64F8E082B02140F00C72E51 /* SampleData+Conversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F64F8E072B02140F00C72E51 /* SampleData+Conversation.swift */; };
 		F64F8E0C2B0214A000C72E51 /* SampleData+Messages.swift in Sources */ = {isa = PBXBuildFile; fileRef = F64F8E0B2B0214A000C72E51 /* SampleData+Messages.swift */; };
@@ -57,6 +58,8 @@
 		F6081DF82B0485EA00A78D64 /* NetworkHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkHandler.swift; sourceTree = "<group>"; };
 		F636A11B2B05B23D00C24891 /* GeneralSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralSettingsView.swift; sourceTree = "<group>"; };
 		F639D8B72BD3C3650035226E /* MarkdownModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MarkdownModel.swift; path = Banksia/Models/MarkdownModel.swift; sourceTree = "<group>"; };
+		F639D8C42BD517AF0035226E /* xcode.min.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = xcode.min.css; sourceTree = "<group>"; };
+		F639D8C92BD51B2A0035226E /* CodeSyntaxTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeSyntaxTheme.swift; sourceTree = "<group>"; };
 		F64F8E022B02136D00C72E51 /* ModelContainerPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelContainerPreview.swift; sourceTree = "<group>"; };
 		F64F8E072B02140F00C72E51 /* SampleData+Conversation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SampleData+Conversation.swift"; sourceTree = "<group>"; };
 		F64F8E0B2B0214A000C72E51 /* SampleData+Messages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SampleData+Messages.swift"; sourceTree = "<group>"; };
@@ -104,10 +107,9 @@
 			files = (
 				F668E1AC2BD15EA7006FB5ED /* Styles in Frameworks */,
 				F668E1AF2BD15EB2006FB5ED /* Utilities in Frameworks */,
-				F639D8C12BD4F03D0035226E /* HighlightSwift in Frameworks */,
 				F635C17E2BD0F41100E4EA4A /* SmoothGradient in Frameworks */,
 				F6E4BC722BD0D93A00BFD550 /* EditorCore in Frameworks */,
-				F639D8BB2BD44E2E0035226E /* Highlightr in Frameworks */,
+				F639D8C82BD518330035226E /* Highlightr in Frameworks */,
 				F6E4BC742BD0D93A00BFD550 /* EditorUI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -164,10 +166,12 @@
 		F64F8E2F2B042A0300C72E51 /* Support */ = {
 			isa = PBXGroup;
 			children = (
+				F639D8C42BD517AF0035226E /* xcode.min.css */,
 				F6E4BC752BD0DA5000BFD550 /* AttributedStringReference.swift */,
 				F6D6E2EA2BC82CFE000D2051 /* ExampleText.swift */,
 				F6C161E02B0F63B800F4AB62 /* banksia_icons.json */,
 				F64F8E302B042A2700C72E51 /* UtilityFunctions.swift */,
+				F639D8C92BD51B2A0035226E /* CodeSyntaxTheme.swift */,
 			);
 			path = Support;
 			sourceTree = "<group>";
@@ -249,8 +253,7 @@
 				F635C17D2BD0F41100E4EA4A /* SmoothGradient */,
 				F668E1AB2BD15EA7006FB5ED /* Styles */,
 				F668E1AE2BD15EB2006FB5ED /* Utilities */,
-				F639D8BA2BD44E2E0035226E /* Highlightr */,
-				F639D8C02BD4F03D0035226E /* HighlightSwift */,
+				F639D8C72BD518330035226E /* Highlightr */,
 			);
 			productName = Banksia;
 			productReference = F6A7BEE72B01C57400D3CE25 /* Banksia.app */;
@@ -285,8 +288,7 @@
 				F635C17C2BD0F41100E4EA4A /* XCRemoteSwiftPackageReference "SmoothGradient" */,
 				F668E1AA2BD15EA7006FB5ED /* XCLocalSwiftPackageReference "../_ Swift Packages/Styles" */,
 				F668E1AD2BD15EB2006FB5ED /* XCLocalSwiftPackageReference "../_ Swift Packages/Utilities" */,
-				F639D8B92BD44E2E0035226E /* XCRemoteSwiftPackageReference "Highlightr" */,
-				F639D8BF2BD4F03D0035226E /* XCRemoteSwiftPackageReference "HighlightSwift" */,
+				F639D8C62BD518330035226E /* XCLocalSwiftPackageReference "../_ Swift Packages/Highlightr" */,
 			);
 			productRefGroup = F6A7BEE82B01C57400D3CE25 /* Products */;
 			projectDirPath = "";
@@ -302,6 +304,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F639D8C52BD517AF0035226E /* xcode.min.css in Resources */,
 				F6C161E12B0F63B800F4AB62 /* banksia_icons.json in Resources */,
 				F6A7BEF12B01C57500D3CE25 /* Assets.xcassets in Resources */,
 			);
@@ -315,6 +318,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F6988DC12BD1597800D20E4C /* MapTest.swift in Sources */,
+				F639D8CA2BD51B2A0035226E /* CodeSyntaxTheme.swift in Sources */,
 				F6D6E2D62BC805E9000D2051 /* SingleMessageView.swift in Sources */,
 				F6795C7D2BCE70920093BC9C /* ConversationEditorView.swift in Sources */,
 				F6A7BEEB2B01C57400D3CE25 /* BanksiaApp.swift in Sources */,
@@ -577,6 +581,10 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
+		F639D8C62BD518330035226E /* XCLocalSwiftPackageReference "../_ Swift Packages/Highlightr" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = "../_ Swift Packages/Highlightr";
+		};
 		F668E1AA2BD15EA7006FB5ED /* XCLocalSwiftPackageReference "../_ Swift Packages/Styles" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = "../_ Swift Packages/Styles";
@@ -600,22 +608,6 @@
 				minimumVersion = 1.0.0;
 			};
 		};
-		F639D8B92BD44E2E0035226E /* XCRemoteSwiftPackageReference "Highlightr" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/raspu/Highlightr.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.1.2;
-			};
-		};
-		F639D8BF2BD4F03D0035226E /* XCRemoteSwiftPackageReference "HighlightSwift" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/appstefan/HighlightSwift.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.7;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -624,15 +616,9 @@
 			package = F635C17C2BD0F41100E4EA4A /* XCRemoteSwiftPackageReference "SmoothGradient" */;
 			productName = SmoothGradient;
 		};
-		F639D8BA2BD44E2E0035226E /* Highlightr */ = {
+		F639D8C72BD518330035226E /* Highlightr */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = F639D8B92BD44E2E0035226E /* XCRemoteSwiftPackageReference "Highlightr" */;
 			productName = Highlightr;
-		};
-		F639D8C02BD4F03D0035226E /* HighlightSwift */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = F639D8BF2BD4F03D0035226E /* XCRemoteSwiftPackageReference "HighlightSwift" */;
-			productName = HighlightSwift;
 		};
 		F668E1AB2BD15EA7006FB5ED /* Styles */ = {
 			isa = XCSwiftPackageProductDependency;

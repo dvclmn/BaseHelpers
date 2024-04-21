@@ -22,11 +22,28 @@ struct ExampleText {
         # This is the beginning of a really long heading so i can see what it does
 
         I will build a library of `Message` objects, as `[String]`, and can ~~you write~~ me up a *function* that simply selects one of the **paragraphs** (i.e. items in the array), and returns it? Also, we need some ***extra emphasis*** on this text.
-
+        
         ```
-        func updateNSView(_ nsView: NSTextView, context: Context) {
-            nsView.textStorage?.setAttributedString(text)
-        }
+        let highlightr = Highlightr()
+        highlightr?.setTheme(to: "xcode-dark-butts")
+        ```
+
+        ```swift
+        # Python program to find the sum of natural using recursive function
+
+        def recur_sum(n):
+           if n <= 1:
+               return n
+           else:
+               return n + recur_sum(n-1)
+
+        # change this value for a different result
+        num = 16
+
+        if num < 0:
+           print("Enter a positive number")
+        else:
+           print("The sum is",recur_sum(num))
         ```
 
         As well as some text down here.

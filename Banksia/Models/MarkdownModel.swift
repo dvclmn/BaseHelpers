@@ -45,8 +45,8 @@ enum MarkdownSyntax: String, CaseIterable {
         case .strikethrough:
             return /\~\~(.*?)\~\~/
         case .inlineCode:
-//            return /`(.*?)`/
-            return /`([^`]+)(?!``)`(?!`)/
+            //            return /`(.*?)`/
+            return /`([^\n`]+)(?!``)`(?!`)/
         case .codeBlock:
             return /(?m)^```([\s\S]*?)```/
         }
@@ -76,12 +76,12 @@ enum MarkdownSyntax: String, CaseIterable {
     }
     /// Used to specify the capture group to target, for styling.
     /// 0 = entire match (all groups), 1 = first group, 2 = second group, and so on
-//    var captureGroup: Int {
-//        switch self {
-//        case .codeBlock: 2
-//        default: 1
-//        }
-//    }
+    //    var captureGroup: Int {
+    //        switch self {
+    //        case .codeBlock: 2
+    //        default: 1
+    //        }
+    //    }
     var syntaxCharacters: Int {
         switch self {
         case .h1: 1
@@ -119,115 +119,106 @@ enum MarkdownSyntax: String, CaseIterable {
     var foreGroundColor: Color {
         switch self {
         case .inlineCode, .codeBlock:
-            .eggplant
+                .eggplant
         default:
-            .primary
+                .primary
         }
     }
     
-    var contentAttributes: AttributeContainer {
+    var contentAttributes: [NSAttributedString.Key : Any] {
         switch self {
         case .h1:
-            var container = AttributeContainer()
-            container.font = Font.system(size: self.fontSize, weight: .medium)
-            container.foregroundColor = self.foreGroundColor
-            return container
+            return [
+                .font: NSFont.systemFont(ofSize: self.fontSize, weight: .medium),
+                .foregroundColor: NSColor.textColor
+            ]
             
         case .h2:
-            var container = AttributeContainer()
-            container.font = Font.system(size: self.fontSize, weight: .medium)
-            container.foregroundColor = self.foreGroundColor
-            return container
+            
+            return [
+                .font: NSFont.systemFont(ofSize: self.fontSize, weight: .medium),
+                .foregroundColor: NSColor.textColor
+            ]
             
         case .h3:
-            var container = AttributeContainer()
-            container.font = Font.system(size: self.fontSize, weight: .medium)
-            container.foregroundColor = self.foreGroundColor
-            return container
+            return [
+                .font: NSFont.systemFont(ofSize: self.fontSize, weight: .medium),
+                .foregroundColor: NSColor.textColor
+            ]
             
         case .bold:
-            var container = AttributeContainer()
-            container.font = Font.system(size: self.fontSize, weight: .bold)
-            container.foregroundColor = self.foreGroundColor
-            return container
+            return [
+                .font: NSFont.systemFont(ofSize: self.fontSize, weight: .bold),
+                .foregroundColor: NSColor.textColor
+            ]
             
         case .italic:
-            var container = AttributeContainer()
-            container.font = Font.system(size: self.fontSize, weight: .medium).italic()
-            container.foregroundColor = self.foreGroundColor
-            return container
+            let bodyDescriptor = NSFontDescriptor.preferredFontDescriptor(forTextStyle: .body)
+            let font = NSFont(descriptor: bodyDescriptor.withSymbolicTraits(.italic), size: self.fontSize)
+            return [
+                .font: font as Any,
+                .foregroundColor: NSColor.textColor
+            ]
             
         case .boldItalic:
-            var container = AttributeContainer()
-            container.font = Font.system(size: self.fontSize, weight: .bold).italic()
-            container.foregroundColor = self.foreGroundColor
-            return container
+            let bodyDescriptor = NSFontDescriptor.preferredFontDescriptor(forTextStyle: .body)
+            let font = NSFont(descriptor: bodyDescriptor.withSymbolicTraits([.italic, .bold]), size: self.fontSize)
+            return [
+                .font: font as Any,
+                .foregroundColor: NSColor.textColor
+            ]
             
         case .strikethrough:
-            var container = AttributeContainer()
-            container.font = Font.system(size: self.fontSize, weight: .medium)
-            container.strikethroughStyle = .single
-            container.foregroundColor = self.foreGroundColor
-            return container
+            return [
+                .font: NSFont.systemFont(ofSize: self.fontSize, weight: .medium),
+                .foregroundColor: NSColor.textColor,
+                .strikethroughStyle: NSUnderlineStyle.single.rawValue
+            ]
             
         case .inlineCode, .codeBlock:
-            var container = AttributeContainer()
-            container.font = Font.system(size: self.fontSize, weight: .medium)
-            container.foregroundColor = self.foreGroundColor
-            container.backgroundColor = .white.opacity(0.15)
-            return container
-            
+            return [
+                .font: NSFont.monospacedSystemFont(ofSize: self.fontSize, weight: .medium),
+                .foregroundColor: NSColor.eggplant,
+                .backgroundColor: NSColor.white.withAlphaComponent(Styles.backgroundAlpha)
+            ]
         }
     } // END content attributes
     
-    var syntaxAttributes: MarkdownStyleAttributes {
+    var syntaxAttributes: [NSAttributedString.Key : Any]  {
         switch self {
         case .h1:
-            MarkdownStyleAttributes(
-                fontSize: self.fontSize,
-                fontWeight: .light,
-                foregroundOpacity: 0.3
-            )
+            
+            return [
+                .font: NSFont.systemFont(ofSize: self.fontSize, weight: .light),
+                .foregroundColor: NSColor.textColor.withAlphaComponent(Styles.syntaxAlpha)
+            ]
         case .h2:
-            MarkdownStyleAttributes(
-                fontSize: self.fontSize,
-                fontWeight: .light,
-                foregroundOpacity: 0.3
-            )
+            return [
+                .font: NSFont.systemFont(ofSize: self.fontSize, weight: .light),
+                .foregroundColor: NSColor.textColor.withAlphaComponent(Styles.syntaxAlpha)
+            ]
         case .h3:
-            MarkdownStyleAttributes(
-                fontSize: self.fontSize,
-                fontWeight: .light,
-                foregroundOpacity: 0.3
-            )
+            return [
+                .font: NSFont.systemFont(ofSize: self.fontSize, weight: .light),
+                .foregroundColor: NSColor.textColor.withAlphaComponent(Styles.syntaxAlpha)
+            ]
         case .bold, .italic, .boldItalic, .strikethrough:
-            MarkdownStyleAttributes(foregroundOpacity: 0.3)
+            return [
+                .font: NSFont.systemFont(ofSize: self.fontSize, weight: .regular),
+                .foregroundColor: NSColor.textColor.withAlphaComponent(Styles.syntaxAlpha)
+            ]
         case.inlineCode, .codeBlock:
-            MarkdownStyleAttributes(
-                fontWeight: .bold,
-                foregroundOpacity: 0.2,
-                backgroundColour: .white
-            )
+            return [
+                .font: NSFont.systemFont(ofSize: self.fontSize, weight: .regular),
+                .foregroundColor: NSColor.textColor.withAlphaComponent(Styles.syntaxAlpha),
+//                .backgroundColor: NSColor.white.withAlphaComponent(Styles.backgroundAlpha)
+            ]
             
         }
     }
 }
 
-//enum MarkdownAttribute {
-//    case fontSize
-//    case fontWeight
-//    
-//    
-//}
-
-struct MarkdownStyleAttributes {
-    var fontSize: Double = MarkdownDefaults.fontSize
-    var fontWeight: NSFont.Weight = .regular
-    var isMono: Bool = false
-    var isItalic: Bool = false
-    var foregroundColor: NSColor = .textColor
-    var foregroundOpacity: Double = 0.8
-    var backgroundColour: NSColor = .clear
-    var backgroundOpacity: Double = 0.07
-    var hasStrike: Bool = false
+enum CodeLanguage {
+    case swift
+    case python
 }
