@@ -9,6 +9,7 @@ import Foundation
 import SwiftUI
 import Styles
 import Highlightr
+import HighlightSwift
 
 class MarkdownEditor: NSTextView {
     
@@ -24,41 +25,45 @@ class MarkdownEditor: NSTextView {
     }
     
     
-    func setupStyle(for style: MarkdownStyleAttributes) -> [NSAttributedString.Key: Any] {
+//    func setupStyle(for style: MarkdownStyleAttributes) -> [AttributeContainer] {
+//        
+//        let container = AttributeContainer()
+//        
+//        attributeContainer.font?.monospaced()
+//        
+//        let bodyDescriptor = NSFontDescriptor.preferredFontDescriptor(forTextStyle: .body)
+//        
+//        var contentFont: NSFont? {
+//            if style.isMono {
+//                return NSFont.monospacedSystemFont(ofSize: style.fontSize, weight: style.fontWeight)
+//            } else if style.isItalic {
+//                return NSFont(descriptor: bodyDescriptor.withSymbolicTraits(.italic), size: style.fontSize)
+//            } else {
+//                return NSFont.systemFont(ofSize: style.fontSize, weight: style.fontWeight)
+//            }
+//        }
+//        
+//        
+//        if let font = contentFont {
+//            var attributes: [NSAttributedString.Key: Any] = [
+//                .font: font as Any,
+//                .foregroundColor: style.foregroundColor.withAlphaComponent(style.foregroundOpacity),
+//                .backgroundColor: style.backgroundColour.withAlphaComponent(style.backgroundOpacity),
+//                .strikethroughStyle: NSUnderlineStyle.single.rawValue,
+//                .strikethroughColor: NSColor.textColor.withAlphaComponent(0.7)
+//            ]
+//            
+//            if !style.hasStrike {
+//                attributes.removeValue(forKey: .strikethroughStyle)
+//            }
+//            
+//            return attributes
+//            
+//        } else {
+//            return [:]
+//        }
         
-        let bodyDescriptor = NSFontDescriptor.preferredFontDescriptor(forTextStyle: .body)
-        
-        var contentFont: NSFont? {
-            if style.isMono {
-                return NSFont.monospacedSystemFont(ofSize: style.fontSize, weight: style.fontWeight)
-            } else if style.isItalic {
-                return NSFont(descriptor: bodyDescriptor.withSymbolicTraits(.italic), size: style.fontSize)
-            } else {
-                return NSFont.systemFont(ofSize: style.fontSize, weight: style.fontWeight)
-            }
-        }
-        
-        
-        if let font = contentFont {
-            var attributes: [NSAttributedString.Key: Any] = [
-                .font: font as Any,
-                .foregroundColor: style.foregroundColor.withAlphaComponent(style.foregroundOpacity),
-                .backgroundColor: style.backgroundColour.withAlphaComponent(style.backgroundOpacity),
-                .strikethroughStyle: NSUnderlineStyle.single.rawValue,
-                .strikethroughColor: NSColor.textColor.withAlphaComponent(0.7)
-            ]
-            
-            if !style.hasStrike {
-                attributes.removeValue(forKey: .strikethroughStyle)
-            }
-            
-            return attributes
-            
-        } else {
-            return [:]
-        }
-        
-    } // END set text style
+//    } // END set text style
     
     func assessSelectedRange(_ selectedRange: NSRange) {
         
@@ -101,14 +106,21 @@ class MarkdownEditor: NSTextView {
         
         let selectedRange = self.selectedRange()
         
+        var baseStyles: AttributeContainer {
+            var container = AttributeContainer()
+            container.font = Font.system(size: Styles.fontSize, weight: .medium)
+            return container
+        }
+        
         // MARK: - Set initial styles (First!)
-        let attributedString = NSMutableAttributedString(string: textStorage.string, attributes: [:])
+        var attributedString = AttributedString(textStorage.string, attributes: baseStyles)
         
         /// Default/base styles
-        let documentRange = NSRange(location: 0, length: attributedString.length)
-        let baseAttributes = setupStyle(for: MarkdownStyleAttributes())
-        attributedString.addAttributes(baseAttributes, range: documentRange)
-        textStorage.setAttributedString(attributedString)
+//        let documentRange = Range
+        
+        attributedString.setAttributes(baseStyles)
+        
+        textStorage.setAttributedString(NSAttributedString(attributedString))
         
         
         let syntaxList = MarkdownSyntax.allCases
@@ -116,7 +128,6 @@ class MarkdownEditor: NSTextView {
         for syntax in syntaxList {
             styleText(
                 for: syntax,
-                selectedRange: selectedRange,
                 withString: attributedString
             )
         }
@@ -130,8 +141,7 @@ class MarkdownEditor: NSTextView {
     
     func styleText(
         for syntax: MarkdownSyntax,
-        selectedRange: NSRange,
-        withString attributedString: NSMutableAttributedString
+        withString attributedString: AttributedString
     ) {
         guard let textStorage = self.textStorage else {
             print("Text storage not available for styling")
@@ -139,15 +149,14 @@ class MarkdownEditor: NSTextView {
         }
         
         let regexLiteral: Regex<(Substring, Substring)> = syntax.regex
-        let contentAttributes = setupStyle(for: syntax.contentAttributes)
-        let syntaxAttributes = setupStyle(for: syntax.syntaxAttributes)
+//        let contentAttributes = setupStyle(for: syntax.contentAttributes)
+//        let syntaxAttributes = setupStyle(for: syntax.syntaxAttributes)
         let syntaxCharacters: Int = syntax.syntaxCharacters
         let syntaxSymmetrical: Bool = syntax.syntaxSymmetrical
 //        let hideSyntax: Bool = syntax.hideSyntax
         
-        
-        
-        let string = attributedString.string
+        let nsAttributedString = NSMutableAttributedString(attributedString)
+        let string = nsAttributedString.string
         let matches = string.matches(of: regexLiteral)
         
         for match in matches {
@@ -158,54 +167,89 @@ class MarkdownEditor: NSTextView {
             
             /// Content range
             let contentLocation = max(0, range.location + syntaxCharacters)
+                let contentLength = min(range.length - (syntaxSymmetrical ? 2 : 1) * syntaxCharacters, nsAttributedString.length - contentLocation)
+                let contentRange = NSRange(location: contentLocation, length: contentLength)
             
-            let contentLength = min(range.length - (syntaxSymmetrical ? 2 : 1) * syntaxCharacters, attributedString.length - contentLocation)
-            
-            let contentRange = NSRange(location: contentLocation, length: contentLength)
-            
-            
-            
-            
-            /// Opening syntax range
-            let startSyntaxLocation = range.location
-            
-            let startSyntaxLength = min(syntaxCharacters, attributedString.length - startSyntaxLocation)
-            
-            let startSyntaxRange = NSRange(location: startSyntaxLocation, length: startSyntaxLength)
-            
-            
-            /// Closing syntax range
-            let endSyntaxLocation = max(0, range.location + range.length - syntaxCharacters)
-            
-            let endSyntaxLength = min(syntax == .codeBlock ? syntaxCharacters + 1 : syntaxCharacters, attributedString.length - endSyntaxLocation)
-            
-            let endSyntaxRange = NSRange(location: endSyntaxLocation, length: endSyntaxLength)
-            
-            /// Apply attributes
-            if attributedString.length >= startSyntaxRange.upperBound {
-                attributedString.addAttributes(syntaxAttributes, range: startSyntaxRange)
-            }
-            if attributedString.length >= endSyntaxRange.upperBound {
-                attributedString.addAttributes(syntaxAttributes, range: endSyntaxRange)
-            }
-            if attributedString.length >= contentRange.upperBound {
-                attributedString.addAttributes(contentAttributes, range: contentRange)
-            }
-            
-            if syntax == .codeBlock {
+            if nsAttributedString.length >= contentRange.upperBound {
                 
-                let highlightr = Highlightr()
-                highlightr?.setTheme(to: "paraiso-dark")
-                let code: String = String(match.output.1)
-                    // You can omit the second parameter to use automatic language detection.
-                let highlightedCode = highlightr?.highlight(code, as: "swift")
-                
-//                attributedString.addAttributes(syntaxAttributes, range: startSyntaxRange)
-                if let highlightedCode = highlightedCode {
-                    attributedString.replaceCharacters(in: contentRange, with: highlightedCode)
+                if let nsContentAttributes = try? Dictionary(syntax.contentAttributes, including: \.appKit) {
+                    nsAttributedString.addAttributes(nsContentAttributes, range: contentRange)
+                    
+                    print("\(nsContentAttributes)")
+                } else {
+                    print("Couldn't get the dictionary")
                 }
                 
             }
+//
+//            
+//            /// Opening syntax range
+//            let startSyntaxLocation = range.location
+//            
+//            let startSyntaxLength = min(syntaxCharacters, attributedString.length - startSyntaxLocation)
+//            
+//            let startSyntaxRange = NSRange(location: startSyntaxLocation, length: startSyntaxLength)
+//            
+//            
+//            /// Closing syntax range
+//            let endSyntaxLocation = max(0, range.location + range.length - syntaxCharacters)
+//            
+//            let endSyntaxLength = min(syntax == .codeBlock ? syntaxCharacters + 1 : syntaxCharacters, attributedString.length - endSyntaxLocation)
+//            
+//            let endSyntaxRange = NSRange(location: endSyntaxLocation, length: endSyntaxLength)
+//            
+//            /// Apply attributes
+//            if attributedString.length >= startSyntaxRange.upperBound {
+//                attributedString.addAttributes(syntaxAttributes, range: startSyntaxRange)
+//            }
+//            if attributedString.length >= endSyntaxRange.upperBound {
+//                attributedString.addAttributes(syntaxAttributes, range: endSyntaxRange)
+//            }
+//            if attributedString.length >= contentRange.upperBound {
+//                attributedString.addAttributes(contentAttributes, range: contentRange)
+//            }
+            
+            if syntax == .codeBlock {
+                
+//                let highlight = Highlight(cacheLimit: 50)
+//                Task {
+//                    let code: String = String(match.output.1)
+//                    let highlightedCode = try await highlight.attributed(code, language: "swift")
+//                    
+//                    
+//                    attributedString.replaceCharacters(in: contentRange, with: highlightedCode)
+//                }
+//                
+//                let highlight = Highlight()
+//
+//                let code: String = String(match.output.1)
+//                    
+//                Task {
+//                    do {
+//                        let highlightedCode = try await highlight.attributed(code)
+//                        attributedString.replaceCharacters(in: contentRange, with: highlightedCode)
+//                    } catch {
+//                        
+//                    }
+//                }
+//                
+////                attributedString.addAttributes(syntaxAttributes, range: startSyntaxRange)
+//                if let highlightedCode = highlightedCode {
+//                    
+//                }
+//                
+//                let highlightr = Highlightr()
+//                highlightr?.setTheme(to: "xcode-dark-butts")
+//                let code: String = String(match.output.1)
+//                    
+//                let highlightedCode = highlightr?.highlight(code, as: "swift")
+//                
+////                attributedString.addAttributes(syntaxAttributes, range: startSyntaxRange)
+//                if let highlightedCode = highlightedCode {
+//                    attributedString.replaceCharacters(in: contentRange, with: highlightedCode)
+//                }
+                
+            } // end code block check
             
             
             print("\n\n")
@@ -213,7 +257,7 @@ class MarkdownEditor: NSTextView {
         
         
         
-        textStorage.setAttributedString(attributedString)
+        textStorage.setAttributedString(nsAttributedString)
         
     } // END style text
     

@@ -116,48 +116,66 @@ enum MarkdownSyntax: String, CaseIterable {
         default: MarkdownDefaults.fontSize
         }
     }
+    var foreGroundColor: Color {
+        switch self {
+        case .inlineCode, .codeBlock:
+            .eggplant
+        default:
+            .primary
+        }
+    }
     
-    var contentAttributes: MarkdownStyleAttributes {
+    var contentAttributes: AttributeContainer {
         switch self {
         case .h1:
-            MarkdownStyleAttributes(
-                fontSize: self.fontSize
-            )
+            var container = AttributeContainer()
+            container.font = Font.system(size: self.fontSize, weight: .medium)
+            container.foregroundColor = self.foreGroundColor
+            return container
             
         case .h2:
-            MarkdownStyleAttributes(
-                fontSize: self.fontSize
-            )
+            var container = AttributeContainer()
+            container.font = Font.system(size: self.fontSize, weight: .medium)
+            container.foregroundColor = self.foreGroundColor
+            return container
             
         case .h3:
-            MarkdownStyleAttributes(
-                fontSize: self.fontSize,
-                fontWeight: .medium
-            )
+            var container = AttributeContainer()
+            container.font = Font.system(size: self.fontSize, weight: .medium)
+            container.foregroundColor = self.foreGroundColor
+            return container
             
         case .bold:
-            MarkdownStyleAttributes(
-                fontWeight: .bold
-            )
+            var container = AttributeContainer()
+            container.font = Font.system(size: self.fontSize, weight: .bold)
+            container.foregroundColor = self.foreGroundColor
+            return container
+            
         case .italic:
-            MarkdownStyleAttributes(isItalic: true)
+            var container = AttributeContainer()
+            container.font = Font.system(size: self.fontSize, weight: .medium).italic()
+            container.foregroundColor = self.foreGroundColor
+            return container
             
         case .boldItalic:
-            MarkdownStyleAttributes(
-                fontWeight: .bold,
-                isItalic: true
-            )
+            var container = AttributeContainer()
+            container.font = Font.system(size: self.fontSize, weight: .bold).italic()
+            container.foregroundColor = self.foreGroundColor
+            return container
+            
         case .strikethrough:
-            MarkdownStyleAttributes(hasStrike: true)
+            var container = AttributeContainer()
+            container.font = Font.system(size: self.fontSize, weight: .medium)
+            container.strikethroughStyle = .single
+            container.foregroundColor = self.foreGroundColor
+            return container
             
         case .inlineCode, .codeBlock:
-            MarkdownStyleAttributes(
-                fontSize: self.fontSize,
-                fontWeight: .medium,
-                isMono: true,
-                foregroundColor: .eggplant,
-                backgroundColour: .white
-            )
+            var container = AttributeContainer()
+            container.font = Font.system(size: self.fontSize, weight: .medium)
+            container.foregroundColor = self.foreGroundColor
+            container.backgroundColor = .white.opacity(0.15)
+            return container
             
         }
     } // END content attributes
@@ -195,6 +213,12 @@ enum MarkdownSyntax: String, CaseIterable {
     }
 }
 
+//enum MarkdownAttribute {
+//    case fontSize
+//    case fontWeight
+//    
+//    
+//}
 
 struct MarkdownStyleAttributes {
     var fontSize: Double = MarkdownDefaults.fontSize

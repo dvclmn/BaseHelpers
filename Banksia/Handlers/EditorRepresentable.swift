@@ -30,6 +30,7 @@ struct EditorRepresentable: NSViewRepresentable {
     
     func makeNSView(context: Context) -> MarkdownEditor {
         
+        
         /// Nothing in here seems to be causing the jumping to bottom whilst typing. Probably because this doesn't change when the view updates, it just sets it up
         let textView = MarkdownEditor()
         textView.delegate = context.coordinator
@@ -40,6 +41,8 @@ struct EditorRepresentable: NSViewRepresentable {
         textView.allowsUndo = true
         textView.setNeedsDisplay(textView.bounds)
         textView.applyStyles()
+        
+
         
         return textView
     }
@@ -80,12 +83,12 @@ struct EditorRepresentable: NSViewRepresentable {
         func textViewDidChangeSelection(_ notification: Notification) {
             guard let textView = notification.object as? MarkdownEditor else { return }
             
-            DispatchQueue.main.async {
-                let selectedRange = textView.selectedRange
-                textView.assessSelectedRange(selectedRange)
-
+//            DispatchQueue.main.async {
+//                let selectedRange = textView.selectedRange
+//                textView.assessSelectedRange(selectedRange)
+//
 //                print("Selected Range:\nLocation: \(selectedRange.location)\nLength: \(selectedRange.length)\n\n")
-            }
+//            }
             
         } // END changed selection
 
