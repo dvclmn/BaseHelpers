@@ -105,9 +105,14 @@ class MarkdownEditor: NSTextView {
         
         let selectedRange = self.selectedRange()
         
-        var baseStyles: [NSAttributedString.Key : Any] = [
+        let globalParagraphStyles = NSMutableParagraphStyle()
+        globalParagraphStyles.lineSpacing = 3.5
+        globalParagraphStyles.paragraphSpacing = 14
+        
+        let baseStyles: [NSAttributedString.Key : Any] = [
             .font: NSFont.systemFont(ofSize: Styles.fontSize, weight: .medium),
-            .foregroundColor: NSColor.textColor.withAlphaComponent(0.85)
+            .foregroundColor: NSColor.textColor.withAlphaComponent(0.85),
+            .paragraphStyle: globalParagraphStyles
         ]
         
         // MARK: - Set initial styles (First!)
@@ -128,8 +133,6 @@ class MarkdownEditor: NSTextView {
                 withString: attributedString
             )
         }
-        
-        
         
         self.setSelectedRange(selectedRange)
     }
@@ -166,99 +169,121 @@ class MarkdownEditor: NSTextView {
             let contentLength = min(range.length - (syntaxSymmetrical ? 2 : 1) * syntaxCharacters, attributedString.length - contentLocation)
             let contentRange = NSRange(location: contentLocation, length: contentLength)
             
-            
             /// Opening syntax range
             let startSyntaxLocation = range.location
-            
             let startSyntaxLength = min(syntaxCharacters, attributedString.length - startSyntaxLocation)
-            
             let startSyntaxRange = NSRange(location: startSyntaxLocation, length: startSyntaxLength)
-            
             
             /// Closing syntax range
             let endSyntaxLocation = max(0, range.location + range.length - syntaxCharacters)
-            
             let endSyntaxLength = min(syntax == .codeBlock ? syntaxCharacters + 1 : syntaxCharacters, attributedString.length - endSyntaxLocation)
-            
             let endSyntaxRange = NSRange(location: endSyntaxLocation, length: endSyntaxLength)
+            
+            /// Paragraph range
+            let paragraphLocation = max(0, range.location)
+            let paragraphLength = min(range.length, attributedString.length)
+            let paragraphRange = NSRange(location: paragraphLocation, length: paragraphLength)
             
             /// Apply attributes
             if attributedString.length >= startSyntaxRange.upperBound {
                 attributedString.addAttributes(syntax.syntaxAttributes, range: startSyntaxRange)
             }
+            
             if attributedString.length >= endSyntaxRange.upperBound {
                 attributedString.addAttributes(syntax.syntaxAttributes, range: endSyntaxRange)
             }
+            
             if attributedString.length >= contentRange.upperBound {
+                
                 attributedString.addAttributes(syntax.contentAttributes, range: contentRange)
             }
             
-            
-            if syntax == .codeBlock {
-                let selectedRange = self.selectedRange()
+            if attributedString.length >= paragraphRange.upperBound {
+
+                let paragraphStyles = NSMutableParagraphStyle()
                 
-                //                let highlight = Highlight(cacheLimit: 50)
-                //                Task {
-                //                    let code: String = String(match.output.1)
-                //                    let highlightedCode = try await highlight.attributed(code, language: "swift")
-                //
-                //
-                //                    attributedString.replaceCharacters(in: contentRange, with: highlightedCode)
-                //                }
-                //
-                //                let highlight = Highlight()
-                //
-                //                let code: String = String(match.output.1)
-                //
-                //                Task {
-                //                    do {
-                //                        let highlightedCode = try await highlight.attributed(code)
-                //                        attributedString.replaceCharacters(in: contentRange, with: highlightedCode)
-                //                    } catch {
-                //
-                //                    }
-                //                }
-                //
-                
-                let highlightr = Highlightr()
-                highlightr?.setTheme(to: "atom-one-dark")
-                
-                let codeLanguageRegex = /(?m)^```(swift|python)?\n([\s\S]*?)```/
-                let codeLanguageMatches = string.matches(of: codeLanguageRegex)
-                
-                var language: String = ""
-//                
-                for languageMatch in codeLanguageMatches {
-                    language = String(languageMatch.output.1 ?? "plain")
+                switch syntax {
+                case .h1:
+                    paragraphStyles.lineSpacing = 1
+//                    paragraphStyles.headIndent = 26
+                    paragraphStyles.paragraphSpacing = 12
+                case .h2:
+                    paragraphStyles.paragraphSpacing = 10
+                case .h3:
+                    paragraphStyles.paragraphSpacing = 10
+//                case .bold:
+//                    <#code#>
+//                case .italic:
+//                    <#code#>
+//                case .boldItalic:
+//                    <#code#>
+//                case .strikethrough:
+//                    <#code#>
+//                case .inlineCode:
+//                    <#code#>
+                case .codeBlock:
+                    paragraphStyles.lineSpacing = 4
+                    paragraphStyles.paragraphSpacing = 0
+                default:
+                    paragraphStyles.lineSpacing = 3.5
                 }
-
-//                let languages: [String] = ["python", "swift", "plain"]
-//                let randomLanguage = languages.randomElement()
                 
+                let paragraphAttributes: [NSMutableAttributedString.Key : Any] = [
+                    .paragraphStyle: paragraphStyles
+                ]
                 
-                let code: String = String(match.output.1)
+                attributedString.addAttributes(paragraphAttributes, range: paragraphRange)
                 
-//                highlightr?.themeChanged = .some({ theme in
-//                    print(theme.codeFont.boundingRectForFont.size.height)
-//                })
-                
-
-                let highlightedCode = highlightr?.highlight(code, as: language)
-                
-                
-                //                attributedString.addAttributes(syntaxAttributes, range: startSyntaxRange)
-                
-                
-                
-                if let highlightedCode = highlightedCode {
+                if syntax == .codeBlock {
                     
-                    attributedString.replaceCharacters(in: contentRange, with: highlightedCode)
-                }
+                    
+                    
+                } // end code block check
+                
+            } // END paragraph styles
+            
+            
+            
+                
+//                let highlightr = Highlightr()
+//                highlightr?.setTheme(to: "atom-one-dark")
+//                
+//                let codeLanguageRegex = /(?m)^```(swift|python)?\n([\s\S]*?)```/
+//                let codeLanguageMatches = string.matches(of: codeLanguageRegex)
+//                
+//                var language: String = ""
+////                
+//                for languageMatch in codeLanguageMatches {
+//                    language = String(languageMatch.output.1 ?? "plain")
+//                }
+//
+////                let languages: [String] = ["python", "swift", "plain"]
+////                let randomLanguage = languages.randomElement()
+//                
+//                
+//                let code: String = String(match.output.1)
+//                
+////                highlightr?.themeChanged = .some({ theme in
+////                    print(theme.codeFont.boundingRectForFont.size.height)
+////                })
+//                
+//
+//                let highlightedCode = highlightr?.highlight(code, as: language)
+//                
+//                
+//                //                attributedString.addAttributes(syntaxAttributes, range: startSyntaxRange)
+//                
+//                
+//                
+//                if let highlightedCode = highlightedCode {
+//                    
+//                    attributedString.replaceCharacters(in: contentRange, with: highlightedCode)
+//                }
+//                
+//                
                 
                 
-                self.setSelectedRange(selectedRange)
-                
-            } // end code block check
+            
             
             
             print("\n\n")

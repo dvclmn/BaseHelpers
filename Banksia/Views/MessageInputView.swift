@@ -80,6 +80,7 @@ struct MessageInputView: View {
                     editorHeight = nil
                 }
                 .background(.plum)
+                
                 .overlay(alignment: .top) {
                     GeometryReader { geo in
                         //                            HStack {

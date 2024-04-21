@@ -20,13 +20,15 @@ struct ExampleText {
     
     static let basicMarkdown: String = """
         # This is the beginning of a really long heading so i can see what it does
-
+        ## Second heading
+        ### Third heading yay
         I will build a library of `Message` objects, as `[String]`, and can ~~you write~~ me up a *function* that simply selects one of the **paragraphs** (i.e. items in the array), and returns it? Also, we need some ***extra emphasis*** on this text.
-        
         ```
         let highlightr = Highlightr()
         highlightr?.setTheme(to: "xcode-dark-butts")
         ```
+        ## And then this heading
+        And some more words here. If you would like to contribute to the development of Highlightr, please follow the guidelines outlined in the CONTRIBUTING.md file in the GitHub repository.
 
         ```swift
         # Python program to find the sum of natural using recursive function

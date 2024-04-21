@@ -31,11 +31,11 @@ enum MarkdownSyntax: String, CaseIterable {
     var regex: Regex<(Substring, Substring)> {
         switch self {
         case .h1:
-            return /#(.*)/
+            return /# (.*)/
         case .h2:
-            return /##(.*)/
+            return /## (.*)/
         case .h3:
-            return /###(.*)/
+            return /### (.*)/
         case .bold:
             return /\*\*(.*?)\*\*/
         case .italic:
@@ -116,40 +116,41 @@ enum MarkdownSyntax: String, CaseIterable {
         default: MarkdownDefaults.fontSize
         }
     }
-    var foreGroundColor: Color {
+    var foreGroundColor: NSColor {
         switch self {
         case .inlineCode, .codeBlock:
                 .eggplant
         default:
-                .primary
+                .textColor.withAlphaComponent(0.85)
         }
     }
     
     var contentAttributes: [NSAttributedString.Key : Any] {
+
         switch self {
         case .h1:
             return [
                 .font: NSFont.systemFont(ofSize: self.fontSize, weight: .medium),
-                .foregroundColor: NSColor.textColor
+                .foregroundColor: self.foreGroundColor
             ]
             
         case .h2:
             
             return [
                 .font: NSFont.systemFont(ofSize: self.fontSize, weight: .medium),
-                .foregroundColor: NSColor.textColor
+                .foregroundColor: self.foreGroundColor
             ]
             
         case .h3:
             return [
                 .font: NSFont.systemFont(ofSize: self.fontSize, weight: .medium),
-                .foregroundColor: NSColor.textColor
+                .foregroundColor: self.foreGroundColor
             ]
             
         case .bold:
             return [
                 .font: NSFont.systemFont(ofSize: self.fontSize, weight: .bold),
-                .foregroundColor: NSColor.textColor
+                .foregroundColor: self.foreGroundColor
             ]
             
         case .italic:
@@ -157,7 +158,7 @@ enum MarkdownSyntax: String, CaseIterable {
             let font = NSFont(descriptor: bodyDescriptor.withSymbolicTraits(.italic), size: self.fontSize)
             return [
                 .font: font as Any,
-                .foregroundColor: NSColor.textColor
+                .foregroundColor: self.foreGroundColor
             ]
             
         case .boldItalic:
@@ -165,20 +166,20 @@ enum MarkdownSyntax: String, CaseIterable {
             let font = NSFont(descriptor: bodyDescriptor.withSymbolicTraits([.italic, .bold]), size: self.fontSize)
             return [
                 .font: font as Any,
-                .foregroundColor: NSColor.textColor
+                .foregroundColor: self.foreGroundColor
             ]
             
         case .strikethrough:
             return [
                 .font: NSFont.systemFont(ofSize: self.fontSize, weight: .medium),
-                .foregroundColor: NSColor.textColor,
+                .foregroundColor: self.foreGroundColor,
                 .strikethroughStyle: NSUnderlineStyle.single.rawValue
             ]
             
         case .inlineCode, .codeBlock:
             return [
                 .font: NSFont.monospacedSystemFont(ofSize: self.fontSize, weight: .medium),
-                .foregroundColor: NSColor.eggplant,
+                .foregroundColor: self.foreGroundColor,
                 .backgroundColor: NSColor.white.withAlphaComponent(Styles.backgroundAlpha)
             ]
         }
@@ -189,29 +190,29 @@ enum MarkdownSyntax: String, CaseIterable {
         case .h1:
             
             return [
-                .font: NSFont.systemFont(ofSize: self.fontSize, weight: .light),
+                .font: NSFont.monospacedSystemFont(ofSize: self.fontSize, weight: .light),
                 .foregroundColor: NSColor.textColor.withAlphaComponent(Styles.syntaxAlpha)
             ]
         case .h2:
             return [
-                .font: NSFont.systemFont(ofSize: self.fontSize, weight: .light),
+                .font: NSFont.monospacedSystemFont(ofSize: self.fontSize, weight: .light),
                 .foregroundColor: NSColor.textColor.withAlphaComponent(Styles.syntaxAlpha)
             ]
         case .h3:
             return [
-                .font: NSFont.systemFont(ofSize: self.fontSize, weight: .light),
+                .font: NSFont.monospacedSystemFont(ofSize: self.fontSize, weight: .light),
                 .foregroundColor: NSColor.textColor.withAlphaComponent(Styles.syntaxAlpha)
             ]
         case .bold, .italic, .boldItalic, .strikethrough:
             return [
-                .font: NSFont.systemFont(ofSize: self.fontSize, weight: .regular),
+                .font: NSFont.monospacedSystemFont(ofSize: self.fontSize, weight: .regular),
                 .foregroundColor: NSColor.textColor.withAlphaComponent(Styles.syntaxAlpha)
             ]
         case.inlineCode, .codeBlock:
             return [
-                .font: NSFont.systemFont(ofSize: self.fontSize, weight: .regular),
+                .font: NSFont.monospacedSystemFont(ofSize: self.fontSize, weight: .regular),
                 .foregroundColor: NSColor.textColor.withAlphaComponent(Styles.syntaxAlpha),
-//                .backgroundColor: NSColor.white.withAlphaComponent(Styles.backgroundAlpha)
+                .backgroundColor: NSColor.white.withAlphaComponent(Styles.backgroundAlpha)
             ]
             
         }

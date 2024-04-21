@@ -24,6 +24,7 @@ extension Styles {
     static let paddingText:             Double = 24
     
     static let fontSize:                Double = 15
+    static let headerSyntaxSize:        Double = 20
     static let fontSizeMono:            Double = 14
     static let syntaxAlpha:             Double = 0.3
     static let backgroundAlpha:         Double = 0.06
