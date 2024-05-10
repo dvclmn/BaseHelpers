@@ -32,8 +32,6 @@ struct MessageInputView: View {
     
     
     @State private var trackedEditorHeight: Double = 0
-    @GestureState private var dragState = CGSize.zero
-    
     
     @FocusState private var isFocused
     
@@ -116,7 +114,7 @@ struct MessageInputView: View {
                                 )
                                 
                             ) // END exclusive gesture
-                            .cursor(.resizeUpDown)
+//                            .cursor(.resizeUpDown)
                             .onHover { hovering in
                                 withAnimation(Styles.animation) {
                                     isHoveringHeightAdjustor = hovering
