@@ -8,6 +8,7 @@
 import SwiftUI
 import Styles
 import Utilities
+import Components
 
 struct GlobalConversationSettingsView: View {
     @EnvironmentObject var pref: Preferences

@@ -24,7 +24,6 @@ class BanksiaHandler {
     var isConversationEditorShowing: Bool = false
     var isGlobalConversationPreferencesShowing: Bool = false
     var isEditingLongFormText: Bool = false
-    
 
 }
 

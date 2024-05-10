@@ -109,7 +109,7 @@ struct QuickNavView: View {
                 .frame(maxWidth: 400)
                 .padding()
                 .background(.contentBackground)
-                .clipShape(RoundedRectangle(cornerRadius: Rounding.medium.value))
+                .clipShape(RoundedRectangle(cornerRadius: Styles.roundingMedium))
                 .padding(.top, 80)
                 
                 Spacer()
