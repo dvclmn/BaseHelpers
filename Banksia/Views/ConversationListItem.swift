@@ -21,14 +21,6 @@ struct ConversationListItem: View {
     @Bindable var conversation: Conversation
     var body: some View {
         NavigationLink(value: conversation) {
-            Button {
-                iconPickerShowing.toggle()
-            } label: {
-                Label("Pick icon", systemImage: Icons.message.icon)
-            }
-            .popover(isPresented: $iconPickerShowing, content: {
-                IconPickerView(conversation: conversation)
-            })
             TextField("Conversation name", text: $conversation.name)
                 .focused($isFieldFocused)
                 .onChange(of: isFieldFocused) {

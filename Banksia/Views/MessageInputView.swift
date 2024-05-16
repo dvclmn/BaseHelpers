@@ -9,6 +9,8 @@ import SwiftUI
 import SwiftData
 import Styles
 import Utilities
+import Modifiers
+import Swatches
 
 struct MessageInputView: View {
     @Environment(ConversationHandler.self) private var conv
@@ -77,7 +79,7 @@ struct MessageInputView: View {
                     isFocused = !conv.isResponseLoading
                     editorHeight = nil
                 }
-                .background(.plum)
+                .background(Swatch.slate.colour)
                 
                 .overlay(alignment: .top) {
                     GeometryReader { geo in
@@ -161,7 +163,7 @@ struct MessageInputView: View {
                 .padding(.top, 12)
                 .padding(.bottom, 14)
                 .background(.ultraThinMaterial)
-                .grainOverlay(opacity: 0.4)
+//                .grainOverlay(opacity: 0.4)
             }
             
             

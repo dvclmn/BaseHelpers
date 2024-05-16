@@ -14,6 +14,7 @@
 		F639D8C52BD517AF0035226E /* xcode.min.css in Resources */ = {isa = PBXBuildFile; fileRef = F639D8C42BD517AF0035226E /* xcode.min.css */; };
 		F639D8C82BD518330035226E /* Highlightr in Frameworks */ = {isa = PBXBuildFile; productRef = F639D8C72BD518330035226E /* Highlightr */; };
 		F639D8CA2BD51B2A0035226E /* CodeSyntaxTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = F639D8C92BD51B2A0035226E /* CodeSyntaxTheme.swift */; };
+		F644B17D2BF276F70098FDCF /* Utilities in Frameworks */ = {isa = PBXBuildFile; productRef = F644B17C2BF276F70098FDCF /* Utilities */; };
 		F64F8E032B02136D00C72E51 /* ModelContainerPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = F64F8E022B02136D00C72E51 /* ModelContainerPreview.swift */; };
 		F64F8E082B02140F00C72E51 /* SampleData+Conversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F64F8E072B02140F00C72E51 /* SampleData+Conversation.swift */; };
 		F64F8E0C2B0214A000C72E51 /* SampleData+Messages.swift in Sources */ = {isa = PBXBuildFile; fileRef = F64F8E0B2B0214A000C72E51 /* SampleData+Messages.swift */; };
@@ -105,6 +106,7 @@
 				F6C2450A2BEE50CF002AEE3D /* Popup in Frameworks */,
 				F6C245082BEE50CF002AEE3D /* KeychainHandler in Frameworks */,
 				F6C245062BEE50CF002AEE3D /* Grainient in Frameworks */,
+				F644B17D2BF276F70098FDCF /* Utilities in Frameworks */,
 				F6C2450C2BEE50CF002AEE3D /* StyleLibrary in Frameworks */,
 				F639D8C82BD518330035226E /* Highlightr in Frameworks */,
 			);
@@ -256,6 +258,7 @@
 				F6C245072BEE50CF002AEE3D /* KeychainHandler */,
 				F6C245092BEE50CF002AEE3D /* Popup */,
 				F6C2450B2BEE50CF002AEE3D /* StyleLibrary */,
+				F644B17C2BF276F70098FDCF /* Utilities */,
 			);
 			productName = Banksia;
 			productReference = F6A7BEE72B01C57400D3CE25 /* Banksia.app */;
@@ -417,7 +420,7 @@
 				SDKROOT = macosx;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_STRICT_CONCURRENCY = targeted;
 			};
 			name = Debug;
 		};
@@ -474,7 +477,7 @@
 				MTL_FAST_MATH = YES;
 				SDKROOT = macosx;
 				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_STRICT_CONCURRENCY = targeted;
 			};
 			name = Release;
 		};
@@ -606,6 +609,10 @@
 		F639D8C72BD518330035226E /* Highlightr */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Highlightr;
+		};
+		F644B17C2BF276F70098FDCF /* Utilities */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Utilities;
 		};
 		F6C245052BEE50CF002AEE3D /* Grainient */ = {
 			isa = XCSwiftPackageProductDependency;

@@ -9,6 +9,7 @@ import SwiftUI
 import Styles
 import Utilities
 import Components
+import BaseUIElement
 
 struct GlobalConversationSettingsView: View {
     @EnvironmentObject var pref: Preferences
@@ -43,7 +44,7 @@ struct GlobalConversationSettingsView: View {
                                 } label: {
                                     Label("Expand", systemImage: Icons.expand.icon)
                                 }
-                                .labelBackground()
+                                .buttonStyle(.customButton())
 
                             }
                         }
