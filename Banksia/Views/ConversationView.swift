@@ -8,17 +8,18 @@
 import SwiftUI
 import SwiftData
 import Styles
+import Utilities
 
 struct ConversationView: View {
     @Environment(BanksiaHandler.self) private var bk
     @Environment(ConversationHandler.self) private var conv
+    @EnvironmentObject var pref: Preferences
     @Environment(\.modelContext) private var modelContext
+    
     
     @Query private var messages: [Message]
     
     var conversation: Conversation
-    
-    //    @State private var messageID: Message.ID?
     
     init(filter: Predicate<Message>? = nil, conversation: Conversation) {
         self.conversation = conversation
@@ -30,113 +31,72 @@ struct ConversationView: View {
         }
     }
     
-    
     var body: some View {
         
         @Bindable var conv = conv
         @Bindable var bk = bk
         
-        
-        VStack(spacing: 0) {
-            if let conversationMessages = conversation.messages {
-                
-                var searchResults: [Message] {
-                    conversationMessages.filter { message in
-                        if conv.searchText.count > 1 {
-                            return message.content.localizedCaseInsensitiveContains(conv.searchText)
-                        } else {
-                            return true
-                        }
+        if let conversationMessages = conversation.messages {
+            
+            var searchResults: [Message] {
+                conversationMessages.filter { message in
+                    if conv.searchText.count > 1 {
+                        return message.content.localizedCaseInsensitiveContains(conv.searchText)
+                    } else {
+                        return true
                     }
-                }
-                
-                
-                
-                ScrollView(.vertical) {
-                    LazyVStack(spacing: 12) {
-                        ForEach(searchResults.sorted(by: { $0.timestamp < $1.timestamp }), id: \.timestamp) { message in
-                            
-                            SingleMessageView(message: message)
-                            
-                            //                                        .onChange(of: messages.count) {
-                            //                                            withAnimation(Styles.animation){
-                            //                                                scrollProxy.scrollTo("bottom")
-                            //                                            }
-                            //                                        }
-                        } // END ForEach
-                        
-                    } // END lazy vstack
-                    .scrollTargetLayout()
-                    //                            .padding()
-                    
-                } // END scrollview
-                .searchable(text: $conv.searchText, isPresented: $conv.isSearching, prompt: Text("Search messages"))
-                //                                        .scrollPosition(id: message.timestamp)
-                .defaultScrollAnchor(.bottom)
-                
-                //                        .defaultScrollAnchor(.top)
-                
-                
-                .overlay(alignment: .bottom) {
-                    HStack {
-                        
-                        //                                Button("Up") {
-                        //                                    scrollToPreviousID()
-                        //                                }
-                        //
-                        //                                Button("Down") {
-                        //                                    scrollToNextID()
-                        //                                }
-                        
-                        Spacer()
-                        
-                        //                                Button {
-                        //                                    withAnimation(Styles.animation){
-                        //                                        scrollProxy.scrollTo("bottom")
-                        //                                    }
-                        //                                } label: {
-                        //                                    Label("Scroll to bottom", systemImage: Icons.arrowDown.icon)
-                        //                                        .labelStyle(.iconOnly)
-                        //                                }
-                        
-                    }
-                    .padding()
-                } // END overlay
-                
-                
-                .cursor(.arrow)
-                //                    .onAppear {
-                //                        messageID = messages[2].id
-                //                    }
-                
-                
-            } else {
-                Text("No messages yet")
-            } // END messages check
-            
-            
-            MessageInputView(conversation: conversation)
-            
-                
-            
-        } // END Vstack
-        .toolbar {
-            ToolbarItem {
-                Button {
-                    bk.isConversationEditorShowing.toggle()
-                } label: {
-                    Label("Edit conversation prompt", systemImage: Icons.edit.icon)
                 }
             }
-        }
-        .sheet(isPresented: $bk.isConversationEditorShowing) {
             
-            ConversationEditorView(conversation: conversation)
+            ScrollView(.vertical) {
+                LazyVStack(spacing: 12) {
+                    ForEach(searchResults.sorted(by: { $0.timestamp < $1.timestamp }), id: \.timestamp) { message in
+                        
+                        SingleMessageView(message: message)
+
+                    } // END ForEach
+//                    Text("End of messages")
+                } // END lazy vstack
+                .scrollTargetLayout()
+                .padding(.bottom, 80)
+            } // END scrollview
+            .safeAreaPadding(.bottom, conv.editorHeight + 30)
+//            .searchable(text: $conv.searchText, isPresented: $conv.isSearching, prompt: Text("Search messages"))
+            //                                        .scrollPosition(id: message.timestamp)
+            .defaultScrollAnchor(.bottom)
+
+            .overlay(alignment: .bottom) {
+                MessageInputView(
+                    conversation: conversation
+                )
+            }
+            .sheet(isPresented: $bk.isConversationEditorShowing) {
+                
+                ConversationEditorView(conversation: conversation)
+                
+            }
+//            .onAppear {
+//                if isPreview {
+//                    editorHeight = 100
+//                }
+//            }
             
-        }
+            
+        } else {
+            Text("No messages yet")
+        } // END messages check
+        //        .toolbar {
+        //            ToolbarItem {
+        //                Button {
+        //                    bk.isConversationEditorShowing.toggle()
+        //                } label: {
+        //                    Label("Edit conversation prompt", systemImage: Icons.edit.icon)
+        //                }
+        //            }
+        //        }
         
         
-    }
+    } // END view body
     
     //    private func scrollToNextID() {
     //        print("Let's scroll to next")

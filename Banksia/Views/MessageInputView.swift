@@ -20,7 +20,7 @@ struct MessageInputView: View {
     
     @SceneStorage("userPrompt") var userPrompt: String = ""
     
-    @SceneStorage("editorHeight") var editorHeight: Double?
+    
     
     @SceneStorage("isTesting") var isTesting: Bool = true
     
@@ -28,58 +28,35 @@ struct MessageInputView: View {
     
     
     let minInputHeight: Double = 200
-    let maxInputHeight: Double = 800
+    let maxInputHeight: Double = 500
     
     let inputHeightControlSize: Double = 12
-    
-    
-    @State private var trackedEditorHeight: Double = 0
     
     @FocusState private var isFocused
     
     var conversation: Conversation
-    
+
     var body: some View {
         
         @Bindable var conv = conv
         
         VStack(spacing: 0) {
             
-            
-            
             VStack(alignment: .leading, spacing: 0) {
                 
-                //                TextEditor(text: $userPrompt)
                 ScrollView(.vertical) {
                     EditorRepresentable(text: $userPrompt)
                         .frame(minHeight: minInputHeight, maxHeight: .infinity)
-//                        .border(Color.green.opacity(0.2))
-//                        .focused($isFocused)
+
                 }
-                .frame(minHeight: editorHeight ?? minInputHeight, maxHeight: editorHeight ?? maxInputHeight)
-                //                .mask {
-                //                    VStack {
-                //                        Color.clear
-                //                            .frame(height:10)
-                //                        SmoothLinearGradient(
-                //                            from: .clear,
-                //                            to: .black,
-                //                            startPoint: .top,
-                //                            endPoint: UnitPoint(x: 0.5, y: 0.1)
-                //                        )
-                //                    }
-                //                }
-                //                    .fixedSize(horizontal: false, vertical: true)
-//                .background(isTesting ? .purple.opacity(0.02) : .black.opacity(0.3))
+                .frame(minHeight: conv.editorHeight, maxHeight: conv.editorHeight)
                 .padding(.top, 18 + inputHeightControlSize)
                 .padding(.horizontal, Styles.paddingText)
                 .scrollContentBackground(.hidden)
-//                .scrollIndicators(.hidden)
                 .onChange(of: conv.isResponseLoading) {
                     isFocused = !conv.isResponseLoading
-                    editorHeight = nil
+//                    editorHeight = nil
                 }
-//                .background(Swatch.slate.colour)
                 .background(.thinMaterial)
                 .overlay(alignment: .top) {
                     GeometryReader { geo in
@@ -87,30 +64,30 @@ struct MessageInputView: View {
                         //                                Text("\(geo.size.height)")
                         //                                Text("Tracked height: \(trackedEditorHeight)")
                         //                            }
-                        Color(.blue.opacity(0.1))
+                        Color(.white.opacity(0.02))
                         //                            .overlay {
                         //                                Color(.white.opacity(isHoveringHeightAdjustor ? 0.2 : 0.1))
                         //                                .frame(height: isHoveringHeightAdjustor ? 12 : 2)
                         //                            }
-                            .frame(height:inputHeightControlSize)
+                            .frame(height: inputHeightControlSize)
                             .contentShape(Rectangle())
-                            .border(Color.green.opacity(0.2))
+//                            .border(Color.green.opacity(0.2))
                             .gesture(
                                 ExclusiveGesture(
                                     TapGesture(count: 2)
                                         .onEnded {
-                                            editorHeight = nil
+                                            pref.editorHeight = conv.editorHeight
+//                                            editorHeight = nil
                                         }
                                     ,
                                     DragGesture(minimumDistance: 0)
                                     
-                                    
                                         .onChanged { gesture in
                                             
-                                            editorHeight = trackedEditorHeight
+//                                            editorHeight = trackedEditorHeight
                                             
-                                            editorHeight? += gesture.translation.height * -1
-                                            editorHeight = min(max(editorHeight ?? 0, minInputHeight), maxInputHeight)
+                                            conv.editorHeight += gesture.translation.height * -1
+                                            conv.editorHeight = min(max(conv.editorHeight, minInputHeight), maxInputHeight)
                                             
                                         }
                                 )
@@ -122,9 +99,7 @@ struct MessageInputView: View {
                                     isHoveringHeightAdjustor = hovering
                                 }
                             }
-                            .task(id: geo.size.height) {
-                                trackedEditorHeight = geo.size.height
-                            }
+
                     } // END geo
                     
                 }

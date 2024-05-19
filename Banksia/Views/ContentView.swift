@@ -30,7 +30,6 @@ struct ContentView: View {
         } content: {
             ZStack {
                 
-                
                 if let currentConversation = conversations.first(where: {$0.id == bk.selectedConversation}) {
                     
                     @Bindable var currentConversation = currentConversation
@@ -44,8 +43,6 @@ struct ContentView: View {
                     QuickNavView()
                 }
                 
-                
-                
             }
 //            .onAppear {
 //                if isPreview {
@@ -54,19 +51,6 @@ struct ContentView: View {
 //            }
         }
 
-        
-        
-//        NavigationSplitView(columnVisibility: $bk.sidebarVisibility) {
-//            
-//            SidebarView(conversations: conversations)
-//            
-//        } detail: {
-//            
-//
-//            
-//            
-//            
-//        }
         .onChange(of: conv.isRequestingNewConversation) {
             let newConversation = Conversation()
             modelContext.insert(newConversation)

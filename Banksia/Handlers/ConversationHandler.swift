@@ -27,6 +27,7 @@ final class ConversationHandler {
     /// This history should only be sent to GPT, not be saved to a Conversation. The Conversation has it's own array of Messages
     var messageHistory: String = ""
     
+    var editorHeight: Double = 200
     
     func createMessageHistory(for conversation: Conversation, latestMessage: Message) async {
         

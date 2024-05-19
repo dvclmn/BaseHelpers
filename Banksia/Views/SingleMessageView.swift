@@ -9,6 +9,7 @@ import SwiftUI
 import SwiftData
 import Styles
 import Utilities
+import BaseUIElement
 
 struct SingleMessageView: View {
     @Environment(BanksiaHandler.self) private var bk
@@ -22,68 +23,52 @@ struct SingleMessageView: View {
     
     var body: some View {
         
-        var match: [String] {
-            return [conv.searchText].filter { message.content.localizedCaseInsensitiveContains($0) }
-        }
-        
-        var highlighted: AttributedString {
-            var result = AttributedString(message.content)
-            _ = match.map {
-                let ranges = message.content.ranges(of: $0, options: [.caseInsensitive])
-                ranges.forEach { range in
-                    result[range].backgroundColor = .orange.opacity(0.2)
-                }
-            }
-            return result
-        }
-        
+        //        var match: [String] {
+        //            return [conv.searchText].filter { message.content.localizedCaseInsensitiveContains($0) }
+        //        }
+        //
+        //        var highlighted: AttributedString {
+        //            var result = AttributedString(message.content)
+        //            _ = match.map {
+        //                let ranges = message.content.ranges(of: $0, options: [.caseInsensitive])
+        //                ranges.forEach { range in
+        //                    result[range].backgroundColor = .orange.opacity(0.2)
+        //                }
+        //            }
+        //            return result
+        //        }
+        //
         
         VStack {
             VStack {
                 
-                
-                //                Markdown {
-                //                    message.content
-                //                }
-//                Text(highlighted)
                 EditorRepresentable(text: $message.content, isEditable: false)
                     .padding()
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    .background(Color(message.type == .user ? .blue : .gray).opacity(0.1))
-                    .clipShape(RoundedRectangle(cornerRadius: Styles.roundingMedium))
-//                    .markdownTheme(.gitHubCustom)
-                    .id(message.timestamp)
-                
-//                    .contextMenu {
-//                        Button {
-//                            
-//                        } label: {
-//                            Label("Delete message", systemImage: Icons.arrowDown.icon)
-//                        }
-//                    }
-//                    .textSelection(.enabled)
+                    .background(Color(message.type == .user ? .blue : .gray).opacity(0.3))
+                    .clipShape(.rect(cornerRadius: Styles.roundingMedium))
+                    .padding(.bottom)
+
                     .overlay(alignment: .topTrailing) {
                         if isHovering {
                             Button {
                                 copyToClipboard(message.content)
                             } label: {
                                 Label("Copy text", systemImage: Icons.copy.icon)
-                                    .labelStyle(.iconOnly)
                             }
+                            .buttonStyle(.customButton(size: .mini, labelDisplay: .iconOnly))
                             .padding(8)
                         }
                     }
-                    
+                
             }
-            .padding(Styles.paddingText)
-            
-            
-            
             .onHover { hovering in
-                isHovering = hovering
+                withAnimation(Styles.animationQuick) {
+                    isHovering = hovering
+                }
             }
         }
-//        .font(.system(size: 14))
+        .padding(.horizontal, Styles.paddingText)
         .frame(maxWidth: .infinity, alignment: message.type == .user ? .trailing : .leading)
     }
     

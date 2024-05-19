@@ -21,32 +21,31 @@ struct SidebarView: View {
         @Bindable var bk = bk
         
         VStack {
-            List(selection: $bk.selectedConversation) {
+            
                 ForEach(conversations) { conversation in
                     ConversationListItem(conversation: conversation)
                 } // END foreach
-            } // END list
-            .navigationTitle("Conversations")
-            .navigationSplitViewColumnWidth(min: 200, ideal: 260, max: 320)
-            .toolbar {
-                ToolbarItem {
-                    Button {
-                        conv.isRequestingNewConversation = true
-                    } label: {
-                        Label("New conversation", systemImage: Icons.plus.icon)
-                    }
-                }
-                
-                ToolbarItem {
-                    Button {
-                        bk.isGlobalConversationPreferencesShowing.toggle()
-                    } label: {
-                        Label("App-wide conversation preferences", systemImage: Icons.sliders.icon)
-                    }
-                    
-                    
-                }
-            } // END toolbar
+            
+            
+//            .toolbar {
+//                ToolbarItem {
+//                    Button {
+//                        conv.isRequestingNewConversation = true
+//                    } label: {
+//                        Label("New conversation", systemImage: Icons.plus.icon)
+//                    }
+//                }
+//                
+//                ToolbarItem {
+//                    Button {
+//                        bk.isGlobalConversationPreferencesShowing.toggle()
+//                    } label: {
+//                        Label("App-wide conversation preferences", systemImage: Icons.sliders.icon)
+//                    }
+//                    
+//                    
+//                }
+//            } // END toolbar
         } // END vstack
         .onAppear(perform: {
             bk.totalConversations = conversations.count

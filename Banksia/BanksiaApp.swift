@@ -42,6 +42,7 @@ struct BanksiaApp: App {
 //            TextFormattingCommands()
 //            TextEditingCommands()
 //        }
+        .windowStyle(.hiddenTitleBar)
 #if os(macOS)
         .commands {
             MenuCommands(

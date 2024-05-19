@@ -34,18 +34,6 @@ struct ConversationListItem: View {
                     } // END if layer name empty
                 } // END onChange of: field focused
         } // END navigation link
-        .swipeActions(edge: .trailing) {
-            Button(role: .destructive) {
-                modelContext.delete(conversation)
-                do {
-                    try modelContext.save()
-                } catch {
-                    print(error.localizedDescription)
-                }
-            } label: {
-                Label("Delete", systemImage: "trash")
-            }
-        } // END swipe actions
     }
 }
 
