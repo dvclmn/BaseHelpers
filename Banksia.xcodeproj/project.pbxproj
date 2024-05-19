@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		F6081DF92B0485EA00A78D64 /* NetworkHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6081DF82B0485EA00A78D64 /* NetworkHandler.swift */; };
+		F61FE4FF2BF674A500824932 /* CustomSidebar.swift in Sources */ = {isa = PBXBuildFile; fileRef = F61FE4FE2BF674A500824932 /* CustomSidebar.swift */; };
+		F626CD1C2BFA73C8002A0D8A /* SplitView in Frameworks */ = {isa = PBXBuildFile; productRef = F626CD1B2BFA73C8002A0D8A /* SplitView */; };
+		F626CD1E2BFA73D1002A0D8A /* APIHandler in Frameworks */ = {isa = PBXBuildFile; productRef = F626CD1D2BFA73D1002A0D8A /* APIHandler */; };
 		F635C17E2BD0F41100E4EA4A /* SmoothGradient in Frameworks */ = {isa = PBXBuildFile; productRef = F635C17D2BD0F41100E4EA4A /* SmoothGradient */; };
 		F636A11C2B05B23D00C24891 /* GeneralSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F636A11B2B05B23D00C24891 /* GeneralSettingsView.swift */; };
 		F639D8B82BD3C3650035226E /* MarkdownModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F639D8B72BD3C3650035226E /* MarkdownModel.swift */; };
@@ -47,7 +50,6 @@
 		F6E4BC6B2BCFD1E100BFD550 /* QuickNavView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6E4BC6A2BCFD1E100BFD550 /* QuickNavView.swift */; };
 		F6E4BC6D2BCFDAC900BFD550 /* MenuCommands.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6E4BC6C2BCFDAC900BFD550 /* MenuCommands.swift */; };
 		F6E4BC6F2BD02D9800BFD550 /* EditorRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6E4BC6E2BD02D9800BFD550 /* EditorRepresentable.swift */; };
-		F6E8269F2B0BDD6E0047477D /* MessagesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6E8269E2B0BDD6E0047477D /* MessagesView.swift */; };
 		F6F393112B09DB7D005046F4 /* ConversationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6F393102B09DB7D005046F4 /* ConversationView.swift */; };
 		F6F393132B0A06B4005046F4 /* ConversationListItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6F393122B0A06B4005046F4 /* ConversationListItem.swift */; };
 		F6FA92EF2B052B9800D1D9B8 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6FA92EE2B052B9800D1D9B8 /* SettingsView.swift */; };
@@ -55,6 +57,7 @@
 
 /* Begin PBXFileReference section */
 		F6081DF82B0485EA00A78D64 /* NetworkHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkHandler.swift; sourceTree = "<group>"; };
+		F61FE4FE2BF674A500824932 /* CustomSidebar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CustomSidebar.swift; path = Banksia/Support/CustomSidebar.swift; sourceTree = SOURCE_ROOT; };
 		F636A11B2B05B23D00C24891 /* GeneralSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralSettingsView.swift; sourceTree = "<group>"; };
 		F639D8B72BD3C3650035226E /* MarkdownModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkdownModel.swift; sourceTree = "<group>"; };
 		F639D8C42BD517AF0035226E /* xcode.min.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = xcode.min.css; sourceTree = "<group>"; };
@@ -90,7 +93,6 @@
 		F6E4BC6C2BCFDAC900BFD550 /* MenuCommands.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuCommands.swift; sourceTree = "<group>"; };
 		F6E4BC6E2BD02D9800BFD550 /* EditorRepresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorRepresentable.swift; sourceTree = "<group>"; };
 		F6E4BC752BD0DA5000BFD550 /* AttributedStringReference.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttributedStringReference.swift; sourceTree = "<group>"; };
-		F6E8269E2B0BDD6E0047477D /* MessagesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesView.swift; sourceTree = "<group>"; };
 		F6F393102B09DB7D005046F4 /* ConversationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationView.swift; sourceTree = "<group>"; };
 		F6F393122B0A06B4005046F4 /* ConversationListItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationListItem.swift; sourceTree = "<group>"; };
 		F6F393142B0A1784005046F4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -102,6 +104,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F626CD1E2BFA73D1002A0D8A /* APIHandler in Frameworks */,
+				F626CD1C2BFA73C8002A0D8A /* SplitView in Frameworks */,
 				F635C17E2BD0F41100E4EA4A /* SmoothGradient in Frameworks */,
 				F6C2450A2BEE50CF002AEE3D /* Popup in Frameworks */,
 				F6C245082BEE50CF002AEE3D /* KeychainHandler in Frameworks */,
@@ -135,11 +139,11 @@
 				F6795C7E2BCE7A4D0093BC9C /* GlobalConversationSettingsView.swift */,
 				F6795C7C2BCE70920093BC9C /* ConversationEditorView.swift */,
 				F64F8E212B03090600C72E51 /* ContentView.swift */,
+				F61FE4FE2BF674A500824932 /* CustomSidebar.swift */,
 				F6A5E1B42BC6E5A40018B1B5 /* ToolbarView.swift */,
 				F6A5E1B22BC6E4E90018B1B5 /* SidebarView.swift */,
 				F6F393122B0A06B4005046F4 /* ConversationListItem.swift */,
 				F6F393102B09DB7D005046F4 /* ConversationView.swift */,
-				F6E8269E2B0BDD6E0047477D /* MessagesView.swift */,
 				F6D6E2DA2BC80AA2000D2051 /* MessageInputView.swift */,
 				F6D6E2D52BC805E9000D2051 /* SingleMessageView.swift */,
 				F6A6566B2B1290E60018689F /* Components */,
@@ -259,6 +263,8 @@
 				F6C245092BEE50CF002AEE3D /* Popup */,
 				F6C2450B2BEE50CF002AEE3D /* StyleLibrary */,
 				F644B17C2BF276F70098FDCF /* Utilities */,
+				F626CD1B2BFA73C8002A0D8A /* SplitView */,
+				F626CD1D2BFA73D1002A0D8A /* APIHandler */,
 			);
 			productName = Banksia;
 			productReference = F6A7BEE72B01C57400D3CE25 /* Banksia.app */;
@@ -336,6 +342,7 @@
 				F697B8662B0B47610091CE79 /* GPTHandler.swift in Sources */,
 				F6F393132B0A06B4005046F4 /* ConversationListItem.swift in Sources */,
 				F64F8E222B03090600C72E51 /* ContentView.swift in Sources */,
+				F61FE4FF2BF674A500824932 /* CustomSidebar.swift in Sources */,
 				F6081DF92B0485EA00A78D64 /* NetworkHandler.swift in Sources */,
 				F64F8E312B042A2700C72E51 /* UtilityFunctions.swift in Sources */,
 				F6FA92EF2B052B9800D1D9B8 /* SettingsView.swift in Sources */,
@@ -348,7 +355,6 @@
 				F64F8E0C2B0214A000C72E51 /* SampleData+Messages.swift in Sources */,
 				F64F8E032B02136D00C72E51 /* ModelContainerPreview.swift in Sources */,
 				F6A5E1B32BC6E4E90018B1B5 /* SidebarView.swift in Sources */,
-				F6E8269F2B0BDD6E0047477D /* MessagesView.swift in Sources */,
 				F6E4BC692BCF0ABD00BFD550 /* ScrollTest.swift in Sources */,
 				F6E4BC6D2BCFDAC900BFD550 /* MenuCommands.swift in Sources */,
 				F6795C7F2BCE7A4D0093BC9C /* GlobalConversationSettingsView.swift in Sources */,
@@ -420,7 +426,7 @@
 				SDKROOT = macosx;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_STRICT_CONCURRENCY = targeted;
+				SWIFT_STRICT_CONCURRENCY = minimal;
 			};
 			name = Debug;
 		};
@@ -477,7 +483,7 @@
 				MTL_FAST_MATH = YES;
 				SDKROOT = macosx;
 				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_STRICT_CONCURRENCY = targeted;
+				SWIFT_STRICT_CONCURRENCY = minimal;
 			};
 			name = Release;
 		};
@@ -601,6 +607,14 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		F626CD1B2BFA73C8002A0D8A /* SplitView */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SplitView;
+		};
+		F626CD1D2BFA73D1002A0D8A /* APIHandler */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = APIHandler;
+		};
 		F635C17D2BD0F41100E4EA4A /* SmoothGradient */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = F635C17C2BD0F41100E4EA4A /* XCRemoteSwiftPackageReference "SmoothGradient" */;

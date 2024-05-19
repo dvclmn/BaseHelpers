@@ -8,6 +8,8 @@
 import SwiftUI
 import SwiftData
 import Utilities
+import Grainient
+import SplitView
 
 struct ContentView: View {
     
@@ -22,12 +24,10 @@ struct ContentView: View {
         
         @Bindable var bk = bk
         
-        NavigationSplitView(columnVisibility: $bk.sidebarVisibility) {
-            
+        
+        SplitView {
             SidebarView(conversations: conversations)
-            
-        } detail: {
-            
+        } content: {
             ZStack {
                 
                 
@@ -52,10 +52,21 @@ struct ContentView: View {
 //                    bk.isQuickNavShowing = true
 //                }
 //            }
-            
-            
-            
         }
+
+        
+        
+//        NavigationSplitView(columnVisibility: $bk.sidebarVisibility) {
+//            
+//            SidebarView(conversations: conversations)
+//            
+//        } detail: {
+//            
+//
+//            
+//            
+//            
+//        }
         .onChange(of: conv.isRequestingNewConversation) {
             let newConversation = Conversation()
             modelContext.insert(newConversation)
@@ -70,7 +81,8 @@ struct ContentView: View {
         .onChange(of: bk.selectedConversation) {
 //            getActiveConversation()
         }
-        .background(.contentBackground)
+        .grainient(seed: 985247)
+//        .background(.contentBackground)
         
     }
     

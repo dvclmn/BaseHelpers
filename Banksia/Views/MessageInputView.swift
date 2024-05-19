@@ -79,8 +79,8 @@ struct MessageInputView: View {
                     isFocused = !conv.isResponseLoading
                     editorHeight = nil
                 }
-                .background(Swatch.slate.colour)
-                
+//                .background(Swatch.slate.colour)
+                .background(.thinMaterial)
                 .overlay(alignment: .top) {
                     GeometryReader { geo in
                         //                            HStack {
@@ -171,8 +171,8 @@ struct MessageInputView: View {
             
             .onAppear {
                 if isPreview {
-                    userPrompt = ExampleText.basicMarkdown
-                    editorHeight = 600
+//                    userPrompt = ExampleText.basicMarkdown
+//                    editorHeight = 600
                 }
             }
             

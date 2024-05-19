@@ -1,5 +1,5 @@
 //
-//  APIHandler.swift
+//  NetworkHandler.swift
 //  Banksia
 //
 //  Created by Dave Coleman on 15/11/2023.
