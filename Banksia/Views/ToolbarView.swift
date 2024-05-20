@@ -6,18 +6,29 @@
 //
 
 import SwiftUI
+import Styles
+import Navigation
 
-struct ToolbarView: ToolbarContent {
+struct ToolbarView: View {
     @Environment(\.modelContext) var modelContext
     @Environment(BanksiaHandler.self) private var bk
+    @Environment(Navigation.self) private var nav
     
-    var body: some ToolbarContent {
-        ToolbarItem() {
+    var body: some View {
+        
+        Button {
+            let newConversation = Conversation(name: "New conversation")
+            modelContext.insert(newConversation)
+            nav.path.append(Page.conversation(newConversation))
+            
+        } label: {
+            Label("New conversation", systemImage: Icons.plus.icon)
+        }
 //            HandyButton(label: "Add sample data", icon: "sparkles") {
 //                Conversation.insertSampleData(modelContext: modelContext)
 //                try? modelContext.save()
 //            }
-        } // END add sample data
+        
         
 //        ToolbarItem() {
 //            switch bk.conversationState {

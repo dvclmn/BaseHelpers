@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 import Styles
 import SplitView
 import Navigation
@@ -16,18 +17,26 @@ struct SidebarView: View {
     @Environment(ConversationHandler.self) private var conv
     @Environment(\.modelContext) var modelContext
     
-    var conversations: [Conversation]
+    @Query(sort: \Conversation.created) private var conversations: [Conversation]
     
     var body: some View {
         
         @Bindable var bk = bk
         
-        VStack {
+        CustomSidebar {
             
             ForEach(conversations) { conversation in
                 
-                ConversationListItem(page: Page.conversation(conversation))
+                ConversationListItem(
+                    page: Page.conversation(conversation),
+                    conversation: conversation
+                )
             } // END foreach
+        }
+        
+        VStack {
+            
+            
             
             
             //            .toolbar {

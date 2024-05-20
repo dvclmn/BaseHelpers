@@ -29,6 +29,10 @@ final class ConversationHandler {
     
     var editorHeight: Double = 200
     
+    func getConversation(from id: Conversation.ID, within conversations: [Conversation]) -> Conversation? {
+        return conversations.first(where: {$0.id == id})
+    }
+    
     func createMessageHistory(for conversation: Conversation, latestMessage: Message) async {
         
         guard let messages = conversation.messages, !messages.isEmpty else {

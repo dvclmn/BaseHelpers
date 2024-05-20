@@ -8,9 +8,12 @@
 import SwiftUI
 import Styles
 import Navigation
+import Popup
 
 struct ConversationListItem: View {
     @Environment(BanksiaHandler.self) private var bk
+    @Environment(ConversationHandler.self) private var conv
+    @EnvironmentObject var popup: PopupHandler
     @Environment(\.modelContext) private var modelContext
     
     @FocusState private var isFieldFocused: Bool
@@ -20,27 +23,35 @@ struct ConversationListItem: View {
     @State private var iconPickerShowing: Bool = false
     
     var page: Page
+    @Bindable var conversation: Conversation
     
     var body: some View {
-        NavigationLink(value: page) {
-            Text(page.name)
-//            TextField("Conversation name", text: $conversation.name)
-//                .focused($isFieldFocused)
-//                .onChange(of: isFieldFocused) {
-//                    if conversation.name.isEmpty {
-//                        conversation.name = oldName
-//                        print("No empty layer names allowed! Name set back to '\(oldName)'")
-//                    } else {
-//                        if isFieldFocused {
-//                            oldName = conversation.name
-//                        } // END is name field focused
-//                    } // END if layer name empty
-//                } // END onChange of: field focused
-        } // END navigation link
+        
+            NavigationLink(value: page) {
+                Text(page.name)
+                         
+            } // END navigation link
+            .contextMenu {
+                Button {
+                    do {
+                        modelContext.delete(conversation)
+                        try modelContext.save()
+                        
+                        popup.showPopup(title: "Deleted \(conversation.name)")
+                    } catch {
+                        
+                        print("Could not save")
+                    }
+                } label: {
+                    Label("Delete game", systemImage: Icons.trash.icon)
+                }
+            }
+        
     }
 }
 
 #Preview {
-    ConversationListItem(page: .conversation(Conversation.appKitDrawing))
+    ConversationListItem(page: .conversation(Conversation.appKitDrawing), conversation: Conversation.appKitDrawing)
         .environment(BanksiaHandler())
+        .environmentObject(PopupHandler())
 }

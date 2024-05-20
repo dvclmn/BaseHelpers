@@ -8,10 +8,10 @@
 import SwiftUI
 import SwiftData
 import Utilities
-import Grainient
 import SplitView
 import Navigation
 import Styles
+import Popup
 
 enum Page: Destination {
     
@@ -34,7 +34,6 @@ enum Page: Destination {
             return conversation.icon ?? Icons.message.icon
         }
     }
-    
 }
 
 struct ContentView: View {
@@ -43,44 +42,43 @@ struct ContentView: View {
     @Environment(\.undoManager) var undoManager
     @Environment(BanksiaHandler.self) private var bk
     @Environment(ConversationHandler.self) private var conv
-    
-    @Query(sort: \Conversation.created) private var conversations: [Conversation]
+    @Environment(Navigation.self) private var nav
+    @EnvironmentObject var popup: PopupHandler
     
     var body: some View {
         
         @Bindable var bk = bk
         
-        
-        SplitView<Page, SidebarView> {
-            SidebarView(conversations: conversations)
+        SplitView<Page, SidebarView, ToolbarView>(nav: nav, popup: popup) {
+            SidebarView()
         } content: { page in
             switch page {
             case .conversation(let conversation):
                 AnyView(ConversationView(conversation: conversation))
             }
-            
-            
+        } toolbar: {
+            ToolbarView()
         }
         .toolbar {
             ToolbarItem {
                 Spacer()
             }
         }
-        .onChange(of: conv.isRequestingNewConversation) {
-            let newConversation = Conversation()
-            modelContext.insert(newConversation)
-            bk.selectedConversation = newConversation.persistentModelID
-        }
-        .onAppear {
-            if let firstConversation = conversations.first {
-                bk.selectedConversation = firstConversation.persistentModelID
-            }
-            //            getActiveConversation()
-        }
-        .onChange(of: bk.selectedConversation) {
-            //            getActiveConversation()
-        }
-        .grainient(seed: 985247)
+//        .onChange(of: conv.isRequestingNewConversation) {
+//            let newConversation = Conversation()
+//            modelContext.insert(newConversation)
+//            bk.selectedConversation = newConversation.persistentModelID
+//        }
+//        .onAppear {
+//            if let firstConversation = conversations.first {
+//                bk.selectedConversation = firstConversation.persistentModelID
+//            }
+//            //            getActiveConversation()
+//        }
+//        .onChange(of: bk.selectedConversation) {
+//            //            getActiveConversation()
+//        }
+        
         //        .background(.contentBackground)
         
     }
@@ -99,7 +97,9 @@ struct ContentView: View {
     ContentView()
         .environment(ConversationHandler())
         .environment(BanksiaHandler())
+        .environment(Navigation())
         .environmentObject(Preferences())
+        .environmentObject(PopupHandler())
         .modelContainer(try! ModelContainer.sample())
         .frame(width: 600, height: 700)
 }

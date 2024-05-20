@@ -7,10 +7,14 @@
 
 import SwiftUI
 import SwiftData
+import Popup
+import Navigation
 
 @main
 struct BanksiaApp: App {
     
+    @StateObject private var popup = PopupHandler()
+    @State private var nav = Navigation()
     @State private var bk = BanksiaHandler()
     @State private var conv = ConversationHandler()
     @StateObject private var pref = Preferences()
@@ -31,6 +35,8 @@ struct BanksiaApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environmentObject(popup)
+                .environment(nav)
                 .environment(bk)
                 .environment(conv)
                 .environmentObject(pref)
