@@ -45,7 +45,7 @@ struct SingleMessageView: View {
                 EditorRepresentable(text: $message.content, isEditable: false)
                     .padding()
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    .background(Color(message.type == .user ? .blue : .gray).opacity(0.3))
+                    .background(Color(message.type == .user ? .blue : .gray).opacity(0.2))
                     .clipShape(.rect(cornerRadius: Styles.roundingMedium))
                     .padding(.bottom)
 

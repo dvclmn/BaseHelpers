@@ -10,6 +10,32 @@ import SwiftData
 import Utilities
 import Grainient
 import SplitView
+import Navigation
+import Styles
+
+enum Page: Destination {
+    
+    case conversation(Conversation)
+    
+    var id: String {
+        self.name
+    }
+    
+    var name: String {
+        switch self {
+        case .conversation(let conversation):
+            return conversation.name
+        }
+    }
+    
+    var icon: String {
+        switch self {
+        case .conversation(let conversation):
+            return conversation.icon ?? Icons.message.icon
+        }
+    }
+    
+}
 
 struct ContentView: View {
     
@@ -25,32 +51,21 @@ struct ContentView: View {
         @Bindable var bk = bk
         
         
-        SplitView {
+        SplitView<Page, SidebarView> {
             SidebarView(conversations: conversations)
-        } content: {
-            ZStack {
-                
-                if let currentConversation = conversations.first(where: {$0.id == bk.selectedConversation}) {
-                    
-                    @Bindable var currentConversation = currentConversation
-                    
-                    ConversationView(conversation: currentConversation)
-                        .navigationTitle(currentConversation.name)
-                }
-                
-                
-                if bk.isQuickNavShowing {
-                    QuickNavView()
-                }
-                
+        } content: { page in
+            switch page {
+            case .conversation(let conversation):
+                AnyView(ConversationView(conversation: conversation))
             }
-//            .onAppear {
-//                if isPreview {
-//                    bk.isQuickNavShowing = true
-//                }
-//            }
+            
+            
         }
-
+        .toolbar {
+            ToolbarItem {
+                Spacer()
+            }
+        }
         .onChange(of: conv.isRequestingNewConversation) {
             let newConversation = Conversation()
             modelContext.insert(newConversation)
@@ -60,24 +75,24 @@ struct ContentView: View {
             if let firstConversation = conversations.first {
                 bk.selectedConversation = firstConversation.persistentModelID
             }
-//            getActiveConversation()
+            //            getActiveConversation()
         }
         .onChange(of: bk.selectedConversation) {
-//            getActiveConversation()
+            //            getActiveConversation()
         }
         .grainient(seed: 985247)
-//        .background(.contentBackground)
+        //        .background(.contentBackground)
         
     }
     
-//    private func getActiveConversation() {
-//        print("Let's get the active conversation")
-//        if let conversationID = bk.selectedConversation.first {
-//            let conversation = conversations.first(where: {$0.persistentModelID == conversationID})
-//            print("The active conversation is: \(String(describing: conversation?.name))")
-//            bk.activeConversation = conversation
-//        }
-//    }
+    //    private func getActiveConversation() {
+    //        print("Let's get the active conversation")
+    //        if let conversationID = bk.selectedConversation.first {
+    //            let conversation = conversations.first(where: {$0.persistentModelID == conversationID})
+    //            print("The active conversation is: \(String(describing: conversation?.name))")
+    //            bk.activeConversation = conversation
+    //        }
+    //    }
 }
 
 #Preview {

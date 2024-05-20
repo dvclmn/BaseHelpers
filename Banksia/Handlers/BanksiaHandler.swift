@@ -17,8 +17,6 @@ class BanksiaHandler {
     
     var totalConversations: Int = 0
     
-    var sidebarVisibility: NavigationSplitViewVisibility = .detailOnly
-    
     var isQuickNavShowing: Bool = false
     
     var isConversationEditorShowing: Bool = false

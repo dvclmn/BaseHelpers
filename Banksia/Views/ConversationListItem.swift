@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Styles
+import Navigation
 
 struct ConversationListItem: View {
     @Environment(BanksiaHandler.self) private var bk
@@ -18,26 +19,28 @@ struct ConversationListItem: View {
     
     @State private var iconPickerShowing: Bool = false
     
-    @Bindable var conversation: Conversation
+    var page: Page
+    
     var body: some View {
-        NavigationLink(value: conversation) {
-            TextField("Conversation name", text: $conversation.name)
-                .focused($isFieldFocused)
-                .onChange(of: isFieldFocused) {
-                    if conversation.name.isEmpty {
-                        conversation.name = oldName
-                        print("No empty layer names allowed! Name set back to '\(oldName)'")
-                    } else {
-                        if isFieldFocused {
-                            oldName = conversation.name
-                        } // END is name field focused
-                    } // END if layer name empty
-                } // END onChange of: field focused
+        NavigationLink(value: page) {
+            Text(page.name)
+//            TextField("Conversation name", text: $conversation.name)
+//                .focused($isFieldFocused)
+//                .onChange(of: isFieldFocused) {
+//                    if conversation.name.isEmpty {
+//                        conversation.name = oldName
+//                        print("No empty layer names allowed! Name set back to '\(oldName)'")
+//                    } else {
+//                        if isFieldFocused {
+//                            oldName = conversation.name
+//                        } // END is name field focused
+//                    } // END if layer name empty
+//                } // END onChange of: field focused
         } // END navigation link
     }
 }
 
 #Preview {
-    ConversationListItem(conversation: .plants)
+    ConversationListItem(page: .conversation(Conversation.appKitDrawing))
         .environment(BanksiaHandler())
 }

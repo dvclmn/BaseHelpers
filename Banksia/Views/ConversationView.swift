@@ -19,9 +19,9 @@ struct ConversationView: View {
     
     @Query private var messages: [Message]
     
-    var conversation: Conversation
+    var conversation: Conversation?
     
-    init(filter: Predicate<Message>? = nil, conversation: Conversation) {
+    init(filter: Predicate<Message>? = nil, conversation: Conversation?) {
         self.conversation = conversation
         
         if let filter = filter {
@@ -36,7 +36,7 @@ struct ConversationView: View {
         @Bindable var conv = conv
         @Bindable var bk = bk
         
-        if let conversationMessages = conversation.messages {
+        if let conversation = conversation, let conversationMessages = conversation.messages {
             
             var searchResults: [Message] {
                 conversationMessages.filter { message in
@@ -80,6 +80,11 @@ struct ConversationView: View {
 //                    editorHeight = 100
 //                }
 //            }
+            .overlay {
+                if bk.isQuickNavShowing {
+                    QuickNavView()
+                }
+            }
             
             
         } else {

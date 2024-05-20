@@ -20,6 +20,7 @@ struct ConversationStateView: View {
     
     var body: some View {
   EmptyView()
+        Text("No conversation selected")
 //        switch bk.selectionState {
 //        case .blank:
 //            Text("No conversations created at all")

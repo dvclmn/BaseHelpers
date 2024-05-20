@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		F6081DF92B0485EA00A78D64 /* NetworkHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6081DF82B0485EA00A78D64 /* NetworkHandler.swift */; };
-		F61FE4FF2BF674A500824932 /* CustomSidebar.swift in Sources */ = {isa = PBXBuildFile; fileRef = F61FE4FE2BF674A500824932 /* CustomSidebar.swift */; };
 		F626CD1C2BFA73C8002A0D8A /* SplitView in Frameworks */ = {isa = PBXBuildFile; productRef = F626CD1B2BFA73C8002A0D8A /* SplitView */; };
 		F626CD1E2BFA73D1002A0D8A /* APIHandler in Frameworks */ = {isa = PBXBuildFile; productRef = F626CD1D2BFA73D1002A0D8A /* APIHandler */; };
 		F635C17E2BD0F41100E4EA4A /* SmoothGradient in Frameworks */ = {isa = PBXBuildFile; productRef = F635C17D2BD0F41100E4EA4A /* SmoothGradient */; };
@@ -57,7 +56,6 @@
 
 /* Begin PBXFileReference section */
 		F6081DF82B0485EA00A78D64 /* NetworkHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkHandler.swift; sourceTree = "<group>"; };
-		F61FE4FE2BF674A500824932 /* CustomSidebar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CustomSidebar.swift; path = Banksia/Support/CustomSidebar.swift; sourceTree = SOURCE_ROOT; };
 		F636A11B2B05B23D00C24891 /* GeneralSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralSettingsView.swift; sourceTree = "<group>"; };
 		F639D8B72BD3C3650035226E /* MarkdownModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkdownModel.swift; sourceTree = "<group>"; };
 		F639D8C42BD517AF0035226E /* xcode.min.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = xcode.min.css; sourceTree = "<group>"; };
@@ -139,7 +137,6 @@
 				F6795C7E2BCE7A4D0093BC9C /* GlobalConversationSettingsView.swift */,
 				F6795C7C2BCE70920093BC9C /* ConversationEditorView.swift */,
 				F64F8E212B03090600C72E51 /* ContentView.swift */,
-				F61FE4FE2BF674A500824932 /* CustomSidebar.swift */,
 				F6A5E1B42BC6E5A40018B1B5 /* ToolbarView.swift */,
 				F6A5E1B22BC6E4E90018B1B5 /* SidebarView.swift */,
 				F6F393122B0A06B4005046F4 /* ConversationListItem.swift */,
@@ -342,7 +339,6 @@
 				F697B8662B0B47610091CE79 /* GPTHandler.swift in Sources */,
 				F6F393132B0A06B4005046F4 /* ConversationListItem.swift in Sources */,
 				F64F8E222B03090600C72E51 /* ContentView.swift in Sources */,
-				F61FE4FF2BF674A500824932 /* CustomSidebar.swift in Sources */,
 				F6081DF92B0485EA00A78D64 /* NetworkHandler.swift in Sources */,
 				F64F8E312B042A2700C72E51 /* UtilityFunctions.swift in Sources */,
 				F6FA92EF2B052B9800D1D9B8 /* SettingsView.swift in Sources */,

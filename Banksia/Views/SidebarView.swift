@@ -7,6 +7,8 @@
 
 import SwiftUI
 import Styles
+import SplitView
+import Navigation
 
 struct SidebarView: View {
     
@@ -22,30 +24,31 @@ struct SidebarView: View {
         
         VStack {
             
-                ForEach(conversations) { conversation in
-                    ConversationListItem(conversation: conversation)
-                } // END foreach
+            ForEach(conversations) { conversation in
+                
+                ConversationListItem(page: Page.conversation(conversation))
+            } // END foreach
             
             
-//            .toolbar {
-//                ToolbarItem {
-//                    Button {
-//                        conv.isRequestingNewConversation = true
-//                    } label: {
-//                        Label("New conversation", systemImage: Icons.plus.icon)
-//                    }
-//                }
-//                
-//                ToolbarItem {
-//                    Button {
-//                        bk.isGlobalConversationPreferencesShowing.toggle()
-//                    } label: {
-//                        Label("App-wide conversation preferences", systemImage: Icons.sliders.icon)
-//                    }
-//                    
-//                    
-//                }
-//            } // END toolbar
+            //            .toolbar {
+            //                ToolbarItem {
+            //                    Button {
+            //                        conv.isRequestingNewConversation = true
+            //                    } label: {
+            //                        Label("New conversation", systemImage: Icons.plus.icon)
+            //                    }
+            //                }
+            //
+            //                ToolbarItem {
+            //                    Button {
+            //                        bk.isGlobalConversationPreferencesShowing.toggle()
+            //                    } label: {
+            //                        Label("App-wide conversation preferences", systemImage: Icons.sliders.icon)
+            //                    }
+            //
+            //
+            //                }
+            //            } // END toolbar
         } // END vstack
         .onAppear(perform: {
             bk.totalConversations = conversations.count
@@ -56,13 +59,13 @@ struct SidebarView: View {
         
     }
 }
-
-#Preview {
-    NavigationSplitView {
-        SidebarView(conversations: [Conversation.appKitDrawing, Conversation.childcare])
-    } detail: {
-        ConversationView(conversation: Conversation.appKitDrawing)
-    }
-    .environment(BanksiaHandler())
-    .environment(ConversationHandler())
-}
+//
+//#Preview {
+//    NavigationSplitView {
+//        SidebarView(conversations: [Conversation.appKitDrawing, Conversation.childcare])
+//    } detail: {
+//        ConversationView(conversation: Conversation.appKitDrawing)
+//    }
+//    .environment(BanksiaHandler())
+//    .environment(ConversationHandler())
+//}
