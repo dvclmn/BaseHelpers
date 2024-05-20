@@ -27,20 +27,12 @@ struct SidebarView: View {
         CustomSidebar(sidebar: sidebar) {
             
             ForEach(conversations) { conversation in
-                
                 ConversationListItem(
                     page: Page.conversation(conversation),
                     conversation: conversation
                 )
             } // END foreach
-        }
-        .onAppear(perform: {
-            bk.totalConversations = conversations.count
-        })
-        .onChange(of: conversations.count, {
-            bk.totalConversations = conversations.count
-        })
-        
+        } // END sidebar
     }
 }
 //

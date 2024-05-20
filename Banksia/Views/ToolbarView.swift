@@ -14,10 +14,14 @@ import Sidebar
 struct ToolbarView: View {
     @Environment(\.modelContext) var modelContext
     @Environment(BanksiaHandler.self) private var bk
-    @Environment(Navigation.self) private var nav
+    @Environment(Navigation<Page>.self) private var nav
     
     @EnvironmentObject var popup: PopupHandler
     @EnvironmentObject var sidebar: SidebarHandler
+    
+    @State private var title: String = "Here is a short title."
+    @State private var message: String? = "And a short message with further info."
+    @State private var isLoading: Bool = false
     
     var body: some View {
         
@@ -32,7 +36,7 @@ struct ToolbarView: View {
             }
             
             Button {
-                popup.showPopup(title: "Here's a popup title", message: "And a short message with further info.")
+                popup.showPopup(title: "Here's a **popup title**", message: "And a *short* message with further info.")
             } label: {
                 Label("Test popup", systemImage: Icons.text.icon)
             }
@@ -45,18 +49,24 @@ struct ToolbarView: View {
             maxHeight: Styles.toolbarHeight,
             alignment: .leading
         )
-        .padding(.leading, sidebar.isSidebarShowing ? 0 : 35)
+        /// Allows space for the sidebar toggle button 􀨱 when the sidebar is hidden
+        .padding(.leading, sidebar.isSidebarShowing ? 0 : 30)
         
         .padding(.horizontal, Styles.paddingToolbarHorizontal)
         .background {
             Rectangle().fill(.ultraThinMaterial)
                 .safeAreaPadding(.leading, sidebar.isSidebarShowing ? sidebar.sidebarWidth : 0)
         }
-        .overlay(alignment: .bottom) {
-            PopupView(popup: popup)
-                .offset(y: 80)
-                .safeAreaPadding(.leading, sidebar.sidebarWidth)
+        .overlay(alignment: .top) {
+            
+            PopupView(
+                topOffset: 70,
+                popup: popup
+            )
+                    .safeAreaPadding(.leading, sidebar.sidebarWidth)
+            
         }
+        
         .overlay(alignment: .leading) {
             if sidebar.isRoomForSidebar {
                 Button {

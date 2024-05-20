@@ -43,7 +43,7 @@ struct ContentView: View {
     @Environment(\.undoManager) var undoManager
     @Environment(BanksiaHandler.self) private var bk
     @Environment(ConversationHandler.self) private var conv
-    @Environment(Navigation.self) private var nav
+    @Environment(Navigation<Page>.self) private var nav
     @EnvironmentObject var popup: PopupHandler
     
     var body: some View {
@@ -57,10 +57,15 @@ struct ContentView: View {
             case .conversation(let conversation):
                 AnyView(ConversationView(conversation: conversation))
             }
+            
+            
+            
+            
         } toolbar: {
             ToolbarView()
             
         }
+        
         .toolbar {
             ToolbarItem {
                 Spacer()
@@ -100,7 +105,7 @@ struct ContentView: View {
     ContentView()
         .environment(ConversationHandler())
         .environment(BanksiaHandler())
-        .environment(Navigation())
+        .environment(Navigation<Page>())
         .environmentObject(Preferences())
         .environmentObject(PopupHandler())
         .environmentObject(SidebarHandler())

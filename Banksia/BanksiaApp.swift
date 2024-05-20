@@ -14,7 +14,7 @@ import Sidebar
 @main
 struct BanksiaApp: App {
     
-    @State private var nav = Navigation()
+    @State private var nav = Navigation<Page>()
     @State private var bk = BanksiaHandler()
     @State private var conv = ConversationHandler()
     
