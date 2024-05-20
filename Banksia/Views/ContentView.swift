@@ -12,6 +12,7 @@ import SplitView
 import Navigation
 import Styles
 import Popup
+import Sidebar
 
 enum Page: Destination {
     
@@ -58,12 +59,14 @@ struct ContentView: View {
             }
         } toolbar: {
             ToolbarView()
+            
         }
         .toolbar {
             ToolbarItem {
                 Spacer()
             }
         }
+        .ignoresSafeArea()
 //        .onChange(of: conv.isRequestingNewConversation) {
 //            let newConversation = Conversation()
 //            modelContext.insert(newConversation)
@@ -100,6 +103,8 @@ struct ContentView: View {
         .environment(Navigation())
         .environmentObject(Preferences())
         .environmentObject(PopupHandler())
+        .environmentObject(SidebarHandler())
         .modelContainer(try! ModelContainer.sample())
+        .padding(.top,1)
         .frame(width: 600, height: 700)
 }

@@ -9,12 +9,13 @@ import SwiftUI
 import SwiftData
 import Styles
 import SplitView
-import Navigation
+import Sidebar
 
 struct SidebarView: View {
-    
     @Environment(BanksiaHandler.self) private var bk
     @Environment(ConversationHandler.self) private var conv
+    @EnvironmentObject var sidebar: SidebarHandler
+    
     @Environment(\.modelContext) var modelContext
     
     @Query(sort: \Conversation.created) private var conversations: [Conversation]
@@ -23,7 +24,7 @@ struct SidebarView: View {
         
         @Bindable var bk = bk
         
-        CustomSidebar {
+        CustomSidebar(sidebar: sidebar) {
             
             ForEach(conversations) { conversation in
                 
@@ -33,32 +34,6 @@ struct SidebarView: View {
                 )
             } // END foreach
         }
-        
-        VStack {
-            
-            
-            
-            
-            //            .toolbar {
-            //                ToolbarItem {
-            //                    Button {
-            //                        conv.isRequestingNewConversation = true
-            //                    } label: {
-            //                        Label("New conversation", systemImage: Icons.plus.icon)
-            //                    }
-            //                }
-            //
-            //                ToolbarItem {
-            //                    Button {
-            //                        bk.isGlobalConversationPreferencesShowing.toggle()
-            //                    } label: {
-            //                        Label("App-wide conversation preferences", systemImage: Icons.sliders.icon)
-            //                    }
-            //
-            //
-            //                }
-            //            } // END toolbar
-        } // END vstack
         .onAppear(perform: {
             bk.totalConversations = conversations.count
         })

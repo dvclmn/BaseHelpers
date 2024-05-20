@@ -9,9 +9,8 @@ import SwiftUI
 import Styles
 
 extension Styles {
-    static let cornerRadiusSmall:       CGFloat = 6
-    static let cornerRadiusLarge:       CGFloat = 10
     
+//    static let sidebarWidth:            Double = 180
     static let iconWidth:               Double = 20
     
     static let paddingText:             Double = 24

@@ -9,15 +9,18 @@ import SwiftUI
 import SwiftData
 import Popup
 import Navigation
+import Sidebar
 
 @main
 struct BanksiaApp: App {
     
-    @StateObject private var popup = PopupHandler()
     @State private var nav = Navigation()
     @State private var bk = BanksiaHandler()
     @State private var conv = ConversationHandler()
+    
+    @StateObject private var popup = PopupHandler()
     @StateObject private var pref = Preferences()
+    @StateObject private var sidebar = SidebarHandler()
     
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
@@ -35,12 +38,12 @@ struct BanksiaApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .environmentObject(popup)
                 .environment(nav)
                 .environment(bk)
                 .environment(conv)
                 .environmentObject(pref)
-                .preferredColorScheme(.dark)
+                .environmentObject(popup)
+                .environmentObject(sidebar)
         }
         .modelContainer(sharedModelContainer)
 //        .commands {
@@ -49,6 +52,7 @@ struct BanksiaApp: App {
 //            TextEditingCommands()
 //        }
         .windowStyle(.hiddenTitleBar)
+        .windowToolbarStyle(.unified)
 #if os(macOS)
         .commands {
             MenuCommands(

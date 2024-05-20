@@ -29,9 +29,7 @@ struct MenuCommands: Commands {
             
         }
         
-        
-        SidebarCommands()
-        ToolbarCommands()
+//        ToolbarCommands()
         InspectorCommands()
     }
 }
