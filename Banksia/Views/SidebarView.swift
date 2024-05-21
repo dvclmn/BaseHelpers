@@ -32,6 +32,11 @@ struct SidebarView: View {
                     conversation: conversation
                 )
             } // END foreach
+            SidebarButton(
+                page: Page.conversation(Conversation.appKitDrawing),
+                label: "Example",
+                icon: "bubble.middle.bottom"
+            )
         } // END sidebar
     }
 }

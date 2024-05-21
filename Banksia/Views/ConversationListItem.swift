@@ -44,8 +44,11 @@ struct ConversationListItem: View {
         SidebarButton(
             page: page,
             label: page.name,
+            editableLabel: $conversation.name,
             icon: "bubble.middle.bottom",
-            isCurrentPage: isCurrentPage
+            isCurrentPage: isCurrentPage, 
+            isEditable: true,
+            isRenaming: $isRenaming
         )
         .frame(maxWidth: .infinity, alignment: .leading)
         

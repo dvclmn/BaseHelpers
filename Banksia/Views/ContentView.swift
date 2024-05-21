@@ -46,6 +46,8 @@ struct ContentView: View {
     @Environment(Navigation<Page>.self) private var nav
     @EnvironmentObject var popup: PopupHandler
     
+    @State private var viewHeight: Double = 200
+    
     var body: some View {
         
         @Bindable var bk = bk
@@ -53,12 +55,11 @@ struct ContentView: View {
         SplitView<Page, SidebarView, ToolbarView>(nav: nav, popup: popup) {
             SidebarView()
         } content: { page in
+            
             switch page {
             case .conversation(let conversation):
                 AnyView(ConversationView(conversation: conversation))
             }
-            
-            
             
             
         } toolbar: {

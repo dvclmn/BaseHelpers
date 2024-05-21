@@ -43,6 +43,7 @@ struct SingleMessageView: View {
             VStack {
                 
                 EditorRepresentable(text: $message.content, isEditable: false)
+                    .fixedSize(horizontal: false, vertical: true)
                     .padding()
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .background(Color(message.type == .user ? .blue : .gray).opacity(0.2))

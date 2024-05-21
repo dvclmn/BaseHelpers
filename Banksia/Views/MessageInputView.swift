@@ -20,12 +20,9 @@ struct MessageInputView: View {
     
     @SceneStorage("userPrompt") var userPrompt: String = ""
     
-    
-    
     @SceneStorage("isTesting") var isTesting: Bool = true
     
     @State private var isHoveringHeightAdjustor: Bool = false
-    
     
     let minInputHeight: Double = 200
     let maxInputHeight: Double = 500

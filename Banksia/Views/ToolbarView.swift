@@ -23,9 +23,19 @@ struct ToolbarView: View {
     @State private var message: String? = "And a short message with further info."
     @State private var isLoading: Bool = false
     
+    @State private var isToolbarMenuPresented: Bool = false
+    
     var body: some View {
         
-        HStack {
+        HStack(spacing: 14) {
+            
+            Text(nav.navigationTitle ?? "Banksia")
+                .font(.title2)
+                .foregroundStyle(.secondary)
+            
+            Spacer()
+            
+            // MARK: - 􀅼 New conversation
             Button {
                 let newConversation = Conversation(name: "New conversation")
                 modelContext.insert(newConversation)
@@ -34,14 +44,27 @@ struct ToolbarView: View {
             } label: {
                 Label("New conversation", systemImage: Icons.plus.icon)
             }
+            .buttonStyle(.customButton(labelDisplay: .iconOnly))
             
+            
+            // MARK: - 􀍠 Options
             Button {
-                popup.showPopup(title: "Here's a **popup title**", message: "And a *short* message with further info.")
+                isToolbarMenuPresented.toggle()
             } label: {
-                Label("Test popup", systemImage: Icons.text.icon)
+                Label("More options", systemImage: Icons.ellipsis.icon)
             }
+            .buttonStyle(.customButton(labelDisplay: .iconOnly))
+            
+            .popover(isPresented: $isToolbarMenuPresented) {
+                Button {
+                    popup.showPopup(title: "Here's a **popup title**", message: "And a *short* message with further info.")
+                } label: {
+                    Label("Test popup", systemImage: Icons.text.icon)
+                }
+            }
+            
+            
         } // END toolbar hstack
-        .buttonStyle(.customButton())
                 .safeAreaPadding(.leading, sidebar.isSidebarShowing ? sidebar.sidebarWidth : Styles.paddingToolbarTrafficLightsWidth)
         .frame(
             maxWidth: .infinity,
@@ -52,7 +75,7 @@ struct ToolbarView: View {
         /// Allows space for the sidebar toggle button 􀨱 when the sidebar is hidden
         .padding(.leading, sidebar.isSidebarShowing ? 0 : 30)
         
-        .padding(.horizontal, Styles.paddingToolbarHorizontal)
+        .padding(.horizontal, 16)
         .background {
             Rectangle().fill(.ultraThinMaterial)
                 .safeAreaPadding(.leading, sidebar.isSidebarShowing ? sidebar.sidebarWidth : 0)
