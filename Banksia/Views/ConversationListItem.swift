@@ -32,14 +32,15 @@ struct ConversationListItem: View {
         var isCurrentPage: Bool {
             return page == nav.path.last
         }
-        
+
         SidebarButton(
             page: page,
             label: page.name,
             editableLabel: $conversation.name,
             icon: "bubble.middle.bottom",
             isCurrentPage: isCurrentPage,
-            isEditable: true
+            isEditable: true,
+            popup: popup
         ) {
             Button {
                 do {
@@ -56,9 +57,6 @@ struct ConversationListItem: View {
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        
-        
-        
         
     }
 }

@@ -32,6 +32,8 @@ struct SidebarView: View {
         CustomSidebar(sidebar: sidebar) {
             
             
+                        
+            
             ForEach(conversations) { conversation in
                 ConversationListItem(
                     page: Page.conversation(conversation),

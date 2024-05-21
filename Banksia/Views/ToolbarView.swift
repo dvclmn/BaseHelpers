@@ -6,18 +6,23 @@
 //
 
 import SwiftUI
+import SwiftData
 import Styles
 import Navigation
 import Popup
 import Sidebar
+import Modifiers
 
 struct ToolbarView: View {
     @Environment(\.modelContext) var modelContext
+    @Environment(ConversationHandler.self) private var conv
     @Environment(BanksiaHandler.self) private var bk
     @EnvironmentObject var nav: NavigationHandler<Page>
     
     @EnvironmentObject var popup: PopupHandler
     @EnvironmentObject var sidebar: SidebarHandler
+    
+    @Query private var conversations: [Conversation]
     
     @State private var title: String = "Here is a short title."
     @State private var message: String? = "And a short message with further info."
@@ -25,15 +30,54 @@ struct ToolbarView: View {
     
     @State private var isToolbarMenuPresented: Bool = false
     
+    @State private var isRenaming: Bool = false
+    @State private var localLabel: String = ""
+    
+    @FocusState private var isRenameFieldFocused: Bool
+    
     var body: some View {
         
+        var currentConversationName: String {
+            return conv.getCurrentConversation(within: conversations)?.name ?? ""
+        }
+        
         HStack(spacing: 14) {
-            
+  
             Text(nav.navigationTitle ?? "Banksia")
                 .font(.title2)
                 .foregroundStyle(.secondary)
+                .renamable(itemName: currentConversationName) { newName in
+                    conv.getCurrentConversation(within: conversations)?.name = newName
+                }
             
-//            Text()
+//            if isRenaming {
+//                TextField("Rename conversation", text: $localLabel)
+//                    .textFieldStyle(.customField(text: $localLabel))
+//                    .focused($isRenameFieldFocused)
+//                    .onSubmit {
+//                        rename()
+//                    }
+//                    .onAppear {
+//                        isRenameFieldFocused = true
+//                        /// As soon as the TextView comes on-screen, we grab a copy of the label to store in this local scope, to work with
+//                        localLabel = conv.getCurrentConversation(within: conversations)?.name ?? ""
+//                    }
+//    #if os(macOS)
+//                    .onExitCommand {
+//                        isRenameFieldFocused = false
+//                        isRenaming = false
+//                        localLabel = ""
+//                    }
+//    #endif
+//            } else {
+//                
+//                    .gesture(TapGesture(count: 2).onEnded {
+//                        isRenameFieldFocused = true
+//                        isRenaming = true
+//                    })
+//            }
+//            
+
             
             Spacer()
             
@@ -47,6 +91,11 @@ struct ToolbarView: View {
                 Label("New conversation", systemImage: Icons.plus.icon)
             }
             .buttonStyle(.customButton(labelDisplay: .iconOnly))
+            
+            
+            // MARK: - Conversation prompt
+            
+            
             
             
             // MARK: - 􀍠 Options
@@ -131,7 +180,17 @@ struct ToolbarView: View {
             
 //        } // END delete
     }
+    private func rename() {
+        isRenaming = false
+        if let currentConversation = conv.getCurrentConversation(within: conversations) {
+            currentConversation.name = localLabel
+            popup.showPopup(title: "Renamed to \"\(currentConversation.name)\"")
+        } else {
+                print("No conversation selected")
+        }
+    }
 }
+
 
 #Preview {
     ContentView()

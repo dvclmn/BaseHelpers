@@ -17,8 +17,6 @@ struct ConversationView: View {
     @EnvironmentObject var pref: Preferences
     @Environment(\.modelContext) private var modelContext
     
-    
-    
     @Query private var messages: [Message]
     
     var conversation: Conversation?
@@ -38,62 +36,73 @@ struct ConversationView: View {
         @Bindable var conv = conv
         @Bindable var bk = bk
         
-        
+        if let conversation = conversation {
             
-            if let conversation = conversation, let conversationMessages = conversation.messages {
-                
-                var searchResults: [Message] {
-                    conversationMessages.filter { message in
-                        if conv.searchText.count > 1 {
-                            return message.content.localizedCaseInsensitiveContains(conv.searchText)
-                        } else {
-                            return true
+            VStack {
+                if let conversationMessages = conversation.messages {
+                    
+                    var searchResults: [Message] {
+                        conversationMessages.filter { message in
+                            if conv.searchText.count > 1 {
+                                return message.content.localizedCaseInsensitiveContains(conv.searchText)
+                            } else {
+                                return true
+                            }
                         }
                     }
-                }
-                
-                ScrollView(.vertical) {
-                    LazyVStack(spacing: 12) {
-                        ForEach(searchResults.sorted(by: { $0.timestamp < $1.timestamp }), id: \.timestamp) { message in
-                            
-                            SingleMessageView(message: message)
-                            
-                        } // END ForEach
-                        //                    Text("End of messages")
-                    } // END lazy vstack
-                    .scrollTargetLayout()
-                    .padding(.bottom, 80)
-                } // END scrollview
-                .safeAreaPadding(.bottom, conv.editorHeight + 30)
-                //            .searchable(text: $conv.searchText, isPresented: $conv.isSearching, prompt: Text("Search messages"))
-                //                                        .scrollPosition(id: message.timestamp)
-                .defaultScrollAnchor(.bottom)
-                
-                .overlay(alignment: .bottom) {
-                    MessageInputView(
-                        conversation: conversation
-                    )
-                }
-                .sheet(isPresented: $bk.isConversationEditorShowing) {
                     
-                    ConversationEditorView(conversation: conversation)
+                    ScrollView(.vertical) {
+                        LazyVStack(spacing: 12) {
+                            ForEach(searchResults.sorted(by: { $0.timestamp < $1.timestamp }), id: \.timestamp) { message in
+                                
+                                SingleMessageView(message: message)
+                                
+                            } // END ForEach
+                            //                    Text("End of messages")
+                        } // END lazy vstack
+                        .scrollTargetLayout()
+                        .padding(.bottom, 80)
+                    } // END scrollview
+                    .safeAreaPadding(.bottom, conv.editorHeight + 30)
+                    //            .searchable(text: $conv.searchText, isPresented: $conv.isSearching, prompt: Text("Search messages"))
+                    //                                        .scrollPosition(id: message.timestamp)
+                    .defaultScrollAnchor(.bottom)
                     
-                }
-                //            .onAppear {
-                //                if isPreview {
-                //                    editorHeight = 100
-                //                }
-                //            }
-                .overlay {
-                    if bk.isQuickNavShowing {
-                        QuickNavView()
+                    .overlay(alignment: .bottom) {
+                        MessageInputView(
+                            conversation: conversation
+                        )
                     }
-                }
+                    .sheet(isPresented: $bk.isConversationEditorShowing) {
+                        
+                        ConversationEditorView(conversation: conversation)
+                        
+                    }
+                    //            .onAppear {
+                    //                if isPreview {
+                    //                    editorHeight = 100
+                    //                }
+                    //            }
+                    .overlay {
+                        if bk.isQuickNavShowing {
+                            QuickNavView()
+                        }
+                    }
+                    
+                    
+                } else {
+                    Text("No messages yet")
+                } // END messages check
                 
-                
-            } else {
-                Text("No messages yet")
-            } // END messages check
+            } // Vstack so I can do an onAppear?
+            .onAppear {
+                conv.currentConversationID = conversation.persistentModelID
+            }
+            
+        } else {
+            Text("No conversation selected")
+            
+        } // END conversation check
         
         //        .toolbar {
         //            ToolbarItem {

@@ -47,7 +47,6 @@ struct ContentView: View {
     @EnvironmentObject var nav: NavigationHandler<Page>
     @EnvironmentObject var popup: PopupHandler
     
-    
     var body: some View {
         
         @Bindable var bk = bk

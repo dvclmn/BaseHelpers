@@ -18,6 +18,8 @@ final class ConversationHandler {
     var searchText: String = ""
     var isSearching: Bool = false
     
+    var currentConversationID: Conversation.ID? = nil
+    
     var isResponseLoading: Bool = false
     
     var isRequestingNewConversation: Bool = false
@@ -28,6 +30,10 @@ final class ConversationHandler {
     var messageHistory: String = ""
     
     var editorHeight: Double = 200
+    
+    func getCurrentConversation(within conversations: [Conversation]) -> Conversation? {
+            conversations.first(where: {$0.id == currentConversationID})
+    }
     
     func getConversation(from id: Conversation.ID, within conversations: [Conversation]) -> Conversation? {
         return conversations.first(where: {$0.id == id})
