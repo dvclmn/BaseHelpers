@@ -10,21 +10,27 @@ import SwiftData
 import Styles
 import SplitView
 import Sidebar
+import Navigation
 
 struct SidebarView: View {
     @Environment(BanksiaHandler.self) private var bk
     @Environment(ConversationHandler.self) private var conv
     @EnvironmentObject var sidebar: SidebarHandler
+    @EnvironmentObject var nav: NavigationHandler<Page>
     
     @Environment(\.modelContext) var modelContext
     
-    @Query(sort: \Conversation.created) private var conversations: [Conversation]
+    @Query(sort: \Conversation.created, order: .reverse) private var conversations: [Conversation]
+    
+    
     
     var body: some View {
         
         @Bindable var bk = bk
         
+        
         CustomSidebar(sidebar: sidebar) {
+            
             
             ForEach(conversations) { conversation in
                 ConversationListItem(
@@ -32,12 +38,12 @@ struct SidebarView: View {
                     conversation: conversation
                 )
             } // END foreach
-            SidebarButton(
-                page: Page.conversation(Conversation.appKitDrawing),
-                label: "Example",
-                icon: "bubble.middle.bottom"
-            )
         } // END sidebar
+        .onAppear {
+            if nav.path.isEmpty, let firstConversation = conversations.first {
+                nav.path = [Page.conversation(firstConversation)]
+            }
+        }
     }
 }
 //

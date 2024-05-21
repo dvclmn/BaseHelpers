@@ -11,6 +11,7 @@ import Styles
 import Utilities
 import Modifiers
 import Swatches
+import ResizableView
 
 struct MessageInputView: View {
     @Environment(ConversationHandler.self) private var conv
@@ -27,6 +28,7 @@ struct MessageInputView: View {
     let minInputHeight: Double = 200
     let maxInputHeight: Double = 500
     
+    
     let inputHeightControlSize: Double = 12
     
     @FocusState private var isFocused
@@ -41,13 +43,21 @@ struct MessageInputView: View {
             
             VStack(alignment: .leading, spacing: 0) {
                 
+                ResizableView(
+                    size: $conv.editorHeight,
+                    minSize: 200,
+                    maxSize: 500,
+                    edge: .top,
+                    persistKey: "viewHeight"
+                ) {    
+                
                 ScrollView(.vertical) {
                     EditorRepresentable(text: $userPrompt)
                         .frame(minHeight: minInputHeight, maxHeight: .infinity)
 
                 }
                 .frame(minHeight: conv.editorHeight, maxHeight: conv.editorHeight)
-                .padding(.top, 18 + inputHeightControlSize)
+                .padding(.top, inputHeightControlSize)
                 .padding(.horizontal, Styles.paddingText)
                 .scrollContentBackground(.hidden)
                 .onChange(of: conv.isResponseLoading) {
@@ -55,54 +65,11 @@ struct MessageInputView: View {
 //                    editorHeight = nil
                 }
                 .background(.thinMaterial)
-                .overlay(alignment: .top) {
-                    GeometryReader { geo in
-                        //                            HStack {
-                        //                                Text("\(geo.size.height)")
-                        //                                Text("Tracked height: \(trackedEditorHeight)")
-                        //                            }
-                        Color(.white.opacity(0.02))
-                        //                            .overlay {
-                        //                                Color(.white.opacity(isHoveringHeightAdjustor ? 0.2 : 0.1))
-                        //                                .frame(height: isHoveringHeightAdjustor ? 12 : 2)
-                        //                            }
-                            .frame(height: inputHeightControlSize)
-                            .contentShape(Rectangle())
-//                            .border(Color.green.opacity(0.2))
-                            .gesture(
-                                ExclusiveGesture(
-                                    TapGesture(count: 2)
-                                        .onEnded {
-                                            pref.editorHeight = conv.editorHeight
-//                                            editorHeight = nil
-                                        }
-                                    ,
-                                    DragGesture(minimumDistance: 0)
-                                    
-                                        .onChanged { gesture in
-                                            
-//                                            editorHeight = trackedEditorHeight
-                                            
-                                            conv.editorHeight += gesture.translation.height * -1
-                                            conv.editorHeight = min(max(conv.editorHeight, minInputHeight), maxInputHeight)
-                                            
-                                        }
-                                )
-                                
-                            ) // END exclusive gesture
-//                            .cursor(.resizeUpDown)
-                            .onHover { hovering in
-                                withAnimation(Styles.animation) {
-                                    isHoveringHeightAdjustor = hovering
-                                }
-                            }
 
-                    } // END geo
-                    
-                }
                 
                 
                 
+                } // END resizable
                 
             } // END user text field hstack
             .overlay(alignment: .bottom) {

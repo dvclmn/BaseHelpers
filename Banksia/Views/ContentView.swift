@@ -43,14 +43,16 @@ struct ContentView: View {
     @Environment(\.undoManager) var undoManager
     @Environment(BanksiaHandler.self) private var bk
     @Environment(ConversationHandler.self) private var conv
-    @Environment(Navigation<Page>.self) private var nav
+    
+    @EnvironmentObject var nav: NavigationHandler<Page>
     @EnvironmentObject var popup: PopupHandler
     
-    @State private var viewHeight: Double = 200
     
     var body: some View {
         
         @Bindable var bk = bk
+        
+        
         
         SplitView<Page, SidebarView, ToolbarView>(nav: nav, popup: popup) {
             SidebarView()
@@ -60,7 +62,6 @@ struct ContentView: View {
             case .conversation(let conversation):
                 AnyView(ConversationView(conversation: conversation))
             }
-            
             
         } toolbar: {
             ToolbarView()
@@ -73,6 +74,9 @@ struct ContentView: View {
             }
         }
         .ignoresSafeArea()
+        
+
+        
 //        .onChange(of: conv.isRequestingNewConversation) {
 //            let newConversation = Conversation()
 //            modelContext.insert(newConversation)
@@ -106,7 +110,7 @@ struct ContentView: View {
     ContentView()
         .environment(ConversationHandler())
         .environment(BanksiaHandler())
-        .environment(Navigation<Page>())
+        .environmentObject(NavigationHandler<Page>())
         .environmentObject(Preferences())
         .environmentObject(PopupHandler())
         .environmentObject(SidebarHandler())

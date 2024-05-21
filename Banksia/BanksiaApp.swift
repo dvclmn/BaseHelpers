@@ -14,10 +14,10 @@ import Sidebar
 @main
 struct BanksiaApp: App {
     
-    @State private var nav = Navigation<Page>()
     @State private var bk = BanksiaHandler()
     @State private var conv = ConversationHandler()
     
+    @StateObject private var nav = NavigationHandler<Page>()
     @StateObject private var popup = PopupHandler()
     @StateObject private var pref = Preferences()
     @StateObject private var sidebar = SidebarHandler()
@@ -38,9 +38,9 @@ struct BanksiaApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .environment(nav)
                 .environment(bk)
                 .environment(conv)
+                .environmentObject(nav)
                 .environmentObject(pref)
                 .environmentObject(popup)
                 .environmentObject(sidebar)

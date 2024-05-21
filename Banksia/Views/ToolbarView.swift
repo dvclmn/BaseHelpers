@@ -14,7 +14,7 @@ import Sidebar
 struct ToolbarView: View {
     @Environment(\.modelContext) var modelContext
     @Environment(BanksiaHandler.self) private var bk
-    @Environment(Navigation<Page>.self) private var nav
+    @EnvironmentObject var nav: NavigationHandler<Page>
     
     @EnvironmentObject var popup: PopupHandler
     @EnvironmentObject var sidebar: SidebarHandler
@@ -32,6 +32,8 @@ struct ToolbarView: View {
             Text(nav.navigationTitle ?? "Banksia")
                 .font(.title2)
                 .foregroundStyle(.secondary)
+            
+//            Text()
             
             Spacer()
             
