@@ -8,8 +8,11 @@
 import SwiftUI
 import Styles
 import Utilities
+import Grainient
+import Modifiers
 
 struct ConversationEditorView: View {
+    @Environment(ConversationHandler.self) private var conv
     
     @Bindable var conversation: Conversation
     
@@ -60,9 +63,9 @@ struct ConversationEditorView: View {
             
         } // END scroll view
         .scrollContentBackground(.hidden)
-        .background(.contentBackground)
-        //        .background(.ultraThinMaterial)
+                .background(.ultraThinMaterial)
         .frame(minWidth: 340 , minHeight: 400)
+        .grainient(seed: conv.currentConversationGrainientSeed)
     
     }
 }

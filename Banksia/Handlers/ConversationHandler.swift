@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 import SwiftData
+import Grainient
 
 @Observable
 final class ConversationHandler {
@@ -20,9 +21,12 @@ final class ConversationHandler {
     
     var currentConversationID: Conversation.ID? = nil
     
+    var currentConversationGrainientSeed: Int? = GrainientSettings.generateGradientSeed()
+    
     var isResponseLoading: Bool = false
     
     var isRequestingNewConversation: Bool = false
+    var isConversationEditorShowing: Bool = false
     
     var selectedParagraph: String = ""
     

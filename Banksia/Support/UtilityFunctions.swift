@@ -66,30 +66,3 @@ extension StringProtocol {
     }
 }
 
-
-// MARK: - Grain overlay
-struct GrainOverlay: ViewModifier {
-    var opacity: Double
-    
-    func body(content: Content) -> some View {
-        content
-            .overlay(
-                Image(.fuji)
-                    .resizable(resizingMode: .tile)
-                    .drawingGroup()
-                    .blendMode(.overlay)
-                    .opacity(opacity)
-            )
-    }
-}
-extension View {
-    func grainOverlay(
-        opacity: Double = 0.8
-    ) -> some View {
-        self.modifier(
-            GrainOverlay(
-                opacity: opacity
-            )
-        )
-    }
-}

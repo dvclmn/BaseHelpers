@@ -27,6 +27,16 @@ struct MenuCommands: Commands {
             }
             .keyboardShortcut("o", modifiers: .command)
             
+            Button("Edit Conversation…") {
+                conv.isConversationEditorShowing.toggle()
+            }
+            .keyboardShortcut("e", modifiers: .command)
+            
+            Button("Delete Conversation…") {
+                
+            }
+            .keyboardShortcut(.delete, modifiers: .command)
+            
         }
         
 //        ToolbarCommands()

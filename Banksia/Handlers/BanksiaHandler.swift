@@ -19,7 +19,7 @@ class BanksiaHandler {
     
     var isQuickNavShowing: Bool = false
     
-    var isConversationEditorShowing: Bool = false
+
     var isGlobalConversationPreferencesShowing: Bool = false
     var isEditingLongFormText: Bool = false
 

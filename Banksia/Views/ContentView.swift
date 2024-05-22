@@ -13,6 +13,7 @@ import Navigation
 import Styles
 import Popup
 import Sidebar
+import Grainient
 
 enum Page: Destination {
     
@@ -44,6 +45,8 @@ struct ContentView: View {
     @Environment(BanksiaHandler.self) private var bk
     @Environment(ConversationHandler.self) private var conv
     
+    @Query private var conversations: [Conversation]
+    
     @EnvironmentObject var nav: NavigationHandler<Page>
     @EnvironmentObject var popup: PopupHandler
     
@@ -64,7 +67,7 @@ struct ContentView: View {
             ToolbarView()
             
         }
-        
+        .grainient(seed: conv.currentConversationGrainientSeed)
         .toolbar {
             ToolbarItem {
                 Spacer()
@@ -74,11 +77,9 @@ struct ContentView: View {
         
 
         
-//        .onChange(of: conv.isRequestingNewConversation) {
-//            let newConversation = Conversation()
-//            modelContext.insert(newConversation)
-//            bk.selectedConversation = newConversation.persistentModelID
-//        }
+        .onChange(of: conv.isRequestingNewConversation) {
+            newConversation()
+        }
 //        .onAppear {
 //            if let firstConversation = conversations.first {
 //                bk.selectedConversation = firstConversation.persistentModelID
@@ -101,6 +102,18 @@ struct ContentView: View {
     //            bk.activeConversation = conversation
     //        }
     //    }
+}
+
+extension ContentView {
+    func newConversation() {
+        if conv.isRequestingNewConversation {
+            let newConversation = Conversation(name: "New conversation")
+            modelContext.insert(newConversation)
+            nav.path.append(Page.conversation(newConversation))
+            popup.showPopup(title: "Added new conversation")
+        }
+        conv.isRequestingNewConversation = false
+    }
 }
 
 #Preview {

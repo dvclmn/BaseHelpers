@@ -73,10 +73,10 @@ struct ConversationView: View {
                             conversation: conversation
                         )
                     }
-                    .sheet(isPresented: $bk.isConversationEditorShowing) {
+                    .sheet(isPresented: $conv.isConversationEditorShowing) {
                         
                         ConversationEditorView(conversation: conversation)
-                        
+                            
                     }
                     //            .onAppear {
                     //                if isPreview {

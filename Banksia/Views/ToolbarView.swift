@@ -12,6 +12,7 @@ import Navigation
 import Popup
 import Sidebar
 import Modifiers
+import Grainient
 
 struct ToolbarView: View {
     @Environment(\.modelContext) var modelContext
@@ -31,11 +32,10 @@ struct ToolbarView: View {
     @State private var isToolbarMenuPresented: Bool = false
     
     @State private var isRenaming: Bool = false
-    @State private var localLabel: String = ""
-    
-    @FocusState private var isRenameFieldFocused: Bool
     
     var body: some View {
+        
+        @Bindable var conv = conv
         
         var currentConversationName: String {
             return conv.getCurrentConversation(within: conversations)?.name ?? ""
@@ -46,8 +46,12 @@ struct ToolbarView: View {
             Text(nav.navigationTitle ?? "Banksia")
                 .font(.title2)
                 .foregroundStyle(.secondary)
-                .renamable(itemName: currentConversationName) { newName in
+                .renamable(
+                    isRenaming: $isRenaming,
+                    itemName: currentConversationName
+                ) { newName in
                     conv.getCurrentConversation(within: conversations)?.name = newName
+                    popup.showPopup(title: "Renamed to \"\(newName)\"")
                 }
             
             Spacer()
@@ -55,9 +59,15 @@ struct ToolbarView: View {
             if !sidebar.isSidebarShowing {
                 NewConversationButton()
             }
+            
+            GrainientPicker(
+                seed: $conv.currentConversationGrainientSeed,
+                popup: popup
+            )
 
+            // MARK: - 􀈎 Edit conversation
             Button {
-                bk.isConversationEditorShowing.toggle()
+                conv.isConversationEditorShowing.toggle()
             } label: {
                 Label("Edit conversation prompt", systemImage: Icons.edit.icon)
             }
@@ -162,25 +172,13 @@ struct ToolbarView: View {
             
 //        } // END delete
     }
-    private func rename() {
-        isRenaming = false
-        if let currentConversation = conv.getCurrentConversation(within: conversations) {
-            currentConversation.name = localLabel
-            popup.showPopup(title: "Renamed to \"\(currentConversation.name)\"")
-        } else {
-                print("No conversation selected")
-        }
-    }
 }
 
 extension ToolbarView {
     @ViewBuilder
     func NewConversationButton() -> some View {
         Button {
-            let newConversation = Conversation(name: "New conversation")
-            modelContext.insert(newConversation)
-            nav.path.append(Page.conversation(newConversation))
-            popup.showPopup(title: "Added new conversation")
+            conv.isRequestingNewConversation = true
         } label: {
             Label("New conversation", systemImage: Icons.plus.icon)
         }
