@@ -25,6 +25,7 @@ struct ConversationListItem: View {
     @State private var iconPickerShowing: Bool = false
     
     var page: Page
+    
     @Bindable var conversation: Conversation
     
     var body: some View {
@@ -40,6 +41,7 @@ struct ConversationListItem: View {
             icon: "bubble.middle.bottom",
             isCurrentPage: isCurrentPage,
             isEditable: true,
+            nav: nav,
             popup: popup
         ) {
             Button {

@@ -51,8 +51,6 @@ struct ContentView: View {
         
         @Bindable var bk = bk
         
-        
-        
         SplitView<Page, SidebarView, ToolbarView>(nav: nav, popup: popup) {
             SidebarView()
         } content: { page in

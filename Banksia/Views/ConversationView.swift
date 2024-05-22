@@ -9,7 +9,6 @@ import SwiftUI
 import SwiftData
 import Styles
 import Utilities
-import ResizableView
 
 struct ConversationView: View {
     @Environment(BanksiaHandler.self) private var bk
@@ -50,6 +49,7 @@ struct ConversationView: View {
                             }
                         }
                     }
+                    
                     
                     ScrollView(.vertical) {
                         LazyVStack(spacing: 12) {
@@ -98,6 +98,7 @@ struct ConversationView: View {
             .onAppear {
                 conv.currentConversationID = conversation.persistentModelID
             }
+            
             
         } else {
             Text("No conversation selected")

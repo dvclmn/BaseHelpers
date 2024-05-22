@@ -40,7 +40,7 @@ struct ToolbarView: View {
         var currentConversationName: String {
             return conv.getCurrentConversation(within: conversations)?.name ?? ""
         }
-        
+
         HStack(spacing: 14) {
   
             Text(nav.navigationTitle ?? "Banksia")
@@ -50,53 +50,18 @@ struct ToolbarView: View {
                     conv.getCurrentConversation(within: conversations)?.name = newName
                 }
             
-//            if isRenaming {
-//                TextField("Rename conversation", text: $localLabel)
-//                    .textFieldStyle(.customField(text: $localLabel))
-//                    .focused($isRenameFieldFocused)
-//                    .onSubmit {
-//                        rename()
-//                    }
-//                    .onAppear {
-//                        isRenameFieldFocused = true
-//                        /// As soon as the TextView comes on-screen, we grab a copy of the label to store in this local scope, to work with
-//                        localLabel = conv.getCurrentConversation(within: conversations)?.name ?? ""
-//                    }
-//    #if os(macOS)
-//                    .onExitCommand {
-//                        isRenameFieldFocused = false
-//                        isRenaming = false
-//                        localLabel = ""
-//                    }
-//    #endif
-//            } else {
-//                
-//                    .gesture(TapGesture(count: 2).onEnded {
-//                        isRenameFieldFocused = true
-//                        isRenaming = true
-//                    })
-//            }
-//            
-
-            
             Spacer()
             
-            // MARK: - 􀅼 New conversation
-            Button {
-                let newConversation = Conversation(name: "New conversation")
-                modelContext.insert(newConversation)
-                nav.path.append(Page.conversation(newConversation))
-                popup.showPopup(title: "Added new conversation")
-            } label: {
-                Label("New conversation", systemImage: Icons.plus.icon)
+            if !sidebar.isSidebarShowing {
+                NewConversationButton()
             }
-            .buttonStyle(.customButton(labelDisplay: .iconOnly))
-            
-            
-            // MARK: - Conversation prompt
-            
-            
-            
+
+            Button {
+                bk.isConversationEditorShowing.toggle()
+            } label: {
+                Label("Edit conversation prompt", systemImage: Icons.edit.icon)
+            }
+
             
             // MARK: - 􀍠 Options
             Button {
@@ -104,7 +69,7 @@ struct ToolbarView: View {
             } label: {
                 Label("More options", systemImage: Icons.ellipsis.icon)
             }
-            .buttonStyle(.customButton(labelDisplay: .iconOnly))
+//            .buttonStyle(.customButton(labelDisplay: .iconOnly))
             
             .popover(isPresented: $isToolbarMenuPresented) {
                 Button {
@@ -114,8 +79,13 @@ struct ToolbarView: View {
                 }
             }
             
-            
         } // END toolbar hstack
+        .buttonStyle(
+            .customButton(
+                hasBackground: false,
+                labelDisplay: .iconOnly
+            )
+        )
                 .safeAreaPadding(.leading, sidebar.isSidebarShowing ? sidebar.sidebarWidth : Styles.paddingToolbarTrafficLightsWidth)
         .frame(
             maxWidth: .infinity,
@@ -141,18 +111,30 @@ struct ToolbarView: View {
             
         }
         
+        // MARK: - 􀨱 Sidebar buttons
         .overlay(alignment: .leading) {
+            
+            
             if sidebar.isRoomForSidebar {
-                Button {
-                    withAnimation(Styles.animationEased) {
-                        sidebar.isSidebarShowing.toggle()
+                HStack {
+                    Button {
+                        withAnimation(Styles.animationEased) {
+                            sidebar.isSidebarShowing.toggle()
+                        }
+                    } label: {
+                        Label("Toggle sidebar", systemImage: Icons.sidebarAlt.icon)
                     }
-                } label: {
-                    Label("Toggle sidebar", systemImage: Icons.sidebarAlt.icon)
-                }
-                .buttonStyle(.customButton(hasBackground: !sidebar.isSidebarShowing, labelDisplay: .iconOnly))
-                .safeAreaPadding(.leading, Styles.paddingToolbarTrafficLightsWidth)
-//                .padding(.trailing, sidebar.isSidebarShowing && sidebar.isRoomForSidebar ? 56 : 0)
+                    
+                    .safeAreaPadding(.leading, Styles.paddingToolbarTrafficLightsWidth)
+    //                .padding(.trailing, sidebar.isSidebarShowing && sidebar.isRoomForSidebar ? 56 : 0)
+                    
+                    // MARK: - 􀅼 New conversation
+                    if sidebar.isSidebarShowing {
+                        NewConversationButton()
+                    } // END sidebar showing check
+                    
+                } // END hstack
+                .buttonStyle(.customButton(hasBackground: false, labelDisplay: .iconOnly))
             }
         }
     
@@ -187,6 +169,20 @@ struct ToolbarView: View {
             popup.showPopup(title: "Renamed to \"\(currentConversation.name)\"")
         } else {
                 print("No conversation selected")
+        }
+    }
+}
+
+extension ToolbarView {
+    @ViewBuilder
+    func NewConversationButton() -> some View {
+        Button {
+            let newConversation = Conversation(name: "New conversation")
+            modelContext.insert(newConversation)
+            nav.path.append(Page.conversation(newConversation))
+            popup.showPopup(title: "Added new conversation")
+        } label: {
+            Label("New conversation", systemImage: Icons.plus.icon)
         }
     }
 }

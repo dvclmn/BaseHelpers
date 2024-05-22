@@ -22,17 +22,11 @@ struct SidebarView: View {
     
     @Query(sort: \Conversation.created, order: .reverse) private var conversations: [Conversation]
     
-    
-    
     var body: some View {
         
         @Bindable var bk = bk
         
-        
         CustomSidebar(sidebar: sidebar) {
-            
-            
-                        
             
             ForEach(conversations) { conversation in
                 ConversationListItem(

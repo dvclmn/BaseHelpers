@@ -43,13 +43,13 @@ struct MessageInputView: View {
             
             VStack(alignment: .leading, spacing: 0) {
                 
-                ResizableView(
-                    size: $conv.editorHeight,
-                    minSize: 200,
-                    maxSize: 500,
-                    edge: .top,
-                    persistKey: "viewHeight"
-                ) {    
+//                ResizableView(
+//                    size: $conv.editorHeight,
+//                    minSize: 200,
+//                    maxSize: 500,
+//                    edge: .top,
+//                    persistKey: "viewHeight"
+//                ) {    
                 
                 ScrollView(.vertical) {
                     EditorRepresentable(text: $userPrompt)
@@ -69,7 +69,7 @@ struct MessageInputView: View {
                 
                 
                 
-                } // END resizable
+//                } // END resizable
                 
             } // END user text field hstack
             .overlay(alignment: .bottom) {
