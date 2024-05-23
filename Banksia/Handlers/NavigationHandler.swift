@@ -10,6 +10,7 @@ import SwiftUI
 import Sidebar
 import Styles
 import Navigation
+import Icons
 
 enum Page: Destination {
     

@@ -8,8 +8,8 @@
 import SwiftUI
 import Styles
 import Utilities
-import Components
-import BaseUIElement
+import Icons
+import Form
 
 struct GlobalConversationSettingsView: View {
     @EnvironmentObject var pref: Preferences

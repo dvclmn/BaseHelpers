@@ -10,6 +10,7 @@ import Styles
 import Utilities
 import Grainient
 import Modifiers
+import Icons
 
 struct ConversationEditorView: View {
     @Environment(ConversationHandler.self) private var conv

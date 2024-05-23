@@ -9,8 +9,9 @@ import SwiftUI
 import Styles
 import Navigation
 import Popup
-import BaseUIElement
 import Sidebar
+import Button
+import Icons
 
 struct ConversationListItem: View {
     @Environment(\.modelContext) private var modelContext
@@ -24,6 +25,8 @@ struct ConversationListItem: View {
     
     @State private var iconPickerShowing: Bool = false
     
+    @State private var isRenaming: Bool = false
+    
     var page: Page
     
     @Bindable var conversation: Conversation
@@ -34,15 +37,29 @@ struct ConversationListItem: View {
             return page == nav.path.last
         }
 
-        SidebarButton(
-            page: page,
-            label: page.name,
-            editableLabel: $conversation.name,
-            icon: "bubble.middle.bottom",
-            isCurrentPage: isCurrentPage,
-            isEditable: true,
-            popup: popup
-        ) {
+        
+        
+        NavigationLink(value: page) {
+            Label(page.name, systemImage: "bubble.middle.bottom")
+                .renamable(
+                    isRenaming: $isRenaming,
+                    itemName: conversation.name,
+                    renameAction: { newName in
+                        conversation.name = newName
+                    popup.showPopup(title: "Renamed to \"\(conversation.name)\"")
+                })
+        } // END nav link
+        .symbolRenderingMode(.hierarchical)
+        .symbolVariant(.fill)
+        .buttonStyle(.customButton(status: isCurrentPage ? .active : .normal, hasBackground: false))
+        .contextMenu {
+            
+            Button {
+                isRenaming = true
+            } label: {
+                Label("Rename…", systemImage: Icons.select.icon)
+            }
+            
             Button {
                 do {
                     modelContext.delete(conversation)
@@ -56,7 +73,9 @@ struct ConversationListItem: View {
             } label: {
                 Label("Delete conversation", systemImage: Icons.trash.icon)
             }
-        }
+            
+        } // END context menu
+
         .frame(maxWidth: .infinity, alignment: .leading)
         
     }

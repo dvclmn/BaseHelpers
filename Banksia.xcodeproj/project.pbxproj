@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		F6081DF92B0485EA00A78D64 /* NetworkHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6081DF82B0485EA00A78D64 /* NetworkHandler.swift */; };
-		F626CD1C2BFA73C8002A0D8A /* SplitView in Frameworks */ = {isa = PBXBuildFile; productRef = F626CD1B2BFA73C8002A0D8A /* SplitView */; };
 		F626CD1E2BFA73D1002A0D8A /* APIHandler in Frameworks */ = {isa = PBXBuildFile; productRef = F626CD1D2BFA73D1002A0D8A /* APIHandler */; };
 		F635C17E2BD0F41100E4EA4A /* SmoothGradient in Frameworks */ = {isa = PBXBuildFile; productRef = F635C17D2BD0F41100E4EA4A /* SmoothGradient */; };
 		F636A11C2B05B23D00C24891 /* GeneralSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F636A11B2B05B23D00C24891 /* GeneralSettingsView.swift */; };
@@ -24,6 +23,9 @@
 		F64F8E222B03090600C72E51 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F64F8E212B03090600C72E51 /* ContentView.swift */; };
 		F64F8E2E2B04254100C72E51 /* ConversationHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F64F8E2D2B04254100C72E51 /* ConversationHandler.swift */; };
 		F64F8E312B042A2700C72E51 /* UtilityFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F64F8E302B042A2700C72E51 /* UtilityFunctions.swift */; };
+		F6623F672BFF89B40087C518 /* Components in Frameworks */ = {isa = PBXBuildFile; productRef = F6623F662BFF89B40087C518 /* Components */; };
+		F6623F692BFF89B40087C518 /* Structure in Frameworks */ = {isa = PBXBuildFile; productRef = F6623F682BFF89B40087C518 /* Structure */; };
+		F6623F6B2BFF89B40087C518 /* Styles in Frameworks */ = {isa = PBXBuildFile; productRef = F6623F6A2BFF89B40087C518 /* Styles */; };
 		F663C2682BD25FC0000D8F5F /* MarkdownEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F663C2672BD25FC0000D8F5F /* MarkdownEditor.swift */; };
 		F6795C7D2BCE70920093BC9C /* ConversationEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6795C7C2BCE70920093BC9C /* ConversationEditorView.swift */; };
 		F6795C7F2BCE7A4D0093BC9C /* GlobalConversationSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6795C7E2BCE7A4D0093BC9C /* GlobalConversationSettingsView.swift */; };
@@ -43,7 +45,6 @@
 		F6C245062BEE50CF002AEE3D /* Grainient in Frameworks */ = {isa = PBXBuildFile; productRef = F6C245052BEE50CF002AEE3D /* Grainient */; };
 		F6C245082BEE50CF002AEE3D /* KeychainHandler in Frameworks */ = {isa = PBXBuildFile; productRef = F6C245072BEE50CF002AEE3D /* KeychainHandler */; };
 		F6C2450A2BEE50CF002AEE3D /* Popup in Frameworks */ = {isa = PBXBuildFile; productRef = F6C245092BEE50CF002AEE3D /* Popup */; };
-		F6C2450C2BEE50CF002AEE3D /* StyleLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = F6C2450B2BEE50CF002AEE3D /* StyleLibrary */; };
 		F6D6E2D62BC805E9000D2051 /* SingleMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6D6E2D52BC805E9000D2051 /* SingleMessageView.swift */; };
 		F6D6E2DB2BC80AA2000D2051 /* MessageInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6D6E2DA2BC80AA2000D2051 /* MessageInputView.swift */; };
 		F6D6E2EB2BC82CFE000D2051 /* ExampleText.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6D6E2EA2BC82CFE000D2051 /* ExampleText.swift */; };
@@ -106,15 +107,16 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F6623F6B2BFF89B40087C518 /* Styles in Frameworks */,
+				F6623F672BFF89B40087C518 /* Components in Frameworks */,
 				F626CD1E2BFA73D1002A0D8A /* APIHandler in Frameworks */,
-				F626CD1C2BFA73C8002A0D8A /* SplitView in Frameworks */,
 				F635C17E2BD0F41100E4EA4A /* SmoothGradient in Frameworks */,
 				F6C2450A2BEE50CF002AEE3D /* Popup in Frameworks */,
 				F6C245082BEE50CF002AEE3D /* KeychainHandler in Frameworks */,
 				F6C245062BEE50CF002AEE3D /* Grainient in Frameworks */,
 				F644B17D2BF276F70098FDCF /* Utilities in Frameworks */,
-				F6C2450C2BEE50CF002AEE3D /* StyleLibrary in Frameworks */,
 				F639D8C82BD518330035226E /* Highlightr in Frameworks */,
+				F6623F692BFF89B40087C518 /* Structure in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -264,10 +266,11 @@
 				F6C245052BEE50CF002AEE3D /* Grainient */,
 				F6C245072BEE50CF002AEE3D /* KeychainHandler */,
 				F6C245092BEE50CF002AEE3D /* Popup */,
-				F6C2450B2BEE50CF002AEE3D /* StyleLibrary */,
 				F644B17C2BF276F70098FDCF /* Utilities */,
-				F626CD1B2BFA73C8002A0D8A /* SplitView */,
 				F626CD1D2BFA73D1002A0D8A /* APIHandler */,
+				F6623F662BFF89B40087C518 /* Components */,
+				F6623F682BFF89B40087C518 /* Structure */,
+				F6623F6A2BFF89B40087C518 /* Styles */,
 			);
 			productName = Banksia;
 			productReference = F6A7BEE72B01C57400D3CE25 /* Banksia.app */;
@@ -612,10 +615,6 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		F626CD1B2BFA73C8002A0D8A /* SplitView */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = SplitView;
-		};
 		F626CD1D2BFA73D1002A0D8A /* APIHandler */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = APIHandler;
@@ -633,6 +632,18 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = Utilities;
 		};
+		F6623F662BFF89B40087C518 /* Components */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Components;
+		};
+		F6623F682BFF89B40087C518 /* Structure */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Structure;
+		};
+		F6623F6A2BFF89B40087C518 /* Styles */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Styles;
+		};
 		F6C245052BEE50CF002AEE3D /* Grainient */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Grainient;
@@ -644,10 +655,6 @@
 		F6C245092BEE50CF002AEE3D /* Popup */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Popup;
-		};
-		F6C2450B2BEE50CF002AEE3D /* StyleLibrary */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = StyleLibrary;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

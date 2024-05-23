@@ -13,6 +13,7 @@ import Popup
 import Sidebar
 import Modifiers
 import Grainient
+import Icons
 
 struct ToolbarView: View {
     @Environment(\.modelContext) var modelContext

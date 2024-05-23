@@ -9,7 +9,7 @@ import SwiftUI
 import SwiftData
 import Styles
 import Utilities
-import BaseUIElement
+import Icons
 
 struct SingleMessageView: View {
     @Environment(BanksiaHandler.self) private var bk
