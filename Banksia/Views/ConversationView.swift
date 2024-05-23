@@ -18,9 +18,9 @@ struct ConversationView: View {
     
     @Query private var messages: [Message]
     
-    var conversation: Conversation?
+    @Bindable var conversation: Conversation
     
-    init(filter: Predicate<Message>? = nil, conversation: Conversation?) {
+    init(filter: Predicate<Message>? = nil, conversation: Conversation) {
         self.conversation = conversation
         
         if let filter = filter {
@@ -34,8 +34,6 @@ struct ConversationView: View {
         
         @Bindable var conv = conv
         @Bindable var bk = bk
-        
-        if let conversation = conversation {
             
             VStack {
                 if let conversationMessages = conversation.messages {
@@ -95,26 +93,12 @@ struct ConversationView: View {
                 } // END messages check
                 
             } // Vstack so I can do an onAppear?
-            .onAppear {
-                conv.currentConversationID = conversation.persistentModelID
+            .task(id: conversation.grainientSeed) {
+                withAnimation(Styles.animationRelaxed) {
+                    conv.grainientSeed = conversation.grainientSeed
+                }
             }
-            
-            
-        } else {
-            Text("No conversation selected")
-            
-        } // END conversation check
-        
-        //        .toolbar {
-        //            ToolbarItem {
-        //                Button {
-        //                    bk.isConversationEditorShowing.toggle()
-        //                } label: {
-        //                    Label("Edit conversation prompt", systemImage: Icons.edit.icon)
-        //                }
-        //            }
-        //        }
-        
+
         
     } // END view body
     

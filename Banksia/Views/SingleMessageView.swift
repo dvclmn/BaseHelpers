@@ -49,11 +49,11 @@ struct SingleMessageView: View {
                     .background(Color(message.type == .user ? .blue : .gray).opacity(0.2))
                     .clipShape(.rect(cornerRadius: Styles.roundingMedium))
                     .padding(.bottom)
-
+                
                     .overlay(alignment: .topTrailing) {
                         if isHovering {
                             Button {
-                                copyToClipboard(message.content)
+                                copyStringToClipboard(message.content)
                             } label: {
                                 Label("Copy text", systemImage: Icons.copy.icon)
                             }
@@ -73,15 +73,6 @@ struct SingleMessageView: View {
         .frame(maxWidth: .infinity, alignment: message.type == .user ? .trailing : .leading)
     }
     
-    private func copyToClipboard(_ text: String) {
-        let pasteboard: PasteboardCopying
-#if canImport(AppKit)
-        pasteboard = NSPasteboard.general
-#elseif canImport(UIKit)
-        pasteboard = UIPasteboard.general
-#endif
-        pasteboard.setString("\(text)")
-    }
 }
 
 #Preview {

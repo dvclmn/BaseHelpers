@@ -21,7 +21,7 @@ final class ConversationHandler {
     
     var currentConversationID: Conversation.ID? = nil
     
-    var currentConversationGrainientSeed: Int? = GrainientSettings.generateGradientSeed()
+    var grainientSeed: Int? = nil
     
     var isResponseLoading: Bool = false
     

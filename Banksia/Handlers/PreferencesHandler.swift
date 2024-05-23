@@ -18,6 +18,8 @@ final class Preferences: ObservableObject {
     
     @AppStorage("systemPromptKey") var systemPrompt: String = ""
     
+    @AppStorage("uiDimmingKey") var uiDimming: Double = 0.25
+    
 //    @AppStorage("userPromptKey") var userPrompt: String = ""
     
     

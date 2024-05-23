@@ -23,23 +23,17 @@ struct ToolbarView: View {
     @EnvironmentObject var popup: PopupHandler
     @EnvironmentObject var sidebar: SidebarHandler
     
-    @Query private var conversations: [Conversation]
-    
-    @State private var title: String = "Here is a short title."
-    @State private var message: String? = "And a short message with further info."
     @State private var isLoading: Bool = false
     
     @State private var isToolbarMenuPresented: Bool = false
     
     @State private var isRenaming: Bool = false
     
+    @Bindable var conversation: Conversation
+    
     var body: some View {
         
         @Bindable var conv = conv
-        
-        var currentConversationName: String {
-            return conv.getCurrentConversation(within: conversations)?.name ?? ""
-        }
 
         HStack(spacing: 14) {
   
@@ -48,9 +42,9 @@ struct ToolbarView: View {
                 .foregroundStyle(.secondary)
                 .renamable(
                     isRenaming: $isRenaming,
-                    itemName: currentConversationName
+                    itemName: conversation.name
                 ) { newName in
-                    conv.getCurrentConversation(within: conversations)?.name = newName
+                    conversation.name = newName
                     popup.showPopup(title: "Renamed to \"\(newName)\"")
                 }
             
@@ -60,8 +54,9 @@ struct ToolbarView: View {
                 NewConversationButton()
             }
             
+            // MARK: - 􁎄 Grainient picker
             GrainientPicker(
-                seed: $conv.currentConversationGrainientSeed,
+                seed: $conversation.grainientSeed,
                 popup: popup
             )
 

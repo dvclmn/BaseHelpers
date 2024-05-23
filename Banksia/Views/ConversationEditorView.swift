@@ -18,7 +18,6 @@ struct ConversationEditorView: View {
     
     var body: some View {
         
-        
         ScrollView(.vertical) {
             VStack(alignment: .leading) {
                 Text("Edit Conversation")
@@ -65,7 +64,7 @@ struct ConversationEditorView: View {
         .scrollContentBackground(.hidden)
                 .background(.ultraThinMaterial)
         .frame(minWidth: 340 , minHeight: 400)
-        .grainient(seed: conv.currentConversationGrainientSeed)
+        .grainient(seed: conversation.grainientSeed)
     
     }
 }

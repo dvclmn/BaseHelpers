@@ -15,29 +15,6 @@ import Popup
 import Sidebar
 import Grainient
 
-enum Page: Destination {
-    
-    case conversation(Conversation)
-    
-    var id: String {
-        self.name
-    }
-    
-    var name: String {
-        switch self {
-        case .conversation(let conversation):
-            return conversation.name
-        }
-    }
-    
-    var icon: String {
-        switch self {
-        case .conversation(let conversation):
-            return conversation.icon ?? Icons.message.icon
-        }
-    }
-}
-
 struct ContentView: View {
     
     @Environment(\.modelContext) var modelContext
@@ -49,25 +26,41 @@ struct ContentView: View {
     
     @EnvironmentObject var nav: NavigationHandler<Page>
     @EnvironmentObject var popup: PopupHandler
+    @EnvironmentObject var pref: Preferences
     
     var body: some View {
         
         @Bindable var bk = bk
         
-        SplitView<Page, SidebarView, ToolbarView>(nav: nav, popup: popup) {
+        SplitView(nav: nav, popup: popup) {
             SidebarView()
         } content: { page in
             
             switch page {
-            case .conversation(let conversation):
-                AnyView(ConversationView(conversation: conversation))
+            case .conversation(let conversationStatic):
+                
+                if let conversation = conversations.first(where: {$0.persistentModelID == conversationStatic.persistentModelID}) {
+                    ConversationView(conversation: conversation)
+                } else {
+                    Text("No conversation")
+                }
+
             }
             
-        } toolbar: {
-            ToolbarView()
+        } toolbar: { page in
+            
+            switch page {
+            case .conversation(let conversationStatic):
+                
+                if let conversation = conversations.first(where: {$0.persistentModelID == conversationStatic.persistentModelID}) {
+                    ToolbarView(conversation: conversation)
+                } else {
+                    Text("No conversation")
+                }
+
+            }
             
         }
-        .grainient(seed: conv.currentConversationGrainientSeed)
         .toolbar {
             ToolbarItem {
                 Spacer()
@@ -75,39 +68,25 @@ struct ContentView: View {
         }
         .ignoresSafeArea()
         
+        .grainient(
+            seed: conv.grainientSeed,
+            dimming: $bk.uiDimming
+        )
 
-        
         .onChange(of: conv.isRequestingNewConversation) {
             newConversation()
         }
-//        .onAppear {
-//            if let firstConversation = conversations.first {
-//                bk.selectedConversation = firstConversation.persistentModelID
-//            }
-//            //            getActiveConversation()
-//        }
-//        .onChange(of: bk.selectedConversation) {
-//            //            getActiveConversation()
-//        }
-        
-        //        .background(.contentBackground)
         
     }
     
-    //    private func getActiveConversation() {
-    //        print("Let's get the active conversation")
-    //        if let conversationID = bk.selectedConversation.first {
-    //            let conversation = conversations.first(where: {$0.persistentModelID == conversationID})
-    //            print("The active conversation is: \(String(describing: conversation?.name))")
-    //            bk.activeConversation = conversation
-    //        }
-    //    }
+    
 }
 
 extension ContentView {
     func newConversation() {
         if conv.isRequestingNewConversation {
-            let newConversation = Conversation(name: "New conversation")
+            let newGrainientSeed = GrainientSettings.generateGradientSeed()
+            let newConversation = Conversation(name: "New conversation", grainientSeed: newGrainientSeed)
             modelContext.insert(newConversation)
             nav.path.append(Page.conversation(newConversation))
             popup.showPopup(title: "Added new conversation")
