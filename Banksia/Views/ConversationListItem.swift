@@ -41,7 +41,6 @@ struct ConversationListItem: View {
             icon: "bubble.middle.bottom",
             isCurrentPage: isCurrentPage,
             isEditable: true,
-            nav: nav,
             popup: popup
         ) {
             Button {

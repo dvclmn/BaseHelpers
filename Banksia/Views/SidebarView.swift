@@ -8,7 +8,6 @@
 import SwiftUI
 import SwiftData
 import Styles
-import SplitView
 import Sidebar
 import Navigation
 
@@ -26,20 +25,36 @@ struct SidebarView: View {
         
         @Bindable var bk = bk
         
-        CustomSidebar(sidebar: sidebar) {
+        if sidebar.isSidebarShowing && sidebar.isRoomForSidebar {
             
-            ForEach(conversations) { conversation in
-                ConversationListItem(
-                    page: Page.conversation(conversation),
-                    conversation: conversation
-                )
-            } // END foreach
-        } // END sidebar
-        .onAppear {
-            if nav.path.isEmpty, let firstConversation = conversations.first {
-                nav.path = [Page.conversation(firstConversation)]
-            }
-        }
+//            ResizableView(
+//                size: $sidebar.sidebarWidth,
+//                minSize: 90,
+//                maxSize: 240,
+//                edge: .leading) {
+                    VStack(alignment: .leading) {
+                        ScrollView(.vertical, showsIndicators: false) {
+                            LazyVStack(spacing: 2) {
+                                ForEach(conversations) { conversation in
+                                    ConversationListItem(
+                                        page: Page.conversation(conversation),
+                                        conversation: conversation
+                                    )
+                                } // END foreach
+                            }
+                            .padding(SidebarHandler.sidebarPadding)
+                        }
+                        Spacer()
+                    }
+//                }
+                    .frame(width: 240, alignment: .leading)
+                .background(.black.opacity(0.35))
+                .background(.regularMaterial)
+                .safeAreaPadding(.top, Styles.toolbarHeight)
+                .transition(.move(edge: .leading))
+            
+        } // END sidebar check
+        
     }
 }
 //

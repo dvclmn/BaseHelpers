@@ -8,7 +8,6 @@
 import SwiftUI
 import SwiftData
 import Utilities
-import SplitView
 import Navigation
 import Styles
 import Popup
@@ -27,39 +26,33 @@ struct ContentView: View {
     @EnvironmentObject var nav: NavigationHandler<Page>
     @EnvironmentObject var popup: PopupHandler
     @EnvironmentObject var pref: Preferences
+    @EnvironmentObject var sidebar: SidebarHandler
     
     var body: some View {
         
         @Bindable var bk = bk
         
-        SplitView(nav: nav, popup: popup) {
-            SidebarView()
-        } content: { page in
+        NavigationStack(path: $nav.path) {
             
-            switch page {
-            case .conversation(let conversationStatic):
+            DetailView(conversations: conversations)
+            
+            .navigationDestination(for: Page.self) { page in
                 
-                if let conversation = conversations.first(where: {$0.persistentModelID == conversationStatic.persistentModelID}) {
-                    ConversationView(conversation: conversation)
-                } else {
-                    Text("No conversation")
-                }
-
+                DetailView(page: page, conversations: conversations)
+                
             }
             
-        } toolbar: { page in
-            
-            switch page {
-            case .conversation(let conversationStatic):
-                
-                if let conversation = conversations.first(where: {$0.persistentModelID == conversationStatic.persistentModelID}) {
-                    ToolbarView(conversation: conversation)
-                } else {
-                    Text("No conversation")
-                }
-
-            }
-            
+        }
+        .frame(
+            minWidth: Styles.minContentWidth,
+            idealWidth: .infinity,
+            maxWidth: .infinity,
+            minHeight: Styles.minContentHeight,
+            maxHeight: .infinity,
+            alignment: .trailing
+        )
+        .readSize { size in
+            sidebar.contentWidth = size.width
         }
         .toolbar {
             ToolbarItem {
@@ -72,7 +65,11 @@ struct ContentView: View {
             seed: conv.grainientSeed,
             dimming: $bk.uiDimming
         )
-
+        .onAppear {
+            if nav.path.isEmpty, let firstConversation = conversations.first {
+                nav.path = [Page.conversation(firstConversation)]
+            }
+        }
         .onChange(of: conv.isRequestingNewConversation) {
             newConversation()
         }
@@ -83,6 +80,9 @@ struct ContentView: View {
 }
 
 extension ContentView {
+    
+
+    
     func newConversation() {
         if conv.isRequestingNewConversation {
             let newGrainientSeed = GrainientSettings.generateGradientSeed()

@@ -10,37 +10,6 @@ import SwiftData
 import Navigation
 import Styles
 
-enum Page: Destination {
-    
-    case conversation(Conversation)
-    
-    var id: String {
-        self.name
-    }
-    
-    var name: String {
-        switch self {
-        case .conversation(let conversation):
-            return conversation.name
-        }
-    }
-    
-    var icon: String {
-        switch self {
-        case .conversation(let conversation):
-            return conversation.icon ?? Icons.message.icon
-        }
-    }
-    
-    var grainientSeed: Int? {
-        switch self {
-        case .conversation(let conversation):
-            return conversation.grainientSeed
-        }
-    }
-}
-
-
 @Observable
 class BanksiaHandler {
     
