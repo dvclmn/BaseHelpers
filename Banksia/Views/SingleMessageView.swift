@@ -8,7 +8,7 @@
 import SwiftUI
 import SwiftData
 import Styles
-import Utilities
+import GeneralUtilities
 import Icons
 
 struct SingleMessageView: View {

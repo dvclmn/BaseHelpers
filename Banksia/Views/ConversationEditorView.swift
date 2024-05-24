@@ -7,7 +7,7 @@
 
 import SwiftUI
 import Styles
-import Utilities
+import GeneralUtilities
 import Grainient
 import Modifiers
 import Icons

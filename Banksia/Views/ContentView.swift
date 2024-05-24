@@ -7,7 +7,7 @@
 
 import SwiftUI
 import SwiftData
-import Utilities
+import GeneralUtilities
 import Navigation
 import Styles
 import Popup
@@ -88,8 +88,6 @@ struct ContentView: View {
 //        }
         
     }
-    
-    
 }
 
 extension ContentView {
@@ -118,5 +116,5 @@ extension ContentView {
         .environmentObject(SidebarHandler())
         .modelContainer(try! ModelContainer.sample())
         .padding(.top,1)
-        .frame(width: 600, height: 700)
+        .frame(width: 560, height: 700)
 }

@@ -32,14 +32,15 @@ struct MenuCommands: Commands {
             }
             .keyboardShortcut("e", modifiers: .command)
             
-            Button("Delete Conversation…") {
-                
-            }
-            .keyboardShortcut(.delete, modifiers: .command)
+            // TODO: Will need to conditionally turn the below shortcut off, so that I can delete lines w/ the same shortcut, in the Editor
+//            Button("Delete Conversation…") {
+//                
+//            }
+//            .keyboardShortcut(.delete, modifiers: .command)
             
         }
         
 //        ToolbarCommands()
-        InspectorCommands()
+//        InspectorCommands()
     }
 }

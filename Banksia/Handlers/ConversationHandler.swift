@@ -33,10 +33,12 @@ final class ConversationHandler {
     /// This history should only be sent to GPT, not be saved to a Conversation. The Conversation has it's own array of Messages
     var messageHistory: String = ""
     
-    var editorHeight: Double = 200
+    var editorHeight: Double = ConversationHandler.defaultEditorHeight
+    
+    static let defaultEditorHeight: Double = 200
     
     func getCurrentConversation(within conversations: [Conversation]) -> Conversation? {
-            conversations.first(where: {$0.id == currentConversationID})
+        conversations.first(where: {$0.id == currentConversationID})
     }
     
     func getConversation(from id: Conversation.ID, within conversations: [Conversation]) -> Conversation? {
@@ -65,11 +67,11 @@ final class ConversationHandler {
         
         let latestMessageFormatted: String = "\(formatMessageForGPT(latestMessage))\n\n"
         let historyHeading: String = "## Conversation History\n"
-
+        
         let queryID: String = latestMessage.persistentModelID.hashValue.description
         let queryFooter: String = "\n--- END Query #\(queryID) ---\n\n"
         
-
+        
         messageHistory = """
         \(latestMessageFormatted)
         \(historyHeading)
@@ -108,53 +110,6 @@ final class ConversationHandler {
         print(">--- END formatMessageForGPT ---|\n")
         return formattedMessage
     }
-    
-    
-    func fetchGPTResponse(for conversation: Conversation, isTesting: Bool) async throws -> Message {
-        print("|--- fetchGPTResponse --->")
-        do {
-            
-            var responseMessage: Message
-            
-            if !isTesting {
-                let gptResponse: GPTReponse = try await fetchGPTResponse(prompt: messageHistory)
-                print("Received GPT response")
-                
-                guard let firstMessage = gptResponse.choices.first else {
-                    throw GPTError.couldNotGetLastResponse
-                    
-                }
-                print("Retrieved last message")
-                
-                responseMessage = Message(content: firstMessage.message.content, type: .assistant, conversation: conversation)
-            } else {
-//                responseMessage = Message(content: getRandomParagraph(), type: .assistant, conversation: conversation)
-                
-                responseMessage = Message(content: "Short test message. Timestamp: \(Date.now)", type: .assistant, conversation: conversation)
-            }
-            
-            print(">--- END fetchGPTResponse ---|\n")
-            return responseMessage
-            
-        } catch {
-            throw GPTError.failedToFetchResponse
-        }
-    }
-    
-    func createMessage(_ response: String, with type: MessageType, for conversation: Conversation) -> Message {
-        print("|--- createMessage --->")
-        
-        let newMessage = Message(
-            content: response,
-            type: type,
-            conversation: conversation
-        )
-        print(">--- END createMessage ---|\n")
-        return newMessage
-    }
-    
-    
-    
     
 }
 

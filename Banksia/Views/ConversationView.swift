@@ -8,7 +8,7 @@
 import SwiftUI
 import SwiftData
 import Styles
-import Utilities
+import GeneralUtilities
 
 struct ConversationView: View {
     @Environment(BanksiaHandler.self) private var bk
@@ -38,7 +38,8 @@ struct ConversationView: View {
         VStack {
             if let conversationMessages = conversation.messages {
                 
-                if conversationMessages.count > 0 {
+                    
+                    
                     var searchResults: [Message] {
                         conversationMessages.filter { message in
                             if conv.searchText.count > 1 {
@@ -49,23 +50,37 @@ struct ConversationView: View {
                         }
                     }
                     
-                    
-                    ScrollView(.vertical) {
-                        LazyVStack(spacing: 12) {
-                            ForEach(searchResults.sorted(by: { $0.timestamp < $1.timestamp }), id: \.timestamp) { message in
-                                
-                                SingleMessageView(message: message)
-                                
-                            } // END ForEach
-                            //                    Text("End of messages")
-                        } // END lazy vstack
-                        .scrollTargetLayout()
-                        .padding(.bottom, 80)
-                    } // END scrollview
-                    .safeAreaPadding(.bottom, conv.editorHeight + 30)
-                    //            .searchable(text: $conv.searchText, isPresented: $conv.isSearching, prompt: Text("Search messages"))
-                    //                                        .scrollPosition(id: message.timestamp)
-                    .defaultScrollAnchor(.bottom)
+                VStack {
+                    if conversationMessages.count > 0 {
+                        
+                        ScrollView(.vertical) {
+                            LazyVStack(spacing: 12) {
+                                ForEach(searchResults.sorted(by: { $0.timestamp < $1.timestamp }), id: \.timestamp) { message in
+                                    
+                                    SingleMessageView(message: message)
+                                    
+                                } // END ForEach
+                                //                    Text("End of messages")
+                            } // END lazy vstack
+                            .scrollTargetLayout()
+                            .padding(.bottom, 80)
+                        } // END scrollview
+                        .safeAreaPadding(.bottom, conv.editorHeight + 30)
+                        //            .searchable(text: $conv.searchText, isPresented: $conv.isSearching, prompt: Text("Search messages"))
+                        //                                        .scrollPosition(id: message.timestamp)
+                        .defaultScrollAnchor(.bottom)
+                        
+                        
+                    } else {
+                        Text("No messages yet")
+                            .padding(.top, Styles.toolbarHeight / 2)
+                            .padding(.bottom, conv.editorHeight)
+                            .font(.title)
+                            .foregroundStyle(.secondary)
+                            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+                    } // END message count check
+                } // END vstack
+//                .cursor(.arrow)
                     
                     .overlay(alignment: .bottom) {
                         MessageInputView(
@@ -87,12 +102,7 @@ struct ConversationView: View {
                             QuickNavView()
                         }
                     }
-                } else {
-                    Text("No messages yet")
-                        .font(.title)
-                        .foregroundStyle(.secondary)
-                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
-                } // END message count check
+                
                 
             } // END has messages check
             

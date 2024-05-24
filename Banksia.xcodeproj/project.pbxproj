@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		F6081DF92B0485EA00A78D64 /* NetworkHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6081DF82B0485EA00A78D64 /* NetworkHandler.swift */; };
 		F60B6A732C005D7B007EDCDD /* SidebarHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F60B6A722C005D7B007EDCDD /* SidebarHandler.swift */; };
 		F626CD1E2BFA73D1002A0D8A /* APIHandler in Frameworks */ = {isa = PBXBuildFile; productRef = F626CD1D2BFA73D1002A0D8A /* APIHandler */; };
 		F635C17E2BD0F41100E4EA4A /* SmoothGradient in Frameworks */ = {isa = PBXBuildFile; productRef = F635C17D2BD0F41100E4EA4A /* SmoothGradient */; };
@@ -59,7 +58,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		F6081DF82B0485EA00A78D64 /* NetworkHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkHandler.swift; sourceTree = "<group>"; };
 		F60B6A722C005D7B007EDCDD /* SidebarHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarHandler.swift; sourceTree = "<group>"; };
 		F636A11B2B05B23D00C24891 /* GeneralSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralSettingsView.swift; sourceTree = "<group>"; };
 		F639D8B72BD3C3650035226E /* MarkdownModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkdownModel.swift; sourceTree = "<group>"; };
@@ -168,7 +166,6 @@
 				F6A5E1B92BC6F3D70018B1B5 /* StyleHandler.swift */,
 				F6A5E1B62BC6EE480018B1B5 /* PreferencesHandler.swift */,
 				F64F8E1F2B03082100C72E51 /* BanksiaHandler.swift */,
-				F6081DF82B0485EA00A78D64 /* NetworkHandler.swift */,
 				F64F8E2D2B04254100C72E51 /* ConversationHandler.swift */,
 				F697B8652B0B47610091CE79 /* GPTHandler.swift */,
 			);
@@ -352,7 +349,6 @@
 				F697B8662B0B47610091CE79 /* GPTHandler.swift in Sources */,
 				F6F393132B0A06B4005046F4 /* ConversationListItem.swift in Sources */,
 				F64F8E222B03090600C72E51 /* ContentView.swift in Sources */,
-				F6081DF92B0485EA00A78D64 /* NetworkHandler.swift in Sources */,
 				F64F8E312B042A2700C72E51 /* UtilityFunctions.swift in Sources */,
 				F687189C2BFF4F2100955B43 /* DetailView.swift in Sources */,
 				F6FA92EF2B052B9800D1D9B8 /* SettingsView.swift in Sources */,

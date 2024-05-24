@@ -104,20 +104,12 @@ struct ToolbarView: View {
         /// Allows space for the sidebar toggle button 􀨱 when the sidebar is hidden
         .padding(.leading, sidebar.isSidebarVisible ? 0 : 30)
         
-        .padding(.horizontal, 16)
+        .padding(.horizontal, Styles.toolbarSpacing)
         .background {
             Rectangle().fill(.ultraThinMaterial)
                 .safeAreaPadding(.leading, sidebar.isSidebarVisible ? sidebar.sidebarWidth : 0)
         }
-        .overlay(alignment: .top) {
-            
-            PopupView(
-                topOffset: 70,
-                popup: popup
-            )
-            .safeAreaPadding(.leading, sidebar.sidebarWidth)
-            
-        }
+
         
         // MARK: - 􀨱 Sidebar buttons
         .overlay(alignment: .leading) {

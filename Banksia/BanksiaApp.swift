@@ -27,7 +27,7 @@ struct BanksiaApp: App {
             Conversation.self
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
-
+        
         do {
             return try ModelContainer(for: schema, configurations: [modelConfiguration])
         } catch {
@@ -46,11 +46,11 @@ struct BanksiaApp: App {
                 .environmentObject(sidebar)
         }
         .modelContainer(sharedModelContainer)
-//        .commands {
-//            SidebarCommands()
-//            TextFormattingCommands()
-//            TextEditingCommands()
-//        }
+        //        .commands {
+        //            SidebarCommands()
+        //            TextFormattingCommands()
+        //            TextEditingCommands()
+        //        }
         .windowStyle(.hiddenTitleBar)
         .windowToolbarStyle(.unified)
 #if os(macOS)
@@ -67,7 +67,14 @@ struct BanksiaApp: App {
             SettingsView()
                 .environment(bk)
                 .environmentObject(pref)
+                .task {
+                    let window = NSApplication.shared.keyWindow
+                    window?.toolbarStyle = .unified
+                    window?.titlebarAppearsTransparent = true
+                }
         }
+        .windowStyle(.hiddenTitleBar)
+        .windowToolbarStyle(.unifiedCompact)
 #endif
     }
     

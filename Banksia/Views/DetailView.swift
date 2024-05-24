@@ -7,12 +7,13 @@
 
 import SwiftUI
 //import Navigation
-//import Popup
-//import Sidebar
+import Popup
+import Sidebar
 //import SwiftData
 
 struct DetailView: View {
-    
+    @EnvironmentObject var popup: PopupHandler
+    @EnvironmentObject var sidebar: SidebarHandler
     var page: Page? = nil
     var conversations: [Conversation]
     
@@ -34,6 +35,15 @@ struct DetailView: View {
                 
                 .overlay(alignment: .top) {
                     ToolbarView(conversation: conversation)
+                }
+                .overlay(alignment: .top) {
+                    
+                    PopupView(
+                        topOffset: 70,
+                        popup: popup
+                    )
+                    .safeAreaPadding(.leading, sidebar.isSidebarVisible ? sidebar.sidebarWidth : 0)
+                    
                 }
                 .navigationBarBackButtonHidden(true)
                 

@@ -12,7 +12,7 @@ final class Preferences: ObservableObject {
     @AppStorage("gptTemperatureKey") var gptTemperature: Double = 0.5
     @AppStorage("gptModelKey") var gptModel: AIModel = AIModel.gpt_4_turbo
     
-    @AppStorage("editorHeightKey") var editorHeight: Double = 300
+    @AppStorage("editorHeightKey") var editorHeight: Double?
     
     @AppStorage("userNameKey") var userName: String?
     
