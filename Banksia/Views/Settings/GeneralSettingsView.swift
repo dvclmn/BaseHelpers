@@ -24,7 +24,7 @@ struct GeneralSettingsView: View {
             LabeledContent {
                 Slider(
                     value: $bk.uiDimming,
-                    in: 0.01...0.6) { changed in
+                    in: 0.01...0.89) { changed in
                         if changed {
                             pref.uiDimming = bk.uiDimming
                         }
@@ -35,9 +35,6 @@ struct GeneralSettingsView: View {
                         minWidth: 60,
                         maxWidth: 90
                     )
-                    .onAppear {
-                        bk.uiDimming = pref.uiDimming
-                    }
             } label: {
                 Label("UI Dimming level", systemImage: "circle.lefthalf.striped.horizontal")
             }
@@ -84,9 +81,4 @@ struct GeneralSettingsView: View {
             }
         }
     }
-}
-
-#Preview {
-    SettingsView()
-        .environment(BanksiaHandler())
 }

@@ -20,13 +20,12 @@ class BanksiaHandler {
     var totalConversations: Int = 0
     
     var uiDimming: Double = 0.25
-    
+
     var isQuickNavShowing: Bool = false
     
-
     var isGlobalConversationPreferencesShowing: Bool = false
     var isEditingLongFormText: Bool = false
-
+    
 }
 
-    
+

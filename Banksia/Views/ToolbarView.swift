@@ -23,6 +23,7 @@ struct ToolbarView: View {
     
     @EnvironmentObject var popup: PopupHandler
     @EnvironmentObject var sidebar: SidebarHandler
+    @EnvironmentObject var pref: Preferences
     
     @State private var isLoading: Bool = false
     
@@ -35,12 +36,13 @@ struct ToolbarView: View {
     var body: some View {
         
         @Bindable var conv = conv
-
+        
         HStack(spacing: 14) {
-  
+            
             Text(nav.navigationTitle ?? "Banksia")
                 .font(.title2)
                 .foregroundStyle(.secondary)
+                .lineLimit(1)
                 .renamable(
                     isRenaming: $isRenaming,
                     itemName: conversation.name
@@ -51,23 +53,23 @@ struct ToolbarView: View {
             
             Spacer()
             
-            if !sidebar.isSidebarShowing {
+            if !sidebar.isSidebarVisible {
                 NewConversationButton()
             }
             
-            // MARK: - 􁎄 Grainient picker
-            GrainientPicker(
-                seed: $conversation.grainientSeed,
-                popup: popup
-            )
-
             // MARK: - 􀈎 Edit conversation
             Button {
                 conv.isConversationEditorShowing.toggle()
             } label: {
                 Label("Edit conversation prompt", systemImage: Icons.edit.icon)
             }
-
+            
+            
+            // MARK: - 􁎄 Grainient picker
+            GrainientPicker(
+                seed: $conversation.grainientSeed,
+                popup: popup
+            )
             
             // MARK: - 􀍠 Options
             Button {
@@ -75,7 +77,7 @@ struct ToolbarView: View {
             } label: {
                 Label("More options", systemImage: Icons.ellipsis.icon)
             }
-//            .buttonStyle(.customButton(labelDisplay: .iconOnly))
+            //            .buttonStyle(.customButton(labelDisplay: .iconOnly))
             
             .popover(isPresented: $isToolbarMenuPresented) {
                 Button {
@@ -92,7 +94,7 @@ struct ToolbarView: View {
                 labelDisplay: .iconOnly
             )
         )
-                .safeAreaPadding(.leading, sidebar.isSidebarShowing ? sidebar.sidebarWidth : Styles.paddingToolbarTrafficLightsWidth)
+        .safeAreaPadding(.leading, sidebar.isSidebarVisible ? sidebar.sidebarWidth : Styles.paddingToolbarTrafficLightsWidth)
         .frame(
             maxWidth: .infinity,
             minHeight: Styles.toolbarHeight,
@@ -100,12 +102,12 @@ struct ToolbarView: View {
             alignment: .leading
         )
         /// Allows space for the sidebar toggle button 􀨱 when the sidebar is hidden
-        .padding(.leading, sidebar.isSidebarShowing ? 0 : 30)
+        .padding(.leading, sidebar.isSidebarVisible ? 0 : 30)
         
         .padding(.horizontal, 16)
         .background {
             Rectangle().fill(.ultraThinMaterial)
-                .safeAreaPadding(.leading, sidebar.isSidebarShowing ? sidebar.sidebarWidth : 0)
+                .safeAreaPadding(.leading, sidebar.isSidebarVisible ? sidebar.sidebarWidth : 0)
         }
         .overlay(alignment: .top) {
             
@@ -113,60 +115,64 @@ struct ToolbarView: View {
                 topOffset: 70,
                 popup: popup
             )
-                    .safeAreaPadding(.leading, sidebar.sidebarWidth)
+            .safeAreaPadding(.leading, sidebar.sidebarWidth)
             
         }
         
         // MARK: - 􀨱 Sidebar buttons
         .overlay(alignment: .leading) {
             
-            
-            if sidebar.isRoomForSidebar {
-                HStack {
+            HStack {
+//            if sidebar.isRoomForSidebar {
                     Button {
-                        withAnimation(Styles.animationEased) {
-                            sidebar.isSidebarShowing.toggle()
-                        }
+                            if !sidebar.isRoomForSidebar {
+                                sidebar.requestRoomForSidebar()
+                            } else {
+                                withAnimation(Styles.animationEased) {
+                                sidebar.toggleSidebar()
+                                }
+                            }
                     } label: {
                         Label("Toggle sidebar", systemImage: Icons.sidebarAlt.icon)
                     }
                     
-                    .safeAreaPadding(.leading, Styles.paddingToolbarTrafficLightsWidth)
-    //                .padding(.trailing, sidebar.isSidebarShowing && sidebar.isRoomForSidebar ? 56 : 0)
+//                }  END room for sidebar check
+                
+                // MARK: - 􀅼 New conversation
+                if sidebar.isSidebarVisible {
+                    NewConversationButton()
+                        .buttonStyle(.customButton(hasBackground: false, labelDisplay: .iconOnly))
                     
-                    // MARK: - 􀅼 New conversation
-                    if sidebar.isSidebarShowing {
-                        NewConversationButton()
-                    } // END sidebar showing check
                     
-                } // END hstack
+                } // END sidebar showing check
+            } // END hstack
+            .safeAreaPadding(.leading, Styles.paddingToolbarTrafficLightsWidth)
                 .buttonStyle(.customButton(hasBackground: false, labelDisplay: .iconOnly))
-            }
-        }
-    
-//            HandyButton(label: "Add sample data", icon: "sparkles") {
-//                Conversation.insertSampleData(modelContext: modelContext)
-//                try? modelContext.save()
-//            }
+        } // END toolbar sidebar controls overlay
+        
+        //            HandyButton(label: "Add sample data", icon: "sparkles") {
+        //                Conversation.insertSampleData(modelContext: modelContext)
+        //                try? modelContext.save()
+        //            }
         
         
-//        ToolbarItem() {
-//            switch bk.conversationState {
-//            case .single:
-//                if let conversation = bk.selectedConversation.first {
-//                    HandyButton(label: "Delete \(conversation.name)", icon: "trash") {
-//                        bk.deleteConversations([conversation], modelContext: modelContext)
-//                    }
-//                }
-//            case .multiple:
-//                HandyButton(label: "Delete all conversations", icon: "trash.fill") {
-//                    bk.deleteConversations(bk.selectedConversation, modelContext: modelContext)
-//                }
-//            default:
-//                EmptyView()
-//            }
-            
-//        } // END delete
+        //        ToolbarItem() {
+        //            switch bk.conversationState {
+        //            case .single:
+        //                if let conversation = bk.selectedConversation.first {
+        //                    HandyButton(label: "Delete \(conversation.name)", icon: "trash") {
+        //                        bk.deleteConversations([conversation], modelContext: modelContext)
+        //                    }
+        //                }
+        //            case .multiple:
+        //                HandyButton(label: "Delete all conversations", icon: "trash.fill") {
+        //                    bk.deleteConversations(bk.selectedConversation, modelContext: modelContext)
+        //                }
+        //            default:
+        //                EmptyView()
+        //            }
+        
+        //        } // END delete
     }
 }
 
@@ -179,10 +185,4 @@ extension ToolbarView {
             Label("New conversation", systemImage: Icons.plus.icon)
         }
     }
-}
-
-
-#Preview {
-    ContentView()
-        .environment(BanksiaHandler())
 }

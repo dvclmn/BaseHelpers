@@ -63,11 +63,12 @@ struct SingleMessageView: View {
                     }
                 
             }
-            .onHover { hovering in
+            .onTapGesture {
                 withAnimation(Styles.animationQuick) {
-                    isHovering = hovering
+                    isHovering.toggle()
                 }
             }
+
         }
         .padding(.horizontal, Styles.paddingText)
         .frame(maxWidth: .infinity, alignment: message.type == .user ? .trailing : .leading)

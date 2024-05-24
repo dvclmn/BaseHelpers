@@ -44,7 +44,7 @@ struct ContentView: View {
             
         }
         .frame(
-            minWidth: Styles.minContentWidth,
+            minWidth: sidebar.contentMinWidth,
             idealWidth: .infinity,
             maxWidth: .infinity,
             minHeight: Styles.minContentHeight,
@@ -52,27 +52,40 @@ struct ContentView: View {
             alignment: .trailing
         )
         .readSize { size in
-            sidebar.contentWidth = size.width
+            sidebar.windowWidth = size.width
         }
         .toolbar {
             ToolbarItem {
                 Spacer()
             }
         }
-        .ignoresSafeArea()
-        
         .grainient(
             seed: conv.grainientSeed,
             dimming: $bk.uiDimming
         )
+        .ignoresSafeArea()
+        
         .onAppear {
-            if nav.path.isEmpty, let firstConversation = conversations.first {
+            if nav.path.isEmpty, let firstConversation = conversations.last {
                 nav.path = [Page.conversation(firstConversation)]
             }
+            
+            // TODO: Need to get UI dimming preference working correctly
+//            bk.uiDimming = pref.uiDimming
         }
         .onChange(of: conv.isRequestingNewConversation) {
             newConversation()
         }
+//        .onChange(of: sidebar.isRequestingSidebar) {
+//            
+//            let widthDefecit: Double = (sidebar.sidebarWidth + sidebar.windowWidth)
+//            
+//            sidebar.contentMinWidth += (sidebar.sidebarWidth + sidebar.sidebarToggleBuffer)
+////            if sidebar.isSidebarVisible {
+//                sidebar.isRequestingSidebar = false
+//                sidebar.contentMinWidth -= (sidebar.sidebarWidth + sidebar.sidebarToggleBuffer)
+////            }
+//        }
         
     }
     

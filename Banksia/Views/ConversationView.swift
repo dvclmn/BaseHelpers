@@ -34,10 +34,11 @@ struct ConversationView: View {
         
         @Bindable var conv = conv
         @Bindable var bk = bk
-            
-            VStack {
-                if let conversationMessages = conversation.messages {
-                    
+        
+        VStack {
+            if let conversationMessages = conversation.messages {
+                
+                if conversationMessages.count > 0 {
                     var searchResults: [Message] {
                         conversationMessages.filter { message in
                             if conv.searchText.count > 1 {
@@ -74,7 +75,7 @@ struct ConversationView: View {
                     .sheet(isPresented: $conv.isConversationEditorShowing) {
                         
                         ConversationEditorView(conversation: conversation)
-                            
+                        
                     }
                     //            .onAppear {
                     //                if isPreview {
@@ -86,19 +87,23 @@ struct ConversationView: View {
                             QuickNavView()
                         }
                     }
-                    
-                    
                 } else {
                     Text("No messages yet")
-                } // END messages check
+                        .font(.title)
+                        .foregroundStyle(.secondary)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+                } // END message count check
                 
-            } // Vstack so I can do an onAppear?
-            .task(id: conversation.grainientSeed) {
-                withAnimation(Styles.animationRelaxed) {
-                    conv.grainientSeed = conversation.grainientSeed
-                }
+            } // END has messages check
+            
+            
+        } // Vstack so I can do an onAppear?
+        .task(id: conversation.grainientSeed) {
+            withAnimation(Styles.animationRelaxed) {
+                conv.grainientSeed = conversation.grainientSeed
             }
-
+        }
+        
         
     } // END view body
     
@@ -156,15 +161,3 @@ struct ConversationView: View {
     
 }
 
-
-#Preview {
-    ModelContainerPreview(ModelContainer.sample) {
-        
-        ContentView()
-            .environment(BanksiaHandler())
-            .environment(ConversationHandler())
-            .environmentObject(Preferences())
-            .frame(width: 480, height: 700)
-        
-    }
-}

@@ -25,33 +25,33 @@ struct SidebarView: View {
         
         @Bindable var bk = bk
         
-        if sidebar.isSidebarShowing && sidebar.isRoomForSidebar {
+        if sidebar.isSidebarVisible {
             
-//            ResizableView(
-//                size: $sidebar.sidebarWidth,
-//                minSize: 90,
-//                maxSize: 240,
-//                edge: .leading) {
-                    VStack(alignment: .leading) {
-                        ScrollView(.vertical, showsIndicators: false) {
-                            LazyVStack(spacing: 2) {
-                                ForEach(conversations) { conversation in
-                                    ConversationListItem(
-                                        page: Page.conversation(conversation),
-                                        conversation: conversation
-                                    )
-                                } // END foreach
-                            }
-                            .padding(SidebarHandler.sidebarPadding)
-                        }
-                        Spacer()
+            //            ResizableView(
+            //                size: $sidebar.sidebarWidth,
+            //                minSize: 90,
+            //                maxSize: 240,
+            //                edge: .leading) {
+            VStack(alignment: .leading) {
+                ScrollView(.vertical, showsIndicators: false) {
+                    LazyVStack(spacing: 2) {
+                        ForEach(conversations) { conversation in
+                            ConversationListItem(
+                                page: Page.conversation(conversation),
+                                conversation: conversation
+                            )
+                        } // END foreach
                     }
-//                }
-                    .frame(width: 240, alignment: .leading)
-                .background(.black.opacity(0.35))
-                .background(.regularMaterial)
-                .safeAreaPadding(.top, Styles.toolbarHeight)
-                .transition(.move(edge: .leading))
+                    .padding(SidebarHandler.sidebarPadding)
+                }
+                Spacer()
+            }
+            //                }
+            .background(.black.opacity(0.35))
+            .background(.regularMaterial)
+            .safeAreaPadding(.top, Styles.toolbarHeight)
+            .transition(.move(edge: .leading))
+            .frame(width: sidebar.sidebarWidth, alignment: .leading)
             
         } // END sidebar check
         

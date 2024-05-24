@@ -12,6 +12,7 @@ import Popup
 import Sidebar
 import Button
 import Icons
+import MultiSelect
 
 struct ConversationListItem: View {
     @Environment(\.modelContext) private var modelContext
@@ -37,8 +38,6 @@ struct ConversationListItem: View {
             return page == nav.path.last
         }
 
-        
-        
         NavigationLink(value: page) {
             Label(page.name, systemImage: "bubble.middle.bottom")
                 .renamable(
@@ -48,10 +47,16 @@ struct ConversationListItem: View {
                         conversation.name = newName
                     popup.showPopup(title: "Renamed to \"\(conversation.name)\"")
                 })
+                .frame(maxWidth: .infinity, alignment: .leading)
         } // END nav link
         .symbolRenderingMode(.hierarchical)
         .symbolVariant(.fill)
         .buttonStyle(.customButton(status: isCurrentPage ? .active : .normal, hasBackground: false))
+//        .multiSelect(
+//            item: conversation,
+//            displayedItems: displayedGames,
+//            cornerRadius: gameGridRounding
+//        )
         .contextMenu {
             
             Button {
@@ -76,7 +81,7 @@ struct ConversationListItem: View {
             
         } // END context menu
 
-        .frame(maxWidth: .infinity, alignment: .leading)
+        
         
     }
 }

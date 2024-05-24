@@ -7,7 +7,6 @@
 
 import Foundation
 import SwiftUI
-import Sidebar
 import Styles
 import Navigation
 import Icons
@@ -75,39 +74,4 @@ public class NavigationHandler<Page: Destination>: Navigable, ObservableObject {
     //        }
     //    }
 }
-
-
-public class SidebarHandler: Sidebarable, ObservableObject {
-
-    @AppStorage("isSidebarShowingKey") public var isSidebarShowing: Bool = true
-    @AppStorage("sidebarWidthKey") public var sidebarWidth: Double = 200
-    
-    /// From GeometryReader somewhere else in app
-    @Published public var contentWidth: Double
-
-    private let sidebarToggleBuffer: Double = 80
-    private let contentMinWidth: Double = 300
-    public static let sidebarPadding: Double = 14
-
-    public var isRoomForSidebar: Bool {
-        return contentWidth - sidebarToggleBuffer > contentMinWidth + sidebarToggleBuffer
-    }
-    
-    public init(
-        contentMinWidth: Double = 100,
-        sidebarToggleBuffer: Double = 60,
-        contentWidth: Double = 400
-    ) {
-        self.contentWidth = contentWidth
-    }
-
-    public func toggleSidebar() {
-        isSidebarShowing.toggle()
-    }
-
-    public func updateContentWidth(_ width: Double) {
-        contentWidth = width
-    }
-}
-
 
