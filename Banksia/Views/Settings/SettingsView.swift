@@ -17,6 +17,7 @@ import APIHandler
 import Styles
 import GeneralUtilities
 import Form
+import LocalAuthentication
 
 @MainActor
 struct SettingsView: View {
@@ -29,9 +30,10 @@ struct SettingsView: View {
     
     @State private var apiKey: String = ""
     
-    @State private var isShowingSecureInformation: Bool = false
     @State private var isConnectedToOpenAI: Bool = false
     @State private var isLoadingConnection: Bool = false
+    
+    @State private var isKeyUnlocked = false
     
     @State private var isEditingLongFormText: Bool = false
     
@@ -42,34 +44,103 @@ struct SettingsView: View {
         
         @Bindable var bk = bk
         
-            Form {
+        Form {
+            
+            Section("Interface") {
                 
-                Section("Interface") {
-                    LabeledContent {
-                        HStack {
-                            Text("\(pref.uiDimming * 100, specifier: "%.0f")%")
-                                .monospacedDigit()
-                            Slider(
-                                value: $pref.uiDimming,
-                                in: 0.01...0.89)
-                                .controlSize(.mini)
-                                .tint(Swatch.lightGrey.colour)
-                                .frame(
-                                    minWidth: 60,
-                                    maxWidth: 90
-                                )
-                        }
-                    } label: {
-                        Text("Interface dimming")
-                    }
+                FormLabel(
+                    label: "Name",
+                    icon: Icons.person.icon,
+                    message: "(Optional) Provide your name to personalise responses."
+                ) {
+                    TextField("", text: pref.$userName.boundString, prompt: Text("Enter your name"))
                 }
+
                 
+                LabeledContent {
+                    
+                    Text("\(pref.uiDimming * 100, specifier: "%.0f")%")
+                        .monospacedDigit()
+                    Slider(
+                        value: $pref.uiDimming,
+                        in: 0.01...0.89)
+                    .controlSize(.mini)
+                    .tint(Swatch.lightGrey.colour)
+                    .frame(
+                        minWidth: 80,
+                        maxWidth: 140
+                    )
+                    
+                } label: {
+                    Text("Interface dimming")
+                }
+            }
+            
+            Section("Customise AI") {
+                FormLabel(
+                    label: "GPT Temperature",
+                    icon: Icons.snowflake.icon) {
+                        Text("\(pref.gptTemperature, specifier: "%.1f")")
+                            .monospacedDigit()
+                        
+                        Slider(
+                            value: $pref.gptTemperature,
+                            in: 0.0...1.0,
+                            step: 0.1
+                        )
+                        .frame(
+                            minWidth: 80,
+                            maxWidth: 140
+                        )
+                    }
+            
+
+                FormLabel(
+                    label: "System-wide prompt",
+                    icon: Icons.text.icon,
+                    message: "This will be included for each message in each conversation."
+                ) {
+                    
+                    VStack(alignment: .leading, spacing: 14) {
+                        TextField("", text: pref.$systemPrompt, prompt: Text("System prompt"), axis: .vertical)
+                            .multilineTextAlignment(.leading)
+                            .lineLimit(4)
+                        if !pref.systemPrompt.isEmpty {
+                            Button {
+                                isEditingLongFormText.toggle()
+                            } label: {
+                                Label("Expand", systemImage: Icons.expand.icon)
+                            }
+                            .buttonStyle(.customButton(size: .small))
+                            
+                        }
+                    }
+                    .padding(.top, 8)
+                    
+                }
+            }
+            
+            
+            
+            Section("Connection") {
                 
-                
-                Section("API") {
-                    LabeledContent {
+                FormLabel(
+                    label: "API Key",
+                    icon: Icons.key.icon
+                ) {
+                        if !apiKey.isEmpty {
+                            HStack(spacing: 0) {
+                                Text("Status: **\(isConnectedToOpenAI ? "Connected" : "No connection")**")
+                                if isLoadingConnection {
+                                    Image(systemName: Icons.rays.icon)
+                                        .spinning()
+                                }
+                            }
+                            .fixedSize(horizontal: true, vertical: false)
+                        }
+                    } content: {
                         HStack {
-                            if isShowingSecureInformation {
+                            if isKeyUnlocked {
                                 TextField("API Key", text: $apiKey, prompt: Text("Enter API Key"))
                                     .onSubmit {
                                         Task {
@@ -78,7 +149,7 @@ struct SettingsView: View {
                                     }
                             } else {
                                 SecureField("API Key", text: $apiKey, prompt: Text("Enter API Key"))
-                                
+                                    .foregroundStyle(.secondary)
                                     .onSubmit {
                                         Task {
                                             await submitAPIKey()
@@ -86,34 +157,43 @@ struct SettingsView: View {
                                     }
                             }
                             Button {
-                                isShowingSecureInformation.toggle()
+                                //                                isShowingSecureInformation.toggle()
+                                if isKeyUnlocked {
+                                    isKeyUnlocked = false
+                                } else {
+                                    authenticate()
+                                }
                             } label: {
-                                Label(isShowingSecureInformation ? "Hide key" : "Show key", systemImage: Icons.eye.icon)
+                                Label(isKeyUnlocked ? "Hide key" : "Show key", systemImage: Icons.eye.icon)
                             }
-                            .buttonStyle(.customButton(size: .mini, status: isShowingSecureInformation ? .active : .normal, hasBackground: false, labelDisplay: .iconOnly))
+                            .buttonStyle(.customButton(size: .mini, status: isKeyUnlocked ? .active : .normal, hasBackground: false, labelDisplay: .iconOnly))
+                            .onAppear {
+                                Task {
+                                    if let key = KeychainHandler.shared.readString(for: apiKeyString) {
+                                        apiKey = key
+                                        isConnectedToOpenAI = await verifyOpenAIConnection()
+                                    }
+                                }
+                            } // END on appear
+                            
                         } // END group
                         .labelsHidden()
-                    } label: {
-                        HStack {
-                            Text("API Key")
-                            
-                        }
-                        .padding(.bottom, 6)
-                        
-                        if !apiKey.isEmpty {
-                            HStack(spacing: 0) {
-                                Text("Status: \(isConnectedToOpenAI ? "Connected" : "No connection")")
-                                if isLoadingConnection {
-                                    Image(systemName: Icons.rays.icon)
-                                        .spinning()
-                                }
-                            }
-                            .fixedSize(horizontal: true, vertical: false)
-                        }
                     }
-                    
-                    
-                    LabeledContent {
+
+                
+                
+
+                
+                
+
+                
+                FormLabel(
+                    label: "Select model",
+                    icon: Icons.shocked.icon) {
+                        Text("Current:\t\t\t**\(pref.gptModel.name)**")
+                        Text("Context window:\t**\(pref.gptModel.contextWindow) tokens**")
+                        Text("Training cut-off:\t**\(pref.gptModel.trainingCutoff)**")
+                    } content: {
                         Picker("Select model", selection: $pref.gptModel) {
                             ForEach(AIModel.allCases, id: \.self) { model in
                                 Text(model.name).tag(model.value)
@@ -121,91 +201,67 @@ struct SettingsView: View {
                         }
                         .labelsHidden()
                         .pickerStyle(.menu)
-                    } label: {
-                        Text("Select model")
-                            .padding(.bottom, 6)
-                        VStack(alignment: .leading) {
-                            Text("Current:\t\t\t**\(pref.gptModel.name)**")
-                            Text("Context window:\t**\(pref.gptModel.contextWindow) tokens**")
-                            Text("Training cut-off:\t**\(pref.gptModel.trainingCutoff)**")
-//                            Text("[More information](\(pref.gptModel.infoURL)) 􀄯")
-                        }
-                        
-                        
                     }
-                    
-                    LabeledContent {
-                        
-                        Slider(
-                            value: $pref.gptTemperature,
-                            in: 0.0...1.0,
-                            step: 0.1
-                        )
-                    } label: {
-                        Text("GPT temperature")
-                    }
-                    
-                    
-                    
-                    
-                    
-                    FormLabel(label: "Name", icon: Icons.title.icon, message: "If you are comfortable doing so, provide your name here to personalise your assistants response.") {
-                        TextField("", text: pref.$userName.boundString, prompt: Text("Enter your name"))
-                            
-                    }
-                    
-                    FormLabel(label: "System-wide prompt", icon: Icons.text.icon, message: "This will be included for each message in each conversation.") {
-                        
-                        VStack(alignment: .leading, spacing: 14) {
-                            TextField("", text: pref.$systemPrompt, prompt: Text("System prompt"), axis: .vertical)
-                                .multilineTextAlignment(.leading)
-                                .lineLimit(4)
-                            if !pref.systemPrompt.isEmpty {
-                                Button {
-                                    isEditingLongFormText.toggle()
-                                } label: {
-                                    Label("Expand", systemImage: Icons.expand.icon)
-                                }
-                                .buttonStyle(.customButton())
 
-                            }
-                        }
-                        .padding(.top, 8)
-                        
+                
+                
+               
+                .onAppear {
+                    if isPreview {
+                        pref.systemPrompt = Message.prompt_01.content
                     }
-                    .onAppear {
-                        if isPreview {
-                            pref.systemPrompt = Message.prompt_01.content
-                        }
-                    }
-                    .sheet(isPresented: $isEditingLongFormText) {
-                        TextEditor(text: pref.$systemPrompt)
-                    }
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
                 }
-            } // END form
-            .scrollContentBackground(.hidden)
-            .formStyle(.grouped)
-            .safeAreaPadding(.top, isPreview ? 0 :Styles.toolbarHeight)
-
-            .grainient(seed: 86206, dimming: $pref.uiDimming)
-//        .task(id: apiKey) {
-//            isConnectedToOpenAI = await verifyOpenAIConnection()
-//        }
+                .sheet(isPresented: $isEditingLongFormText) {
+                    TextEditor(text: pref.$systemPrompt)
+                }
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+            }
+        } // END form
+        .scrollContentBackground(.hidden)
+        .formStyle(.grouped)
+        .safeAreaPadding(.top, isPreview ? 0 :Styles.toolbarHeight)
+        
+        .grainient(seed: 86206, dimming: $pref.uiDimming)
+        
         
     }
 }
 
 extension SettingsView {
+    
+    private func authenticate() {
+        let context = LAContext()
+        var error: NSError?
+        
+        // check whether biometric authentication is possible
+        if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
+            // it's possible, so go ahead and use it
+            let reason = "We need to unlock your data."
+            
+            context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: reason) { success, authenticationError in
+                // authentication has now completed
+                if success {
+                    isKeyUnlocked = true
+                } else {
+                    popup.showPopup(title: "Error displaying API key", message: "Please try authenticating again.")
+                }
+            }
+        } else {
+            // no biometrics
+        }
+    }
+    
+    
+    
     
     private func verifyOpenAIConnection() async -> Bool {
         
@@ -255,6 +311,6 @@ extension SettingsView {
     .environment(BanksiaHandler())
     .environmentObject(Preferences())
     .frame(width: 480, height: 500)
-
+    
 }
 
