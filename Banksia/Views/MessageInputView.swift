@@ -29,7 +29,9 @@ struct MessageInputView: View {
     
     @SceneStorage("userPrompt") var userPrompt: String = ""
     
-    @SceneStorage("isTesting") var isTesting: Bool = true
+    @FocusState private var isFocused
+    
+//    @SceneStorage("isTesting") var isTesting: Bool = true
     
     @State private var isHoveringHeightAdjustor: Bool = false
     
@@ -37,8 +39,6 @@ struct MessageInputView: View {
     let maxInputHeight: Double = 580
     
     let inputHeightControlSize: Double = 12
-    
-    @FocusState private var isFocused
     
     @Bindable var conversation: Conversation
     
@@ -52,14 +52,21 @@ struct MessageInputView: View {
                 
                 
                 ScrollView(.vertical) {
-                    EditorRepresentable(text: $userPrompt)
+                    EditorRepresentable(
+                        text: $userPrompt,
+                        isFocused: $isFocused
+                    )
                         .frame(minHeight: minInputHeight, maxHeight: .infinity)
                         .safeAreaPadding(.top, 30)
                         .safeAreaPadding(.bottom, 90)
                         .padding(.horizontal, Styles.paddingText)
+                        .focused($isFocused)
                     
                 }
                 .frame(minHeight: conv.editorHeight, maxHeight: conv.editorHeight)
+                .onTapGesture {
+                    isFocused = true
+                }
                 .scrollMask()
                 //                .padding(.top, inputHeightControlSize)
                 .scrollContentBackground(.hidden)
@@ -75,7 +82,7 @@ struct MessageInputView: View {
                 HStack(spacing: 16) {
                     Spacer()
                     
-                    TestToggle()
+//                    TestToggle()
                     
                     Button {
                         Task {
@@ -85,8 +92,8 @@ struct MessageInputView: View {
                     } label: {
                         Label("Send random", systemImage: Icons.sparkle.icon)
                     }
-                    .disabled(!isTesting)
-                    .buttonStyle(.customButton(size: .small, status: isTesting ? .normal : .disabled, labelDisplay: .titleOnly))
+//                    .disabled(!isTesting)
+                    .buttonStyle(.customButton(size: .small, /*status: isTesting ? .normal : .disabled,*/ labelDisplay: .titleOnly))
                     
                     Button {
                         Task {
@@ -113,7 +120,7 @@ struct MessageInputView: View {
                 pref.editorHeight = conv.editorHeight
             }
             .onAppear {
-                userPrompt = ExampleText.basicMarkdown
+//                userPrompt = ExampleText.basicMarkdown
                 if let editorHeightPreference = pref.editorHeight {
                     conv.editorHeight = editorHeightPreference
                 }
@@ -126,19 +133,23 @@ struct MessageInputView: View {
 
 extension MessageInputView {
     
-    @ViewBuilder
-    func TestToggle() -> some View {
-        Toggle(isOn: $isTesting, label: {
-            Text("Test mode")
-        })
-        .foregroundStyle(isTesting ? .secondary : .quaternary)
-        .disabled(conv.isResponseLoading)
-        .toggleStyle(.switch)
-        .font(.system(size: 12, weight: .medium))
-        .controlSize(.mini)
-        .tint(.secondary)
-        .animation(Styles.animationQuick, value: isTesting)
-    } // END test toggle
+//    @ViewBuilder
+//    func TestToggle() -> some View {
+//        Toggle(isOn: $isTesting, label: {
+//            Text("Test mode")
+//        })
+//        .foregroundStyle(isTesting ? .secondary : .quaternary)
+//        .disabled(conv.isResponseLoading)
+//        .toggleStyle(.switch)
+//        .font(.system(size: 12, weight: .medium))
+//        .controlSize(.mini)
+//        .tint(.secondary)
+//        .animation(Styles.animationQuick, value: isTesting)
+//    } // END test toggle
+    
+    
+    
+    
     
     private func sendMessage(_ isTestMode: Bool = false) async {
         
@@ -174,48 +185,43 @@ extension MessageInputView {
                     RequestMessage(role: "system", content: pref.systemPrompt),
                     RequestMessage(role: "user", content: messageContents)
                 ],
-                stream: true,
+                stream: false,
                 temperature: pref.gptTemperature
             )
             
             let requestBodyData = APIHandler.encodeBody(requestBody)
             
-            let request = try APIHandler.makeURLRequest(
-                from: URL(string: OpenAI.chatURL),
+//            print("Body: \(requestBody)")
+            print("Body Encoded: \(String(describing: requestBodyData))")
+            
+            let response: GPTResponse = try await APIHandler.constructRequestAndFetch(
+                url: URL(string: OpenAI.chatURL),
                 requestType: .post,
                 bearerToken: apiKey,
                 body: requestBodyData
             )
             
-            let newGPTMessage = Message(
-                content: "",
-                type: .assistant,
-                conversation: conversation
-            )
-            modelContext.insert(newGPTMessage)
-            
-            let (stream, _) = try await URLSession.shared.bytes(for: request)
-            
-            for try await line in stream.lines {
-                guard let messageChunk = parse(line) else { continue }
-                
-                newGPTMessage.content += messageChunk
+            if let messageResponse = response.choices.first {
+                let newGPTMessage = Message(
+                    content: messageResponse.message.content,
+                    type: .assistant,
+                    conversation: conversation
+                )
+                modelContext.insert(newGPTMessage)
+            } else {
+                print("Couldn't get the message")
             }
             
-            /// Parse a line from the stream and extract the message
-            func parse(_ line: String) -> String? {
-                let components = line.split(separator: ":", maxSplits: 1, omittingEmptySubsequences: true)
-                guard components.count == 2, components[0] == "data" else { return nil }
-                
-                let message = components[1].trimmingCharacters(in: .whitespacesAndNewlines)
-                
-                if message == "[DONE]" {
-                    return "\n"
-                } else {
-                    let chunk = try? JSONDecoder().decode(GPTResponse.self, from: message.data(using: .utf8)!)
-                    return chunk?.choices.first?.message.content
-                }
-            }
+//            let (stream, _) = try await URLSession.shared.bytes(for: request)
+//            print("Stream: \(stream)")
+//            
+//            for try await line in stream.lines {
+//                print("Entered the stream. \(line)")
+//                guard let messageChunk = ConversationHandler.parse(line) else { continue }
+//
+//                newGPTMessage.content += messageChunk
+//            }
+            
             
             
         } catch {
@@ -224,6 +230,7 @@ extension MessageInputView {
         
         conv.isResponseLoading = false
     } // END send message
+    
 }
 
 #Preview {

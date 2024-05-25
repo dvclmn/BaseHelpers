@@ -21,6 +21,10 @@ struct SingleMessageView: View {
     
     let messageMaxWidth: Double = 300
     
+    let authorAltPadding: Double = 80
+    
+    @FocusState private var isFocused
+    
     var body: some View {
         
         //        var match: [String] {
@@ -42,13 +46,19 @@ struct SingleMessageView: View {
         VStack {
             VStack {
                 
-                EditorRepresentable(text: $message.content, isEditable: false)
+                EditorRepresentable(
+                    text: $message.content,
+                    isFocused: $isFocused,
+                    isEditable: false
+                )
                     .fixedSize(horizontal: false, vertical: true)
                     .padding()
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .background(Color(message.type == .user ? .blue : .gray).opacity(0.2))
                     .clipShape(.rect(cornerRadius: Styles.roundingMedium))
-                    .padding(.bottom)
+                    .padding(.leading, message.type == .user ? authorAltPadding : 0)
+                    .padding(.trailing, message.type == .user ? 0 : authorAltPadding)
+                    .padding(.bottom, 40)
                 
                     .overlay(alignment: .topTrailing) {
                         if isHovering {

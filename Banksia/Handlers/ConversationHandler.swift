@@ -54,33 +54,64 @@ final class ConversationHandler {
             return
         }
         
-        let sortedMessages = messages.sorted { $0.timestamp < $1.timestamp }
+        /// Each query sent to GPT will be formatted into 4 parts
+        /// 1. # Conversation name
+        /// 2. ## Conversation-wide prompt
+        /// 3. ## User query
+        ///     - Sent
+        ///     - Message body
+        ///4. ## Previous Messages
+        ///     - Author ({timestamp}):
+        ///     - Message body
         
-        let maxMessageContextCount: Int = 8
+        /// Constants
+        let maxMessagesInHistory: Int = 8
         
+        /// Part 1
+        let conversationHeading: String = "# Conversation: \"\(conversation.name)\""
         
-        let historicalMessages: [Message] = sortedMessages.suffix(maxMessageContextCount).dropLast()
+        /// Part 2
+        var conversationPromptHeading: String = ""
+        var conversationPromptBody: String = ""
         
-        let reSortedMessages = historicalMessages.sorted(by: {$0.timestamp > $1.timestamp})
-        let historyFormatted: String = reSortedMessages.map {
+        if let prompt = conversation.prompt {
+            conversationPromptHeading = "## Conversation-wide prompt"
+            conversationPromptBody = "\(prompt)"
+        }
+
+        /// Part 3
+        let latestMessageHeading: String = "## User Query"
+        let latestMessagebody: String = "\(formatMessageForGPT(latestMessage))"
+        
+        /// Part 4
+        let historyHeading: String = "## Previous Messages (newest to oldest)"
+
+        /// Prune the messages, leaving the most recent 8, *not* including the latest message
+        let historicalMessages: [Message] = messages
+                .filter { $0.persistentModelID != latestMessage.persistentModelID }
+                .sorted { $0.timestamp > $1.timestamp }
+                
+        let prunedHistory = historicalMessages.prefix(maxMessagesInHistory)
+
+        let historyBody: String = historicalMessages.map {
             formatMessageForGPT($0)
         }.joined(separator: "\n\n")
         
-        let latestMessageFormatted: String = "\(formatMessageForGPT(latestMessage))\n\n"
-        let historyHeading: String = "## Conversation History\n"
-        
-        let queryID: String = latestMessage.persistentModelID.hashValue.description
-        let queryFooter: String = "\n--- END Query #\(queryID) ---\n\n"
-        
-        
         messageHistory = """
-        \(latestMessageFormatted)
+        \(conversationHeading)
+        
+        \(conversationPromptHeading)
+        \(conversationPromptBody)
+        
+        \(latestMessageHeading)
+        \(latestMessagebody)
+        
         \(historyHeading)
-        \(historyFormatted)
-        \(queryFooter)
+        \(historyBody)
         """
         
         print(messageHistory)
+        print(">--- END Message history ---|\n")
         
     } // END createMessageHistory
     
@@ -89,27 +120,36 @@ final class ConversationHandler {
     }
     
     func formatMessageForGPT(_ message: Message) -> String {
+        
         print("|--- formatMessageForGPT --->")
         
-        let messageID: String = message.persistentModelID.hashValue.description
-        
-        let messageBegin: String = "\n\n### Message ID: \(messageID)\n"
-        let timeStamp: String = "*Timestamp:* \(message.timestamp.formatted(.dateTime.year().month().day().hour().minute().second()))"
-        let type: String = "*Author:* \(message.type.name)"
-        let conversationID: String = "*Conversation ID:* \(message.conversation?.persistentModelID.hashValue.description ?? "No Conversation ID")"
-        let content: String = "*Message:*\n\n\(message.content)"
-        let messageEnd: String = "\n --- END Message ID: \(messageID) --- \n\n"
+        let messageHeading: String = "\(message.type.name) (\(ConversationHandler.formatTimestamp(message.timestamp))):"
         
         let formattedMessage: String = """
-        \(messageBegin)
-        \(timeStamp)
-        \(type)
-        \(conversationID)
-        \(content)
-        \(messageEnd)
+        \(messageHeading)
+        \(message.content)
         """
         print(">--- END formatMessageForGPT ---|\n")
         return formattedMessage
+    }
+    
+    static func formatTimestamp(_ timestamp: Date) -> String {
+        return timestamp.formatted(.dateTime.year().month().day().hour().minute().second())
+    }
+    
+    /// Parse a line from the stream and extract the message
+    static func parse(_ line: String) -> String? {
+        let components = line.split(separator: ":", maxSplits: 1, omittingEmptySubsequences: true)
+        guard components.count == 2, components[0] == "data" else { return nil }
+        
+        let message = components[1].trimmingCharacters(in: .whitespacesAndNewlines)
+        
+        if message == "[DONE]" {
+            return "\n"
+        } else {
+            let chunk = try? JSONDecoder().decode(GPTResponse.self, from: message.data(using: .utf8)!)
+            return chunk?.choices.first?.message.content
+        }
     }
     
 }

@@ -9,13 +9,15 @@ import SwiftUI
 //import Navigation
 import Popup
 import Sidebar
-//import SwiftData
+import SwiftData
 
 struct DetailView: View {
     @EnvironmentObject var popup: PopupHandler
     @EnvironmentObject var sidebar: SidebarHandler
+    
+    @Query private var conversations: [Conversation]
+    
     var page: Page? = nil
-    var conversations: [Conversation]
     
     var body: some View {
         

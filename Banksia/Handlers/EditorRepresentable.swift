@@ -20,6 +20,7 @@ import Styles
 
 struct EditorRepresentable: NSViewRepresentable {
     @Binding var text: String
+    var isFocused: FocusState<Bool>.Binding
     var isEditable: Bool = true
     var maxWidth: Double = 500
     var fontSize: Double = 15
@@ -29,7 +30,7 @@ struct EditorRepresentable: NSViewRepresentable {
     }
     
     func makeNSView(context: Context) -> MarkdownEditor {
-
+        
         let textView = MarkdownEditor()
         textView.delegate = context.coordinator
         textView.invalidateIntrinsicContentSize()
@@ -40,7 +41,14 @@ struct EditorRepresentable: NSViewRepresentable {
         textView.allowsUndo = true
         textView.setNeedsDisplay(textView.bounds)
         textView.applyStyles()
-                
+        
+        // Set initial focus state
+        if isFocused.wrappedValue {
+            DispatchQueue.main.async {
+                textView.window?.makeFirstResponder(textView)
+            }
+        }
+        
         return textView
     }
     
@@ -56,6 +64,20 @@ struct EditorRepresentable: NSViewRepresentable {
         if textView.isEditable != isEditable {
             textView.isEditable = isEditable
         }
+        
+        // Update focus state
+        if isFocused.wrappedValue {
+            DispatchQueue.main.async {
+                textView.window?.makeFirstResponder(textView)
+            }
+        }
+//        } else {
+//            DispatchQueue.main.async {
+//                if textView.window?.firstResponder == textView {
+//                    textView.window?.makeFirstResponder(nil)
+//                }
+//            }
+//        }
     }
     
     class Coordinator: NSObject, NSTextViewDelegate {
@@ -79,16 +101,17 @@ struct EditorRepresentable: NSViewRepresentable {
         
         func textViewDidChangeSelection(_ notification: Notification) {
             guard let textView = notification.object as? MarkdownEditor else { return }
-            
-//            DispatchQueue.main.async {
-//                let selectedRange = textView.selectedRange
-//                textView.assessSelectedRange(selectedRange)
-//
-//                print("Selected Range:\nLocation: \(selectedRange.location)\nLength: \(selectedRange.length)\n\n")
-//            }
+            DispatchQueue.main.async {
+                self.parent.isFocused.wrappedValue = textView.window?.firstResponder == textView
+            }
+            //                let selectedRange = textView.selectedRange
+            //                textView.assessSelectedRange(selectedRange)
+            //
+            //                print("Selected Range:\nLocation: \(selectedRange.location)\nLength: \(selectedRange.length)\n\n")
+            //            }
             
         } // END changed selection
-
+        
         
         func updateSize(_ newSize: CGSize) {
             size = newSize

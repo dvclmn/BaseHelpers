@@ -26,42 +26,7 @@ struct GlobalConversationSettingsView: View {
                     .padding(.bottom, -8)
                 
                 Form {
-                    
-                    FormLabel(label: "Name", icon: Icons.title.icon, message: "If you are comfortable doing so, provide your name here to personalise your assistants response.") {
-                        TextField("", text: pref.$userName.boundString, prompt: Text("Enter your name"))
-                            
-                    }
-                    
-                    FormLabel(label: "System-wide prompt", icon: Icons.text.icon, message: "This will be included for each message in each conversation.") {
-                        
-                        VStack(alignment: .leading, spacing: 14) {
-                            TextField("", text: pref.$systemPrompt, prompt: Text("System prompt"), axis: .vertical)
-                                .multilineTextAlignment(.leading)
-                                .lineLimit(4)
-                            if !pref.systemPrompt.isEmpty {
-                                Button {
-                                    isEditingLongFormText.toggle()
-                                } label: {
-                                    Label("Expand", systemImage: Icons.expand.icon)
-                                }
-                                .buttonStyle(.customButton())
 
-                            }
-                        }
-                        .padding(.top, 8)
-                        
-                    }
-                    .onAppear {
-                        if isPreview {
-                            pref.systemPrompt = Message.prompt_01.content
-                        }
-                    }
-                    .sheet(isPresented: $isEditingLongFormText) {
-                        TextEditor(text: pref.$systemPrompt)
-                    }
-                    
-                    
-                    
                     
                 } // END form
                 .formStyle(.grouped)

@@ -160,7 +160,7 @@ class MarkdownEditor: NSTextView {
         
         for match in matches {
             let range = NSRange(match.range, in: string)
-            print("Range location: \(range.location), Range length: \(range.length)")
+//            print("Range location: \(range.location), Range length: \(range.length)")
             
             
             

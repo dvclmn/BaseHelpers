@@ -34,11 +34,11 @@ struct ContentView: View {
         
         NavigationStack(path: $nav.path) {
             
-            DetailView(conversations: conversations)
+            DetailView()
             
             .navigationDestination(for: Page.self) { page in
                 
-                DetailView(page: page, conversations: conversations)
+                DetailView(page: page)
                 
             }
             
@@ -61,7 +61,7 @@ struct ContentView: View {
         }
         .grainient(
             seed: conv.grainientSeed,
-            dimming: $bk.uiDimming
+            dimming: $pref.uiDimming
         )
         .ignoresSafeArea()
         
@@ -69,9 +69,7 @@ struct ContentView: View {
             if nav.path.isEmpty, let firstConversation = conversations.last {
                 nav.path = [Page.conversation(firstConversation)]
             }
-            
-            // TODO: Need to get UI dimming preference working correctly
-//            bk.uiDimming = pref.uiDimming
+
         }
         .onChange(of: conv.isRequestingNewConversation) {
             newConversation()

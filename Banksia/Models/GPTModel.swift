@@ -24,6 +24,7 @@ struct RequestMessage: Codable { // Called Message in example
     let content: String
 }
 
+
 //struct Chunk: Codable {
 //  let choices: [GPTChoice]
 //}
@@ -44,9 +45,9 @@ struct GPTResponse: Codable { // Called Chunk, in example
     let object: String
     let created: Int
     let model: String
-    let choices: [GPTChoice]
     let usage: APIUsage
-    let system_fingerprint: String
+    let choices: [GPTChoice]
+//    let system_fingerprint: String
 }
 
 struct GPTChoice: Codable { // Called Choice, in example

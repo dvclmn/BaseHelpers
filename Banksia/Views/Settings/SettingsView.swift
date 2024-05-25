@@ -16,6 +16,7 @@ import Button
 import APIHandler
 import Styles
 import GeneralUtilities
+import Form
 
 @MainActor
 struct SettingsView: View {
@@ -32,6 +33,8 @@ struct SettingsView: View {
     @State private var isConnectedToOpenAI: Bool = false
     @State private var isLoadingConnection: Bool = false
     
+    @State private var isEditingLongFormText: Bool = false
+    
     let apiKeyString: String = "openAIAPIKey"
     
     var body: some View {
@@ -43,19 +46,19 @@ struct SettingsView: View {
                 
                 Section("Interface") {
                     LabeledContent {
-                        Slider(
-                            value: $bk.uiDimming,
-                            in: 0.01...0.89) { changed in
-                                if changed {
-                                    pref.uiDimming = bk.uiDimming
-                                }
-                            }
-                            .controlSize(.mini)
-                            .tint(Swatch.lightGrey.colour)
-                            .frame(
-                                minWidth: 60,
-                                maxWidth: 90
-                            )
+                        HStack {
+                            Text("\(pref.uiDimming * 100, specifier: "%.0f")%")
+                                .monospacedDigit()
+                            Slider(
+                                value: $pref.uiDimming,
+                                in: 0.01...0.89)
+                                .controlSize(.mini)
+                                .tint(Swatch.lightGrey.colour)
+                                .frame(
+                                    minWidth: 60,
+                                    maxWidth: 90
+                                )
+                        }
                     } label: {
                         Text("Interface dimming")
                     }
@@ -141,13 +144,60 @@ struct SettingsView: View {
                     } label: {
                         Text("GPT temperature")
                     }
+                    
+                    
+                    
+                    
+                    
+                    FormLabel(label: "Name", icon: Icons.title.icon, message: "If you are comfortable doing so, provide your name here to personalise your assistants response.") {
+                        TextField("", text: pref.$userName.boundString, prompt: Text("Enter your name"))
+                            
+                    }
+                    
+                    FormLabel(label: "System-wide prompt", icon: Icons.text.icon, message: "This will be included for each message in each conversation.") {
+                        
+                        VStack(alignment: .leading, spacing: 14) {
+                            TextField("", text: pref.$systemPrompt, prompt: Text("System prompt"), axis: .vertical)
+                                .multilineTextAlignment(.leading)
+                                .lineLimit(4)
+                            if !pref.systemPrompt.isEmpty {
+                                Button {
+                                    isEditingLongFormText.toggle()
+                                } label: {
+                                    Label("Expand", systemImage: Icons.expand.icon)
+                                }
+                                .buttonStyle(.customButton())
+
+                            }
+                        }
+                        .padding(.top, 8)
+                        
+                    }
+                    .onAppear {
+                        if isPreview {
+                            pref.systemPrompt = Message.prompt_01.content
+                        }
+                    }
+                    .sheet(isPresented: $isEditingLongFormText) {
+                        TextEditor(text: pref.$systemPrompt)
+                    }
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
                 }
             } // END form
             .scrollContentBackground(.hidden)
             .formStyle(.grouped)
             .safeAreaPadding(.top, isPreview ? 0 :Styles.toolbarHeight)
 
-        .grainient(seed: 86206, dimming: .constant(0.3))
+            .grainient(seed: 86206, dimming: $pref.uiDimming)
 //        .task(id: apiKey) {
 //            isConnectedToOpenAI = await verifyOpenAIConnection()
 //        }
@@ -170,7 +220,7 @@ extension SettingsView {
         let url: String = "https://api.openai.com/v1/models"
         
         do {
-            let result: TestResponse = try await APIHandler.fetchAndDecodeJSON(
+            let result: TestResponse = try await APIHandler.constructRequestAndFetch(
                 url: URL(string: url),
                 requestType: .get,
                 bearerToken: key

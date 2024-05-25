@@ -15,11 +15,10 @@ final class Conversation: Identifiable {
     var icon: String? = nil
     var tokens: Int? = nil
     var prompt: String? = nil
+    var assistantName: String = "Assistant"
     var grainientSeed: Int? = nil
     
     @Relationship(deleteRule: .cascade, inverse: \Message.conversation) var messages: [Message]? = []
-    
-    var history: String = ""
     
     init(
         created: Date = Date.now,
@@ -27,9 +26,9 @@ final class Conversation: Identifiable {
         icon: String? = nil,
         tokens: Int? = nil,
         prompt: String? = nil,
+        assistantName: String = "Assistant",
         grainientSeed: Int? = nil,
-        messages: [Message]? = [],
-        history: String = ""
+        messages: [Message]? = []
         
     ) {
         self.created = created
@@ -37,9 +36,9 @@ final class Conversation: Identifiable {
         self.icon = icon
         self.tokens = tokens
         self.prompt = prompt
+        self.assistantName = assistantName
         self.grainientSeed = grainientSeed
         self.messages = messages
-        self.history = history
     }
 } // END Conversation
 
