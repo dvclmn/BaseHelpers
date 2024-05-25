@@ -38,70 +38,66 @@ struct ConversationView: View {
         VStack {
             if let conversationMessages = conversation.messages {
                 
-                    
-                    
-                    var searchResults: [Message] {
-                        conversationMessages.filter { message in
-                            if conv.searchText.count > 1 {
-                                return message.content.localizedCaseInsensitiveContains(conv.searchText)
-                            } else {
-                                return true
-                            }
+                var searchResults: [Message] {
+                    conversationMessages.filter { message in
+                        if conv.searchText.count > 1 {
+                            return message.content.localizedCaseInsensitiveContains(conv.searchText)
+                        } else {
+                            return true
                         }
                     }
-                    
+                }
+                
                 VStack {
                     if conversationMessages.count > 0 {
                         
-                        ScrollView(.vertical) {
-                            LazyVStack(spacing: 12) {
-                                ForEach(searchResults.sorted(by: { $0.timestamp < $1.timestamp }), id: \.timestamp) { message in
-                                    
-                                    SingleMessageView(message: message)
-                                    
-                                } // END ForEach
-                                //                    Text("End of messages")
-                            } // END lazy vstack
-                            .scrollTargetLayout()
-                            .padding(.bottom, 80)
-                        } // END scrollview
-                        .safeAreaPadding(.bottom, conv.editorHeight + 30)
-                        //            .searchable(text: $conv.searchText, isPresented: $conv.isSearching, prompt: Text("Search messages"))
-                        //                                        .scrollPosition(id: message.timestamp)
-                        .defaultScrollAnchor(.bottom)
-                        
+                        if searchResults.count > 0 {
+                            ScrollView(.vertical) {
+                                LazyVStack(spacing: 12) {
+                                    ForEach(searchResults.sorted(by: { $0.timestamp < $1.timestamp }), id: \.timestamp) { message in
+                                        
+                                        SingleMessageView(message: message)
+                                        
+                                    } // END ForEach
+                                } // END lazy vstack
+                                .scrollTargetLayout()
+                                .padding(.vertical, 40)
+                            } // END scrollview
+                            .defaultScrollAnchor(.bottom)
+                            .safeAreaPadding(.top, Styles.toolbarHeight)
+                            .safeAreaPadding(.bottom, conv.editorHeight + 10)
+    //                        .searchable(text: $conv.searchText, isPresented: $conv.isSearching, prompt: Text("Search messages"))
+                            //                                        .scrollPosition(id: message.timestamp)
+                        } else {
+                            EmptyMessage("No matching results", message: "No results found for \"\(conv.searchText)\".")
+                        }
                         
                     } else {
-                        Text("No messages yet")
-                            .padding(.top, Styles.toolbarHeight / 2)
-                            .padding(.bottom, conv.editorHeight)
-                            .font(.title)
-                            .foregroundStyle(.secondary)
-                            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+                        EmptyMessage("No messages yet")
                     } // END message count check
                 } // END vstack
-//                .cursor(.arrow)
+                //                .cursor(.arrow)
+                
+                .overlay(alignment: .bottom) {
+                    MessageInputView(
+                        conversation: conversation
+                    )
+                }
+                .sheet(isPresented: $conv.isConversationEditorShowing) {
                     
-                    .overlay(alignment: .bottom) {
-                        MessageInputView(
-                            conversation: conversation
-                        )
+                    ConversationEditorView(conversation: conversation)
+                    
+                }
+                //            .onAppear {
+                //                if isPreview {
+                //                    editorHeight = 100
+                //                }
+                //            }
+                .overlay {
+                    if bk.isQuickNavShowing {
+                        QuickNavView()
                     }
-                    .sheet(isPresented: $conv.isConversationEditorShowing) {
-                        
-                        ConversationEditorView(conversation: conversation)
-                        
-                    }
-                    //            .onAppear {
-                    //                if isPreview {
-                    //                    editorHeight = 100
-                    //                }
-                    //            }
-                    .overlay {
-                        if bk.isQuickNavShowing {
-                            QuickNavView()
-                        }
-                    }
+                }
                 
                 
             } // END has messages check
@@ -169,5 +165,26 @@ struct ConversationView: View {
     //    }
     
     
+}
+extension ConversationView {
+    @ViewBuilder
+    func EmptyMessage(
+        _ title: String,
+        message: String? = nil
+    ) -> some View {
+        VStack(spacing: 14) {
+            Text(title)
+                .font(.system(size: 26, weight: .regular))
+                .foregroundStyle(.tertiary)
+            if let message = message {
+                Text(message)
+                    .font(.system(size: 13, weight: .medium))
+                    .foregroundStyle(.secondary)
+            }
+        }
+        .padding(.top, Styles.toolbarHeight / 2)
+        .padding(.bottom, conv.editorHeight)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+    }
 }
 

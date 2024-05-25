@@ -31,7 +31,7 @@
 		F6795C7F2BCE7A4D0093BC9C /* GlobalConversationSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6795C7E2BCE7A4D0093BC9C /* GlobalConversationSettingsView.swift */; };
 		F687189C2BFF4F2100955B43 /* DetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F687189B2BFF4F2100955B43 /* DetailView.swift */; };
 		F687189E2BFF742800955B43 /* NavigationHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F687189D2BFF742800955B43 /* NavigationHandler.swift */; };
-		F697B8662B0B47610091CE79 /* GPTHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F697B8652B0B47610091CE79 /* GPTHandler.swift */; };
+		F697B8662B0B47610091CE79 /* GPTModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F697B8652B0B47610091CE79 /* GPTModel.swift */; };
 		F697B8682B0B48160091CE79 /* ConversationStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F697B8672B0B48160091CE79 /* ConversationStateView.swift */; };
 		F6988DC12BD1597800D20E4C /* MapTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6988DC02BD1597800D20E4C /* MapTest.swift */; };
 		F6A5E1B32BC6E4E90018B1B5 /* SidebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A5E1B22BC6E4E90018B1B5 /* SidebarView.swift */; };
@@ -75,7 +75,7 @@
 		F6795C7E2BCE7A4D0093BC9C /* GlobalConversationSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalConversationSettingsView.swift; sourceTree = "<group>"; };
 		F687189B2BFF4F2100955B43 /* DetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailView.swift; sourceTree = "<group>"; };
 		F687189D2BFF742800955B43 /* NavigationHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationHandler.swift; sourceTree = "<group>"; };
-		F697B8652B0B47610091CE79 /* GPTHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GPTHandler.swift; sourceTree = "<group>"; };
+		F697B8652B0B47610091CE79 /* GPTModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GPTModel.swift; sourceTree = "<group>"; };
 		F697B8672B0B48160091CE79 /* ConversationStateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationStateView.swift; sourceTree = "<group>"; };
 		F6988DC02BD1597800D20E4C /* MapTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapTest.swift; sourceTree = "<group>"; };
 		F6A5E1B22BC6E4E90018B1B5 /* SidebarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarView.swift; sourceTree = "<group>"; };
@@ -167,7 +167,6 @@
 				F6A5E1B62BC6EE480018B1B5 /* PreferencesHandler.swift */,
 				F64F8E1F2B03082100C72E51 /* BanksiaHandler.swift */,
 				F64F8E2D2B04254100C72E51 /* ConversationHandler.swift */,
-				F697B8652B0B47610091CE79 /* GPTHandler.swift */,
 			);
 			path = Handlers;
 			sourceTree = "<group>";
@@ -183,6 +182,15 @@
 				F639D8C92BD51B2A0035226E /* CodeSyntaxTheme.swift */,
 			);
 			path = Support;
+			sourceTree = "<group>";
+		};
+		F6535B042C01D20B00633D77 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				F6A7BEEE2B01C57400D3CE25 /* DataModel.swift */,
+				F697B8652B0B47610091CE79 /* GPTModel.swift */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 		F6A5E1B82BC6EF4E0018B1B5 /* Preview Content */ = {
@@ -226,7 +234,7 @@
 			children = (
 				F6F393142B0A1784005046F4 /* Info.plist */,
 				F6A7BEEA2B01C57400D3CE25 /* BanksiaApp.swift */,
-				F6A7BEEE2B01C57400D3CE25 /* DataModel.swift */,
+				F6535B042C01D20B00633D77 /* Models */,
 				F64F8E102B02200400C72E51 /* Handlers */,
 				F64F8E0D2B0214CC00C72E51 /* Views */,
 				F6A5E1B82BC6EF4E0018B1B5 /* Preview Content */,
@@ -346,7 +354,7 @@
 				F6A5E1B72BC6EE480018B1B5 /* PreferencesHandler.swift in Sources */,
 				F64F8E202B03082100C72E51 /* BanksiaHandler.swift in Sources */,
 				F6D6E2EB2BC82CFE000D2051 /* ExampleText.swift in Sources */,
-				F697B8662B0B47610091CE79 /* GPTHandler.swift in Sources */,
+				F697B8662B0B47610091CE79 /* GPTModel.swift in Sources */,
 				F6F393132B0A06B4005046F4 /* ConversationListItem.swift in Sources */,
 				F64F8E222B03090600C72E51 /* ContentView.swift in Sources */,
 				F64F8E312B042A2700C72E51 /* UtilityFunctions.swift in Sources */,

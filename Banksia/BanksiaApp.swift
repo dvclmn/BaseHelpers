@@ -69,7 +69,6 @@ struct BanksiaApp: App {
                 .environmentObject(pref)
                 .task {
                     let window = NSApplication.shared.keyWindow
-                    window?.toolbarStyle = .unified
                     window?.titlebarAppearsTransparent = true
                 }
         }

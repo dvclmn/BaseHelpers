@@ -62,15 +62,16 @@ struct SingleMessageView: View {
                         }
                     }
                 
-            }
+            } // END inner vstack
+            .frame(maxWidth: 620)
             .onTapGesture {
                 withAnimation(Styles.animationQuick) {
                     isHovering.toggle()
                 }
             }
 
-        }
-        .padding(.horizontal, Styles.paddingText)
+        } // END outer vstack
+        .padding(.horizontal, Styles.paddingText + Styles.paddingNSTextView)
         .frame(maxWidth: .infinity, alignment: message.type == .user ? .trailing : .leading)
     }
     

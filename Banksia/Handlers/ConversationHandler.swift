@@ -27,6 +27,7 @@ final class ConversationHandler {
     
     var isRequestingNewConversation: Bool = false
     var isConversationEditorShowing: Bool = false
+    var isRequestingSearch: Bool = false
     
     var selectedParagraph: String = ""
     

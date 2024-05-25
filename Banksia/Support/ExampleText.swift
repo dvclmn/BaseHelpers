@@ -85,11 +85,9 @@ struct ExampleText {
         """
     static let paragraphs: [String] = [
         """
-        *** Test Response ***
         Could you come up with a function for me, for SwiftUI, that will generate a paragraph or two, with some tweakable parameters for paragprah count, and word count? I dont mind what the words are, they jsut need to look like natural language. Feel free to even supply actual static blocks of strings — actually let’s do that. I will build a library of parapgraphcs, as `[String]`, and can you write me up a function that simply selects one of the paragraphis (i.e. items in the array), and returns it?
         """,
         """
-        *** Test Response ***
         ```swift
         import SwiftUI
         
@@ -119,7 +117,6 @@ struct ExampleText {
         This approach allows you to maintain the rich text capabilities of `NSTextView` while integrating it into a modern SwiftUI interface.
         """,
         """
-        *** Test Response ***
         ### Considerations:
         - **Performance**: If your app needs to display a large number of messages or very frequent updates, consider the performance implications of using `NSTextView`, as it might be heavier than simpler views like `Text` in SwiftUI.
         - **Consistency**: Using the same component (`NSTextView`) across your app for both input and display can lead to a more consistent implementation and styling approach.
@@ -128,7 +125,6 @@ struct ExampleText {
         """,
         
         """
-        *** Test Response ***
         Using `NSTextView` in your macOS app for both input and display of messages can be a viable option, especially if you want to leverage its rich text capabilities and the ability to use attributed strings for advanced styling. Here are some considerations and steps for using `NSTextView` as a read-only component for displaying messages:
         
         ### Advantages of Using `NSTextView`:
@@ -142,7 +138,6 @@ struct ExampleText {
         """,
         
         """
-        *** Test Response ***
         ### Key Points:
         
         1. **Regex Pattern**: The pattern `"`.*?`"` is used to match text including the backticks.
@@ -152,7 +147,6 @@ struct ExampleText {
         This approach allows you to include and style the backticks along with the text they enclose, directly within your SwiftUI view.
         """,
         """
-        *** Test Response ***
         Thanks!
         
         Could you explain 'non-greedy’?
@@ -160,7 +154,6 @@ struct ExampleText {
         Also, how would you suggest i could *include* the backticks, so they are caught in the styled attributed string?
         """,
         """
-        *** Test Response ***
         1. **Regular Expression**: The pattern `("```\\n)(.*?)(\\n```")` is used to match blocks of text that start and end with triple backticks, considering the line breaks. It uses `.*?` for non-greedy matching of any characters between the backticks, including new lines due to the `.dotMatchesLineSeparators` option.
         
         2. **Text Attributes**: The code applies several attributes to the matched text:
@@ -173,7 +166,6 @@ struct ExampleText {
         This function should be called in appropriate places, such as after the text changes in the `NSTextView`. This way, it will style the code blocks dynamically as the user types or modifies the existing text.
         """,
         """
-        *** Test Response ***
         The issue with the cursor jumping to the end of the text in your `StylableTextEditor` appears to be related to how the text is being updated in the `updateNSView` method of your `NSViewRepresentable` implementation. Every time the text changes and you set `textView.string = text`, the cursor position (caret) is reset to the end of the text.
         
         To fix this, you need to preserve the cursor position before updating the text and restore it afterward. Here’s how you can adjust your `updateNSView` method:
@@ -189,13 +181,11 @@ struct ExampleText {
             textView.setSelectedRange(selectedRange) // Restore the selected range
         }
         ```
-        
         This modification ensures that the cursor position is saved before the text is updated and then restored to its original position, preventing it from jumping to the end after each character is typed.
         
         This approach assumes that the text changes are not dramatically altering the structure of the text (e.g., inserting or deleting large blocks of text in positions before the cursor), which would require more complex handling of the cursor position. For typical text editing, this should work effectively.
         """,
         """
-        *** Test Response ***
         Could you start me off by providing code for the following requirement:
         
         I would like to style code within three backticks like ```, followed by a line break, then the body of the code, finally another line break and the last set of three backticks. This is, of course, a typical markdown syntax, to  facilitate the styling of code blocks.
@@ -227,7 +217,6 @@ struct ExampleText {
         
         """,
         """
-        *** Test Response ***
         The issue with the cursor jumping to the end of the text in your `StylableTextEditor` appears to be related to how the text is being updated in the `updateNSView` method of your `NSViewRepresentable` implementation. Every time the text changes and you set `textView.string = text`, the cursor position (caret) is reset to the end of the text.
         
         To fix this, you need to preserve the cursor position before updating the text and restore it afterward. Here’s how you can adjust your `updateNSView` method:

@@ -32,18 +32,15 @@ struct DetailView: View {
                     
                 } // END hstack
                 
-                
                 .overlay(alignment: .top) {
                     ToolbarView(conversation: conversation)
                 }
                 .overlay(alignment: .top) {
-                    
                     PopupView(
                         topOffset: 70,
                         popup: popup
                     )
                     .safeAreaPadding(.leading, sidebar.isSidebarVisible ? sidebar.sidebarWidth : 0)
-                    
                 }
                 .navigationBarBackButtonHidden(true)
                 

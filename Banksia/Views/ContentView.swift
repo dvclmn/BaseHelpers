@@ -92,8 +92,6 @@ struct ContentView: View {
 
 extension ContentView {
     
-
-    
     func newConversation() {
         if conv.isRequestingNewConversation {
             let newGrainientSeed = GrainientSettings.generateGradientSeed()

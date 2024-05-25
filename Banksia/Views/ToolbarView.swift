@@ -14,6 +14,8 @@ import Sidebar
 import Modifiers
 import Grainient
 import Icons
+import TextField
+import GeneralUtilities
 
 struct ToolbarView: View {
     @Environment(\.modelContext) var modelContext
@@ -30,6 +32,8 @@ struct ToolbarView: View {
     @State private var isToolbarMenuPresented: Bool = false
     
     @State private var isRenaming: Bool = false
+    
+    @FocusState private var isSearchFocused: Bool
     
     @Bindable var conversation: Conversation
     
@@ -66,26 +70,39 @@ struct ToolbarView: View {
             
             
             // MARK: - 􁎄 Grainient picker
-            GrainientPicker(
-                seed: $conversation.grainientSeed,
-                popup: popup
-            )
+//            GrainientPicker(
+//                seed: $conversation.grainientSeed,
+//                popup: popup
+//            )
+            
+            
             
             // MARK: - 􀍠 Options
-            Button {
-                isToolbarMenuPresented.toggle()
-            } label: {
-                Label("More options", systemImage: Icons.ellipsis.icon)
-            }
-            //            .buttonStyle(.customButton(labelDisplay: .iconOnly))
+//            Button {
+//                isToolbarMenuPresented.toggle()
+//            } label: {
+//                Label("More options", systemImage: Icons.ellipsis.icon)
+//            }
+//            //            .buttonStyle(.customButton(labelDisplay: .iconOnly))
+//            
+//            .popover(isPresented: $isToolbarMenuPresented) {
+//                Button {
+//                    popup.showPopup(title: "Here's a **popup title**", message: "And a *short* message with further info.")
+//                } label: {
+//                    Label("Test popup", systemImage: Icons.text.icon)
+//                }
+//            }
+//            
+//            
             
-            .popover(isPresented: $isToolbarMenuPresented) {
-                Button {
-                    popup.showPopup(title: "Here's a **popup title**", message: "And a *short* message with further info.")
-                } label: {
-                    Label("Test popup", systemImage: Icons.text.icon)
+            // MARK: - Search
+            TextField("Search messages", text: $conv.searchText, prompt: Text("Search…"))
+                .textFieldStyle(.customField(text: $conv.searchText, isFocused: isSearchFocused))
+                .focused($isSearchFocused)
+                .frame(maxWidth: isSearchFocused ? 240 : 120)
+                .onExitCommand {
+                    isSearchFocused = false
                 }
-            }
             
         } // END toolbar hstack
         .buttonStyle(
@@ -94,7 +111,8 @@ struct ToolbarView: View {
                 labelDisplay: .iconOnly
             )
         )
-        .safeAreaPadding(.leading, sidebar.isSidebarVisible ? sidebar.sidebarWidth : Styles.paddingToolbarTrafficLightsWidth)
+        .animation(Styles.animation, value: isSearchFocused)
+        .safeAreaPadding(.leading, isPreview && !sidebar.isSidebarVisible ? Styles.toolbarSpacing : (sidebar.isSidebarVisible ? sidebar.sidebarWidth : Styles.paddingToolbarTrafficLightsWidth))
         .frame(
             maxWidth: .infinity,
             minHeight: Styles.toolbarHeight,
@@ -138,7 +156,13 @@ struct ToolbarView: View {
                     
                 } // END sidebar showing check
             } // END hstack
-            .safeAreaPadding(.leading, Styles.paddingToolbarTrafficLightsWidth)
+            .onChange(of: conv.isRequestingSearch) {
+                if conv.isRequestingSearch {
+                    isSearchFocused = true
+                    conv.isRequestingSearch = false
+                }
+            }
+            .safeAreaPadding(.leading, isPreview ? Styles.toolbarSpacing : Styles.paddingToolbarTrafficLightsWidth)
                 .buttonStyle(.customButton(hasBackground: false, labelDisplay: .iconOnly))
         } // END toolbar sidebar controls overlay
         

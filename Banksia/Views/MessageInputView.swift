@@ -16,6 +16,7 @@ import Icons
 import APIHandler
 import KeychainHandler
 import Popup
+import ScrollMask
 
 struct MessageInputView: View {
     @Environment(ConversationHandler.self) private var conv
@@ -39,7 +40,7 @@ struct MessageInputView: View {
     
     @FocusState private var isFocused
     
-    var conversation: Conversation
+    @Bindable var conversation: Conversation
     
     var body: some View {
         
@@ -53,11 +54,14 @@ struct MessageInputView: View {
                 ScrollView(.vertical) {
                     EditorRepresentable(text: $userPrompt)
                         .frame(minHeight: minInputHeight, maxHeight: .infinity)
+                        .safeAreaPadding(.top, 30)
+                        .safeAreaPadding(.bottom, 90)
+                        .padding(.horizontal, Styles.paddingText)
                     
                 }
                 .frame(minHeight: conv.editorHeight, maxHeight: conv.editorHeight)
-                .padding(.top, inputHeightControlSize)
-                .padding(.horizontal, Styles.paddingText)
+                .scrollMask()
+                //                .padding(.top, inputHeightControlSize)
                 .scrollContentBackground(.hidden)
                 .onChange(of: conv.isResponseLoading) {
                     isFocused = !conv.isResponseLoading
@@ -75,25 +79,41 @@ struct MessageInputView: View {
                     
                     Button {
                         Task {
+                            userPrompt = conv.getRandomParagraph()
+                            await sendMessage()
+                        }
+                    } label: {
+                        Label("Send random", systemImage: Icons.sparkle.icon)
+                    }
+                    .disabled(!isTesting)
+                    .buttonStyle(.customButton(size: .small, status: isTesting ? .normal : .disabled, labelDisplay: .titleOnly))
+                    
+                    Button {
+                        Task {
                             await sendMessage()
                         }
                     } label: {
                         Label(conv.isResponseLoading ? "Loading…" : "Send", systemImage: Icons.text.icon)
                     }
-                    .buttonStyle(.customButton(status: userPrompt.isEmpty ? .disabled : .normal, labelDisplay: .titleOnly))
+                    .buttonStyle(.customButton(size: .small, status: userPrompt.isEmpty ? .disabled : .normal, labelDisplay: .titleOnly))
                     .disabled(userPrompt.isEmpty)
                     .keyboardShortcut(.return, modifiers: .command)
                     
-                    
                 }
-                .padding(.horizontal, Styles.toolbarSpacing)
-                .padding(.top, 12)
-                .padding(.bottom, 14)
-            }
+                .padding(.horizontal, 12)
+                .padding(.bottom, 10)
+//                .background(alignment: .bottom) {
+//                    LinearGradient(colors: [.clear, .black.opacity(0.4)], startPoint: .top, endPoint: .bottom)
+//                        .frame(height: 60)
+//                    
+//                }
+            } // END input buttons overlay
+            
             .task(id: conv.editorHeight) {
                 pref.editorHeight = conv.editorHeight
             }
             .onAppear {
+                userPrompt = ExampleText.basicMarkdown
                 if let editorHeightPreference = pref.editorHeight {
                     conv.editorHeight = editorHeightPreference
                 }
@@ -114,14 +134,13 @@ extension MessageInputView {
         .foregroundStyle(isTesting ? .secondary : .quaternary)
         .disabled(conv.isResponseLoading)
         .toggleStyle(.switch)
+        .font(.system(size: 12, weight: .medium))
         .controlSize(.mini)
         .tint(.secondary)
         .animation(Styles.animationQuick, value: isTesting)
     } // END test toggle
     
-    private func sendMessage() async {
-        
-        
+    private func sendMessage(_ isTestMode: Bool = false) async {
         
         guard let apiKey = KeychainHandler.shared.readString(for: "openAIAPIKey") else {
             popup.showPopup(title: "No API Key found", message: "Please visit app Settings (⌘,) to set up your API Key")
@@ -132,8 +151,8 @@ extension MessageInputView {
         
         /// Save user message, so we can clear the input field
         let messageContents = userPrompt
+        print("User prompt was:\n\(messageContents)")
         userPrompt = ""
-        
         
         
         /// Create new `Message` object and add to database

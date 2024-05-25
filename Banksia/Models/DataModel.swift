@@ -17,7 +17,7 @@ final class Conversation: Identifiable {
     var prompt: String? = nil
     var grainientSeed: Int? = nil
     
-    @Relationship(deleteRule: .cascade, inverse: \Message.conversation) var messages: [Message]? = nil
+    @Relationship(deleteRule: .cascade, inverse: \Message.conversation) var messages: [Message]? = []
     
     var history: String = ""
     
@@ -28,7 +28,7 @@ final class Conversation: Identifiable {
         tokens: Int? = nil,
         prompt: String? = nil,
         grainientSeed: Int? = nil,
-        messages: [Message]? = nil,
+        messages: [Message]? = [],
         history: String = ""
         
     ) {

@@ -34,6 +34,7 @@ struct EditorRepresentable: NSViewRepresentable {
         textView.delegate = context.coordinator
         textView.invalidateIntrinsicContentSize()
         textView.string = text
+        textView.font = NSFont.systemFont(ofSize: fontSize)
         textView.isEditable = isEditable
         textView.drawsBackground = false
         textView.allowsUndo = true

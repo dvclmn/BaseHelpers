@@ -14,6 +14,8 @@ import Popup
 import Icons
 import Button
 import APIHandler
+import Styles
+import GeneralUtilities
 
 @MainActor
 struct SettingsView: View {
@@ -37,9 +39,6 @@ struct SettingsView: View {
         
         @Bindable var bk = bk
         
-        
-        
-//        TabView {
             Form {
                 
                 Section("Interface") {
@@ -66,16 +65,16 @@ struct SettingsView: View {
                 
                 Section("API") {
                     LabeledContent {
-                        Group {
+                        HStack {
                             if isShowingSecureInformation {
-                                TextField("API Key", text: $apiKey, prompt: Text("Enter OpenAI API Key"))
+                                TextField("API Key", text: $apiKey, prompt: Text("Enter API Key"))
                                     .onSubmit {
                                         Task {
                                             await submitAPIKey()
                                         }
                                     }
                             } else {
-                                SecureField("API Key", text: $apiKey, prompt: Text("Enter OpenAI API Key"))
+                                SecureField("API Key", text: $apiKey, prompt: Text("Enter API Key"))
                                 
                                     .onSubmit {
                                         Task {
@@ -83,17 +82,18 @@ struct SettingsView: View {
                                         }
                                     }
                             }
-                        } // END group
-                        .labelsHidden()
-                    } label: {
-                        HStack {
-                            Text("API Key")
                             Button {
                                 isShowingSecureInformation.toggle()
                             } label: {
                                 Label(isShowingSecureInformation ? "Hide key" : "Show key", systemImage: Icons.eye.icon)
                             }
                             .buttonStyle(.customButton(size: .mini, status: isShowingSecureInformation ? .active : .normal, hasBackground: false, labelDisplay: .iconOnly))
+                        } // END group
+                        .labelsHidden()
+                    } label: {
+                        HStack {
+                            Text("API Key")
+                            
                         }
                         .padding(.bottom, 6)
                         
@@ -112,7 +112,7 @@ struct SettingsView: View {
                     
                     LabeledContent {
                         Picker("Select model", selection: $pref.gptModel) {
-                            ForEach(AIModel.allCases.reversed(), id: \.self) { model in
+                            ForEach(AIModel.allCases, id: \.self) { model in
                                 Text(model.name).tag(model.value)
                             }
                         }
@@ -122,10 +122,10 @@ struct SettingsView: View {
                         Text("Select model")
                             .padding(.bottom, 6)
                         VStack(alignment: .leading) {
-                            //                        Text("Current: \(pref.gptModel.name)")
-                            Text("Context window: **\(pref.gptModel.contextWindow)**")
-                            Text("Training cut-off: **\(pref.gptModel.trainingCutoff)**")
-                            Text("More information: [\(pref.gptModel.value)](\(pref.gptModel.infoURL))")
+                            Text("Current:\t\t\t**\(pref.gptModel.name)**")
+                            Text("Context window:\t**\(pref.gptModel.contextWindow) tokens**")
+                            Text("Training cut-off:\t**\(pref.gptModel.trainingCutoff)**")
+//                            Text("[More information](\(pref.gptModel.infoURL)) 􀄯")
                         }
                         
                         
@@ -145,9 +145,9 @@ struct SettingsView: View {
             } // END form
             .scrollContentBackground(.hidden)
             .formStyle(.grouped)
-//        } // END tabview
-//        .tabViewStyle(.automatic)
-        .grainient(seed: 24139, dimming: .constant(0.3))
+            .safeAreaPadding(.top, isPreview ? 0 :Styles.toolbarHeight)
+
+        .grainient(seed: 86206, dimming: .constant(0.3))
 //        .task(id: apiKey) {
 //            isConnectedToOpenAI = await verifyOpenAIConnection()
 //        }
@@ -199,13 +199,12 @@ extension SettingsView {
 
 #Preview {
     ModelContainerPreview(ModelContainer.sample) {
-        
         SettingsView()
-        
+            .padding(.top,1)
     }
     .environment(BanksiaHandler())
     .environmentObject(Preferences())
-    .frame(width: 380, height: 700)
-    .background(.contentBackground)
+    .frame(width: 480, height: 500)
+
 }
 

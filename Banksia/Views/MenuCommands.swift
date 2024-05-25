@@ -17,17 +17,17 @@ struct MenuCommands: Commands {
     var body: some Commands {
         
         CommandGroup(replacing: .newItem) {
-            Button("New Conversation…") {
+            Button("New") {
                 conv.isRequestingNewConversation = true
             }
             .keyboardShortcut("n", modifiers: .command)
             
-            Button("Open Conversation…") {
+            Button("Quick Open…") {
                 bk.isQuickNavShowing.toggle()
             }
             .keyboardShortcut("o", modifiers: .command)
             
-            Button("Edit Conversation…") {
+            Button("Edit…") {
                 conv.isConversationEditorShowing.toggle()
             }
             .keyboardShortcut("e", modifiers: .command)
@@ -37,7 +37,13 @@ struct MenuCommands: Commands {
 //                
 //            }
 //            .keyboardShortcut(.delete, modifiers: .command)
-            
+        }
+        
+        CommandGroup(before: .textEditing) {
+            Button("Search…") {
+                conv.isRequestingSearch = true
+            }
+            .keyboardShortcut("f", modifiers: .command)
         }
         
 //        ToolbarCommands()
