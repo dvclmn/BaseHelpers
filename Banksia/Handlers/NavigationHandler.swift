@@ -41,25 +41,19 @@ enum Page: Destination {
     }
 }
 
-public class NavigationHandler<Page: Destination>: Navigable, ObservableObject {
+class NavigationHandler: Navigable, ObservableObject {
     
-    @Published public var path: [Page]
-    @AppStorage("lastDestinationKey") public var lastDestination: Int?
-    
-    public init(
-        path: [Page] = []
-    ) {
-        self.path = path
-    }
+    @Published public var path: [Page] = []
+    @AppStorage("lastDestinationKey") var lastDestination: Int?
 
-    public var navigationTitle: String? {
+    var navigationTitle: String? {
         if let pathLast = self.path.last?.name {
             return pathLast
         } else {
             return nil
         }
     }
-    public func navigate(to page: Page) {
+    func navigate(to page: Page) {
         if path.last != page {
             path.append(page)
         } else {

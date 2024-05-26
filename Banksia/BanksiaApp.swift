@@ -17,7 +17,7 @@ struct BanksiaApp: App {
     @State private var bk = BanksiaHandler()
     @State private var conv = ConversationHandler()
     
-    @StateObject private var nav = NavigationHandler<Page>()
+    @StateObject private var nav = NavigationHandler()
     @StateObject private var popup = PopupHandler()
     @StateObject private var pref = Preferences()
     @StateObject private var sidebar = SidebarHandler()

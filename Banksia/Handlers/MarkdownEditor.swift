@@ -23,8 +23,7 @@ class MarkdownEditor: NSTextView {
         return NSSize(width: NSView.noIntrinsicMetric, height: rect.height)
     }
     
-    //    } // END set text style
-    
+
     func assessSelectedRange(_ selectedRange: NSRange) {
         
         guard let textStorage = self.textStorage else {
@@ -47,10 +46,8 @@ class MarkdownEditor: NSTextView {
                     } else {
                         print("No reported selection matches for \(syntax.name)")
                     }
-                    
-                }
-            }
-            
+                } // END match loop
+            } // END check valid selected range
         } // END loop markdown syntax
     } // END assess selecred range
     
@@ -75,10 +72,8 @@ class MarkdownEditor: NSTextView {
         
         // MARK: - Set initial styles (First!)
         let attributedString = NSMutableAttributedString(string: textStorage.string, attributes: baseStyles)
-        
 
         textStorage.setAttributedString(attributedString)
-        
         
         let syntaxList = MarkdownSyntax.allCases
         
@@ -88,7 +83,6 @@ class MarkdownEditor: NSTextView {
                 withString: attributedString
             )
         }
-        
         self.setSelectedRange(selectedRange)
     }
     
@@ -198,17 +192,13 @@ class MarkdownEditor: NSTextView {
             
             print("\n\n")
         }
-        
-        
+
         
         textStorage.setAttributedString(attributedString)
         
     } // END style text
     
-    
-    
-    
-    
+
     override func didChangeText() {
         super.didChangeText()
         applyStyles()

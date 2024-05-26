@@ -21,7 +21,7 @@ struct ToolbarView: View {
     @Environment(\.modelContext) var modelContext
     @Environment(ConversationHandler.self) private var conv
     @Environment(BanksiaHandler.self) private var bk
-    @EnvironmentObject var nav: NavigationHandler<Page>
+    @EnvironmentObject var nav: NavigationHandler
     
     @EnvironmentObject var popup: PopupHandler
     @EnvironmentObject var sidebar: SidebarHandler

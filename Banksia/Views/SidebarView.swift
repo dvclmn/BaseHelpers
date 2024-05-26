@@ -15,7 +15,7 @@ struct SidebarView: View {
     @Environment(BanksiaHandler.self) private var bk
     @Environment(ConversationHandler.self) private var conv
     @EnvironmentObject var sidebar: SidebarHandler
-    @EnvironmentObject var nav: NavigationHandler<Page>
+    @EnvironmentObject var nav: NavigationHandler
     
     @Environment(\.modelContext) var modelContext
     

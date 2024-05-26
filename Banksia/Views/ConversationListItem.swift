@@ -17,7 +17,7 @@ import MultiSelect
 struct ConversationListItem: View {
     @Environment(\.modelContext) private var modelContext
     
-    @EnvironmentObject var nav: NavigationHandler<Page>
+    @EnvironmentObject var nav: NavigationHandler
     @Environment(BanksiaHandler.self) private var bk
     @Environment(ConversationHandler.self) private var conv
     

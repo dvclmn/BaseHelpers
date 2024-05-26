@@ -23,7 +23,7 @@ struct ContentView: View {
     
     @Query private var conversations: [Conversation]
     
-    @EnvironmentObject var nav: NavigationHandler<Page>
+    @EnvironmentObject var nav: NavigationHandler
     @EnvironmentObject var popup: PopupHandler
     @EnvironmentObject var pref: Preferences
     @EnvironmentObject var sidebar: SidebarHandler
@@ -98,7 +98,7 @@ extension ContentView {
     ContentView()
         .environment(ConversationHandler())
         .environment(BanksiaHandler())
-        .environmentObject(NavigationHandler<Page>())
+        .environmentObject(NavigationHandler())
         .environmentObject(Preferences())
         .environmentObject(PopupHandler())
         .environmentObject(SidebarHandler())
