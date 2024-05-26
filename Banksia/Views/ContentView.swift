@@ -28,6 +28,8 @@ struct ContentView: View {
     @EnvironmentObject var pref: Preferences
     @EnvironmentObject var sidebar: SidebarHandler
     
+    
+    
     var body: some View {
         
         @Bindable var bk = bk

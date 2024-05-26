@@ -17,6 +17,8 @@ struct DetailView: View {
     
     @Query private var conversations: [Conversation]
     
+    @State private var scrolledMessageID: Message.ID?
+    
     var page: Page? = nil
     
     var body: some View {
@@ -29,7 +31,10 @@ struct DetailView: View {
                     SidebarView()
                     
                     VStack {
-                        ConversationView(conversation: conversation)
+                        ConversationView(
+                            conversation: conversation,
+                            scrolledMessageID: $scrolledMessageID
+                        )
                     }
                     
                 } // END hstack

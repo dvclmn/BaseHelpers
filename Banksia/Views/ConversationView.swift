@@ -9,6 +9,8 @@ import SwiftUI
 import SwiftData
 import Styles
 import GeneralUtilities
+import Icons
+import Button
 
 struct ConversationView: View {
     @Environment(BanksiaHandler.self) private var bk
@@ -19,16 +21,7 @@ struct ConversationView: View {
     @Query private var messages: [Message]
     
     @Bindable var conversation: Conversation
-    
-    init(filter: Predicate<Message>? = nil, conversation: Conversation) {
-        self.conversation = conversation
-        
-        if let filter = filter {
-            _messages = Query(filter: filter)
-        } else {
-            _messages = Query()
-        }
-    }
+    @Binding var scrolledMessageID: Message.ID?
     
     var body: some View {
         
@@ -52,22 +45,38 @@ struct ConversationView: View {
                     if conversationMessages.count > 0 {
                         
                         if searchResults.count > 0 {
+                            
+                            
+                            
                             ScrollView(.vertical) {
                                 LazyVStack(spacing: 12) {
                                     ForEach(searchResults.sorted(by: { $0.timestamp < $1.timestamp }), id: \.timestamp) { message in
                                         
-                                        SingleMessageView(message: message)
+                                        SingleMessageView(
+                                            message: message
+                                        )
+                                        .id(message.id)
                                         
                                     } // END ForEach
                                 } // END lazy vstack
                                 .scrollTargetLayout()
                                 .padding(.vertical, 40)
                             } // END scrollview
-                            .defaultScrollAnchor(.bottom)
+                            .scrollPosition(id: $scrolledMessageID, anchor: .top)
                             .safeAreaPadding(.top, Styles.toolbarHeight)
                             .safeAreaPadding(.bottom, conv.editorHeight + 10)
-    //                        .searchable(text: $conv.searchText, isPresented: $conv.isSearching, prompt: Text("Search messages"))
-                            //                                        .scrollPosition(id: message.timestamp)
+                            
+                            .overlay(alignment: .bottomTrailing) {
+                                Button {
+                                    scrolledMessageID = searchResults.last?.id
+                                } label: {
+                                    Label("Scroll to latest message", systemImage: Icons.down.icon)
+                                }
+                                .buttonStyle(.customButton(size: .small, labelDisplay: .iconOnly))
+                                .padding(.bottom, conv.editorHeight + Styles.paddingSmall)
+                                .padding(.trailing, Styles.paddingSmall)
+                            } // END scroll to bottom
+                            
                         } else {
                             EmptyMessage("No matching results", message: "No results found for \"\(conv.searchText)\".")
                         }
@@ -83,16 +92,13 @@ struct ConversationView: View {
                         conversation: conversation
                     )
                 }
+                
                 .sheet(isPresented: $conv.isConversationEditorShowing) {
                     
                     ConversationEditorView(conversation: conversation)
                     
                 }
-                //            .onAppear {
-                //                if isPreview {
-                //                    editorHeight = 100
-                //                }
-                //            }
+
                 .overlay {
                     if bk.isQuickNavShowing {
                         QuickNavView()

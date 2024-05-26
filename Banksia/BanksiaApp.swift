@@ -66,6 +66,7 @@ struct BanksiaApp: App {
         Settings {
             SettingsView()
                 .environment(bk)
+                .environmentObject(popup)
                 .environmentObject(pref)
                 .task {
                     let window = NSApplication.shared.keyWindow

@@ -37,28 +37,28 @@ struct ConversationListItem: View {
         var isCurrentPage: Bool {
             return page == nav.path.last
         }
-
+        
         NavigationLink(value: page) {
+            
             Label(page.name, systemImage: "bubble.middle.bottom")
                 .renamable(
                     isRenaming: $isRenaming,
                     itemName: conversation.name,
                     renameAction: { newName in
                         conversation.name = newName
-                    popup.showPopup(title: "Renamed to \"\(conversation.name)\"")
-                })
+                        popup.showPopup(title: "Renamed to \"\(conversation.name)\"")
+                    })
                 .frame(maxWidth: .infinity, alignment: .leading)
         } // END nav link
         .symbolRenderingMode(.hierarchical)
         .symbolVariant(.fill)
         .buttonStyle(.customButton(status: isCurrentPage ? .active : .normal, hasBackground: false))
-//        .multiSelect(
-//            item: conversation,
-//            displayedItems: displayedGames,
-//            cornerRadius: gameGridRounding
-//        )
+        //        .multiSelect(
+        //            item: conversation,
+        //            displayedItems: displayedGames,
+        //            cornerRadius: gameGridRounding
+        //        )
         .contextMenu {
-            
             Button {
                 isRenaming = true
             } label: {
@@ -80,9 +80,6 @@ struct ConversationListItem: View {
             }
             
         } // END context menu
-
-        
-        
     }
 }
 

@@ -78,6 +78,8 @@ struct MessageInputView: View {
                 
                 
             } // END user text field hstack
+            
+            // MARK: - Text area Buttons
             .overlay(alignment: .bottom) {
                 HStack(spacing: 16) {
                     Spacer()
@@ -191,7 +193,6 @@ extension MessageInputView {
             
             let requestBodyData = APIHandler.encodeBody(requestBody)
             
-//            print("Body: \(requestBody)")
             print("Body Encoded: \(String(describing: requestBodyData))")
             
             let response: GPTResponse = try await APIHandler.constructRequestAndFetch(
@@ -238,7 +239,10 @@ extension MessageInputView {
         
         VStack {
             Spacer()
-            ConversationView(conversation: Conversation.childcare)
+            ConversationView(
+                conversation: Conversation.childcare,
+                scrolledMessageID: .constant(Message.prompt_01.persistentModelID)
+            )
         }
     }
     .environment(ConversationHandler())

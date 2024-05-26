@@ -55,7 +55,7 @@ struct SettingsView: View {
                 ) {
                     TextField("", text: pref.$userName.boundString, prompt: Text("Enter your name"))
                 }
-
+                
                 
                 LabeledContent {
                     
@@ -93,8 +93,8 @@ struct SettingsView: View {
                             maxWidth: 140
                         )
                     }
-            
-
+                
+                
                 FormLabel(
                     label: "System-wide prompt",
                     icon: Icons.text.icon,
@@ -128,64 +128,64 @@ struct SettingsView: View {
                     label: "API Key",
                     icon: Icons.key.icon
                 ) {
-                        if !apiKey.isEmpty {
-                            HStack(spacing: 0) {
-                                Text("Status: **\(isConnectedToOpenAI ? "Connected" : "No connection")**")
-                                if isLoadingConnection {
-                                    Image(systemName: Icons.rays.icon)
-                                        .spinning()
-                                }
+                    if !apiKey.isEmpty {
+                        HStack(spacing: 0) {
+                            Text("Status: **\(isConnectedToOpenAI ? "Connected" : "No connection")**")
+                            if isLoadingConnection {
+                                Image(systemName: Icons.rays.icon)
+                                    .spinning()
                             }
-                            .fixedSize(horizontal: true, vertical: false)
                         }
-                    } content: {
-                        HStack {
-                            if isKeyUnlocked {
-                                TextField("API Key", text: $apiKey, prompt: Text("Enter API Key"))
-                                    .onSubmit {
-                                        Task {
-                                            await submitAPIKey()
-                                        }
-                                    }
-                            } else {
-                                SecureField("API Key", text: $apiKey, prompt: Text("Enter API Key"))
-                                    .foregroundStyle(.secondary)
-                                    .onSubmit {
-                                        Task {
-                                            await submitAPIKey()
-                                        }
-                                    }
-                            }
-                            Button {
-                                //                                isShowingSecureInformation.toggle()
-                                if isKeyUnlocked {
-                                    isKeyUnlocked = false
-                                } else {
-                                    authenticate()
-                                }
-                            } label: {
-                                Label(isKeyUnlocked ? "Hide key" : "Show key", systemImage: Icons.eye.icon)
-                            }
-                            .buttonStyle(.customButton(size: .mini, status: isKeyUnlocked ? .active : .normal, hasBackground: false, labelDisplay: .iconOnly))
-                            .onAppear {
-                                Task {
-                                    if let key = KeychainHandler.shared.readString(for: apiKeyString) {
-                                        apiKey = key
-                                        isConnectedToOpenAI = await verifyOpenAIConnection()
-                                    }
-                                }
-                            } // END on appear
-                            
-                        } // END group
-                        .labelsHidden()
+                        .fixedSize(horizontal: true, vertical: false)
                     }
-
+                } content: {
+                    HStack {
+                        if isKeyUnlocked {
+                            TextField("API Key", text: $apiKey, prompt: Text("Enter API Key"))
+                                .onSubmit {
+                                    Task {
+                                        await submitAPIKey()
+                                    }
+                                }
+                        } else {
+                            SecureField("API Key", text: $apiKey, prompt: Text("Enter API Key"))
+                                .foregroundStyle(.secondary)
+                                .onSubmit {
+                                    Task {
+                                        await submitAPIKey()
+                                    }
+                                }
+                        }
+                        Button {
+                            //                                isShowingSecureInformation.toggle()
+                            if isKeyUnlocked {
+                                isKeyUnlocked = false
+                            } else {
+                                authenticate()
+                            }
+                        } label: {
+                            Label(isKeyUnlocked ? "Hide key" : "Show key", systemImage: Icons.eye.icon)
+                        }
+                        .buttonStyle(.customButton(size: .mini, status: isKeyUnlocked ? .active : .normal, hasBackground: false, labelDisplay: .iconOnly))
+                        .onAppear {
+                            Task {
+                                if let key = KeychainHandler.shared.readString(for: apiKeyString) {
+                                    apiKey = key
+                                    isConnectedToOpenAI = await verifyOpenAIConnection()
+                                }
+                            }
+                        } // END on appear
+                        
+                    } // END group
+                    .labelsHidden()
+                }
                 
                 
-
                 
                 
-
+                
+                
+                
                 
                 FormLabel(
                     label: "Select model",
@@ -202,18 +202,19 @@ struct SettingsView: View {
                         .labelsHidden()
                         .pickerStyle(.menu)
                     }
-
+                    
                 
                 
-               
-                .onAppear {
-                    if isPreview {
-                        pref.systemPrompt = Message.prompt_01.content
+                
+                
+                    .onAppear {
+                        if isPreview {
+                            pref.systemPrompt = Message.prompt_01.content
+                        }
                     }
-                }
-                .sheet(isPresented: $isEditingLongFormText) {
-                    TextEditor(text: pref.$systemPrompt)
-                }
+                    .sheet(isPresented: $isEditingLongFormText) {
+                        TextEditor(text: pref.$systemPrompt)
+                    }
                 
                 
                 
@@ -224,14 +225,14 @@ struct SettingsView: View {
                 
                 
                 
-            }
+            } // End connection section
+
         } // END form
         .scrollContentBackground(.hidden)
         .formStyle(.grouped)
         .safeAreaPadding(.top, isPreview ? 0 :Styles.toolbarHeight)
         
         .grainient(seed: 86206, dimming: $pref.uiDimming)
-        
         
     }
 }
@@ -244,8 +245,11 @@ extension SettingsView {
         
         // check whether biometric authentication is possible
         if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
-            // it's possible, so go ahead and use it
-            let reason = "We need to unlock your data."
+            
+            
+            /// Application reason for authentication. This string must be provided in correct localization and should be short and clear. It will be eventually displayed in the authentication dialog as a part of the following string: "<appname>" is trying to <localized reason>.
+            /// For example, if the app name is "TestApp" and localizedReason is passed "access the hidden records", then the authentication prompt will read: "TestApp" is trying to access the hidden records.
+            let reason = "reveal your API Key"
             
             context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: reason) { success, authenticationError in
                 // authentication has now completed
@@ -310,7 +314,7 @@ extension SettingsView {
     }
     .environment(BanksiaHandler())
     .environmentObject(Preferences())
-    .frame(width: 480, height: 500)
+    .frame(width: 480, height: 600)
     
 }
 

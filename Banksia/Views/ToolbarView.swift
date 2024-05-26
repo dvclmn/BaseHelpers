@@ -78,22 +78,22 @@ struct ToolbarView: View {
             
             
             // MARK: - 􀍠 Options
-//            Button {
-//                isToolbarMenuPresented.toggle()
-//            } label: {
-//                Label("More options", systemImage: Icons.ellipsis.icon)
-//            }
-//            //            .buttonStyle(.customButton(labelDisplay: .iconOnly))
-//            
-//            .popover(isPresented: $isToolbarMenuPresented) {
-//                Button {
-//                    popup.showPopup(title: "Here's a **popup title**", message: "And a *short* message with further info.")
-//                } label: {
-//                    Label("Test popup", systemImage: Icons.text.icon)
-//                }
-//            }
-//            
-//            
+            Button {
+                isToolbarMenuPresented.toggle()
+            } label: {
+                Label("More options", systemImage: Icons.ellipsis.icon)
+            }
+            //            .buttonStyle(.customButton(labelDisplay: .iconOnly))
+            
+            .popover(isPresented: $isToolbarMenuPresented) {
+                Button {
+                    popup.showPopup(title: "Here's a **popup title**", message: "And a *short* message with further info.")
+                } label: {
+                    Label("Test popup", systemImage: Icons.text.icon)
+                }
+            }
+            
+            
             
             // MARK: - Search
             TextField("Search messages", text: $conv.searchText, prompt: Text("Search…"))
