@@ -17,7 +17,7 @@ public class SidebarHandler: Sidebarable, ObservableObject {
     public var sidebarWidth: Double = 200
     
     /// From GeometryReader somewhere else in app
-    @Published public var windowWidth: Double
+    @Published public var windowSize: CGSize = .zero
     
     /// This value is the desired content width, not including the sidebar
     @Published var contentMinWidth: Double = 480
@@ -26,7 +26,7 @@ public class SidebarHandler: Sidebarable, ObservableObject {
     public static let sidebarPadding: Double = 14
     
     public var isRoomForSidebar: Bool {
-        return windowWidth - sidebarToggleBuffer > contentMinWidth + sidebarToggleBuffer
+        return windowSize.width - sidebarToggleBuffer > contentMinWidth + sidebarToggleBuffer
     }
     
     var isSidebarVisible: Bool {
@@ -35,7 +35,7 @@ public class SidebarHandler: Sidebarable, ObservableObject {
     
     func requestRoomForSidebar() {
         let requiredWidth = contentMinWidth + sidebarWidth + sidebarToggleBuffer
-        let widthDeficit = max(0, requiredWidth - windowWidth)
+        let widthDeficit = max(0, requiredWidth - windowSize.width)
         contentMinWidth += widthDeficit
         
         // Trigger window resize
@@ -47,9 +47,9 @@ public class SidebarHandler: Sidebarable, ObservableObject {
     }
     
     public init(
-        windowWidth: Double = 400
+        
     ) {
-        self.windowWidth = windowWidth
+        
     }
 }
 

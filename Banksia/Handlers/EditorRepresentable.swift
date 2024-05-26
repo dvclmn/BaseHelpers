@@ -6,14 +6,6 @@
 //
 
 import Foundation
-
-//
-//  MarkdownEditor.swift
-//  Banksia
-//
-//  Created by Dave Coleman on 11/4/2024.
-//
-
 import SwiftUI
 import Cocoa
 import Styles

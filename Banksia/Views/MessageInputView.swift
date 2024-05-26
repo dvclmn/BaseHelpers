@@ -8,6 +8,7 @@
 import SwiftUI
 import SwiftData
 import Styles
+import Sidebar
 import GeneralUtilities
 import Modifiers
 import Swatches
@@ -24,6 +25,7 @@ struct MessageInputView: View {
     
     @EnvironmentObject var pref: Preferences
     @EnvironmentObject var popup: PopupHandler
+    @EnvironmentObject var sidebar: SidebarHandler
     
     @Environment(\.modelContext) private var modelContext
     
@@ -31,14 +33,7 @@ struct MessageInputView: View {
     
     @FocusState private var isFocused
     
-//    @SceneStorage("isTesting") var isTesting: Bool = true
-    
     @State private var isHoveringHeightAdjustor: Bool = false
-    
-    let minInputHeight: Double = 100
-    let maxInputHeight: Double = 580
-    
-    let inputHeightControlSize: Double = 12
     
     @Bindable var conversation: Conversation
     
@@ -50,13 +45,11 @@ struct MessageInputView: View {
             
             VStack(alignment: .leading, spacing: 0) {
                 
-                
                 ScrollView(.vertical) {
                     EditorRepresentable(
                         text: $userPrompt,
                         isFocused: $isFocused
                     )
-                        .frame(minHeight: minInputHeight, maxHeight: .infinity)
                         .safeAreaPadding(.top, 30)
                         .safeAreaPadding(.bottom, 90)
                         .padding(.horizontal, Styles.paddingText)
@@ -68,13 +61,15 @@ struct MessageInputView: View {
                     isFocused = true
                 }
                 .scrollMask()
-                //                .padding(.top, inputHeightControlSize)
                 .scrollContentBackground(.hidden)
                 .onChange(of: conv.isResponseLoading) {
                     isFocused = !conv.isResponseLoading
                 }
                 .background(.thinMaterial)
-                .resizable(height: $conv.editorHeight)
+                .resizable(
+                    height: $conv.editorHeight,
+                    maxHeight: sidebar.windowSize.height * 0.8
+                )
                 
                 
             } // END user text field hstack

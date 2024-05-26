@@ -31,7 +31,7 @@ struct SingleMessageView: View {
     var body: some View {
         
         var authorAltPadding: Double {
-            if sidebar.windowWidth < 600 {
+            if sidebar.windowSize.width < 600 {
                 return 20
             } else {
                 return 80

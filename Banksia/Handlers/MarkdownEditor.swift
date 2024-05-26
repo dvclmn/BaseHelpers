@@ -23,45 +23,6 @@ class MarkdownEditor: NSTextView {
         return NSSize(width: NSView.noIntrinsicMetric, height: rect.height)
     }
     
-    
-    //    func setupStyle(for style: MarkdownStyleAttributes) -> [AttributeContainer] {
-    //
-    //        let container = AttributeContainer()
-    //
-    //        attributeContainer.font?.monospaced()
-    //
-    //        let bodyDescriptor = NSFontDescriptor.preferredFontDescriptor(forTextStyle: .body)
-    //
-    //        var contentFont: NSFont? {
-    //            if style.isMono {
-    //                return NSFont.monospacedSystemFont(ofSize: style.fontSize, weight: style.fontWeight)
-    //            } else if style.isItalic {
-    //                return NSFont(descriptor: bodyDescriptor.withSymbolicTraits(.italic), size: style.fontSize)
-    //            } else {
-    //                return NSFont.systemFont(ofSize: style.fontSize, weight: style.fontWeight)
-    //            }
-    //        }
-    //
-    //
-    //        if let font = contentFont {
-    //            var attributes: [NSAttributedString.Key: Any] = [
-    //                .font: font as Any,
-    //                .foregroundColor: style.foregroundColor.withAlphaComponent(style.foregroundOpacity),
-    //                .backgroundColor: style.backgroundColour.withAlphaComponent(style.backgroundOpacity),
-    //                .strikethroughStyle: NSUnderlineStyle.single.rawValue,
-    //                .strikethroughColor: NSColor.textColor.withAlphaComponent(0.7)
-    //            ]
-    //
-    //            if !style.hasStrike {
-    //                attributes.removeValue(forKey: .strikethroughStyle)
-    //            }
-    //
-    //            return attributes
-    //
-    //        } else {
-    //            return [:]
-    //        }
-    
     //    } // END set text style
     
     func assessSelectedRange(_ selectedRange: NSRange) {
@@ -70,9 +31,6 @@ class MarkdownEditor: NSTextView {
             print("Text storage not available for styling")
             return
         }
-        
-        //        let documentRange = NSRange(location: 0, length: textStorage.string.count)
-        //        print("Document word count: \(documentRange.length)")
         
         for syntax in MarkdownSyntax.allCases {
             
@@ -118,15 +76,12 @@ class MarkdownEditor: NSTextView {
         // MARK: - Set initial styles (First!)
         let attributedString = NSMutableAttributedString(string: textStorage.string, attributes: baseStyles)
         
-        /// Default/base styles
-        //        let documentRange = Range
-        
-        
+
         textStorage.setAttributedString(attributedString)
         
         
         let syntaxList = MarkdownSyntax.allCases
-        //        let syntaxList = MarkdownSyntax.allCases.filter {$0.name == "codeBlock"}
+        
         for syntax in syntaxList {
             styleText(
                 for: syntax,
@@ -149,11 +104,9 @@ class MarkdownEditor: NSTextView {
         }
         
         let regexLiteral: Regex<(Substring, Substring)> = syntax.regex
-        //        let contentAttributes = setupStyle(for: syntax.contentAttributes)
-        //        let syntaxAttributes = setupStyle(for: syntax.syntaxAttributes)
+
         let syntaxCharacters: Int = syntax.syntaxCharacters
         let syntaxSymmetrical: Bool = syntax.syntaxSymmetrical
-        //        let hideSyntax: Bool = syntax.hideSyntax
         
         let string = attributedString.string
         let matches = string.matches(of: regexLiteral)
@@ -161,7 +114,6 @@ class MarkdownEditor: NSTextView {
         for match in matches {
             let range = NSRange(match.range, in: string)
 //            print("Range location: \(range.location), Range length: \(range.length)")
-            
             
             
             /// Content range
@@ -212,15 +164,15 @@ class MarkdownEditor: NSTextView {
                 case .h3:
                     paragraphStyles.paragraphSpacing = 10
 //                case .bold:
-//                    <#code#>
+//
 //                case .italic:
-//                    <#code#>
+//
 //                case .boldItalic:
-//                    <#code#>
+//
 //                case .strikethrough:
-//                    <#code#>
+//
 //                case .inlineCode:
-//                    <#code#>
+//
                 case .codeBlock:
                     paragraphStyles.lineSpacing = 4
                     paragraphStyles.paragraphSpacing = 0
@@ -241,48 +193,6 @@ class MarkdownEditor: NSTextView {
                 } // end code block check
                 
             } // END paragraph styles
-            
-            
-            
-                
-//                let highlightr = Highlightr()
-//                highlightr?.setTheme(to: "atom-one-dark")
-//                
-//                let codeLanguageRegex = /(?m)^```(swift|python)?\n([\s\S]*?)```/
-//                let codeLanguageMatches = string.matches(of: codeLanguageRegex)
-//                
-//                var language: String = ""
-////                
-//                for languageMatch in codeLanguageMatches {
-//                    language = String(languageMatch.output.1 ?? "plain")
-//                }
-//
-////                let languages: [String] = ["python", "swift", "plain"]
-////                let randomLanguage = languages.randomElement()
-//                
-//                
-//                let code: String = String(match.output.1)
-//                
-////                highlightr?.themeChanged = .some({ theme in
-////                    print(theme.codeFont.boundingRectForFont.size.height)
-////                })
-//                
-//
-//                let highlightedCode = highlightr?.highlight(code, as: language)
-//                
-//                
-//                //                attributedString.addAttributes(syntaxAttributes, range: startSyntaxRange)
-//                
-//                
-//                
-//                if let highlightedCode = highlightedCode {
-//                    
-//                    attributedString.replaceCharacters(in: contentRange, with: highlightedCode)
-//                }
-//                
-//                
-                
-                
             
             
             

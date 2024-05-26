@@ -54,7 +54,7 @@ struct ContentView: View {
             alignment: .trailing
         )
         .readSize { size in
-            sidebar.windowWidth = size.width
+            sidebar.windowSize = size
         }
         .toolbar {
             ToolbarItem {
@@ -76,17 +76,7 @@ struct ContentView: View {
         .onChange(of: conv.isRequestingNewConversation) {
             newConversation()
         }
-//        .onChange(of: sidebar.isRequestingSidebar) {
-//            
-//            let widthDefecit: Double = (sidebar.sidebarWidth + sidebar.windowWidth)
-//            
-//            sidebar.contentMinWidth += (sidebar.sidebarWidth + sidebar.sidebarToggleBuffer)
-////            if sidebar.isSidebarVisible {
-//                sidebar.isRequestingSidebar = false
-//                sidebar.contentMinWidth -= (sidebar.sidebarWidth + sidebar.sidebarToggleBuffer)
-////            }
-//        }
-        
+ 
     }
 }
 
