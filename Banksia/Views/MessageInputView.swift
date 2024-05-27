@@ -52,35 +52,41 @@ struct MessageInputView: View {
                 
                 ScrollView(.vertical) {
                     
+                    VStack {
                         MarkdownEditorView(
                             text: $userPrompt,
                             placeholderText: "Begin writing here…",
                             isFocused: $isFocused
                         )
-                    
-                        .safeAreaPadding(.top, 20)
+                        
+                        .safeAreaPadding(.top, 26)
                         .safeAreaPadding(.bottom, 90)
                         .padding(.horizontal, Styles.paddingText)
                         .focused($isFocused)
-                    
-                    
+                    }
+                    .onScrollThreshold(threshold: 10) { reached in
+                        withAnimation(Styles.animation) {
+                            isMasked = reached
+                        }
+                    }
                 }
+                .coordinateSpace(name: "scroll")
                 .frame(minHeight: conv.editorHeight, maxHeight: conv.editorHeight)
                 .onTapGesture {
                     isFocused = true
                 }
                 .scrollMask(isMasked)
+                .scrollIndicators(.hidden)
                 .scrollContentBackground(.hidden)
                 .onChange(of: conv.isResponseLoading) {
                     isFocused = !conv.isResponseLoading
                 }
-                .background(isMasked ? .red.opacity(0.3) : .blue.opacity(0.3))
                 .background(.thinMaterial)
                 .resizable(
                     height: $conv.editorHeight,
                     maxHeight: sidebar.windowSize.height * 0.8
                 )
-
+                
                 
                 
             } // END user text field hstack
@@ -90,18 +96,18 @@ struct MessageInputView: View {
                 HStack(spacing: 16) {
                     Spacer()
                     
-//                    TestToggle()
+                    //                    TestToggle()
                     
-//                    Button {
-//                        Task {
-//                            userPrompt = conv.getRandomParagraph()
-//                            await sendMessage()
-//                        }
-//                    } label: {
-//                        Label("Send random", systemImage: Icons.sparkle.icon)
-//                    }
-////                    .disabled(!isTesting)
-//                    .buttonStyle(.customButton(size: .small, /*status: isTesting ? .normal : .disabled,*/ labelDisplay: .titleOnly))
+                    //                    Button {
+                    //                        Task {
+                    //                            userPrompt = conv.getRandomParagraph()
+                    //                            await sendMessage()
+                    //                        }
+                    //                    } label: {
+                    //                        Label("Send random", systemImage: Icons.sparkle.icon)
+                    //                    }
+                    ////                    .disabled(!isTesting)
+                    //                    .buttonStyle(.customButton(size: .small, /*status: isTesting ? .normal : .disabled,*/ labelDisplay: .titleOnly))
                     
                     Button {
                         Task {
@@ -117,11 +123,11 @@ struct MessageInputView: View {
                 }
                 .padding(.horizontal, 12)
                 .padding(.bottom, 10)
-//                .background(alignment: .bottom) {
-//                    LinearGradient(colors: [.clear, .black.opacity(0.4)], startPoint: .top, endPoint: .bottom)
-//                        .frame(height: 60)
-//                    
-//                }
+                //                .background(alignment: .bottom) {
+                //                    LinearGradient(colors: [.clear, .black.opacity(0.4)], startPoint: .top, endPoint: .bottom)
+                //                        .frame(height: 60)
+                //
+                //                }
             } // END input buttons overlay
             
             .task(id: conv.editorHeight) {
@@ -202,15 +208,15 @@ extension MessageInputView {
                 print("Couldn't get the message")
             }
             
-//            let (stream, _) = try await URLSession.shared.bytes(for: request)
-//            print("Stream: \(stream)")
-//            
-//            for try await line in stream.lines {
-//                print("Entered the stream. \(line)")
-//                guard let messageChunk = ConversationHandler.parse(line) else { continue }
-//
-//                newGPTMessage.content += messageChunk
-//            }
+            //            let (stream, _) = try await URLSession.shared.bytes(for: request)
+            //            print("Stream: \(stream)")
+            //
+            //            for try await line in stream.lines {
+            //                print("Entered the stream. \(line)")
+            //                guard let messageChunk = ConversationHandler.parse(line) else { continue }
+            //
+            //                newGPTMessage.content += messageChunk
+            //            }
             
             
             
