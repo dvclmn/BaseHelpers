@@ -64,9 +64,10 @@ struct MessageInputView: View {
                         .padding(.horizontal, Styles.paddingText)
                         .focused($isFocused)
                     }
-                    .onScrollThreshold(threshold: 10) { reached in
+                    .onScrollThreshold(threshold: 10) { thresholdReached in
+                        
                         withAnimation(Styles.animation) {
-                            isMasked = reached
+                            isMasked = thresholdReached
                         }
                     }
                 }

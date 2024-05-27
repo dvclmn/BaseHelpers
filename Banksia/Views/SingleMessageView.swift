@@ -66,8 +66,7 @@ struct SingleMessageView: View {
                     isFocused: $isFocused,
                     isEditable: false
                 )
-                .fixedSize(horizontal: false, vertical: true)
-                .padding()
+                .fixedSize(horizontal: false, vertical: true)                .padding()
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .background(Color(message.type == .user ? .blue : .gray).opacity(0.2))
                 .clipShape(.rect(cornerRadius: Styles.roundingMedium))
