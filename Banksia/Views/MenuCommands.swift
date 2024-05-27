@@ -39,6 +39,8 @@ struct MenuCommands: Commands {
 //            .keyboardShortcut(.delete, modifiers: .command)
         }
         
+        CommandGroup(after: ., addition: <#T##() -> Content#>)
+        
         CommandGroup(before: .textEditing) {
             Button("Search…") {
                 conv.isRequestingSearch = true

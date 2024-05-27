@@ -65,6 +65,13 @@ struct ContentView: View {
         .ignoresSafeArea()
         
         .onAppear {
+            
+#if DEBUG
+
+            try? modelContext.delete(model: Conversation.self)
+
+#endif
+            
             if nav.path.isEmpty, let firstConversation = conversations.last {
                 nav.path = [Page.conversation(firstConversation)]
             }

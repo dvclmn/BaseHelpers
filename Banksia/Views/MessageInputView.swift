@@ -19,6 +19,7 @@ import KeychainHandler
 import Popup
 import ScrollMask
 import MarkdownEditor
+import CountdownTimer
 
 struct MessageInputView: View {
     @Environment(ConversationHandler.self) private var conv
@@ -32,13 +33,17 @@ struct MessageInputView: View {
     
     @SceneStorage("userPrompt") var userPrompt: String = ""
     
+    @State private var isUIFaded: Bool = false
+    
     @FocusState private var isFocused
     
     @State private var isHoveringHeightAdjustor: Bool = false
+    @State private var isHoveringControls: Bool = false
     
     @State private var isMasked: Bool = true
+    @State private var isScrolling: Bool = false
     
-    
+    @State private var countdown = CountdownTimer()
     
     @Bindable var conversation: Conversation
     
@@ -64,7 +69,10 @@ struct MessageInputView: View {
                         .padding(.horizontal, Styles.paddingText)
                         .focused($isFocused)
                     }
-                    .onScrollThreshold(threshold: 10) { thresholdReached in
+                    .onScrollThreshold(
+                        threshold: 10,
+                        isScrolling: $isScrolling
+                    ) { thresholdReached in
                         
                         withAnimation(Styles.animation) {
                             isMasked = thresholdReached
@@ -82,11 +90,27 @@ struct MessageInputView: View {
                 .onChange(of: conv.isResponseLoading) {
                     isFocused = !conv.isResponseLoading
                 }
+                
+                .task(id: isScrolling) {
+                    startTimer()
+                }
+                
+                .task(id: userPrompt) {
+                    startTimer()
+                }
+                .task {
+                    countdown.onCountdownEnd = {
+                        withAnimation(Styles.animationQuick) {
+                            self.isUIFaded = false
+                        }
+                    }
+                }
                 .background(.thinMaterial)
                 .resizable(
                     height: $conv.editorHeight,
                     maxHeight: sidebar.windowSize.height * 0.8
                 )
+
                 
                 
                 
@@ -94,41 +118,16 @@ struct MessageInputView: View {
             
             // MARK: - Text area Buttons
             .overlay(alignment: .bottom) {
-                HStack(spacing: 16) {
-                    Spacer()
-                    
-                    //                    TestToggle()
-                    
-                    //                    Button {
-                    //                        Task {
-                    //                            userPrompt = conv.getRandomParagraph()
-                    //                            await sendMessage()
-                    //                        }
-                    //                    } label: {
-                    //                        Label("Send random", systemImage: Icons.sparkle.icon)
-                    //                    }
-                    ////                    .disabled(!isTesting)
-                    //                    .buttonStyle(.customButton(size: .small, /*status: isTesting ? .normal : .disabled,*/ labelDisplay: .titleOnly))
-                    
-                    Button {
-                        Task {
-                            await sendMessage()
+                EditorControls()
+                    .border(Color.green.opacity(0.2))
+                    .onContinuousHover { phase in
+                        switch phase {
+                        case .active(_):
+                            isHoveringControls = true
+                        case .ended:
+                            isHoveringControls = false
                         }
-                    } label: {
-                        Label(conv.isResponseLoading ? "Loading…" : "Send", systemImage: Icons.text.icon)
                     }
-                    .buttonStyle(.customButton(size: .small, status: userPrompt.isEmpty ? .disabled : .normal, labelDisplay: .titleOnly))
-                    .disabled(userPrompt.isEmpty)
-                    .keyboardShortcut(.return, modifiers: .command)
-                    
-                }
-                .padding(.horizontal, 12)
-                .padding(.bottom, 10)
-                //                .background(alignment: .bottom) {
-                //                    LinearGradient(colors: [.clear, .black.opacity(0.4)], startPoint: .top, endPoint: .bottom)
-                //                        .frame(height: 60)
-                //
-                //                }
             } // END input buttons overlay
             
             .task(id: conv.editorHeight) {
@@ -148,6 +147,14 @@ struct MessageInputView: View {
 
 extension MessageInputView {
     
+    private func startTimer() {
+        if isFocused {
+            countdown.startCountdown(for: 2)
+            withAnimation(Styles.animationEased) {
+                self.isUIFaded = true
+            }
+        }
+    }
     
     private func sendMessage(_ isTestMode: Bool = false) async {
         
@@ -227,7 +234,52 @@ extension MessageInputView {
         
         conv.isResponseLoading = false
     } // END send message
-    
+}
+
+extension MessageInputView {
+    @ViewBuilder
+    func EditorControls() -> some View {
+        HStack(spacing: 16) {
+            
+            //                    TestToggle()
+            
+            //                    Button {
+            //                        Task {
+            //                            userPrompt = conv.getRandomParagraph()
+            //                            await sendMessage()
+            //                        }
+            //                    } label: {
+            //                        Label("Send random", systemImage: Icons.sparkle.icon)
+            //                    }
+            ////                    .disabled(!isTesting)
+            //                    .buttonStyle(.customButton(size: .small, /*status: isTesting ? .normal : .disabled,*/ labelDisplay: .titleOnly))
+            
+            Text(pref.gptModel.name).caption()
+            
+            Spacer()
+            
+            Button {
+                Task {
+                    await sendMessage()
+                }
+            } label: {
+                Label(conv.isResponseLoading ? "Loading…" : "Send", systemImage: Icons.text.icon)
+            }
+            .buttonStyle(.customButton(size: .small, status: userPrompt.isEmpty ? .disabled : .normal, labelDisplay: .titleOnly))
+            .disabled(userPrompt.isEmpty)
+            .keyboardShortcut(.return, modifiers: .command)
+            
+        }
+        .opacity(isUIFaded ? 0.2 : 1.0)
+        .padding(.top, 50)
+        .padding(.horizontal, 12)
+        .padding(.bottom, 10)
+        //                .background(alignment: .bottom) {
+        //                    LinearGradient(colors: [.clear, .black.opacity(0.4)], startPoint: .top, endPoint: .bottom)
+        //                        .frame(height: 60)
+        //
+        //                }
+    }
 }
 
 #Preview {
