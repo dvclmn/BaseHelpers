@@ -7,7 +7,7 @@
 
 import SwiftUI
 import SwiftData
-import Styles
+import GeneralStyles
 import Sidebar
 import GeneralUtilities
 import Modifiers
@@ -18,6 +18,7 @@ import APIHandler
 import KeychainHandler
 import Popup
 import ScrollMask
+import MarkdownEditor
 
 struct MessageInputView: View {
     @Environment(ConversationHandler.self) private var conv
@@ -35,6 +36,10 @@ struct MessageInputView: View {
     
     @State private var isHoveringHeightAdjustor: Bool = false
     
+    @State private var isMasked: Bool = true
+    
+    
+    
     @Bindable var conversation: Conversation
     
     var body: some View {
@@ -46,30 +51,36 @@ struct MessageInputView: View {
             VStack(alignment: .leading, spacing: 0) {
                 
                 ScrollView(.vertical) {
-                    EditorRepresentable(
-                        text: $userPrompt,
-                        isFocused: $isFocused
-                    )
-                        .safeAreaPadding(.top, 30)
+                    
+                        MarkdownEditorView(
+                            text: $userPrompt,
+                            placeholderText: "Begin writing here…",
+                            isFocused: $isFocused
+                        )
+                    
+                        .safeAreaPadding(.top, 20)
                         .safeAreaPadding(.bottom, 90)
                         .padding(.horizontal, Styles.paddingText)
                         .focused($isFocused)
+                    
                     
                 }
                 .frame(minHeight: conv.editorHeight, maxHeight: conv.editorHeight)
                 .onTapGesture {
                     isFocused = true
                 }
-                .scrollMask()
+                .scrollMask(isMasked)
                 .scrollContentBackground(.hidden)
                 .onChange(of: conv.isResponseLoading) {
                     isFocused = !conv.isResponseLoading
                 }
+                .background(isMasked ? .red.opacity(0.3) : .blue.opacity(0.3))
                 .background(.thinMaterial)
                 .resizable(
                     height: $conv.editorHeight,
                     maxHeight: sidebar.windowSize.height * 0.8
                 )
+
                 
                 
             } // END user text field hstack
@@ -81,16 +92,16 @@ struct MessageInputView: View {
                     
 //                    TestToggle()
                     
-                    Button {
-                        Task {
-                            userPrompt = conv.getRandomParagraph()
-                            await sendMessage()
-                        }
-                    } label: {
-                        Label("Send random", systemImage: Icons.sparkle.icon)
-                    }
-//                    .disabled(!isTesting)
-                    .buttonStyle(.customButton(size: .small, /*status: isTesting ? .normal : .disabled,*/ labelDisplay: .titleOnly))
+//                    Button {
+//                        Task {
+//                            userPrompt = conv.getRandomParagraph()
+//                            await sendMessage()
+//                        }
+//                    } label: {
+//                        Label("Send random", systemImage: Icons.sparkle.icon)
+//                    }
+////                    .disabled(!isTesting)
+//                    .buttonStyle(.customButton(size: .small, /*status: isTesting ? .normal : .disabled,*/ labelDisplay: .titleOnly))
                     
                     Button {
                         Task {
@@ -117,7 +128,7 @@ struct MessageInputView: View {
                 pref.editorHeight = conv.editorHeight
             }
             .onAppear {
-//                userPrompt = ExampleText.basicMarkdown
+                userPrompt = ExampleText.paragraphs[3]
                 if let editorHeightPreference = pref.editorHeight {
                     conv.editorHeight = editorHeightPreference
                 }
@@ -129,23 +140,6 @@ struct MessageInputView: View {
 }
 
 extension MessageInputView {
-    
-//    @ViewBuilder
-//    func TestToggle() -> some View {
-//        Toggle(isOn: $isTesting, label: {
-//            Text("Test mode")
-//        })
-//        .foregroundStyle(isTesting ? .secondary : .quaternary)
-//        .disabled(conv.isResponseLoading)
-//        .toggleStyle(.switch)
-//        .font(.system(size: 12, weight: .medium))
-//        .controlSize(.mini)
-//        .tint(.secondary)
-//        .animation(Styles.animationQuick, value: isTesting)
-//    } // END test toggle
-    
-    
-    
     
     
     private func sendMessage(_ isTestMode: Bool = false) async {
@@ -177,7 +171,7 @@ extension MessageInputView {
         do {
             
             let requestBody = RequestBody(
-                model: pref.gptModel.value,
+                model: pref.gptModel.model,
                 messages: [
                     RequestMessage(role: "system", content: pref.systemPrompt),
                     RequestMessage(role: "user", content: messageContents)
@@ -191,7 +185,7 @@ extension MessageInputView {
             print("Body Encoded: \(String(describing: requestBodyData))")
             
             let response: GPTResponse = try await APIHandler.constructRequestAndFetch(
-                url: URL(string: OpenAI.chatURL),
+                url: URL(string: OpenAIHandler.chatURL),
                 requestType: .post,
                 bearerToken: apiKey,
                 body: requestBodyData

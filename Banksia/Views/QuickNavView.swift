@@ -7,7 +7,7 @@
 
 import SwiftUI
 import SwiftData
-import Styles
+import GeneralStyles
 
 struct QuickNavView: View {
     @Environment(BanksiaHandler.self) private var bk
@@ -148,10 +148,10 @@ struct QuickNavView: View {
         }
     
 }
-
-#Preview {
-    ModelContainerPreview(ModelContainer.sample) {
-        QuickNavView()
-            .environment(BanksiaHandler())
-    }
-}
+//
+//#Preview {
+//    ModelContainerPreview(ModelContainer.sample) {
+//        QuickNavView()
+//            .environment(BanksiaHandler())
+//    }
+//}

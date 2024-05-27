@@ -9,10 +9,11 @@ import SwiftUI
 import SwiftData
 import GeneralUtilities
 import Navigation
-import Styles
+import GeneralStyles
 import Popup
 import Sidebar
 import Grainient
+import Swatches
 
 struct ContentView: View {
     
@@ -28,8 +29,6 @@ struct ContentView: View {
     @EnvironmentObject var pref: Preferences
     @EnvironmentObject var sidebar: SidebarHandler
     
-    
-    
     var body: some View {
         
         @Bindable var bk = bk
@@ -39,11 +38,8 @@ struct ContentView: View {
             DetailView()
             
             .navigationDestination(for: Page.self) { page in
-                
                 DetailView(page: page)
-                
             }
-            
         }
         .frame(
             minWidth: sidebar.contentMinWidth,
@@ -62,20 +58,29 @@ struct ContentView: View {
             }
         }
         .grainient(
-            seed: conv.grainientSeed,
+            seed: conv.grainientSeed ?? pref.defaultGrainientSeed,
             dimming: $pref.uiDimming
         )
+        .background(Swatch.slate.colour)
         .ignoresSafeArea()
         
         .onAppear {
             if nav.path.isEmpty, let firstConversation = conversations.last {
                 nav.path = [Page.conversation(firstConversation)]
             }
+            if conversations.isEmpty {
+                let grainientSeed = GrainientSettings.generateGradientSeed()
+                let newConversation = Conversation(grainientSeed: grainientSeed)
+                
+                modelContext.insert(newConversation)
+            }
 
         }
         .onChange(of: conv.isRequestingNewConversation) {
             newConversation()
         }
+        
+        
  
     }
 }
@@ -94,6 +99,7 @@ extension ContentView {
     }
 }
 
+#if DEBUG
 #Preview {
     ContentView()
         .environment(ConversationHandler())
@@ -106,3 +112,4 @@ extension ContentView {
         .padding(.top,1)
         .frame(width: 560, height: 700)
 }
+#endif

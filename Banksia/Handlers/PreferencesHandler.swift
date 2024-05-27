@@ -10,7 +10,7 @@ import SwiftUI
 final class Preferences: ObservableObject {
     @AppStorage("textScaleKey") var textScale: Double = 1.0
     @AppStorage("gptTemperatureKey") var gptTemperature: Double = 0.5
-    @AppStorage("gptModelKey") var gptModel: AIModel = AIModel.gpt_4_turbo
+    @AppStorage("gptModelKey") var gptModel: GPTModel = GPTModel.gpt_4_turbo
     
     @AppStorage("editorHeightKey") var editorHeight: Double?
     
@@ -18,7 +18,8 @@ final class Preferences: ObservableObject {
     
     @AppStorage("systemPromptKey") var systemPrompt: String = ""
     
-    @AppStorage("uiDimmingKey") var uiDimming: Double = 0.25
+    @AppStorage("uiDimmingKey") var uiDimming: Double = 0.30
+    @AppStorage("defaultGrainientSeedKey") var defaultGrainientSeed: Int = 358962
     
 //    @AppStorage("userPromptKey") var userPrompt: String = ""
     

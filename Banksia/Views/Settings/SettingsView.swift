@@ -14,10 +14,12 @@ import Popup
 import Icons
 import Button
 import APIHandler
-import Styles
+import GeneralStyles
 import GeneralUtilities
 import Form
-import LocalAuthentication
+import TextEditor
+import MarkdownEditor
+import GrainientPicker
 
 @MainActor
 struct SettingsView: View {
@@ -34,6 +36,8 @@ struct SettingsView: View {
     @State private var isLoadingConnection: Bool = false
     
     @State private var isKeyUnlocked = false
+
+    @FocusState private var isFocused
     
     @State private var isEditingLongFormText: Bool = false
     
@@ -56,9 +60,7 @@ struct SettingsView: View {
                     TextField("", text: pref.$userName.boundString, prompt: Text("Enter your name"))
                 }
                 
-                
-                LabeledContent {
-                    
+                FormLabel(label: "UI Dimming", icon: Icons.contrast.icon) {
                     Text("\(pref.uiDimming * 100, specifier: "%.0f")%")
                         .monospacedDigit()
                     Slider(
@@ -70,10 +72,26 @@ struct SettingsView: View {
                         minWidth: 80,
                         maxWidth: 140
                     )
-                    
-                } label: {
-                    Text("Interface dimming")
                 }
+                
+                FormLabel(
+                    label: "Default background",
+                    icon: Icons.gradient.icon,
+                    message: "Customise the gradient background that appears when no conversation is selected."
+                ) {
+                    GrainientPicker(
+                        seed: $pref.defaultGrainientSeed,
+                        popup: popup,
+                        viewSeedEnabled: false
+                    )
+                    
+//                    Button {
+//                        pref.defaultGrainientSeed = GrainientSettings.generateGradientSeed()
+//                    } label: {
+//                        Label("Generate", systemImage: Icons.refresh.icon)
+//                    }
+                }
+
             }
             
             Section("Customise AI") {
@@ -100,22 +118,18 @@ struct SettingsView: View {
                     icon: Icons.text.icon,
                     message: "This will be included for each message in each conversation."
                 ) {
+                    Text(pref.systemPrompt)
+                        .multilineTextAlignment(.leading)
+                        .lineLimit(3)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                } content: {
                     
-                    VStack(alignment: .leading, spacing: 14) {
-                        TextField("", text: pref.$systemPrompt, prompt: Text("System prompt"), axis: .vertical)
-                            .multilineTextAlignment(.leading)
-                            .lineLimit(4)
-                        if !pref.systemPrompt.isEmpty {
-                            Button {
-                                isEditingLongFormText.toggle()
-                            } label: {
-                                Label("Expand", systemImage: Icons.expand.icon)
-                            }
-                            .buttonStyle(.customButton(size: .small))
-                            
-                        }
+                    Button {
+                        isEditingLongFormText.toggle()
+                    } label: {
+                        Label("Edit", systemImage: Icons.edit.icon)
                     }
-                    .padding(.top, 8)
+//                    .buttonStyle(.customButton(size: .small, hasBackground: false))
                     
                 }
             }
@@ -157,12 +171,7 @@ struct SettingsView: View {
                                 }
                         }
                         Button {
-                            //                                isShowingSecureInformation.toggle()
-                            if isKeyUnlocked {
-                                isKeyUnlocked = false
-                            } else {
-                                authenticate()
-                            }
+                            isKeyUnlocked.toggle()
                         } label: {
                             Label(isKeyUnlocked ? "Hide key" : "Show key", systemImage: Icons.eye.icon)
                         }
@@ -191,12 +200,12 @@ struct SettingsView: View {
                     label: "Select model",
                     icon: Icons.shocked.icon) {
                         Text("Current:\t\t\t**\(pref.gptModel.name)**")
-                        Text("Context window:\t**\(pref.gptModel.contextWindow) tokens**")
-                        Text("Training cut-off:\t**\(pref.gptModel.trainingCutoff)**")
+                        Text("Context length:\t**\(pref.gptModel.contextLength) tokens**")
+                        Text("Training cut-off:\t**\(pref.gptModel.cutoff)**")
                     } content: {
                         Picker("Select model", selection: $pref.gptModel) {
-                            ForEach(AIModel.allCases, id: \.self) { model in
-                                Text(model.name).tag(model.value)
+                            ForEach(GPTModel.allCases, id: \.self) { model in
+                                Text(model.name).tag(model.model)
                             }
                         }
                         .labelsHidden()
@@ -207,62 +216,73 @@ struct SettingsView: View {
                 
                 
                 
-                    .onAppear {
-                        if isPreview {
-                            pref.systemPrompt = Message.prompt_01.content
-                        }
-                    }
+//                    .onAppear {
+//                        if isPreview {
+//                            pref.systemPrompt = Message.prompt_01.content
+//                        }
+//                    }
                     .sheet(isPresented: $isEditingLongFormText) {
-                        TextEditor(text: pref.$systemPrompt)
+//                        TextEditor(text: pref.$systemPrompt)
+                        
+                        TextEditorView(
+                            text: pref.$systemPrompt,
+                            isPresented: $isEditingLongFormText) { text in
+                                MarkdownEditorView(
+                                    text: text,
+                                    placeholderText: "Enter system prompt",
+                                    isFocused: $isFocused
+                                )
+                                .focused($isFocused)
+                            }
                     }
-                
-                
-                
-                
-                
-                
-                
-                
-                
                 
             } // End connection section
 
         } // END form
+        .frame(
+            minWidth: 380,
+            idealWidth: 500,
+            maxWidth: 780,
+            minHeight: 280,
+            idealHeight: 600,
+            maxHeight: .infinity
+        )
         .scrollContentBackground(.hidden)
         .formStyle(.grouped)
         .safeAreaPadding(.top, isPreview ? 0 :Styles.toolbarHeight)
-        
-        .grainient(seed: 86206, dimming: $pref.uiDimming)
+        .scrollIndicators(.hidden)
+        .grainient(seed: pref.defaultGrainientSeed, dimming: $pref.uiDimming)
         
     }
 }
 
 extension SettingsView {
-    
-    private func authenticate() {
-        let context = LAContext()
-        var error: NSError?
-        
-        // check whether biometric authentication is possible
-        if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
-            
-            
-            /// Application reason for authentication. This string must be provided in correct localization and should be short and clear. It will be eventually displayed in the authentication dialog as a part of the following string: "<appname>" is trying to <localized reason>.
-            /// For example, if the app name is "TestApp" and localizedReason is passed "access the hidden records", then the authentication prompt will read: "TestApp" is trying to access the hidden records.
-            let reason = "reveal your API Key"
-            
-            context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: reason) { success, authenticationError in
-                // authentication has now completed
-                if success {
-                    isKeyUnlocked = true
-                } else {
-                    popup.showPopup(title: "Error displaying API key", message: "Please try authenticating again.")
-                }
-            }
-        } else {
-            // no biometrics
-        }
-    }
+  
+    // TODO: The system asking for mac login password felt too invaisve, for not enough benefit
+//    private func authenticate() {
+//        let context = LAContext()
+//        var error: NSError?
+//        
+//        // check whether biometric authentication is possible
+//        if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
+//            
+//            
+//            /// Application reason for authentication. This string must be provided in correct localization and should be short and clear. It will be eventually displayed in the authentication dialog as a part of the following string: "<appname>" is trying to <localized reason>.
+//            /// For example, if the app name is "TestApp" and localizedReason is passed "access the hidden records", then the authentication prompt will read: "TestApp" is trying to access the hidden records.
+//            let reason = "reveal your API Key"
+//            
+//            context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: reason) { success, authenticationError in
+//                // authentication has now completed
+//                if success {
+//                    isKeyUnlocked = true
+//                } else {
+//                    popup.showPopup(title: "Error displaying API key", message: "Please try authenticating again.")
+//                }
+//            }
+//        } else {
+//            // no biometrics
+//        }
+//    }
     
     
     
@@ -307,6 +327,11 @@ extension SettingsView {
     }
 }
 
+
+
+
+#if DEBUG
+
 #Preview {
     ModelContainerPreview(ModelContainer.sample) {
         SettingsView()
@@ -314,7 +339,9 @@ extension SettingsView {
     }
     .environment(BanksiaHandler())
     .environmentObject(Preferences())
+    .environmentObject(PopupHandler())
     .frame(width: 480, height: 600)
     
 }
 
+#endif

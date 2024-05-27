@@ -6,11 +6,13 @@
 //
 
 import SwiftUI
-import Styles
+import GeneralStyles
 import GeneralUtilities
 import Grainient
 import Modifiers
 import Icons
+import MarkdownEditor
+import TextEditor
 
 struct ConversationEditorView: View {
     @Environment(ConversationHandler.self) private var conv
@@ -59,25 +61,17 @@ struct ConversationEditorView: View {
                         Label("Prompt", systemImage: Icons.text.icon)
                     }
                     .sheet(isPresented: $isPromptEditorPresented) {
-                        VStack {
-                            Button {
-                                conversation.prompt = localPromptValue
-                                isPromptEditorPresented = false
-                            } label: {
-                                Text("Save")
-                            }
-                            EditorRepresentable(
-                                text: $localPromptValue,
+                        TextEditorView(
+                            text: $conversation.prompt.boundString,
+                            isPresented: $isPromptEditorPresented
+                        ) { text in
+                            MarkdownEditorView(
+                                text: text,
+                                placeholderText: "Provide instructions to apply conversation-wide…",
                                 isFocused: $isFocused
                             )
-                            .focused($isFocused)
+                                .focused($isFocused)
                         }
-                            .padding(Styles.paddingText)
-                            .frame(minWidth: 400, minHeight: 500)
-                            .grainient(seed: conversation.grainientSeed, dimming: $pref.uiDimming)
-                            .onAppear {
-                                localPromptValue = conversation.prompt.boundString
-                            }
                     }
                     
                     LabeledContent {
@@ -109,8 +103,14 @@ struct ConversationEditorView: View {
     }
 }
 
+#if DEBUG
+
+
 #Preview {
     ConversationEditorView(conversation: Conversation.plants)
         .environment(ConversationHandler())
         .frame(width: 380)
 }
+
+
+#endif

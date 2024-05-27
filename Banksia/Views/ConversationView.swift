@@ -7,7 +7,7 @@
 
 import SwiftUI
 import SwiftData
-import Styles
+import GeneralStyles
 import GeneralUtilities
 import Icons
 import Button

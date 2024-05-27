@@ -8,7 +8,7 @@
 import SwiftUI
 import SwiftData
 import Navigation
-import Styles
+import GeneralStyles
 
 @Observable
 class BanksiaHandler {

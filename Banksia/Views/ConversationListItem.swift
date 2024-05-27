@@ -6,13 +6,14 @@
 //
 
 import SwiftUI
-import Styles
+import GeneralStyles
 import Navigation
 import Popup
 import Sidebar
 import Button
 import Icons
 import MultiSelect
+import Renamable
 
 struct ConversationListItem: View {
     @Environment(\.modelContext) private var modelContext
@@ -82,9 +83,9 @@ struct ConversationListItem: View {
         } // END context menu
     }
 }
-
-#Preview {
-    ConversationListItem(page: .conversation(Conversation.appKitDrawing), conversation: Conversation.appKitDrawing)
-        .environment(BanksiaHandler())
-        .environmentObject(PopupHandler())
-}
+//
+//#Preview {
+//    ConversationListItem(page: .conversation(Conversation.appKitDrawing), conversation: Conversation.appKitDrawing)
+//        .environment(BanksiaHandler())
+//        .environmentObject(PopupHandler())
+//}

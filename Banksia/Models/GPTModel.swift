@@ -6,8 +6,9 @@
 //
 
 import Foundation
+import APIHandler
 
-struct OpenAI {
+struct OpenAIHandler {
     static let chatURL: String = "https://api.openai.com/v1/chat/completions"
 }
 
@@ -67,9 +68,16 @@ struct APIUsage: Codable {
     let total_tokens: Int
     
 }
+//
+//struct OpenAI: AICompany {
+//
+//    let name: String = "OpenAI"
+//    let models: [GPTModel.AllCases]
+//}
 
 
-enum AIModel: String, Codable, CaseIterable {
+enum GPTModel: String, AIModel, Codable, CaseIterable {
+    
     case gpt_4o
     case gpt_4_turbo
     case gpt_4
@@ -88,7 +96,7 @@ enum AIModel: String, Codable, CaseIterable {
         }
     }
     
-    var value: String {
+    var model: String {
         switch self {
         case .gpt_4o:
             "gpt-4o"
@@ -101,7 +109,11 @@ enum AIModel: String, Codable, CaseIterable {
         }
     }
     
-    var contextWindow: String {
+    var company: String {
+        return "OpenAI"
+    }
+    
+    var contextLength: String {
         switch self {
         case .gpt_4o:
             "128,000"
@@ -114,7 +126,7 @@ enum AIModel: String, Codable, CaseIterable {
         }
     }
     
-    var trainingCutoff: String {
+    var cutoff: String {
         switch self {
         case .gpt_4o:
             "Oct 2023"

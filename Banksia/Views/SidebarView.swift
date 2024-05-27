@@ -7,7 +7,7 @@
 
 import SwiftUI
 import SwiftData
-import Styles
+import GeneralStyles
 import Sidebar
 import Navigation
 

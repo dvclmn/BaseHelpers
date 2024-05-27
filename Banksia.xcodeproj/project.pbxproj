@@ -3,17 +3,14 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 60;
+	objectVersion = 56;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		F60B6A732C005D7B007EDCDD /* SidebarHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F60B6A722C005D7B007EDCDD /* SidebarHandler.swift */; };
 		F626CD1E2BFA73D1002A0D8A /* APIHandler in Frameworks */ = {isa = PBXBuildFile; productRef = F626CD1D2BFA73D1002A0D8A /* APIHandler */; };
-		F635C17E2BD0F41100E4EA4A /* SmoothGradient in Frameworks */ = {isa = PBXBuildFile; productRef = F635C17D2BD0F41100E4EA4A /* SmoothGradient */; };
 		F636A11C2B05B23D00C24891 /* GeneralSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F636A11B2B05B23D00C24891 /* GeneralSettingsView.swift */; };
-		F639D8B82BD3C3650035226E /* MarkdownModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F639D8B72BD3C3650035226E /* MarkdownModel.swift */; };
 		F639D8C52BD517AF0035226E /* xcode.min.css in Resources */ = {isa = PBXBuildFile; fileRef = F639D8C42BD517AF0035226E /* xcode.min.css */; };
-		F639D8C82BD518330035226E /* Highlightr in Frameworks */ = {isa = PBXBuildFile; productRef = F639D8C72BD518330035226E /* Highlightr */; };
 		F639D8CA2BD51B2A0035226E /* CodeSyntaxTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = F639D8C92BD51B2A0035226E /* CodeSyntaxTheme.swift */; };
 		F644B17D2BF276F70098FDCF /* Utilities in Frameworks */ = {isa = PBXBuildFile; productRef = F644B17C2BF276F70098FDCF /* Utilities */; };
 		F64F8E032B02136D00C72E51 /* ModelContainerPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = F64F8E022B02136D00C72E51 /* ModelContainerPreview.swift */; };
@@ -22,11 +19,8 @@
 		F64F8E202B03082100C72E51 /* BanksiaHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F64F8E1F2B03082100C72E51 /* BanksiaHandler.swift */; };
 		F64F8E222B03090600C72E51 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F64F8E212B03090600C72E51 /* ContentView.swift */; };
 		F64F8E2E2B04254100C72E51 /* ConversationHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F64F8E2D2B04254100C72E51 /* ConversationHandler.swift */; };
-		F64F8E312B042A2700C72E51 /* UtilityFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F64F8E302B042A2700C72E51 /* UtilityFunctions.swift */; };
 		F6623F672BFF89B40087C518 /* Components in Frameworks */ = {isa = PBXBuildFile; productRef = F6623F662BFF89B40087C518 /* Components */; };
-		F6623F692BFF89B40087C518 /* Structure in Frameworks */ = {isa = PBXBuildFile; productRef = F6623F682BFF89B40087C518 /* Structure */; };
 		F6623F6B2BFF89B40087C518 /* Styles in Frameworks */ = {isa = PBXBuildFile; productRef = F6623F6A2BFF89B40087C518 /* Styles */; };
-		F663C2682BD25FC0000D8F5F /* MarkdownEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F663C2672BD25FC0000D8F5F /* MarkdownEditor.swift */; };
 		F6795C7D2BCE70920093BC9C /* ConversationEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6795C7C2BCE70920093BC9C /* ConversationEditorView.swift */; };
 		F6795C7F2BCE7A4D0093BC9C /* GlobalConversationSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6795C7E2BCE7A4D0093BC9C /* GlobalConversationSettingsView.swift */; };
 		F687189C2BFF4F2100955B43 /* DetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F687189B2BFF4F2100955B43 /* DetailView.swift */; };
@@ -41,6 +35,7 @@
 		F6A7BEEB2B01C57400D3CE25 /* BanksiaApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A7BEEA2B01C57400D3CE25 /* BanksiaApp.swift */; };
 		F6A7BEEF2B01C57400D3CE25 /* DataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A7BEEE2B01C57400D3CE25 /* DataModel.swift */; };
 		F6A7BEF12B01C57500D3CE25 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F6A7BEF02B01C57500D3CE25 /* Assets.xcassets */; };
+		F6BBA9D82C038659003AB082 /* MarkdownEditor in Frameworks */ = {isa = PBXBuildFile; productRef = F6BBA9D72C038659003AB082 /* MarkdownEditor */; };
 		F6C161E12B0F63B800F4AB62 /* banksia_icons.json in Resources */ = {isa = PBXBuildFile; fileRef = F6C161E02B0F63B800F4AB62 /* banksia_icons.json */; };
 		F6C245062BEE50CF002AEE3D /* Grainient in Frameworks */ = {isa = PBXBuildFile; productRef = F6C245052BEE50CF002AEE3D /* Grainient */; };
 		F6C245082BEE50CF002AEE3D /* KeychainHandler in Frameworks */ = {isa = PBXBuildFile; productRef = F6C245072BEE50CF002AEE3D /* KeychainHandler */; };
@@ -51,7 +46,7 @@
 		F6E4BC692BCF0ABD00BFD550 /* ScrollTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6E4BC682BCF0ABD00BFD550 /* ScrollTest.swift */; };
 		F6E4BC6B2BCFD1E100BFD550 /* QuickNavView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6E4BC6A2BCFD1E100BFD550 /* QuickNavView.swift */; };
 		F6E4BC6D2BCFDAC900BFD550 /* MenuCommands.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6E4BC6C2BCFDAC900BFD550 /* MenuCommands.swift */; };
-		F6E4BC6F2BD02D9800BFD550 /* EditorRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6E4BC6E2BD02D9800BFD550 /* EditorRepresentable.swift */; };
+		F6EBCA882C047FC7007C452A /* ClaudeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6EBCA872C047FC7007C452A /* ClaudeModel.swift */; };
 		F6F393112B09DB7D005046F4 /* ConversationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6F393102B09DB7D005046F4 /* ConversationView.swift */; };
 		F6F393132B0A06B4005046F4 /* ConversationListItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6F393122B0A06B4005046F4 /* ConversationListItem.swift */; };
 		F6FA92EF2B052B9800D1D9B8 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6FA92EE2B052B9800D1D9B8 /* SettingsView.swift */; };
@@ -60,7 +55,6 @@
 /* Begin PBXFileReference section */
 		F60B6A722C005D7B007EDCDD /* SidebarHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarHandler.swift; sourceTree = "<group>"; };
 		F636A11B2B05B23D00C24891 /* GeneralSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralSettingsView.swift; sourceTree = "<group>"; };
-		F639D8B72BD3C3650035226E /* MarkdownModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkdownModel.swift; sourceTree = "<group>"; };
 		F639D8C42BD517AF0035226E /* xcode.min.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = xcode.min.css; sourceTree = "<group>"; };
 		F639D8C92BD51B2A0035226E /* CodeSyntaxTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeSyntaxTheme.swift; sourceTree = "<group>"; };
 		F64F8E022B02136D00C72E51 /* ModelContainerPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelContainerPreview.swift; sourceTree = "<group>"; };
@@ -69,8 +63,6 @@
 		F64F8E1F2B03082100C72E51 /* BanksiaHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BanksiaHandler.swift; sourceTree = "<group>"; };
 		F64F8E212B03090600C72E51 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		F64F8E2D2B04254100C72E51 /* ConversationHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationHandler.swift; sourceTree = "<group>"; };
-		F64F8E302B042A2700C72E51 /* UtilityFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityFunctions.swift; sourceTree = "<group>"; };
-		F663C2672BD25FC0000D8F5F /* MarkdownEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkdownEditor.swift; sourceTree = "<group>"; };
 		F6795C7C2BCE70920093BC9C /* ConversationEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationEditorView.swift; sourceTree = "<group>"; };
 		F6795C7E2BCE7A4D0093BC9C /* GlobalConversationSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalConversationSettingsView.swift; sourceTree = "<group>"; };
 		F687189B2BFF4F2100955B43 /* DetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailView.swift; sourceTree = "<group>"; };
@@ -94,8 +86,8 @@
 		F6E4BC682BCF0ABD00BFD550 /* ScrollTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollTest.swift; sourceTree = "<group>"; };
 		F6E4BC6A2BCFD1E100BFD550 /* QuickNavView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickNavView.swift; sourceTree = "<group>"; };
 		F6E4BC6C2BCFDAC900BFD550 /* MenuCommands.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuCommands.swift; sourceTree = "<group>"; };
-		F6E4BC6E2BD02D9800BFD550 /* EditorRepresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorRepresentable.swift; sourceTree = "<group>"; };
 		F6E4BC752BD0DA5000BFD550 /* AttributedStringReference.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttributedStringReference.swift; sourceTree = "<group>"; };
+		F6EBCA872C047FC7007C452A /* ClaudeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClaudeModel.swift; sourceTree = "<group>"; };
 		F6F393102B09DB7D005046F4 /* ConversationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationView.swift; sourceTree = "<group>"; };
 		F6F393122B0A06B4005046F4 /* ConversationListItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationListItem.swift; sourceTree = "<group>"; };
 		F6F393142B0A1784005046F4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -110,13 +102,11 @@
 				F6623F6B2BFF89B40087C518 /* Styles in Frameworks */,
 				F6623F672BFF89B40087C518 /* Components in Frameworks */,
 				F626CD1E2BFA73D1002A0D8A /* APIHandler in Frameworks */,
-				F635C17E2BD0F41100E4EA4A /* SmoothGradient in Frameworks */,
 				F6C2450A2BEE50CF002AEE3D /* Popup in Frameworks */,
 				F6C245082BEE50CF002AEE3D /* KeychainHandler in Frameworks */,
 				F6C245062BEE50CF002AEE3D /* Grainient in Frameworks */,
+				F6BBA9D82C038659003AB082 /* MarkdownEditor in Frameworks */,
 				F644B17D2BF276F70098FDCF /* Utilities in Frameworks */,
-				F639D8C82BD518330035226E /* Highlightr in Frameworks */,
-				F6623F692BFF89B40087C518 /* Structure in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -136,7 +126,6 @@
 			isa = PBXGroup;
 			children = (
 				F687189B2BFF4F2100955B43 /* DetailView.swift */,
-				F639D8B72BD3C3650035226E /* MarkdownModel.swift */,
 				F6988DC02BD1597800D20E4C /* MapTest.swift */,
 				F6E4BC682BCF0ABD00BFD550 /* ScrollTest.swift */,
 				F6E4BC6C2BCFDAC900BFD550 /* MenuCommands.swift */,
@@ -161,8 +150,6 @@
 			children = (
 				F60B6A722C005D7B007EDCDD /* SidebarHandler.swift */,
 				F687189D2BFF742800955B43 /* NavigationHandler.swift */,
-				F663C2672BD25FC0000D8F5F /* MarkdownEditor.swift */,
-				F6E4BC6E2BD02D9800BFD550 /* EditorRepresentable.swift */,
 				F6A5E1B92BC6F3D70018B1B5 /* StyleHandler.swift */,
 				F6A5E1B62BC6EE480018B1B5 /* PreferencesHandler.swift */,
 				F64F8E1F2B03082100C72E51 /* BanksiaHandler.swift */,
@@ -178,7 +165,6 @@
 				F6E4BC752BD0DA5000BFD550 /* AttributedStringReference.swift */,
 				F6D6E2EA2BC82CFE000D2051 /* ExampleText.swift */,
 				F6C161E02B0F63B800F4AB62 /* banksia_icons.json */,
-				F64F8E302B042A2700C72E51 /* UtilityFunctions.swift */,
 				F639D8C92BD51B2A0035226E /* CodeSyntaxTheme.swift */,
 			);
 			path = Support;
@@ -187,6 +173,7 @@
 		F6535B042C01D20B00633D77 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				F6EBCA872C047FC7007C452A /* ClaudeModel.swift */,
 				F6A7BEEE2B01C57400D3CE25 /* DataModel.swift */,
 				F697B8652B0B47610091CE79 /* GPTModel.swift */,
 			);
@@ -269,16 +256,14 @@
 			);
 			name = Banksia;
 			packageProductDependencies = (
-				F635C17D2BD0F41100E4EA4A /* SmoothGradient */,
-				F639D8C72BD518330035226E /* Highlightr */,
 				F6C245052BEE50CF002AEE3D /* Grainient */,
 				F6C245072BEE50CF002AEE3D /* KeychainHandler */,
 				F6C245092BEE50CF002AEE3D /* Popup */,
 				F644B17C2BF276F70098FDCF /* Utilities */,
 				F626CD1D2BFA73D1002A0D8A /* APIHandler */,
 				F6623F662BFF89B40087C518 /* Components */,
-				F6623F682BFF89B40087C518 /* Structure */,
 				F6623F6A2BFF89B40087C518 /* Styles */,
+				F6BBA9D72C038659003AB082 /* MarkdownEditor */,
 			);
 			productName = Banksia;
 			productReference = F6A7BEE72B01C57400D3CE25 /* Banksia.app */;
@@ -309,8 +294,6 @@
 			);
 			mainGroup = F6A7BEDE2B01C57400D3CE25;
 			packageReferences = (
-				F635C17C2BD0F41100E4EA4A /* XCRemoteSwiftPackageReference "SmoothGradient" */,
-				F639D8C62BD518330035226E /* XCLocalSwiftPackageReference "../_ Swift Packages/Highlightr" */,
 			);
 			productRefGroup = F6A7BEE82B01C57400D3CE25 /* Products */;
 			projectDirPath = "";
@@ -345,19 +328,16 @@
 				F6795C7D2BCE70920093BC9C /* ConversationEditorView.swift in Sources */,
 				F6A7BEEB2B01C57400D3CE25 /* BanksiaApp.swift in Sources */,
 				F6A5E1BA2BC6F3D80018B1B5 /* StyleHandler.swift in Sources */,
-				F663C2682BD25FC0000D8F5F /* MarkdownEditor.swift in Sources */,
 				F6A7BEEF2B01C57400D3CE25 /* DataModel.swift in Sources */,
 				F6A5E1B52BC6E5A40018B1B5 /* ToolbarView.swift in Sources */,
-				F6E4BC6F2BD02D9800BFD550 /* EditorRepresentable.swift in Sources */,
-				F639D8B82BD3C3650035226E /* MarkdownModel.swift in Sources */,
 				F60B6A732C005D7B007EDCDD /* SidebarHandler.swift in Sources */,
 				F6A5E1B72BC6EE480018B1B5 /* PreferencesHandler.swift in Sources */,
 				F64F8E202B03082100C72E51 /* BanksiaHandler.swift in Sources */,
+				F6EBCA882C047FC7007C452A /* ClaudeModel.swift in Sources */,
 				F6D6E2EB2BC82CFE000D2051 /* ExampleText.swift in Sources */,
 				F697B8662B0B47610091CE79 /* GPTModel.swift in Sources */,
 				F6F393132B0A06B4005046F4 /* ConversationListItem.swift in Sources */,
 				F64F8E222B03090600C72E51 /* ContentView.swift in Sources */,
-				F64F8E312B042A2700C72E51 /* UtilityFunctions.swift in Sources */,
 				F687189C2BFF4F2100955B43 /* DetailView.swift in Sources */,
 				F6FA92EF2B052B9800D1D9B8 /* SettingsView.swift in Sources */,
 				F636A11C2B05B23D00C24891 /* GeneralSettingsView.swift in Sources */,
@@ -508,7 +488,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Banksia/Banksia.entitlements;
-				CODE_SIGN_IDENTITY = "Apple Development: dave@dvclmn.com (JN3JD5QA9U)";
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -532,9 +512,10 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = dvclmn.Banksia;
+				MARKETING_VERSION = 0.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.dvclmn.Banksia;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -550,7 +531,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Banksia/Banksia.entitlements;
-				CODE_SIGN_IDENTITY = "Apple Development: dave@dvclmn.com (JN3JD5QA9U)";
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -573,9 +554,10 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = dvclmn.Banksia;
+				MARKETING_VERSION = 0.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.dvclmn.Banksia;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -608,37 +590,10 @@
 		};
 /* End XCConfigurationList section */
 
-/* Begin XCLocalSwiftPackageReference section */
-		F639D8C62BD518330035226E /* XCLocalSwiftPackageReference "../_ Swift Packages/Highlightr" */ = {
-			isa = XCLocalSwiftPackageReference;
-			relativePath = "../_ Swift Packages/Highlightr";
-		};
-/* End XCLocalSwiftPackageReference section */
-
-/* Begin XCRemoteSwiftPackageReference section */
-		F635C17C2BD0F41100E4EA4A /* XCRemoteSwiftPackageReference "SmoothGradient" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/raymondjavaxx/SmoothGradient";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.0;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
 /* Begin XCSwiftPackageProductDependency section */
 		F626CD1D2BFA73D1002A0D8A /* APIHandler */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = APIHandler;
-		};
-		F635C17D2BD0F41100E4EA4A /* SmoothGradient */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = F635C17C2BD0F41100E4EA4A /* XCRemoteSwiftPackageReference "SmoothGradient" */;
-			productName = SmoothGradient;
-		};
-		F639D8C72BD518330035226E /* Highlightr */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = Highlightr;
 		};
 		F644B17C2BF276F70098FDCF /* Utilities */ = {
 			isa = XCSwiftPackageProductDependency;
@@ -648,13 +603,13 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = Components;
 		};
-		F6623F682BFF89B40087C518 /* Structure */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = Structure;
-		};
 		F6623F6A2BFF89B40087C518 /* Styles */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Styles;
+		};
+		F6BBA9D72C038659003AB082 /* MarkdownEditor */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MarkdownEditor;
 		};
 		F6C245052BEE50CF002AEE3D /* Grainient */ = {
 			isa = XCSwiftPackageProductDependency;

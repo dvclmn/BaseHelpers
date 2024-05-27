@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import Styles
+import GeneralStyles
 import GeneralUtilities
 import Icons
 import Form

@@ -93,7 +93,7 @@ final class ConversationHandler {
                 
         let prunedHistory = historicalMessages.prefix(maxMessagesInHistory)
 
-        let historyBody: String = historicalMessages.map {
+        let historyBody: String = prunedHistory.map {
             formatMessageForGPT($0)
         }.joined(separator: "\n\n")
         

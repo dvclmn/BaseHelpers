@@ -53,6 +53,7 @@ struct BanksiaApp: App {
         //        }
         .windowStyle(.hiddenTitleBar)
         .windowToolbarStyle(.unified)
+        .defaultSize(width: 800, height: 900)
 #if os(macOS)
         .commands {
             MenuCommands(

@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 import Sidebar
-import Styles
+import GeneralStyles
 
 class SidebarHandler: Sidebarable, ObservableObject {
     

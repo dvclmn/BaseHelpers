@@ -7,10 +7,11 @@
 
 import SwiftUI
 import SwiftData
-import Styles
+import GeneralStyles
 import GeneralUtilities
 import Icons
 import Sidebar
+import MarkdownEditor
 
 struct SingleMessageView: View {
     @Environment(BanksiaHandler.self) private var bk
@@ -56,15 +57,16 @@ struct SingleMessageView: View {
         
         VStack {
             VStack {
-                Text(highlighted)
-                    .foregroundStyle(.primary.opacity(0.9))
-                    .font(.system(size: 15, weight: .medium))
-//                EditorRepresentable(
-//                    text: $message.content,
-//                    isFocused: $isFocused,
-//                    isEditable: false
-//                )
-//                .fixedSize(horizontal: false, vertical: true)
+//                Text(highlighted)
+//                    .foregroundStyle(.primary.opacity(0.9))
+//                    .font(.system(size: 15, weight: .medium))
+                MarkdownEditorView(
+                    text: $message.content,
+                    placeholderText: "",
+                    isFocused: $isFocused,
+                    isEditable: false
+                )
+                .fixedSize(horizontal: false, vertical: true)
                 .padding()
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .background(Color(message.type == .user ? .blue : .gray).opacity(0.2))
@@ -99,12 +101,12 @@ struct SingleMessageView: View {
     }
     
 }
-
-#Preview {
-    ModelContainerPreview(ModelContainer.sample) {
-        SingleMessageView(message: Message.response_02)
-            .environment(BanksiaHandler())
-            .environment(ConversationHandler())
-            .frame(width: 500, height: 700)
-    }
-}
+//
+//#Preview {
+//    ModelContainerPreview(ModelContainer.sample) {
+//        SingleMessageView(message: Message.response_02)
+//            .environment(BanksiaHandler())
+//            .environment(ConversationHandler())
+//            .frame(width: 500, height: 700)
+//    }
+//}

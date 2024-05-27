@@ -7,7 +7,7 @@
 
 import Foundation
 import SwiftUI
-import Styles
+import GeneralStyles
 import Navigation
 import Icons
 
