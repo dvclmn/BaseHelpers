@@ -7,12 +7,13 @@
 
 import Foundation
 import SwiftUI
+import Sidebar
 
 struct MenuCommands: Commands {
 
     @Binding var bk: BanksiaHandler
     @Binding var conv: ConversationHandler
-    
+    @ObservedObject var sidebar: SidebarHandler
     
     var body: some Commands {
         
@@ -39,7 +40,11 @@ struct MenuCommands: Commands {
 //            .keyboardShortcut(.delete, modifiers: .command)
         }
         
-        CommandGroup(after: ., addition: <#T##() -> Content#>)
+        CommandGroup(before: .toolbar) {
+            Toggle(sidebar.isSidebarDismissed ? "Show Sidebar" : "Hide Sidebar", isOn: $sidebar.isSidebarDismissed)
+                .keyboardShortcut("\\", modifiers: .command)
+        }
+        
         
         CommandGroup(before: .textEditing) {
             Button("Search…") {

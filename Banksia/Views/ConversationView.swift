@@ -98,11 +98,9 @@ struct ConversationView: View {
                     ConversationEditorView(conversation: conversation)
                     
                 }
-
+                
                 .overlay {
-                    if bk.isQuickNavShowing {
-                        QuickNavView()
-                    }
+                    QuickNavView()
                 }
                 
                 

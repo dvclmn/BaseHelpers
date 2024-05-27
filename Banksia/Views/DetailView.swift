@@ -24,7 +24,9 @@ struct DetailView: View {
     var body: some View {
         
         switch page {
+            
         case .conversation(let conversationStatic):
+            
             if let conversation = conversations.first(where: {$0.persistentModelID == conversationStatic.persistentModelID}) {
                 
                 HStack(spacing: 0) {
@@ -57,7 +59,35 @@ struct DetailView: View {
             
         case .none:
             Text("No page")
+            
+            HStack(spacing: 0) {
+                SidebarView()
+                
+                
+                
+            } // END hstack
+            
+            .overlay(alignment: .top) {
+                ToolbarView(conversation: conversation)
+            }
+            .overlay(alignment: .top) {
+                PopupView(
+                    topOffset: 70,
+                    popup: popup
+                )
+                .safeAreaPadding(.leading, sidebar.isSidebarVisible ? sidebar.sidebarWidth : 0)
+            }
+            .navigationBarBackButtonHidden(true)
         }
 
     }
 }
+
+//extension DetailView {
+//    
+//    @ViewBuilder
+//    func Detail() -> some View {
+//        
+//    }
+//    
+//}

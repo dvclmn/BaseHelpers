@@ -8,6 +8,7 @@
 import SwiftUI
 import SwiftData
 import GeneralStyles
+import GeneralUtilities
 
 struct QuickNavView: View {
     @Environment(BanksiaHandler.self) private var bk
@@ -48,74 +49,78 @@ struct QuickNavView: View {
             return index.description
         }
         
-        ZStack {
+        
+        if bk.isQuickNavShowing || isPreview {
             
-            Color.black.opacity(0.3)
-                .onTapGesture {
-                    bk.isQuickNavShowing = false
-                }
-            
-            VStack {
-                VStack {
-                    Text(currentIndex)
-                    TextField("Search conversations", text: $searchText)
-                        .textFieldStyle(.plain)
-                        .font(.system(size: 16))
-                        .focused($isFocused)
-                        .onAppear {
-                            isFocused = true
-                        }
-                        .onSubmit {
-                            bk.selectedConversation = self.selectedConversation?.persistentModelID
-                        }
-                        .onExitCommand {
-                            bk.isQuickNavShowing = false
-                        }
-                    
-                    
-                    //                        List(selection: $selectedConversation) {
-                    ForEach(filteredResults) { conversation in
-                        
-                        Button {
-                            bk.selectedConversation = conversation.persistentModelID
-                        } label: {
-                            Label(conversation.name, systemImage: conversation.icon ?? "")
-                            //                            .background(Color.blue)
-                        }
-                        .buttonStyle(.plain)
-                        .background(conversation == self.selectedConversation ? .blue : .clear)
-                        //                    .disabled(!isSelected)
-                        //                                .keyboardShortcut(.return)
-                        //                    .focused($isFocused)
-                    }
-                    
-                    
-                    Button("Down") {
-                        moveToNextConversation()
-                        print("Pressed down arrow, moved down")
-                    }
-                    .disabled(!canMoveToNextConversation())
-//                    .keyboardShortcut(.downArrow)
-                    
-                    
-                }
-                .task(id: searchText) {
-                    if searchText.count > 0 {
-                        selectedConversation = filteredResults[0]
-                    } else {
-                        selectedConversation = firstResult
-                    }
-                }
-                .frame(maxWidth: 400)
-                .padding()
-                .background(.contentBackground)
-                .clipShape(RoundedRectangle(cornerRadius: Styles.roundingMedium))
-                .padding(.top, 80)
+            ZStack {
                 
-                Spacer()
-            } // END main vstack
-            
-        } // END zstack
+                Color.black.opacity(0.3)
+                    .onTapGesture {
+                        bk.isQuickNavShowing = false
+                    }
+                
+                VStack {
+                    VStack {
+                        Text(currentIndex)
+                        TextField("Search conversations", text: $searchText)
+                            .textFieldStyle(.plain)
+                            .font(.system(size: 16))
+                            .focused($isFocused)
+                            .onAppear {
+                                isFocused = true
+                            }
+                            .onSubmit {
+                                bk.selectedConversation = self.selectedConversation?.persistentModelID
+                            }
+                            .onExitCommand {
+                                bk.isQuickNavShowing = false
+                            }
+                        
+                        
+                        //                        List(selection: $selectedConversation) {
+                        ForEach(filteredResults) { conversation in
+                            
+                            Button {
+                                bk.selectedConversation = conversation.persistentModelID
+                            } label: {
+                                Label(conversation.name, systemImage: conversation.icon ?? "")
+                                //                            .background(Color.blue)
+                            }
+                            .buttonStyle(.plain)
+                            .background(conversation == self.selectedConversation ? .blue : .clear)
+                            //                    .disabled(!isSelected)
+                            //                                .keyboardShortcut(.return)
+                            //                    .focused($isFocused)
+                        }
+                        
+                        
+                        Button("Down") {
+                            moveToNextConversation()
+                            print("Pressed down arrow, moved down")
+                        }
+                        .disabled(!canMoveToNextConversation())
+                        //                    .keyboardShortcut(.downArrow)
+                        
+                        
+                    }
+                    .task(id: searchText) {
+                        if searchText.count > 0 {
+                            selectedConversation = filteredResults[0]
+                        } else {
+                            selectedConversation = firstResult
+                        }
+                    }
+                    .frame(maxWidth: 400)
+                    .padding()
+                    .background(.contentBackground)
+                    .clipShape(RoundedRectangle(cornerRadius: Styles.roundingMedium))
+                    .padding(.top, 80)
+                    
+                    Spacer()
+                } // END main vstack
+                
+            } // END zstack
+        } // END check for quick nav
     }
     
     private func indexOfSelectedConversation() -> Int? {
@@ -148,10 +153,11 @@ struct QuickNavView: View {
         }
     
 }
-//
-//#Preview {
-//    ModelContainerPreview(ModelContainer.sample) {
-//        QuickNavView()
-//            .environment(BanksiaHandler())
-//    }
-//}
+
+#Preview {
+    ModelContainerPreview(ModelContainer.sample) {
+        QuickNavView()
+            .environment(BanksiaHandler())
+            .frame(width: 600, height: 700)
+    }
+}

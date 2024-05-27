@@ -36,7 +36,7 @@ struct BanksiaApp: App {
     }()
     
     var body: some Scene {
-        WindowGroup {
+        Window("Banksia", id: "main") {
             ContentView()
                 .environment(bk)
                 .environment(conv)
@@ -58,7 +58,8 @@ struct BanksiaApp: App {
         .commands {
             MenuCommands(
                 bk: $bk,
-                conv: $conv
+                conv: $conv,
+                sidebar: sidebar
             )
         }
 #endif
