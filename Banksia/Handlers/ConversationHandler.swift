@@ -10,22 +10,39 @@ import SwiftUI
 import SwiftData
 import Grainient
 
+enum ConversationRequest {
+    case new
+    case delete
+    case goToPrevious
+    case goToNext
+    case search
+    
+    case goToPreviousQuickOpen
+    case goToNextQuickOpen
+    
+    case none
+}
+
 @Observable
 final class ConversationHandler {
     
     let bk = BanksiaHandler()
     let pref = Preferences()
     
+    var currentConversationID: Conversation.ID? = nil
+    
     var searchText: String = ""
     var isSearching: Bool = false
+    
+    var isEditorFocused: Bool = false
 
     var grainientSeed: Int? = nil
     
     var isResponseLoading: Bool = false
     
-    var isRequestingNewConversation: Bool = false
+    var currentRequest: ConversationRequest = .none
+    
     var isConversationEditorShowing: Bool = false
-    var isRequestingSearch: Bool = false
     
     var selectedParagraph: String = ""
     

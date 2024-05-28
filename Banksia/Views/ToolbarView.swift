@@ -166,12 +166,16 @@ struct ToolbarView: View {
                     
                 } // END sidebar showing check
             } // END hstack
-            .onChange(of: conv.isRequestingSearch) {
-                if conv.isRequestingSearch {
+            .task(id: conv.currentRequest) {
+                switch conv.currentRequest {
+                case .search:
                     isSearchFocused = true
-                    conv.isRequestingSearch = false
+                default:
+                    break
                 }
+                conv.currentRequest = .none
             }
+
             .safeAreaPadding(.leading, isPreview ? Styles.toolbarSpacing : Styles.paddingToolbarTrafficLightsWidth)
                 .buttonStyle(.customButton(hasBackground: false, labelDisplay: .iconOnly))
         } // END toolbar sidebar controls overlay
@@ -206,7 +210,7 @@ extension ToolbarView {
     @ViewBuilder
     func NewConversationButton() -> some View {
         Button {
-            conv.isRequestingNewConversation = true
+            conv.currentRequest = .new
         } label: {
             Label("New conversation", systemImage: Icons.plus.icon)
         }

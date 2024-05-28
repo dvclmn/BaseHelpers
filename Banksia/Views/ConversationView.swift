@@ -50,7 +50,7 @@ struct ConversationView: View {
                             
                             
                             ScrollView(.vertical) {
-                                LazyVStack(spacing: 12) {
+                                VStack(spacing: 12) {
                                     ForEach(searchResults.sorted(by: { $0.timestamp < $1.timestamp }), id: \.timestamp) { message in
                                         
                                         SingleMessageView(

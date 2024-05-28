@@ -172,12 +172,22 @@ struct QuickOpenView: View {
         return currentIndex > 0
     }
     
-    private func isItemLastInArray<T: Collection>(index: Int, array: T) -> Bool {
-        guard !array.isEmpty, array.indices.contains(index) else {
-            return false
-        }
-        return index == array.count - 1
-    }
+//    private enum Position {
+//        case first, last
+//    }
+//
+//    private func isItemInPosition<T: Collection>(index: T.Index, array: T, position: Position) -> Bool {
+//        guard !array.isEmpty, array.indices.contains(index) else {
+//            return false
+//        }
+//        switch position {
+//        case .first:
+//            return index == array.startIndex
+//        case .last:
+//            return index == array.index(before: array.endIndex)
+//        }
+//    }
+
 }
 
 

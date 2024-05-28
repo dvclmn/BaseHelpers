@@ -105,6 +105,9 @@ struct MessageInputView: View {
                         }
                     }
                 }
+                .task(id: isFocused) {
+                    conv.isEditorFocused = isFocused
+                }
                 .background(.thinMaterial)
                 .resizable(
                     height: $conv.editorHeight,
@@ -134,7 +137,7 @@ struct MessageInputView: View {
                 pref.editorHeight = conv.editorHeight
             }
             .onAppear {
-                userPrompt = ExampleText.paragraphs[3]
+//                userPrompt = ExampleText.paragraphs[3]
                 if let editorHeightPreference = pref.editorHeight {
                     conv.editorHeight = editorHeightPreference
                 }

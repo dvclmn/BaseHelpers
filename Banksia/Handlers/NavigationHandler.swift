@@ -11,6 +11,43 @@ import GeneralStyles
 import Navigation
 import Icons
 
+
+
+class NavigationHandler: Navigable, ObservableObject {
+    
+    @Published public var path: [Page] = []
+    @AppStorage("lastDestinationKey") var lastDestination: String?
+
+    var navigationTitle: String? {
+        if let pathLast = self.path.last?.name {
+            return pathLast
+        } else {
+            return nil
+        }
+    }
+    func navigate(to page: Page) {
+        if path.last != page {
+            path.append(page)
+        } else {
+            print("Already on \(page.name)")
+        }
+    }
+    
+    func updateLastDestination() {
+        if let last = path.last {
+            lastDestination = last.name
+        } else {
+            print("No last item in path")
+        }
+    }
+    
+    //    public func goBack() {
+    //        if canGoBack {
+    //            path.removeLast()
+    //        }
+    //    }
+}
+
 enum Page: Destination {
     
     case conversation(Conversation)
@@ -40,32 +77,3 @@ enum Page: Destination {
         }
     }
 }
-
-class NavigationHandler: Navigable, ObservableObject {
-    
-    @Published public var path: [Page] = []
-    @AppStorage("lastDestinationKey") var lastDestination: Int?
-
-    var navigationTitle: String? {
-        if let pathLast = self.path.last?.name {
-            return pathLast
-        } else {
-            return nil
-        }
-    }
-    func navigate(to page: Page) {
-        if path.last != page {
-            path.append(page)
-        } else {
-            print("Already on \(page.name)")
-        }
-    }
-    
-    
-    //    public func goBack() {
-    //        if canGoBack {
-    //            path.removeLast()
-    //        }
-    //    }
-}
-

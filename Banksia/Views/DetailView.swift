@@ -62,7 +62,7 @@ struct DetailView: View {
             HStack(spacing: 0) {
                 SidebarView()
                 
-                StateView(title: "No Conversations")
+                StateView(title: "No Page Selection")
                 
             } // END hstack
             

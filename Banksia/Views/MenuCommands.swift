@@ -20,7 +20,7 @@ struct MenuCommands: Commands {
         
         CommandGroup(replacing: .newItem) {
             Button("New") {
-                conv.isRequestingNewConversation = true
+                conv.currentRequest = .new
             }
             .keyboardShortcut("n", modifiers: .command)
             
@@ -33,12 +33,6 @@ struct MenuCommands: Commands {
                 conv.isConversationEditorShowing.toggle()
             }
             .keyboardShortcut("e", modifiers: .command)
-            
-            // TODO: Will need to conditionally turn the below shortcut off, so that I can delete lines w/ the same shortcut, in the Editor
-            //            Button("Delete Conversation…") {
-            //
-            //            }
-            //            .keyboardShortcut(.delete, modifiers: .command)
         }
         
         CommandGroup(before: .toolbar) {
@@ -51,13 +45,13 @@ struct MenuCommands: Commands {
         CommandMenu("Navigate") {
             
             Button("Previous Conversation") {
-                bk.isRequestingNextQuickOpenItem = true
+                conv.currentRequest = .goToPrevious
             }
             
             .keyboardShortcut("[", modifiers: [.command, .shift])
             
             Button("Next Conversation") {
-                bk.isRequestingNextQuickOpenItem = true
+                conv.currentRequest = .goToNext
             }
             
             .keyboardShortcut("]", modifiers: [.command, .shift])
@@ -66,23 +60,32 @@ struct MenuCommands: Commands {
             Divider()
             
             Button("Previous Quick Open Conversation") {
-                bk.isRequestingNextQuickOpenItem = true
+                conv.currentRequest = .goToPreviousQuickOpen
             }
             .disabled(!bk.isPreviousQuickOpenAvailable && !bk.isQuickOpenShowing)
             .keyboardShortcut(.upArrow, modifiers: [])
             
             Button("Next Quick Open Conversation") {
-                bk.isRequestingNextQuickOpenItem = true
+                conv.currentRequest = .goToNextQuickOpen
             }
             .disabled(!bk.isNextQuickOpenAvailable && !bk.isQuickOpenShowing)
             .keyboardShortcut(.downArrow, modifiers: [])
             
             
         }
+        CommandGroup(after: .pasteboard) {
+            
+                Button("Delete Conversation…") {
+                    conv.currentRequest = .delete
+                }
+                .disabled(conv.isEditorFocused && conv.currentConversationID == nil)
+                .keyboardShortcut(.delete, modifiers: .command)
+            
+        }
         
         CommandGroup(before: .textEditing) {
             Button("Search…") {
-                conv.isRequestingSearch = true
+                conv.currentRequest = .search
             }
             .keyboardShortcut("f", modifiers: .command)
         }
