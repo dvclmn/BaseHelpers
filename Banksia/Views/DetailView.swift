@@ -24,27 +24,52 @@ struct DetailView: View {
     
     var body: some View {
         
-        switch page {
-            
-        case .conversation(let conversationStatic):
-            
-            if let conversation = conversations.first(where: {$0.persistentModelID == conversationStatic.persistentModelID}) {
+        VStack {
+            switch page {
                 
+            case .conversation(let conversationStatic):
+                
+                if let conversation = conversations.first(where: {$0.persistentModelID == conversationStatic.persistentModelID}) {
+                    
+                    HStack(spacing: 0) {
+                        SidebarView()
+                        
+                        VStack {
+                            ConversationView(
+                                conversation: conversation,
+                                scrolledMessageID: $scrolledMessageID
+                            )
+                        }
+                        
+                    } // END hstack
+                    
+                    .overlay(alignment: .top) {
+                        ToolbarView(conversation: conversation)
+                    }
+                    .overlay(alignment: .top) {
+                        PopupView(
+                            topOffset: 70,
+                            popup: popup
+                        )
+                        .safeAreaPadding(.leading, sidebar.isSidebarVisible ? sidebar.sidebarWidth : 0)
+                    }
+                    .navigationBarBackButtonHidden(true)
+                    
+                } else {
+                    StateView(title: "No Conversations")
+                }
+                
+            case .none:
                 HStack(spacing: 0) {
                     SidebarView()
                     
-                    VStack {
-                        ConversationView(
-                            conversation: conversation,
-                            scrolledMessageID: $scrolledMessageID
-                        )
-                    }
+                    StateView(title: "No Page Selection")
                     
                 } // END hstack
                 
-                .overlay(alignment: .top) {
-                    ToolbarView(conversation: conversation)
-                }
+    //            .overlay(alignment: .top) {
+    //                ToolbarView(conversation: conversation)
+    //            }
                 .overlay(alignment: .top) {
                     PopupView(
                         topOffset: 70,
@@ -53,30 +78,10 @@ struct DetailView: View {
                     .safeAreaPadding(.leading, sidebar.isSidebarVisible ? sidebar.sidebarWidth : 0)
                 }
                 .navigationBarBackButtonHidden(true)
-                
-            } else {
-                StateView(title: "No Conversations")
             }
-            
-        case .none:
-            HStack(spacing: 0) {
-                SidebarView()
-                
-                StateView(title: "No Page Selection")
-                
-            } // END hstack
-            
-//            .overlay(alignment: .top) {
-//                ToolbarView(conversation: conversation)
-//            }
-            .overlay(alignment: .top) {
-                PopupView(
-                    topOffset: 70,
-                    popup: popup
-                )
-                .safeAreaPadding(.leading, sidebar.isSidebarVisible ? sidebar.sidebarWidth : 0)
-            }
-            .navigationBarBackButtonHidden(true)
+        } // END main vstack
+        .overlay {
+            QuickOpenView()
         }
 
     }

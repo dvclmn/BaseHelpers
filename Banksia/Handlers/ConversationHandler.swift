@@ -51,7 +51,7 @@ final class ConversationHandler {
     
     var editorHeight: Double = ConversationHandler.defaultEditorHeight
     
-    static let defaultEditorHeight: Double = 200
+    static let defaultEditorHeight: Double = 160
     
     func getConversation(from id: Conversation.ID, within conversations: [Conversation]) -> Conversation? {
         return conversations.first(where: {$0.id == id})

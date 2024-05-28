@@ -100,7 +100,7 @@ struct MessageInputView: View {
                 }
                 .task {
                     countdown.onCountdownEnd = {
-                        withAnimation(Styles.animation) {
+                        withAnimation(Styles.animationEased) {
                             self.isUIFaded = false
                         }
                     }
@@ -153,7 +153,7 @@ extension MessageInputView {
     private func startTimer() {
         if isFocused {
             countdown.startCountdown(for: 2)
-            withAnimation(Styles.animationEased) {
+            withAnimation(Styles.animationEasedSlow) {
                 self.isUIFaded = true
             }
         }
@@ -172,6 +172,7 @@ extension MessageInputView {
         let messageContents = userPrompt
         print("User prompt was:\n\(messageContents)")
         userPrompt = ""
+        conv.editorHeight = ConversationHandler.defaultEditorHeight
         
         
         /// Create new `Message` object and add to database
@@ -262,6 +263,7 @@ extension MessageInputView {
                 Text(pref.gptModel.name)
             }
             .caption()
+            .opacity(0.8)
             
             Spacer()
             
@@ -278,14 +280,8 @@ extension MessageInputView {
             
         }
         .opacity(isUIFaded ? 0.2 : 1.0)
-//        .padding(.top, 50)
         .padding(.horizontal, 14)
         .padding(.bottom, 8)
-        //                .background(alignment: .bottom) {
-        //                    LinearGradient(colors: [.clear, .black.opacity(0.4)], startPoint: .top, endPoint: .bottom)
-        //                        .frame(height: 60)
-        //
-        //                }
     }
 }
 

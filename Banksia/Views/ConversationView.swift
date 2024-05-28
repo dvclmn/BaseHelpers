@@ -103,26 +103,7 @@ struct ConversationView: View {
                     
                 }
                 
-                .overlay {
-                    QuickOpenView()
 
-
-                    if isPreview {
-                        HStack {
-                            VStack {
-                                Spacer()
-                                Button {
-                                    bk.toggleQuickOpen()
-                                } label: {
-                                    Label("Toggle QO", systemImage: Icons.text.icon)
-                                }
-                                .padding(.bottom, conv.editorHeight + 10)
-                            }
-                            Spacer()
-                        }
-                    }
-
-                }
                 
                 
             } // END has messages check

@@ -10,7 +10,6 @@
 		F60B6A732C005D7B007EDCDD /* SidebarHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F60B6A722C005D7B007EDCDD /* SidebarHandler.swift */; };
 		F626CD1E2BFA73D1002A0D8A /* APIHandler in Frameworks */ = {isa = PBXBuildFile; productRef = F626CD1D2BFA73D1002A0D8A /* APIHandler */; };
 		F636A11C2B05B23D00C24891 /* GeneralSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F636A11B2B05B23D00C24891 /* GeneralSettingsView.swift */; };
-		F639D8C52BD517AF0035226E /* xcode.min.css in Resources */ = {isa = PBXBuildFile; fileRef = F639D8C42BD517AF0035226E /* xcode.min.css */; };
 		F639D8CA2BD51B2A0035226E /* CodeSyntaxTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = F639D8C92BD51B2A0035226E /* CodeSyntaxTheme.swift */; };
 		F644B17D2BF276F70098FDCF /* Utilities in Frameworks */ = {isa = PBXBuildFile; productRef = F644B17C2BF276F70098FDCF /* Utilities */; };
 		F64F8E032B02136D00C72E51 /* ModelContainerPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = F64F8E022B02136D00C72E51 /* ModelContainerPreview.swift */; };
@@ -55,7 +54,6 @@
 		F610453E2C061E3200F7632E /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Config.xcconfig; path = Banksia/Config.xcconfig; sourceTree = "<group>"; };
 		F610453F2C061ED300F7632E /* version.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; name = version.sh; path = Banksia/version.sh; sourceTree = "<group>"; };
 		F636A11B2B05B23D00C24891 /* GeneralSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralSettingsView.swift; sourceTree = "<group>"; };
-		F639D8C42BD517AF0035226E /* xcode.min.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = xcode.min.css; sourceTree = "<group>"; };
 		F639D8C92BD51B2A0035226E /* CodeSyntaxTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeSyntaxTheme.swift; sourceTree = "<group>"; };
 		F64F8E022B02136D00C72E51 /* ModelContainerPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelContainerPreview.swift; sourceTree = "<group>"; };
 		F64F8E072B02140F00C72E51 /* SampleData+Conversation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SampleData+Conversation.swift"; sourceTree = "<group>"; };
@@ -149,7 +147,6 @@
 		F64F8E2F2B042A0300C72E51 /* Support */ = {
 			isa = PBXGroup;
 			children = (
-				F639D8C42BD517AF0035226E /* xcode.min.css */,
 				F6E4BC752BD0DA5000BFD550 /* AttributedStringReference.swift */,
 				F6D6E2EA2BC82CFE000D2051 /* ExampleText.swift */,
 				F6C161E02B0F63B800F4AB62 /* banksia_icons.json */,
@@ -291,7 +288,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F639D8C52BD517AF0035226E /* xcode.min.css in Resources */,
 				F6C161E12B0F63B800F4AB62 /* banksia_icons.json in Resources */,
 				F6A7BEF12B01C57500D3CE25 /* Assets.xcassets in Resources */,
 			);

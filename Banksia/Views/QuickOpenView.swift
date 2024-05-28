@@ -110,6 +110,7 @@ struct QuickOpenView: View {
                 } // END check for quick nav
                 
             } // END main vstack
+
             .onAppear {
                 if isPreview {
                     bk.toggleQuickOpen()
