@@ -1,0 +1,22 @@
+//
+//  Config.xcconfig
+//  Banksia
+//
+//  Created by Dave Coleman on 28/5/2024.
+//
+
+// Configuration settings file format documentation can be found at:
+// https://help.apple.com/xcode/#/dev745c5c974
+
+//
+//  Config.xcconfig
+//  carbonwatchuk
+//
+//  Created by Mateusz Siatrak on 21/06/2023.
+//
+
+// Configuration settings file format documentation can be found at:
+// https://help.apple.com/xcode/#/dev745c5c974
+
+VERSION = 0.2.0
+BUILD_NUMBER = 202405287

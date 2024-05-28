@@ -257,7 +257,11 @@ extension MessageInputView {
             ////                    .disabled(!isTesting)
             //                    .buttonStyle(.customButton(size: .small, /*status: isTesting ? .normal : .disabled,*/ labelDisplay: .titleOnly))
             
-            Text(pref.gptModel.name).caption()
+            Group {
+                Text("Banksia v\(bk.getAppVersion())(\(bk.getBuildNumber()))")
+                Text(pref.gptModel.name)
+            }
+            .caption()
             
             Spacer()
             
@@ -274,9 +278,9 @@ extension MessageInputView {
             
         }
         .opacity(isUIFaded ? 0.2 : 1.0)
-        .padding(.top, 50)
-        .padding(.horizontal, 12)
-        .padding(.bottom, 10)
+//        .padding(.top, 50)
+        .padding(.horizontal, 14)
+        .padding(.bottom, 8)
         //                .background(alignment: .bottom) {
         //                    LinearGradient(colors: [.clear, .black.opacity(0.4)], startPoint: .top, endPoint: .bottom)
         //                        .frame(height: 60)

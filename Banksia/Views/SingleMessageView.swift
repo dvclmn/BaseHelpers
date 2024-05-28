@@ -12,6 +12,7 @@ import GeneralUtilities
 import Icons
 import Sidebar
 import MarkdownEditor
+import Swatches
 
 struct SingleMessageView: View {
     @Environment(BanksiaHandler.self) private var bk
@@ -68,7 +69,7 @@ struct SingleMessageView: View {
                 )
                 .fixedSize(horizontal: false, vertical: true)                .padding()
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .background(Color(message.type == .user ? .blue : .gray).opacity(0.2))
+                .background(Color(message.type == .user ? Swatch.eggplant.colour.opacity(0.2) : .gray.opacity(0.2)))
                 .clipShape(.rect(cornerRadius: Styles.roundingMedium))
                 .padding(.leading, message.type == .user ? authorAltPadding : 0)
                 .padding(.trailing, message.type == .user ? 0 : authorAltPadding)
@@ -100,12 +101,12 @@ struct SingleMessageView: View {
     }
     
 }
-//
-//#Preview {
-//    ModelContainerPreview(ModelContainer.sample) {
-//        SingleMessageView(message: Message.response_02)
-//            .environment(BanksiaHandler())
-//            .environment(ConversationHandler())
-//            .frame(width: 500, height: 700)
-//    }
-//}
+
+#Preview {
+    ModelContainerPreview(ModelContainer.sample) {
+        SingleMessageView(message: Message.response_02)
+            .environment(BanksiaHandler())
+            .environment(ConversationHandler())
+            .frame(width: 500, height: 700)
+    }
+}

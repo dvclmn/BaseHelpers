@@ -38,7 +38,19 @@ class BanksiaHandler {
         }
     } // END toggle quick open
     
+    func getAppVersion() -> String {
+            if let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String {
+                return appVersion
+            }
+            return "Unknown"
+        }
 
+        func getBuildNumber() -> String {
+            if let buildNumber = Bundle.main.infoDictionary?["CFBundleVersion"] as? String {
+                return buildNumber
+            }
+            return "Unknown"
+        }
     
 }
 
