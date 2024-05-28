@@ -86,11 +86,21 @@ struct ToolbarView: View {
             //            .buttonStyle(.customButton(labelDisplay: .iconOnly))
             
             .popover(isPresented: $isToolbarMenuPresented) {
-                Button {
-                    popup.showPopup(title: "Here's a **popup title**", message: "And a *short* message with further info.")
-                } label: {
-                    Label("Test popup", systemImage: Icons.text.icon)
+                VStack {
+                    Button {
+                        popup.showPopup(title: "Here's a **popup title**", message: "And a *short* message with further info.")
+                    } label: {
+                        Label("Test popup", systemImage: Icons.text.icon)
+                    }
+                    
+                    Button {
+                        modelContext.delete(conversation)
+                        try? modelContext.save()
+                    } label: {
+                        Label("Delete conversation", systemImage: Icons.trash.icon)
+                    }
                 }
+                .padding()
             }
             
             
@@ -138,9 +148,9 @@ struct ToolbarView: View {
                             if !sidebar.isRoomForSidebar {
                                 sidebar.requestRoomForSidebar()
                             } else {
-                                withAnimation(Styles.animationEased) {
+                                
                                 sidebar.toggleSidebar()
-                                }
+                                
                             }
                     } label: {
                         Label("Toggle sidebar", systemImage: Icons.sidebarAlt.icon)

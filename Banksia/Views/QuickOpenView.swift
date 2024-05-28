@@ -1,5 +1,5 @@
 //
-//  QuickNavView.swift
+//  QuickOpenView.swift
 //  Banksia
 //
 //  Created by Dave Coleman on 17/4/2024.
@@ -9,17 +9,18 @@ import SwiftUI
 import SwiftData
 import GeneralStyles
 import GeneralUtilities
+import Navigation
 
-struct QuickNavView: View {
-    @Environment(BanksiaHandler.self) private var bk
+struct QuickOpenView: View {
     @Environment(\.modelContext) private var modelContext
+    
+    @Environment(BanksiaHandler.self) private var bk
+    @EnvironmentObject var nav: NavigationHandler
     
     @Query private var conversations: [Conversation]
     
     @State private var searchText: String = ""
     @FocusState private var isFocused: Bool
-    
-    @State private var isSelected: Bool = false
     
     @State private var selectedConversation: Conversation? = nil
     
@@ -41,27 +42,20 @@ struct QuickNavView: View {
             filteredResults.first
         }
         
-        var currentIndex: String {
-            guard let index = indexOfSelectedConversation() else {
-                return "No index"
-            }
-            
-            return index.description
-        }
         
-        
-        if bk.isQuickNavShowing || isPreview {
+        ZStack {
             
-            ZStack {
-                
+            if bk.isQuickOpenShowing {
                 Color.black.opacity(0.3)
                     .onTapGesture {
-                        bk.isQuickNavShowing = false
+                        bk.toggleQuickOpen()
                     }
-                
-                VStack {
+                    .transition(.opacity)
+            }
+            
+            VStack {
+                if bk.isQuickOpenShowing {
                     VStack {
-                        Text(currentIndex)
                         TextField("Search conversations", text: $searchText)
                             .textFieldStyle(.plain)
                             .font(.system(size: 16))
@@ -70,21 +64,21 @@ struct QuickNavView: View {
                                 isFocused = true
                             }
                             .onSubmit {
-                                bk.selectedConversation = self.selectedConversation?.persistentModelID
+                                if let conversation = selectedConversation {
+                                    nav.navigate(to: .conversation(conversation))
+                                }
                             }
                             .onExitCommand {
-                                bk.isQuickNavShowing = false
+                                bk.toggleQuickOpen()
                             }
-                        
                         
                         //                        List(selection: $selectedConversation) {
                         ForEach(filteredResults) { conversation in
                             
                             Button {
-                                bk.selectedConversation = conversation.persistentModelID
+                                nav.navigate(to: .conversation(conversation))
                             } label: {
                                 Label(conversation.name, systemImage: conversation.icon ?? "")
-                                //                            .background(Color.blue)
                             }
                             .buttonStyle(.plain)
                             .background(conversation == self.selectedConversation ? .blue : .clear)
@@ -94,18 +88,12 @@ struct QuickNavView: View {
                         }
                         
                         
-                        Button("Down") {
-                            moveToNextConversation()
-                            print("Pressed down arrow, moved down")
-                        }
-                        .disabled(!canMoveToNextConversation())
-                        //                    .keyboardShortcut(.downArrow)
                         
                         
-                    }
+                    } // END inner Vstack
                     .task(id: searchText) {
-                        if searchText.count > 0 {
-                            selectedConversation = filteredResults[0]
+                        if searchText.count > 0 && filteredResults.count > 0 {
+                            selectedConversation = filteredResults.first
                         } else {
                             selectedConversation = firstResult
                         }
@@ -115,48 +103,90 @@ struct QuickNavView: View {
                     .background(.contentBackground)
                     .clipShape(RoundedRectangle(cornerRadius: Styles.roundingMedium))
                     .padding(.top, 80)
+                    .transition(.fadeSlide)
+                    
                     
                     Spacer()
-                } // END main vstack
+                } // END check for quick nav
                 
-            } // END zstack
-        } // END check for quick nav
+            } // END main vstack
+            .onAppear {
+                if isPreview {
+                    bk.toggleQuickOpen()
+                }
+            }
+            .task(id: bk.isRequestingNextQuickOpenItem) {
+                moveToNextConversation()
+            }
+            .task(id: bk.isRequestingPreviousQuickOpenItem) {
+                moveToPreviousConversation()
+            }
+            .task(id: searchText) {
+                bk.isNextQuickOpenAvailable = canMoveToNextConversation()
+                bk.isPreviousQuickOpenAvailable = canMoveToPreviousConversation()
+            }
+        } // END zstack
     }
     
     private func indexOfSelectedConversation() -> Int? {
         guard let selectedConversation = selectedConversation else {
             return nil
         }
-        return conversations.firstIndex(where: { $0.id == selectedConversation.id })
+        print("Selected conversation Name: \(selectedConversation.name)")
+        print("Selected conversation Created: \(selectedConversation.created)")
+        
+        let index: Int? = conversations.firstIndex(where: { $0.id == selectedConversation.id })
+        print("Selected conversation Index: \(index?.description ?? "Invalid")")
+        return index
     }
     
-    // Example usage of indexOfSelectedConversation
-    //        private func deleteSelectedConversation() {
-    //            guard let index = indexOfSelectedConversation() else {
-    //                return
-    //            }
-    //            conversations.remove(at: index)
-    //        }
-    
     private func moveToNextConversation() {
+        if canMoveToNextConversation() {
             guard let currentIndex = indexOfSelectedConversation(), currentIndex < conversations.count - 1 else {
                 return
             }
             selectedConversation = conversations[currentIndex + 1]
         }
-
-        private func canMoveToNextConversation() -> Bool {
-            guard let currentIndex = indexOfSelectedConversation() else {
-                return false
-            }
-            return currentIndex < conversations.count - 1
-        }
+    }
     
+    private func moveToPreviousConversation() {
+        if canMoveToPreviousConversation() {
+            guard let currentIndex = indexOfSelectedConversation(), currentIndex > 0 else {
+                return
+            }
+            selectedConversation = conversations[currentIndex - 1]
+        }
+    }
+    
+    private func canMoveToNextConversation() -> Bool {
+        guard let currentIndex = indexOfSelectedConversation() else {
+            return false
+        }
+        return currentIndex < conversations.count - 1
+    }
+    
+    private func canMoveToPreviousConversation() -> Bool {
+        guard let currentIndex = indexOfSelectedConversation() else {
+            return false
+        }
+        return currentIndex > 0
+    }
+    
+    private func isItemLastInArray<T: Collection>(index: Int, array: T) -> Bool {
+        guard !array.isEmpty, array.indices.contains(index) else {
+            return false
+        }
+        return index == array.count - 1
+    }
 }
+
+
+
+
 
 #Preview {
     ModelContainerPreview(ModelContainer.sample) {
-        QuickNavView()
+        QuickOpenView()
             .environment(BanksiaHandler())
             .frame(width: 600, height: 700)
     }

@@ -12,17 +12,33 @@ import GeneralStyles
 
 @Observable
 class BanksiaHandler {
-    
-    let pref = Preferences()
-    
-    var selectedConversation: Conversation.ID? = nil
-    
-    var totalConversations: Int = 0
 
-    var isQuickNavShowing: Bool = false
+    var isQuickOpenShowing: Bool = false
     
+    var isRequestingNextQuickOpenItem: Bool = false
+    var isRequestingPreviousQuickOpenItem: Bool = false
+    
+    var isNextQuickOpenAvailable: Bool = false
+    var isPreviousQuickOpenAvailable: Bool = false
+
     var isGlobalConversationPreferencesShowing: Bool = false
     var isEditingLongFormText: Bool = false
+    
+    func toggleQuickOpen() {
+        withAnimation(Styles.animation) {
+            if isQuickOpenShowing {
+                withAnimation(Styles.animation) {
+                    isQuickOpenShowing = false
+                }
+            } else {
+                withAnimation(Styles.animationQuick) {
+                    isQuickOpenShowing = true
+                }
+            }
+        }
+    } // END toggle quick open
+    
+
     
 }
 

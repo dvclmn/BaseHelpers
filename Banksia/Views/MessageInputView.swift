@@ -100,7 +100,7 @@ struct MessageInputView: View {
                 }
                 .task {
                     countdown.onCountdownEnd = {
-                        withAnimation(Styles.animationQuick) {
+                        withAnimation(Styles.animation) {
                             self.isUIFaded = false
                         }
                     }
@@ -119,7 +119,7 @@ struct MessageInputView: View {
             // MARK: - Text area Buttons
             .overlay(alignment: .bottom) {
                 EditorControls()
-                    .border(Color.green.opacity(0.2))
+                    
                     .onContinuousHover { phase in
                         switch phase {
                         case .active(_):

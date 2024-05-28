@@ -18,9 +18,7 @@ final class ConversationHandler {
     
     var searchText: String = ""
     var isSearching: Bool = false
-    
-    var currentConversationID: Conversation.ID? = nil
-    
+
     var grainientSeed: Int? = nil
     
     var isResponseLoading: Bool = false
@@ -38,14 +36,11 @@ final class ConversationHandler {
     
     static let defaultEditorHeight: Double = 200
     
-    func getCurrentConversation(within conversations: [Conversation]) -> Conversation? {
-        conversations.first(where: {$0.id == currentConversationID})
-    }
-    
     func getConversation(from id: Conversation.ID, within conversations: [Conversation]) -> Conversation? {
         return conversations.first(where: {$0.id == id})
     }
-    
+
+
     func createMessageHistory(for conversation: Conversation, latestMessage: Message) async {
         
         guard let messages = conversation.messages, !messages.isEmpty else {
@@ -124,10 +119,12 @@ final class ConversationHandler {
         print("|--- formatMessageForGPT --->")
         
         let messageHeading: String = "\(message.type.name) (\(ConversationHandler.formatTimestamp(message.timestamp))):"
+        let messageFooter: String = "End of message from \(message.type.name) (\(ConversationHandler.formatTimestamp(message.timestamp)))."
         
         let formattedMessage: String = """
         \(messageHeading)
         \(message.content)
+        \(messageFooter)
         """
         print(">--- END formatMessageForGPT ---|\n")
         return formattedMessage

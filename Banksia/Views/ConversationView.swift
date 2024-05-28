@@ -11,6 +11,7 @@ import GeneralStyles
 import GeneralUtilities
 import Icons
 import Button
+import StateView
 
 struct ConversationView: View {
     @Environment(BanksiaHandler.self) private var bk
@@ -78,11 +79,14 @@ struct ConversationView: View {
                             } // END scroll to bottom
                             
                         } else {
-                            EmptyMessage("No matching results", message: "No results found for \"\(conv.searchText)\".")
+                            StateView(title: "No matching results", message: "No results found for \"\(conv.searchText)\".")
                         }
                         
                     } else {
-                        EmptyMessage("No messages yet")
+                        StateView(title: "No messages yet")
+                            .padding(.top, Styles.toolbarHeight / 2)
+                            .padding(.bottom, conv.editorHeight)
+                        
                     } // END message count check
                 } // END vstack
                 //                .cursor(.arrow)
@@ -100,7 +104,24 @@ struct ConversationView: View {
                 }
                 
                 .overlay {
-                    QuickNavView()
+                    QuickOpenView()
+
+
+                    if isPreview {
+                        HStack {
+                            VStack {
+                                Spacer()
+                                Button {
+                                    bk.toggleQuickOpen()
+                                } label: {
+                                    Label("Toggle QO", systemImage: Icons.text.icon)
+                                }
+                                .padding(.bottom, conv.editorHeight + 10)
+                            }
+                            Spacer()
+                        }
+                    }
+
                 }
                 
                 
@@ -170,25 +191,3 @@ struct ConversationView: View {
     
     
 }
-extension ConversationView {
-    @ViewBuilder
-    func EmptyMessage(
-        _ title: String,
-        message: String? = nil
-    ) -> some View {
-        VStack(spacing: 14) {
-            Text(title)
-                .font(.system(size: 26, weight: .regular))
-                .foregroundStyle(.tertiary)
-            if let message = message {
-                Text(message)
-                    .font(.system(size: 13, weight: .medium))
-                    .foregroundStyle(.secondary)
-            }
-        }
-        .padding(.top, Styles.toolbarHeight / 2)
-        .padding(.bottom, conv.editorHeight)
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
-    }
-}
-

@@ -66,12 +66,12 @@ struct ContentView: View {
         
         .onAppear {
             
-#if DEBUG
-
-            try? modelContext.delete(model: Conversation.self)
-
-#endif
-            
+//#if DEBUG
+//
+//            try? modelContext.delete(model: Conversation.self)
+//
+//#endif
+//            
             if nav.path.isEmpty, let firstConversation = conversations.last {
                 nav.path = [Page.conversation(firstConversation)]
             }
@@ -80,6 +80,8 @@ struct ContentView: View {
                 let newConversation = Conversation(grainientSeed: grainientSeed)
                 
                 modelContext.insert(newConversation)
+                
+                nav.navigate(to: .conversation(newConversation))
             }
 
         }

@@ -10,6 +10,7 @@ import SwiftUI
 import Popup
 import Sidebar
 import SwiftData
+import StateView
 
 struct DetailView: View {
     @EnvironmentObject var popup: PopupHandler
@@ -54,22 +55,20 @@ struct DetailView: View {
                 .navigationBarBackButtonHidden(true)
                 
             } else {
-                Text("No conversation")
+                StateView(title: "No Conversations")
             }
             
         case .none:
-            Text("No page")
-            
             HStack(spacing: 0) {
                 SidebarView()
                 
-                
+                StateView(title: "No Conversations")
                 
             } // END hstack
             
-            .overlay(alignment: .top) {
-                ToolbarView(conversation: conversation)
-            }
+//            .overlay(alignment: .top) {
+//                ToolbarView(conversation: conversation)
+//            }
             .overlay(alignment: .top) {
                 PopupView(
                     topOffset: 70,
