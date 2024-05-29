@@ -59,9 +59,14 @@ struct BanksiaApp: App {
                 .environmentObject(pref)
                 .environmentObject(popup)
                 .environmentObject(sidebar)
+
         }
+        .windowResizability(.contentSize)
         .windowStyle(.hiddenTitleBar)
-        .defaultSize(width: 240, height: 300)
+        .windowToolbarStyle(.automatic)
+        .defaultSize(width: 300, height: 400)
+
+        
         
 #if os(macOS)
         Settings {

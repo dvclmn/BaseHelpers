@@ -18,11 +18,14 @@ struct DebugView: View {
     @EnvironmentObject var pref: Preferences
     @EnvironmentObject var sidebar: SidebarHandler
     
+    let minWidth: Double = 260
+    let minHeight: Double = 190
+    
+    let frameSizePlay: Double = 200
+    
     @State private var isHoveringDebug: Bool = false
     
     var body: some View {
-        
-        
         
         VStack(alignment: .leading) {
             
@@ -34,13 +37,16 @@ struct DebugView: View {
                     Editor focused: \(conv.isEditorFocused)
                     """
             Text(debugString)
-            
         }
-        
         .lineSpacing(6.0)
         .caption()
-        .padding()
-        .ignoresSafeArea()
+//        .padding()
+        .frame(
+                    minWidth: minWidth,
+                    maxWidth: minWidth + frameSizePlay,
+                    minHeight: minHeight,
+                    maxHeight: minHeight + frameSizePlay
+                )
         .grainient(seed: GrainientSettings.generateGradientSeed(), dimming: $pref.uiDimming)
         
     }
@@ -52,5 +58,5 @@ struct DebugView: View {
         .environment(ConversationHandler())
         .environmentObject(Preferences())
         .environmentObject(SidebarHandler())
-
+    
 }

@@ -31,10 +31,12 @@ struct ToolbarView: View {
     @State private var isLoading: Bool = false
     
     @State private var isToolbarMenuPresented: Bool = false
+    @State private var isToolbarMenuToggleEnabled: Bool = true
     
     @State private var isRenaming: Bool = false
     
     @FocusState private var isSearchFocused: Bool
+    
     
     @Bindable var conversation: Conversation
     
@@ -80,14 +82,21 @@ struct ToolbarView: View {
             
             // MARK: - 􀍠 Options
             Button {
-                isToolbarMenuPresented.toggle()
+                isToolbarMenuPresented = true
+
             } label: {
                 Label("More options", systemImage: Icons.ellipsis.icon)
             }
+            .disabled(!isToolbarMenuToggleEnabled)
             //            .buttonStyle(.customButton(labelDisplay: .iconOnly))
             
             .popover(isPresented: $isToolbarMenuPresented) {
                 ConversationOptionsView(conversation: conversation)
+            }
+            .task(id: isToolbarMenuPresented) {
+                if !isToolbarMenuPresented {
+                    await disableToolbarMenuToggle()
+                }
             }
             
             
@@ -194,6 +203,13 @@ struct ToolbarView: View {
 }
 
 extension ToolbarView {
+    
+    func disableToolbarMenuToggle() async {
+        isToolbarMenuToggleEnabled = false
+        try? await Task.sleep(for: .seconds(0.5))
+        isToolbarMenuToggleEnabled = true
+    }
+    
     @ViewBuilder
     func NewConversationButton() -> some View {
         Button {

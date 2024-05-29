@@ -301,6 +301,7 @@ extension MessageInputView {
     .environment(ConversationHandler())
     .environment(BanksiaHandler())
     .environmentObject(Preferences())
+    .environmentObject(SidebarHandler())
     .frame(width: 380, height: 700)
     .background(.contentBackground)
 }

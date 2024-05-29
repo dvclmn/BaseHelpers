@@ -14,6 +14,7 @@ import Grainient
 import GeneralUtilities
 import Sidebar
 import Button
+import GrainientPicker
 
 struct ConversationOptionsView: View {
 
@@ -27,28 +28,25 @@ struct ConversationOptionsView: View {
     @EnvironmentObject var pref: Preferences
     
     @FocusState private var isFocused
-    
-    //    @State private var isLoading: Bool = false
-    //
-    //    @State private var isToolbarMenuPresented: Bool = false
-    //
-    //    @State private var isRenaming: Bool = false
-    //
-    //    @FocusState private var isSearchFocused: Bool
-    //
+
     @Bindable var conversation: Conversation
     
     var body: some View {
+        
         
         VStack(alignment: .leading) {
             CustomSection(label: "Conversation", icon: Icons.messageAlt.icon) {
                 
                 
-                Button {
+                    
+
+                GrainientPicker(seed: $conversation.grainientSeed.boundInt, popup: popup)
+                
+                Button(role: .destructive) {
                     modelContext.delete(conversation)
                     try? modelContext.save()
                 } label: {
-                    Label("Delete conversation", systemImage: Icons.trash.icon)
+                    Label("Delete", systemImage: Icons.trash.icon)
                 }
             }
             
@@ -110,7 +108,7 @@ struct ConversationOptionsView: View {
         .frame(
             //            minWidth: 380,
             //            idealWidth: 180,
-            minWidth: 180
+            maxWidth: 220
             //            minHeight: 280,
             //            idealHeight: 600,
             //            maxHeight: .infinity
@@ -120,7 +118,6 @@ struct ConversationOptionsView: View {
         .onAppear {
             isFocused = true
         }
-        
         
     }
 }
