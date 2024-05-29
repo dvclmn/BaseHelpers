@@ -64,7 +64,6 @@ struct BanksiaApp: App {
         .windowResizability(.contentSize)
         .windowStyle(.hiddenTitleBar)
         .windowToolbarStyle(.automatic)
-        .defaultSize(width: 300, height: 400)
 
         
         
