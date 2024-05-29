@@ -102,6 +102,8 @@ struct SingleMessageView: View {
     
 }
 
+#if DEBUG
+
 #Preview {
     ModelContainerPreview(ModelContainer.sample) {
         SingleMessageView(message: Message.response_02)
@@ -110,3 +112,5 @@ struct SingleMessageView: View {
             .frame(width: 500, height: 700)
     }
 }
+
+#endif

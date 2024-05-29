@@ -252,6 +252,7 @@ struct SettingsView: View {
         .safeAreaPadding(.top, isPreview ? 0 :Styles.toolbarHeight)
         .scrollIndicators(.hidden)
         .grainient(seed: pref.defaultGrainientSeed, dimming: $pref.uiDimming)
+        .ignoresSafeArea()
         
     }
 }

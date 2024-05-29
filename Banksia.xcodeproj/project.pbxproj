@@ -8,20 +8,20 @@
 
 /* Begin PBXBuildFile section */
 		F60B6A732C005D7B007EDCDD /* SidebarHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F60B6A722C005D7B007EDCDD /* SidebarHandler.swift */; };
-		F626CD1E2BFA73D1002A0D8A /* APIHandler in Frameworks */ = {isa = PBXBuildFile; productRef = F626CD1D2BFA73D1002A0D8A /* APIHandler */; };
 		F636A11C2B05B23D00C24891 /* GeneralSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F636A11B2B05B23D00C24891 /* GeneralSettingsView.swift */; };
 		F639D8CA2BD51B2A0035226E /* CodeSyntaxTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = F639D8C92BD51B2A0035226E /* CodeSyntaxTheme.swift */; };
-		F644B17D2BF276F70098FDCF /* Utilities in Frameworks */ = {isa = PBXBuildFile; productRef = F644B17C2BF276F70098FDCF /* Utilities */; };
 		F64F8E032B02136D00C72E51 /* ModelContainerPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = F64F8E022B02136D00C72E51 /* ModelContainerPreview.swift */; };
 		F64F8E082B02140F00C72E51 /* SampleData+Conversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F64F8E072B02140F00C72E51 /* SampleData+Conversation.swift */; };
 		F64F8E0C2B0214A000C72E51 /* SampleData+Messages.swift in Sources */ = {isa = PBXBuildFile; fileRef = F64F8E0B2B0214A000C72E51 /* SampleData+Messages.swift */; };
 		F64F8E202B03082100C72E51 /* BanksiaHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F64F8E1F2B03082100C72E51 /* BanksiaHandler.swift */; };
 		F64F8E222B03090600C72E51 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F64F8E212B03090600C72E51 /* ContentView.swift */; };
 		F64F8E2E2B04254100C72E51 /* ConversationHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F64F8E2D2B04254100C72E51 /* ConversationHandler.swift */; };
-		F6623F672BFF89B40087C518 /* Components in Frameworks */ = {isa = PBXBuildFile; productRef = F6623F662BFF89B40087C518 /* Components */; };
-		F6623F6B2BFF89B40087C518 /* Styles in Frameworks */ = {isa = PBXBuildFile; productRef = F6623F6A2BFF89B40087C518 /* Styles */; };
 		F6795C7D2BCE70920093BC9C /* ConversationEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6795C7C2BCE70920093BC9C /* ConversationEditorView.swift */; };
 		F6795C7F2BCE7A4D0093BC9C /* GlobalConversationSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6795C7E2BCE7A4D0093BC9C /* GlobalConversationSettingsView.swift */; };
+		F6823E192C07139B00C8749F /* APIHandler in Frameworks */ = {isa = PBXBuildFile; productRef = F6823E182C07139B00C8749F /* APIHandler */; };
+		F6823E1B2C07139B00C8749F /* Components in Frameworks */ = {isa = PBXBuildFile; productRef = F6823E1A2C07139B00C8749F /* Components */; };
+		F6823E1D2C07139B00C8749F /* MarkdownEditor in Frameworks */ = {isa = PBXBuildFile; productRef = F6823E1C2C07139B00C8749F /* MarkdownEditor */; };
+		F6823E1F2C07139B00C8749F /* Popup in Frameworks */ = {isa = PBXBuildFile; productRef = F6823E1E2C07139B00C8749F /* Popup */; };
 		F687189C2BFF4F2100955B43 /* DetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F687189B2BFF4F2100955B43 /* DetailView.swift */; };
 		F687189E2BFF742800955B43 /* NavigationHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F687189D2BFF742800955B43 /* NavigationHandler.swift */; };
 		F697B8662B0B47610091CE79 /* GPTModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F697B8652B0B47610091CE79 /* GPTModel.swift */; };
@@ -33,11 +33,9 @@
 		F6A7BEEB2B01C57400D3CE25 /* BanksiaApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A7BEEA2B01C57400D3CE25 /* BanksiaApp.swift */; };
 		F6A7BEEF2B01C57400D3CE25 /* DataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A7BEEE2B01C57400D3CE25 /* DataModel.swift */; };
 		F6A7BEF12B01C57500D3CE25 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F6A7BEF02B01C57500D3CE25 /* Assets.xcassets */; };
-		F6BBA9D82C038659003AB082 /* MarkdownEditor in Frameworks */ = {isa = PBXBuildFile; productRef = F6BBA9D72C038659003AB082 /* MarkdownEditor */; };
+		F6BC6B5F2C071C8B00CD0FE4 /* ConversationOptionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6BC6B5E2C071C8B00CD0FE4 /* ConversationOptionsView.swift */; };
+		F6BC6B612C072B9500CD0FE4 /* DebugView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6BC6B602C072B9500CD0FE4 /* DebugView.swift */; };
 		F6C161E12B0F63B800F4AB62 /* banksia_icons.json in Resources */ = {isa = PBXBuildFile; fileRef = F6C161E02B0F63B800F4AB62 /* banksia_icons.json */; };
-		F6C245062BEE50CF002AEE3D /* Grainient in Frameworks */ = {isa = PBXBuildFile; productRef = F6C245052BEE50CF002AEE3D /* Grainient */; };
-		F6C245082BEE50CF002AEE3D /* KeychainHandler in Frameworks */ = {isa = PBXBuildFile; productRef = F6C245072BEE50CF002AEE3D /* KeychainHandler */; };
-		F6C2450A2BEE50CF002AEE3D /* Popup in Frameworks */ = {isa = PBXBuildFile; productRef = F6C245092BEE50CF002AEE3D /* Popup */; };
 		F6D6E2D62BC805E9000D2051 /* SingleMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6D6E2D52BC805E9000D2051 /* SingleMessageView.swift */; };
 		F6D6E2DB2BC80AA2000D2051 /* MessageInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6D6E2DA2BC80AA2000D2051 /* MessageInputView.swift */; };
 		F6D6E2EB2BC82CFE000D2051 /* ExampleText.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6D6E2EA2BC82CFE000D2051 /* ExampleText.swift */; };
@@ -55,6 +53,9 @@
 		F610453F2C061ED300F7632E /* version.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; name = version.sh; path = Banksia/version.sh; sourceTree = "<group>"; };
 		F636A11B2B05B23D00C24891 /* GeneralSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralSettingsView.swift; sourceTree = "<group>"; };
 		F639D8C92BD51B2A0035226E /* CodeSyntaxTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeSyntaxTheme.swift; sourceTree = "<group>"; };
+		F6479B422C07057F00CAF351 /* Icons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Icons.swift; path = "../_Natives Workspace/Shared/Icons.swift"; sourceTree = "<group>"; };
+		F6479B432C07057F00CAF351 /* Styles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Styles.swift; path = "../_Natives Workspace/Shared/Styles.swift"; sourceTree = "<group>"; };
+		F6479B442C07057F00CAF351 /* Swatches.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Swatches.swift; path = "../_Natives Workspace/Shared/Swatches.swift"; sourceTree = "<group>"; };
 		F64F8E022B02136D00C72E51 /* ModelContainerPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelContainerPreview.swift; sourceTree = "<group>"; };
 		F64F8E072B02140F00C72E51 /* SampleData+Conversation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SampleData+Conversation.swift"; sourceTree = "<group>"; };
 		F64F8E0B2B0214A000C72E51 /* SampleData+Messages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SampleData+Messages.swift"; sourceTree = "<group>"; };
@@ -76,6 +77,8 @@
 		F6A7BEEE2B01C57400D3CE25 /* DataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataModel.swift; sourceTree = "<group>"; };
 		F6A7BEF02B01C57500D3CE25 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F6A7BEF52B01C57500D3CE25 /* Banksia.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Banksia.entitlements; sourceTree = "<group>"; };
+		F6BC6B5E2C071C8B00CD0FE4 /* ConversationOptionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationOptionsView.swift; sourceTree = "<group>"; };
+		F6BC6B602C072B9500CD0FE4 /* DebugView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugView.swift; sourceTree = "<group>"; };
 		F6C161E02B0F63B800F4AB62 /* banksia_icons.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = banksia_icons.json; path = Working/banksia_icons.json; sourceTree = SOURCE_ROOT; };
 		F6D6E2D52BC805E9000D2051 /* SingleMessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleMessageView.swift; sourceTree = "<group>"; };
 		F6D6E2DA2BC80AA2000D2051 /* MessageInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageInputView.swift; sourceTree = "<group>"; };
@@ -95,14 +98,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F6623F6B2BFF89B40087C518 /* Styles in Frameworks */,
-				F6623F672BFF89B40087C518 /* Components in Frameworks */,
-				F626CD1E2BFA73D1002A0D8A /* APIHandler in Frameworks */,
-				F6C2450A2BEE50CF002AEE3D /* Popup in Frameworks */,
-				F6C245082BEE50CF002AEE3D /* KeychainHandler in Frameworks */,
-				F6C245062BEE50CF002AEE3D /* Grainient in Frameworks */,
-				F6BBA9D82C038659003AB082 /* MarkdownEditor in Frameworks */,
-				F644B17D2BF276F70098FDCF /* Utilities in Frameworks */,
+				F6823E1B2C07139B00C8749F /* Components in Frameworks */,
+				F6823E1F2C07139B00C8749F /* Popup in Frameworks */,
+				F6823E1D2C07139B00C8749F /* MarkdownEditor in Frameworks */,
+				F6823E192C07139B00C8749F /* APIHandler in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -112,6 +111,7 @@
 		F64F8E0D2B0214CC00C72E51 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				F6BC6B5E2C071C8B00CD0FE4 /* ConversationOptionsView.swift */,
 				F687189B2BFF4F2100955B43 /* DetailView.swift */,
 				F6E4BC6C2BCFDAC900BFD550 /* MenuCommands.swift */,
 				F6E4BC6A2BCFD1E100BFD550 /* QuickOpenView.swift */,
@@ -122,6 +122,7 @@
 				F6A5E1B22BC6E4E90018B1B5 /* SidebarView.swift */,
 				F6F393122B0A06B4005046F4 /* ConversationListItem.swift */,
 				F6F393102B09DB7D005046F4 /* ConversationView.swift */,
+				F6BC6B602C072B9500CD0FE4 /* DebugView.swift */,
 				F6D6E2DA2BC80AA2000D2051 /* MessageInputView.swift */,
 				F6D6E2D52BC805E9000D2051 /* SingleMessageView.swift */,
 				F697B8672B0B48160091CE79 /* ConversationStateView.swift */,
@@ -214,6 +215,9 @@
 		F6C245042BEE50CF002AEE3D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				F6479B422C07057F00CAF351 /* Icons.swift */,
+				F6479B432C07057F00CAF351 /* Styles.swift */,
+				F6479B442C07057F00CAF351 /* Swatches.swift */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -235,14 +239,10 @@
 			);
 			name = Banksia;
 			packageProductDependencies = (
-				F6C245052BEE50CF002AEE3D /* Grainient */,
-				F6C245072BEE50CF002AEE3D /* KeychainHandler */,
-				F6C245092BEE50CF002AEE3D /* Popup */,
-				F644B17C2BF276F70098FDCF /* Utilities */,
-				F626CD1D2BFA73D1002A0D8A /* APIHandler */,
-				F6623F662BFF89B40087C518 /* Components */,
-				F6623F6A2BFF89B40087C518 /* Styles */,
-				F6BBA9D72C038659003AB082 /* MarkdownEditor */,
+				F6823E182C07139B00C8749F /* APIHandler */,
+				F6823E1A2C07139B00C8749F /* Components */,
+				F6823E1C2C07139B00C8749F /* MarkdownEditor */,
+				F6823E1E2C07139B00C8749F /* Popup */,
 			);
 			productName = Banksia;
 			productReference = F6A7BEE72B01C57400D3CE25 /* Banksia.app */;
@@ -312,6 +312,7 @@
 				F64F8E202B03082100C72E51 /* BanksiaHandler.swift in Sources */,
 				F6EBCA882C047FC7007C452A /* ClaudeModel.swift in Sources */,
 				F6D6E2EB2BC82CFE000D2051 /* ExampleText.swift in Sources */,
+				F6BC6B612C072B9500CD0FE4 /* DebugView.swift in Sources */,
 				F697B8662B0B47610091CE79 /* GPTModel.swift in Sources */,
 				F6F393132B0A06B4005046F4 /* ConversationListItem.swift in Sources */,
 				F64F8E222B03090600C72E51 /* ContentView.swift in Sources */,
@@ -326,6 +327,7 @@
 				F64F8E0C2B0214A000C72E51 /* SampleData+Messages.swift in Sources */,
 				F64F8E032B02136D00C72E51 /* ModelContainerPreview.swift in Sources */,
 				F6A5E1B32BC6E4E90018B1B5 /* SidebarView.swift in Sources */,
+				F6BC6B5F2C071C8B00CD0FE4 /* ConversationOptionsView.swift in Sources */,
 				F687189E2BFF742800955B43 /* NavigationHandler.swift in Sources */,
 				F6E4BC6D2BCFDAC900BFD550 /* MenuCommands.swift in Sources */,
 				F6795C7F2BCE7A4D0093BC9C /* GlobalConversationSettingsView.swift in Sources */,
@@ -490,7 +492,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = "$(VERSION)";
+				MARKETING_VERSION = 0.2.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.dvclmn.Banksia;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -535,7 +537,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = "$(VERSION)";
+				MARKETING_VERSION = 0.2.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.dvclmn.Banksia;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -573,35 +575,19 @@
 /* End XCConfigurationList section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		F626CD1D2BFA73D1002A0D8A /* APIHandler */ = {
+		F6823E182C07139B00C8749F /* APIHandler */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = APIHandler;
 		};
-		F644B17C2BF276F70098FDCF /* Utilities */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = Utilities;
-		};
-		F6623F662BFF89B40087C518 /* Components */ = {
+		F6823E1A2C07139B00C8749F /* Components */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Components;
 		};
-		F6623F6A2BFF89B40087C518 /* Styles */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = Styles;
-		};
-		F6BBA9D72C038659003AB082 /* MarkdownEditor */ = {
+		F6823E1C2C07139B00C8749F /* MarkdownEditor */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = MarkdownEditor;
 		};
-		F6C245052BEE50CF002AEE3D /* Grainient */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = Grainient;
-		};
-		F6C245072BEE50CF002AEE3D /* KeychainHandler */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = KeychainHandler;
-		};
-		F6C245092BEE50CF002AEE3D /* Popup */ = {
+		F6823E1E2C07139B00C8749F /* Popup */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Popup;
 		};

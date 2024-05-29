@@ -12,7 +12,7 @@ import GeneralStyles
 
 @Observable
 class BanksiaHandler {
-
+    
     var isQuickOpenShowing: Bool = false
     
     var isRequestingNextQuickOpenItem: Bool = false
@@ -20,7 +20,7 @@ class BanksiaHandler {
     
     var isNextQuickOpenAvailable: Bool = false
     var isPreviousQuickOpenAvailable: Bool = false
-
+    
     var isGlobalConversationPreferencesShowing: Bool = false
     var isEditingLongFormText: Bool = false
     
@@ -39,18 +39,18 @@ class BanksiaHandler {
     } // END toggle quick open
     
     func getAppVersion() -> String {
-            if let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String {
-                return appVersion
-            }
-            return "Unknown"
+        if let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String {
+            return appVersion
         }
-
-        func getBuildNumber() -> String {
-            if let buildNumber = Bundle.main.infoDictionary?["CFBundleVersion"] as? String {
-                return buildNumber
-            }
-            return "Unknown"
+        return "Unknown"
+    }
+    
+    func getBuildNumber() -> String {
+        if let buildNumber = Bundle.main.infoDictionary?["CFBundleVersion"] as? String {
+            return buildNumber
         }
+        return "Unknown"
+    }
     
 }
 

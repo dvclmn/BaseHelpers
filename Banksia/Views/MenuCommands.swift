@@ -22,17 +22,17 @@ struct MenuCommands: Commands {
             Button("New") {
                 conv.currentRequest = .new
             }
-            .keyboardShortcut("n", modifiers: .command)
+            .keyboardShortcut(ConversationAction.new.shortcut)
             
             Button("Quick Open…") {
                 bk.toggleQuickOpen()
             }
-            .keyboardShortcut("o", modifiers: .command)
+            .keyboardShortcut(ConversationAction.quickOpen.shortcut)
             
             Button("Edit…") {
                 conv.isConversationEditorShowing.toggle()
             }
-            .keyboardShortcut("e", modifiers: .command)
+            .keyboardShortcut(ConversationAction.edit.shortcut)
         }
         
         CommandGroup(before: .toolbar) {

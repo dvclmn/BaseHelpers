@@ -49,7 +49,19 @@ struct BanksiaApp: App {
                 sidebar: sidebar
             )
         }
+        
 #endif
+        Window("Banksia Debug", id: "debug") {
+            DebugView()
+                .environment(bk)
+                .environment(conv)
+                .environmentObject(nav)
+                .environmentObject(pref)
+                .environmentObject(popup)
+                .environmentObject(sidebar)
+        }
+        .windowStyle(.hiddenTitleBar)
+        .defaultSize(width: 240, height: 300)
         
 #if os(macOS)
         Settings {

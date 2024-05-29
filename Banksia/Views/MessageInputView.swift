@@ -285,6 +285,8 @@ extension MessageInputView {
     }
 }
 
+#if DEBUG
+
 #Preview {
     ModelContainerPreview(ModelContainer.sample) {
         
@@ -302,3 +304,4 @@ extension MessageInputView {
     .frame(width: 380, height: 700)
     .background(.contentBackground)
 }
+#endif

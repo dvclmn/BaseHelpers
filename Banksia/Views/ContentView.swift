@@ -17,7 +17,8 @@ import Swatches
 import Icons
 
 struct ContentView: View {
-    
+    @Environment(\.openWindow) var openWindow
+    @Environment(\.dismissWindow) var closeWindow
     @Environment(\.modelContext) var modelContext
     @Environment(\.undoManager) var undoManager
     @Environment(BanksiaHandler.self) private var bk
@@ -152,6 +153,13 @@ struct ContentView: View {
             conv.currentConversationID = fetchCurrentConversation()?.persistentModelID
             nav.updateLastDestination()
         }
+        .task(id: pref.isDebugShowing) {
+            if pref.isDebugShowing {
+                openWindow.callAsFunction(id: "debug")
+            } else {
+                closeWindow.callAsFunction(id: "debug")
+            }
+        }
         
         
         
@@ -209,7 +217,7 @@ extension ContentView {
             print("Unable to get current conversation")
             return
         }
-
+        
         undoManager?.registerUndo(withTarget: conversation, handler: { conv in
             print(conv)
         })
@@ -236,7 +244,7 @@ extension ContentView {
         return messages
     } // END generate messages
     
-
+    
 }
 
 #if DEBUG

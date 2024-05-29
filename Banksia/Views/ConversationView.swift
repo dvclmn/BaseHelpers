@@ -12,17 +12,21 @@ import GeneralUtilities
 import Icons
 import Button
 import StateView
+import Sidebar
 
 struct ConversationView: View {
+    @Environment(\.modelContext) private var modelContext
     @Environment(BanksiaHandler.self) private var bk
     @Environment(ConversationHandler.self) private var conv
+    
     @EnvironmentObject var pref: Preferences
-    @Environment(\.modelContext) private var modelContext
+    @EnvironmentObject var sidebar: SidebarHandler
     
     @Query private var messages: [Message]
     
     @Bindable var conversation: Conversation
     @Binding var scrolledMessageID: Message.ID?
+
     
     var body: some View {
         
@@ -96,13 +100,9 @@ struct ConversationView: View {
                         conversation: conversation
                     )
                 }
-                
                 .sheet(isPresented: $conv.isConversationEditorShowing) {
-                    
                     ConversationEditorView(conversation: conversation)
-                    
                 }
-                
 
                 
                 
@@ -115,6 +115,7 @@ struct ConversationView: View {
                 conv.grainientSeed = conversation.grainientSeed
             }
         }
+        
         
         
     } // END view body

@@ -1,0 +1,136 @@
+//
+//  ConversationOptionsView.swift
+//  Banksia
+//
+//  Created by Dave Coleman on 29/5/2024.
+//
+
+import SwiftUI
+import Popup
+import Icons
+import Swatches
+import GeneralStyles
+import Grainient
+import GeneralUtilities
+import Sidebar
+import Button
+
+struct ConversationOptionsView: View {
+
+    @Environment(\.modelContext) var modelContext
+    @Environment(ConversationHandler.self) private var conv
+    @Environment(BanksiaHandler.self) private var bk
+    @EnvironmentObject var nav: NavigationHandler
+    
+    @EnvironmentObject var popup: PopupHandler
+    @EnvironmentObject var sidebar: SidebarHandler
+    @EnvironmentObject var pref: Preferences
+    
+    @FocusState private var isFocused
+    
+    //    @State private var isLoading: Bool = false
+    //
+    //    @State private var isToolbarMenuPresented: Bool = false
+    //
+    //    @State private var isRenaming: Bool = false
+    //
+    //    @FocusState private var isSearchFocused: Bool
+    //
+    @Bindable var conversation: Conversation
+    
+    var body: some View {
+        
+        VStack(alignment: .leading) {
+            CustomSection(label: "Conversation", icon: Icons.messageAlt.icon) {
+                
+                
+                Button {
+                    modelContext.delete(conversation)
+                    try? modelContext.save()
+                } label: {
+                    Label("Delete conversation", systemImage: Icons.trash.icon)
+                }
+            }
+            
+            
+            
+            CustomSection(label: "Debug", icon: Icons.debug.icon) {
+                
+
+                
+                CustomSection(label: "Debug pane", icon: "window.horizontal.closed", level: .child) {
+                    
+                    Button {
+                        pref.isDebugShowing.toggle()
+                    } label: {
+                        Label("Toggle debug pane", systemImage: Icons.debug.icon)
+                    }
+                    
+                    
+                    ControlGroup {
+                        Text("\(pref.debugOpacity * 1000, specifier: "%.0f")%")
+                            .frame(width: 38, alignment: .trailing)
+                        Slider(
+                            value: $pref.debugOpacity,
+                            in: 0.01...0.1)
+                        .controlSize(.mini)
+                        .tint(Swatch.lightGrey.colour)
+                        .frame(
+                            minWidth: 80,
+                            maxWidth: 140
+                        )
+                    }
+                    .controlGroupStyle(.customControlGroup())
+                    .background {
+                        RoundedRectangle(cornerRadius: Styles.roundingMedium)
+                            .fill(.white.opacity(0.1))
+                            .padding()
+                    }
+                }
+                
+                
+                
+                
+                
+                Button {
+                    popup.showPopup(title: "Here's a **popup title**", message: "And a *short* message with further info.")
+                } label: {
+                    Label("Test popup", systemImage: "rectangle.ratio.16.to.9")
+                }
+                
+            } // END custom section
+            
+            
+            
+        } // END Vstack
+        .focusable()
+        .focused($isFocused)
+        .focusEffectDisabled()
+        .buttonStyle(.customButton())
+        .frame(
+            //            minWidth: 380,
+            //            idealWidth: 180,
+            minWidth: 180
+            //            minHeight: 280,
+            //            idealHeight: 600,
+            //            maxHeight: .infinity
+        )
+        .padding(Styles.paddingGenerous)
+        .grainient(seed: pref.defaultGrainientSeed, dimming: $pref.uiDimming)
+        .onAppear {
+            isFocused = true
+        }
+        
+        
+    }
+}
+
+#Preview() {
+    ConversationOptionsView(conversation: Conversation.childcare)
+        .environment(ConversationHandler())
+        .environment(BanksiaHandler())
+        .environmentObject(NavigationHandler())
+        .environmentObject(Preferences())
+        .environmentObject(PopupHandler())
+        .environmentObject(SidebarHandler())
+}

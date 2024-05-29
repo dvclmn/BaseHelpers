@@ -16,6 +16,10 @@ final class Preferences: ObservableObject {
     
     @AppStorage("userNameKey") var userName: String?
     
+    @AppStorage("isDebugShowingKey") var isDebugShowing: Bool = true
+    @AppStorage("debugOpacityKey") var debugOpacity: Double = 0.4
+    
+    
     @AppStorage("systemPromptKey") var systemPrompt: String = ""
     
     @AppStorage("uiDimmingKey") var uiDimming: Double = 0.30

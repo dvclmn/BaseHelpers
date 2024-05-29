@@ -193,6 +193,9 @@ struct QuickOpenView: View {
 
 
 
+#if DEBUG
+
+
 
 
 #Preview {
@@ -202,3 +205,4 @@ struct QuickOpenView: View {
             .frame(width: 600, height: 700)
     }
 }
+#endif

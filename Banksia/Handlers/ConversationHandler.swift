@@ -10,17 +10,44 @@ import SwiftUI
 import SwiftData
 import Grainient
 
-enum ConversationRequest {
+enum ConversationAction {
     case new
+    case edit
     case delete
     case goToPrevious
     case goToNext
     case search
+    case quickOpen
     
     case goToPreviousQuickOpen
     case goToNextQuickOpen
     
     case none
+    
+    var shortcut: KeyboardShortcut {
+        switch self {
+        case .new:
+                .init("n", modifiers: .command)
+        case .edit:
+                .init("e", modifiers: .command)
+        case .delete:
+                .init(.delete, modifiers: .command)
+        case .goToPrevious:
+                .init("[", modifiers: [.command, .shift])
+        case .goToNext:
+                .init("]", modifiers: [.command, .shift])
+        case .search:
+                .init("f", modifiers: .command)
+        case .quickOpen:
+                .init("o", modifiers: .command)
+        case .goToPreviousQuickOpen:
+                .init(.upArrow, modifiers: [])
+        case .goToNextQuickOpen:
+                .init(.downArrow, modifiers: [])
+        case .none:
+                .defaultAction
+        }
+    }
 }
 
 @Observable
@@ -40,7 +67,7 @@ final class ConversationHandler {
     
     var isResponseLoading: Bool = false
     
-    var currentRequest: ConversationRequest = .none
+    var currentRequest: ConversationAction = .none
     
     var isConversationEditorShowing: Bool = false
     

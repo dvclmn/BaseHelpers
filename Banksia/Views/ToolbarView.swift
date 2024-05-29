@@ -16,6 +16,7 @@ import Grainient
 import Icons
 import TextField
 import GeneralUtilities
+import Swatches
 
 struct ToolbarView: View {
     @Environment(\.modelContext) var modelContext
@@ -86,21 +87,7 @@ struct ToolbarView: View {
             //            .buttonStyle(.customButton(labelDisplay: .iconOnly))
             
             .popover(isPresented: $isToolbarMenuPresented) {
-                VStack {
-                    Button {
-                        popup.showPopup(title: "Here's a **popup title**", message: "And a *short* message with further info.")
-                    } label: {
-                        Label("Test popup", systemImage: Icons.text.icon)
-                    }
-                    
-                    Button {
-                        modelContext.delete(conversation)
-                        try? modelContext.save()
-                    } label: {
-                        Label("Delete conversation", systemImage: Icons.trash.icon)
-                    }
-                }
-                .padding()
+                ConversationOptionsView(conversation: conversation)
             }
             
             
