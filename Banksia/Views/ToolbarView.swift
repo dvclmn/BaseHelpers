@@ -176,29 +176,6 @@ struct ToolbarView: View {
                 .buttonStyle(.customButton(hasBackground: false, labelDisplay: .iconOnly))
         } // END toolbar sidebar controls overlay
         
-        //            HandyButton(label: "Add sample data", icon: "sparkles") {
-        //                Conversation.insertSampleData(modelContext: modelContext)
-        //                try? modelContext.save()
-        //            }
-        
-        
-        //        ToolbarItem() {
-        //            switch bk.conversationState {
-        //            case .single:
-        //                if let conversation = bk.selectedConversation.first {
-        //                    HandyButton(label: "Delete \(conversation.name)", icon: "trash") {
-        //                        bk.deleteConversations([conversation], modelContext: modelContext)
-        //                    }
-        //                }
-        //            case .multiple:
-        //                HandyButton(label: "Delete all conversations", icon: "trash.fill") {
-        //                    bk.deleteConversations(bk.selectedConversation, modelContext: modelContext)
-        //                }
-        //            default:
-        //                EmptyView()
-        //            }
-        
-        //        } // END delete
     }
 }
 

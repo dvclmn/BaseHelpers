@@ -20,6 +20,7 @@ import Popup
 import ScrollMask
 import MarkdownEditor
 import CountdownTimer
+import Button
 
 struct MessageInputView: View {
     @Environment(ConversationHandler.self) private var conv
@@ -257,6 +258,18 @@ extension MessageInputView {
             //                    }
             ////                    .disabled(!isTesting)
             //                    .buttonStyle(.customButton(size: .small, /*status: isTesting ? .normal : .disabled,*/ labelDisplay: .titleOnly))
+            
+            Button {
+                pref.isDebugShowing.toggle()
+            } label: {
+                Label("Toggle Debug Window", systemImage: Icons.debug.icon)
+            }
+            .buttonStyle(.customButton(
+                    size: .mini,
+                    status: pref.isDebugShowing ? .active : .normal,
+                    hasBackground: false,
+                    labelDisplay: .iconOnly
+                ))
             
             Group {
                 Text("Banksia v\(bk.getAppVersion())(\(bk.getBuildNumber()))")

@@ -104,7 +104,6 @@ struct ConversationOptionsView: View {
         .focusable()
         .focused($isFocused)
         .focusEffectDisabled()
-        .buttonStyle(.customButton())
         .frame(
             //            minWidth: 380,
             //            idealWidth: 180,
@@ -114,13 +113,19 @@ struct ConversationOptionsView: View {
             //            maxHeight: .infinity
         )
         .padding(Styles.paddingGenerous)
-        .grainient(seed: pref.defaultGrainientSeed, dimming: $pref.uiDimming)
+        .background(.regularMaterial)
+        .grainOverlay()
+        .ignoresSafeArea()
+//        .grainient(seed: pref.defaultGrainientSeed, dimming: $pref.uiDimming)
         .onAppear {
             isFocused = true
         }
         
     }
 }
+
+#if DEBUG
+
 
 #Preview() {
     ConversationOptionsView(conversation: Conversation.childcare)
@@ -131,3 +136,6 @@ struct ConversationOptionsView: View {
         .environmentObject(PopupHandler())
         .environmentObject(SidebarHandler())
 }
+
+#endif
+

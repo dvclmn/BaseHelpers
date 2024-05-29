@@ -59,12 +59,12 @@ struct ContentView: View {
                 Spacer()
             }
         }
+        .ignoresSafeArea()
         .grainient(
             seed: conv.grainientSeed ?? pref.defaultGrainientSeed,
             dimming: $pref.uiDimming
         )
         .background(Swatch.slate.colour)
-        .ignoresSafeArea()
         .overlay(alignment: .bottomLeading) {
             if isPreview {
                 HStack {

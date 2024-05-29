@@ -99,25 +99,15 @@ struct DebugView: View {
                 definedOn: .sidebar
             )
         ]
-        
-//        let columns: [GridItem] = [
-//            GridItem(.adaptive(minimum: 40), alignment: .topLeading)
-//        ]
-        
+
         let spacing: Double = 0
         
         let columns: [GridItem] = [
-            GridItem(.flexible(minimum: 40),                spacing: spacing, alignment: .topLeading),
+            GridItem(.flexible(minimum: 80),                spacing: spacing, alignment: .topLeading),
             GridItem(.flexible(minimum: 40, maximum: 80),   spacing: spacing, alignment: .topLeading),
-            GridItem(.flexible(minimum: 120),                spacing: spacing, alignment: .topLeading)
+            GridItem(.flexible(minimum: 110),               spacing: spacing, alignment: .topLeading)
         ]
-        
-//        let columns: [GridItem] = [
-//            GridItem(.fixed(120), alignment: .topLeading),
-//            GridItem(.fixed(120), alignment: .topLeading),
-//            GridItem(.fixed(120), alignment: .topLeading)
-//        ]
-        
+
         var sortedDebugInfo: [DebugInfo] {
             switch sorting {
             case .title:
