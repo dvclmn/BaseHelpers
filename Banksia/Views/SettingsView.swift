@@ -65,6 +65,8 @@ struct SettingsView: View {
     
     @State private var settingsTab: SettingsTab = .interface
     
+    @FocusState private var isEditorFocused
+    
     var body: some View {
         
         
@@ -88,7 +90,7 @@ struct SettingsView: View {
                 }
             }
             .frame(maxWidth: .infinity)
-            .padding(.top, 20)
+            .padding(.top, 36)
             .padding(.bottom, 4)
             .background(.thinMaterial)
             
@@ -133,6 +135,8 @@ struct SettingsView: View {
                         
                     }
                     
+                    GrainientPreviews(seed: $pref.defaultGrainientSeed)
+                    
                     
                     
                     
@@ -168,7 +172,7 @@ struct SettingsView: View {
                         ) {
                             Text(pref.systemPrompt)
                                 .multilineTextAlignment(.leading)
-                                .lineLimit(3)
+                                .lineLimit(6)
                                 .frame(maxWidth: .infinity, alignment: .leading)
                         } content: {
                             
@@ -177,8 +181,21 @@ struct SettingsView: View {
                             } label: {
                                 Label("Edit", systemImage: Icons.edit.icon)
                             }
-                            //                    .buttonStyle(.customButton(size: .small, hasBackground: false))
+                            .buttonStyle(.customButton(size: .small))
                             
+                        }
+                        .sheet(isPresented: $bk.isEditingLongFormText) {
+
+                            TextEditorView(
+                                text: pref.$systemPrompt,
+                                isPresented: $bk.isEditingLongFormText) { text in
+                                    MarkdownEditorView(
+                                        text: text,
+                                        placeholderText: "Enter system prompt",
+                                        isFocused: $isEditorFocused
+                                    )
+                                    .focused($isEditorFocused)
+                                }
                         }
                     }
                 case .connections:
@@ -199,10 +216,15 @@ struct SettingsView: View {
             idealHeight: 600,
             maxHeight: .infinity
         )
-        .safeAreaPadding(.top, isPreview ? 0 :Styles.toolbarHeight)
         .scrollIndicators(.hidden)
         .grainient(seed: pref.defaultGrainientSeed, dimming: $pref.uiDimming)
         .ignoresSafeArea()
+        
+        .onAppear {
+            if isPreview {
+                settingsTab = .interface
+            }
+        }
         
     }
 }

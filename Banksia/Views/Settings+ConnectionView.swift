@@ -24,8 +24,6 @@ struct Settings_ConnectionView: View {
     @State private var isKeyUnlocked = false
     @State private var apiKey: String = ""
     
-    @FocusState private var isEditorFocused
-    
     let apiKeyString: String = "openAIAPIKey"
     
     var body: some View {
@@ -104,29 +102,6 @@ struct Settings_ConnectionView: View {
                     }
                     .labelsHidden()
                     .pickerStyle(.menu)
-                }
-                
-            
-            
-            
-            
-//                    .onAppear {
-//                        if isPreview {
-//                            pref.systemPrompt = Message.prompt_01.content
-//                        }
-//                    }
-                .sheet(isPresented: $bk.isEditingLongFormText) {
-
-                    TextEditorView(
-                        text: pref.$systemPrompt,
-                        isPresented: $bk.isEditingLongFormText) { text in
-                            MarkdownEditorView(
-                                text: text,
-                                placeholderText: "Enter system prompt",
-                                isFocused: $isEditorFocused
-                            )
-                            .focused($isEditorFocused)
-                        }
                 }
             
         } // End connection section

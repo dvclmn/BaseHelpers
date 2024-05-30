@@ -47,6 +47,7 @@
 		F6BCC7A42C08B51E00B9751D /* ShortcutHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6BCC7A32C08B51E00B9751D /* ShortcutHandler.swift */; };
 		F6BCC7A62C08B5A300B9751D /* Settings+ShortcutsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6BCC7A52C08B5A300B9751D /* Settings+ShortcutsView.swift */; };
 		F6BCC7A82C08B5CA00B9751D /* Settings+ConnectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6BCC7A72C08B5CA00B9751D /* Settings+ConnectionView.swift */; };
+		F6BCC7AA2C08DC9F00B9751D /* GrainientPreviews.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6BCC7A92C08DC9F00B9751D /* GrainientPreviews.swift */; };
 		F6C161E12B0F63B800F4AB62 /* banksia_icons.json in Resources */ = {isa = PBXBuildFile; fileRef = F6C161E02B0F63B800F4AB62 /* banksia_icons.json */; };
 		F6D6E2D62BC805E9000D2051 /* SingleMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6D6E2D52BC805E9000D2051 /* SingleMessageView.swift */; };
 		F6D6E2DB2BC80AA2000D2051 /* MessageInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6D6E2DA2BC80AA2000D2051 /* MessageInputView.swift */; };
@@ -97,6 +98,7 @@
 		F6BCC7A32C08B51E00B9751D /* ShortcutHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutHandler.swift; sourceTree = "<group>"; };
 		F6BCC7A52C08B5A300B9751D /* Settings+ShortcutsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Settings+ShortcutsView.swift"; sourceTree = "<group>"; };
 		F6BCC7A72C08B5CA00B9751D /* Settings+ConnectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Settings+ConnectionView.swift"; sourceTree = "<group>"; };
+		F6BCC7A92C08DC9F00B9751D /* GrainientPreviews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrainientPreviews.swift; sourceTree = "<group>"; };
 		F6C161E02B0F63B800F4AB62 /* banksia_icons.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = banksia_icons.json; path = Working/banksia_icons.json; sourceTree = SOURCE_ROOT; };
 		F6D6E2D52BC805E9000D2051 /* SingleMessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleMessageView.swift; sourceTree = "<group>"; };
 		F6D6E2DA2BC80AA2000D2051 /* MessageInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageInputView.swift; sourceTree = "<group>"; };
@@ -135,6 +137,7 @@
 		F64F8E0D2B0214CC00C72E51 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				F6BCC7A92C08DC9F00B9751D /* GrainientPreviews.swift */,
 				F6BCC79E2C08929F00B9751D /* FeedbackView.swift */,
 				F6BC6B5E2C071C8B00CD0FE4 /* ToolbarExpandedView.swift */,
 				F687189B2BFF4F2100955B43 /* DetailView.swift */,
@@ -339,6 +342,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F639D8CA2BD51B2A0035226E /* CodeSyntaxTheme.swift in Sources */,
+				F6BCC7AA2C08DC9F00B9751D /* GrainientPreviews.swift in Sources */,
 				F6D6E2D62BC805E9000D2051 /* SingleMessageView.swift in Sources */,
 				F6795C7D2BCE70920093BC9C /* ConversationEditorView.swift in Sources */,
 				F6A7BEEB2B01C57400D3CE25 /* BanksiaApp.swift in Sources */,
@@ -540,7 +544,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 0.2.1;
+				MARKETING_VERSION = 0.2.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.dvclmn.Banksia;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -585,7 +589,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 0.2.1;
+				MARKETING_VERSION = 0.2.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.dvclmn.Banksia;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

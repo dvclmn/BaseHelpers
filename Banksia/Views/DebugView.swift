@@ -180,11 +180,10 @@ struct DebugView: View {
 //        }
         .ignoresSafeArea()
         .grainient(
-            seed: 93628,
+            seed: GrainientPreset.algae.seed,
             dimming: $pref.uiDimming
         )
         .background(Swatch.slate.colour)
-        
     }
 }
 

@@ -15,6 +15,7 @@ import Sidebar
 import Grainient
 import Swatches
 import Icons
+import KeyboardShortcuts
 
 struct ContentView: View {
     @Environment(\.openWindow) var openWindow
@@ -80,7 +81,12 @@ struct ContentView: View {
             }
         }
         
+        
         .onAppear {
+            
+            KeyboardShortcuts.onKeyUp(for: .summonBanksia) {
+                bringAppToForeground()
+            }
             
             //#if DEBUG
             //
@@ -136,7 +142,7 @@ struct ContentView: View {
                 
             case .goToNext:
                 print("Request to navigate to next conversation")
-
+                
             default:
                 break
                 
@@ -162,6 +168,11 @@ struct ContentView: View {
 }
 
 extension ContentView {
+    
+    private func bringAppToForeground() {
+        NSApp.activate(ignoringOtherApps: true)
+    }
+    
     
     func presentConversation() {
         if let lastDestinationString = nav.lastDestination {

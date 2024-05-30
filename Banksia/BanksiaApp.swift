@@ -11,9 +11,21 @@ import Popup
 import Navigation
 import Sidebar
 import Sparkle
+import KeyboardShortcuts
+
+@MainActor
+final class AppState: ObservableObject {
+    init() {
+        KeyboardShortcuts.onKeyUp(for: .summonBanksia) { [self] in
+            
+        }
+    }
+}
 
 @main
 struct BanksiaApp: App {
+    
+    @StateObject private var appState = AppState()
     
     @State private var conv = ConversationHandler()
     
