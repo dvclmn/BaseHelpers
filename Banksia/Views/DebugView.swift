@@ -10,6 +10,7 @@ import GeneralStyles
 import Grainient
 import Sidebar
 import Swatches
+import Icons
 
 struct DebugInfo: Identifiable {
     var id = UUID()
@@ -120,18 +121,15 @@ struct DebugView: View {
         }
         
         
-        VStack(alignment: .leading) {
-            //            Picker("Sort by", selection: $sorting) {
-            //                Text("Title").tag(SortingOption.title)
-            //                Text("State").tag(SortingOption.state)
-            //                Text("Defined on").tag(SortingOption.definedOn)
-            //            }
-            //            .pickerStyle(SegmentedPickerStyle())
-            //            .padding()
+        VStack(alignment: .leading, spacing: 20) {
             
+//            Label("Debug", systemImage: Icons.debug.icon)
+            Text("Debug")
+                .font(.system(size: 22))
+                .foregroundStyle(.secondary)
+                .padding(4)
+
             LazyVGrid(columns: columns) {
-                
-                
                 
                 CustomTableColumn(
                     column: DebugColumn.title,
@@ -147,40 +145,33 @@ struct DebugView: View {
                     rows: sortedDebugInfo.map { $0.definedOn.name },
                     columnPosition: .end
                 )
-                
-                
-                //                VStack(alignment: .leading) {
-                //                    TableHeader("Title")
-                //                    ForEach(sortedDebugInfo) { info in
-                //                        TableRow(info.title)
-                //                    }
-                //                }
-                //                VStack(alignment: .leading) {
-                //                    TableHeader("State")
-                //                    ForEach(sortedDebugInfo) { info in
-                //                        TableRow(info.state)
-                //                    }
-                //                }
-                //                VStack(alignment: .leading) {
-                //                    TableHeader("Defined on")
-                //                    ForEach(sortedDebugInfo) { info in
-                //                        TableRow(info.definedOn)
-                //                    }
-                //                }
-                
-                
+
             } // END pazy grid
-            .padding(18)
+            
+            Spacer()
         }
-        .lineSpacing(6.0)
-        .caption()
+        .padding(18)
+        .font(.system(size: 12))
+        
         .frame(
             minWidth: minWidth,
-            maxWidth: minWidth + frameSizePlay,
+            idealWidth: .infinity,
+            maxWidth: .infinity,
             minHeight: minHeight,
-            maxHeight: minHeight + frameSizePlay
+            maxHeight: .infinity,
+            alignment: .trailing
         )
-        .grainient(seed: 30753, dimming: $pref.uiDimming)
+        .toolbar {
+            ToolbarItem {
+                Spacer()
+            }
+        }
+        .ignoresSafeArea()
+        .grainient(
+            seed: 93628,
+            dimming: $pref.uiDimming
+        )
+        .background(Swatch.slate.colour)
         
     }
 }
@@ -215,7 +206,7 @@ extension DebugView {
                     .foregroundStyle(booleanStyle)
                     .padding(.horizontal, 3)
                     .padding(.vertical, 1)
-                    .background(.black.opacity(0.3))
+                    .background(.thinMaterial)
                     .clipShape(.rect(cornerRadius: Styles.roundingTiny))
             case .definedOn:
                 Text(content)
@@ -274,13 +265,15 @@ extension DebugView {
                     .clipShape(corners)
                     
             }
-        }
+        } // END vstack
+        .fontWeight(.medium)
         
     }
 }
 
 #Preview {
     DebugView()
+        .padding(.top,1)
         .environment(BanksiaHandler())
         .environment(ConversationHandler())
         .environmentObject(Preferences())

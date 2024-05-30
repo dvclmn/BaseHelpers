@@ -61,9 +61,8 @@ struct BanksiaApp: App {
                 .environmentObject(sidebar)
 
         }
-        .windowResizability(.contentSize)
         .windowStyle(.hiddenTitleBar)
-        .windowToolbarStyle(.automatic)
+        .windowResizability(.contentSize)
 
         
         

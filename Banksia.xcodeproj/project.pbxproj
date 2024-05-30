@@ -35,6 +35,10 @@
 		F6A7BEF12B01C57500D3CE25 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F6A7BEF02B01C57500D3CE25 /* Assets.xcassets */; };
 		F6BC6B5F2C071C8B00CD0FE4 /* ConversationOptionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6BC6B5E2C071C8B00CD0FE4 /* ConversationOptionsView.swift */; };
 		F6BC6B612C072B9500CD0FE4 /* DebugView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6BC6B602C072B9500CD0FE4 /* DebugView.swift */; };
+		F6BCC7902C08647000B9751D /* Styles in Frameworks */ = {isa = PBXBuildFile; productRef = F6BCC78F2C08647000B9751D /* Styles */; };
+		F6BCC7922C08647000B9751D /* Utilities in Frameworks */ = {isa = PBXBuildFile; productRef = F6BCC7912C08647000B9751D /* Utilities */; };
+		F6BCC7942C08648000B9751D /* KeychainHandler in Frameworks */ = {isa = PBXBuildFile; productRef = F6BCC7932C08648000B9751D /* KeychainHandler */; };
+		F6BCC7962C08648A00B9751D /* Grainient in Frameworks */ = {isa = PBXBuildFile; productRef = F6BCC7952C08648A00B9751D /* Grainient */; };
 		F6C161E12B0F63B800F4AB62 /* banksia_icons.json in Resources */ = {isa = PBXBuildFile; fileRef = F6C161E02B0F63B800F4AB62 /* banksia_icons.json */; };
 		F6D6E2D62BC805E9000D2051 /* SingleMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6D6E2D52BC805E9000D2051 /* SingleMessageView.swift */; };
 		F6D6E2DB2BC80AA2000D2051 /* MessageInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6D6E2DA2BC80AA2000D2051 /* MessageInputView.swift */; };
@@ -98,8 +102,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F6BCC7902C08647000B9751D /* Styles in Frameworks */,
+				F6BCC7922C08647000B9751D /* Utilities in Frameworks */,
+				F6BCC7962C08648A00B9751D /* Grainient in Frameworks */,
 				F6823E1B2C07139B00C8749F /* Components in Frameworks */,
 				F6823E1F2C07139B00C8749F /* Popup in Frameworks */,
+				F6BCC7942C08648000B9751D /* KeychainHandler in Frameworks */,
 				F6823E1D2C07139B00C8749F /* MarkdownEditor in Frameworks */,
 				F6823E192C07139B00C8749F /* APIHandler in Frameworks */,
 			);
@@ -243,6 +251,10 @@
 				F6823E1A2C07139B00C8749F /* Components */,
 				F6823E1C2C07139B00C8749F /* MarkdownEditor */,
 				F6823E1E2C07139B00C8749F /* Popup */,
+				F6BCC78F2C08647000B9751D /* Styles */,
+				F6BCC7912C08647000B9751D /* Utilities */,
+				F6BCC7932C08648000B9751D /* KeychainHandler */,
+				F6BCC7952C08648A00B9751D /* Grainient */,
 			);
 			productName = Banksia;
 			productReference = F6A7BEE72B01C57400D3CE25 /* Banksia.app */;
@@ -391,6 +403,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
@@ -400,6 +413,7 @@
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_STRICT_CONCURRENCY = minimal;
+				XROS_DEPLOYMENT_TARGET = 1.0;
 			};
 			name = Debug;
 		};
@@ -450,6 +464,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
@@ -457,6 +472,7 @@
 				SDKROOT = macosx;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_STRICT_CONCURRENCY = minimal;
+				XROS_DEPLOYMENT_TARGET = 1.0;
 			};
 			name = Release;
 		};
@@ -590,6 +606,22 @@
 		F6823E1E2C07139B00C8749F /* Popup */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Popup;
+		};
+		F6BCC78F2C08647000B9751D /* Styles */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Styles;
+		};
+		F6BCC7912C08647000B9751D /* Utilities */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Utilities;
+		};
+		F6BCC7932C08648000B9751D /* KeychainHandler */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = KeychainHandler;
+		};
+		F6BCC7952C08648A00B9751D /* Grainient */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Grainient;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
