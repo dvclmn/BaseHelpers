@@ -217,7 +217,8 @@ struct SettingsView: View {
             maxHeight: .infinity
         )
         .scrollIndicators(.hidden)
-        .grainient(seed: pref.defaultGrainientSeed, dimming: $pref.uiDimming)
+        .background(.ultraThinMaterial)
+        .grainOverlay()
         .ignoresSafeArea()
         
         .onAppear {
@@ -228,42 +229,6 @@ struct SettingsView: View {
         
     }
 }
-
-extension SettingsView {
-    
-    // TODO: The system asking for mac login password felt too invaisve, for not enough benefit
-    //    private func authenticate() {
-    //        let context = LAContext()
-    //        var error: NSError?
-    //
-    //        // check whether biometric authentication is possible
-    //        if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
-    //
-    //
-    //            /// Application reason for authentication. This string must be provided in correct localization and should be short and clear. It will be eventually displayed in the authentication dialog as a part of the following string: "<appname>" is trying to <localized reason>.
-    //            /// For example, if the app name is "TestApp" and localizedReason is passed "access the hidden records", then the authentication prompt will read: "TestApp" is trying to access the hidden records.
-    //            let reason = "reveal your API Key"
-    //
-    //            context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: reason) { success, authenticationError in
-    //                // authentication has now completed
-    //                if success {
-    //                    isKeyUnlocked = true
-    //                } else {
-    //                    popup.showPopup(title: "Error displaying API key", message: "Please try authenticating again.")
-    //                }
-    //            }
-    //        } else {
-    //            // no biometrics
-    //        }
-    //    }
-    
-    
-    
-    
-    
-}
-
-
 
 
 #if DEBUG
