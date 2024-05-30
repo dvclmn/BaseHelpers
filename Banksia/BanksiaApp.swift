@@ -10,6 +10,7 @@ import SwiftData
 import Popup
 import Navigation
 import Sidebar
+import Sparkle
 
 @main
 struct BanksiaApp: App {
@@ -21,6 +22,14 @@ struct BanksiaApp: App {
     @StateObject private var popup = PopupHandler()
     @StateObject private var pref = Preferences()
     @StateObject private var sidebar = SidebarHandler()
+    
+    private let updaterController: SPUStandardUpdaterController
+    
+    init() {
+        // If you want to start the updater manually, pass false to startingUpdater and call .startUpdater() later
+        // This is where you can also pass an updater delegate if you need one
+        updaterController = SPUStandardUpdaterController(startingUpdater: true, updaterDelegate: nil, userDriverDelegate: nil)
+    }
     
     var body: some Scene {
         Window("Banksia", id: "main") {
@@ -46,7 +55,8 @@ struct BanksiaApp: App {
             MenuCommands(
                 bk: $bk,
                 conv: $conv,
-                sidebar: sidebar
+                sidebar: sidebar,
+                updaterController: updaterController
             )
         }
         

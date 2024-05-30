@@ -1,5 +1,5 @@
 //
-//  ConversationOptionsView.swift
+//  ToolbarExpandedView.swift
 //  Banksia
 //
 //  Created by Dave Coleman on 29/5/2024.
@@ -16,7 +16,7 @@ import Sidebar
 import Button
 import GrainientPicker
 
-struct ConversationOptionsView: View {
+struct ToolbarExpandedView: View {
 
     @Environment(\.modelContext) var modelContext
     @Environment(ConversationHandler.self) private var conv
@@ -63,27 +63,7 @@ struct ConversationOptionsView: View {
                     } label: {
                         Label("Toggle debug pane", systemImage: Icons.debug.icon)
                     }
-                    
-                    
-                    ControlGroup {
-                        Text("\(pref.debugOpacity * 1000, specifier: "%.0f")%")
-                            .frame(width: 38, alignment: .trailing)
-                        Slider(
-                            value: $pref.debugOpacity,
-                            in: 0.01...0.1)
-                        .controlSize(.mini)
-                        .tint(Swatch.lightGrey.colour)
-                        .frame(
-                            minWidth: 80,
-                            maxWidth: 140
-                        )
-                    }
-                    .controlGroupStyle(.customControlGroup())
-                    .background {
-                        RoundedRectangle(cornerRadius: Styles.roundingMedium)
-                            .fill(.white.opacity(0.1))
-                            .padding()
-                    }
+
                 }
                 
                 
@@ -128,7 +108,7 @@ struct ConversationOptionsView: View {
 
 
 #Preview() {
-    ConversationOptionsView(conversation: Conversation.childcare)
+    ToolbarExpandedView(conversation: Conversation.childcare)
         .environment(ConversationHandler())
         .environment(BanksiaHandler())
         .environmentObject(NavigationHandler())

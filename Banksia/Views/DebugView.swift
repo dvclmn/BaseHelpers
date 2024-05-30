@@ -11,6 +11,7 @@ import Grainient
 import Sidebar
 import Swatches
 import Icons
+import GeneralUtilities
 
 struct DebugInfo: Identifiable {
     var id = UUID()
@@ -151,6 +152,7 @@ struct DebugView: View {
             Spacer()
         }
         .padding(18)
+        .safeAreaPadding(.top, isPreview ? 0 : 30)
         .font(.system(size: 12))
         
         .frame(
@@ -161,11 +163,11 @@ struct DebugView: View {
             maxHeight: .infinity,
             alignment: .trailing
         )
-        .toolbar {
-            ToolbarItem {
-                Spacer()
-            }
-        }
+//        .toolbar {
+//            ToolbarItem {
+//                Spacer()
+//            }
+//        }
         .ignoresSafeArea()
         .grainient(
             seed: 93628,

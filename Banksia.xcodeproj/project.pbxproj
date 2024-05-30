@@ -39,6 +39,8 @@
 		F6BCC7922C08647000B9751D /* Utilities in Frameworks */ = {isa = PBXBuildFile; productRef = F6BCC7912C08647000B9751D /* Utilities */; };
 		F6BCC7942C08648000B9751D /* KeychainHandler in Frameworks */ = {isa = PBXBuildFile; productRef = F6BCC7932C08648000B9751D /* KeychainHandler */; };
 		F6BCC7962C08648A00B9751D /* Grainient in Frameworks */ = {isa = PBXBuildFile; productRef = F6BCC7952C08648A00B9751D /* Grainient */; };
+		F6BCC7992C08658900B9751D /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = F6BCC7982C08658900B9751D /* Sparkle */; };
+		F6BCC79B2C08678E00B9751D /* UpdaterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6BCC79A2C08678E00B9751D /* UpdaterView.swift */; };
 		F6C161E12B0F63B800F4AB62 /* banksia_icons.json in Resources */ = {isa = PBXBuildFile; fileRef = F6C161E02B0F63B800F4AB62 /* banksia_icons.json */; };
 		F6D6E2D62BC805E9000D2051 /* SingleMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6D6E2D52BC805E9000D2051 /* SingleMessageView.swift */; };
 		F6D6E2DB2BC80AA2000D2051 /* MessageInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6D6E2DA2BC80AA2000D2051 /* MessageInputView.swift */; };
@@ -83,6 +85,7 @@
 		F6A7BEF52B01C57500D3CE25 /* Banksia.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Banksia.entitlements; sourceTree = "<group>"; };
 		F6BC6B5E2C071C8B00CD0FE4 /* ConversationOptionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationOptionsView.swift; sourceTree = "<group>"; };
 		F6BC6B602C072B9500CD0FE4 /* DebugView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugView.swift; sourceTree = "<group>"; };
+		F6BCC79A2C08678E00B9751D /* UpdaterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdaterView.swift; sourceTree = "<group>"; };
 		F6C161E02B0F63B800F4AB62 /* banksia_icons.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = banksia_icons.json; path = Working/banksia_icons.json; sourceTree = SOURCE_ROOT; };
 		F6D6E2D52BC805E9000D2051 /* SingleMessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleMessageView.swift; sourceTree = "<group>"; };
 		F6D6E2DA2BC80AA2000D2051 /* MessageInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageInputView.swift; sourceTree = "<group>"; };
@@ -102,6 +105,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F6BCC7992C08658900B9751D /* Sparkle in Frameworks */,
 				F6BCC7902C08647000B9751D /* Styles in Frameworks */,
 				F6BCC7922C08647000B9751D /* Utilities in Frameworks */,
 				F6BCC7962C08648A00B9751D /* Grainient in Frameworks */,
@@ -126,6 +130,7 @@
 				F6795C7E2BCE7A4D0093BC9C /* GlobalConversationSettingsView.swift */,
 				F6795C7C2BCE70920093BC9C /* ConversationEditorView.swift */,
 				F64F8E212B03090600C72E51 /* ContentView.swift */,
+				F6BCC79A2C08678E00B9751D /* UpdaterView.swift */,
 				F6A5E1B42BC6E5A40018B1B5 /* ToolbarView.swift */,
 				F6A5E1B22BC6E4E90018B1B5 /* SidebarView.swift */,
 				F6F393122B0A06B4005046F4 /* ConversationListItem.swift */,
@@ -255,6 +260,7 @@
 				F6BCC7912C08647000B9751D /* Utilities */,
 				F6BCC7932C08648000B9751D /* KeychainHandler */,
 				F6BCC7952C08648A00B9751D /* Grainient */,
+				F6BCC7982C08658900B9751D /* Sparkle */,
 			);
 			productName = Banksia;
 			productReference = F6A7BEE72B01C57400D3CE25 /* Banksia.app */;
@@ -285,6 +291,7 @@
 			);
 			mainGroup = F6A7BEDE2B01C57400D3CE25;
 			packageReferences = (
+				F6BCC7972C08658900B9751D /* XCRemoteSwiftPackageReference "Sparkle" */,
 			);
 			productRefGroup = F6A7BEE82B01C57400D3CE25 /* Products */;
 			projectDirPath = "";
@@ -324,6 +331,7 @@
 				F64F8E202B03082100C72E51 /* BanksiaHandler.swift in Sources */,
 				F6EBCA882C047FC7007C452A /* ClaudeModel.swift in Sources */,
 				F6D6E2EB2BC82CFE000D2051 /* ExampleText.swift in Sources */,
+				F6BCC79B2C08678E00B9751D /* UpdaterView.swift in Sources */,
 				F6BC6B612C072B9500CD0FE4 /* DebugView.swift in Sources */,
 				F697B8662B0B47610091CE79 /* GPTModel.swift in Sources */,
 				F6F393132B0A06B4005046F4 /* ConversationListItem.swift in Sources */,
@@ -590,6 +598,17 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCRemoteSwiftPackageReference section */
+		F6BCC7972C08658900B9751D /* XCRemoteSwiftPackageReference "Sparkle" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sparkle-project/Sparkle";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.6.2;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
 /* Begin XCSwiftPackageProductDependency section */
 		F6823E182C07139B00C8749F /* APIHandler */ = {
 			isa = XCSwiftPackageProductDependency;
@@ -622,6 +641,11 @@
 		F6BCC7952C08648A00B9751D /* Grainient */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Grainient;
+		};
+		F6BCC7982C08658900B9751D /* Sparkle */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F6BCC7972C08658900B9751D /* XCRemoteSwiftPackageReference "Sparkle" */;
+			productName = Sparkle;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

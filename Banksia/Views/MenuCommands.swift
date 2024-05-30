@@ -9,12 +9,15 @@ import Foundation
 import SwiftUI
 import Sidebar
 import GeneralStyles
+import Sparkle
 
 struct MenuCommands: Commands {
     
     @Binding var bk: BanksiaHandler
     @Binding var conv: ConversationHandler
     @ObservedObject var sidebar: SidebarHandler
+    
+    let updaterController: SPUStandardUpdaterController
     
     var body: some Commands {
         
@@ -88,6 +91,11 @@ struct MenuCommands: Commands {
                 conv.currentRequest = .search
             }
             .keyboardShortcut("f", modifiers: .command)
+        }
+        
+        
+        CommandGroup(after: .appInfo) {
+            CheckForUpdatesView(updater: updaterController.updater)
         }
         
         //        ToolbarCommands()

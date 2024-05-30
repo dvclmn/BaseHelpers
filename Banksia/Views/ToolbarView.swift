@@ -91,7 +91,7 @@ struct ToolbarView: View {
             //            .buttonStyle(.customButton(labelDisplay: .iconOnly))
             
             .popover(isPresented: $isToolbarMenuPresented) {
-                ConversationOptionsView(conversation: conversation)
+                ToolbarExpandedView(conversation: conversation)
             }
             .task(id: isToolbarMenuPresented) {
                 if !isToolbarMenuPresented {
