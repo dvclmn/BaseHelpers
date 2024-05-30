@@ -178,11 +178,12 @@ struct DebugView: View {
 //                Spacer()
 //            }
 //        }
-        .ignoresSafeArea()
         .grainient(
             seed: GrainientPreset.algae.seed,
+            version: .v1,
             dimming: $pref.uiDimming
         )
+        .ignoresSafeArea()
         .background(Swatch.slate.colour)
     }
 }

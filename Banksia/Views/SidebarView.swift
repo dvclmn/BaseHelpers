@@ -68,13 +68,11 @@ struct SidebarView: View {
         
     }
 }
-//
+
 //#Preview {
-//    NavigationSplitView {
-//        SidebarView(conversations: [Conversation.appKitDrawing, Conversation.childcare])
-//    } detail: {
-//        ConversationView(conversation: Conversation.appKitDrawing)
-//    }
-//    .environmentObject(BanksiaHandler())
+//    SidebarView()
 //    .environment(ConversationHandler())
+//    .environmentObject(BanksiaHandler())
+//    .environmentObject(SidebarHandler())
+//    .environmentObject(NavigationHandler())
 //}

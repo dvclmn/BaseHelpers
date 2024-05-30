@@ -61,25 +61,26 @@ struct ContentView: View {
         .ignoresSafeArea()
         .grainient(
             seed: conv.grainientSeed ?? pref.defaultGrainientSeed,
+            version: .v1,
             dimming: $pref.uiDimming
         )
         .background(Swatch.slate.colour)
-        .overlay(alignment: .bottomLeading) {
-            if isPreview {
-                HStack {
-                    VStack {
-                        Spacer()
-                        Button {
-                            bk.toggleQuickOpen()
-                        } label: {
-                            Label("Toggle QO", systemImage: Icons.text.icon)
-                        }
-                        .padding(.bottom, conv.editorHeight + 10)
-                    }
-                    Spacer()
-                }
-            }
-        }
+//        .overlay(alignment: .bottomLeading) {
+//            if isPreview {
+//                HStack {
+//                    VStack {
+//                        Spacer()
+//                        Button {
+//                            bk.toggleQuickOpen()
+//                        } label: {
+//                            Label("Toggle QO", systemImage: Icons.text.icon)
+//                        }
+//                        .padding(.bottom, conv.editorHeight + 10)
+//                    }
+//                    Spacer()
+//                }
+//            }
+//        }
         
         
         .onAppear {
@@ -88,12 +89,12 @@ struct ContentView: View {
                 bringAppToForeground()
             }
             
-            //#if DEBUG
-            //
-            //            try? modelContext.delete(model: Conversation.self)
-            //
-            //#endif
-            //
+            #if DEBUG
+            
+                        try? modelContext.delete(model: Conversation.self)
+            
+            #endif
+            
             if conversations.isEmpty {
                 let grainientSeed = GrainientSettings.generateGradientSeed()
                 let newConversation = Conversation(grainientSeed: grainientSeed)

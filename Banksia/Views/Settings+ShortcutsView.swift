@@ -16,6 +16,6 @@ struct Settings_ShortcutsView: View {
     }
 }
 
-#Preview {
-    Settings_ShortcutsView()
-}
+//#Preview {
+//    Settings_ShortcutsView()
+//}

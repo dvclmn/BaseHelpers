@@ -247,7 +247,7 @@ extension MessageInputView {
 extension MessageInputView {
     @ViewBuilder
     func EditorControls() -> some View {
-        HStack(spacing: 16) {
+        HStack(spacing: 10) {
             
             //                    TestToggle()
             
@@ -262,24 +262,13 @@ extension MessageInputView {
             ////                    .disabled(!isTesting)
             //                    .buttonStyle(.customButton(size: .small, /*status: isTesting ? .normal : .disabled,*/ labelDisplay: .titleOnly))
             
-            Button {
-                pref.isDebugShowing.toggle()
-            } label: {
-                Label("Toggle Debug Window", systemImage: Icons.debug.icon)
-            }
-            .buttonStyle(.customButton(
-                    size: .mini,
-                    status: pref.isDebugShowing ? .active : .normal,
-                    hasBackground: false,
-                    labelDisplay: .iconOnly
-                ))
-            
             Group {
-                Text("Banksia v\(bk.getAppVersion())(\(bk.getBuildNumber()))")
+                Text("Banksia v\(bk.getAppVersion())")
                 Text(pref.gptModel.name)
             }
             .caption()
             .opacity(0.8)
+            .padding(.leading, 6)
             
             Spacer()
             
@@ -296,29 +285,29 @@ extension MessageInputView {
             
         }
         .opacity(isUIFaded ? 0.2 : 1.0)
-        .padding(.horizontal, 14)
-        .padding(.bottom, 8)
+        .padding(.horizontal, Styles.paddingGutter)
+        .padding(.bottom, Styles.paddingGutter)
     }
 }
 
-#if DEBUG
-
-#Preview {
-    ModelContainerPreview(ModelContainer.sample) {
-        
-        VStack {
-            Spacer()
-            ConversationView(
-                conversation: Conversation.childcare,
-                scrolledMessageID: .constant(Message.prompt_01.persistentModelID)
-            )
-        }
-    }
-    .environment(ConversationHandler())
-    .environmentObject(BanksiaHandler())
-    .environmentObject(Preferences())
-    .environmentObject(SidebarHandler())
-    .frame(width: 380, height: 700)
-    .background(.contentBackground)
-}
-#endif
+//#if DEBUG
+//
+//#Preview {
+//    ModelContainerPreview(ModelContainer.sample) {
+//        
+//        VStack {
+//            Spacer()
+//            ConversationView(
+//                conversation: Conversation.childcare,
+//                scrolledMessageID: .constant(Message.prompt_01.persistentModelID)
+//            )
+//        }
+//    }
+//    .environment(ConversationHandler())
+//    .environmentObject(BanksiaHandler())
+//    .environmentObject(Preferences())
+//    .environmentObject(SidebarHandler())
+//    .frame(width: 380, height: 700)
+//    .background(.contentBackground)
+//}
+//#endif

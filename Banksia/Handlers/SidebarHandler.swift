@@ -31,7 +31,7 @@ class SidebarHandler: Sidebarable, ObservableObject, Equatable {
     
     let sidebarToggleBuffer: Double = 20
     
-    static let sidebarPadding: Double = 14
+    static let sidebarPadding: Double = 12
     
 }
 

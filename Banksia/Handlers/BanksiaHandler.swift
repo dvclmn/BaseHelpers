@@ -17,6 +17,10 @@ enum FocusedArea: Hashable {
     case toolbarExpanded
 }
 
+extension Styles {
+    static let paddingGutter: Double = 12
+}
+
 class BanksiaHandler: ObservableObject, Equatable {
     
     static func == (lhs: BanksiaHandler, rhs: BanksiaHandler) -> Bool {

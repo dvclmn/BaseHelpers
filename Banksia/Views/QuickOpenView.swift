@@ -190,17 +190,17 @@ struct QuickOpenView: View {
 }
 
 
-
-#if DEBUG
-
-
-
-
-#Preview {
-    ModelContainerPreview(ModelContainer.sample) {
-        QuickOpenView()
-            .environmentObject(BanksiaHandler())
-            .frame(width: 600, height: 700)
-    }
-}
-#endif
+//
+//#if DEBUG
+//
+//
+//
+//
+//#Preview {
+//    ModelContainerPreview(ModelContainer.sample) {
+//        QuickOpenView()
+//            .environmentObject(BanksiaHandler())
+//            .frame(width: 600, height: 700)
+//    }
+//}
+//#endif

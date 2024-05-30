@@ -98,19 +98,22 @@ struct ConversationEditorView: View {
         .scrollContentBackground(.hidden)
                 .background(.ultraThinMaterial)
         .frame(minWidth: 340 , minHeight: 400)
-        .grainient(seed: conversation.grainientSeed)
+        .grainient(
+            seed: conversation.grainientSeed,
+            version: .v1
+        )
     
     }
 }
 
-#if DEBUG
-
-
-#Preview {
-    ConversationEditorView(conversation: Conversation.plants)
-        .environment(ConversationHandler())
-        .frame(width: 380)
-}
-
-
-#endif
+//#if DEBUG
+//
+//
+//#Preview {
+//    ConversationEditorView(conversation: Conversation.plants)
+//        .environment(ConversationHandler())
+//        .frame(width: 380)
+//}
+//
+//
+//#endif

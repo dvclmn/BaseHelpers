@@ -53,8 +53,8 @@ struct ConversationStateView: View {
         
     }
 }
-
-#Preview {
-    ConversationStateView()
-        .environmentObject(BanksiaHandler())
-}
+//
+//#Preview {
+//    ConversationStateView()
+//        .environmentObject(BanksiaHandler())
+//}

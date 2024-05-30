@@ -102,18 +102,18 @@ struct ToolbarExpandedView: View {
     }
 }
 
-#if DEBUG
-
-
-#Preview() {
-    ToolbarExpandedView(conversationGrainientSeed: .constant(568309))
-        .environment(ConversationHandler())
-        .environmentObject(BanksiaHandler())
-        .environmentObject(NavigationHandler())
-        .environmentObject(Preferences())
-        .environmentObject(PopupHandler())
-        .environmentObject(SidebarHandler())
-}
-
-#endif
+//#if DEBUG
+//
+//
+//#Preview() {
+//    ToolbarExpandedView(conversationGrainientSeed: .constant(568309))
+//        .environment(ConversationHandler())
+//        .environmentObject(BanksiaHandler())
+//        .environmentObject(NavigationHandler())
+//        .environmentObject(Preferences())
+//        .environmentObject(PopupHandler())
+//        .environmentObject(SidebarHandler())
+//}
+//
+//#endif
 

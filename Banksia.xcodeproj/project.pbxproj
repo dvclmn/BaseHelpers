@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F60499BB2C08FAEF00527BD6 /* Components in Frameworks */ = {isa = PBXBuildFile; productRef = F60499BA2C08FAEF00527BD6 /* Components */; };
 		F60B6A732C005D7B007EDCDD /* SidebarHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F60B6A722C005D7B007EDCDD /* SidebarHandler.swift */; };
 		F636A11C2B05B23D00C24891 /* GeneralSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F636A11B2B05B23D00C24891 /* GeneralSettingsView.swift */; };
 		F639D8CA2BD51B2A0035226E /* CodeSyntaxTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = F639D8C92BD51B2A0035226E /* CodeSyntaxTheme.swift */; };
@@ -19,7 +20,6 @@
 		F6795C7D2BCE70920093BC9C /* ConversationEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6795C7C2BCE70920093BC9C /* ConversationEditorView.swift */; };
 		F6795C7F2BCE7A4D0093BC9C /* GlobalConversationSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6795C7E2BCE7A4D0093BC9C /* GlobalConversationSettingsView.swift */; };
 		F6823E192C07139B00C8749F /* APIHandler in Frameworks */ = {isa = PBXBuildFile; productRef = F6823E182C07139B00C8749F /* APIHandler */; };
-		F6823E1B2C07139B00C8749F /* Components in Frameworks */ = {isa = PBXBuildFile; productRef = F6823E1A2C07139B00C8749F /* Components */; };
 		F6823E1D2C07139B00C8749F /* MarkdownEditor in Frameworks */ = {isa = PBXBuildFile; productRef = F6823E1C2C07139B00C8749F /* MarkdownEditor */; };
 		F6823E1F2C07139B00C8749F /* Popup in Frameworks */ = {isa = PBXBuildFile; productRef = F6823E1E2C07139B00C8749F /* Popup */; };
 		F687189C2BFF4F2100955B43 /* DetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F687189B2BFF4F2100955B43 /* DetailView.swift */; };
@@ -122,11 +122,11 @@
 				F6BCC7902C08647000B9751D /* Styles in Frameworks */,
 				F6BCC7922C08647000B9751D /* Utilities in Frameworks */,
 				F6BCC7962C08648A00B9751D /* Grainient in Frameworks */,
-				F6823E1B2C07139B00C8749F /* Components in Frameworks */,
 				F6823E1F2C07139B00C8749F /* Popup in Frameworks */,
 				F6BCC7942C08648000B9751D /* KeychainHandler in Frameworks */,
 				F6BCC7A22C08B4D600B9751D /* KeyboardShortcuts in Frameworks */,
 				F6823E1D2C07139B00C8749F /* MarkdownEditor in Frameworks */,
+				F60499BB2C08FAEF00527BD6 /* Components in Frameworks */,
 				F6823E192C07139B00C8749F /* APIHandler in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -273,7 +273,6 @@
 			name = Banksia;
 			packageProductDependencies = (
 				F6823E182C07139B00C8749F /* APIHandler */,
-				F6823E1A2C07139B00C8749F /* Components */,
 				F6823E1C2C07139B00C8749F /* MarkdownEditor */,
 				F6823E1E2C07139B00C8749F /* Popup */,
 				F6BCC78F2C08647000B9751D /* Styles */,
@@ -282,6 +281,7 @@
 				F6BCC7952C08648A00B9751D /* Grainient */,
 				F6BCC7982C08658900B9751D /* Sparkle */,
 				F6BCC7A12C08B4D600B9751D /* KeyboardShortcuts */,
+				F60499BA2C08FAEF00527BD6 /* Components */,
 			);
 			productName = Banksia;
 			productReference = F6A7BEE72B01C57400D3CE25 /* Banksia.app */;
@@ -646,13 +646,13 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		F60499BA2C08FAEF00527BD6 /* Components */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Components;
+		};
 		F6823E182C07139B00C8749F /* APIHandler */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = APIHandler;
-		};
-		F6823E1A2C07139B00C8749F /* Components */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = Components;
 		};
 		F6823E1C2C07139B00C8749F /* MarkdownEditor */ = {
 			isa = XCSwiftPackageProductDependency;

@@ -20,6 +20,7 @@ import Form
 import TextEditor
 import MarkdownEditor
 import GrainientPicker
+import Sidebar
 
 enum SettingsTab: CaseIterable {
     case interface
@@ -62,6 +63,7 @@ struct SettingsView: View {
     @EnvironmentObject var popup: PopupHandler
     
     @EnvironmentObject var bk: BanksiaHandler
+    @EnvironmentObject var sidebar: SidebarHandler
     
     @State private var settingsTab: SettingsTab = .interface
     
@@ -70,7 +72,7 @@ struct SettingsView: View {
     var body: some View {
         
         
-        VStack {
+        VStack(spacing: 0) {
             HStack(spacing: 0) {
                 
                 ForEach(SettingsTab.allCases, id: \.name) { tab in
@@ -86,15 +88,16 @@ struct SettingsView: View {
                         labelDisplay: .stacked
                     ))
                     .symbolVariant(.fill)
-                    
                 }
             }
-            .frame(maxWidth: .infinity)
-            .padding(.top, 36)
-            .padding(.bottom, 4)
-            .background(.thinMaterial)
+            .frame(
+                maxWidth: .infinity,
+                minHeight: 70,
+                maxHeight: 70
+            )
+            .background(.ultraThinMaterial)
             
-            Form {
+            CustomForm {
                 
                 switch settingsTab {
                     
@@ -137,13 +140,7 @@ struct SettingsView: View {
                     
                     GrainientPreviews(seed: $pref.defaultGrainientSeed)
                     
-                    
-                    
-                    
-                    
-                    
-                    
-                    
+
                 case .assistant:
                     
                     Section("Customise AI") {
@@ -205,9 +202,11 @@ struct SettingsView: View {
                 }
                 
             } // END form
-            .scrollContentBackground(.hidden)
-            .formStyle(.grouped)
-        }
+            .background(Swatch.slate.colour.opacity(0.6))
+            .background(.ultraThickMaterial)
+            
+
+        } // END main vstack
         .frame(
             minWidth: 380,
             idealWidth: 500,
@@ -216,11 +215,7 @@ struct SettingsView: View {
             idealHeight: 600,
             maxHeight: .infinity
         )
-        .scrollIndicators(.hidden)
-        .background(.ultraThinMaterial)
-        .grainOverlay()
-        .ignoresSafeArea()
-        
+        .grainient(seed: pref.defaultGrainientSeed, version: .v1)
         .onAppear {
             if isPreview {
                 settingsTab = .interface
@@ -241,8 +236,35 @@ struct SettingsView: View {
     .environmentObject(BanksiaHandler())
     .environmentObject(Preferences())
     .environmentObject(PopupHandler())
+    .environmentObject(SidebarHandler())
     .frame(width: 480, height: 600)
     
 }
 
 #endif
+
+
+
+public struct CustomForm<Content: View>: View {
+    
+    let content: Content
+    
+    public init(
+        @ViewBuilder content: () -> Content
+    ) {
+        self.content = content()
+    }
+    
+    public var body: some View {
+        ScrollView(.vertical) {
+            VStack {
+                content
+            }
+            .padding(Styles.paddingGenerous)
+        }
+        .scrollIndicators(.hidden)
+        
+    }
+}
+
+

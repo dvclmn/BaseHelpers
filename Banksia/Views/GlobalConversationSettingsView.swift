@@ -42,9 +42,9 @@ struct GlobalConversationSettingsView: View {
     }
 }
 
-#Preview {
-    GlobalConversationSettingsView()
-        .environmentObject(Preferences())
-        .frame(width: 380, height: 700)
-    
-}
+//#Preview {
+//    GlobalConversationSettingsView()
+//        .environmentObject(Preferences())
+//        .frame(width: 380, height: 700)
+//    
+//}

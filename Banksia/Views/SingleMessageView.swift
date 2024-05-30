@@ -102,15 +102,15 @@ struct SingleMessageView: View {
     
 }
 
-#if DEBUG
-
-#Preview {
-    ModelContainerPreview(ModelContainer.sample) {
-        SingleMessageView(message: Message.response_02)
-            .environmentObject(BanksiaHandler())
-            .environment(ConversationHandler())
-            .frame(width: 500, height: 700)
-    }
-}
-
-#endif
+//#if DEBUG
+//
+//#Preview {
+//    ModelContainerPreview(ModelContainer.sample) {
+//        SingleMessageView(message: Message.response_02)
+//            .environmentObject(BanksiaHandler())
+//            .environment(ConversationHandler())
+//            .frame(width: 500, height: 700)
+//    }
+//}
+//
+//#endif
