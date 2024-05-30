@@ -10,7 +10,7 @@ import SwiftUI
 import GeneralStyles
 import Navigation
 import Icons
-
+import Grainient
 
 
 class NavigationHandler: Navigable, ObservableObject {
@@ -51,6 +51,7 @@ class NavigationHandler: Navigable, ObservableObject {
 enum Page: Destination {
     
     case conversation(Conversation)
+    case feedback
     
     var id: String {
         self.name
@@ -60,6 +61,8 @@ enum Page: Destination {
         switch self {
         case .conversation(let conversation):
             return conversation.name
+        case .feedback:
+            return "Feedback"
         }
     }
     
@@ -67,6 +70,8 @@ enum Page: Destination {
         switch self {
         case .conversation(let conversation):
             return conversation.icon ?? Icons.message.icon
+        case .feedback:
+            return Icons.text.icon
         }
     }
     
@@ -74,6 +79,8 @@ enum Page: Destination {
         switch self {
         case .conversation(let conversation):
             return conversation.grainientSeed
+        case .feedback:
+            return GrainientPreset.algae.seed
         }
     }
 }

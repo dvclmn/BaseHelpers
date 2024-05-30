@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ConversationStateView: View {
-    @Environment(BanksiaHandler.self) private var bk
+    @EnvironmentObject var bk: BanksiaHandler
     @Environment(\.modelContext) private var modelContext
     
 //    var emoji: String
@@ -56,5 +56,5 @@ struct ConversationStateView: View {
 
 #Preview {
     ConversationStateView()
-        .environment(BanksiaHandler())
+        .environmentObject(BanksiaHandler())
 }

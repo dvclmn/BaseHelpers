@@ -19,7 +19,7 @@ struct ConversationListItem: View {
     @Environment(\.modelContext) private var modelContext
     
     @EnvironmentObject var nav: NavigationHandler
-    @Environment(BanksiaHandler.self) private var bk
+    @EnvironmentObject var bk: BanksiaHandler
     @Environment(ConversationHandler.self) private var conv
     
     @EnvironmentObject var sidebar: SidebarHandler
@@ -86,6 +86,6 @@ struct ConversationListItem: View {
 //
 //#Preview {
 //    ConversationListItem(page: .conversation(Conversation.appKitDrawing), conversation: Conversation.appKitDrawing)
-//        .environment(BanksiaHandler())
+//        .environmentObject(BanksiaHandler())
 //        .environmentObject(PopupHandler())
 //}

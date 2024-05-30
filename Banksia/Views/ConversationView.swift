@@ -16,7 +16,7 @@ import Sidebar
 
 struct ConversationView: View {
     @Environment(\.modelContext) private var modelContext
-    @Environment(BanksiaHandler.self) private var bk
+    @EnvironmentObject var bk: BanksiaHandler
     @Environment(ConversationHandler.self) private var conv
     
     @EnvironmentObject var pref: Preferences
@@ -31,7 +31,6 @@ struct ConversationView: View {
     var body: some View {
         
         @Bindable var conv = conv
-        @Bindable var bk = bk
         
         VStack {
             if let conversationMessages = conversation.messages {

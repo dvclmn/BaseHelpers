@@ -15,7 +15,7 @@ import MarkdownEditor
 import Swatches
 
 struct SingleMessageView: View {
-    @Environment(BanksiaHandler.self) private var bk
+    @EnvironmentObject var bk: BanksiaHandler
     @Environment(ConversationHandler.self) private var conv
     
     @EnvironmentObject var sidebar: SidebarHandler
@@ -107,7 +107,7 @@ struct SingleMessageView: View {
 #Preview {
     ModelContainerPreview(ModelContainer.sample) {
         SingleMessageView(message: Message.response_02)
-            .environment(BanksiaHandler())
+            .environmentObject(BanksiaHandler())
             .environment(ConversationHandler())
             .frame(width: 500, height: 700)
     }

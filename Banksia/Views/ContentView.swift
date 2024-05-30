@@ -21,7 +21,7 @@ struct ContentView: View {
     @Environment(\.dismissWindow) var closeWindow
     @Environment(\.modelContext) var modelContext
     @Environment(\.undoManager) var undoManager
-    @Environment(BanksiaHandler.self) private var bk
+    @EnvironmentObject var bk: BanksiaHandler
     @Environment(ConversationHandler.self) private var conv
     
     @Query private var conversations: [Conversation]
@@ -32,8 +32,6 @@ struct ContentView: View {
     @EnvironmentObject var sidebar: SidebarHandler
     
     var body: some View {
-        
-        @Bindable var bk = bk
         
         NavigationStack(path: $nav.path) {
             
@@ -127,7 +125,6 @@ struct ContentView: View {
         
         .task(id: conv.currentRequest) {
             switch conv.currentRequest {
-                
             case .new:
                 newConversation()
                 
@@ -139,13 +136,11 @@ struct ContentView: View {
                 
             case .goToNext:
                 print("Request to navigate to next conversation")
-                
+
             default:
                 break
                 
             }
-            
-            conv.currentRequest = .none
         }
         
         .task(id: nav.path) {
@@ -195,6 +190,8 @@ extension ContentView {
             
             print("Current conversation from Query: \(String(describing: current))")
             return current
+        default:
+            return nil
         }
     }
     
@@ -251,7 +248,7 @@ extension ContentView {
 #Preview {
     ContentView()
         .environment(ConversationHandler())
-        .environment(BanksiaHandler())
+        .environmentObject(BanksiaHandler())
         .environmentObject(NavigationHandler())
         .environmentObject(Preferences())
         .environmentObject(PopupHandler())

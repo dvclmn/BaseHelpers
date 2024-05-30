@@ -10,9 +10,10 @@ import SwiftData
 import GeneralStyles
 import Sidebar
 import Navigation
+import Button
 
 struct SidebarView: View {
-    @Environment(BanksiaHandler.self) private var bk
+    @EnvironmentObject var bk: BanksiaHandler
     @Environment(ConversationHandler.self) private var conv
     @EnvironmentObject var sidebar: SidebarHandler
     @EnvironmentObject var nav: NavigationHandler
@@ -22,8 +23,6 @@ struct SidebarView: View {
     @Query(sort: \Conversation.created, order: .reverse) private var conversations: [Conversation]
     
     var body: some View {
-        
-        @Bindable var bk = bk
         
         if sidebar.isSidebarVisible {
             
@@ -45,6 +44,18 @@ struct SidebarView: View {
                     .padding(SidebarHandler.sidebarPadding)
                 }
                 Spacer()
+                
+
+                NavigationLink(value: Page.feedback) {
+                    
+                    Label("Feedback", systemImage: "horn.blast")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                } // END nav link
+                .padding(SidebarHandler.sidebarPadding)
+                .symbolRenderingMode(.hierarchical)
+                .symbolVariant(.fill)
+                .buttonStyle(.customButton(status: Page.feedback == nav.path.last ? .active : .normal, hasBackground: false))
+
             }
             //                }
             .background(.black.opacity(0.35))
@@ -64,6 +75,6 @@ struct SidebarView: View {
 //    } detail: {
 //        ConversationView(conversation: Conversation.appKitDrawing)
 //    }
-//    .environment(BanksiaHandler())
+//    .environmentObject(BanksiaHandler())
 //    .environment(ConversationHandler())
 //}

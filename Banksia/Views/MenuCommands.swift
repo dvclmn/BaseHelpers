@@ -13,7 +13,7 @@ import Sparkle
 
 struct MenuCommands: Commands {
     
-    @Binding var bk: BanksiaHandler
+    @ObservedObject var bk: BanksiaHandler
     @Binding var conv: ConversationHandler
     @ObservedObject var sidebar: SidebarHandler
     
@@ -25,24 +25,31 @@ struct MenuCommands: Commands {
             Button("New") {
                 conv.currentRequest = .new
             }
-            .keyboardShortcut(ConversationAction.new.shortcut)
+            .keyboardShortcut(AppAction.new.shortcut)
             
             Button("Quick Open…") {
-                bk.toggleQuickOpen()
+                AppAction.toggleQuickOpen(bk).action()
             }
-            .keyboardShortcut(ConversationAction.quickOpen.shortcut)
+            .keyboardShortcut(AppAction.toggleQuickOpen(bk).shortcut)
             
             Button("Edit…") {
                 conv.isConversationEditorShowing.toggle()
             }
-            .keyboardShortcut(ConversationAction.edit.shortcut)
+            .keyboardShortcut(AppAction.edit.shortcut)
         }
         
+        
+        // MARK: - View
         CommandGroup(before: .toolbar) {
             Button(sidebar.isSidebarDismissed ? "Show Sidebar" : "Hide Sidebar") {
-                sidebar.toggleSidebar()
+                conv.currentRequest = .toggleSidebar(sidebar)
             }
-            .keyboardShortcut("\\", modifiers: .command)
+            .keyboardShortcut(AppAction.toggleSidebar(sidebar).shortcut)
+            
+            Button(bk.isToolbarExpanded ? "Hide Expanded Toolbar" : "Show Expanded Toolbar") {
+                conv.currentRequest = .toggleSidebar(sidebar)
+            }
+            .keyboardShortcut(AppAction.toggleToolbarExpanded(bk).shortcut)
             
         }
         CommandMenu("Navigate") {
@@ -62,17 +69,17 @@ struct MenuCommands: Commands {
             
             Divider()
             
-            Button("Previous Quick Open Conversation") {
-                conv.currentRequest = .goToPreviousQuickOpen
-            }
-            .disabled(!bk.isPreviousQuickOpenAvailable && !bk.isQuickOpenShowing)
-            .keyboardShortcut(.upArrow, modifiers: [])
-            
-            Button("Next Quick Open Conversation") {
-                conv.currentRequest = .goToNextQuickOpen
-            }
-            .disabled(!bk.isNextQuickOpenAvailable && !bk.isQuickOpenShowing)
-            .keyboardShortcut(.downArrow, modifiers: [])
+//            Button("Previous Quick Open Conversation") {
+//                conv.currentRequest = .goToPreviousQuickOpen
+//            }
+//            .disabled(!bk.isPreviousQuickOpenAvailable && !bk.isQuickOpenShowing)
+//            .keyboardShortcut(.upArrow, modifiers: [])
+//            
+//            Button("Next Quick Open Conversation") {
+//                conv.currentRequest = .goToNextQuickOpen
+//            }
+//            .disabled(!bk.isNextQuickOpenAvailable && !bk.isQuickOpenShowing)
+//            .keyboardShortcut(.downArrow, modifiers: [])
             
             
         }
@@ -90,7 +97,7 @@ struct MenuCommands: Commands {
             Button("Search…") {
                 conv.currentRequest = .search
             }
-            .keyboardShortcut("f", modifiers: .command)
+            .keyboardShortcut(AppAction.search.shortcut)
         }
         
         

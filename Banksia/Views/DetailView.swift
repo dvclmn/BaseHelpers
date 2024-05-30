@@ -6,18 +6,15 @@
 //
 
 import SwiftUI
-//import Navigation
 import Popup
 import Sidebar
 import SwiftData
 import StateView
+import GeneralUtilities
 
 struct DetailView: View {
-    @EnvironmentObject var popup: PopupHandler
-    @EnvironmentObject var sidebar: SidebarHandler
-    
+    @EnvironmentObject var bk: BanksiaHandler
     @Query private var conversations: [Conversation]
-    
     @State private var scrolledMessageID: Message.ID?
     
     var page: Page? = nil
@@ -27,71 +24,100 @@ struct DetailView: View {
         VStack {
             switch page {
                 
+                // MARK: - Conversation
             case .conversation(let conversationStatic):
                 
                 if let conversation = conversations.first(where: {$0.persistentModelID == conversationStatic.persistentModelID}) {
                     
-                    HStack(spacing: 0) {
-                        SidebarView()
-                        
-                        VStack {
-                            ConversationView(
-                                conversation: conversation,
-                                scrolledMessageID: $scrolledMessageID
-                            )
-                        }
-                        
-                    } // END hstack
+                    @Bindable var conversation = conversation
                     
-                    .overlay(alignment: .top) {
-                        ToolbarView(conversation: conversation)
-                    }
-                    .overlay(alignment: .top) {
-                        PopupView(
-                            topOffset: 70,
-                            popup: popup
+                    DetailWrapper(
+                        conversationName: $conversation.name,
+                        conversationGrainientSeed: $conversation.grainientSeed.boundInt
+                    ) {
+                        ConversationView(
+                            conversation: conversation,
+                            scrolledMessageID: $scrolledMessageID
                         )
-                        .safeAreaPadding(.leading, sidebar.isSidebarVisible ? sidebar.sidebarWidth : 0)
-                    }
-                    .navigationBarBackButtonHidden(true)
+                    } // END detail wrapper
                     
                 } else {
-                    StateView(title: "No Conversations")
+                    
+                    DetailWrapper {
+                        StateView(title: "No Conversations")
+                    } // END detail wrapper
                 }
                 
+                // MARK: - Feedback
+            case .feedback:
+                
+                DetailWrapper {
+                    FeedbackView()
+                } // END detail wrapper
+                
+                
+                // MARK: - No Page
             case .none:
                 HStack(spacing: 0) {
-                    SidebarView()
-                    
-                    StateView(title: "No Page Selection")
+                    DetailWrapper {
+                        StateView(title: "No Page Selection")
+                    } // END detail wrapper
                     
                 } // END hstack
                 
-    //            .overlay(alignment: .top) {
-    //                ToolbarView(conversation: conversation)
-    //            }
-                .overlay(alignment: .top) {
-                    PopupView(
-                        topOffset: 70,
-                        popup: popup
-                    )
-                    .safeAreaPadding(.leading, sidebar.isSidebarVisible ? sidebar.sidebarWidth : 0)
-                }
-                .navigationBarBackButtonHidden(true)
-            }
+            } // END switch
         } // END main vstack
         .overlay {
-            QuickOpenView()
+            //            QuickOpenView()
         }
-
+        
     }
 }
 
-//extension DetailView {
-//    
-//    @ViewBuilder
-//    func Detail() -> some View {
-//        
-//    }
-//    
-//}
+
+struct DetailWrapper<Content: View>: View {
+    @EnvironmentObject var sidebar: SidebarHandler
+    @EnvironmentObject var popup: PopupHandler
+    
+    @Binding var conversationName: String
+    @Binding var conversationGrainientSeed: Int
+    
+    let content: Content
+    
+    init(
+        conversationName: Binding<String> = .constant(""),
+        conversationGrainientSeed: Binding<Int> = .constant(0),
+        @ViewBuilder content: () -> Content
+    ) {
+        self._conversationName = conversationName
+        self._conversationGrainientSeed = conversationGrainientSeed
+        self.content = content()
+    }
+    
+    var body: some View {
+        
+        HStack(spacing: 0) {
+            SidebarView()
+            
+            VStack {
+                content
+            }
+        }
+        .overlay(alignment: .top) {
+            ToolbarView(
+                conversationName: $conversationName,
+                conversationGrainientSeed: $conversationGrainientSeed
+            )
+        }
+        .overlay(alignment: .top) {
+            PopupView(
+                topOffset: 70,
+                popup: popup
+            )
+            .safeAreaPadding(.leading, sidebar.isSidebarVisible ? sidebar.sidebarWidth : 0)
+        }
+        .navigationBarBackButtonHidden(true)
+    }
+}
+
+

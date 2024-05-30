@@ -60,7 +60,7 @@ enum ColumnPosition {
 
 struct DebugView: View {
     @Environment(\.modelContext) private var modelContext
-    @Environment(BanksiaHandler.self) private var bk
+    @EnvironmentObject var bk: BanksiaHandler
     @Environment(ConversationHandler.self) private var conv
     
     @EnvironmentObject var pref: Preferences
@@ -99,6 +99,16 @@ struct DebugView: View {
                 title: "Sidebar dismissed",
                 state: "\(sidebar.isSidebarDismissed)",
                 definedOn: .sidebar
+            ),
+//            DebugInfo(
+//                title: "Search focused",
+//                state: "\(sidebar.isSidebarDismissed)",
+//                definedOn: .sidebar
+//            ),
+            DebugInfo(
+                title: "Current request",
+                state: "\(conv.currentRequest)",
+                definedOn: .conv
             )
         ]
 
@@ -276,7 +286,7 @@ extension DebugView {
 #Preview {
     DebugView()
         .padding(.top,1)
-        .environment(BanksiaHandler())
+        .environmentObject(BanksiaHandler())
         .environment(ConversationHandler())
         .environmentObject(Preferences())
         .environmentObject(SidebarHandler())

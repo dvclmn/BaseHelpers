@@ -14,7 +14,7 @@ import Navigation
 struct QuickOpenView: View {
     @Environment(\.modelContext) private var modelContext
     
-    @Environment(BanksiaHandler.self) private var bk
+    @EnvironmentObject var bk: BanksiaHandler
     @EnvironmentObject var nav: NavigationHandler
     
     @Query private var conversations: [Conversation]
@@ -25,8 +25,6 @@ struct QuickOpenView: View {
     @State private var selectedConversation: Conversation? = nil
     
     var body: some View {
-        
-        @Bindable var bk = bk
         
         var filteredResults: [Conversation] {
             if searchText.count > 0 {
@@ -116,16 +114,16 @@ struct QuickOpenView: View {
                     bk.toggleQuickOpen()
                 }
             }
-            .task(id: bk.isRequestingNextQuickOpenItem) {
-                moveToNextConversation()
-            }
-            .task(id: bk.isRequestingPreviousQuickOpenItem) {
-                moveToPreviousConversation()
-            }
-            .task(id: searchText) {
-                bk.isNextQuickOpenAvailable = canMoveToNextConversation()
-                bk.isPreviousQuickOpenAvailable = canMoveToPreviousConversation()
-            }
+//            .task(id: bk.isRequestingNextQuickOpenItem) {
+//                moveToNextConversation()
+//            }
+//            .task(id: bk.isRequestingPreviousQuickOpenItem) {
+//                moveToPreviousConversation()
+//            }
+//            .task(id: searchText) {
+//                bk.isNextQuickOpenAvailable = canMoveToNextConversation()
+//                bk.isPreviousQuickOpenAvailable = canMoveToPreviousConversation()
+//            }
         } // END zstack
     }
     
@@ -201,7 +199,7 @@ struct QuickOpenView: View {
 #Preview {
     ModelContainerPreview(ModelContainer.sample) {
         QuickOpenView()
-            .environment(BanksiaHandler())
+            .environmentObject(BanksiaHandler())
             .frame(width: 600, height: 700)
     }
 }

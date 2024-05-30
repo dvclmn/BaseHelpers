@@ -15,9 +15,9 @@ import Sparkle
 @main
 struct BanksiaApp: App {
     
-    @State private var bk = BanksiaHandler()
     @State private var conv = ConversationHandler()
     
+    @StateObject private var bk = BanksiaHandler()
     @StateObject private var nav = NavigationHandler()
     @StateObject private var popup = PopupHandler()
     @StateObject private var pref = Preferences()
@@ -34,8 +34,8 @@ struct BanksiaApp: App {
     var body: some Scene {
         Window("Banksia", id: "main") {
             ContentView()
-                .environment(bk)
                 .environment(conv)
+                .environmentObject(bk)
                 .environmentObject(nav)
                 .environmentObject(pref)
                 .environmentObject(popup)
@@ -53,7 +53,7 @@ struct BanksiaApp: App {
 #if os(macOS)
         .commands {
             MenuCommands(
-                bk: $bk,
+                bk: bk,
                 conv: $conv,
                 sidebar: sidebar,
                 updaterController: updaterController
@@ -63,8 +63,8 @@ struct BanksiaApp: App {
 #endif
         Window("Banksia Debug", id: "debug") {
             DebugView()
-                .environment(bk)
                 .environment(conv)
+                .environmentObject(bk)
                 .environmentObject(nav)
                 .environmentObject(pref)
                 .environmentObject(popup)
@@ -79,7 +79,7 @@ struct BanksiaApp: App {
 #if os(macOS)
         Settings {
             SettingsView()
-                .environment(bk)
+                .environmentObject(bk)
                 .environmentObject(popup)
                 .environmentObject(pref)
                 .task {

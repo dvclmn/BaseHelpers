@@ -24,7 +24,7 @@ import Button
 
 struct MessageInputView: View {
     @Environment(ConversationHandler.self) private var conv
-    @Environment(BanksiaHandler.self) private var bk
+    @EnvironmentObject var bk: BanksiaHandler
     
     @EnvironmentObject var pref: Preferences
     @EnvironmentObject var popup: PopupHandler
@@ -69,6 +69,9 @@ struct MessageInputView: View {
                         .safeAreaPadding(.bottom, 90)
                         .padding(.horizontal, Styles.paddingText)
                         .focused($isFocused)
+                        .onAppear {
+                            isFocused = true
+                        }
                     }
                     .onScrollThreshold(
                         threshold: 10,
@@ -312,7 +315,7 @@ extension MessageInputView {
         }
     }
     .environment(ConversationHandler())
-    .environment(BanksiaHandler())
+    .environmentObject(BanksiaHandler())
     .environmentObject(Preferences())
     .environmentObject(SidebarHandler())
     .frame(width: 380, height: 700)
