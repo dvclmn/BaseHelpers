@@ -42,6 +42,7 @@ enum DefinedOn {
     case conv
     case sidebar
     case bk
+    case nav
     
     var name: String {
         switch self {
@@ -51,6 +52,8 @@ enum DefinedOn {
             "SidebarHandler"
         case .bk:
             "BanksiaHandler"
+        case .nav:
+            "NavigationHandler"
         }
     }
 }
@@ -66,8 +69,8 @@ struct DebugView: View {
     @EnvironmentObject var bk: BanksiaHandler
     @Environment(ConversationHandler.self) private var conv
     
-    
     @EnvironmentObject var sidebar: SidebarHandler
+    @EnvironmentObject var nav: NavigationHandler
     
     let minWidth: Double = 260
     let minHeight: Double = 190
@@ -112,6 +115,11 @@ struct DebugView: View {
                 title: "Current request",
                 state: "\(conv.currentRequest)",
                 definedOn: .conv
+            ),
+            DebugInfo(
+                title: "Last Destination",
+                state: "\(nav.lastDestination ?? "None")",
+                definedOn: .conv
             )
         ]
 
@@ -119,7 +127,7 @@ struct DebugView: View {
         
         let columns: [GridItem] = [
             GridItem(.flexible(minimum: 80),                spacing: spacing, alignment: .topLeading),
-            GridItem(.flexible(minimum: 40, maximum: 80),   spacing: spacing, alignment: .topLeading),
+            GridItem(.flexible(minimum: 40),   spacing: spacing, alignment: .topLeading),
             GridItem(.flexible(minimum: 110),               spacing: spacing, alignment: .topLeading)
         ]
 
@@ -291,7 +299,7 @@ extension DebugView {
         .padding(.top,1)
         .environmentObject(BanksiaHandler())
         .environment(ConversationHandler())
-        
+        .environmentObject(NavigationHandler())
         .environmentObject(SidebarHandler())
     
 }

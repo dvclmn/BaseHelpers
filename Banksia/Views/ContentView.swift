@@ -16,6 +16,7 @@ import Grainient
 import Swatches
 import Icons
 import KeyboardShortcuts
+import MarkdownEditor
 
 struct ContentView: View {
     @Environment(\.openWindow) var openWindow
@@ -151,12 +152,15 @@ struct ContentView: View {
                 
             case .toggleSidebar:
                 sidebar.toggleSidebar()
+                conv.currentRequest = .none
                 
             case .toggleToolbarExpanded:
-                bk.toggleExpanded()
+                bk.isToolbarExpanded.toggle()
+                conv.currentRequest = .none
                 
             case .toggleDebug:
                 bk.isDebugShowing.toggle()
+                conv.currentRequest = .none
                 
             default:
                 break
@@ -186,7 +190,6 @@ extension ContentView {
     private func bringAppToForeground() {
         NSApp.activate(ignoringOtherApps: true)
     }
-    
     
     func presentConversation() {
         if let lastDestinationString = nav.lastDestination {
@@ -227,7 +230,10 @@ extension ContentView {
     func newConversation() {
         
         let newGrainientSeed = GrainientSettings.generateGradientSeed()
-        let newConversation = Conversation(name: "New conversation", grainientSeed: newGrainientSeed)
+        let newConversation = Conversation(
+            name: ExampleText.conversationTitles.randomElement() ?? "Title here",
+            grainientSeed: newGrainientSeed
+        )
         modelContext.insert(newConversation)
         nav.path.append(Page.conversation(newConversation))
         popup.showPopup(title: "Added new conversation")

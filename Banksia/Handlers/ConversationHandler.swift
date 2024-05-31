@@ -96,27 +96,7 @@ enum AppAction {
                 .defaultAction
         }
     }
-    //    
-    //    var action: () -> Void {
-    //        switch self {
-    //        case .toggleSidebar(let sidebar):
-    //            return {
-    //                sidebar.toggleSidebar()
-    //            }
-    //        case .toggleToolbarExpanded(let bk):
-    //            return {
-    //                bk.toggleExpanded()
-    //            }
-    //        case .toggleQuickOpen(let bk):
-    //            return {
-    //                bk.toggleQuickOpen()
-    //            }
-    //        default:
-    //            return {
-    //                print("No action associated with case \(self.name)")
-    //            }
-    //        }
-    //    }
+
 }
 
 @Observable
@@ -155,7 +135,7 @@ final class ConversationHandler {
     
     func createMessageHistory(for conversation: Conversation, latestMessage: Message, with systemPrompt: String) async -> [RequestMessage] {
         
-        let maxMessagesInHistory: Int = 4
+        let maxMessagesInHistory: Int = 6
         
         let conversationPrompt: String = conversation.prompt ?? ""
         

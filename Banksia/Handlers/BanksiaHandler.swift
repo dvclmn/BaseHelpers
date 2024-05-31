@@ -45,6 +45,7 @@ class BanksiaHandler: ObservableObject {
     @AppStorage("userNameKey") var userName: String?
     
     @AppStorage("isDebugShowingKey") var isDebugShowing: Bool = false
+    @AppStorage("isTestModeKey") var isTestMode: Bool = false
     
     @AppStorage("systemPromptKey") var systemPrompt: String = ""
     
@@ -65,10 +66,6 @@ class BanksiaHandler: ObservableObject {
             }
         }
     } // END toggle quick open
-    
-    func toggleExpanded() {
-        isToolbarExpanded.toggle()
-    }
     
     func getAppVersion() -> String {
         if let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String {

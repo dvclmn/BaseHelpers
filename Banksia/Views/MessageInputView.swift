@@ -47,6 +47,8 @@ struct MessageInputView: View {
     
     @State private var conversationIDToAddTextTo: Conversation.ID? = nil
     
+    let defaultEditorHeight: Double = 180
+    
     @Bindable var conversation: Conversation
     
     var body: some View {
@@ -57,7 +59,7 @@ struct MessageInputView: View {
             
             VStack(alignment: .leading, spacing: 0) {
                 
-
+                
                 ScrollView(.vertical) {
                     
                     VStack {
@@ -79,7 +81,7 @@ struct MessageInputView: View {
                         threshold: 10,
                         isScrolling: $isScrolling
                     ) { thresholdReached in
-
+                        
                         withAnimation(Styles.animation) {
                             isMasked = thresholdReached
                         }
@@ -140,17 +142,18 @@ struct MessageInputView: View {
                 } label: {
                     Label("Add to Message", systemImage: Icons.plus.icon)
                 }
+                .offset(y: -30)
                 
-//                EditorControls()
-//
-//                    .onContinuousHover { phase in
-//                        switch phase {
-//                        case .active(_):
-//                            isHoveringControls = true
-//                        case .ended:
-//                            isHoveringControls = false
-//                        }
-//                    }
+                EditorControls()
+                //
+                    .onContinuousHover { phase in
+                        switch phase {
+                        case .active(_):
+                            isHoveringControls = true
+                        case .ended:
+                            isHoveringControls = false
+                        }
+                    }
             } // END input buttons overlay
             
             
@@ -184,6 +187,39 @@ extension MessageInputView {
         
     }
     
+    private func sendTestMessage() async {
+        
+        let newUserMessage = Message(
+            content: userPrompt,
+            type: .user,
+            conversation: conversation
+        )
+        modelContext.insert(newUserMessage)
+        
+        userPrompt = ""
+        bk.editorHeight = defaultEditorHeight
+        
+        /// Construct the message history for GPT context
+        let messageHistory: [RequestMessage] = await conv.createMessageHistory(
+            for: conversation,
+            latestMessage: newUserMessage,
+            with: bk.systemPrompt
+        )
+        
+        print("Test-message history: \(messageHistory.prettyPrinted)")
+        
+        
+        let newGPTMessage = Message(
+            content: ExampleText.paragraphs.randomElement() ?? "No random element",
+            type: .assistant,
+            conversation: conversation
+        )
+        modelContext.insert(newGPTMessage)
+        
+        conv.isResponseLoading = false
+        
+    }
+    
     private func sendMessage(_ isTestMode: Bool = false) async {
         
         guard let apiKey = KeychainHandler.shared.readString(for: "openAIAPIKey") else {
@@ -203,7 +239,7 @@ extension MessageInputView {
         modelContext.insert(newUserMessage)
         
         userPrompt = ""
-        bk.editorHeight = 180
+        bk.editorHeight = defaultEditorHeight
         
         
         /// Construct the message history for GPT context
@@ -244,31 +280,35 @@ extension MessageInputView {
             modelContext.insert(newGPTMessage)
             
             
+            guard let message = conversation.messages?.first(where: {$0.persistentModelID == newGPTMessage.persistentModelID}) else {
+                print("No message to add text to")
+                return
+            }
             
-//            let (stream, _) = try await URLSession.shared.bytes(for: request)
-//            print("Stream: \(stream)")
+            
+            let (stream, _) = try await URLSession.shared.bytes(for: request)
+            print("Stream: \(stream)")
+            
+            for try await line in stream.lines {
+                print("Entered the stream. \(line)")
+                guard let messageChunk = ConversationHandler.parse(line) else { continue }
+                
+                message.content += messageChunk
+            }
+            
+//            let response: GPTResponse = try await APIHandler.constructRequestAndFetch(
+//                url: URL(string: OpenAIHandler.chatURL),
+//                requestType: .post,
+//                bearerToken: apiKey,
+//                body: requestBodyData
+//            )
 //            
-//            
-//            for try await line in stream.lines {
-//                print("Entered the stream. \(line)")
-//                guard let messageChunk = ConversationHandler.parse(line) else { continue }
-//                
-//                newGPTMessage.content += messageChunk
+//            guard let gptMessage = response.choices.first?.message.content else {
+//                print("No message content from GPT")
+//                return
 //            }
             
-            //            let response: GPTResponse = try await APIHandler.constructRequestAndFetch(
-            //                url: URL(string: OpenAIHandler.chatURL),
-            //                requestType: .post,
-            //                bearerToken: apiKey,
-            //                body: requestBodyData
-            //            )
-            //
-            //            guard let gptMessage = response.choices.first?.message.content else {
-            //                print("No message content from GPT")
-            //                return
-            //            }
-            //
-            //
+            
             
             
             
@@ -301,9 +341,26 @@ extension MessageInputView {
             
             Spacer()
             
+            Toggle(isOn: $bk.isTestMode, label: {
+                Text("Test mode")
+            })
+            .foregroundStyle(bk.isTestMode ? .secondary : .quaternary)
+            .disabled(conv.isResponseLoading)
+            .toggleStyle(.switch)
+            .controlSize(.mini)
+            .tint(.secondary)
+            .animation(Styles.animationQuick, value: bk.isTestMode)
+            
+            
+            
             Button {
                 Task {
-                    await sendMessage()
+                    
+                    if bk.isTestMode {
+                        await sendTestMessage()
+                    } else {
+                        await sendMessage()
+                    }
                 }
             } label: {
                 Label(conv.isResponseLoading ? "Loading…" : "Send", systemImage: Icons.text.icon)
