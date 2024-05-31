@@ -25,13 +25,13 @@ class BanksiaHandler: ObservableObject {
     
     @Published var isQuickOpenShowing: Bool = false
     
-//    @Published var isRequestingNextQuickOpenItem: Bool = false
-//    @Published var isRequestingPreviousQuickOpenItem: Bool = false
-//    
-//    @Published var isNextQuickOpenAvailable: Bool = false
-//    @Published var isPreviousQuickOpenAvailable: Bool = false
+    //    @Published var isRequestingNextQuickOpenItem: Bool = false
+    //    @Published var isRequestingPreviousQuickOpenItem: Bool = false
+    //
+    //    @Published var isNextQuickOpenAvailable: Bool = false
+    //    @Published var isPreviousQuickOpenAvailable: Bool = false
     
-//    @Published var isGlobalConversationPreferencesShowing: Bool = false
+    //    @Published var isGlobalConversationPreferencesShowing: Bool = false
     @Published var isEditingLongFormText: Bool = false
     
     @Published var isToolbarExpanded: Bool = false
@@ -51,7 +51,7 @@ class BanksiaHandler: ObservableObject {
     
     @AppStorage("uiDimmingKey") var uiDimming: Double = 0.30
     @AppStorage("defaultGrainientSeedKey") var defaultGrainientSeed: Int = 358962
-
+    
     
     func toggleQuickOpen() {
         withAnimation(Styles.animation) {
@@ -91,25 +91,38 @@ class BanksiaHandler: ObservableObject {
         encoder.outputFormatting = .prettyPrinted
         encoder.dateEncodingStrategy = .secondsSince1970
         
+        let dateFormatter: DateFormatter = {
+            let formatter = DateFormatter()
+            formatter.dateFormat = "yyyyMMdd"
+            return formatter
+        }()
+        let formattedDate = dateFormatter.string(from: Date.now)
+        
+        let fileName: String = "Banksia_backup_\(formattedDate).json"
+        
         do {
             let jsonData = try encoder.encode(exportData)
             
-            // Save the JSON to a file
+            // Save the JSON to a temporary file
             let fileManager = FileManager.default
-            let urls = fileManager.urls(for: .documentDirectory, in: .userDomainMask)
-            guard let documentDirectory = urls.first else { return nil }
-            
-            let fileURL = documentDirectory.appendingPathComponent("conversations_backup.json")
+            let tempDirectory = fileManager.temporaryDirectory
+            let fileURL = tempDirectory.appendingPathComponent(fileName)
             try jsonData.write(to: fileURL)
             
             // Show save panel to the user
             let savePanel = NSSavePanel()
-            savePanel.directoryURL = documentDirectory
-            savePanel.nameFieldStringValue = "conversations_backup.json"
+            savePanel.directoryURL = tempDirectory
+            savePanel.nameFieldStringValue = fileName
             savePanel.allowedContentTypes = [.json]
             
             if savePanel.runModal() == .OK {
                 if let selectedURL = savePanel.url {
+                    // Check if the file already exists at the destination
+                    if fileManager.fileExists(atPath: selectedURL.path) {
+                        // Remove the existing file
+                        try fileManager.removeItem(at: selectedURL)
+                    }
+                    // Move the temporary file to the selected location
                     try fileManager.moveItem(at: fileURL, to: selectedURL)
                     return selectedURL
                 }
@@ -124,4 +137,16 @@ class BanksiaHandler: ObservableObject {
     
 }
 
-
+//import UniformTypeIdentifiers
+//
+//struct BanksiaExportedData: FileDocument {
+//
+//    static public var readableContentTypes: [UTType] =
+//    [.json]
+//
+//    var text: String = ""
+//
+//    init(_ text: String = "") {
+//        self.text = text
+//    }
+//}

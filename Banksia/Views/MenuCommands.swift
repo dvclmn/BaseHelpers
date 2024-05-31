@@ -39,6 +39,7 @@ struct MenuCommands: Commands {
             }
             .keyboardShortcut(AppAction.edit.shortcut)
             
+            
             Button(AppAction.exportAll.name) {
                 conv.currentRequest = .exportAll
             }

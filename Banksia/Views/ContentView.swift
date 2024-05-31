@@ -33,6 +33,13 @@ struct ContentView: View {
     
     @EnvironmentObject var sidebar: SidebarHandler
     
+    @State private var isExporting: Bool = false
+    @State private var isAlerting: Bool = false
+    @State private var didExport: Bool = false
+    
+    @State private var alertMessage: String = ""
+    @State private var exportLocation: URL? = nil
+    
     var body: some View {
         
         NavigationStack(path: $nav.path) {
@@ -66,22 +73,22 @@ struct ContentView: View {
             dimming: $bk.uiDimming
         )
         .background(Swatch.slate.colour)
-//        .overlay(alignment: .bottomLeading) {
-//            if isPreview {
-//                HStack {
-//                    VStack {
-//                        Spacer()
-//                        Button {
-//                            bk.toggleQuickOpen()
-//                        } label: {
-//                            Label("Toggle QO", systemImage: Icons.text.icon)
-//                        }
-//                        .padding(.bottom, bk.editorHeight + 10)
-//                    }
-//                    Spacer()
-//                }
-//            }
-//        }
+        //        .overlay(alignment: .bottomLeading) {
+        //            if isPreview {
+        //                HStack {
+        //                    VStack {
+        //                        Spacer()
+        //                        Button {
+        //                            bk.toggleQuickOpen()
+        //                        } label: {
+        //                            Label("Toggle QO", systemImage: Icons.text.icon)
+        //                        }
+        //                        .padding(.bottom, bk.editorHeight + 10)
+        //                    }
+        //                    Spacer()
+        //                }
+        //            }
+        //        }
         
         
         .onAppear {
@@ -90,11 +97,11 @@ struct ContentView: View {
                 bringAppToForeground()
             }
             
-//            #if DEBUG
-//            
-//                        try? modelContext.delete(model: Conversation.self)
-//            
-//            #endif
+            //            #if DEBUG
+            //
+            //                        try? modelContext.delete(model: Conversation.self)
+            //
+            //            #endif
             
             closeWindow.callAsFunction(id: "debug")
             
@@ -143,7 +150,7 @@ struct ContentView: View {
                 conv.currentRequest = .none
                 
             case .exportAll:
-                deleteCurrentConversation()
+                exportAllData()
                 conv.currentRequest = .none
                 
             case .goToPrevious:
@@ -170,6 +177,27 @@ struct ContentView: View {
                 break
             }
         }
+        //        .alert(isPresented: $isAlerting) {
+        //            Alert(
+        //                title: Text("Save Result"),
+        //                message: Text(alertMessage),
+        //                dismissButton: .default(Text("OK"))
+        //            )
+        //        }
+        
+        .alert("Export results", isPresented: $isAlerting) {
+            if didExport, let exportLocation = exportLocation {
+                Button("Show in Finder") {
+                    NSWorkspace.shared.activateFileViewerSelecting([exportLocation])
+                }
+            }
+            Button("OK") {
+                isAlerting = false
+            }
+        } message: {
+            Text(alertMessage)
+        }
+        
         
         .task(id: nav.path) {
             print("Navigation path changed")
@@ -183,7 +211,7 @@ struct ContentView: View {
                 closeWindow.callAsFunction(id: "debug")
             }
         }
-        .fileExporter(isPresented: <#T##Binding<Bool>#>, documents: <#T##Collection#>, contentType: <#T##UTType#>, onCompletion: <#T##(Result<[URL], any Error>) -> Void##(Result<[URL], any Error>) -> Void##(_ result: Result<[URL], any Error>) -> Void#>)
+        
         
         
         
@@ -196,8 +224,18 @@ extension ContentView {
         NSApp.activate(ignoringOtherApps: true)
     }
     
+    
     func exportAllData() {
-        bk.exportDataToJSON(conversations: conversations)
+        if let url = bk.exportDataToJSON(conversations: conversations) {
+            exportLocation = url
+            didExport = true
+            alertMessage = "File saved to: \(url.path)"
+        } else {
+            alertMessage = "Data was not exported."
+            didExport = false
+            exportLocation = nil
+        }
+        isAlerting = true
     }
     
     func presentConversation() {
@@ -221,11 +259,11 @@ extension ContentView {
         }
         switch lastPathItem {
         case .conversation(let conversation):
-//            print("Current navigated conversation: \(conversation)")
+            //            print("Current navigated conversation: \(conversation)")
             
             let current = conversations.first(where: {$0.persistentModelID == conversation.persistentModelID})
             
-//            print("Current conversation from Query: \(String(describing: current))")
+            //            print("Current conversation from Query: \(String(describing: current))")
             return current
         default:
             return nil
@@ -256,7 +294,7 @@ extension ContentView {
         }
         
         undoManager?.registerUndo(withTarget: conversation, handler: { conv in
-//            print(conv)
+            //            print(conv)
         })
         modelContext.delete(conversation)
         
@@ -290,7 +328,7 @@ extension ContentView {
         .environment(ConversationHandler())
         .environmentObject(BanksiaHandler())
         .environmentObject(NavigationHandler())
-        
+    
         .environmentObject(PopupHandler())
         .environmentObject(SidebarHandler())
         .modelContainer(try! ModelContainer.sample())
