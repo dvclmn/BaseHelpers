@@ -154,11 +154,11 @@ struct ContentView: View {
                 conv.currentRequest = .none
                 
             case .goToPrevious:
-                print("Request to navigate to previous conversation")
+                goToPreviousConversation()
                 conv.currentRequest = .none
                 
             case .goToNext:
-                print("Request to navigate to next conversation")
+                goToNextConversation()
                 conv.currentRequest = .none
                 
             case .toggleSidebar:
@@ -224,6 +224,42 @@ extension ContentView {
         NSApp.activate(ignoringOtherApps: true)
     }
     
+    
+    
+    func goToPreviousConversation() {
+        
+        if let currentIndex = conversations.indexOf(fetchCurrentConversation()) {
+            print("Current Index: \(currentIndex)")
+            
+            if let previousIndex = conversations.previousIndex(before: fetchCurrentConversation()) {
+                print("Next Index: \(previousIndex), next conversation: \(conversations[previousIndex])")
+                nav.navigate(to: Page.conversation(conversations[previousIndex]))
+            } else {
+                print("No previous conversation.")
+            }
+        } else {
+            print("Conversation not found.")
+        }
+    }
+    
+    func goToNextConversation() {
+        
+        if let currentIndex = conversations.indexOf(fetchCurrentConversation()) {
+            print("Current Index: \(currentIndex)")
+            
+            if let nextIndex = conversations.nextIndex(after: fetchCurrentConversation()) {
+                print("Next Index: \(nextIndex), next conversation: \(conversations[nextIndex])")
+                nav.navigate(to: Page.conversation(conversations[nextIndex]))
+            } else {
+                print("No next conversation.")
+            }
+            
+        } else {
+            print("Conversation not found.")
+        }
+    }
+    
+    
     func exportAllData() {
         if let url = bk.exportDataToJSON(conversations: conversations) {
             exportLocation = url
@@ -238,12 +274,10 @@ extension ContentView {
     }
     
     func presentConversation() {
-        if let lastDestinationString = nav.lastDestination {
+        
+        if let currentConversation = fetchCurrentConversation() {
+            nav.navigate(to: .conversation(currentConversation))
             
-            if let lastConversation = conversations.first(where: {"\($0.persistentModelID)" == lastDestinationString}) {
-                
-                nav.navigate(to: .conversation(lastConversation))
-            }
         } else {
             if nav.path.isEmpty, let firstConversation = conversations.last {
                 nav.path = [Page.conversation(firstConversation)]
@@ -252,22 +286,22 @@ extension ContentView {
     }
     
     func fetchCurrentConversation() -> Conversation? {
-        guard let lastPathItem = nav.path.last else {
-            print("No items in path")
+        
+        guard let currentDestinationString = nav.currentDestination else {
+            print("No last destination")
             return nil
         }
-        switch lastPathItem {
-        case .conversation(let conversation):
-            //            print("Current navigated conversation: \(conversation)")
-            
-            let current = conversations.first(where: {$0.persistentModelID == conversation.persistentModelID})
-            
-            //            print("Current conversation from Query: \(String(describing: current))")
-            return current
-        default:
+        
+        guard let current = conversations.first(where: {"\($0.persistentModelID)" == currentDestinationString}) else {
+            print("No matching converation")
             return nil
         }
+        
+        return current
+        
     }
+    
+    
     
     func testConversationExists(_ conversationName: String) -> Bool {
         return conversations.contains(where: {$0.name == conversationName})

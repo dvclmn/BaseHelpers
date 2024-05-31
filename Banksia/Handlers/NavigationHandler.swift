@@ -17,7 +17,7 @@ class NavigationHandler: Navigable, ObservableObject {
     
     @Published public var path: [Page] = []
     
-    @AppStorage("lastDestinationKey") var lastDestination: String?
+    @AppStorage("currentDestinationKey") var currentDestination: String?
 
     var navigationTitle: String? {
         if let pathLast = self.path.last?.name {
@@ -36,7 +36,7 @@ class NavigationHandler: Navigable, ObservableObject {
     
     func updateLastDestination() {
         if let last = path.last {
-            lastDestination = last.id
+            currentDestination = last.id
         } else {
             print("No last item in path")
         }
