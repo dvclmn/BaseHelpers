@@ -188,7 +188,7 @@ extension MessageInputView {
         modelContext.insert(newUserMessage)
         
         /// Construct the message history for GPT context
-        await conv.createMessageHistory(for: conversation, latestMessage: newUserMessage)
+        let messageHistory: String = await conv.createMessageHistory(for: conversation, latestMessage: newUserMessage)
         
         do {
             
@@ -196,7 +196,7 @@ extension MessageInputView {
                 model: pref.gptModel.model,
                 messages: [
                     RequestMessage(role: "system", content: pref.systemPrompt),
-                    RequestMessage(role: "user", content: messageContents)
+                    RequestMessage(role: "user", content: messageHistory)
                 ],
                 stream: false,
                 temperature: pref.gptTemperature
@@ -213,16 +213,13 @@ extension MessageInputView {
                 body: requestBodyData
             )
             
-            if let messageResponse = response.choices.first {
-                let newGPTMessage = Message(
-                    content: messageResponse.message.content,
-                    type: .assistant,
-                    conversation: conversation
-                )
-                modelContext.insert(newGPTMessage)
-            } else {
-                print("Couldn't get the message")
-            }
+            let newGPTMessage = Message(
+                content: response.choices.first?.message.content,
+                tokens: response.usage..
+                type: .assistant,
+                conversation: conversation
+            )
+            modelContext.insert(newGPTMessage)
             
             //            let (stream, _) = try await URLSession.shared.bytes(for: request)
             //            print("Stream: \(stream)")

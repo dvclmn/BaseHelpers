@@ -13,7 +13,6 @@ final class Conversation: Identifiable {
     var created: Date = Date.now
     var name: String = "New conversation"
     var icon: String? = nil
-    var tokens: Int? = nil
     var prompt: String? = nil
     var assistantName: String = "Assistant"
     var grainientSeed: Int? = nil
@@ -24,7 +23,6 @@ final class Conversation: Identifiable {
         created: Date = Date.now,
         name: String = "New conversation",
         icon: String? = nil,
-        tokens: Int? = nil,
         prompt: String? = nil,
         assistantName: String = "Assistant",
         grainientSeed: Int? = nil,
@@ -34,7 +32,6 @@ final class Conversation: Identifiable {
         self.created = created
         self.name = name
         self.icon = icon
-        self.tokens = tokens
         self.prompt = prompt
         self.assistantName = assistantName
         self.grainientSeed = grainientSeed
@@ -46,20 +43,29 @@ final class Conversation: Identifiable {
 final class Message: Identifiable {
     var timestamp: Date = Date.now
     var content: String = ""
-    var tokens: Int? = nil
+    
+    var promptTokens: Int? = nil
+    var completionTokens: Int? = nil
+    
     var type: MessageType = MessageType.user
     var conversation: Conversation? = nil
     
     init(
         timestamp: Date = .now,
         content: String = "",
-        tokens: Int? = nil,
+        
+        promptTokens: Int? = nil,
+        completionTokens: Int? = nil,
+        
         type: MessageType = MessageType.user,
         conversation: Conversation? = nil
     ) {
         self.timestamp = timestamp
         self.content = content
-        self.tokens = tokens
+        
+        self.promptTokens = promptTokens
+        self.completionTokens = completionTokens
+        
         self.type = type
         self.conversation = conversation
     }

@@ -52,11 +52,6 @@ struct BanksiaApp: App {
                 .environmentObject(sidebar)
         }
         .modelContainer(for: Conversation.self, isUndoEnabled: true)
-        //        .commands {
-        //            SidebarCommands()
-        //            TextFormattingCommands()
-        //            TextEditingCommands()
-        //        }
         .windowStyle(.hiddenTitleBar)
         .windowToolbarStyle(.unified)
         .defaultSize(width: 800, height: 900)
@@ -64,6 +59,7 @@ struct BanksiaApp: App {
         .commands {
             MenuCommands(
                 bk: bk,
+                pref: pref,
                 conv: $conv,
                 sidebar: sidebar,
                 updaterController: updaterController
@@ -71,18 +67,20 @@ struct BanksiaApp: App {
         }
         
 #endif
-        Window("Banksia Debug", id: "debug") {
-            DebugView()
-                .environment(conv)
-                .environmentObject(bk)
-                .environmentObject(nav)
-                .environmentObject(pref)
-                .environmentObject(popup)
-                .environmentObject(sidebar)
+        
+            Window("Banksia Debug", id: "debug") {
+                DebugView()
+                    .environment(conv)
+                    .environmentObject(bk)
+                    .environmentObject(nav)
+                    .environmentObject(pref)
+                    .environmentObject(popup)
+                    .environmentObject(sidebar)
 
-        }
-        .windowStyle(.hiddenTitleBar)
-        .windowResizability(.contentSize)
+            }
+            .windowStyle(.hiddenTitleBar)
+            .windowResizability(.contentSize)
+        
 
         
         

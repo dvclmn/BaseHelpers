@@ -67,7 +67,7 @@ struct SettingsView: View {
     
     @State private var settingsTab: SettingsTab = .interface
     
-    @FocusState private var isEditorFocused
+    
     
     var body: some View {
         
@@ -142,61 +142,11 @@ struct SettingsView: View {
                     
 
                 case .assistant:
+                    Settings_AssistantView()
                     
-                    Section("Customise AI") {
-                        FormLabel(
-                            label: "GPT Temperature",
-                            icon: Icons.snowflake.icon) {
-                                Text("\(pref.gptTemperature, specifier: "%.1f")")
-                                    .monospacedDigit()
-                                
-                                Slider(
-                                    value: $pref.gptTemperature,
-                                    in: 0.0...1.0,
-                                    step: 0.1
-                                )
-                                .frame(
-                                    minWidth: 80,
-                                    maxWidth: 140
-                                )
-                            }
-                        
-                        
-                        FormLabel(
-                            label: "System-wide prompt",
-                            icon: Icons.text.icon,
-                            message: "This will be included for each message in each conversation."
-                        ) {
-                            Text(pref.systemPrompt)
-                                .multilineTextAlignment(.leading)
-                                .lineLimit(6)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                        } content: {
-                            
-                            Button {
-                                bk.isEditingLongFormText.toggle()
-                            } label: {
-                                Label("Edit", systemImage: Icons.edit.icon)
-                            }
-                            .buttonStyle(.customButton(size: .small))
-                            
-                        }
-                        .sheet(isPresented: $bk.isEditingLongFormText) {
-
-                            TextEditorView(
-                                text: pref.$systemPrompt,
-                                isPresented: $bk.isEditingLongFormText) { text in
-                                    MarkdownEditorView(
-                                        text: text,
-                                        placeholderText: "Enter system prompt",
-                                        isFocused: $isEditorFocused
-                                    )
-                                    .focused($isEditorFocused)
-                                }
-                        }
-                    }
                 case .connections:
                     Settings_ConnectionView()
+                    
                 case .shortcuts:
                     Settings_ShortcutsView()
                 }
@@ -218,7 +168,7 @@ struct SettingsView: View {
         .grainient(seed: pref.defaultGrainientSeed, version: .v1)
         .onAppear {
             if isPreview {
-                settingsTab = .interface
+                settingsTab = .assistant
             }
         }
         

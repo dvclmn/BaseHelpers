@@ -30,8 +30,6 @@ struct ToolbarView: View {
     
     @State private var isLoading: Bool = false
     
-    
-    
     @State private var isRenaming: Bool = false
     
     @FocusState private var isSearchFocused: Bool
@@ -132,13 +130,7 @@ struct ToolbarView: View {
             HStack {
                 //            if sidebar.isRoomForSidebar {
                 Button {
-                    if !sidebar.isRoomForSidebar {
-                        sidebar.requestRoomForSidebar()
-                    } else {
-                        
-                        sidebar.toggleSidebar()
-                        
-                    }
+                    sidebar.toggleSidebar()
                 } label: {
                     Label("Toggle sidebar", systemImage: Icons.sidebarAlt.icon)
                 }
@@ -154,6 +146,7 @@ struct ToolbarView: View {
                 } // END sidebar showing check
             } // END hstack
             .frame(height: Styles.toolbarHeight)
+            
             .task(id: conv.currentRequest) {
                 print("Current request changed to: \(conv.currentRequest)")
                 switch conv.currentRequest {
@@ -167,23 +160,17 @@ struct ToolbarView: View {
             .safeAreaPadding(.leading, isPreview ? Styles.toolbarSpacing : Styles.paddingToolbarTrafficLightsWidth)
             .buttonStyle(.customButton(hasBackground: false, labelDisplay: .iconOnly))
         } // END toolbar sidebar controls overlay
-        .onAppear {
-            if isPreview {
-                bk.isToolbarExpanded = true
-            }
-        }
+//        .onAppear {
+//            if isPreview {
+//                bk.isToolbarExpanded = true
+//            }
+//        }
         
     }
 }
 
 extension ToolbarView {
-    
-    //    func disableToolbarMenuToggle() async {
-    //        bk.isToolbarExpandedToggleEnabled = false
-    //        try? await Task.sleep(for: .seconds(0.5))
-    //        bk.isToolbarExpandedToggleEnabled = true
-    //    }
-    
+
     @ViewBuilder
     func NewConversationButton() -> some View {
         Button {

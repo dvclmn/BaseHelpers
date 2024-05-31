@@ -102,6 +102,7 @@ struct DetailWrapper<Content: View>: View {
             VStack {
                 content
             }
+            .frame(maxWidth: .infinity)
         }
         .overlay(alignment: .top) {
             ToolbarView(

@@ -10,16 +10,17 @@ import SwiftUI
 import SwiftData
 import Grainient
 
-enum AppAction: Equatable {
+enum AppAction {
     case new
     case edit
     case delete
     case goToPrevious
     case goToNext
     case search
-    case toggleQuickOpen(BanksiaHandler)
-    case toggleSidebar(SidebarHandler)
-    case toggleToolbarExpanded(BanksiaHandler)
+    case toggleQuickOpen
+    case toggleSidebar
+    case toggleToolbarExpanded
+    case toggleDebug
     
     case goToPreviousQuickOpen
     case goToNextQuickOpen
@@ -47,6 +48,9 @@ enum AppAction: Equatable {
             
         case .toggleToolbarExpanded:
             return "Toggle Expanded toolbar"
+            
+        case .toggleDebug:
+            return "Toggle Debug Window"
             
         case .goToPreviousQuickOpen:
             return "Go To Previous Quick Open"
@@ -80,6 +84,9 @@ enum AppAction: Equatable {
         case .toggleToolbarExpanded:
                 .init("i", modifiers: .command)
             
+        case .toggleDebug:
+                .init("d", modifiers: .shift)
+            
         case .goToPreviousQuickOpen:
                 .init(.upArrow, modifiers: [])
         case .goToNextQuickOpen:
@@ -88,27 +95,27 @@ enum AppAction: Equatable {
                 .defaultAction
         }
     }
-    
-    var action: () -> Void {
-        switch self {
-        case .toggleSidebar(let sidebar):
-            return {
-                sidebar.toggleSidebar()
-            }
-        case .toggleToolbarExpanded(let bk):
-            return {
-                bk.toggleExpanded()
-            }
-        case .toggleQuickOpen(let bk):
-            return {
-                bk.toggleQuickOpen()
-            }
-        default:
-            return {
-                print("No action associated with case \(self.name)")
-            }
-        }
-    }
+//    
+//    var action: () -> Void {
+//        switch self {
+//        case .toggleSidebar(let sidebar):
+//            return {
+//                sidebar.toggleSidebar()
+//            }
+//        case .toggleToolbarExpanded(let bk):
+//            return {
+//                bk.toggleExpanded()
+//            }
+//        case .toggleQuickOpen(let bk):
+//            return {
+//                bk.toggleQuickOpen()
+//            }
+//        default:
+//            return {
+//                print("No action associated with case \(self.name)")
+//            }
+//        }
+//    }
 }
 
 @Observable
@@ -146,13 +153,13 @@ final class ConversationHandler {
     }
     
     
-    func createMessageHistory(for conversation: Conversation, latestMessage: Message) async {
+    func createMessageHistory(for conversation: Conversation, latestMessage: Message) async -> String {
         
-        guard let messages = conversation.messages, !messages.isEmpty else {
-            messageHistory = ""
-            print("No message in conversation")
-            return
-        }
+//        guard let messages = conversation.messages, !messages.isEmpty else {
+//            messageHistory = ""
+//            print("No message in conversation")
+//            return latestMessage.content
+//        }
         
         /// Each query sent to GPT will be formatted into 4 parts
         /// 1. # Conversation name
@@ -187,15 +194,26 @@ final class ConversationHandler {
         let historyHeading: String = "## Previous Messages (newest to oldest)"
         
         /// Prune the messages, leaving the most recent 8, *not* including the latest message
-        let historicalMessages: [Message] = messages
-            .filter { $0.persistentModelID != latestMessage.persistentModelID }
-            .sorted { $0.timestamp > $1.timestamp }
         
-        let prunedHistory = historicalMessages.prefix(maxMessagesInHistory)
         
-        let historyBody: String = prunedHistory.map {
-            formatMessageForGPT($0)
-        }.joined(separator: "\n\n")
+        var historyBody: String = ""
+
+        if let messages = conversation.messages {
+            
+            let history: [Message] = messages
+                .filter { $0.persistentModelID != latestMessage.persistentModelID }
+                .sorted { $0.timestamp > $1.timestamp }
+            
+            let prunedHistory = history.prefix(maxMessagesInHistory)
+            
+            let historicalMessages: String = prunedHistory.map {
+                formatMessageForGPT($0)
+            }.joined(separator: "\n\n")
+            
+            historyBody = historicalMessages
+        }
+        
+        
         
         messageHistory = """
         \(conversationHeading)
@@ -212,6 +230,8 @@ final class ConversationHandler {
         
         print(messageHistory)
         print(">--- END Message history ---|\n")
+        
+        return messageHistory
         
     } // END createMessageHistory
     

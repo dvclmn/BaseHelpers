@@ -10,15 +10,8 @@ import SwiftUI
 import Sidebar
 import GeneralStyles
 
-class SidebarHandler: Sidebarable, ObservableObject, Equatable {
-    static func == (lhs: SidebarHandler, rhs: SidebarHandler) -> Bool {
-        return lhs.isSidebarDismissed == rhs.isSidebarDismissed &&
-        lhs.sidebarWidth == rhs.sidebarWidth &&
-        lhs.windowSize == rhs.windowSize &&
-        lhs.contentMinWidth == rhs.contentMinWidth &&
-        lhs.sidebarToggleBuffer == rhs.sidebarToggleBuffer
-    }
-    
+class SidebarHandler: Sidebarable, ObservableObject {
+
     @AppStorage("isSidebarDismissedKey") public var isSidebarDismissed: Bool = false
     
     var sidebarWidth: Double = 200
@@ -32,6 +25,17 @@ class SidebarHandler: Sidebarable, ObservableObject, Equatable {
     let sidebarToggleBuffer: Double = 20
     
     static let sidebarPadding: Double = 12
+    
+
+    
+    var isRoomForSidebar: Bool {
+        return windowSize.width - sidebarToggleBuffer > contentMinWidth + sidebarToggleBuffer
+    }
+    
+    var isSidebarVisible: Bool {
+        !isSidebarDismissed && isRoomForSidebar
+    }
+    
     
 }
 

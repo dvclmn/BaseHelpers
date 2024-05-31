@@ -108,7 +108,7 @@ struct ConversationView: View {
             } // END has messages check
             
             
-        } // Vstack so I can do an onAppear?
+        } // END Vstack
         .task(id: conversation.grainientSeed) {
             withAnimation(Styles.animationRelaxed) {
                 conv.grainientSeed = conversation.grainientSeed

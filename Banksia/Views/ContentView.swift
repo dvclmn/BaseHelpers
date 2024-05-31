@@ -89,11 +89,13 @@ struct ContentView: View {
                 bringAppToForeground()
             }
             
-            #if DEBUG
+//            #if DEBUG
+//            
+//                        try? modelContext.delete(model: Conversation.self)
+//            
+//            #endif
             
-                        try? modelContext.delete(model: Conversation.self)
-            
-            #endif
+            closeWindow.callAsFunction(id: "debug")
             
             if conversations.isEmpty {
                 let grainientSeed = GrainientSettings.generateGradientSeed()
@@ -128,7 +130,7 @@ struct ContentView: View {
 #endif
             
             
-        }
+        } // END on appear
         
         .task(id: conv.currentRequest) {
             switch conv.currentRequest {
@@ -144,9 +146,17 @@ struct ContentView: View {
             case .goToNext:
                 print("Request to navigate to next conversation")
                 
+            case .toggleSidebar:
+                sidebar.toggleSidebar()
+                
+            case .toggleToolbarExpanded:
+                bk.toggleExpanded()
+                
+            case .toggleDebug:
+                pref.isDebugShowing.toggle()
+                
             default:
                 break
-                
             }
         }
         

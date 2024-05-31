@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		F60499BB2C08FAEF00527BD6 /* Components in Frameworks */ = {isa = PBXBuildFile; productRef = F60499BA2C08FAEF00527BD6 /* Components */; };
+		F60499BD2C09010100527BD6 /* Settings+AssistantView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F60499BC2C09010100527BD6 /* Settings+AssistantView.swift */; };
 		F60B6A732C005D7B007EDCDD /* SidebarHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F60B6A722C005D7B007EDCDD /* SidebarHandler.swift */; };
 		F636A11C2B05B23D00C24891 /* GeneralSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F636A11B2B05B23D00C24891 /* GeneralSettingsView.swift */; };
 		F639D8CA2BD51B2A0035226E /* CodeSyntaxTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = F639D8C92BD51B2A0035226E /* CodeSyntaxTheme.swift */; };
@@ -61,6 +62,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		F60499BC2C09010100527BD6 /* Settings+AssistantView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Settings+AssistantView.swift"; sourceTree = "<group>"; };
 		F60B6A722C005D7B007EDCDD /* SidebarHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarHandler.swift; sourceTree = "<group>"; };
 		F610453E2C061E3200F7632E /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Config.xcconfig; path = Banksia/Config.xcconfig; sourceTree = "<group>"; };
 		F610453F2C061ED300F7632E /* version.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; name = version.sh; path = Banksia/version.sh; sourceTree = "<group>"; };
@@ -137,6 +139,7 @@
 		F64F8E0D2B0214CC00C72E51 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				F60499BC2C09010100527BD6 /* Settings+AssistantView.swift */,
 				F6BCC7A92C08DC9F00B9751D /* GrainientPreviews.swift */,
 				F6BCC79E2C08929F00B9751D /* FeedbackView.swift */,
 				F6BC6B5E2C071C8B00CD0FE4 /* ToolbarExpandedView.swift */,
@@ -341,6 +344,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F60499BD2C09010100527BD6 /* Settings+AssistantView.swift in Sources */,
 				F639D8CA2BD51B2A0035226E /* CodeSyntaxTheme.swift in Sources */,
 				F6BCC7AA2C08DC9F00B9751D /* GrainientPreviews.swift in Sources */,
 				F6D6E2D62BC805E9000D2051 /* SingleMessageView.swift in Sources */,

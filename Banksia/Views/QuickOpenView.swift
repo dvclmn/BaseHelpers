@@ -109,11 +109,11 @@ struct QuickOpenView: View {
                 
             } // END main vstack
 
-            .onAppear {
-                if isPreview {
-                    bk.toggleQuickOpen()
-                }
-            }
+//            .onAppear {
+//                if isPreview {
+//                    bk.toggleQuickOpen()
+//                }
+//            }
 //            .task(id: bk.isRequestingNextQuickOpenItem) {
 //                moveToNextConversation()
 //            }

@@ -22,9 +22,6 @@ final class Preferences: ObservableObject {
     
     @AppStorage("uiDimmingKey") var uiDimming: Double = 0.30
     @AppStorage("defaultGrainientSeedKey") var defaultGrainientSeed: Int = 358962
-    
-//    @AppStorage("userPromptKey") var userPrompt: String = ""
-    
-    
+
     
 }

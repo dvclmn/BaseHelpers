@@ -21,14 +21,8 @@ extension Styles {
     static let paddingGutter: Double = 12
 }
 
-class BanksiaHandler: ObservableObject, Equatable {
+class BanksiaHandler: ObservableObject {
     
-    static func == (lhs: BanksiaHandler, rhs: BanksiaHandler) -> Bool {
-        return lhs.isQuickOpenShowing == rhs.isQuickOpenShowing &&
-        lhs.isToolbarExpanded == rhs.isToolbarExpanded &&
-        lhs.isEditingLongFormText == rhs.isEditingLongFormText
-    }
-
     @Published var isQuickOpenShowing: Bool = false
     
 //    @Published var isRequestingNextQuickOpenItem: Bool = false

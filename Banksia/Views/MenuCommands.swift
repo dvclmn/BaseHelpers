@@ -14,6 +14,7 @@ import Sparkle
 struct MenuCommands: Commands {
     
     @ObservedObject var bk: BanksiaHandler
+    @ObservedObject var pref: Preferences
     @Binding var conv: ConversationHandler
     @ObservedObject var sidebar: SidebarHandler
     
@@ -27,10 +28,12 @@ struct MenuCommands: Commands {
             }
             .keyboardShortcut(AppAction.new.shortcut)
             
+            
             Button("Quick Open…") {
-                AppAction.toggleQuickOpen(bk).action()
+                conv.currentRequest = .toggleQuickOpen
             }
-            .keyboardShortcut(AppAction.toggleQuickOpen(bk).shortcut)
+            .keyboardShortcut(AppAction.toggleQuickOpen.shortcut)
+            
             
             Button("Edit…") {
                 conv.isConversationEditorShowing.toggle()
@@ -42,16 +45,22 @@ struct MenuCommands: Commands {
         // MARK: - View
         CommandGroup(before: .toolbar) {
             Button(sidebar.isSidebarDismissed ? "Show Sidebar" : "Hide Sidebar") {
-                conv.currentRequest = .toggleSidebar(sidebar)
+                conv.currentRequest = .toggleSidebar
             }
-            .keyboardShortcut(AppAction.toggleSidebar(sidebar).shortcut)
+            .keyboardShortcut(AppAction.toggleSidebar.shortcut)
             
             Button(bk.isToolbarExpanded ? "Hide Expanded Toolbar" : "Show Expanded Toolbar") {
-                conv.currentRequest = .toggleSidebar(sidebar)
+                conv.currentRequest = .toggleToolbarExpanded
             }
-            .keyboardShortcut(AppAction.toggleToolbarExpanded(bk).shortcut)
+            .keyboardShortcut(AppAction.toggleToolbarExpanded.shortcut)
+            
+            Button(pref.isDebugShowing ? "Hide Debug Window" : "Show Debug Window") {
+                conv.currentRequest = .toggleDebug
+            }
+            .keyboardShortcut(AppAction.toggleDebug.shortcut)
             
         }
+        
         CommandMenu("Navigate") {
             
             Button("Previous Conversation") {
@@ -89,7 +98,7 @@ struct MenuCommands: Commands {
                     conv.currentRequest = .delete
                 }
                 .disabled(conv.isEditorFocused && conv.currentConversationID == nil)
-                .keyboardShortcut(.delete, modifiers: .command)
+//                .keyboardShortcut(.delete, modifiers: .command)
             
         }
         
