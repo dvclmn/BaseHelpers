@@ -11,6 +11,7 @@ import GeneralStyles
 import Sidebar
 import Navigation
 import Button
+import Icons
 
 struct SidebarView: View {
     @EnvironmentObject var bk: BanksiaHandler
@@ -33,7 +34,7 @@ struct SidebarView: View {
             //                edge: .leading) {
             VStack(alignment: .leading) {
                 ScrollView(.vertical, showsIndicators: false) {
-                    LazyVStack(spacing: 2) {
+                    LazyVStack(spacing: 6) {
                         ForEach(conversations) { conversation in
                             ConversationListItem(
                                 page: Page.conversation(conversation),
@@ -41,33 +42,41 @@ struct SidebarView: View {
                             )
                         } // END foreach
                     }
-                    .padding(SidebarHandler.sidebarPadding)
+                    .padding(Styles.paddingGutter)
                 }
                 
-                NavigationLink(value: Page.feedback) {
+                VStack(alignment: .leading, spacing: 2) {
                     
-                    Label("Feedback", systemImage: "horn.blast")
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                } // END nav link
-                .padding(SidebarHandler.sidebarPadding)
-                .symbolRenderingMode(.hierarchical)
-                .symbolVariant(.fill)
-                .buttonStyle(.customButton(status: Page.feedback == nav.path.last ? .active : .normal, hasBackground: false))
-                
-                
-                Spacer()
-                
-                Group {
-                    Text("Banksia v\(bk.getAppVersion())")
-                    Text(bk.gptModel.name)
-                }
-                .caption()
-                .opacity(0.8)
-                .padding(.leading, 6)
-                
+                        
+                        SidebarButton(
+                            label: Page.feedback.name,
+                            icon: Page.feedback.icon,
+                            nav: nav,
+                            page: Page.feedback
+                        )
+                        
+                        
+                        SidebarButton(
+                            label: Page.settings.name,
+                            icon: Page.settings.icon,
+                            nav: nav,
+                            page: Page.settings,
+                            isSettingsLink: true
+                        )
+                        
 
+                    
+                        Label("Banksia v\(bk.getAppVersion())-beta", systemImage: Icons.shocked.icon)
+                    
+                    .labelStyle(.customLabel(size: .mini, labelDisplay: .titleOnly))
+                    .opacity(0.4)
+                    .symbolVariant(.fill)
+                    .padding(.leading, 10)
+                    .padding(.bottom, 5)
+                } // END vstack
+                .padding(Styles.paddingGutter)
                 
-
+                
             }
             //                }
             .background(.black.opacity(0.35))
@@ -83,8 +92,38 @@ struct SidebarView: View {
 
 #Preview {
     SidebarView()
-    .environment(ConversationHandler())
-    .environmentObject(BanksiaHandler())
-    .environmentObject(SidebarHandler())
-    .environmentObject(NavigationHandler())
+        .environment(ConversationHandler())
+        .environmentObject(BanksiaHandler())
+        .environmentObject(SidebarHandler())
+        .environmentObject(NavigationHandler())
+    
+        .frame(width: 200, height: 600)
 }
+
+
+//public struct SidebarButtonModifier: ViewModifier {
+//
+//    var page:
+//    var isActive: Bool
+//
+//    public func body(content: Content) -> some View {
+//        content
+//
+//    }
+//}
+//extension View {
+//    func sidebarButton(
+//        isActive: Bool = false
+//    ) -> some View {
+//        self.modifier(
+//            SidebarButtonModifier(
+//                isActive: isActive
+//            )
+//        )
+//    }
+//}
+//
+
+
+
+

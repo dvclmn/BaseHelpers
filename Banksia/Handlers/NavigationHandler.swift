@@ -52,6 +52,7 @@ enum Page: Destination {
     
     case conversation(Conversation)
     case feedback
+    case settings
     
     var id: String {
         self.name
@@ -63,6 +64,8 @@ enum Page: Destination {
             return conversation.name
         case .feedback:
             return "Feedback"
+        case .settings:
+            return "Settings"
         }
     }
     
@@ -71,7 +74,9 @@ enum Page: Destination {
         case .conversation(let conversation):
             return conversation.icon ?? Icons.message.icon
         case .feedback:
-            return Icons.text.icon
+            return Icons.horn.icon
+        case .settings:
+            return Icons.gear.icon
         }
     }
     
@@ -81,6 +86,8 @@ enum Page: Destination {
             return conversation.grainientSeed
         case .feedback:
             return GrainientPreset.algae.seed
+        default:
+            return GrainientPreset.chalkyBlue.seed
         }
     }
 }

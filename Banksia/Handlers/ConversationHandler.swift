@@ -271,6 +271,23 @@ final class ConversationHandler {
             let chunk = try? JSONDecoder().decode(GPTResponse.self, from: message.data(using: .utf8)!)
             return chunk?.choices.first?.message.content
         }
+    } // Stream parsing
+    
+    func totalTokens(for conversation: Conversation) -> Int {
+        if let messages = conversation.messages {
+            
+            var promptTokens: Int = 0
+            var completionTokens: Int = 0
+            
+            for message in messages {
+                promptTokens += message.promptTokens.boundInt
+                completionTokens += message.completionTokens.boundInt
+            }
+            
+            return promptTokens + completionTokens
+        } else {
+            return 0
+        }
     }
     
 }

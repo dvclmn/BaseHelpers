@@ -57,7 +57,7 @@ struct DetailView: View {
                 
                 
                 // MARK: - No Page
-            case .none:
+            default:
                 HStack(spacing: 0) {
                     DetailWrapper {
                         StateView(title: "No Page Selection")

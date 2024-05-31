@@ -117,7 +117,7 @@ struct MessageInputView: View {
                     height: $conv.editorHeight,
                     maxHeight: sidebar.windowSize.height * 0.8
                 )
-
+                
                 
                 
                 
@@ -126,7 +126,7 @@ struct MessageInputView: View {
             // MARK: - Text area Buttons
             .overlay(alignment: .bottom) {
                 EditorControls()
-                    
+                
                     .onContinuousHover { phase in
                         switch phase {
                         case .active(_):
@@ -141,7 +141,7 @@ struct MessageInputView: View {
                 bk.editorHeight = conv.editorHeight
             }
             .onAppear {
-//                userPrompt = ExampleText.paragraphs[3]
+                //                userPrompt = ExampleText.paragraphs[3]
                 if let editorHeightPreference = bk.editorHeight {
                     conv.editorHeight = editorHeightPreference
                 }
@@ -252,20 +252,18 @@ extension MessageInputView {
     func EditorControls() -> some View {
         HStack(spacing: 10) {
             
-            //                    TestToggle()
             
-            //                    Button {
-            //                        Task {
-            //                            userPrompt = conv.getRandomParagraph()
-            //                            await sendMessage()
-            //                        }
-            //                    } label: {
-            //                        Label("Send random", systemImage: Icons.sparkle.icon)
-            //                    }
-            ////                    .disabled(!isTesting)
-            //                    .buttonStyle(.customButton(size: .small, /*status: isTesting ? .normal : .disabled,*/ labelDisplay: .titleOnly))
+            HStack(spacing: 18) {
+                
+                Label(bk.gptModel.name, systemImage: Icons.shocked.icon)
+                Label("\(conv.totalTokens(for: conversation))", systemImage: Icons.token.icon)
+                
+                
+            }
+            .labelStyle(.customLabel(size: .mini))
+            .padding(.leading, 6)
+            .symbolVariant(.fill)
             
-
             Spacer()
             
             Button {
