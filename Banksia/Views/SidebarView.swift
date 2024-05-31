@@ -43,9 +43,7 @@ struct SidebarView: View {
                     }
                     .padding(SidebarHandler.sidebarPadding)
                 }
-                Spacer()
                 
-
                 NavigationLink(value: Page.feedback) {
                     
                     Label("Feedback", systemImage: "horn.blast")
@@ -55,6 +53,20 @@ struct SidebarView: View {
                 .symbolRenderingMode(.hierarchical)
                 .symbolVariant(.fill)
                 .buttonStyle(.customButton(status: Page.feedback == nav.path.last ? .active : .normal, hasBackground: false))
+                
+                
+                Spacer()
+                
+                Group {
+                    Text("Banksia v\(bk.getAppVersion())")
+                    Text(bk.gptModel.name)
+                }
+                .caption()
+                .opacity(0.8)
+                .padding(.leading, 6)
+                
+
+                
 
             }
             //                }
@@ -69,10 +81,10 @@ struct SidebarView: View {
     }
 }
 
-//#Preview {
-//    SidebarView()
-//    .environment(ConversationHandler())
-//    .environmentObject(BanksiaHandler())
-//    .environmentObject(SidebarHandler())
-//    .environmentObject(NavigationHandler())
-//}
+#Preview {
+    SidebarView()
+    .environment(ConversationHandler())
+    .environmentObject(BanksiaHandler())
+    .environmentObject(SidebarHandler())
+    .environmentObject(NavigationHandler())
+}

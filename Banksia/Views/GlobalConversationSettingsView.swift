@@ -12,7 +12,7 @@ import Icons
 import Form
 
 struct GlobalConversationSettingsView: View {
-    @EnvironmentObject var pref: Preferences
+    
     
     @State private var isEditingLongFormText: Bool = false
     
@@ -44,7 +44,7 @@ struct GlobalConversationSettingsView: View {
 
 //#Preview {
 //    GlobalConversationSettingsView()
-//        .environmentObject(Preferences())
+//        
 //        .frame(width: 380, height: 700)
 //    
 //}

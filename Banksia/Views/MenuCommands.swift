@@ -14,7 +14,6 @@ import Sparkle
 struct MenuCommands: Commands {
     
     @ObservedObject var bk: BanksiaHandler
-    @ObservedObject var pref: Preferences
     @Binding var conv: ConversationHandler
     @ObservedObject var sidebar: SidebarHandler
     
@@ -54,7 +53,7 @@ struct MenuCommands: Commands {
             }
             .keyboardShortcut(AppAction.toggleToolbarExpanded.shortcut)
             
-            Button(pref.isDebugShowing ? "Hide Debug Window" : "Show Debug Window") {
+            Button(bk.isDebugShowing ? "Hide Debug Window" : "Show Debug Window") {
                 conv.currentRequest = .toggleDebug
             }
             .keyboardShortcut(AppAction.toggleDebug.shortcut)

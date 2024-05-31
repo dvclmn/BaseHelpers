@@ -26,7 +26,7 @@ struct ToolbarView: View {
     
     @EnvironmentObject var popup: PopupHandler
     @EnvironmentObject var sidebar: SidebarHandler
-    @EnvironmentObject var pref: Preferences
+    
     
     @State private var isLoading: Bool = false
     

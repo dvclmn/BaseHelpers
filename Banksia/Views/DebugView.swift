@@ -63,7 +63,7 @@ struct DebugView: View {
     @EnvironmentObject var bk: BanksiaHandler
     @Environment(ConversationHandler.self) private var conv
     
-    @EnvironmentObject var pref: Preferences
+    
     @EnvironmentObject var sidebar: SidebarHandler
     
     let minWidth: Double = 260
@@ -181,7 +181,7 @@ struct DebugView: View {
         .grainient(
             seed: GrainientPreset.algae.seed,
             version: .v1,
-            dimming: $pref.uiDimming
+            dimming: $bk.uiDimming
         )
         .ignoresSafeArea()
         .background(Swatch.slate.colour)
@@ -288,7 +288,7 @@ extension DebugView {
         .padding(.top,1)
         .environmentObject(BanksiaHandler())
         .environment(ConversationHandler())
-        .environmentObject(Preferences())
+        
         .environmentObject(SidebarHandler())
     
 }

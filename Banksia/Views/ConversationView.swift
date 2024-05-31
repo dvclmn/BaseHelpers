@@ -19,7 +19,7 @@ struct ConversationView: View {
     @EnvironmentObject var bk: BanksiaHandler
     @Environment(ConversationHandler.self) private var conv
     
-    @EnvironmentObject var pref: Preferences
+    
     @EnvironmentObject var sidebar: SidebarHandler
     
     @Query private var messages: [Message]

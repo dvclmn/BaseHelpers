@@ -36,6 +36,22 @@ class BanksiaHandler: ObservableObject {
     
     @Published var isToolbarExpanded: Bool = false
     
+    @AppStorage("textScaleKey") var textScale: Double = 1.0
+    @AppStorage("gptTemperatureKey") var gptTemperature: Double = 0.5
+    @AppStorage("gptModelKey") var gptModel: GPTModel = GPTModel.gpt_4_turbo
+    
+    @AppStorage("editorHeightKey") var editorHeight: Double?
+    
+    @AppStorage("userNameKey") var userName: String?
+    
+    @AppStorage("isDebugShowingKey") var isDebugShowing: Bool = false
+    
+    @AppStorage("systemPromptKey") var systemPrompt: String = ""
+    
+    @AppStorage("uiDimmingKey") var uiDimming: Double = 0.30
+    @AppStorage("defaultGrainientSeedKey") var defaultGrainientSeed: Int = 358962
+
+    
     func toggleQuickOpen() {
         withAnimation(Styles.animation) {
             if isQuickOpenShowing {

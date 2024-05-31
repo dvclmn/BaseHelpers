@@ -16,12 +16,14 @@ import TextEditor
 
 struct ConversationEditorView: View {
     @Environment(ConversationHandler.self) private var conv
-    @EnvironmentObject var pref: Preferences
+    
     
     @Bindable var conversation: Conversation
     
     @State private var isPromptEditorPresented: Bool = false
     @State private var localPromptValue: String = ""
+    
+    @State private var totalTokens: Int = 0
     
     @FocusState private var isFocused
     
@@ -82,7 +84,7 @@ struct ConversationEditorView: View {
                     }
                     
                     LabeledContent {
-                        Text("\(conversation.tokens ?? 0)")
+                        Text("\(totalTokens)")
                         
                     } label: {
                         Label("Tokens used", systemImage: Icons.token.icon)
@@ -102,6 +104,20 @@ struct ConversationEditorView: View {
             seed: conversation.grainientSeed,
             version: .v1
         )
+        .onAppear {
+            if let messages = conversation.messages {
+                
+                var promptTokens: Int = 0
+                var completionTokens: Int = 0
+                
+                for message in messages {
+                    promptTokens += message.promptTokens.boundInt
+                    completionTokens += message.completionTokens.boundInt
+                }
+                
+                self.totalTokens = promptTokens + completionTokens
+            }
+        }
     
     }
 }

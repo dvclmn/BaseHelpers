@@ -26,7 +26,7 @@ struct MessageInputView: View {
     @Environment(ConversationHandler.self) private var conv
     @EnvironmentObject var bk: BanksiaHandler
     
-    @EnvironmentObject var pref: Preferences
+    
     @EnvironmentObject var popup: PopupHandler
     @EnvironmentObject var sidebar: SidebarHandler
     
@@ -138,11 +138,11 @@ struct MessageInputView: View {
             } // END input buttons overlay
             
             .task(id: conv.editorHeight) {
-                pref.editorHeight = conv.editorHeight
+                bk.editorHeight = conv.editorHeight
             }
             .onAppear {
 //                userPrompt = ExampleText.paragraphs[3]
-                if let editorHeightPreference = pref.editorHeight {
+                if let editorHeightPreference = bk.editorHeight {
                     conv.editorHeight = editorHeightPreference
                 }
             }
@@ -193,13 +193,13 @@ extension MessageInputView {
         do {
             
             let requestBody = RequestBody(
-                model: pref.gptModel.model,
+                model: bk.gptModel.model,
                 messages: [
-                    RequestMessage(role: "system", content: pref.systemPrompt),
+                    RequestMessage(role: "system", content: bk.systemPrompt),
                     RequestMessage(role: "user", content: messageHistory)
                 ],
                 stream: false,
-                temperature: pref.gptTemperature
+                temperature: bk.gptTemperature
             )
             
             let requestBodyData = APIHandler.encodeBody(requestBody)
@@ -213,9 +213,15 @@ extension MessageInputView {
                 body: requestBodyData
             )
             
+            guard let gptMessage = response.choices.first?.message.content else {
+                print("No message content from GPT")
+                return
+            }
+            
             let newGPTMessage = Message(
-                content: response.choices.first?.message.content,
-                tokens: response.usage..
+                content: gptMessage,
+                promptTokens: response.usage.prompt_tokens,
+                completionTokens: response.usage.completion_tokens,
                 type: .assistant,
                 conversation: conversation
             )
@@ -259,14 +265,7 @@ extension MessageInputView {
             ////                    .disabled(!isTesting)
             //                    .buttonStyle(.customButton(size: .small, /*status: isTesting ? .normal : .disabled,*/ labelDisplay: .titleOnly))
             
-            Group {
-                Text("Banksia v\(bk.getAppVersion())")
-                Text(pref.gptModel.name)
-            }
-            .caption()
-            .opacity(0.8)
-            .padding(.leading, 6)
-            
+
             Spacer()
             
             Button {
@@ -287,24 +286,24 @@ extension MessageInputView {
     }
 }
 
-//#if DEBUG
-//
-//#Preview {
-//    ModelContainerPreview(ModelContainer.sample) {
-//        
-//        VStack {
-//            Spacer()
-//            ConversationView(
-//                conversation: Conversation.childcare,
-//                scrolledMessageID: .constant(Message.prompt_01.persistentModelID)
-//            )
-//        }
-//    }
-//    .environment(ConversationHandler())
-//    .environmentObject(BanksiaHandler())
-//    .environmentObject(Preferences())
-//    .environmentObject(SidebarHandler())
-//    .frame(width: 380, height: 700)
-//    .background(.contentBackground)
-//}
-//#endif
+#if DEBUG
+
+#Preview {
+    ModelContainerPreview(ModelContainer.sample) {
+        
+        VStack {
+            Spacer()
+            ConversationView(
+                conversation: Conversation.childcare,
+                scrolledMessageID: .constant(Message.prompt_01.persistentModelID)
+            )
+        }
+    }
+    .environment(ConversationHandler())
+    .environmentObject(BanksiaHandler())
+    
+    .environmentObject(SidebarHandler())
+    .frame(width: 380, height: 700)
+    .background(.contentBackground)
+}
+#endif

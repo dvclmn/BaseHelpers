@@ -122,7 +122,6 @@ enum AppAction {
 final class ConversationHandler {
     
     let bk = BanksiaHandler()
-    let pref = Preferences()
     
     var currentConversationID: Conversation.ID? = nil
     

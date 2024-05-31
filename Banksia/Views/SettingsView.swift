@@ -59,7 +59,7 @@ enum SettingsTab: CaseIterable {
 struct SettingsView: View {
     
     @Environment(\.modelContext) private var modelContext
-    @EnvironmentObject var pref: Preferences
+    
     @EnvironmentObject var popup: PopupHandler
     
     @EnvironmentObject var bk: BanksiaHandler
@@ -108,14 +108,14 @@ struct SettingsView: View {
                         icon: Icons.person.icon,
                         message: "(Optional) Provide your name to personalise responses."
                     ) {
-                        TextField("", text: pref.$userName.boundString, prompt: Text("Enter your name"))
+                        TextField("", text: bk.$userName.boundString, prompt: Text("Enter your name"))
                     }
                     
                     FormLabel(label: "UI Dimming", icon: Icons.contrast.icon) {
-                        Text("\(pref.uiDimming * 100, specifier: "%.0f")%")
+                        Text("\(bk.uiDimming * 100, specifier: "%.0f")%")
                             .monospacedDigit()
                         Slider(
-                            value: $pref.uiDimming,
+                            value: $bk.uiDimming,
                             in: 0.01...0.89)
                         .controlSize(.mini)
                         .tint(Swatch.lightGrey.colour)
@@ -131,14 +131,14 @@ struct SettingsView: View {
                         message: "Customise the gradient background that appears when no conversation is selected."
                     ) {
                         GrainientPicker(
-                            seed: $pref.defaultGrainientSeed,
+                            seed: $bk.defaultGrainientSeed,
                             popup: popup,
                             viewSeedEnabled: false
                         )
                         
                     }
                     
-                    GrainientPreviews(seed: $pref.defaultGrainientSeed)
+                    GrainientPreviews(seed: $bk.defaultGrainientSeed)
                     
 
                 case .assistant:
@@ -165,7 +165,7 @@ struct SettingsView: View {
             idealHeight: 600,
             maxHeight: .infinity
         )
-        .grainient(seed: pref.defaultGrainientSeed, version: .v1)
+        .grainient(seed: bk.defaultGrainientSeed, version: .v1)
         .onAppear {
             if isPreview {
                 settingsTab = .assistant
@@ -184,7 +184,7 @@ struct SettingsView: View {
             .padding(.top,1)
     }
     .environmentObject(BanksiaHandler())
-    .environmentObject(Preferences())
+    
     .environmentObject(PopupHandler())
     .environmentObject(SidebarHandler())
     .frame(width: 480, height: 600)

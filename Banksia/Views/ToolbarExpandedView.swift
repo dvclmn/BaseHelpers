@@ -26,7 +26,7 @@ struct ToolbarExpandedView: View {
     
     @EnvironmentObject var popup: PopupHandler
     @EnvironmentObject var sidebar: SidebarHandler
-    @EnvironmentObject var pref: Preferences
+    
     
     @FocusState private var isFocused
 
@@ -61,7 +61,7 @@ struct ToolbarExpandedView: View {
                     CustomSection(label: "Debug pane", icon: "window.horizontal.closed", level: .child) {
                         
                         Button {
-                            pref.isDebugShowing.toggle()
+                            bk.isDebugShowing.toggle()
                         } label: {
                             Label("Toggle debug pane", systemImage: Icons.debug.icon)
                         }
@@ -110,7 +110,7 @@ struct ToolbarExpandedView: View {
 //        .environment(ConversationHandler())
 //        .environmentObject(BanksiaHandler())
 //        .environmentObject(NavigationHandler())
-//        .environmentObject(Preferences())
+//        
 //        .environmentObject(PopupHandler())
 //        .environmentObject(SidebarHandler())
 //}

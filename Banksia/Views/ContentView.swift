@@ -29,7 +29,7 @@ struct ContentView: View {
     
     @EnvironmentObject var nav: NavigationHandler
     @EnvironmentObject var popup: PopupHandler
-    @EnvironmentObject var pref: Preferences
+    
     @EnvironmentObject var sidebar: SidebarHandler
     
     var body: some View {
@@ -60,9 +60,9 @@ struct ContentView: View {
         }
         .ignoresSafeArea()
         .grainient(
-            seed: conv.grainientSeed ?? pref.defaultGrainientSeed,
+            seed: conv.grainientSeed ?? bk.defaultGrainientSeed,
             version: .v1,
-            dimming: $pref.uiDimming
+            dimming: $bk.uiDimming
         )
         .background(Swatch.slate.colour)
 //        .overlay(alignment: .bottomLeading) {
@@ -115,7 +115,6 @@ struct ContentView: View {
                 let testConversation = Conversation(
                     name: testName,
                     icon: Icons.sport.icon,
-                    tokens: 400,
                     grainientSeed: GrainientPreset.chalkyBlue.seed
                 )
                 
@@ -153,7 +152,7 @@ struct ContentView: View {
                 bk.toggleExpanded()
                 
             case .toggleDebug:
-                pref.isDebugShowing.toggle()
+                bk.isDebugShowing.toggle()
                 
             default:
                 break
@@ -165,8 +164,8 @@ struct ContentView: View {
             conv.currentConversationID = fetchCurrentConversation()?.persistentModelID
             nav.updateLastDestination()
         }
-        .task(id: pref.isDebugShowing) {
-            if pref.isDebugShowing {
+        .task(id: bk.isDebugShowing) {
+            if bk.isDebugShowing {
                 openWindow.callAsFunction(id: "debug")
             } else {
                 closeWindow.callAsFunction(id: "debug")
@@ -272,7 +271,7 @@ extension ContentView {
         .environment(ConversationHandler())
         .environmentObject(BanksiaHandler())
         .environmentObject(NavigationHandler())
-        .environmentObject(Preferences())
+        
         .environmentObject(PopupHandler())
         .environmentObject(SidebarHandler())
         .modelContainer(try! ModelContainer.sample())

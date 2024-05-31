@@ -15,7 +15,7 @@ import APIHandler
 import Popup
 
 struct Settings_ConnectionView: View {
-    @EnvironmentObject var pref: Preferences
+    
     @EnvironmentObject var bk: BanksiaHandler
     @EnvironmentObject var popup: PopupHandler
     
@@ -91,11 +91,11 @@ struct Settings_ConnectionView: View {
             FormLabel(
                 label: "Select model",
                 icon: Icons.shocked.icon) {
-                    Text("Current:\t\t\t**\(pref.gptModel.name)**")
-                    Text("Context length:\t**\(pref.gptModel.contextLength) tokens**")
-                    Text("Training cut-off:\t**\(pref.gptModel.cutoff)**")
+                    Text("Current:\t\t\t**\(bk.gptModel.name)**")
+                    Text("Context length:\t**\(bk.gptModel.contextLength) tokens**")
+                    Text("Training cut-off:\t**\(bk.gptModel.cutoff)**")
                 } content: {
-                    Picker("Select model", selection: $pref.gptModel) {
+                    Picker("Select model", selection: $bk.gptModel) {
                         ForEach(GPTModel.allCases, id: \.self) { model in
                             Text(model.name).tag(model.model)
                         }
