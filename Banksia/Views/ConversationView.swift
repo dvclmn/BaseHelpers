@@ -19,7 +19,6 @@ struct ConversationView: View {
     @EnvironmentObject var bk: BanksiaHandler
     @Environment(ConversationHandler.self) private var conv
     
-    
     @EnvironmentObject var sidebar: SidebarHandler
     
     @Query private var messages: [Message]
@@ -27,7 +26,6 @@ struct ConversationView: View {
     @Bindable var conversation: Conversation
     @Binding var scrolledMessageID: Message.ID?
 
-    
     var body: some View {
         
         @Bindable var conv = conv
@@ -50,8 +48,7 @@ struct ConversationView: View {
                         
                         if searchResults.count > 0 {
                             
-                            
-                            
+
                             ScrollView(.vertical) {
                                 VStack(spacing: 12) {
                                     ForEach(searchResults.sorted(by: { $0.timestamp < $1.timestamp }), id: \.timestamp) { message in
@@ -68,7 +65,7 @@ struct ConversationView: View {
                             } // END scrollview
                             .scrollPosition(id: $scrolledMessageID, anchor: .top)
                             .safeAreaPadding(.top, Styles.toolbarHeight)
-                            .safeAreaPadding(.bottom, bk.editorHeight + 10)
+                            .safeAreaPadding(.bottom, conv.editorHeight + 10)
                             
                             .overlay(alignment: .bottomTrailing) {
                                 Button {
@@ -77,7 +74,7 @@ struct ConversationView: View {
                                     Label("Scroll to latest message", systemImage: Icons.down.icon)
                                 }
                                 .buttonStyle(.customButton(size: .small, labelDisplay: .iconOnly))
-                                .padding(.bottom, bk.editorHeight + Styles.paddingSmall)
+                                .padding(.bottom, conv.editorHeight + Styles.paddingSmall)
                                 .padding(.trailing, Styles.paddingSmall)
                             } // END scroll to bottom
                             
@@ -88,7 +85,7 @@ struct ConversationView: View {
                     } else {
                         StateView(title: "No messages yet")
                             .padding(.top, Styles.toolbarHeight / 2)
-                            .padding(.bottom, bk.editorHeight)
+                            .padding(.bottom, conv.editorHeight)
                         
                     } // END message count check
                 } // END vstack
@@ -114,6 +111,9 @@ struct ConversationView: View {
                 conv.grainientSeed = conversation.grainientSeed
             }
         }
+//        .task(id: conv.currentGPTMessageID) {
+//                            populateActiveGPTMessage()
+//                        }
         
         
         
@@ -172,3 +172,5 @@ struct ConversationView: View {
     
     
 }
+
+

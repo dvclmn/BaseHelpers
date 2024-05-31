@@ -224,7 +224,6 @@ extension ContentView {
         NSApp.activate(ignoringOtherApps: true)
     }
     
-    
     func exportAllData() {
         if let url = bk.exportDataToJSON(conversations: conversations) {
             exportLocation = url
@@ -241,7 +240,7 @@ extension ContentView {
     func presentConversation() {
         if let lastDestinationString = nav.lastDestination {
             
-            if let lastConversation = conversations.first(where: {$0.name == lastDestinationString}) {
+            if let lastConversation = conversations.first(where: {"\($0.persistentModelID)" == lastDestinationString}) {
                 
                 nav.navigate(to: .conversation(lastConversation))
             }

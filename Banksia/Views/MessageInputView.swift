@@ -44,10 +44,7 @@ struct MessageInputView: View {
     @State private var isScrolling: Bool = false
     
     @State private var countdown = CountdownTimer()
-    
-    @State private var conversationIDToAddTextTo: Conversation.ID? = nil
-    
-    let defaultEditorHeight: Double = 180
+
     
     @Bindable var conversation: Conversation
     
@@ -89,10 +86,11 @@ struct MessageInputView: View {
                 }
                 .coordinateSpace(name: "scroll")
                 
-                .frame(
-                    minHeight: bk.editorHeight,
-                    maxHeight: bk.editorHeight
-                )
+                
+                .resizable(startingHeight: $bk.editorHeight, maxHeight: sidebar.windowSize.height * 0.8) { onChangeHeight, onEndHeight in
+                    conv.editorHeight = onChangeHeight
+                    bk.editorHeight = onEndHeight
+                }
                 .onTapGesture {
                     isFocused = true
                 }
@@ -120,14 +118,8 @@ struct MessageInputView: View {
                 .task(id: isFocused) {
                     conv.isEditorFocused = isFocused
                 }
+                
                 .background(.thinMaterial)
-                .resizable(
-                    height: $bk.editorHeight,
-                    maxHeight: sidebar.windowSize.height * 0.8
-                )
-                .onAppear {
-                    conversationIDToAddTextTo = conversation.messages?.last?.persistentModelID
-                }
                 
                 
                 
@@ -138,7 +130,7 @@ struct MessageInputView: View {
             .overlay(alignment: .bottom) {
                 
                 Button {
-                    addTextToMessage()
+                    
                 } label: {
                     Label("Add to Message", systemImage: Icons.plus.icon)
                 }
@@ -156,7 +148,10 @@ struct MessageInputView: View {
                     }
             } // END input buttons overlay
             
-            
+            .onAppear {
+                //                userPrompt = ExampleText.paragraphs[3]
+                conv.editorHeight = bk.editorHeight
+            }
             
             
         }
@@ -166,6 +161,7 @@ struct MessageInputView: View {
 
 extension MessageInputView {
     
+
     private func startTimer() {
         if isFocused {
             countdown.startCountdown(for: 2)
@@ -173,18 +169,6 @@ extension MessageInputView {
                 self.isUIFaded = true
             }
         }
-    }
-    
-    private func addTextToMessage() {
-        let text = "Butts"
-        
-        guard let message = conversation.messages?.first(where: {$0.persistentModelID == conversationIDToAddTextTo}) else {
-            print("No message to add text to")
-            return
-        }
-        
-        message.content += text
-        
     }
     
     private func sendTestMessage() async {
@@ -197,7 +181,7 @@ extension MessageInputView {
         modelContext.insert(newUserMessage)
         
         userPrompt = ""
-        bk.editorHeight = defaultEditorHeight
+        conv.editorHeight = ConversationHandler.defaultEditorHeight
         
         /// Construct the message history for GPT context
         let messageHistory: [RequestMessage] = await conv.createMessageHistory(
@@ -239,7 +223,7 @@ extension MessageInputView {
         modelContext.insert(newUserMessage)
         
         userPrompt = ""
-        bk.editorHeight = defaultEditorHeight
+        conv.editorHeight = ConversationHandler.defaultEditorHeight
         
         
         /// Construct the message history for GPT context
@@ -251,26 +235,6 @@ extension MessageInputView {
         
         do {
             
-            
-            
-            let requestBody = RequestBody(
-                model: bk.gptModel.model,
-                messages: messageHistory,
-                stream: true,
-                temperature: bk.gptTemperature
-            )
-            
-            print("Final query to GPT:\n\(requestBody.messages)")
-            
-            let requestBodyData = APIHandler.encodeBody(requestBody)
-            
-            let request = try APIHandler.constructURLRequest(
-                from: URL(string: OpenAIHandler.chatURL),
-                requestType: .post,
-                bearerToken: apiKey,
-                body: requestBodyData
-            )
-            
             let newGPTMessage = Message(
                 content: "",
                 type: .assistant,
@@ -278,40 +242,48 @@ extension MessageInputView {
             )
             
             modelContext.insert(newGPTMessage)
+
+            let requestBody = RequestBody(
+                model: bk.gptModel.model,
+                messages: messageHistory,
+                stream: true,
+                temperature: bk.gptTemperature
+            )
             
             
-            guard let message = conversation.messages?.first(where: {$0.persistentModelID == newGPTMessage.persistentModelID}) else {
-                print("No message to add text to")
-                return
-            }
+            let url = URL(string: OpenAIHandler.chatURL)!
+            
+            var request = URLRequest(url: url)
+            request.httpMethod = "POST"
+            request.httpBody = try JSONEncoder().encode(requestBody)
+            request.allHTTPHeaderFields = [
+                "Content-Type": "application/json",
+                "Authorization": "Bearer \(apiKey)"
+            ]
             
             
             let (stream, _) = try await URLSession.shared.bytes(for: request)
+            
             print("Stream: \(stream)")
             
             for try await line in stream.lines {
                 print("Entered the stream. \(line)")
                 guard let messageChunk = ConversationHandler.parse(line) else { continue }
                 
-                message.content += messageChunk
+                conv.streamedResponse += messageChunk
             }
             
-//            let response: GPTResponse = try await APIHandler.constructRequestAndFetch(
-//                url: URL(string: OpenAIHandler.chatURL),
-//                requestType: .post,
-//                bearerToken: apiKey,
-//                body: requestBodyData
-//            )
-//            
-//            guard let gptMessage = response.choices.first?.message.content else {
-//                print("No message content from GPT")
-//                return
-//            }
-            
-            
-            
-            
-            
+            //            let response: GPTResponse = try await APIHandler.constructRequestAndFetch(
+            //                url: URL(string: OpenAIHandler.chatURL),
+            //                requestType: .post,
+            //                bearerToken: apiKey,
+            //                body: requestBodyData
+            //            )
+            //
+            //            guard let gptMessage = response.choices.first?.message.content else {
+            //                print("No message content from GPT")
+            //                return
+            //            }
             
             
         } catch {
@@ -320,6 +292,10 @@ extension MessageInputView {
         
         conv.isResponseLoading = false
     } // END send message
+    
+    
+    
+    
 }
 
 extension MessageInputView {
@@ -336,7 +312,7 @@ extension MessageInputView {
                 
             }
             .labelStyle(.customLabel(size: .mini))
-            .padding(.leading, 6)
+            .padding(.leading, Styles.paddingNSTextViewCompensation)
             .symbolVariant(.fill)
             
             Spacer()
@@ -397,36 +373,3 @@ extension MessageInputView {
     .background(.contentBackground)
 }
 #endif
-
-
-
-
-//[
-//    Banksia.RequestMessage(
-//        role: "system",
-//        content: "No need for lengthy intro and outro paragraphs, unless they provide useful info. Encouragement is OK, but avoid overly-cheery sentiment.\n\t•\tDo not repeat lengthy portions of my own code back to me, this wastes tokens, and I cannot afford to waste money\n\t•\tKeep answers to off-topic questions (not relating to coding) `brief`\n\t•\tMacro @Observable is part of the new Observation framework, introduced with iOS 17, and macOS 14. It is a robust & type-safe implementation of the observer design pattern in Swift. This is in place of ObservableObject, do not mix the two. Do not suggest or use ObservableObject unless asked specifically\n\t•\tSwiftData is the successor to Core Data, do not treat SwiftData as though it is a third party / unknown framework\n\t•\tDo not use Combine unless specifically requested. Instead prefer modern Swift concurrency, async/await, Task, etc."
-//    ),
-//    Banksia.RequestMessage(
-//        role: "assistant",
-//        content: "Sure, just send me the message when you\'re ready!"
-//    ),
-//    Banksia.RequestMessage(
-//        role: "user",
-//        content: "I am currently printing out arrays to the console in xcode, and they are difficult to read, as one run-on line. I\'d like to write  , and have the array print with line breaks and indentation, similar to the way the editor in xcode would display it. \"pretty printing\", essentuially. Can you write me a Swift extension on `Array` / `Collection`, such that I could write e.g. `print(\"My array: \\(myLongArrayExample.prettyPrinted)”)`, to achieve this?"
-//    ),
-//    Banksia.RequestMessage(
-//        role: "assistant",
-//        content: "Got it. How can I assist you today?"
-//    ),
-//    Banksia.RequestMessage(
-//        role: "user",
-//        content: "I am working on code to handle `Message` history (aka a context window), for my app Banksia. I am going to send you a short message, please send a short one back, so I can do some testing! Thanks"
-//    )
-//]
-
-//[{"role": "system", "content" : "You are ChatGPT, a large language model trained by OpenAI. Answer as concisely as possible.\nKnowledge cutoff: 2021-09-01\nCurrent date: 2023-03-02"},
-//{"role": "user", "content" : "How are you?"},
-//{"role": "assistant", "content" : "I am doing well"},
-//{"role": "user", "content" : "When was the last Formula One championship in South Africa?"},
-//{"role": "assistant", "content" : "The last Formula One championship race held in South Africa was on October 17, 1993."},
-//{"role": "user", "content" : "Who won the race in South Africa?"}]

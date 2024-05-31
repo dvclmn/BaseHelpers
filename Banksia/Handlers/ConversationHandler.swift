@@ -42,9 +42,10 @@ enum AppAction {
             return "Export All…"
             
         case .goToPrevious:
-            return "Go To Previous"
+            return "Previous Conversation"
         case .goToNext:
-            return "Go To Next"
+            return "Next Conversation"
+            
         case .search:
             return "Search"
         case .toggleQuickOpen:
@@ -83,8 +84,10 @@ enum AppAction {
             
         case .goToPrevious:
                 .init("[", modifiers: [.command, .shift])
+            
         case .goToNext:
                 .init("]", modifiers: [.command, .shift])
+            
         case .search:
                 .init("f", modifiers: .command)
         case .toggleQuickOpen:
@@ -134,9 +137,13 @@ final class ConversationHandler {
     /// This history should only be sent to GPT, not be saved to a Conversation. The Conversation has it's own array of Messages
     var messageHistory: String = ""
     
-//    var editorHeight: Double = ConversationHandler.defaultEditorHeight
     
-//    static let defaultEditorHeight: Double = 160
+    var currentGPTMessageID: Conversation.ID? = nil
+    var streamedResponse: String = ""
+    
+    var editorHeight: Double = ConversationHandler.defaultEditorHeight
+    
+    static let defaultEditorHeight: Double = 180
     
     func getConversation(from id: Conversation.ID, within conversations: [Conversation]) -> Conversation? {
         return conversations.first(where: {$0.id == id})
@@ -209,8 +216,8 @@ final class ConversationHandler {
         if message == "[DONE]" {
             return "\n"
         } else {
-            let chunk = try? JSONDecoder().decode(GPTResponse.self, from: message.data(using: .utf8)!)
-            return chunk?.choices.first?.message.content
+            let chunk = try? JSONDecoder().decode(GPTStreamedResponse.self, from: message.data(using: .utf8)!)
+            return chunk?.choices.first?.delta.content
         }
     } // Stream parsing
     

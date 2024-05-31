@@ -120,6 +120,11 @@ struct DebugView: View {
                 title: "Last Destination",
                 state: "\(nav.lastDestination ?? "None")",
                 definedOn: .conv
+            ),
+            DebugInfo(
+                title: "Last Destination",
+                state: "\(nav.lastDestination ?? "None")",
+                definedOn: .conv
             )
         ]
 

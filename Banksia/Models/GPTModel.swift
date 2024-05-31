@@ -41,22 +41,42 @@ struct TestResponseData: Codable {
     let owned_by: String
 }
 
-struct GPTResponse: Codable { // Called Chunk, in example
+struct GPTResponse: Codable {
     let id: String
     let object: String
     let created: Int
     let model: String
     let usage: APIUsage
     let choices: [GPTChoice]
-//    let system_fingerprint: String
 }
 
-struct GPTChoice: Codable { // Called Choice, in example
+struct GPTStreamedResponse: Codable {
+    let id: String
+    let object: String
+    let created: Int
+    let model: String
+    let usage: APIUsage
+    let choices: [GPTStreamedChoice]
+}
+
+struct GPTChoice: Codable {
     let index: Int
     let message: GPTMessage
     let finish_reason: String
 }
-struct GPTMessage: Codable { // Called Delta, in example
+
+struct GPTMessage: Codable {
+    let role: String
+    let content: String
+}
+
+struct GPTStreamedChoice: Codable {
+    let index: Int
+    let delta: GPTStreamedMessage
+    let finish_reason: String
+}
+
+struct GPTStreamedMessage: Codable {
     let role: String
     let content: String
 }

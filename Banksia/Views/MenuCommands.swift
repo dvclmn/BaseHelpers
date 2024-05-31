@@ -68,17 +68,15 @@ struct MenuCommands: Commands {
         
         CommandMenu("Navigate") {
             
-            Button("Previous Conversation") {
+            Button(AppAction.goToPrevious.name) {
                 conv.currentRequest = .goToPrevious
             }
+            .keyboardShortcut(AppAction.goToPrevious.shortcut)
             
-            .keyboardShortcut("[", modifiers: [.command, .shift])
-            
-            Button("Next Conversation") {
+            Button(AppAction.goToNext.name) {
                 conv.currentRequest = .goToNext
             }
-            
-            .keyboardShortcut("]", modifiers: [.command, .shift])
+            .keyboardShortcut(AppAction.goToNext.shortcut)
             
             
             Divider()

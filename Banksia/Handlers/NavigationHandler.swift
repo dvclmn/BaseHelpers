@@ -16,6 +16,7 @@ import Grainient
 class NavigationHandler: Navigable, ObservableObject {
     
     @Published public var path: [Page] = []
+    
     @AppStorage("lastDestinationKey") var lastDestination: String?
 
     var navigationTitle: String? {
@@ -35,11 +36,13 @@ class NavigationHandler: Navigable, ObservableObject {
     
     func updateLastDestination() {
         if let last = path.last {
-            lastDestination = last.name
+            lastDestination = last.id
         } else {
             print("No last item in path")
         }
     }
+    
+    
     
     //    public func goBack() {
     //        if canGoBack {
@@ -55,7 +58,12 @@ enum Page: Destination {
     case settings
     
     var id: String {
-        self.name
+        switch self {
+        case .conversation(let conversation):
+            return "\(conversation.persistentModelID)"
+        default:
+            return self.name
+        }
     }
     
     var name: String {
