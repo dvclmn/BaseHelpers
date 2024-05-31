@@ -99,6 +99,7 @@ class BanksiaHandler: ObservableObject {
         let formattedDate = dateFormatter.string(from: Date.now)
         
         let fileName: String = "Banksia_backup_\(formattedDate).json"
+        let verb: String = "Export"
         
         do {
             let jsonData = try encoder.encode(exportData)
@@ -112,7 +113,10 @@ class BanksiaHandler: ObservableObject {
             // Show save panel to the user
             let savePanel = NSSavePanel()
             savePanel.directoryURL = tempDirectory
+            savePanel.nameFieldLabel = "\(verb) as:"
             savePanel.nameFieldStringValue = fileName
+            savePanel.prompt = verb
+            savePanel.title = verb
             savePanel.allowedContentTypes = [.json]
             
             if savePanel.runModal() == .OK {
