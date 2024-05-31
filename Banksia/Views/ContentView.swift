@@ -75,7 +75,7 @@ struct ContentView: View {
 //                        } label: {
 //                            Label("Toggle QO", systemImage: Icons.text.icon)
 //                        }
-//                        .padding(.bottom, conv.editorHeight + 10)
+//                        .padding(.bottom, bk.editorHeight + 10)
 //                    }
 //                    Spacer()
 //                }
@@ -135,15 +135,19 @@ struct ContentView: View {
             switch conv.currentRequest {
             case .new:
                 newConversation()
+                conv.currentRequest = .none
                 
             case .delete:
                 deleteCurrentConversation()
+                conv.currentRequest = .none
                 
             case .goToPrevious:
                 print("Request to navigate to previous conversation")
+                conv.currentRequest = .none
                 
             case .goToNext:
                 print("Request to navigate to next conversation")
+                conv.currentRequest = .none
                 
             case .toggleSidebar:
                 sidebar.toggleSidebar()
@@ -205,11 +209,11 @@ extension ContentView {
         }
         switch lastPathItem {
         case .conversation(let conversation):
-            print("Current navigated conversation: \(conversation)")
+//            print("Current navigated conversation: \(conversation)")
             
             let current = conversations.first(where: {$0.persistentModelID == conversation.persistentModelID})
             
-            print("Current conversation from Query: \(String(describing: current))")
+//            print("Current conversation from Query: \(String(describing: current))")
             return current
         default:
             return nil
@@ -237,7 +241,7 @@ extension ContentView {
         }
         
         undoManager?.registerUndo(withTarget: conversation, handler: { conv in
-            print(conv)
+//            print(conv)
         })
         modelContext.delete(conversation)
         

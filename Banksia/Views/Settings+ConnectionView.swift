@@ -129,7 +129,7 @@ extension Settings_ConnectionView {
                 requestType: .get,
                 bearerToken: key
             )
-            print("Data from OpenAI: \(result)")
+//            print("Data from OpenAI: \(result)")
             
             isLoadingConnection = false
             return true

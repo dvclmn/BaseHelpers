@@ -47,32 +47,36 @@ struct SidebarView: View {
                 
                 VStack(alignment: .leading, spacing: 2) {
                     
-                        
-                        SidebarButton(
-                            label: Page.feedback.name,
-                            icon: Page.feedback.icon,
-                            nav: nav,
-                            page: Page.feedback
-                        )
-                        
-                        
-                        SidebarButton(
-                            label: Page.settings.name,
-                            icon: Page.settings.icon,
-                            nav: nav,
-                            page: Page.settings,
-                            isSettingsLink: true
-                        )
-                        
-
                     
-                        Label("Banksia v\(bk.getAppVersion())-beta", systemImage: Icons.shocked.icon)
                     
-                    .labelStyle(.customLabel(size: .mini, labelDisplay: .titleOnly))
-                    .opacity(0.4)
-                    .symbolVariant(.fill)
-                    .padding(.leading, 10)
-                    .padding(.bottom, 5)
+                    SidebarButton(
+                        label: Page.settings.name,
+                        icon: Page.settings.icon,
+                        nav: nav,
+                        page: Page.settings,
+                        isSettingsLink: true
+                    )
+                    
+                    SidebarButton(
+                        label: Page.feedback.name,
+                        icon: Page.feedback.icon,
+                        nav: nav,
+                        page: Page.feedback
+                    )
+                    
+                    
+                    
+                    .padding(.bottom)
+                    
+                    
+                    
+                    Label("Banksia v\(bk.getAppVersion())-beta", systemImage: Icons.shocked.icon)
+                    
+                        .labelStyle(.customLabel(size: .mini, labelDisplay: .titleOnly))
+                        .opacity(0.4)
+                        .symbolVariant(.fill)
+                        .padding(.leading, 10)
+                        .padding(.bottom, 5)
                 } // END vstack
                 .padding(Styles.paddingGutter)
                 

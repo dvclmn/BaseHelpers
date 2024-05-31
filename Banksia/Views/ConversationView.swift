@@ -68,7 +68,7 @@ struct ConversationView: View {
                             } // END scrollview
                             .scrollPosition(id: $scrolledMessageID, anchor: .top)
                             .safeAreaPadding(.top, Styles.toolbarHeight)
-                            .safeAreaPadding(.bottom, conv.editorHeight + 10)
+                            .safeAreaPadding(.bottom, bk.editorHeight + 10)
                             
                             .overlay(alignment: .bottomTrailing) {
                                 Button {
@@ -77,7 +77,7 @@ struct ConversationView: View {
                                     Label("Scroll to latest message", systemImage: Icons.down.icon)
                                 }
                                 .buttonStyle(.customButton(size: .small, labelDisplay: .iconOnly))
-                                .padding(.bottom, conv.editorHeight + Styles.paddingSmall)
+                                .padding(.bottom, bk.editorHeight + Styles.paddingSmall)
                                 .padding(.trailing, Styles.paddingSmall)
                             } // END scroll to bottom
                             
@@ -88,7 +88,7 @@ struct ConversationView: View {
                     } else {
                         StateView(title: "No messages yet")
                             .padding(.top, Styles.toolbarHeight / 2)
-                            .padding(.bottom, conv.editorHeight)
+                            .padding(.bottom, bk.editorHeight)
                         
                     } // END message count check
                 } // END vstack

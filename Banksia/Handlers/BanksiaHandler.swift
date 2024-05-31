@@ -40,7 +40,7 @@ class BanksiaHandler: ObservableObject {
     @AppStorage("gptTemperatureKey") var gptTemperature: Double = 0.5
     @AppStorage("gptModelKey") var gptModel: GPTModel = GPTModel.gpt_4_turbo
     
-    @AppStorage("editorHeightKey") var editorHeight: Double?
+    @AppStorage("editorHeightKey") var editorHeight: Double = 180
     
     @AppStorage("userNameKey") var userName: String?
     

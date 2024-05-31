@@ -9,6 +9,7 @@ import Foundation
 import SwiftUI
 import SwiftData
 import Grainient
+import MarkdownEditor
 
 enum AppAction {
     case new
@@ -95,27 +96,27 @@ enum AppAction {
                 .defaultAction
         }
     }
-//    
-//    var action: () -> Void {
-//        switch self {
-//        case .toggleSidebar(let sidebar):
-//            return {
-//                sidebar.toggleSidebar()
-//            }
-//        case .toggleToolbarExpanded(let bk):
-//            return {
-//                bk.toggleExpanded()
-//            }
-//        case .toggleQuickOpen(let bk):
-//            return {
-//                bk.toggleQuickOpen()
-//            }
-//        default:
-//            return {
-//                print("No action associated with case \(self.name)")
-//            }
-//        }
-//    }
+    //    
+    //    var action: () -> Void {
+    //        switch self {
+    //        case .toggleSidebar(let sidebar):
+    //            return {
+    //                sidebar.toggleSidebar()
+    //            }
+    //        case .toggleToolbarExpanded(let bk):
+    //            return {
+    //                bk.toggleExpanded()
+    //            }
+    //        case .toggleQuickOpen(let bk):
+    //            return {
+    //                bk.toggleQuickOpen()
+    //            }
+    //        default:
+    //            return {
+    //                print("No action associated with case \(self.name)")
+    //            }
+    //        }
+    //    }
 }
 
 @Observable
@@ -143,116 +144,66 @@ final class ConversationHandler {
     /// This history should only be sent to GPT, not be saved to a Conversation. The Conversation has it's own array of Messages
     var messageHistory: String = ""
     
-    var editorHeight: Double = ConversationHandler.defaultEditorHeight
+//    var editorHeight: Double = ConversationHandler.defaultEditorHeight
     
-    static let defaultEditorHeight: Double = 160
+//    static let defaultEditorHeight: Double = 160
     
     func getConversation(from id: Conversation.ID, within conversations: [Conversation]) -> Conversation? {
         return conversations.first(where: {$0.id == id})
     }
     
     
-    func createMessageHistory(for conversation: Conversation, latestMessage: Message) async -> String {
+    func createMessageHistory(for conversation: Conversation, latestMessage: Message, with systemPrompt: String) async -> [RequestMessage] {
         
-//        guard let messages = conversation.messages, !messages.isEmpty else {
-//            messageHistory = ""
-//            print("No message in conversation")
-//            return latestMessage.content
-//        }
+        let maxMessagesInHistory: Int = 4
         
-        /// Each query sent to GPT will be formatted into 4 parts
-        /// 1. # Conversation name
-        /// 2. ## Conversation-wide prompt
-        /// 3. ## User query
-        ///     - Sent
-        ///     - Message body
-        ///4. ## Previous Messages
-        ///     - Author ({timestamp}):
-        ///     - Message body
+        let conversationPrompt: String = conversation.prompt ?? ""
         
-        /// Constants
-        let maxMessagesInHistory: Int = 8
+        let system = RequestMessage(role: "system", content: systemPrompt + conversationPrompt)
         
-        /// Part 1
-        let conversationHeading: String = "# Conversation: \"\(conversation.name)\""
+        //        guard let messages = conversation.messages else {
+        //            print("There were no messages to send")
+        //            throw GPTError.failedToFetchResponse
+        //        }
         
-        /// Part 2
-        var conversationPromptHeading: String = ""
-        var conversationPromptBody: String = ""
+        // Filter out the latest message and sort by timestamp in descending order
         
-        if let prompt = conversation.prompt {
-            conversationPromptHeading = "## Conversation-wide prompt"
-            conversationPromptBody = "\(prompt)"
-        }
-        
-        /// Part 3
-        let latestMessageHeading: String = "## User Query"
-        let latestMessagebody: String = "\(formatMessageForGPT(latestMessage))"
-        
-        /// Part 4
-        let historyHeading: String = "## Previous Messages (newest to oldest)"
-        
-        /// Prune the messages, leaving the most recent 8, *not* including the latest message
-        
-        
-        var historyBody: String = ""
-
         if let messages = conversation.messages {
             
-            let history: [Message] = messages
+            let history = messages
                 .filter { $0.persistentModelID != latestMessage.persistentModelID }
-                .sorted { $0.timestamp > $1.timestamp }
+                .sorted { $0.timestamp < $1.timestamp }
             
             let prunedHistory = history.prefix(maxMessagesInHistory)
             
-            let historicalMessages: String = prunedHistory.map {
-                formatMessageForGPT($0)
-            }.joined(separator: "\n\n")
+            let historicalMessages: [RequestMessage] = prunedHistory.map { message in
+                let role: String
+                switch message.type {
+                case .user:
+                    role = "user"
+                case .assistant:
+                    role = "assistant"
+                }
+                return RequestMessage(role: role, content: message.content)
+            }
             
-            historyBody = historicalMessages
+            // Prepend the system message
+            return [system] + historicalMessages
+        } else {
+            
+            let latest = [RequestMessage(role: "user", content: latestMessage.content)]
+            
+            return [system] + latest
         }
-        
-        
-        
-        messageHistory = """
-        \(conversationHeading)
-        
-        \(conversationPromptHeading)
-        \(conversationPromptBody)
-        
-        \(latestMessageHeading)
-        \(latestMessagebody)
-        
-        \(historyHeading)
-        \(historyBody)
-        """
-        
-        print(messageHistory)
-        print(">--- END Message history ---|\n")
-        
-        return messageHistory
-        
-    } // END createMessageHistory
+    } // END create message history
+    
+    
     
     func getRandomParagraph() -> String {
         ExampleText.paragraphs.randomElement() ?? "No paragraphs available"
     }
     
-    func formatMessageForGPT(_ message: Message) -> String {
-        
-        print("|--- formatMessageForGPT --->")
-        
-        let messageHeading: String = "\(message.type.name) (\(ConversationHandler.formatTimestamp(message.timestamp))):"
-        let messageFooter: String = "End of message from \(message.type.name) (\(ConversationHandler.formatTimestamp(message.timestamp)))."
-        
-        let formattedMessage: String = """
-        \(messageHeading)
-        \(message.content)
-        \(messageFooter)
-        """
-        print(">--- END formatMessageForGPT ---|\n")
-        return formattedMessage
-    }
+    
     
     static func formatTimestamp(_ timestamp: Date) -> String {
         return timestamp.formatted(.dateTime.year().month().day().hour().minute().second())

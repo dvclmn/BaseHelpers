@@ -41,6 +41,7 @@ enum DebugColumn {
 enum DefinedOn {
     case conv
     case sidebar
+    case bk
     
     var name: String {
         switch self {
@@ -48,6 +49,8 @@ enum DefinedOn {
             "ConversationHandler"
         case .sidebar:
             "SidebarHandler"
+        case .bk:
+            "BanksiaHandler"
         }
     }
 }
@@ -100,11 +103,11 @@ struct DebugView: View {
                 state: "\(sidebar.isSidebarDismissed)",
                 definedOn: .sidebar
             ),
-//            DebugInfo(
-//                title: "Search focused",
-//                state: "\(sidebar.isSidebarDismissed)",
-//                definedOn: .sidebar
-//            ),
+            DebugInfo(
+                title: "Editor height",
+                state: "\(bk.editorHeight)",
+                definedOn: .bk
+            ),
             DebugInfo(
                 title: "Current request",
                 state: "\(conv.currentRequest)",
