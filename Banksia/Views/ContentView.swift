@@ -142,6 +142,10 @@ struct ContentView: View {
                 deleteCurrentConversation()
                 conv.currentRequest = .none
                 
+            case .exportAll:
+                deleteCurrentConversation()
+                conv.currentRequest = .none
+                
             case .goToPrevious:
                 print("Request to navigate to previous conversation")
                 conv.currentRequest = .none
@@ -179,6 +183,7 @@ struct ContentView: View {
                 closeWindow.callAsFunction(id: "debug")
             }
         }
+        .fileExporter(isPresented: <#T##Binding<Bool>#>, documents: <#T##Collection#>, contentType: <#T##UTType#>, onCompletion: <#T##(Result<[URL], any Error>) -> Void##(Result<[URL], any Error>) -> Void##(_ result: Result<[URL], any Error>) -> Void#>)
         
         
         
@@ -189,6 +194,10 @@ extension ContentView {
     
     private func bringAppToForeground() {
         NSApp.activate(ignoringOtherApps: true)
+    }
+    
+    func exportAllData() {
+        bk.exportDataToJSON(conversations: conversations)
     }
     
     func presentConversation() {

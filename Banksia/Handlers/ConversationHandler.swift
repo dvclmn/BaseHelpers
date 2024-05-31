@@ -15,6 +15,7 @@ enum AppAction {
     case new
     case edit
     case delete
+    case exportAll
     case goToPrevious
     case goToNext
     case search
@@ -36,6 +37,10 @@ enum AppAction {
             return "Edit"
         case .delete:
             return "Delete"
+            
+        case .exportAll:
+            return "Export All…"
+            
         case .goToPrevious:
             return "Go To Previous"
         case .goToNext:
@@ -71,6 +76,11 @@ enum AppAction {
                 .init("e", modifiers: .command)
         case .delete:
                 .init(.delete, modifiers: .command)
+            
+        case .exportAll:
+                .init("e", modifiers: [.command, .shift])
+            
+            
         case .goToPrevious:
                 .init("[", modifiers: [.command, .shift])
         case .goToNext:

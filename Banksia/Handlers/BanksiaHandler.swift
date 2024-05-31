@@ -81,6 +81,47 @@ class BanksiaHandler: ObservableObject {
         return "Unknown"
     }
     
+    
+    
+    
+    func exportDataToJSON(conversations: [Conversation]) -> URL? {
+        let exportData = ExportData(systemPrompt: self.systemPrompt, created: Date().timeIntervalSince1970, conversations: conversations)
+        
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = .prettyPrinted
+        encoder.dateEncodingStrategy = .secondsSince1970
+        
+        do {
+            let jsonData = try encoder.encode(exportData)
+            
+            // Save the JSON to a file
+            let fileManager = FileManager.default
+            let urls = fileManager.urls(for: .documentDirectory, in: .userDomainMask)
+            guard let documentDirectory = urls.first else { return nil }
+            
+            let fileURL = documentDirectory.appendingPathComponent("conversations_backup.json")
+            try jsonData.write(to: fileURL)
+            
+            // Show save panel to the user
+            let savePanel = NSSavePanel()
+            savePanel.directoryURL = documentDirectory
+            savePanel.nameFieldStringValue = "conversations_backup.json"
+            savePanel.allowedContentTypes = [.json]
+            
+            if savePanel.runModal() == .OK {
+                if let selectedURL = savePanel.url {
+                    try fileManager.moveItem(at: fileURL, to: selectedURL)
+                    return selectedURL
+                }
+            }
+            
+        } catch {
+            print("Error encoding JSON: \(error)")
+        }
+        
+        return nil
+    }
+    
 }
 
 

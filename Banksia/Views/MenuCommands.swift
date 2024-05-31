@@ -22,22 +22,27 @@ struct MenuCommands: Commands {
     var body: some Commands {
         
         CommandGroup(replacing: .newItem) {
-            Button("New") {
+            Button(AppAction.new.name) {
                 conv.currentRequest = .new
             }
             .keyboardShortcut(AppAction.new.shortcut)
             
             
-            Button("Quick Open…") {
+            Button(AppAction.toggleQuickOpen.name) {
                 conv.currentRequest = .toggleQuickOpen
             }
             .keyboardShortcut(AppAction.toggleQuickOpen.shortcut)
             
             
-            Button("Edit…") {
+            Button(AppAction.edit.name) {
                 conv.isConversationEditorShowing.toggle()
             }
             .keyboardShortcut(AppAction.edit.shortcut)
+            
+            Button(AppAction.exportAll.name) {
+                conv.currentRequest = .exportAll
+            }
+            .keyboardShortcut(AppAction.exportAll.shortcut)
         }
         
         
