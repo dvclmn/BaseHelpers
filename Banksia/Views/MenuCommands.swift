@@ -27,6 +27,7 @@ struct MenuCommands: Commands {
             }
             .keyboardShortcut(AppAction.new.shortcut)
             
+            Divider()
             
             Button(AppAction.toggleQuickOpen.name) {
                 conv.currentRequest = .toggleQuickOpen
@@ -34,10 +35,6 @@ struct MenuCommands: Commands {
             .keyboardShortcut(AppAction.toggleQuickOpen.shortcut)
             
             
-            Button(AppAction.edit.name) {
-                conv.isConversationEditorShowing.toggle()
-            }
-            .keyboardShortcut(AppAction.edit.shortcut)
             
             
             Button(AppAction.exportAll.name) {
@@ -86,6 +83,12 @@ struct MenuCommands: Commands {
             .keyboardShortcut(AppAction.goToNext.shortcut)
             
             Divider()
+            
+            Button(AppAction.conversationSettings.name) {
+                conv.isConversationEditorShowing.toggle()
+            }
+            .keyboardShortcut(AppAction.conversationSettings.shortcut)
+            
             
 //            Button("Previous Quick Open Conversation") {
 //                conv.currentRequest = .goToPreviousQuickOpen

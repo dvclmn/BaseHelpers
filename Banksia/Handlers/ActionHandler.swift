@@ -24,11 +24,13 @@ enum AppFocus: String {
 
 enum AppAction {
     case new
-    case edit
     case delete
     
+    case conversationSettings
+
     case sendQuery
     
+    case exportConversation
     case exportAll
     case goToPrevious
     case goToNext
@@ -47,13 +49,16 @@ enum AppAction {
         switch self {
         case .new:
             return "New"
-        case .edit:
-            return "Edit"
+        case .conversationSettings:
+            return "Conversation Settings…"
         case .delete:
             return "Delete"
             
         case .sendQuery:
             return "Send"
+            
+        case .exportConversation:
+            return "Export Conversation…"
             
         case .exportAll:
             return "Export All…"
@@ -108,7 +113,7 @@ enum AppAction {
         switch self {
         case .new:
                 .init("n", modifiers: .command)
-        case .edit:
+        case .conversationSettings:
                 .init("e", modifiers: .command)
         case .delete:
                 .init(.delete, modifiers: .command)
@@ -116,6 +121,8 @@ enum AppAction {
         case .sendQuery:
                 .init(.return, modifiers: .command)
             
+        case .exportConversation:
+                .init("e", modifiers: [.command])
         case .exportAll:
                 .init("e", modifiers: [.command, .shift])
             

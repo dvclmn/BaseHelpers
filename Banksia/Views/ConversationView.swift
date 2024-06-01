@@ -59,12 +59,13 @@ struct ConversationView: View {
                                         
                                     } // END ForEach
                                 } // END lazy vstack
-                                .scrollTargetLayout()
                                 .padding(.vertical, 40)
+                                .scrollTargetLayout()
                             } // END scrollview
-                            .scrollPosition(id: $conv.scrolledMessageID, anchor: .bottom)
                             .safeAreaPadding(.top, Styles.toolbarHeight)
-                            .safeAreaPadding(.bottom, conv.editorHeight + 10)
+                            .safeAreaPadding(.bottom, conv.editorHeight)
+                            .defaultScrollAnchor(.bottom)
+                            .scrollPosition(id: $conv.scrolledMessageID, anchor: .bottom)
                             
                             .overlay(alignment: .bottomTrailing) {
                                 Button {

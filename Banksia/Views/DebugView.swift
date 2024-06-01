@@ -13,11 +13,32 @@ import Swatches
 import Icons
 import GeneralUtilities
 
-struct DebugInfo: Identifiable {
+public protocol Debuggable {
+    
+}
+
+struct DebugRow: Identifiable {
+    let id = UUID()
+    let title: String
+    let state: String
+    let definedOn: String
+}
+
+struct DebugInfo<Object, Value>: Identifiable {
     var id = UUID()
     var title: String
-    var state: String
-    var definedOn: DefinedOn
+    var state: [String]
+    var definedOn: String
+    
+    init(
+        title: String,
+        object: Object,
+        keyPath: KeyPath<Object, Value>
+    ) {
+        self.title = title
+        self.state = [String(describing: object[keyPath: keyPath])]
+        self.definedOn = String(describing: type(of: object))
+    }
 }
 
 
@@ -38,26 +59,6 @@ enum DebugColumn {
     }
 }
 
-enum DefinedOn {
-    case conv
-    case sidebar
-    case bk
-    case nav
-    
-    var name: String {
-        switch self {
-        case .conv:
-            "ConversationHandler"
-        case .sidebar:
-            "SidebarHandler"
-        case .bk:
-            "BanksiaHandler"
-        case .nav:
-            "NavigationHandler"
-        }
-    }
-}
-
 enum ColumnPosition {
     case beginning
     case middle
@@ -68,7 +69,6 @@ struct DebugView: View {
     @Environment(\.modelContext) private var modelContext
     @EnvironmentObject var bk: BanksiaHandler
     @EnvironmentObject var conv: ConversationHandler
-    
     @EnvironmentObject var sidebar: SidebarHandler
     @EnvironmentObject var nav: NavigationHandler
     
@@ -89,45 +89,65 @@ struct DebugView: View {
     
     var body: some View {
         
+        var debugInfo: [DebugInfo<Any, Any>] {
+            [
+                DebugInfo(
+                    title: "Action log",
+                    object: conv,
+                    keyPath: \.currentRequest
+                ),
+                DebugInfo(
+                    title: "Sidebar visible",
+                    object: sidebar,
+                    keyPath: \.isSidebarVisible
+                ),
+                DebugInfo(
+                    title: "Editor height",
+                    object: bk,
+                    keyPath: \.editorHeight
+                )
+            ]
+        }
         
-        let debugInfo: [DebugInfo] = [
-            DebugInfo(
-                title: "Editor focused",
-                state: "\(conv.isEditorFocused)",
-                definedOn: .conv
-            ),
-            DebugInfo(
-                title: "Sidebar visible",
-                state: "\(sidebar.isSidebarVisible)",
-                definedOn: .sidebar
-            ),
-            DebugInfo(
-                title: "Sidebar dismissed",
-                state: "\(sidebar.isSidebarDismissed)",
-                definedOn: .sidebar
-            ),
-            DebugInfo(
-                title: "Editor height",
-                state: "\(bk.editorHeight)",
-                definedOn: .bk
-            ),
-            DebugInfo(
-                title: "Current request",
-                state: "\(conv.currentRequest)",
-                definedOn: .conv
-            ),
-            DebugInfo(
-                title: "Visible message",
-                state: "\(conv.scrolledMessagePreview ?? "None")",
-                definedOn: .conv
-            ),
-            DebugInfo(
-                title: "Current Focus",
-                state: "\(conv.currentRequest.focus.name)",
-                definedOn: .conv
-            )
-        ]
-
+        
+//        let debugInfo: [DebugInfo<Any, Any>] = [
+//            DebugInfo(
+//                title: "Editor focused",
+//                object: conv,
+//                keyPath: \.
+//            )
+            //            DebugInfo(
+            //                title: "Sidebar visible",
+            //                state: "\(sidebar.isSidebarVisible)",
+            //                definedOn: .sidebar
+            //            ),
+            //            DebugInfo(
+            //                title: "Sidebar dismissed",
+            //                state: "\(sidebar.isSidebarDismissed)",
+            //                definedOn: .sidebar
+            //            ),
+            //            DebugInfo(
+            //                title: "Editor height",
+            //                state: "\(bk.editorHeight)",
+            //                definedOn: .bk
+            //            ),
+            //            DebugInfo(
+            //                title: "Current request",
+            //                state: "\(conv.currentRequest)",
+            //                definedOn: .conv
+            //            ),
+            //            DebugInfo(
+            //                title: "Visible message",
+            //                state: "\(conv.scrolledMessagePreview ?? "None")",
+            //                definedOn: .conv
+            //            ),
+            //            DebugInfo(
+            //                title: "Current Focus",
+            //                state: "\(conv.currentRequest.focus.name)",
+            //                definedOn: .conv
+            //            )
+//        ]
+        
         let spacing: Double = 0
         
         let columns: [GridItem] = [
@@ -135,44 +155,48 @@ struct DebugView: View {
             GridItem(.flexible(minimum: 40),   spacing: spacing, alignment: .topLeading),
             GridItem(.flexible(minimum: 110),               spacing: spacing, alignment: .topLeading)
         ]
-
-        var sortedDebugInfo: [DebugInfo] {
+        
+        
+        var sortedDebugInfo: [DebugRow] {
+            let rows = debugInfo.map { DebugRow(title: $0.title, state: $0.state.joined(separator: ", "), definedOn: $0.definedOn) }
             switch sorting {
             case .title:
-                return debugInfo.sorted { $0.title < $1.title }
+                return rows.sorted { $0.title < $1.title }
             case .state:
-                return debugInfo.sorted { $0.state < $1.state }
+                return rows.sorted { $0.state < $1.state }
             case .definedOn:
-                return debugInfo.sorted { $0.definedOn.name < $1.definedOn.name }
+                return rows.sorted { $0.definedOn < $1.definedOn }
             }
         }
         
         
         VStack(alignment: .leading, spacing: 20) {
             
-//            Label("Debug", systemImage: Icons.debug.icon)
+            //            Label("Debug", systemImage: Icons.debug.icon)
             Text("Debug")
                 .font(.system(size: 22))
                 .foregroundStyle(.secondary)
                 .padding(4)
-
+            
             LazyVGrid(columns: columns) {
                 
                 CustomTableColumn(
-                    column: DebugColumn.title,
-                    rows: sortedDebugInfo.map { $0.title },
-                    columnPosition: .beginning
-                )
-                CustomTableColumn(
-                    column: DebugColumn.state,
-                    rows: sortedDebugInfo.map { $0.state }
-                )
-                CustomTableColumn(
-                    column: DebugColumn.definedOn,
-                    rows: sortedDebugInfo.map { $0.definedOn.name },
-                    columnPosition: .end
-                )
-
+                        column: DebugColumn.title,
+                        rows: sortedDebugInfo.map { $0.title },
+                        columnPosition: .beginning
+                    )
+                    CustomTableColumn(
+                        column: DebugColumn.state,
+                        rows: sortedDebugInfo.map { $0.state }
+                    )
+                    CustomTableColumn(
+                        column: DebugColumn.definedOn,
+                        rows: sortedDebugInfo.map { $0.definedOn },
+                        columnPosition: .end
+                    )
+                
+                
+                
             } // END pazy grid
             
             Spacer()
@@ -189,11 +213,11 @@ struct DebugView: View {
             maxHeight: .infinity,
             alignment: .trailing
         )
-//        .toolbar {
-//            ToolbarItem {
-//                Spacer()
-//            }
-//        }
+        //        .toolbar {
+        //            ToolbarItem {
+        //                Spacer()
+        //            }
+        //        }
         .grainient(
             seed: GrainientPreset.algae.seed,
             version: .v1,
@@ -205,45 +229,9 @@ struct DebugView: View {
 }
 
 extension DebugView {
-    @ViewBuilder
-    func CustomTableHeader(_ label: String) -> some View {
-        Text(label)
-            .fontWeight(.bold)
-    }
     
-    @ViewBuilder
-    func CustomTableRow(_ content: String, column: DebugColumn) -> some View {
-        
-        var booleanStyle: Color {
-            if content == "true" {
-                Swatch.eggplant.colour
-            } else if content == "false" {
-                Swatch.peach.colour.opacity(0.8)
-            } else {
-                .secondary
-            }
-        }
-        
-        Group {
-            switch column {
-            case .title:
-                Text(content)
-            case .state:
-                Text(content)
-                    .monospaced()
-                    .foregroundStyle(booleanStyle)
-                    .padding(.horizontal, 3)
-                    .padding(.vertical, 1)
-                    .background(.thinMaterial)
-                    .clipShape(.rect(cornerRadius: Styles.roundingTiny))
-            case .definedOn:
-                Text(content)
-                    .foregroundStyle(.secondary)
-            }
-        }
-            .frame(height: 20)
-    }
     
+
     @ViewBuilder
     func CustomTableColumn(
         column: DebugColumn,
@@ -281,21 +269,53 @@ extension DebugView {
         
         
         VStack(alignment: .leading, spacing: 0) {
+            
             CustomTableHeader(column.title)
                 .padding(.horizontal, 6)
                 .padding(.bottom, 6)
-            ForEach(Array(zip(rows.indices, rows)), id: \.0) { index, row in
-                CustomTableRow(row, column: column)
-                    .padding(.horizontal, 6)
-                    .padding(.vertical, 2)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .background(index % 2 == 0 ? Color.black.opacity(0.1) : Color.clear)
-                    .clipShape(corners)
-                    
-            }
+            ForEach(rows.indices, id: \.self) { index in
+                    CustomTableRow(rows[index], column: column)
+                        .padding(.horizontal, 6)
+                        .padding(.vertical, 2)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .background(index % 2 == 0 ? Color.black.opacity(0.1) : Color.clear)
+                        .clipShape(corners)
+                }
         } // END vstack
         .fontWeight(.medium)
         
+    } // END CustomTableColumn
+    
+    
+    
+    @ViewBuilder
+    func CustomTableHeader(_ label: String) -> some View {
+        Text(label)
+            .fontWeight(.bold)
+    }
+    
+    @ViewBuilder
+    func CustomTableRow(_ content: [String], column: DebugColumn) -> some View {
+        
+        ForEach(content, id: \.self) { item in
+            var booleanStyle: Color {
+                if item == "true" {
+                    Swatch.eggplant.colour
+                } else if item == "false" {
+                    Swatch.peach.colour.opacity(0.8)
+                } else {
+                    .secondary
+                }
+            }
+            
+            Text(item)
+                .monospaced()
+                .foregroundStyle(booleanStyle)
+                .padding(.horizontal, 3)
+                .padding(.vertical, 1)
+                .background(.thinMaterial)
+                .clipShape(.rect(cornerRadius: Styles.roundingTiny))
+        }
     }
 }
 
