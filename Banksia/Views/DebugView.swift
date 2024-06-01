@@ -13,58 +13,6 @@ import Swatches
 import Icons
 import GeneralUtilities
 
-struct DebugRow: Identifiable {
-    var id = UUID()
-    var title: String
-    var state: DebugState
-    var definedOn: DefinedOn
-}
-
-struct DebugState {
-    var main: String
-    var log: [String] = []
-}
-
-struct RowHeightPreferenceKey: PreferenceKey {
-    static var defaultValue: [Int: CGFloat] = [:]
-    static func reduce(value: inout [Int: CGFloat], nextValue: () -> [Int: CGFloat]) {
-        for (index, height) in nextValue() {
-            value[index] = max(value[index] ?? 0, height)
-        }
-    }
-}
-
-enum DebugColumn: String, CaseIterable {
-    case title = "Title"
-    case state = "State"
-    case definedOn = "Defined on"
-    
-    var columnPosition: ColumnPosition {
-        switch self {
-        case .title:
-                .beginning
-        case .state:
-                .middle
-        case .definedOn:
-                .end
-        }
-    }
-}
-
-enum DefinedOn: String {
-    case conv = "ConversationHandler"
-    case sidebar = "SidebarHandler"
-    case bk = "BanksiaHandler"
-    case nav = "NavigationHandler"
-}
-
-enum ColumnPosition {
-    case beginning
-    case middle
-    case end
-}
-
-
 struct DebugView: View {
     @Environment(\.modelContext) private var modelContext
     @EnvironmentObject var bk: BanksiaHandler
@@ -77,7 +25,8 @@ struct DebugView: View {
     let minWidth: Double = 260
     let minHeight: Double = 190
     
-    let frameSizePlay: Double = 200
+    let rowPaddingHorizontal: Double = 8
+    let rowPaddingVertical: Double = 4
     
     @State private var sorting: DebugColumn = .title
     
@@ -129,25 +78,12 @@ struct DebugView: View {
             )
         ]
         
-        //        var sortedDebugRow: [DebugRow] {
-        //            switch sorting {
-        //            case .title:
-        //                return debugInfo.sorted { $0.title < $1.title }
-        //            case .state:
-        //                return debugInfo.sorted { $0.state < $1.state }
-        //            case .definedOn:
-        //                return debugInfo.sorted { $0.definedOn.name < $1.definedOn.name }
-        //            }
-        //        }
-        
-        
         VStack(alignment: .leading, spacing: 20) {
             
             Text("Debug")
                 .font(.system(size: 22))
                 .foregroundStyle(.secondary)
                 .padding(4)
-            
             
             VStack {
                 HStack(alignment: .top, spacing: 0) {
@@ -162,8 +98,8 @@ struct DebugView: View {
                 }
             }
             .onPreferenceChange(RowHeightPreferenceKey.self) { value in
-                        rowHeights = value
-                    }
+                rowHeights = value
+            }
             
             Spacer()
         }
@@ -191,9 +127,6 @@ struct DebugView: View {
 }
 
 extension DebugView {
-    
-    
-    
     
     @ViewBuilder
     func CustomTableColumn(
@@ -231,29 +164,52 @@ extension DebugView {
             }
         }
         
-        
+        var columnMinWidth: Double {
+            switch column {
+            case .title:
+                return 140
+            case .state:
+                return 60
+            case .definedOn:
+                return 140
+            }
+        }
+        var columnMaxWidth: Double {
+            switch column {
+            case .title:
+                return .infinity
+            case .state:
+                return 80
+            case .definedOn:
+                return .infinity
+            }
+        }
         
         
         VStack(alignment: .leading, spacing: 0) {
+            
             CustomTableHeader(column.rawValue)
+            
             ForEach(Array(rows.enumerated()), id: \.element.id) { index, row in
-                
                 
                 Group {
                     switch column {
                     case .title:
-                        CustomTableRow(content: row.title, rowIndex: index)
+                        CustomTableRow(content: row.title, rowIndex: index, column: column)
                     case .state:
-                        CustomTableRow(content: row.state.main, subItems: row.state.log, rowIndex: index)
+                        CustomTableRow(content: row.state.main, subItems: row.state.log, rowIndex: index, column: column)
                     case .definedOn:
-                        CustomTableRow(content: row.definedOn.rawValue, rowIndex: index)
+                        CustomTableRow(content: row.definedOn.rawValue, rowIndex: index, column: column)
                     }
                 }
-                
-                .frame(height: rowHeights.wrappedValue[index] ?? .zero)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.horizontal, 6)
-                .padding(.vertical, 2)
+                .frame(
+                    minWidth: columnMinWidth,
+                    maxWidth: columnMaxWidth,
+                    minHeight: rowHeights.wrappedValue[index] ?? .zero,
+                    alignment: .leading
+                )
+                .padding(.horizontal, rowPaddingHorizontal)
+                .padding(.vertical, rowPaddingVertical)
                 .background(index % 2 == 0 ? Color.black.opacity(0.1) : Color.clear)
                 .clipShape(corners)
             } // END foreach
@@ -263,14 +219,19 @@ extension DebugView {
     @ViewBuilder
     func CustomTableHeader(_ label: String) -> some View {
         Text(label)
-            .fontWeight(.bold)
+            .textCase(.uppercase)
+            .foregroundStyle(.tertiary)
+            .fontWeight(.semibold)
+            .padding(.horizontal, rowPaddingHorizontal)
+            .padding(.vertical, rowPaddingVertical + 8)
     }
     
     @ViewBuilder
     func CustomTableRow(
         content: String,
         subItems: [String] = [],
-        rowIndex: Int
+        rowIndex: Int,
+        column: DebugColumn
     ) -> some View {
         
         var booleanStyle: Color {
@@ -285,18 +246,38 @@ extension DebugView {
         
         VStack(alignment: .leading) {
             
-            Text(content)
-                .monospaced()
-                .foregroundStyle(booleanStyle)
-                .padding(.horizontal, 3)
-                .padding(.vertical, 1)
-                .background(.thinMaterial)
-                .clipShape(.rect(cornerRadius: Styles.roundingTiny))
-            
-            ForEach(subItems, id: \.self) { item in
-                Text(item)
+            Group {
+                switch column {
+                case .title:
+                    Text(content)
+                        .foregroundStyle(.primary)
+                    
+                case .state:
+                    Text(content)
+                        .foregroundStyle(booleanStyle)
+                        .monospaced()
+                        .padding(.horizontal, 3)
+                        .padding(.vertical, 1)
+                        .background(.black.opacity(0.2))
+                        .clipShape(.rect(cornerRadius: Styles.roundingTiny))
+                    
+                    
+                case .definedOn:
+                    Text(content)
+                        .foregroundStyle(.secondary)
+                }
+                ForEach(subItems, id: \.self) { item in
+                    Text(item)
+                }
             }
+            .fontWeight(.medium)
+            
+            
+            
+            
+            
         }
+        
         .background(
             GeometryReader { geometry in
                 Color.clear.preference(key: RowHeightPreferenceKey.self, value: [rowIndex: geometry.size.height])

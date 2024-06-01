@@ -35,6 +35,7 @@
 		F6A7BEEF2B01C57400D3CE25 /* DataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A7BEEE2B01C57400D3CE25 /* DataModel.swift */; };
 		F6A7BEF12B01C57500D3CE25 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F6A7BEF02B01C57500D3CE25 /* Assets.xcassets */; };
 		F6ACAFF62C0B12270009DC15 /* ActionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6ACAFF52C0B12270009DC15 /* ActionHandler.swift */; };
+		F6ACAFF82C0B7F450009DC15 /* DebugHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6ACAFF72C0B7F450009DC15 /* DebugHandler.swift */; };
 		F6BC6B5F2C071C8B00CD0FE4 /* ToolbarExpandedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6BC6B5E2C071C8B00CD0FE4 /* ToolbarExpandedView.swift */; };
 		F6BC6B612C072B9500CD0FE4 /* DebugView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6BC6B602C072B9500CD0FE4 /* DebugView.swift */; };
 		F6BCC7902C08647000B9751D /* Styles in Frameworks */ = {isa = PBXBuildFile; productRef = F6BCC78F2C08647000B9751D /* Styles */; };
@@ -93,6 +94,7 @@
 		F6A7BEF02B01C57500D3CE25 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F6A7BEF52B01C57500D3CE25 /* Banksia.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Banksia.entitlements; sourceTree = "<group>"; };
 		F6ACAFF52C0B12270009DC15 /* ActionHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionHandler.swift; sourceTree = "<group>"; };
+		F6ACAFF72C0B7F450009DC15 /* DebugHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugHandler.swift; sourceTree = "<group>"; };
 		F6BC6B5E2C071C8B00CD0FE4 /* ToolbarExpandedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolbarExpandedView.swift; sourceTree = "<group>"; };
 		F6BC6B602C072B9500CD0FE4 /* DebugView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugView.swift; sourceTree = "<group>"; };
 		F6BCC79A2C08678E00B9751D /* UpdaterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdaterView.swift; sourceTree = "<group>"; };
@@ -169,6 +171,7 @@
 		F64F8E102B02200400C72E51 /* Handlers */ = {
 			isa = PBXGroup;
 			children = (
+				F6ACAFF72C0B7F450009DC15 /* DebugHandler.swift */,
 				F6ACAFF52C0B12270009DC15 /* ActionHandler.swift */,
 				F6BCC7A32C08B51E00B9751D /* ShortcutHandler.swift */,
 				F60B6A722C005D7B007EDCDD /* SidebarHandler.swift */,
@@ -357,6 +360,7 @@
 				F60B6A732C005D7B007EDCDD /* SidebarHandler.swift in Sources */,
 				F6A5E1B72BC6EE480018B1B5 /* PreferencesHandler.swift in Sources */,
 				F64F8E202B03082100C72E51 /* BanksiaHandler.swift in Sources */,
+				F6ACAFF82C0B7F450009DC15 /* DebugHandler.swift in Sources */,
 				F6BCC7A82C08B5CA00B9751D /* Settings+ConnectionView.swift in Sources */,
 				F6EBCA882C047FC7007C452A /* ClaudeModel.swift in Sources */,
 				F6BCC79B2C08678E00B9751D /* UpdaterView.swift in Sources */,
