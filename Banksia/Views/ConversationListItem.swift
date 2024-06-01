@@ -20,7 +20,7 @@ struct ConversationListItem: View {
     
     @EnvironmentObject var nav: NavigationHandler
     @EnvironmentObject var bk: BanksiaHandler
-    @Environment(ConversationHandler.self) private var conv
+    @EnvironmentObject var conv: ConversationHandler
     
     @EnvironmentObject var sidebar: SidebarHandler
     @EnvironmentObject var popup: PopupHandler

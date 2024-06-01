@@ -42,6 +42,26 @@ class NavigationHandler: Navigable, ObservableObject {
         }
     }
     
+
+    func fetchCurrentConversationStatic(from conversations: [Conversation]) -> Conversation? {
+        
+        print("\n\n|--- Fetch current conversation --->\n")
+        
+        guard let currentDestinationString = currentDestination else {
+            print("No last destination")
+            return nil
+        }
+        
+        guard let current = conversations.first(where: {"\($0.persistentModelID)" == currentDestinationString}) else {
+            print("No matching converation")
+            return nil
+        }
+        
+        print("Current conversation is: \(current.name)")
+        return current
+    }
+    
+    
     
     
     //    public func goBack() {

@@ -17,7 +17,7 @@ import Popup
 
 struct SingleMessageView: View {
     @EnvironmentObject var bk: BanksiaHandler
-    @Environment(ConversationHandler.self) private var conv
+    @EnvironmentObject var conv: ConversationHandler
     
     @EnvironmentObject var popup: PopupHandler
     @EnvironmentObject var sidebar: SidebarHandler
@@ -142,7 +142,7 @@ struct SingleMessageView: View {
             .environmentObject(BanksiaHandler())
             .environmentObject(SidebarHandler())
             .environmentObject(PopupHandler())
-            .environment(ConversationHandler())
+            .environmentObject(ConversationHandler())
             .frame(width: 500, height: 700)
     }
 }

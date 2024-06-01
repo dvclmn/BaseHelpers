@@ -13,20 +13,21 @@ import Icons
 import Button
 import StateView
 import Sidebar
+import MarkdownEditor
+import KeychainHandler
+import Popup
 
 struct ConversationView: View {
     @Environment(\.modelContext) private var modelContext
     @EnvironmentObject var bk: BanksiaHandler
-    @Environment(ConversationHandler.self) private var conv
-    
+    @EnvironmentObject var conv: ConversationHandler
+    @EnvironmentObject var popup: PopupHandler
     @EnvironmentObject var sidebar: SidebarHandler
     
     @Bindable var conversation: Conversation
     @Binding var scrolledMessageID: Message.ID?
     
     var body: some View {
-        
-        @Bindable var conv = conv
         
         VStack {
             if let conversationMessages = conversation.messages {
@@ -43,10 +44,7 @@ struct ConversationView: View {
                 
                 VStack {
                     if conversationMessages.count > 0 {
-                        
                         if searchResults.count > 0 {
-                            
-                            
                             ScrollView(.vertical) {
                                 VStack(spacing: 12) {
                                     ForEach(searchResults.sorted(by: { $0.timestamp < $1.timestamp }), id: \.timestamp) { message in
@@ -97,15 +95,11 @@ struct ConversationView: View {
                 .sheet(isPresented: $conv.isConversationEditorShowing) {
                     ConversationEditorView(conversation: conversation)
                 }
-                
-                
-                
             } else {
                 
                 Text("No messages here?")
                 
             }// END has messages check
-            
             
         } // END Vstack
         .task(id: conversation.grainientSeed) {
@@ -113,16 +107,24 @@ struct ConversationView: View {
                 conv.grainientSeed = conversation.grainientSeed
             }
         }
-        .task(id: conv.streamingGPTMessageID) {
-            if let id = conv.streamingGPTMessageID {
-                print("conv.streamingGPTMessageID successfully updated to: \(id)")
-                updateGPTResponseWithStream()
-            }
-        }
+//        .task(id: conv.streamingGPTMessageID) {
+//            if let id = conv.streamingGPTMessageID {
+//                print("conv.streamingGPTMessageID successfully updated to: \(id)")
+//                updateGPTResponseWithStream()
+//            }
+//        }
         
-        .task(id: conv.streamedResponse) {
-            updateGPTResponseWithStream()
-            
+//        .task(id: conv.streamedResponse) {
+//            updateGPTResponseWithStream()
+//        }
+        .task(id: conv.currentRequest) {
+            switch conv.currentRequest {
+            case .sendQuery:
+                await sendMessage()
+                conv.currentRequest = .none
+            default:
+                break
+            }
         }
         
         
@@ -134,41 +136,7 @@ struct ConversationView: View {
 
 extension ConversationView {
     
-    
-    private func sendTestMessage() async {
-        
-        let newUserMessage = Message(
-            content: userPrompt,
-            type: .user,
-            conversation: conversation
-        )
-        modelContext.insert(newUserMessage)
-        
-        userPrompt = ""
-        conv.editorHeight = ConversationHandler.defaultEditorHeight
-        
-        /// Construct the message history for GPT context
-        let messageHistory: [RequestMessage] = await conv.createMessageHistory(
-            for: conversation,
-            latestMessage: newUserMessage,
-            with: bk.systemPrompt
-        )
-        
-        print("Test-message history: \(messageHistory.prettyPrinted)")
-        
-        
-        let newGPTMessage = Message(
-            content: ExampleText.paragraphs.randomElement() ?? "No random element",
-            type: .assistant,
-            conversation: conversation
-        )
-        modelContext.insert(newGPTMessage)
-        
-        conv.isResponseLoading = false
-        
-    }
-    
-    private func sendMessage(_ isTestMode: Bool = false) async {
+    private func sendMessage() async {
         
         guard let apiKey = KeychainHandler.shared.readString(for: "openAIAPIKey") else {
             popup.showPopup(title: "No API Key found", message: "Please visit app Settings (⌘,) to set up your API Key")
@@ -176,17 +144,16 @@ extension ConversationView {
         }
         
         conv.isResponseLoading = true
-        
-        
+
         /// Create new `Message` object and add to database
         let newUserMessage = Message(
-            content: userPrompt,
+            content: conv.userPrompt,
             type: .user,
             conversation: conversation
         )
         modelContext.insert(newUserMessage)
         
-        userPrompt = ""
+        conv.userPrompt = ""
         conv.editorHeight = ConversationHandler.defaultEditorHeight
         
         
@@ -197,15 +164,28 @@ extension ConversationView {
             with: bk.systemPrompt
         )
         
+        let newGPTMessage = Message(
+            content: "",
+            type: .assistant,
+            conversation: conversation
+        )
+        
+        modelContext.insert(newGPTMessage)
+
+        
+        guard !bk.isTestMode else {
+            
+            guard let lastMessage = conversation.messages?.last(where: { $0.type == .assistant }) else { return }
+            
+            lastMessage.content = ExampleText.paragraphs.randomElement() ?? "Couldn't randomise"
+            
+            conv.isResponseLoading = false
+            
+            return
+        }
+        
         do {
             
-            let newGPTMessage = Message(
-                content: "",
-                type: .assistant,
-                conversation: conversation
-            )
-            
-            modelContext.insert(newGPTMessage)
             
             
 
@@ -276,7 +256,7 @@ extension ConversationView {
         
         
         //        print("\n\n|--- Update GPT message with Stream --->\n")
-        //        if let conversation = conv.fetchCurrentConversationStatic(withID: nav.currentDestination, from: conversations) {
+        //        if let conversation = nav.fetchCurrentConversationStatic(from: conversations) {
         //
         //            print("We got the current convoersation!: \(conversation)")
         //

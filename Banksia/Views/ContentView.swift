@@ -23,15 +23,14 @@ struct ContentView: View {
     @Environment(\.dismissWindow) var closeWindow
     @Environment(\.modelContext) var modelContext
     @Environment(\.undoManager) var undoManager
+    
     @EnvironmentObject var bk: BanksiaHandler
-    @Environment(ConversationHandler.self) private var conv
-    
-    @Query private var conversations: [Conversation]
-    
+    @EnvironmentObject var conv: ConversationHandler
     @EnvironmentObject var nav: NavigationHandler
     @EnvironmentObject var popup: PopupHandler
-    
     @EnvironmentObject var sidebar: SidebarHandler
+    
+    @Query private var conversations: [Conversation]
     
     @State private var isExporting: Bool = false
     @State private var isAlerting: Bool = false
@@ -201,7 +200,7 @@ struct ContentView: View {
         
         .task(id: nav.path) {
             print("Navigation path changed")
-            conv.currentConversationID = conv.fetchCurrentConversationStatic(withID: nav.currentDestination, from: conversations)?.persistentModelID
+            conv.currentConversationID = nav.fetchCurrentConversationStatic(from: conversations)?.persistentModelID
             nav.updateLastDestination()
         }
         .task(id: bk.isDebugShowing) {
@@ -230,10 +229,10 @@ extension ContentView {
     
     func goToNextConversation() {
         
-        if let currentIndex = conversations.indexOf(conv.fetchCurrentConversationStatic(withID: nav.currentDestination, from: conversations)) {
+        if let currentIndex = conversations.indexOf(nav.fetchCurrentConversationStatic(from: conversations)) {
             print("Current Index: \(currentIndex)")
             
-            if let previousIndex = conversations.previousIndex(before: conv.fetchCurrentConversationStatic(withID: nav.currentDestination, from: conversations)) {
+            if let previousIndex = conversations.previousIndex(before: nav.fetchCurrentConversationStatic(from: conversations)) {
                 print("Next Index: \(previousIndex), next conversation: \(conversations[previousIndex])")
                 nav.navigate(to: Page.conversation(conversations[previousIndex]))
             } else {
@@ -246,10 +245,10 @@ extension ContentView {
     
     func goToPreviousConversation() {
         
-        if let currentIndex = conversations.indexOf(conv.fetchCurrentConversationStatic(withID: nav.currentDestination, from: conversations)) {
+        if let currentIndex = conversations.indexOf(nav.fetchCurrentConversationStatic(from: conversations)) {
             print("Current Index: \(currentIndex)")
             
-            if let nextIndex = conversations.nextIndex(after: conv.fetchCurrentConversationStatic(withID: nav.currentDestination, from: conversations)) {
+            if let nextIndex = conversations.nextIndex(after: nav.fetchCurrentConversationStatic(from: conversations)) {
                 print("Next Index: \(nextIndex), next conversation: \(conversations[nextIndex])")
                 nav.navigate(to: Page.conversation(conversations[nextIndex]))
             } else {
@@ -277,7 +276,7 @@ extension ContentView {
     
     func presentConversation() {
         
-        if let currentConversation = conv.fetchCurrentConversationStatic(withID: nav.currentDestination, from: conversations) {
+        if let currentConversation = nav.fetchCurrentConversationStatic(from: conversations) {
             nav.navigate(to: .conversation(currentConversation))
             
         } else {
@@ -309,7 +308,7 @@ extension ContentView {
     
     func deleteCurrentConversation() {
         
-        guard let conversation = conv.fetchCurrentConversationStatic(withID: nav.currentDestination, from: conversations) else {
+        guard let conversation = nav.fetchCurrentConversationStatic(from: conversations) else {
             print("Unable to get current conversation")
             return
         }
@@ -346,7 +345,7 @@ extension ContentView {
 #if DEBUG
 #Preview {
     ContentView()
-        .environment(ConversationHandler())
+        .environmentObject(ConversationHandler())
         .environmentObject(BanksiaHandler())
         .environmentObject(NavigationHandler())
     

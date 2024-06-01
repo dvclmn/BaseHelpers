@@ -67,7 +67,7 @@ enum ColumnPosition {
 struct DebugView: View {
     @Environment(\.modelContext) private var modelContext
     @EnvironmentObject var bk: BanksiaHandler
-    @Environment(ConversationHandler.self) private var conv
+    @EnvironmentObject var conv: ConversationHandler
     
     @EnvironmentObject var sidebar: SidebarHandler
     @EnvironmentObject var nav: NavigationHandler
@@ -293,7 +293,7 @@ extension DebugView {
     DebugView()
         .padding(.top,1)
         .environmentObject(BanksiaHandler())
-        .environment(ConversationHandler())
+        .environmentObject(ConversationHandler())
         .environmentObject(NavigationHandler())
         .environmentObject(SidebarHandler())
     

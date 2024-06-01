@@ -16,8 +16,7 @@ import KeyboardShortcuts
 @main
 struct BanksiaApp: App {
     
-    @State private var conv = ConversationHandler()
-    
+    @StateObject private var conv = ConversationHandler()
     @StateObject private var bk = BanksiaHandler()
     @StateObject private var nav = NavigationHandler()
     @StateObject private var popup = PopupHandler()
@@ -32,7 +31,7 @@ struct BanksiaApp: App {
     var body: some Scene {
         Window("Banksia", id: "main") {
             ContentView()
-                .environment(conv)
+                .environmentObject(conv)
                 .environmentObject(bk)
                 .environmentObject(nav)
                 .environmentObject(popup)
@@ -46,7 +45,7 @@ struct BanksiaApp: App {
         .commands {
             MenuCommands(
                 bk: bk,
-                conv: $conv,
+                conv: conv,
                 sidebar: sidebar,
                 updaterController: updaterController
             )
@@ -56,7 +55,7 @@ struct BanksiaApp: App {
         
             Window("Banksia Debug", id: "debug") {
                 DebugView()
-                    .environment(conv)
+                    .environmentObject(conv)
                     .environmentObject(bk)
                     .environmentObject(nav)
                     .environmentObject(popup)

@@ -23,7 +23,7 @@ import CountdownTimer
 import Button
 
 struct MessageInputView: View {
-    @Environment(ConversationHandler.self) private var conv
+    @EnvironmentObject var conv: ConversationHandler
     @EnvironmentObject var bk: BanksiaHandler
     
     @EnvironmentObject var popup: PopupHandler
@@ -31,7 +31,7 @@ struct MessageInputView: View {
     
     @Environment(\.modelContext) private var modelContext
     
-    @SceneStorage("userPrompt") var userPrompt: String = ""
+//    @SceneStorage("userPrompt") var userPrompt: String = ""
     
     @State private var isUIFaded: Bool = false
     
@@ -50,8 +50,6 @@ struct MessageInputView: View {
     
     var body: some View {
         
-        @Bindable var conv = conv
-        
         VStack(spacing: 0) {
             
             VStack(alignment: .leading, spacing: 0) {
@@ -62,7 +60,7 @@ struct MessageInputView: View {
                     VStack {
                         
                         MarkdownEditorView(
-                            text: $userPrompt,
+                            text: $conv.userPrompt,
                             placeholderText: "Begin writing here…",
                             isFocused: $isFocused
                         )
@@ -105,7 +103,7 @@ struct MessageInputView: View {
                     startTimer()
                 }
                 
-                .task(id: userPrompt) {
+                .task(id: conv.userPrompt) {
                     startTimer()
                 }
                 .task {
@@ -129,12 +127,12 @@ struct MessageInputView: View {
             // MARK: - Text area Buttons
             .overlay(alignment: .bottom) {
                 
-                Button {
-                    
-                } label: {
-                    Label("Add to Message", systemImage: Icons.plus.icon)
-                }
-                .offset(y: -30)
+//                Button {
+//                    
+//                } label: {
+//                    Label("Add to Message", systemImage: Icons.plus.icon)
+//                }
+//                .offset(y: -30)
                 
                 EditorControls()
                 //
@@ -206,18 +204,18 @@ extension MessageInputView {
             
             Button {
                 Task {
-                    
-                    if bk.isTestMode {
-                        await sendTestMessage()
-                    } else {
-                        await sendMessage()
-                    }
+                    conv.currentRequest = .sendQuery
+//                    if bk.isTestMode {
+//                        await sendTestMessage()
+//                    } else {
+//                        await sendMessage()
+//                    }
                 }
             } label: {
                 Label(conv.isResponseLoading ? "Loading…" : "Send", systemImage: Icons.text.icon)
             }
-            .buttonStyle(.customButton(size: .small, status: userPrompt.isEmpty ? .disabled : .normal, labelDisplay: .titleOnly))
-            .disabled(userPrompt.isEmpty)
+            .buttonStyle(.customButton(size: .small, status: conv.userPrompt.isEmpty ? .disabled : .normal, labelDisplay: .titleOnly))
+            .disabled(conv.userPrompt.isEmpty)
             .keyboardShortcut(.return, modifiers: .command)
             
         }
@@ -240,7 +238,7 @@ extension MessageInputView {
             )
         }
     }
-    .environment(ConversationHandler())
+    .environmentObject(ConversationHandler())
     .environmentObject(BanksiaHandler())
     
     .environmentObject(SidebarHandler())

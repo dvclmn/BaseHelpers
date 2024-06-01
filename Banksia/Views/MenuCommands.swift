@@ -14,7 +14,7 @@ import Sparkle
 struct MenuCommands: Commands {
     
     @ObservedObject var bk: BanksiaHandler
-    @Binding var conv: ConversationHandler
+    @ObservedObject var conv: ConversationHandler
     @ObservedObject var sidebar: SidebarHandler
     
     let updaterController: SPUStandardUpdaterController
@@ -66,7 +66,13 @@ struct MenuCommands: Commands {
             
         }
         
-        CommandMenu("Navigate") {
+        CommandMenu("Conversation") {
+
+            Button(AppAction.sendQuery.name) {
+                conv.currentRequest = .sendQuery
+            }
+            .keyboardShortcut(AppAction.sendQuery.shortcut)
+            
             
             Button(AppAction.goToPrevious.name) {
                 conv.currentRequest = .goToPrevious

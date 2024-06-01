@@ -11,144 +11,36 @@ import SwiftData
 import Grainient
 import MarkdownEditor
 
-enum AppAction {
-    case new
-    case edit
-    case delete
-    case exportAll
-    case goToPrevious
-    case goToNext
-    case search
-    case toggleQuickOpen
-    case toggleSidebar
-    case toggleToolbarExpanded
-    case toggleDebug
-    
-    case goToPreviousQuickOpen
-    case goToNextQuickOpen
-    
-    case none
-    
-    var name: String {
-        switch self {
-        case .new:
-            return "New"
-        case .edit:
-            return "Edit"
-        case .delete:
-            return "Delete"
-            
-        case .exportAll:
-            return "Export All…"
-            
-        case .goToPrevious:
-            return "Previous Conversation"
-        case .goToNext:
-            return "Next Conversation"
-            
-        case .search:
-            return "Search"
-        case .toggleQuickOpen:
-            return "Quick Open"
-        case .toggleSidebar:
-            return "Toggle Sidebar"
-            
-        case .toggleToolbarExpanded:
-            return "Toggle Expanded toolbar"
-            
-        case .toggleDebug:
-            return "Toggle Debug Window"
-            
-        case .goToPreviousQuickOpen:
-            return "Go To Previous Quick Open"
-        case .goToNextQuickOpen:
-            return "Go To Next Quick Open"
-        case .none:
-            return "None"
-        }
-    }
-    
-    
-    var shortcut: KeyboardShortcut {
-        switch self {
-        case .new:
-                .init("n", modifiers: .command)
-        case .edit:
-                .init("e", modifiers: .command)
-        case .delete:
-                .init(.delete, modifiers: .command)
-            
-        case .exportAll:
-                .init("e", modifiers: [.command, .shift])
-            
-            
-        case .goToPrevious:
-                .init("[", modifiers: [.command, .shift])
-            
-        case .goToNext:
-                .init("]", modifiers: [.command, .shift])
-            
-        case .search:
-                .init("f", modifiers: .command)
-        case .toggleQuickOpen:
-                .init("o", modifiers: .command)
-        case .toggleSidebar:
-                .init("\\", modifiers: .command)
-            
-        case .toggleToolbarExpanded:
-                .init("i", modifiers: .command)
-            
-        case .toggleDebug:
-                .init("d", modifiers: .shift)
-            
-        case .goToPreviousQuickOpen:
-                .init(.upArrow, modifiers: [])
-        case .goToNextQuickOpen:
-                .init(.downArrow, modifiers: [])
-        case .none:
-                .defaultAction
-        }
-    }
 
-}
 
-@Observable
-final class ConversationHandler {
+final class ConversationHandler: ObservableObject {
     
-    let bk = BanksiaHandler()
+    @Published var currentConversationID: Conversation.ID? = nil
     
-    var currentConversationID: Conversation.ID? = nil
+    @AppStorage("userPromptKey") var userPrompt: String = ""
     
-    var searchText: String = ""
-    var isSearching: Bool = false
+    @Published var searchText: String = ""
+    @Published var isSearching: Bool = false
     
-    var isEditorFocused: Bool = false
+    @Published var isEditorFocused: Bool = false
     
-    var grainientSeed: Int? = nil
+    @Published var grainientSeed: Int? = nil
     
-    var isResponseLoading: Bool = false
+    @Published var isResponseLoading: Bool = false
     
-    var currentRequest: AppAction = .none
+    @Published var currentRequest: AppAction = .none
     
-    var isConversationEditorShowing: Bool = false
+    @Published var isConversationEditorShowing: Bool = false
     
-    var selectedParagraph: String = ""
-    
-    /// This history should only be sent to GPT, not be saved to a Conversation. The Conversation has it's own array of Messages
-    var messageHistory: String = ""
-    
-    
-    var streamingGPTMessageID: Conversation.ID? = nil
-    var streamedResponse: String = ""
+//    var streamingGPTMessageID: Conversation.ID? = nil
+//    var streamedResponse: String = ""
     
     var editorHeight: Double = ConversationHandler.defaultEditorHeight
-    
     static let defaultEditorHeight: Double = 180
     
     func getConversation(from id: Conversation.ID, within conversations: [Conversation]) -> Conversation? {
         return conversations.first(where: {$0.id == id})
     }
-    
     
     func createMessageHistory(for conversation: Conversation, latestMessage: Message, with systemPrompt: String) async -> [RequestMessage] {
         
@@ -238,25 +130,6 @@ final class ConversationHandler {
         }
     } // END total tokens
     
-    func fetchCurrentConversationStatic(
-        withID currentConversationID: String?,
-        from conversations: [Conversation]
-    ) -> Conversation? {
-        print("\n\n|--- Fetch current conversation --->\n")
-        
-        guard let currentDestinationString = currentConversationID else {
-            print("No last destination")
-            return nil
-        }
-        
-        guard let current = conversations.first(where: {"\($0.persistentModelID)" == currentDestinationString}) else {
-            print("No matching converation")
-            return nil
-        }
-        
-        print("Current conversation is: \(current.name)")
-        return current
-    }
     
 }
 

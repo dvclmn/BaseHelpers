@@ -20,7 +20,7 @@ import Swatches
 
 struct ToolbarView: View {
     @Environment(\.modelContext) var modelContext
-    @Environment(ConversationHandler.self) private var conv
+    @EnvironmentObject var conv: ConversationHandler
     @EnvironmentObject var bk: BanksiaHandler
     @EnvironmentObject var nav: NavigationHandler
     
@@ -38,8 +38,6 @@ struct ToolbarView: View {
     @Binding var conversationGrainientSeed: Int
     
     var body: some View {
-        
-        @Bindable var conv = conv
         
         VStack(spacing:0) {
             HStack(spacing: 14) {

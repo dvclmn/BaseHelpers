@@ -15,7 +15,7 @@ import Icons
 
 struct SidebarView: View {
     @EnvironmentObject var bk: BanksiaHandler
-    @Environment(ConversationHandler.self) private var conv
+    @EnvironmentObject var conv: ConversationHandler
     @EnvironmentObject var sidebar: SidebarHandler
     @EnvironmentObject var nav: NavigationHandler
     
@@ -96,7 +96,7 @@ struct SidebarView: View {
 
 #Preview {
     SidebarView()
-        .environment(ConversationHandler())
+        .environmentObject(ConversationHandler())
         .environmentObject(BanksiaHandler())
         .environmentObject(SidebarHandler())
         .environmentObject(NavigationHandler())
