@@ -8,6 +8,20 @@
 import Foundation
 import SwiftUI
 
+enum AppFocus: String {
+    case search
+//    case sidebar
+    case editor
+    case toolbarExpanded
+    case quickOpen
+    case none
+    
+    var name: String {
+        self.rawValue
+    }
+}
+
+
 enum AppAction {
     case new
     case edit
@@ -71,6 +85,24 @@ enum AppAction {
         }
     }
     
+    var focus: AppFocus {
+        switch self {
+        case .sendQuery, .goToPrevious, .goToNext:
+                .editor
+            
+        case .search:
+                .search
+        case .toggleQuickOpen, .goToPreviousQuickOpen, .goToNextQuickOpen:
+                .quickOpen
+            
+        case .toggleToolbarExpanded:
+                .toolbarExpanded
+            
+        default:
+                .none
+        }
+    }
+    
     
     var shortcut: KeyboardShortcut {
         switch self {
@@ -115,5 +147,5 @@ enum AppAction {
                 .defaultAction
         }
     }
-
+    
 }

@@ -10,12 +10,7 @@ import SwiftData
 import Navigation
 import GeneralStyles
 
-enum FocusedArea: Hashable {
-    case search
-    case sidebar
-    case editor
-    case toolbarExpanded
-}
+
 
 extension Styles {
     static let paddingGutter: Double = 12
@@ -24,6 +19,8 @@ extension Styles {
 class BanksiaHandler: ObservableObject {
     
     @Published var isQuickOpenShowing: Bool = false
+    
+//    @Published var appFocus: AppFocus = .editor
     
     //    @Published var isRequestingNextQuickOpenItem: Bool = false
     //    @Published var isRequestingPreviousQuickOpenItem: Bool = false

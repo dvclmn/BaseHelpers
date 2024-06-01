@@ -146,14 +146,15 @@ struct ToolbarView: View {
             .frame(height: Styles.toolbarHeight)
             
             .task(id: conv.currentRequest) {
-//                print("Current request changed to: \(conv.currentRequest)")
                 switch conv.currentRequest {
                 case .search:
-                    isSearchFocused = true
+                    
+                    conv.currentRequest = .none
                 default:
                     break
                 }
             }
+            
             
             .safeAreaPadding(.leading, isPreview ? Styles.toolbarSpacing : Styles.paddingToolbarTrafficLightsWidth)
             .buttonStyle(.customButton(hasBackground: false, labelDisplay: .iconOnly))

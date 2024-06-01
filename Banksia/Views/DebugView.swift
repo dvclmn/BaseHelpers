@@ -115,6 +115,16 @@ struct DebugView: View {
                 title: "Current request",
                 state: "\(conv.currentRequest)",
                 definedOn: .conv
+            ),
+            DebugInfo(
+                title: "Visible message",
+                state: "\(conv.scrolledMessagePreview ?? "None")",
+                definedOn: .conv
+            ),
+            DebugInfo(
+                title: "Current Focus",
+                state: "\(conv.currentRequest.focus.name)",
+                definedOn: .conv
             )
         ]
 

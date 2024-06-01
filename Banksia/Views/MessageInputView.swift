@@ -45,7 +45,6 @@ struct MessageInputView: View {
     
     @State private var countdown = CountdownTimer()
 
-    
     @Bindable var conversation: Conversation
     
     var body: some View {
@@ -205,11 +204,6 @@ extension MessageInputView {
             Button {
                 Task {
                     conv.currentRequest = .sendQuery
-//                    if bk.isTestMode {
-//                        await sendTestMessage()
-//                    } else {
-//                        await sendMessage()
-//                    }
                 }
             } label: {
                 Label(conv.isResponseLoading ? "Loading…" : "Send", systemImage: Icons.text.icon)
@@ -233,8 +227,7 @@ extension MessageInputView {
         VStack {
             Spacer()
             ConversationView(
-                conversation: Conversation.childcare,
-                scrolledMessageID: .constant(Message.prompt_01.persistentModelID)
+                conversation: Conversation.childcare
             )
         }
     }

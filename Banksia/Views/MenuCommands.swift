@@ -72,6 +72,7 @@ struct MenuCommands: Commands {
                 conv.currentRequest = .sendQuery
             }
             .keyboardShortcut(AppAction.sendQuery.shortcut)
+            .disabled(conv.userPrompt.isEmpty)
             
             
             Button(AppAction.goToPrevious.name) {
@@ -83,7 +84,6 @@ struct MenuCommands: Commands {
                 conv.currentRequest = .goToNext
             }
             .keyboardShortcut(AppAction.goToNext.shortcut)
-            
             
             Divider()
             
@@ -112,7 +112,7 @@ struct MenuCommands: Commands {
         }
         
         CommandGroup(before: .textEditing) {
-            Button("Search…") {
+            Button(AppAction.search.name) {
                 conv.currentRequest = .search
             }
             .keyboardShortcut(AppAction.search.shortcut)

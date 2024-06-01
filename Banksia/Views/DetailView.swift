@@ -17,8 +17,6 @@ struct DetailView: View {
     
     @Query private var conversations: [Conversation]
     
-    @State private var scrolledMessageID: Message.ID?
-    
     var page: Page? = nil
     
     var body: some View {
@@ -38,8 +36,7 @@ struct DetailView: View {
                         conversationGrainientSeed: $conversation.grainientSeed.boundInt
                     ) {
                         ConversationView(
-                            conversation: conversation,
-                            scrolledMessageID: $scrolledMessageID
+                            conversation: conversation
                         )
                     } // END detail wrapper
                     

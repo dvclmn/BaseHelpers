@@ -25,7 +25,6 @@ struct ConversationView: View {
     @EnvironmentObject var sidebar: SidebarHandler
     
     @Bindable var conversation: Conversation
-    @Binding var scrolledMessageID: Message.ID?
     
     var body: some View {
         
@@ -33,21 +32,25 @@ struct ConversationView: View {
             if let conversationMessages = conversation.messages {
                 
                 var searchResults: [Message] {
-                    conversationMessages.filter { message in
+                    conversationMessages
+                        .filter { message in
                         if conv.searchText.count > 1 {
                             return message.content.localizedCaseInsensitiveContains(conv.searchText)
                         } else {
                             return true
                         }
                     }
+                        .sorted(by: { $0.timestamp < $1.timestamp })
                 }
                 
                 VStack {
                     if conversationMessages.count > 0 {
                         if searchResults.count > 0 {
+                            
+                            // MARK: - Scrollview
                             ScrollView(.vertical) {
-                                VStack(spacing: 12) {
-                                    ForEach(searchResults.sorted(by: { $0.timestamp < $1.timestamp }), id: \.timestamp) { message in
+                                LazyVStack(spacing: 12) {
+                                    ForEach(searchResults, id: \.timestamp) { message in
                                         
                                         SingleMessageView(
                                             message: message
@@ -59,13 +62,13 @@ struct ConversationView: View {
                                 .scrollTargetLayout()
                                 .padding(.vertical, 40)
                             } // END scrollview
-                            .scrollPosition(id: $scrolledMessageID, anchor: .top)
+                            .scrollPosition(id: $conv.scrolledMessageID, anchor: .bottom)
                             .safeAreaPadding(.top, Styles.toolbarHeight)
                             .safeAreaPadding(.bottom, conv.editorHeight + 10)
                             
                             .overlay(alignment: .bottomTrailing) {
                                 Button {
-                                    scrolledMessageID = searchResults.last?.id
+                                    conv.scrolledMessageID = searchResults.last?.id
                                 } label: {
                                     Label("Scroll to latest message", systemImage: Icons.down.icon)
                                 }
@@ -107,27 +110,31 @@ struct ConversationView: View {
                 conv.grainientSeed = conversation.grainientSeed
             }
         }
-//        .task(id: conv.streamingGPTMessageID) {
-//            if let id = conv.streamingGPTMessageID {
-//                print("conv.streamingGPTMessageID successfully updated to: \(id)")
-//                updateGPTResponseWithStream()
-//            }
-//        }
+        //        .task(id: conv.streamingGPTMessageID) {
+        //            if let id = conv.streamingGPTMessageID {
+        //                print("conv.streamingGPTMessageID successfully updated to: \(id)")
+        //                updateGPTResponseWithStream()
+        //            }
+        //        }
         
-//        .task(id: conv.streamedResponse) {
-//            updateGPTResponseWithStream()
-//        }
+        //        .task(id: conv.streamedResponse) {
+        //            updateGPTResponseWithStream()
+        //        }
+        .task(id: conv.scrolledMessageID) {
+            if let message = conversation.messages?.first(where: {$0.persistentModelID == conv.scrolledMessageID}) {
+                conv.scrolledMessagePreview = message.content.prefix(20).description
+            }
+        }
         .task(id: conv.currentRequest) {
             switch conv.currentRequest {
             case .sendQuery:
                 await sendMessage()
+                print("Send message requested")
                 conv.currentRequest = .none
             default:
                 break
             }
         }
-        
-        
         
         
     } // END view body
@@ -138,13 +145,18 @@ extension ConversationView {
     
     private func sendMessage() async {
         
+        guard !conv.userPrompt.isEmpty else {
+            print("No query to send")
+            return
+        }
+        
         guard let apiKey = KeychainHandler.shared.readString(for: "openAIAPIKey") else {
             popup.showPopup(title: "No API Key found", message: "Please visit app Settings (⌘,) to set up your API Key")
             return
         }
         
         conv.isResponseLoading = true
-
+        
         /// Create new `Message` object and add to database
         let newUserMessage = Message(
             content: conv.userPrompt,
@@ -171,7 +183,7 @@ extension ConversationView {
         )
         
         modelContext.insert(newGPTMessage)
-
+        
         
         guard !bk.isTestMode else {
             
@@ -186,16 +198,12 @@ extension ConversationView {
         
         do {
             
-            
-            
-
             let requestBody = RequestBody(
                 model: bk.gptModel.model,
                 messages: messageHistory,
                 stream: true,
                 temperature: bk.gptTemperature
             )
-            
             
             let url = URL(string: OpenAIHandler.chatURL)!
             
@@ -206,7 +214,6 @@ extension ConversationView {
                 "Content-Type": "application/json",
                 "Authorization": "Bearer \(apiKey)"
             ]
-            
             
             let (stream, _) = try await URLSession.shared.bytes(for: request)
             
@@ -220,57 +227,13 @@ extension ConversationView {
                 guard let lastMessage = conversation.messages?.last(where: { $0.type == .assistant }) else { return }
                 lastMessage.content += messageChunk
                 
-                
-                
             }
-            
-            //            let response: GPTResponse = try await APIHandler.constructRequestAndFetch(
-            //                url: URL(string: OpenAIHandler.chatURL),
-            //                requestType: .post,
-            //                bearerToken: apiKey,
-            //                body: requestBodyData
-            //            )
-            //
-            //            guard let gptMessage = response.choices.first?.message.content else {
-            //                print("No message content from GPT")
-            //                return
-            //            }
-            
             
         } catch {
             print("Error getting GPT response")
         }
-        
         conv.isResponseLoading = false
     } // END send message
-    
-    
-    
-    func updateLastAssistantMessage(with content: String) {
-        guard let lastMessage = conversation.messages?.last(where: { $0.type == .assistant }) else { return }
-        lastMessage.content += content
-    }
-    
-    func updateGPTResponseWithStream() {
-        
-        
-        
-        //        print("\n\n|--- Update GPT message with Stream --->\n")
-        //        if let conversation = nav.fetchCurrentConversationStatic(from: conversations) {
-        //
-        //            print("We got the current convoersation!: \(conversation)")
-        //
-        //            if let gptMessage = conversation.messages?.first(where: {$0.persistentModelID == conv.streamingGPTMessageID}) {
-        //
-        //                gptMessage.content += conv.streamedResponse
-        //            } else {
-        //                print("Could not get the current target GPT message")
-        //            }
-        //        } else {
-        //            print("Could not get current conversation")
-        //        }
-    }
-    
     
 }
 

@@ -32,10 +32,14 @@ final class ConversationHandler: ObservableObject {
     
     @Published var isConversationEditorShowing: Bool = false
     
+    @Published var scrolledMessageID: Message.ID?
+    @Published var scrolledMessagePreview: String?
+    
 //    var streamingGPTMessageID: Conversation.ID? = nil
 //    var streamedResponse: String = ""
     
     var editorHeight: Double = ConversationHandler.defaultEditorHeight
+    
     static let defaultEditorHeight: Double = 180
     
     func getConversation(from id: Conversation.ID, within conversations: [Conversation]) -> Conversation? {
