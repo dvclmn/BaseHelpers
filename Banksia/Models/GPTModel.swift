@@ -50,15 +50,6 @@ struct GPTResponse: Codable {
     let choices: [GPTChoice]
 }
 
-struct GPTStreamedResponse: Codable {
-    let id: String
-    let object: String
-    let created: Int
-    let model: String
-    let usage: APIUsage
-    let choices: [GPTStreamedChoice]
-}
-
 struct GPTChoice: Codable {
     let index: Int
     let message: GPTMessage
@@ -70,15 +61,24 @@ struct GPTMessage: Codable {
     let content: String
 }
 
+struct GPTStreamedResponse: Codable {
+    let id: String
+    let object: String
+    let created: Int
+    let model: String
+//    let usage: APIUsage
+    let choices: [GPTStreamedChoice]
+}
+
 struct GPTStreamedChoice: Codable {
-    let index: Int
+//    let index: Int
     let delta: GPTStreamedMessage
-    let finish_reason: String
+    let finish_reason: String?
 }
 
 struct GPTStreamedMessage: Codable {
-    let role: String
-    let content: String
+    let role: String?
+    let content: String?
 }
 
 

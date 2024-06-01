@@ -58,7 +58,7 @@ struct SingleMessageView: View {
         
         VStack {
             VStack(alignment: .leading, spacing: 20) {
-                                Text(highlighted)
+                                Text(message.content)
                                     .foregroundStyle(.primary.opacity(0.9))
                                     .font(.system(size: 15, weight: .medium))
 //                MarkdownEditorView(
@@ -69,11 +69,11 @@ struct SingleMessageView: View {
 //                )
                 
                 if bk.isMessageInfoShowing {
-                    HStack(alignment: .bottom, spacing: 18) {
+                    HStack(alignment: .bottom, spacing: 14) {
                         Label("\((message.promptTokens ?? 0) + (message.completionTokens ?? 0))", systemImage: Icons.token.icon)
                         
-                        Label("\(message.content.count)", systemImage: "textformat.alt")
                         Label("\(message.content.wordCount)", systemImage: "text.word.spacing")
+                        Label("\(message.content.count)", systemImage: "textformat.alt")
                         
                         Spacer()
                         
@@ -82,9 +82,9 @@ struct SingleMessageView: View {
                             popup.showPopup(title: "Message copied to clipboard")
                         } label: {
                             Label("Copy text", systemImage: Icons.copy.icon)
-                                .foregroundStyle(.secondary)
                         }
-                        .buttonStyle(.customButton(size: .small, labelDisplay: .iconOnly))
+                        .buttonStyle(.customButton(size: .mini, hasBackground: false, labelDisplay: .iconOnly))
+                        .offset(x: 6, y: 3)
                     }
                     .opacity(isHovering ? 1.0 : 0.4)
                     .labelStyle(.customLabel(size: .mini))
@@ -100,11 +100,11 @@ struct SingleMessageView: View {
             .onHover { hovering in
                 
                 if hovering {
-                    withAnimation(Styles.animation) {
+                    withAnimation(Styles.animationQuick) {
                         isHovering = true
                     }
                 } else {
-                    withAnimation(Styles.animationEasedSlow) {
+                    withAnimation(Styles.animationEased) {
                         isHovering = false
                     }
                 }

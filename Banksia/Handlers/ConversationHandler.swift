@@ -17,7 +17,7 @@ final class ConversationHandler: ObservableObject {
     
     @Published var currentConversationID: Conversation.ID? = nil
     
-    @AppStorage("userPromptKey") var userPrompt: String = ""
+//    @AppStorage("userPromptKey") var userPrompt: String = ""
     
     @Published var searchText: String = ""
     @Published var isSearching: Bool = false
@@ -103,19 +103,7 @@ final class ConversationHandler: ObservableObject {
     }
     
     /// Parse a line from the stream and extract the message
-    static func parse(_ line: String) -> String? {
-        let components = line.split(separator: ":", maxSplits: 1, omittingEmptySubsequences: true)
-        guard components.count == 2, components[0] == "data" else { return nil }
-        
-        let message = components[1].trimmingCharacters(in: .whitespacesAndNewlines)
-        
-        if message == "[DONE]" {
-            return "\n"
-        } else {
-            let chunk = try? JSONDecoder().decode(GPTStreamedResponse.self, from: message.data(using: .utf8)!)
-            return chunk?.choices.first?.delta.content
-        }
-    } // Stream parsing
+    
     
     func totalTokens(for conversation: Conversation) -> Int {
         if let messages = conversation.messages {
@@ -133,6 +121,9 @@ final class ConversationHandler: ObservableObject {
             return 0
         }
     } // END total tokens
+    
+    
+    
     
     
 }

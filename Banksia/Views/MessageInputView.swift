@@ -47,6 +47,8 @@ struct MessageInputView: View {
 
     @Bindable var conversation: Conversation
     
+    @Binding var userPrompt: String
+    
     var body: some View {
         
         VStack(spacing: 0) {
@@ -59,7 +61,7 @@ struct MessageInputView: View {
                     VStack {
                         
                         MarkdownEditorView(
-                            text: $conv.userPrompt,
+                            text: $userPrompt,
                             placeholderText: "Begin writing here…",
                             isFocused: $isFocused
                         )
@@ -102,7 +104,7 @@ struct MessageInputView: View {
                     startTimer()
                 }
                 
-                .task(id: conv.userPrompt) {
+                .task(id: userPrompt) {
                     startTimer()
                 }
                 .task {
@@ -173,24 +175,22 @@ extension MessageInputView {
 extension MessageInputView {
     @ViewBuilder
     func EditorControls() -> some View {
-        HStack(spacing: 10) {
+        HStack(spacing: 18) {
             
             
-            HStack(spacing: 18) {
-                
+            
+            Group {
                 Label(bk.gptModel.name, systemImage: Icons.shocked.icon)
                 Label("\(conv.totalTokens(for: conversation))", systemImage: Icons.token.icon)
-                
-                
             }
             .labelStyle(.customLabel(size: .mini))
             .padding(.leading, Styles.paddingNSTextViewCompensation)
-            .symbolVariant(.fill)
             
             Spacer()
             
             Toggle(isOn: $bk.isTestMode, label: {
-                Text("Test mode")
+                Label("Test mode", systemImage: Icons.fish.icon)
+                    .labelStyle(.customLabel(size: .small, labelDisplay: .titleOnly))
             })
             .foregroundStyle(bk.isTestMode ? .secondary : .quaternary)
             .disabled(conv.isResponseLoading)
@@ -200,7 +200,6 @@ extension MessageInputView {
             .animation(Styles.animationQuick, value: bk.isTestMode)
             
             
-            
             Button {
                 Task {
                     conv.currentRequest = .sendQuery
@@ -208,8 +207,8 @@ extension MessageInputView {
             } label: {
                 Label(conv.isResponseLoading ? "Loading…" : "Send", systemImage: Icons.text.icon)
             }
-            .buttonStyle(.customButton(size: .small, status: conv.userPrompt.isEmpty ? .disabled : .normal, labelDisplay: .titleOnly))
-            .disabled(conv.userPrompt.isEmpty)
+            .buttonStyle(.customButton(size: .small, status: userPrompt.isEmpty ? .disabled : .normal, labelDisplay: .titleOnly))
+            .disabled(userPrompt.isEmpty)
             .keyboardShortcut(.return, modifiers: .command)
             
         }

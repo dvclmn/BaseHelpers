@@ -26,6 +26,10 @@ struct ConversationView: View {
     
     @Bindable var conversation: Conversation
     
+    @State private var userPrompt: String = ""
+    
+    @State private var testStream: String = "Let's stream"
+    
     var body: some View {
         
         VStack {
@@ -91,9 +95,13 @@ struct ConversationView: View {
                 //                .cursor(.arrow)
                 
                 .overlay(alignment: .bottom) {
-                    MessageInputView(
-                        conversation: conversation
-                    )
+                    VStack {
+                        Text(testStream)
+                        MessageInputView(
+                            conversation: conversation,
+                            userPrompt: $userPrompt
+                        )
+                    }
                 }
                 .sheet(isPresented: $conv.isConversationEditorShowing) {
                     ConversationEditorView(conversation: conversation)
@@ -145,27 +153,26 @@ extension ConversationView {
     
     private func sendMessage() async {
         
-        guard !conv.userPrompt.isEmpty else {
+        print("\n\n|--- Send message \(bk.isTestMode ? "Test mode" : "") --->\n")
+        
+        guard !userPrompt.isEmpty else {
             print("No query to send")
             return
         }
+        print("There *is* a query to send")
         
-        guard let apiKey = KeychainHandler.shared.readString(for: "openAIAPIKey") else {
-            popup.showPopup(title: "No API Key found", message: "Please visit app Settings (⌘,) to set up your API Key")
-            return
-        }
         
         conv.isResponseLoading = true
         
         /// Create new `Message` object and add to database
         let newUserMessage = Message(
-            content: conv.userPrompt,
+            content: userPrompt,
             type: .user,
             conversation: conversation
         )
         modelContext.insert(newUserMessage)
         
-        conv.userPrompt = ""
+        userPrompt = ""
         conv.editorHeight = ConversationHandler.defaultEditorHeight
         
         
@@ -184,7 +191,7 @@ extension ConversationView {
         
         modelContext.insert(newGPTMessage)
         
-        
+        // MARK: - Test mode
         guard !bk.isTestMode else {
             
             guard let lastMessage = conversation.messages?.last(where: { $0.type == .assistant }) else { return }
@@ -196,37 +203,55 @@ extension ConversationView {
             return
         }
         
+        // MARK: - Live mode
         do {
             
-            let requestBody = RequestBody(
-                model: bk.gptModel.model,
-                messages: messageHistory,
-                stream: true,
-                temperature: bk.gptTemperature
-            )
+//            let requestBody = RequestBody(
+//                model: bk.gptModel.model,
+//                messages: messageHistory,
+//                stream: true,
+//                temperature: bk.gptTemperature
+//            )
+//            
+//            let url = URL(string: OpenAIHandler.chatURL)!
+//            
+//            var request = URLRequest(url: url)
+//            request.httpMethod = "POST"
+//            request.httpBody = try JSONEncoder().encode(requestBody)
+//            request.allHTTPHeaderFields = [
+//                "Content-Type": "application/json",
+//                "Authorization": "Bearer \(apiKey)"
+//            ]
             
-            let url = URL(string: OpenAIHandler.chatURL)!
             
-            var request = URLRequest(url: url)
-            request.httpMethod = "POST"
-            request.httpBody = try JSONEncoder().encode(requestBody)
-            request.allHTTPHeaderFields = [
-                "Content-Type": "application/json",
-                "Authorization": "Bearer \(apiKey)"
-            ]
+
+            
+            let question = "Hi, this is a test. Juts a brief response to see if this is working is fine."
+            
+            guard let request = try makeRequest(content: question) else {
+                print("Could not make the request")
+                return
+            }
             
             let (stream, _) = try await URLSession.shared.bytes(for: request)
             
-            print("Stream: \(stream)")
+//            print("Stream: \(stream)")
             
             for try await line in stream.lines {
                 print("Entered the stream. \(line)")
-                guard let messageChunk = ConversationHandler.parse(line) else { continue }
                 
+                guard let messageChunk = parse(line) else {
+                print("Couldn't parse?")
+                    continue
+                }
                 
-                guard let lastMessage = conversation.messages?.last(where: { $0.type == .assistant }) else { return }
-                lastMessage.content += messageChunk
+//                guard let lastMessage = conversation.messages?.last(where: { $0.type == .assistant }) else {
+//                    print("Issue with getting the last message")
+//                    return
+//                }
                 
+                testStream += messageChunk
+
             }
             
         } catch {
@@ -235,6 +260,82 @@ extension ConversationView {
         conv.isResponseLoading = false
     } // END send message
     
+    
+    func makeRequest(content: String) throws -> URLRequest? {
+        
+        guard let apiKey = KeychainHandler.shared.readString(for: "openAIAPIKey") else {
+            popup.showPopup(title: "No API Key found", message: "Please visit app Settings (⌘,) to set up your API Key")
+            return nil
+        }
+        
+        let query = RequestBody(
+            model: bk.gptModel.model,
+            messages: [.init(role: "user", content: content)],
+            stream: true,
+            temperature: bk.gptTemperature
+        )
+        let url = URL(string: "https://api.openai.com/v1/chat/completions")!
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.httpBody = try JSONEncoder().encode(query)
+        request.allHTTPHeaderFields = [
+            "Content-Type": "application/json",
+            "Authorization": "Bearer \(apiKey)"
+        ]
+        return request
+    }
+    
+    func parse(_ line: String) -> String? {
+        print("\n\n|--- Parse streamed response --->\n")
+        print("Received line: \(line)")
+        
+        let components = line.split(separator: ":", maxSplits: 1, omittingEmptySubsequences: true)
+        
+        guard components.count == 2, components[0] == "data" else {
+            print("Component count was not equal to 2, or the first item in component array was not 'data'")
+            return nil
+        }
+        
+        let message = components[1].trimmingCharacters(in: .whitespacesAndNewlines)
+        
+        // Decode into Chunk object
+            let chunk = try? JSONDecoder().decode(GPTStreamedResponse.self, from: message.data(using: .utf8)!)
+
+            if let finishReason = chunk?.choices.first?.finish_reason, finishReason == "stop" {
+                return "\n"
+            } else {
+                return chunk?.choices.first?.delta.content
+            }
+    } // Stream parsing
+    
 }
 
+//Couldn't parse?
+//Entered the stream. data: {
+//    "id":"chatcmpl-9VOQ1TfgUDaHLZo1Lav6B7EZz67Hu",
+//    "object":"chat.completion.chunk",
+//    "created":1717269061,
+//    "model":"gpt-4o-2024-05-13",
+//    "system_fingerprint":"fp_319be4768e",
+//    "choices":[{"index":0,"delta":{"content":" messages"},"logprobs":null,"finish_reason":null}]
+//}
+//Couldn't parse?
+//Entered the stream. data: {
+//    "id":"chatcmpl-9VOQ1TfgUDaHLZo1Lav6B7EZz67Hu",
+//    "object":"chat.completion.chunk",
+//    "created":1717269061,
+//    "model":"gpt-4o-2024-05-13",
+//    "system_fingerprint":"fp_319be4768e",
+//    "choices":[{"index":0,"delta":{"content":" in"},"logprobs":null,"finish_reason":null}]
+//}
+//Couldn't parse?
+//Entered the stream. data: {
+//    "id":"chatcmpl-9VOQ1TfgUDaHLZo1Lav6B7EZz67Hu",
+//    "object":"chat.completion.chunk",
+//    "created":1717269061,
+//    "model":"gpt-4o-2024-05-13",
+//    "system_fingerprint":"fp_319be4768e",
+//    "choices":[{"index":0,"delta":{"content":" your"},"logprobs":null,"finish_reason":null}]
+//}
+//Couldn't parse?
 

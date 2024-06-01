@@ -65,11 +65,11 @@ struct MenuCommands: Commands {
         
         CommandMenu("Conversation") {
 
-            Button(AppAction.sendQuery.name) {
-                conv.currentRequest = .sendQuery
-            }
-            .keyboardShortcut(AppAction.sendQuery.shortcut)
-            .disabled(conv.userPrompt.isEmpty)
+//            Button(AppAction.sendQuery.name) {
+//                conv.currentRequest = .sendQuery
+//            }
+//            .keyboardShortcut(AppAction.sendQuery.shortcut)
+//            .disabled(conv.userPrompt.isEmpty)
             
             Divider()
             
