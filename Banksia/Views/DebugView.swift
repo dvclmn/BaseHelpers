@@ -108,9 +108,6 @@ struct DebugView: View {
         .padding(18)
         .safeAreaPadding(.top, isPreview ? 0 : 30)
         .font(.system(size: 12))
-        .transaction { transaction in
-            transaction.animation = nil
-        }
         .frame(
             minWidth: minWidth,
             idealWidth: .infinity,

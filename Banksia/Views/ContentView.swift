@@ -353,6 +353,6 @@ extension ContentView {
         .environmentObject(SidebarHandler())
         .modelContainer(try! ModelContainer.sample())
         .padding(.top,1)
-        .frame(width: 560, height: 700)
+        .frame(width: 560, height: 740)
 }
 #endif

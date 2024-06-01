@@ -50,12 +50,11 @@ struct ConversationView: View {
                             // MARK: - Scrollview
                             ScrollView(.vertical) {
                                 LazyVStack(spacing: 12) {
-                                    ForEach(searchResults, id: \.timestamp) { message in
+                                    ForEach(searchResults, id: \.persistentModelID) { message in
                                         
                                         SingleMessageView(
                                             message: message
                                         )
-                                        .id(message.id)
                                         
                                     } // END ForEach
                                 } // END lazy vstack
@@ -65,18 +64,18 @@ struct ConversationView: View {
                             .safeAreaPadding(.top, Styles.toolbarHeight)
                             .safeAreaPadding(.bottom, conv.editorHeight)
                             .defaultScrollAnchor(.bottom)
-                            .scrollPosition(id: $conv.scrolledMessageID, anchor: .bottom)
+//                            .scrollPosition(id: $conv.scrolledMessageID, anchor: .bottom)
                             
-                            .overlay(alignment: .bottomTrailing) {
-                                Button {
-                                    conv.scrolledMessageID = searchResults.last?.id
-                                } label: {
-                                    Label("Scroll to latest message", systemImage: Icons.down.icon)
-                                }
-                                .buttonStyle(.customButton(size: .small, labelDisplay: .iconOnly))
-                                .padding(.bottom, conv.editorHeight + Styles.paddingSmall)
-                                .padding(.trailing, Styles.paddingSmall)
-                            } // END scroll to bottom
+//                            .overlay(alignment: .bottomTrailing) {
+//                                Button {
+//                                    conv.scrolledMessageID = searchResults.last?.id
+//                                } label: {
+//                                    Label("Scroll to latest message", systemImage: Icons.down.icon)
+//                                }
+//                                .buttonStyle(.customButton(size: .small, labelDisplay: .iconOnly))
+//                                .padding(.bottom, conv.editorHeight + Styles.paddingSmall)
+//                                .padding(.trailing, Styles.paddingSmall)
+//                            } // END scroll to bottom
                             
                         } else {
                             StateView(title: "No matching results", message: "No results found for \"\(conv.searchText)\".")

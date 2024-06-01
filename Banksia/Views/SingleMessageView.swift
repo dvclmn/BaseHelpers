@@ -68,26 +68,28 @@ struct SingleMessageView: View {
 //                    isEditable: false
 //                )
                 
-                HStack(alignment: .bottom, spacing: 18) {
-                    Label("\((message.promptTokens ?? 0) + (message.completionTokens ?? 0))", systemImage: Icons.token.icon)
-                    
-                    Label("\(message.content.count)", systemImage: "textformat.alt")
-                    Label("\(message.content.wordCount)", systemImage: "text.word.spacing")
-                    
-                    Spacer()
-                    
-                    Button {
-                        copyStringToClipboard(message.content)
-                        popup.showPopup(title: "Message copied to clipboard")
-                    } label: {
-                        Label("Copy text", systemImage: Icons.copy.icon)
-                            .foregroundStyle(.secondary)
+                if bk.isMessageInfoShowing {
+                    HStack(alignment: .bottom, spacing: 18) {
+                        Label("\((message.promptTokens ?? 0) + (message.completionTokens ?? 0))", systemImage: Icons.token.icon)
+                        
+                        Label("\(message.content.count)", systemImage: "textformat.alt")
+                        Label("\(message.content.wordCount)", systemImage: "text.word.spacing")
+                        
+                        Spacer()
+                        
+                        Button {
+                            copyStringToClipboard(message.content)
+                            popup.showPopup(title: "Message copied to clipboard")
+                        } label: {
+                            Label("Copy text", systemImage: Icons.copy.icon)
+                                .foregroundStyle(.secondary)
+                        }
+                        .buttonStyle(.customButton(size: .small, labelDisplay: .iconOnly))
                     }
-                    .buttonStyle(.customButton(size: .small, labelDisplay: .iconOnly))
+                    .opacity(isHovering ? 1.0 : 0.4)
+                    .labelStyle(.customLabel(size: .mini))
+                    .padding(.horizontal, Styles.paddingNSTextViewCompensation)
                 }
-                .opacity(isHovering ? 1.0 : 0.4)
-                .labelStyle(.customLabel(size: .mini))
-                .padding(.horizontal, Styles.paddingNSTextViewCompensation)
                 
             } // END inner vstack
 //            .fixedSize(horizontal: false, vertical: true)

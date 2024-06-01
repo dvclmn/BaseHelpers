@@ -49,6 +49,7 @@ class BanksiaHandler: ObservableObject {
     @AppStorage("uiDimmingKey") var uiDimming: Double = 0.30
     @AppStorage("defaultGrainientSeedKey") var defaultGrainientSeed: Int = 358962
     
+    @AppStorage("isMessageInfoShowingKey") var isMessageInfoShowing: Bool = true
     
     func toggleQuickOpen() {
         withAnimation(Styles.animation) {

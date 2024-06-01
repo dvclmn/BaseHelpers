@@ -71,6 +71,7 @@ struct MenuCommands: Commands {
             .keyboardShortcut(AppAction.sendQuery.shortcut)
             .disabled(conv.userPrompt.isEmpty)
             
+            Divider()
             
             Button(AppAction.goToPrevious.name) {
                 conv.currentRequest = .goToPrevious

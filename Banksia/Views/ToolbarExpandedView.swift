@@ -56,7 +56,9 @@ struct ToolbarExpandedView: View {
                 
                 CustomSection(label: "Debug", icon: Icons.debug.icon) {
                     
-
+                    Toggle(isOn: $bk.isMessageInfoShowing) {
+                        Label(bk.isMessageInfoShowing ? "Hide Message info" : "Show Message info", systemImage: Icons.info.icon)
+                    }
                     
                     CustomSection(label: "Debug pane", icon: "window.horizontal.closed", level: .child) {
                         
