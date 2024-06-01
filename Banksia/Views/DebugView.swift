@@ -57,13 +57,14 @@ struct DebugView: View {
             ),
             DebugRow(
                 title: "Current request",
-                state: DebugState(main: "\(conv.currentRequest)", log: [
-                    "\(conv.currentRequest)",
-                    "\(conv.currentRequest)",
-                    "\(conv.currentRequest)",
-                    "\(conv.currentRequest)",
-                    "\(conv.currentRequest)"
-                ]),
+                state: DebugState(main: "\(conv.currentRequest)"),
+//                state: DebugState(main: "\(conv.currentRequest)", log: [
+//                    "\(conv.currentRequest)",
+//                    "\(conv.currentRequest)",
+//                    "\(conv.currentRequest)",
+//                    "\(conv.currentRequest)",
+//                    "\(conv.currentRequest)"
+//                ]),
                 definedOn: .conv
             ),
             DebugRow(
@@ -94,6 +95,7 @@ struct DebugView: View {
                             rowHeights: $rowHeights,
                             columnPosition: column.columnPosition
                         )
+                        .lineLimit(1)
                     }
                 }
             }
@@ -106,14 +108,16 @@ struct DebugView: View {
         .padding(18)
         .safeAreaPadding(.top, isPreview ? 0 : 30)
         .font(.system(size: 12))
-        
+        .transaction { transaction in
+            transaction.animation = nil
+        }
         .frame(
             minWidth: minWidth,
             idealWidth: .infinity,
             maxWidth: .infinity,
             minHeight: minHeight,
             maxHeight: .infinity,
-            alignment: .trailing
+            alignment: .leading
         )
         
         .grainient(
@@ -167,11 +171,11 @@ extension DebugView {
         var columnMinWidth: Double {
             switch column {
             case .title:
-                return 140
+                return 100
             case .state:
                 return 60
             case .definedOn:
-                return 140
+                return 100
             }
         }
         var columnMaxWidth: Double {
@@ -189,6 +193,7 @@ extension DebugView {
         VStack(alignment: .leading, spacing: 0) {
             
             CustomTableHeader(column.rawValue)
+                .frame(maxWidth: columnMaxWidth, alignment: .leading)
             
             ForEach(Array(rows.enumerated()), id: \.element.id) { index, row in
                 
@@ -206,7 +211,7 @@ extension DebugView {
                     minWidth: columnMinWidth,
                     maxWidth: columnMaxWidth,
                     minHeight: rowHeights.wrappedValue[index] ?? .zero,
-                    alignment: .leading
+                    alignment: .topLeading
                 )
                 .padding(.horizontal, rowPaddingHorizontal)
                 .padding(.vertical, rowPaddingVertical)
@@ -223,7 +228,7 @@ extension DebugView {
             .foregroundStyle(.tertiary)
             .fontWeight(.semibold)
             .padding(.horizontal, rowPaddingHorizontal)
-            .padding(.vertical, rowPaddingVertical + 8)
+            .padding(.vertical, rowPaddingVertical + 4)
     }
     
     @ViewBuilder
@@ -294,5 +299,5 @@ extension DebugView {
         .environmentObject(ConversationHandler())
         .environmentObject(NavigationHandler())
         .environmentObject(SidebarHandler())
-        .frame(width: 500, height: 600)
+        .frame(width: 400, height: 600)
 }
