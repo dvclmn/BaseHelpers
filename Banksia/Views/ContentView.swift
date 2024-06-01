@@ -201,7 +201,7 @@ struct ContentView: View {
         
         .task(id: nav.path) {
             print("Navigation path changed")
-            conv.currentConversationID = fetchCurrentConversation()?.persistentModelID
+            conv.currentConversationID = conv.fetchCurrentConversationStatic(withID: nav.currentDestination, from: conversations)?.persistentModelID
             nav.updateLastDestination()
         }
         .task(id: bk.isDebugShowing) {
@@ -215,6 +215,8 @@ struct ContentView: View {
         
         
         
+        
+        
     }
 }
 
@@ -222,16 +224,16 @@ extension ContentView {
     
     private func bringAppToForeground() {
         NSApp.activate(ignoringOtherApps: true)
+        
     }
     
     
-    
-    func goToPreviousConversation() {
+    func goToNextConversation() {
         
-        if let currentIndex = conversations.indexOf(fetchCurrentConversation()) {
+        if let currentIndex = conversations.indexOf(conv.fetchCurrentConversationStatic(withID: nav.currentDestination, from: conversations)) {
             print("Current Index: \(currentIndex)")
             
-            if let previousIndex = conversations.previousIndex(before: fetchCurrentConversation()) {
+            if let previousIndex = conversations.previousIndex(before: conv.fetchCurrentConversationStatic(withID: nav.currentDestination, from: conversations)) {
                 print("Next Index: \(previousIndex), next conversation: \(conversations[previousIndex])")
                 nav.navigate(to: Page.conversation(conversations[previousIndex]))
             } else {
@@ -242,12 +244,12 @@ extension ContentView {
         }
     }
     
-    func goToNextConversation() {
+    func goToPreviousConversation() {
         
-        if let currentIndex = conversations.indexOf(fetchCurrentConversation()) {
+        if let currentIndex = conversations.indexOf(conv.fetchCurrentConversationStatic(withID: nav.currentDestination, from: conversations)) {
             print("Current Index: \(currentIndex)")
             
-            if let nextIndex = conversations.nextIndex(after: fetchCurrentConversation()) {
+            if let nextIndex = conversations.nextIndex(after: conv.fetchCurrentConversationStatic(withID: nav.currentDestination, from: conversations)) {
                 print("Next Index: \(nextIndex), next conversation: \(conversations[nextIndex])")
                 nav.navigate(to: Page.conversation(conversations[nextIndex]))
             } else {
@@ -275,7 +277,7 @@ extension ContentView {
     
     func presentConversation() {
         
-        if let currentConversation = fetchCurrentConversation() {
+        if let currentConversation = conv.fetchCurrentConversationStatic(withID: nav.currentDestination, from: conversations) {
             nav.navigate(to: .conversation(currentConversation))
             
         } else {
@@ -285,21 +287,7 @@ extension ContentView {
         }
     }
     
-    func fetchCurrentConversation() -> Conversation? {
-        
-        guard let currentDestinationString = nav.currentDestination else {
-            print("No last destination")
-            return nil
-        }
-        
-        guard let current = conversations.first(where: {"\($0.persistentModelID)" == currentDestinationString}) else {
-            print("No matching converation")
-            return nil
-        }
-        
-        return current
-        
-    }
+
     
     
     
@@ -321,7 +309,7 @@ extension ContentView {
     
     func deleteCurrentConversation() {
         
-        guard let conversation = fetchCurrentConversation() else {
+        guard let conversation = conv.fetchCurrentConversationStatic(withID: nav.currentDestination, from: conversations) else {
             print("Unable to get current conversation")
             return
         }

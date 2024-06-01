@@ -115,16 +115,6 @@ struct DebugView: View {
                 title: "Current request",
                 state: "\(conv.currentRequest)",
                 definedOn: .conv
-            ),
-            DebugInfo(
-                title: "Last Destination",
-                state: "\(nav.currentDestination ?? "None")",
-                definedOn: .conv
-            ),
-            DebugInfo(
-                title: "Last Destination",
-                state: "\(nav.currentDestination ?? "None")",
-                definedOn: .conv
             )
         ]
 

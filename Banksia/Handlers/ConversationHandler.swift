@@ -138,7 +138,7 @@ final class ConversationHandler {
     var messageHistory: String = ""
     
     
-    var currentGPTMessageID: Conversation.ID? = nil
+    var streamingGPTMessageID: Conversation.ID? = nil
     var streamedResponse: String = ""
     
     var editorHeight: Double = ConversationHandler.defaultEditorHeight
@@ -236,6 +236,26 @@ final class ConversationHandler {
         } else {
             return 0
         }
+    } // END total tokens
+    
+    func fetchCurrentConversationStatic(
+        withID currentConversationID: String?,
+        from conversations: [Conversation]
+    ) -> Conversation? {
+        print("\n\n|--- Fetch current conversation --->\n")
+        
+        guard let currentDestinationString = currentConversationID else {
+            print("No last destination")
+            return nil
+        }
+        
+        guard let current = conversations.first(where: {"\($0.persistentModelID)" == currentDestinationString}) else {
+            print("No matching converation")
+            return nil
+        }
+        
+        print("Current conversation is: \(current.name)")
+        return current
     }
     
 }

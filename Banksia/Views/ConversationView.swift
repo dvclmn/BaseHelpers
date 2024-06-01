@@ -21,11 +21,9 @@ struct ConversationView: View {
     
     @EnvironmentObject var sidebar: SidebarHandler
     
-    @Query private var messages: [Message]
-    
     @Bindable var conversation: Conversation
     @Binding var scrolledMessageID: Message.ID?
-
+    
     var body: some View {
         
         @Bindable var conv = conv
@@ -48,7 +46,7 @@ struct ConversationView: View {
                         
                         if searchResults.count > 0 {
                             
-
+                            
                             ScrollView(.vertical) {
                                 VStack(spacing: 12) {
                                     ForEach(searchResults.sorted(by: { $0.timestamp < $1.timestamp }), id: \.timestamp) { message in
@@ -99,10 +97,14 @@ struct ConversationView: View {
                 .sheet(isPresented: $conv.isConversationEditorShowing) {
                     ConversationEditorView(conversation: conversation)
                 }
-
                 
                 
-            } // END has messages check
+                
+            } else {
+                
+                Text("No messages here?")
+                
+            }// END has messages check
             
             
         } // END Vstack
@@ -111,64 +113,183 @@ struct ConversationView: View {
                 conv.grainientSeed = conversation.grainientSeed
             }
         }
-//        .task(id: conv.currentGPTMessageID) {
-//                            populateActiveGPTMessage()
-//                        }
+        .task(id: conv.streamingGPTMessageID) {
+            if let id = conv.streamingGPTMessageID {
+                print("conv.streamingGPTMessageID successfully updated to: \(id)")
+                updateGPTResponseWithStream()
+            }
+        }
+        
+        .task(id: conv.streamedResponse) {
+            updateGPTResponseWithStream()
+            
+        }
+        
         
         
         
     } // END view body
     
-    //    private func scrollToNextID() {
-    //        print("Let's scroll to next")
-    //
-    //        guard let messages = conversation.messages else {
-    //            print("Couldn't get first convo's messages")
-    //            return
-    //        }
-    //
-    //        guard let id = messageID else {
-    //            print("Couldn't get id to equal message")
-    //            return
-    //        }
-    //
-    //        guard id != messages.last?.id else {
-    //            print("id ended up being the same as messages.last")
-    //            return
-    //        }
-    //
-    //        guard let index = messages.firstIndex(where: { $0.id == id }) else {
-    //            print("couldn't get index to equal the first message where the message ID matched the `messageID` binding")
-    //            return
-    //        }
-    //
-    //
-    //        withAnimation {
-    //            messageID = messages[index + 1].id
-    //            print(messageID ?? UUID())
-    //        }
-    //    }
+}
+
+extension ConversationView {
     
-    //    private func scrollToPreviousID() {
-    //        print("Let's scroll to next")
-    //
-    //        guard let messages = conversation.messages else {
-    //            print("Couldn't get first convo's messages")
-    //            return
-    //        }
-    //
-    //        guard let id = messageID, id != messages.first?.id,
-    //              let index = messages.firstIndex(where: { $0.id == id })
-    //        else {
-    //            print("Couldn't get that complex stuff")
-    //            return
-    //        }
-    //
-    //        withAnimation {
-    //            messageID = messages[index - 1].id
-    //            print(messageID ?? UUID())
-    //        }
-    //    }
+    
+    private func sendTestMessage() async {
+        
+        let newUserMessage = Message(
+            content: userPrompt,
+            type: .user,
+            conversation: conversation
+        )
+        modelContext.insert(newUserMessage)
+        
+        userPrompt = ""
+        conv.editorHeight = ConversationHandler.defaultEditorHeight
+        
+        /// Construct the message history for GPT context
+        let messageHistory: [RequestMessage] = await conv.createMessageHistory(
+            for: conversation,
+            latestMessage: newUserMessage,
+            with: bk.systemPrompt
+        )
+        
+        print("Test-message history: \(messageHistory.prettyPrinted)")
+        
+        
+        let newGPTMessage = Message(
+            content: ExampleText.paragraphs.randomElement() ?? "No random element",
+            type: .assistant,
+            conversation: conversation
+        )
+        modelContext.insert(newGPTMessage)
+        
+        conv.isResponseLoading = false
+        
+    }
+    
+    private func sendMessage(_ isTestMode: Bool = false) async {
+        
+        guard let apiKey = KeychainHandler.shared.readString(for: "openAIAPIKey") else {
+            popup.showPopup(title: "No API Key found", message: "Please visit app Settings (⌘,) to set up your API Key")
+            return
+        }
+        
+        conv.isResponseLoading = true
+        
+        
+        /// Create new `Message` object and add to database
+        let newUserMessage = Message(
+            content: userPrompt,
+            type: .user,
+            conversation: conversation
+        )
+        modelContext.insert(newUserMessage)
+        
+        userPrompt = ""
+        conv.editorHeight = ConversationHandler.defaultEditorHeight
+        
+        
+        /// Construct the message history for GPT context
+        let messageHistory: [RequestMessage] = await conv.createMessageHistory(
+            for: conversation,
+            latestMessage: newUserMessage,
+            with: bk.systemPrompt
+        )
+        
+        do {
+            
+            let newGPTMessage = Message(
+                content: "",
+                type: .assistant,
+                conversation: conversation
+            )
+            
+            modelContext.insert(newGPTMessage)
+            
+            
+
+            let requestBody = RequestBody(
+                model: bk.gptModel.model,
+                messages: messageHistory,
+                stream: true,
+                temperature: bk.gptTemperature
+            )
+            
+            
+            let url = URL(string: OpenAIHandler.chatURL)!
+            
+            var request = URLRequest(url: url)
+            request.httpMethod = "POST"
+            request.httpBody = try JSONEncoder().encode(requestBody)
+            request.allHTTPHeaderFields = [
+                "Content-Type": "application/json",
+                "Authorization": "Bearer \(apiKey)"
+            ]
+            
+            
+            let (stream, _) = try await URLSession.shared.bytes(for: request)
+            
+            print("Stream: \(stream)")
+            
+            for try await line in stream.lines {
+                print("Entered the stream. \(line)")
+                guard let messageChunk = ConversationHandler.parse(line) else { continue }
+                
+                
+                guard let lastMessage = conversation.messages?.last(where: { $0.type == .assistant }) else { return }
+                lastMessage.content += messageChunk
+                
+                
+                
+            }
+            
+            //            let response: GPTResponse = try await APIHandler.constructRequestAndFetch(
+            //                url: URL(string: OpenAIHandler.chatURL),
+            //                requestType: .post,
+            //                bearerToken: apiKey,
+            //                body: requestBodyData
+            //            )
+            //
+            //            guard let gptMessage = response.choices.first?.message.content else {
+            //                print("No message content from GPT")
+            //                return
+            //            }
+            
+            
+        } catch {
+            print("Error getting GPT response")
+        }
+        
+        conv.isResponseLoading = false
+    } // END send message
+    
+    
+    
+    func updateLastAssistantMessage(with content: String) {
+        guard let lastMessage = conversation.messages?.last(where: { $0.type == .assistant }) else { return }
+        lastMessage.content += content
+    }
+    
+    func updateGPTResponseWithStream() {
+        
+        
+        
+        //        print("\n\n|--- Update GPT message with Stream --->\n")
+        //        if let conversation = conv.fetchCurrentConversationStatic(withID: nav.currentDestination, from: conversations) {
+        //
+        //            print("We got the current convoersation!: \(conversation)")
+        //
+        //            if let gptMessage = conversation.messages?.first(where: {$0.persistentModelID == conv.streamingGPTMessageID}) {
+        //
+        //                gptMessage.content += conv.streamedResponse
+        //            } else {
+        //                print("Could not get the current target GPT message")
+        //            }
+        //        } else {
+        //            print("Could not get current conversation")
+        //        }
+    }
     
     
 }

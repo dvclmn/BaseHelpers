@@ -58,15 +58,15 @@ struct SingleMessageView: View {
         
         VStack {
             VStack(alignment: .leading, spacing: 20) {
-                //                Text(highlighted)
-                //                    .foregroundStyle(.primary.opacity(0.9))
-                //                    .font(.system(size: 15, weight: .medium))
-                MarkdownEditorView(
-                    text: $message.content,
-                    placeholderText: "",
-                    isFocused: $isFocused,
-                    isEditable: false
-                )
+                                Text(highlighted)
+                                    .foregroundStyle(.primary.opacity(0.9))
+                                    .font(.system(size: 15, weight: .medium))
+//                MarkdownEditorView(
+//                    text: $message.content,
+//                    placeholderText: "",
+//                    isFocused: $isFocused,
+//                    isEditable: false
+//                )
                 
                 HStack(alignment: .bottom, spacing: 18) {
                     Label("\((message.promptTokens ?? 0) + (message.completionTokens ?? 0))", systemImage: Icons.token.icon)
@@ -90,22 +90,11 @@ struct SingleMessageView: View {
                 .padding(.horizontal, Styles.paddingNSTextViewCompensation)
                 
             } // END inner vstack
-            .fixedSize(horizontal: false, vertical: true)
+//            .fixedSize(horizontal: false, vertical: true)
             .padding()
             .frame(maxWidth: 620, alignment: .leading)
             .background(Color(message.type == .user ? Swatch.eggplant.colour.opacity(0.2) : .gray.opacity(0.2)))
             .clipShape(.rect(cornerRadius: Styles.roundingMedium))
-            .padding(.leading, message.type == .user ? authorAltPadding : 0)
-            .padding(.trailing, message.type == .user ? 0 : authorAltPadding)
-            .padding(.bottom, 40)
-            
-//            .overlay(alignment: .topTrailing) {
-//                if isHovering {
-//                   
-//                }
-//            }
-//            
-//            
             .onHover { hovering in
                 
                 if hovering {
@@ -117,8 +106,20 @@ struct SingleMessageView: View {
                         isHovering = false
                     }
                 }
-
+                
             }
+            .padding(.leading, message.type == .user ? authorAltPadding : 0)
+            .padding(.trailing, message.type == .user ? 0 : authorAltPadding)
+            .padding(.bottom, 40)
+            
+//            .overlay(alignment: .topTrailing) {
+//                if isHovering {
+//                   
+//                }
+//            }
+//            
+//            
+            
             //            .frame(maxWidth: 620)
             //            .onTapGesture {
             //                withAnimation(Styles.animationQuick) {

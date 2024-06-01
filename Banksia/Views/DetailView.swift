@@ -14,7 +14,9 @@ import GeneralUtilities
 
 struct DetailView: View {
     @EnvironmentObject var bk: BanksiaHandler
+    
     @Query private var conversations: [Conversation]
+    
     @State private var scrolledMessageID: Message.ID?
     
     var page: Page? = nil
