@@ -13,22 +13,19 @@ struct OpenAIHandler {
 }
 
 /// This and `RequestMessage` are created by me, to *send* to OpenAI, not based on data being received
-struct RequestBody: Codable { // Called Query in example
+struct RequestBody: Codable {
     let model: String
     let messages: [RequestMessage]
     let stream: Bool
     let temperature: Double
 }
 
-struct RequestMessage: Codable { // Called Message in example
+struct RequestMessage: Codable {
     let role: String
     let content: String
 }
 
 
-//struct Chunk: Codable {
-//  let choices: [GPTChoice]
-//}
 
 struct TestResponse: Codable {
     let object: String

@@ -33,10 +33,7 @@ final class ConversationHandler {
     var isConversationEditorShowing: Bool = false
     
     var scrolledMessageID: Message.ID?
-    var scrolledMessagePreview: String?
-    
-    var streamingGPTMessageTimestamp: Date? = nil
-    var streamedResponse: String = ""
+//    var scrolledMessagePreview: String?
     
     var editorHeight: Double = ConversationHandler.defaultEditorHeight
     
@@ -48,19 +45,36 @@ final class ConversationHandler {
     
     func createMessageHistory(for conversation: Conversation, latestMessage: Message, with systemPrompt: String) async -> [RequestMessage] {
         
+        print("\n\n|--- Message History --->\n")
+        
         let maxMessagesInHistory: Int = 2
+        print("Max messages in history: \(maxMessagesInHistory)")
         
         let conversationPrompt: String = conversation.prompt ?? ""
         
         let system = RequestMessage(role: "system", content: systemPrompt + conversationPrompt)
         
+        let latest = [RequestMessage(role: "user", content: latestMessage.content)]
+        
         if let messages = conversation.messages {
             
             let history = messages
+            
+            /// This excludes the latest message, as I will handle that seperately
                 .filter { $0.persistentModelID != latestMessage.persistentModelID }
+            
+            /// This sorts the messages in ascending order by their timestamps. This means older messages will come before newer messages, as expected by OpenAI's docs
+            /// https://community.openai.com/t/managing-messages-array-for-multi-user-chat-with-gpt-3-5-turbo/85976/6
                 .sorted { $0.timestamp < $1.timestamp }
             
-            let prunedHistory = history.prefix(maxMessagesInHistory)
+//            print("Here are the messages from converation named '\(conversation.name)', in order of timestamp:\n\n")
+//            print(history.prettyPrinted)
+            
+            /// Multiplying by two, to allow 2 per message type, 2 for user, 2 for assistant
+            let prunedHistory = history.suffix(maxMessagesInHistory * 2)
+            
+            print("This pruned history should display 2x messages from user, and 2x messages from assistant, in order from oldest first, to newest at the end:")
+            print(prunedHistory)
             
             let historicalMessages: [RequestMessage] = prunedHistory.map { message in
                 let role: String
@@ -74,20 +88,13 @@ final class ConversationHandler {
             }
             
             // Prepend the system message
-            return [system] + historicalMessages
-        } else {
+            return [system] + historicalMessages + latest
             
-            let latest = [RequestMessage(role: "user", content: latestMessage.content)]
+        } else {
             
             return [system] + latest
         }
     } // END create message history
-    
-    
-    
-    func getRandomParagraph() -> String {
-        ExampleText.paragraphs.randomElement() ?? "No paragraphs available"
-    }
     
     func getTidyMessageID(_ id: PersistentIdentifier.ID) -> String {
 //        let idString: String = "\(id)"
@@ -118,8 +125,6 @@ final class ConversationHandler {
     }
     
     /// Parse a line from the stream and extract the message
-    
-    
     func totalTokens(for conversation: Conversation) -> Int {
         if let messages = conversation.messages {
             
@@ -230,27 +235,3 @@ enum ConversationState {
     }
     
 } // END coversation state
-
-
-
-struct DataStreamer: AsyncSequence {
-    typealias Element = String
-    
-    struct AsyncIterator: AsyncIteratorProtocol {
-        private var index = 0
-        private let data = ["Hello", " ", "World", "!", "\n"]
-        
-        mutating func next() async throws -> String? {
-            print("Let's make some fake data")
-            guard index < data.count else { return nil }
-            let element = data[index]
-            index += 1
-            try await Task.sleep(nanoseconds: 500_000_000) // Simulate delay
-            return element
-        }
-    }
-    
-    func makeAsyncIterator() -> AsyncIterator {
-        return AsyncIterator()
-    }
-}

@@ -68,18 +68,18 @@ struct ConversationView: View {
                             .safeAreaPadding(.top, Styles.toolbarHeight)
                             .safeAreaPadding(.bottom, conv.editorHeight)
                             .defaultScrollAnchor(.bottom)
-                            //                            .scrollPosition(id: $conv.scrolledMessageID, anchor: .bottom)
+                            .scrollPosition(id: $conv.scrolledMessageID, anchor: .bottom)
                             
-                            //                            .overlay(alignment: .bottomTrailing) {
-                            //                                Button {
-                            //                                    conv.scrolledMessageID = searchResults.last?.id
-                            //                                } label: {
-                            //                                    Label("Scroll to latest message", systemImage: Icons.down.icon)
-                            //                                }
-                            //                                .buttonStyle(.customButton(size: .small, labelDisplay: .iconOnly))
-                            //                                .padding(.bottom, conv.editorHeight + Styles.paddingSmall)
-                            //                                .padding(.trailing, Styles.paddingSmall)
-                            //                            } // END scroll to bottom
+                            .overlay(alignment: .bottomTrailing) {
+                                Button {
+                                    conv.scrolledMessageID = searchResults.last?.id
+                                } label: {
+                                    Label("Scroll to latest message", systemImage: Icons.down.icon)
+                                }
+                                .buttonStyle(.customButton(size: .small, labelDisplay: .iconOnly))
+                                .padding(.bottom, conv.editorHeight + Styles.paddingSmall)
+                                .padding(.trailing, Styles.paddingSmall)
+                            } // END scroll to bottom
                             
                         } else {
                             StateView(title: "No matching results", message: "No results found for \"\(conv.searchText)\".")
@@ -92,12 +92,9 @@ struct ConversationView: View {
                         
                     } // END message count check
                 } // END vstack
-                //                .cursor(.arrow)
                 
                 .overlay(alignment: .bottom) {
                     VStack {
-                        Text(conv.streamedResponse)
-                        Text(getLatestGPTMessageTimestamp())
                         MessageInputView(
                             conversation: conversation
                         )
@@ -118,27 +115,14 @@ struct ConversationView: View {
         //                conv.grainientSeed = conversation.grainientSeed
         //            }
         //        }
-        //        .task(id: conv.streamingGPTMessageID) {
-        //            if let id = conv.streamingGPTMessageID {
-        //                print("conv.streamingGPTMessageID successfully updated to: \(id)")
-        //                updateGPTResponseWithStream()
-        //            }
-        //        }
-        
-        //        .task(id: conv.streamedResponse) {
-        //            updateGPTResponseWithStream()
-        //        }
-        .task(id: conv.scrolledMessageID) {
-            if let message = conversation.messages?.first(where: {$0.persistentModelID == conv.scrolledMessageID}) {
-                conv.scrolledMessagePreview = message.content.prefix(20).description
-            }
-        }
+
         .task(id: conv.currentRequest) {
             switch conv.currentRequest {
             case .sendQuery:
                 await sendMessage()
                 print("Send message requested")
                 conv.currentRequest = .none
+                
             case .generateConversationGrainient:
                 withAnimation(Styles.animationRelaxed) {
                     conversation.grainientSeed = GrainientSettings.generateGradientSeed()
@@ -149,12 +133,9 @@ struct ConversationView: View {
             }
         }
         .task {
-            if let message = conversation.messages?.last {
-                message.content += "Some butts man!"
-            }
-//            if bk.isTestMode {
-                conv.userPrompt = ExampleText.conversationTitles.randomElement() ?? "No random"
-//            }
+            //            if bk.isTestMode {
+            conv.userPrompt = ExampleText.conversationTitles.randomElement() ?? "No random"
+            //            }
         }
         
         
@@ -164,15 +145,6 @@ struct ConversationView: View {
 }
 
 extension ConversationView {
-    
-    func getLatestGPTMessageTimestamp() -> String {
-        guard let message = conversation.messages?.first(where: {$0.timestamp == conv.streamingGPTMessageTimestamp }) else {
-            return "No match found"
-        }
-        return conv.getMessageTimestamp(message.timestamp)
-    }
-    
-    
     
     private func sendMessage() async {
         
@@ -200,11 +172,13 @@ extension ConversationView {
         
         
         /// Construct the message history for GPT context
-                let messageHistory: [RequestMessage] = await conv.createMessageHistory(
-                    for: conversation,
-                    latestMessage: newUserMessage,
-                    with: bk.systemPrompt
-                )
+        let messageHistory: [RequestMessage] = await conv.createMessageHistory(
+            for: conversation,
+            latestMessage: newUserMessage,
+            with: bk.systemPrompt
+        )
+        
+        print("Message history:\n\n\(messageHistory.prettyPrinted)")
         
         let newGPTMessage = Message(
             content: "",
@@ -213,29 +187,24 @@ extension ConversationView {
         modelContext.insert(newGPTMessage)
         
         newGPTMessage.conversation = conversation
-//        newGPTMessage.content += "Cool shorts my bro"
-        
-        print("Created new GPT message with ID: \(newGPTMessage.persistentModelID)")
-        
-        conv.streamingGPTMessageTimestamp = newGPTMessage.timestamp
         
         // MARK: - Test mode
         guard !bk.isTestMode else {
             
-//            func updateMessageContent(message: Message) async {
-//                let streamer = DataStreamer()
-//                
-//                do {
-//                    for try await chunk in streamer {
-//                        await MainActor.run {
-//                            newGPTMessage.content += chunk
-//                            conv.streamedResponse += chunk
-//                        }
-//                    }
-//                } catch {
-//                    print("There was a problem in Single Message view")
-//                }
-//            }
+            //            func updateMessageContent(message: Message) async {
+            //                let streamer = DataStreamer()
+            //
+            //                do {
+            //                    for try await chunk in streamer {
+            //                        await MainActor.run {
+            //                            newGPTMessage.content += chunk
+            //                            conv.streamedResponse += chunk
+            //                        }
+            //                    }
+            //                } catch {
+            //                    print("There was a problem in Single Message view")
+            //                }
+            //            }
             
             conv.isResponseLoading = false
             
@@ -261,12 +230,7 @@ extension ConversationView {
                     print("Couldn't parse?")
                     continue
                 }
-                
                 newGPTMessage.content += messageChunk
-//                conv.streamedResponse += messageChunk
-                
-                print("Streamed conversation name: \(conversation.name)")
-                
             }
             
         } catch {
@@ -282,8 +246,6 @@ extension ConversationView {
             popup.showPopup(title: "No API Key found", message: "Please visit app Settings (⌘,) to set up your API Key")
             return nil
         }
-        
-        
         
         let query = RequestBody(
             model: bk.gptModel.model,

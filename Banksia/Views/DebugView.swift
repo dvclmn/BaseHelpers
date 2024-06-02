@@ -67,11 +67,11 @@ struct DebugView: View {
 //                ]),
                 definedOn: .conv
             ),
-            DebugRow(
-                title: "Visible message",
-                state: DebugState(main:"\(conv.scrolledMessagePreview ?? "None")"),
-                definedOn: .conv
-            ),
+//            DebugRow(
+//                title: "Visible message",
+//                state: DebugState(main:"\(conv.scrolledMessageID ?? "None")"),
+//                definedOn: .conv
+//            ),
             DebugRow(
                 title: "Current Focus",
                 state: DebugState(main:"\(conv.currentRequest.focus.name)"),

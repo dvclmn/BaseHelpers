@@ -31,8 +31,6 @@ struct MessageInputView: View {
     
     @Environment(\.modelContext) private var modelContext
     
-//    @SceneStorage("userPrompt") var userPrompt: String = ""
-    
     @State private var isUIFaded: Bool = false
     
     @FocusState private var isFocused
