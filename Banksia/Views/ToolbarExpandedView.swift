@@ -88,7 +88,7 @@ struct ToolbarExpandedView: View {
 //            .frame(maxWidth: .infinity)
             .padding(Styles.paddingGenerous)
 //            .padding(.top, Styles.toolbarHeight)
-            .safeAreaPadding(.leading, isPreview && !sidebar.isSidebarVisible ? Styles.toolbarSpacing : (sidebar.isSidebarVisible ? sidebar.sidebarWidth : Styles.paddingToolbarTrafficLightsWidth))
+            .safeAreaPadding(.leading, !sidebar.isSidebarVisible ? Styles.toolbarSpacing : (sidebar.isSidebarVisible ? sidebar.sidebarWidth : Styles.paddingToolbarTrafficLightsWidth))
             .padding(.leading, sidebar.isSidebarVisible ? 0 : 30)
             .background {
                 Rectangle().fill(.thickMaterial)

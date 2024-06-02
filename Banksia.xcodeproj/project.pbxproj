@@ -18,7 +18,7 @@
 		F64F8E202B03082100C72E51 /* BanksiaHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F64F8E1F2B03082100C72E51 /* BanksiaHandler.swift */; };
 		F64F8E222B03090600C72E51 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F64F8E212B03090600C72E51 /* ContentView.swift */; };
 		F64F8E2E2B04254100C72E51 /* ConversationHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F64F8E2D2B04254100C72E51 /* ConversationHandler.swift */; };
-		F6795C7D2BCE70920093BC9C /* ConversationEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6795C7C2BCE70920093BC9C /* ConversationEditorView.swift */; };
+		F6795C7D2BCE70920093BC9C /* ConversationSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6795C7C2BCE70920093BC9C /* ConversationSettingsView.swift */; };
 		F6795C7F2BCE7A4D0093BC9C /* GlobalConversationSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6795C7E2BCE7A4D0093BC9C /* GlobalConversationSettingsView.swift */; };
 		F6823E192C07139B00C8749F /* APIHandler in Frameworks */ = {isa = PBXBuildFile; productRef = F6823E182C07139B00C8749F /* APIHandler */; };
 		F6823E1D2C07139B00C8749F /* MarkdownEditor in Frameworks */ = {isa = PBXBuildFile; productRef = F6823E1C2C07139B00C8749F /* MarkdownEditor */; };
@@ -78,7 +78,7 @@
 		F64F8E1F2B03082100C72E51 /* BanksiaHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BanksiaHandler.swift; sourceTree = "<group>"; };
 		F64F8E212B03090600C72E51 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		F64F8E2D2B04254100C72E51 /* ConversationHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationHandler.swift; sourceTree = "<group>"; };
-		F6795C7C2BCE70920093BC9C /* ConversationEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationEditorView.swift; sourceTree = "<group>"; };
+		F6795C7C2BCE70920093BC9C /* ConversationSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationSettingsView.swift; sourceTree = "<group>"; };
 		F6795C7E2BCE7A4D0093BC9C /* GlobalConversationSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalConversationSettingsView.swift; sourceTree = "<group>"; };
 		F687189B2BFF4F2100955B43 /* DetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailView.swift; sourceTree = "<group>"; };
 		F687189D2BFF742800955B43 /* NavigationHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationHandler.swift; sourceTree = "<group>"; };
@@ -149,7 +149,7 @@
 				F6E4BC6C2BCFDAC900BFD550 /* MenuCommands.swift */,
 				F6E4BC6A2BCFD1E100BFD550 /* QuickOpenView.swift */,
 				F6795C7E2BCE7A4D0093BC9C /* GlobalConversationSettingsView.swift */,
-				F6795C7C2BCE70920093BC9C /* ConversationEditorView.swift */,
+				F6795C7C2BCE70920093BC9C /* ConversationSettingsView.swift */,
 				F64F8E212B03090600C72E51 /* ContentView.swift */,
 				F6BCC79A2C08678E00B9751D /* UpdaterView.swift */,
 				F6A5E1B42BC6E5A40018B1B5 /* ToolbarView.swift */,
@@ -351,7 +351,7 @@
 				F639D8CA2BD51B2A0035226E /* CodeSyntaxTheme.swift in Sources */,
 				F6BCC7AA2C08DC9F00B9751D /* GrainientPreviews.swift in Sources */,
 				F6D6E2D62BC805E9000D2051 /* SingleMessageView.swift in Sources */,
-				F6795C7D2BCE70920093BC9C /* ConversationEditorView.swift in Sources */,
+				F6795C7D2BCE70920093BC9C /* ConversationSettingsView.swift in Sources */,
 				F6A7BEEB2B01C57400D3CE25 /* BanksiaApp.swift in Sources */,
 				F6A5E1BA2BC6F3D80018B1B5 /* StyleHandler.swift in Sources */,
 				F6A7BEEF2B01C57400D3CE25 /* DataModel.swift in Sources */,

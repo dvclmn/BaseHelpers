@@ -45,7 +45,7 @@ class NavigationHandler: Navigable, ObservableObject {
 
     func fetchCurrentConversationStatic(from conversations: [Conversation]) -> Conversation? {
         
-        print("\n\n|--- Fetch current conversation --->\n")
+//        print("\n\n|--- Fetch current conversation --->\n")
         
         guard let currentDestinationString = currentDestination else {
             print("No last destination")
@@ -57,7 +57,7 @@ class NavigationHandler: Navigable, ObservableObject {
             return nil
         }
         
-        print("Current conversation is: \(current.name)")
+//        print("Current conversation is: \(current.name)")
         return current
     }
     
@@ -100,7 +100,7 @@ enum Page: Destination {
     var icon: String {
         switch self {
         case .conversation(let conversation):
-            return conversation.icon ?? Icons.message.icon
+            return conversation.icon
         case .feedback:
             return Icons.horn.icon
         case .settings:

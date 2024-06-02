@@ -44,7 +44,6 @@ struct ContentView: View {
         NavigationStack(path: $nav.path) {
             
             DetailView()
-            
                 .navigationDestination(for: Page.self) { page in
                     DetailView(page: page)
                 }
@@ -65,12 +64,12 @@ struct ContentView: View {
                 Spacer()
             }
         }
-        .ignoresSafeArea()
         .grainient(
-            seed: conv.grainientSeed ?? bk.defaultGrainientSeed,
-            version: .v1,
+            seed: nav.fetchCurrentConversationStatic(from: conversations)?.grainientSeed ?? bk.defaultGrainientSeed,
+            version: .v3,
             dimming: $bk.uiDimming
         )
+        .ignoresSafeArea()
         .background(Swatch.slate.colour)
         //        .overlay(alignment: .bottomLeading) {
         //            if isPreview {
@@ -166,6 +165,12 @@ struct ContentView: View {
                 
             case .toggleToolbarExpanded:
                 bk.isToolbarExpanded.toggle()
+                conv.currentRequest = .none
+                
+            case .toggleToolbar:
+                withAnimation(Styles.animation) {
+                    bk.isToolbarShowing.toggle()
+                }
                 conv.currentRequest = .none
                 
             case .toggleDebug:

@@ -37,8 +37,13 @@ enum AppAction {
     case search
     case toggleQuickOpen
     case toggleSidebar
+    
     case toggleToolbarExpanded
+    case toggleToolbar
+    
     case toggleDebug
+    
+    case generateConversationGrainient
     
     case goToPreviousQuickOpen
     case goToNextQuickOpen
@@ -76,10 +81,16 @@ enum AppAction {
             return "Toggle Sidebar"
             
         case .toggleToolbarExpanded:
-            return "Toggle Expanded toolbar"
+            return "Toggle Expanded Toolbar"
+            
+        case .toggleToolbar:
+            return "Toggle Toolbar"
             
         case .toggleDebug:
             return "Toggle Debug Window"
+            
+        case.generateConversationGrainient:
+            return "Generate new Background"
             
         case .goToPreviousQuickOpen:
             return "Go To Previous Quick Open"
@@ -143,8 +154,14 @@ enum AppAction {
         case .toggleToolbarExpanded:
                 .init("i", modifiers: .command)
             
+        case .toggleToolbar:
+                .init("t", modifiers: .shift)
+            
         case .toggleDebug:
                 .init("d", modifiers: .shift)
+            
+        case .generateConversationGrainient:
+                .init("g", modifiers: [.shift, .command])
             
         case .goToPreviousQuickOpen:
                 .init(.upArrow, modifiers: [])

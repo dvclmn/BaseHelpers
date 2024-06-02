@@ -35,8 +35,6 @@ struct MenuCommands: Commands {
             .keyboardShortcut(AppAction.toggleQuickOpen.shortcut)
             
             
-            
-            
             Button(AppAction.exportAll.name) {
                 conv.currentRequest = .exportAll
             }
@@ -51,10 +49,19 @@ struct MenuCommands: Commands {
             }
             .keyboardShortcut(AppAction.toggleSidebar.shortcut)
             
+            Divider()
+            
+            Button(bk.isToolbarShowing ? "Hide Toolbar" : "Show Toolbar") {
+                conv.currentRequest = .toggleToolbar
+            }
+            .keyboardShortcut(AppAction.toggleToolbar.shortcut)
+            
             Button(bk.isToolbarExpanded ? "Hide Expanded Toolbar" : "Show Expanded Toolbar") {
                 conv.currentRequest = .toggleToolbarExpanded
             }
             .keyboardShortcut(AppAction.toggleToolbarExpanded.shortcut)
+            
+            Divider()
             
             Button(bk.isDebugShowing ? "Hide Debug Window" : "Show Debug Window") {
                 conv.currentRequest = .toggleDebug
@@ -65,10 +72,10 @@ struct MenuCommands: Commands {
         
         CommandMenu("Conversation") {
 
-//            Button(AppAction.sendQuery.name) {
-//                conv.currentRequest = .sendQuery
-//            }
-//            .keyboardShortcut(AppAction.sendQuery.shortcut)
+            Button(AppAction.sendQuery.name) {
+                conv.currentRequest = .sendQuery
+            }
+            .keyboardShortcut(AppAction.sendQuery.shortcut)
 //            .disabled(conv.userPrompt.isEmpty)
             
             Divider()
@@ -82,6 +89,13 @@ struct MenuCommands: Commands {
                 conv.currentRequest = .goToNext
             }
             .keyboardShortcut(AppAction.goToNext.shortcut)
+            
+            Divider()
+            
+            Button(AppAction.generateConversationGrainient.name) {
+                conv.currentRequest = .generateConversationGrainient
+            }
+            .keyboardShortcut(AppAction.generateConversationGrainient.shortcut)
             
             Divider()
             

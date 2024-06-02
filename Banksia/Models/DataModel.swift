@@ -7,24 +7,30 @@
 
 import Foundation
 import SwiftData
+import Icons
 
 @Model
 final class Conversation: Identifiable, Codable {
-    var created: Date = Date.now
-    var name: String = "New conversation"
-    var icon: String? = nil
-    var prompt: String? = nil
-    var assistantName: String = "Assistant"
-    var grainientSeed: Int? = nil
+    var created: Date
+    var name: String
+    var icon: String
+    var prompt: String?
     
+    var assistantName: String
+    var assistantIcon: String
+    
+    var grainientSeed: Int?
     @Relationship(deleteRule: .cascade, inverse: \Message.conversation) var messages: [Message]? = []
     
     init(
         created: Date = Date.now,
         name: String = "New conversation",
-        icon: String? = nil,
+        icon: String = Icons.messageAlt.icon,
         prompt: String? = nil,
+        
         assistantName: String = "Assistant",
+        assistantIcon: String = Icons.shocked.icon,
+        
         grainientSeed: Int? = nil,
         messages: [Message]? = []
         
@@ -33,7 +39,10 @@ final class Conversation: Identifiable, Codable {
         self.name = name
         self.icon = icon
         self.prompt = prompt
+        
         self.assistantName = assistantName
+        self.assistantIcon = assistantIcon
+        
         self.grainientSeed = grainientSeed
         self.messages = messages
     }
@@ -42,9 +51,12 @@ final class Conversation: Identifiable, Codable {
             let container = try decoder.container(keyedBy: CodingKeys.self)
             created = try container.decode(Date.self, forKey: .created)
             name = try container.decode(String.self, forKey: .name)
-            icon = try container.decodeIfPresent(String.self, forKey: .icon)
+            icon = try container.decode(String.self, forKey: .icon)
             prompt = try container.decodeIfPresent(String.self, forKey: .prompt)
+        
             assistantName = try container.decode(String.self, forKey: .assistantName)
+            assistantIcon = try container.decode(String.self, forKey: .assistantIcon)
+        
             grainientSeed = try container.decodeIfPresent(Int.self, forKey: .grainientSeed)
             messages = try container.decodeIfPresent([Message].self, forKey: .messages)
         }
@@ -53,9 +65,13 @@ final class Conversation: Identifiable, Codable {
             var container = encoder.container(keyedBy: CodingKeys.self)
             try container.encode(created, forKey: .created)
             try container.encode(name, forKey: .name)
-            try container.encodeIfPresent(icon, forKey: .icon)
+            try container.encode(icon, forKey: .icon)
+            
             try container.encodeIfPresent(prompt, forKey: .prompt)
+            
             try container.encode(assistantName, forKey: .assistantName)
+            try container.encode(assistantIcon, forKey: .assistantIcon)
+            
             try container.encodeIfPresent(grainientSeed, forKey: .grainientSeed)
             try container.encodeIfPresent(messages, forKey: .messages)
         }
@@ -66,6 +82,7 @@ final class Conversation: Identifiable, Codable {
             case icon
             case prompt
             case assistantName
+            case assistantIcon
             case grainientSeed
             case messages
         }
@@ -105,20 +122,28 @@ final class Message: Identifiable, Codable {
     
     required init(from decoder: Decoder) throws {
             let container = try decoder.container(keyedBy: CodingKeys.self)
+        
             timestamp = try container.decode(Date.self, forKey: .timestamp)
             content = try container.decode(String.self, forKey: .content)
+        
             promptTokens = try container.decodeIfPresent(Int.self, forKey: .promptTokens)
             completionTokens = try container.decodeIfPresent(Int.self, forKey: .completionTokens)
+        
             type = try container.decode(MessageType.self, forKey: .type)
+            conversation = try container.decode(Conversation.self, forKey: .conversation)
+        
         }
 
         func encode(to encoder: Encoder) throws {
             var container = encoder.container(keyedBy: CodingKeys.self)
             try container.encode(timestamp, forKey: .timestamp)
             try container.encode(content, forKey: .content)
+            
             try container.encodeIfPresent(promptTokens, forKey: .promptTokens)
             try container.encodeIfPresent(completionTokens, forKey: .completionTokens)
+            
             try container.encode(type, forKey: .type)
+            try container.encode(conversation, forKey: .conversation)
         }
 
         private enum CodingKeys: String, CodingKey {
@@ -127,6 +152,7 @@ final class Message: Identifiable, Codable {
             case promptTokens
             case completionTokens
             case type
+            case conversation
         }
 
 } // END Message
@@ -141,6 +167,15 @@ enum MessageType: Codable {
             return "User"
         case .assistant:
             return "Assistant"
+        }
+    }
+    
+    var defaultIcon: String {
+        switch self {
+        case .user:
+            Icons.person.icon
+        case .assistant:
+            Icons.shocked.icon
         }
     }
 }

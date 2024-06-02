@@ -40,6 +40,8 @@ class BanksiaHandler: ObservableObject {
     @AppStorage("editorHeightKey") var editorHeight: Double = 180
     
     @AppStorage("userNameKey") var userName: String?
+
+    @AppStorage("isToolbarShowingKey") var isToolbarShowing: Bool = true
     
     @AppStorage("isDebugShowingKey") var isDebugShowing: Bool = false
     @AppStorage("isTestModeKey") var isTestMode: Bool = false

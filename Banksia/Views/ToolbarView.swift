@@ -40,100 +40,106 @@ struct ToolbarView: View {
     var body: some View {
         
         VStack(spacing:0) {
-            HStack(spacing: 14) {
+            
+            if bk.isToolbarShowing {
                 
-                Text(nav.navigationTitle ?? "Banksia")
-                    .font(.title2)
-                    .foregroundStyle(.secondary)
-                    .lineLimit(1)
-                    .renamable(
-                        isRenaming: $isRenaming,
-                        itemName: conversationName
-                    ) { newName in
-                        conversationName = newName
-                        popup.showPopup(title: "Renamed to \"\(newName)\"")
-                    }
-                
-                Spacer()
-                
-                if !sidebar.isSidebarVisible {
-                    NewConversationButton()
-                }
-                
-                // MARK: - 􀈎 Edit conversation
-                Button {
-                    conv.isConversationEditorShowing.toggle()
-                } label: {
-                    Label("Edit conversation prompt", systemImage: Icons.edit.icon)
-                }
-                
-
-                
-                // MARK: - 􀍠 Expanded
-                Button {
-                    bk.isToolbarExpanded.toggle()
+                HStack(spacing: 14) {
                     
-                } label: {
-                    Label("More options", systemImage: Icons.ellipsis.icon)
+                    Text(nav.navigationTitle ?? "Banksia")
+                        .font(.title2)
+                        .foregroundStyle(.secondary)
+                        .lineLimit(1)
+                        .renamable(
+                            isRenaming: $isRenaming,
+                            itemName: conversationName
+                        ) { newName in
+                            conversationName = newName
+                            popup.showPopup(title: "Renamed to \"\(newName)\"")
+                        }
+                    
+                    Spacer()
+                    
+                    if !sidebar.isSidebarVisible {
+                        NewConversationButton()
+                    }
+                    
+                    // MARK: - 􀈎 Edit conversation
+                    Button {
+                        conv.isConversationEditorShowing.toggle()
+                    } label: {
+                        Label("Edit conversation prompt", systemImage: Icons.edit.icon)
+                    }
+                    
+                    
+                    
+                    // MARK: - 􀍠 Expanded
+                    Button {
+                        bk.isToolbarExpanded.toggle()
+                        
+                    } label: {
+                        Label("More options", systemImage: Icons.ellipsis.icon)
+                    }
+                    
+                    
+                    
+                    // MARK: - Search
+                    TextField("Search messages", text: $conv.searchText, prompt: Text("Search…"))
+                        .textFieldStyle(.customField(text: $conv.searchText, isFocused: isSearchFocused))
+                        .focused($isSearchFocused)
+                        .frame(maxWidth: isSearchFocused ? 240 : 120)
+                        .onExitCommand {
+                            isSearchFocused = false
+                        }
+                    
+                } // END toolbar hstack
+                
+                .buttonStyle(
+                    .customButton(
+                        hasBackground: false,
+                        labelDisplay: .iconOnly
+                    )
+                )
+                
+                .animation(Styles.animation, value: isSearchFocused)
+                
+                .frame(
+                    maxWidth: .infinity,
+                    minHeight: Styles.toolbarHeight,
+                    maxHeight: Styles.toolbarHeight,
+                    alignment: .leading
+                )
+                .safeAreaPadding(.leading, !sidebar.isSidebarVisible ? Styles.toolbarSpacing : (sidebar.isSidebarVisible ? sidebar.sidebarWidth : Styles.paddingToolbarTrafficLightsWidth))
+
+                /// Allows space for the sidebar toggle button 􀨱 when the sidebar is hidden
+                .padding(.leading, sidebar.isSidebarVisible ? 0 : 110)
+                
+                .padding(.horizontal, Styles.toolbarSpacing)
+                .background {
+                    Rectangle().fill(.ultraThinMaterial)
+                        .safeAreaPadding(.leading, sidebar.isSidebarVisible ? sidebar.sidebarWidth : 0)
                 }
                 
+                ToolbarExpandedView(conversationGrainientSeed: $conversationGrainientSeed)
                 
-                
-                // MARK: - Search
-                TextField("Search messages", text: $conv.searchText, prompt: Text("Search…"))
-                    .textFieldStyle(.customField(text: $conv.searchText, isFocused: isSearchFocused))
-                    .focused($isSearchFocused)
-                    .frame(maxWidth: isSearchFocused ? 240 : 120)
-                    .onExitCommand {
-                        isSearchFocused = false
-                    }
-                
-            } // END toolbar hstack
-            .buttonStyle(
-                .customButton(
-                    hasBackground: false,
-                    labelDisplay: .iconOnly
-                )
-            )
-
-            .animation(Styles.animation, value: isSearchFocused)
-            .safeAreaPadding(.leading, isPreview && !sidebar.isSidebarVisible ? Styles.toolbarSpacing : (sidebar.isSidebarVisible ? sidebar.sidebarWidth : Styles.paddingToolbarTrafficLightsWidth))
-            .frame(
-                maxWidth: .infinity,
-                minHeight: Styles.toolbarHeight,
-                maxHeight: Styles.toolbarHeight,
-                alignment: .leading
-            )
-            /// Allows space for the sidebar toggle button 􀨱 when the sidebar is hidden
-            .padding(.leading, sidebar.isSidebarVisible ? 0 : 30)
-            
-            .padding(.horizontal, Styles.toolbarSpacing)
-            .background {
-                Rectangle().fill(.ultraThinMaterial)
-                    .safeAreaPadding(.leading, sidebar.isSidebarVisible ? sidebar.sidebarWidth : 0)
-            }
-            
-            
-            ToolbarExpandedView(conversationGrainientSeed: $conversationGrainientSeed)
+            } // END toolbar toggle
             
         } // END vstack
-        
-        
+        .frame(maxWidth: .infinity, alignment: .leading)
         
         
         
         // MARK: - 􀨱 Sidebar buttons
         .overlay(alignment: .topLeading) {
             
-            HStack {
-                //            if sidebar.isRoomForSidebar {
-                Button {
-                    sidebar.toggleSidebar()
-                } label: {
-                    Label("Toggle sidebar", systemImage: Icons.sidebarAlt.icon)
+            HStack(spacing: 0) {
+
+                if bk.isToolbarShowing {
+                    Button {
+                        sidebar.toggleSidebar()
+                    } label: {
+                        Label("Toggle sidebar", systemImage: Icons.sidebarAlt.icon)
+                    }
                 }
-                
-                //                }  END room for sidebar check
                 
                 // MARK: - 􀅼 New conversation
                 if sidebar.isSidebarVisible {
@@ -142,8 +148,9 @@ struct ToolbarView: View {
                     
                     
                 } // END sidebar showing check
+                
+                
             } // END hstack
-            .frame(height: Styles.toolbarHeight)
             
             .task(id: conv.currentRequest) {
                 switch conv.currentRequest {
@@ -155,21 +162,23 @@ struct ToolbarView: View {
                 }
             }
             
+            .frame(
+                height: Styles.toolbarHeight
+            )
+            .safeAreaPadding(.leading, Styles.paddingToolbarTrafficLightsWidth)
             
-            .safeAreaPadding(.leading, isPreview ? Styles.toolbarSpacing : Styles.paddingToolbarTrafficLightsWidth)
             .buttonStyle(.customButton(hasBackground: false, labelDisplay: .iconOnly))
         } // END toolbar sidebar controls overlay
-//        .onAppear {
-//            if isPreview {
-//                bk.isToolbarExpanded = true
-//            }
-//        }
+        
+        .frame(maxWidth: .infinity, alignment: .leading)
+        
+        
         
     }
 }
 
 extension ToolbarView {
-
+    
     @ViewBuilder
     func NewConversationButton() -> some View {
         Button {

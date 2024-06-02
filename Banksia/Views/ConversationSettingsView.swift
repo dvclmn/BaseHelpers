@@ -1,5 +1,5 @@
 //
-//  ConversationEditorView.swift
+//  ConversationSettingsView.swift
 //  Banksia
 //
 //  Created by Dave Coleman on 16/4/2024.
@@ -14,7 +14,7 @@ import Icons
 import MarkdownEditor
 import TextEditor
 
-struct ConversationEditorView: View {
+struct ConversationSettingsView: View {
     @EnvironmentObject var conv: ConversationHandler
     
     
@@ -111,7 +111,7 @@ struct ConversationEditorView: View {
 //
 //
 //#Preview {
-//    ConversationEditorView(conversation: Conversation.plants)
+//    ConversationSettingsView(conversation: Conversation.plants)
 //        .environment(ConversationHandler())
 //        .frame(width: 380)
 //}

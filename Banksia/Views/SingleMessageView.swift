@@ -16,13 +16,15 @@ import Swatches
 import Popup
 
 struct SingleMessageView: View {
+
     @EnvironmentObject var bk: BanksiaHandler
     @EnvironmentObject var conv: ConversationHandler
-    
     @EnvironmentObject var popup: PopupHandler
     @EnvironmentObject var sidebar: SidebarHandler
     
     @State private var isHovering: Bool = false
+    
+    var conversation: Conversation
     
     @Bindable var message: Message
     
@@ -58,18 +60,36 @@ struct SingleMessageView: View {
         
         VStack {
             VStack(alignment: .leading, spacing: 20) {
-                                Text(message.content)
-                                    .foregroundStyle(.primary.opacity(0.9))
-                                    .font(.system(size: 15, weight: .medium))
-//                MarkdownEditorView(
-//                    text: $message.content,
-//                    placeholderText: "",
-//                    isFocused: $isFocused,
-//                    isEditable: false
-//                )
+                
+//                Label(message.type.name, systemImage: message.type.defaultIcon)
+//                    .labelStyle(.customLabel())
+                
+                Text(highlighted)
+                    .foregroundStyle(.primary.opacity(0.9))
+                    .font(.system(size: 15, weight: .medium))
+                //                MarkdownEditorView(
+                //                    text: $message.content,
+                //                    placeholderText: "",
+                //                    isFocused: $isFocused,
+                //                    isEditable: false
+                //                )
                 
                 if bk.isMessageInfoShowing {
+                    
+//                    Button {
+//                        message.content += "butts "
+//                    } label: {
+//                        Label("Add text", systemImage: Icons.text.icon)
+//                    }
+                    
                     HStack(alignment: .bottom, spacing: 14) {
+
+                        
+                        Label("\(message.type.name)", systemImage: message.type.defaultIcon)
+                        
+                        
+                        Label("\(conv.getMessageTimestamp(message.timestamp))", systemImage: Icons.clock.icon)
+                        
                         Label("\((message.promptTokens ?? 0) + (message.completionTokens ?? 0))", systemImage: Icons.token.icon)
                         
                         Label("\(message.content.wordCount)", systemImage: "text.word.spacing")
@@ -89,10 +109,12 @@ struct SingleMessageView: View {
                     .opacity(isHovering ? 1.0 : 0.4)
                     .labelStyle(.customLabel(size: .mini))
                     .padding(.horizontal, Styles.paddingNSTextViewCompensation)
+                    
+                    
                 }
                 
             } // END inner vstack
-//            .fixedSize(horizontal: false, vertical: true)
+            //            .fixedSize(horizontal: false, vertical: true)
             .padding()
             .frame(maxWidth: 620, alignment: .leading)
             .background(Color(message.type == .user ? Swatch.eggplant.colour.opacity(0.2) : .gray.opacity(0.2)))
@@ -114,13 +136,13 @@ struct SingleMessageView: View {
             .padding(.trailing, message.type == .user ? 0 : authorAltPadding)
             .padding(.bottom, 40)
             
-//            .overlay(alignment: .topTrailing) {
-//                if isHovering {
-//                   
-//                }
-//            }
-//            
-//            
+            //            .overlay(alignment: .topTrailing) {
+            //                if isHovering {
+            //
+            //                }
+            //            }
+            //
+            //
             
             //            .frame(maxWidth: 620)
             //            .onTapGesture {
@@ -132,6 +154,23 @@ struct SingleMessageView: View {
         } // END outer vstack
         .padding(.horizontal, Styles.paddingText + Styles.paddingNSTextViewCompensation)
         .frame(maxWidth: .infinity, alignment: message.type == .user ? .trailing : .leading)
+//        .task(id: conv.streamingGPTMessageTimestamp) {
+//            if message.timestamp == conv.streamingGPTMessageTimestamp {
+//                print("The single message time, *did* match the streamed message time!")
+//                
+//                message.content += conv.streamedResponse
+//            } else {
+//                print("The single message time, did not match the streamed message time")
+//                print("The single message ID:\n\(message.persistentModelID), did not match the streamed message ID:\n\(String(describing: conv.streamingGPTMessageID))")
+//            }
+//        }
+//        .task {
+//            guard let gptMessage = message.first(where: {$0.timestamp == conv.streamingGPTMessageTimestamp}).content else {
+//                print("Couldn't get a matching message to stream to")
+//            }
+            
+//            message.content += conv.streamedResponse
+//        }
     }
     
 }
@@ -140,12 +179,15 @@ struct SingleMessageView: View {
 
 #Preview {
     ModelContainerPreview(ModelContainer.sample) {
-        SingleMessageView(message: Message(content: ExampleText.paragraphs[3]))
-            .environmentObject(BanksiaHandler())
-            .environmentObject(SidebarHandler())
-            .environmentObject(PopupHandler())
-            .environmentObject(ConversationHandler())
-            .frame(width: 500, height: 700)
+        SingleMessageView(
+            conversation: Conversation.appKitDrawing,
+            message: Message(content: ExampleText.paragraphs[3])
+        )
+        .environmentObject(BanksiaHandler())
+        .environmentObject(SidebarHandler())
+        .environmentObject(PopupHandler())
+        .environmentObject(ConversationHandler())
+        .frame(width: 500, height: 700)
     }
 }
 

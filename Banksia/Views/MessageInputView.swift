@@ -201,15 +201,12 @@ extension MessageInputView {
             
             
             Button {
-                Task {
-                    conv.currentRequest = .sendQuery
-                }
+                conv.currentRequest = .sendQuery
             } label: {
                 Label(conv.isResponseLoading ? "Loading…" : "Send", systemImage: Icons.text.icon)
             }
             .buttonStyle(.customButton(size: .small, status: userPrompt.isEmpty ? .disabled : .normal, labelDisplay: .titleOnly))
             .disabled(userPrompt.isEmpty)
-            .keyboardShortcut(.return, modifiers: .command)
             
         }
         .opacity(isUIFaded ? 0.2 : 1.0)

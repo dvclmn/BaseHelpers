@@ -16,6 +16,7 @@ import Sidebar
 import MarkdownEditor
 import KeychainHandler
 import Popup
+import Grainient
 
 struct ConversationView: View {
     @Environment(\.modelContext) private var modelContext
@@ -24,31 +25,45 @@ struct ConversationView: View {
     @EnvironmentObject var popup: PopupHandler
     @EnvironmentObject var sidebar: SidebarHandler
     
+    @Query private var messages: [Message]
+    
     @Bindable var conversation: Conversation
     
     @State private var userPrompt: String = ""
     
-    @State private var testStream: String = "Let's stream"
+    init(
+        conversation: Conversation,
+        filter: Predicate<Message>? = nil,
+        sort: SortDescriptor<Message> = SortDescriptor(\Message.timestamp, order: .forward)
+    ) {
+        self.conversation = conversation
+        if let filter = filter {
+            _messages = Query(filter: filter, sort: [sort])
+            
+        } else {
+            _messages = Query(sort: [sort])
+        }
+    }
     
     var body: some View {
         
         VStack {
-            if let conversationMessages = conversation.messages {
+//            if let conversationMessages = conversation.messages {
                 
                 var searchResults: [Message] {
-                    conversationMessages
+                    messages
                         .filter { message in
-                        if conv.searchText.count > 1 {
-                            return message.content.localizedCaseInsensitiveContains(conv.searchText)
-                        } else {
-                            return true
+                            if conv.searchText.count > 1 {
+                                return message.content.localizedCaseInsensitiveContains(conv.searchText)
+                            } else {
+                                return true
+                            }
                         }
-                    }
                         .sorted(by: { $0.timestamp < $1.timestamp })
                 }
                 
                 VStack {
-                    if conversationMessages.count > 0 {
+                    if messages.count > 0 {
                         if searchResults.count > 0 {
                             
                             // MARK: - Scrollview
@@ -57,6 +72,7 @@ struct ConversationView: View {
                                     ForEach(searchResults, id: \.persistentModelID) { message in
                                         
                                         SingleMessageView(
+                                            conversation: conversation,
                                             message: message
                                         )
                                         
@@ -68,18 +84,18 @@ struct ConversationView: View {
                             .safeAreaPadding(.top, Styles.toolbarHeight)
                             .safeAreaPadding(.bottom, conv.editorHeight)
                             .defaultScrollAnchor(.bottom)
-//                            .scrollPosition(id: $conv.scrolledMessageID, anchor: .bottom)
+                            //                            .scrollPosition(id: $conv.scrolledMessageID, anchor: .bottom)
                             
-//                            .overlay(alignment: .bottomTrailing) {
-//                                Button {
-//                                    conv.scrolledMessageID = searchResults.last?.id
-//                                } label: {
-//                                    Label("Scroll to latest message", systemImage: Icons.down.icon)
-//                                }
-//                                .buttonStyle(.customButton(size: .small, labelDisplay: .iconOnly))
-//                                .padding(.bottom, conv.editorHeight + Styles.paddingSmall)
-//                                .padding(.trailing, Styles.paddingSmall)
-//                            } // END scroll to bottom
+                            //                            .overlay(alignment: .bottomTrailing) {
+                            //                                Button {
+                            //                                    conv.scrolledMessageID = searchResults.last?.id
+                            //                                } label: {
+                            //                                    Label("Scroll to latest message", systemImage: Icons.down.icon)
+                            //                                }
+                            //                                .buttonStyle(.customButton(size: .small, labelDisplay: .iconOnly))
+                            //                                .padding(.bottom, conv.editorHeight + Styles.paddingSmall)
+                            //                                .padding(.trailing, Styles.paddingSmall)
+                            //                            } // END scroll to bottom
                             
                         } else {
                             StateView(title: "No matching results", message: "No results found for \"\(conv.searchText)\".")
@@ -96,7 +112,8 @@ struct ConversationView: View {
                 
                 .overlay(alignment: .bottom) {
                     VStack {
-                        Text(testStream)
+                        Text(conv.streamedResponse)
+                        Text(getLatestGPTMessageTimestamp())
                         MessageInputView(
                             conversation: conversation,
                             userPrompt: $userPrompt
@@ -104,20 +121,20 @@ struct ConversationView: View {
                     }
                 }
                 .sheet(isPresented: $conv.isConversationEditorShowing) {
-                    ConversationEditorView(conversation: conversation)
+                    ConversationSettingsView(conversation: conversation)
                 }
-            } else {
-                
-                Text("No messages here?")
-                
-            }// END has messages check
+//            } else {
+//                
+//                Text("No messages here?")
+//                
+//            }// END has messages check
             
         } // END Vstack
-        .task(id: conversation.grainientSeed) {
-            withAnimation(Styles.animationRelaxed) {
-                conv.grainientSeed = conversation.grainientSeed
-            }
-        }
+        //        .task(id: conversation.grainientSeed) {
+        //            withAnimation(Styles.animationRelaxed) {
+        //                conv.grainientSeed = conversation.grainientSeed
+        //            }
+        //        }
         //        .task(id: conv.streamingGPTMessageID) {
         //            if let id = conv.streamingGPTMessageID {
         //                print("conv.streamingGPTMessageID successfully updated to: \(id)")
@@ -139,10 +156,21 @@ struct ConversationView: View {
                 await sendMessage()
                 print("Send message requested")
                 conv.currentRequest = .none
+            case .generateConversationGrainient:
+                withAnimation(Styles.animationRelaxed) {
+                    conversation.grainientSeed = GrainientSettings.generateGradientSeed()
+                }
+                conv.currentRequest = .none
             default:
                 break
             }
         }
+        .task {
+            if let message = conversation.messages?.last {
+                message.content += "Some butts man!"
+            }
+        }
+        
         
         
     } // END view body
@@ -150,6 +178,13 @@ struct ConversationView: View {
 }
 
 extension ConversationView {
+    
+    func getLatestGPTMessageTimestamp() -> String {
+        guard let message = conversation.messages?.first(where: {$0.timestamp == conv.streamingGPTMessageTimestamp }) else {
+            return "No match found"
+        }
+        return conv.getMessageTimestamp(message.timestamp)
+    }
     
     private func sendMessage() async {
         
@@ -160,7 +195,6 @@ extension ConversationView {
             return
         }
         print("There *is* a query to send")
-        
         
         conv.isResponseLoading = true
         
@@ -177,11 +211,11 @@ extension ConversationView {
         
         
         /// Construct the message history for GPT context
-        let messageHistory: [RequestMessage] = await conv.createMessageHistory(
-            for: conversation,
-            latestMessage: newUserMessage,
-            with: bk.systemPrompt
-        )
+                let messageHistory: [RequestMessage] = await conv.createMessageHistory(
+                    for: conversation,
+                    latestMessage: newUserMessage,
+                    with: bk.systemPrompt
+                )
         
         let newGPTMessage = Message(
             content: "",
@@ -190,6 +224,10 @@ extension ConversationView {
         )
         
         modelContext.insert(newGPTMessage)
+        
+        print("Created new GPT message with ID: \(newGPTMessage.persistentModelID)")
+        
+        conv.streamingGPTMessageTimestamp = newGPTMessage.timestamp
         
         // MARK: - Test mode
         guard !bk.isTestMode else {
@@ -206,52 +244,44 @@ extension ConversationView {
         // MARK: - Live mode
         do {
             
-//            let requestBody = RequestBody(
-//                model: bk.gptModel.model,
-//                messages: messageHistory,
-//                stream: true,
-//                temperature: bk.gptTemperature
-//            )
-//            
-//            let url = URL(string: OpenAIHandler.chatURL)!
-//            
-//            var request = URLRequest(url: url)
-//            request.httpMethod = "POST"
-//            request.httpBody = try JSONEncoder().encode(requestBody)
-//            request.allHTTPHeaderFields = [
-//                "Content-Type": "application/json",
-//                "Authorization": "Bearer \(apiKey)"
-//            ]
+            //            let requestBody = RequestBody(
+            //                model: bk.gptModel.model,
+            //                messages: messageHistory,
+            //                stream: true,
+            //                temperature: bk.gptTemperature
+            //            )
+            //
+            //            let url = URL(string: OpenAIHandler.chatURL)!
+            //
+            //            var request = URLRequest(url: url)
+            //            request.httpMethod = "POST"
+            //            request.httpBody = try JSONEncoder().encode(requestBody)
+            //            request.allHTTPHeaderFields = [
+            //                "Content-Type": "application/json",
+            //                "Authorization": "Bearer \(apiKey)"
+            //            ]
             
-            
-
-            
-            let question = "Hi, this is a test. Juts a brief response to see if this is working is fine."
-            
-            guard let request = try makeRequest(content: question) else {
+            guard let request = try makeRequest(content: messageHistory) else {
                 print("Could not make the request")
                 return
             }
             
+            /// Credit to https://gist.github.com/arthurgarzajr/89a485a50af30ef4183e725a43bba230
+            /// and https://zachwaugh.com/posts/streaming-messages-chatgpt-swift-asyncsequence
+            /// for helping me figure out streaming
             let (stream, _) = try await URLSession.shared.bytes(for: request)
             
-//            print("Stream: \(stream)")
-            
             for try await line in stream.lines {
-                print("Entered the stream. \(line)")
                 
                 guard let messageChunk = parse(line) else {
-                print("Couldn't parse?")
+                    print("Couldn't parse?")
                     continue
                 }
                 
-//                guard let lastMessage = conversation.messages?.last(where: { $0.type == .assistant }) else {
-//                    print("Issue with getting the last message")
-//                    return
-//                }
+                conv.streamedResponse += messageChunk
                 
-                testStream += messageChunk
-
+                print("Streamed conversation name: \(conversation.name)")
+                
             }
             
         } catch {
@@ -261,16 +291,18 @@ extension ConversationView {
     } // END send message
     
     
-    func makeRequest(content: String) throws -> URLRequest? {
+    func makeRequest(content: [RequestMessage]) throws -> URLRequest? {
         
         guard let apiKey = KeychainHandler.shared.readString(for: "openAIAPIKey") else {
             popup.showPopup(title: "No API Key found", message: "Please visit app Settings (⌘,) to set up your API Key")
             return nil
         }
         
+        
+        
         let query = RequestBody(
             model: bk.gptModel.model,
-            messages: [.init(role: "user", content: content)],
+            messages: content,
             stream: true,
             temperature: bk.gptTemperature
         )
@@ -287,7 +319,7 @@ extension ConversationView {
     
     func parse(_ line: String) -> String? {
         print("\n\n|--- Parse streamed response --->\n")
-        print("Received line: \(line)")
+        //        print("Received line: \(line)")
         
         let components = line.split(separator: ":", maxSplits: 1, omittingEmptySubsequences: true)
         
@@ -299,43 +331,13 @@ extension ConversationView {
         let message = components[1].trimmingCharacters(in: .whitespacesAndNewlines)
         
         // Decode into Chunk object
-            let chunk = try? JSONDecoder().decode(GPTStreamedResponse.self, from: message.data(using: .utf8)!)
-
-            if let finishReason = chunk?.choices.first?.finish_reason, finishReason == "stop" {
-                return "\n"
-            } else {
-                return chunk?.choices.first?.delta.content
-            }
+        let chunk = try? JSONDecoder().decode(GPTStreamedResponse.self, from: message.data(using: .utf8)!)
+        
+        if let finishReason = chunk?.choices.first?.finish_reason, finishReason == "stop" {
+            return "\n"
+        } else {
+            return chunk?.choices.first?.delta.content
+        }
     } // Stream parsing
     
 }
-
-//Couldn't parse?
-//Entered the stream. data: {
-//    "id":"chatcmpl-9VOQ1TfgUDaHLZo1Lav6B7EZz67Hu",
-//    "object":"chat.completion.chunk",
-//    "created":1717269061,
-//    "model":"gpt-4o-2024-05-13",
-//    "system_fingerprint":"fp_319be4768e",
-//    "choices":[{"index":0,"delta":{"content":" messages"},"logprobs":null,"finish_reason":null}]
-//}
-//Couldn't parse?
-//Entered the stream. data: {
-//    "id":"chatcmpl-9VOQ1TfgUDaHLZo1Lav6B7EZz67Hu",
-//    "object":"chat.completion.chunk",
-//    "created":1717269061,
-//    "model":"gpt-4o-2024-05-13",
-//    "system_fingerprint":"fp_319be4768e",
-//    "choices":[{"index":0,"delta":{"content":" in"},"logprobs":null,"finish_reason":null}]
-//}
-//Couldn't parse?
-//Entered the stream. data: {
-//    "id":"chatcmpl-9VOQ1TfgUDaHLZo1Lav6B7EZz67Hu",
-//    "object":"chat.completion.chunk",
-//    "created":1717269061,
-//    "model":"gpt-4o-2024-05-13",
-//    "system_fingerprint":"fp_319be4768e",
-//    "choices":[{"index":0,"delta":{"content":" your"},"logprobs":null,"finish_reason":null}]
-//}
-//Couldn't parse?
-

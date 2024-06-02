@@ -76,7 +76,7 @@ struct QuickOpenView: View {
                             Button {
                                 nav.navigate(to: .conversation(conversation))
                             } label: {
-                                Label(conversation.name, systemImage: conversation.icon ?? "")
+                                Label(conversation.name, systemImage: conversation.icon)
                             }
                             .buttonStyle(.plain)
                             .background(conversation == self.selectedConversation ? .blue : .clear)

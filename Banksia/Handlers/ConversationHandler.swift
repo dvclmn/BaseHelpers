@@ -17,14 +17,12 @@ final class ConversationHandler: ObservableObject {
     
     @Published var currentConversationID: Conversation.ID? = nil
     
-//    @AppStorage("userPromptKey") var userPrompt: String = ""
-    
     @Published var searchText: String = ""
     @Published var isSearching: Bool = false
     
     @Published var isEditorFocused: Bool = false
     
-    @Published var grainientSeed: Int? = nil
+//    @Published var grainientSeed: Int? = nil
     
     @Published var isResponseLoading: Bool = false
     
@@ -35,8 +33,8 @@ final class ConversationHandler: ObservableObject {
     @Published var scrolledMessageID: Message.ID?
     @Published var scrolledMessagePreview: String?
     
-//    var streamingGPTMessageID: Conversation.ID? = nil
-//    var streamedResponse: String = ""
+    @Published var streamingGPTMessageTimestamp: Date? = nil
+    @Published var streamedResponse: String = ""
     
     var editorHeight: Double = ConversationHandler.defaultEditorHeight
     
@@ -48,18 +46,11 @@ final class ConversationHandler: ObservableObject {
     
     func createMessageHistory(for conversation: Conversation, latestMessage: Message, with systemPrompt: String) async -> [RequestMessage] {
         
-        let maxMessagesInHistory: Int = 6
+        let maxMessagesInHistory: Int = 2
         
         let conversationPrompt: String = conversation.prompt ?? ""
         
         let system = RequestMessage(role: "system", content: systemPrompt + conversationPrompt)
-        
-        //        guard let messages = conversation.messages else {
-        //            print("There were no messages to send")
-        //            throw GPTError.failedToFetchResponse
-        //        }
-        
-        // Filter out the latest message and sort by timestamp in descending order
         
         if let messages = conversation.messages {
             
@@ -96,6 +87,28 @@ final class ConversationHandler: ObservableObject {
         ExampleText.paragraphs.randomElement() ?? "No paragraphs available"
     }
     
+    func getTidyMessageID(_ id: PersistentIdentifier.ID) -> String {
+//        let idString: String = "\(id)"
+//        let suffix = String(idString.suffix(67))
+//        let final = String(suffix.prefix(3))
+        
+        let idString: String = "\(id)"
+        let suffix = String(idString.suffix(200))
+        let final = String(suffix.prefix(200))
+        
+        return final
+    }
+    
+    func getMessageTimestamp(_ date: Date) -> String {
+        let dateFormatter = DateFormatter()
+
+        dateFormatter.dateFormat = "hh:mm:ss.SSS a"
+
+        let formattedDate = dateFormatter.string(from: date)
+
+        return formattedDate
+    }
+    
     
     
     static func formatTimestamp(_ timestamp: Date) -> String {
@@ -123,7 +136,41 @@ final class ConversationHandler: ObservableObject {
     } // END total tokens
     
     
-    
+//    var descriptor: FetchDescriptor<Message> {
+//        switch self {
+//        case .all:
+//            FetchDescriptor<Message>(predicate: MessageCount.allMessagesPredicate)
+//        case .bookmarked:
+//            FetchDescriptor<Message>(predicate: MessageCount.bookmarkPredicate)
+//        case .wishlisted:
+//            FetchDescriptor<Message>(predicate: MessageCount.wishlistPredicate)
+//        case .steam:
+//            FetchDescriptor<Message>(predicate: MessageCount.allMessagesPredicate)
+//        case .gog:
+//            FetchDescriptor<Message>(predicate: MessageCount.allMessagesPredicate)
+//        }
+//    }
+//    
+//    /// Predicates
+//    static let allMessagesPredicate: Predicate<Message> = #Predicate<Message> {
+//        /// I've chosen something that is almost certainly not going to be false?
+//        !$0.title.isEmpty
+//    }
+//    
+//    static let libraryPredicate: Predicate<Message> = #Predicate<Message> {
+//        $0.inLibrary && !$0.isHidden
+//    }
+//    
+//    static let bookmarkPredicate: Predicate<Message> = #Predicate<Message> {
+//        $0.inLibrary && !$0.isHidden && $0.isBookmarked
+//    }
+//    static let wishlistPredicate: Predicate<Message> = #Predicate<Message> {
+//        $0.inLibrary && !$0.isHidden && $0.isOnWishlist
+//    }
+//    static let hiddenPredicate: Predicate<Message> = #Predicate<Message> {
+//        $0.inLibrary && $0.isHidden
+//    }
+//    
     
     
 }
