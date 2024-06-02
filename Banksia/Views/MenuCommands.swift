@@ -14,7 +14,7 @@ import Sparkle
 struct MenuCommands: Commands {
     
     @ObservedObject var bk: BanksiaHandler
-    @ObservedObject var conv: ConversationHandler
+    @Bindable var conv: ConversationHandler
     @ObservedObject var sidebar: SidebarHandler
     
     let updaterController: SPUStandardUpdaterController

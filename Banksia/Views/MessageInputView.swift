@@ -23,7 +23,7 @@ import CountdownTimer
 import Button
 
 struct MessageInputView: View {
-    @EnvironmentObject var conv: ConversationHandler
+    @Environment(ConversationHandler.self) private var conv
     @EnvironmentObject var bk: BanksiaHandler
     
     @EnvironmentObject var popup: PopupHandler
@@ -47,9 +47,9 @@ struct MessageInputView: View {
 
     @Bindable var conversation: Conversation
     
-    @Binding var userPrompt: String
-    
     var body: some View {
+        
+        @Bindable var conv = conv
         
         VStack(spacing: 0) {
             
@@ -61,7 +61,7 @@ struct MessageInputView: View {
                     VStack {
                         
                         MarkdownEditorView(
-                            text: $userPrompt,
+                            text: $conv.userPrompt,
                             placeholderText: "Begin writing here…",
                             isFocused: $isFocused
                         )
@@ -104,7 +104,7 @@ struct MessageInputView: View {
                     startTimer()
                 }
                 
-                .task(id: userPrompt) {
+                .task(id: conv.userPrompt) {
                     startTimer()
                 }
                 .task {
@@ -205,8 +205,8 @@ extension MessageInputView {
             } label: {
                 Label(conv.isResponseLoading ? "Loading…" : "Send", systemImage: Icons.text.icon)
             }
-            .buttonStyle(.customButton(size: .small, status: userPrompt.isEmpty ? .disabled : .normal, labelDisplay: .titleOnly))
-            .disabled(userPrompt.isEmpty)
+            .buttonStyle(.customButton(size: .small, status: conv.userPrompt.isEmpty ? .disabled : .normal, labelDisplay: .titleOnly))
+            .disabled(conv.userPrompt.isEmpty)
             
         }
         .opacity(isUIFaded ? 0.2 : 1.0)
@@ -227,7 +227,7 @@ extension MessageInputView {
             )
         }
     }
-    .environmentObject(ConversationHandler())
+    .environment(ConversationHandler())
     .environmentObject(BanksiaHandler())
     
     .environmentObject(SidebarHandler())

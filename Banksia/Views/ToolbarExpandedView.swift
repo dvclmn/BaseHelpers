@@ -19,7 +19,7 @@ import GrainientPicker
 struct ToolbarExpandedView: View {
 
     @Environment(\.modelContext) var modelContext
-    @EnvironmentObject var conv: ConversationHandler
+    @Environment(ConversationHandler.self) private var conv
     
     @EnvironmentObject var bk: BanksiaHandler
     @EnvironmentObject var nav: NavigationHandler

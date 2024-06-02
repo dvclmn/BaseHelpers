@@ -15,7 +15,7 @@ import MarkdownEditor
 import TextEditor
 
 struct ConversationSettingsView: View {
-    @EnvironmentObject var conv: ConversationHandler
+    @Environment(ConversationHandler.self) private var conv
     
     
     @Bindable var conversation: Conversation

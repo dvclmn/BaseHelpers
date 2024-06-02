@@ -16,7 +16,7 @@ import GeneralUtilities
 struct DebugView: View {
     @Environment(\.modelContext) private var modelContext
     @EnvironmentObject var bk: BanksiaHandler
-    @EnvironmentObject var conv: ConversationHandler
+    @Environment(ConversationHandler.self) private var conv
     @EnvironmentObject var sidebar: SidebarHandler
     @EnvironmentObject var nav: NavigationHandler
     
@@ -293,7 +293,7 @@ extension DebugView {
     DebugView()
         .padding(.top,1)
         .environmentObject(BanksiaHandler())
-        .environmentObject(ConversationHandler())
+        .environment(ConversationHandler())
         .environmentObject(NavigationHandler())
         .environmentObject(SidebarHandler())
         .frame(width: 400, height: 600)

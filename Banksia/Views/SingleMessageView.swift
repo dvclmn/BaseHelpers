@@ -18,7 +18,7 @@ import Popup
 struct SingleMessageView: View {
 
     @EnvironmentObject var bk: BanksiaHandler
-    @EnvironmentObject var conv: ConversationHandler
+    @Environment(ConversationHandler.self) private var conv
     @EnvironmentObject var popup: PopupHandler
     @EnvironmentObject var sidebar: SidebarHandler
     
@@ -154,6 +154,7 @@ struct SingleMessageView: View {
         } // END outer vstack
         .padding(.horizontal, Styles.paddingText + Styles.paddingNSTextViewCompensation)
         .frame(maxWidth: .infinity, alignment: message.type == .user ? .trailing : .leading)
+
 //        .task(id: conv.streamingGPTMessageTimestamp) {
 //            if message.timestamp == conv.streamingGPTMessageTimestamp {
 //                print("The single message time, *did* match the streamed message time!")
@@ -175,6 +176,12 @@ struct SingleMessageView: View {
     
 }
 
+extension SingleMessageView {
+    
+    
+    
+}
+
 #if DEBUG
 
 #Preview {
@@ -186,7 +193,7 @@ struct SingleMessageView: View {
         .environmentObject(BanksiaHandler())
         .environmentObject(SidebarHandler())
         .environmentObject(PopupHandler())
-        .environmentObject(ConversationHandler())
+        .environment(ConversationHandler())
         .frame(width: 500, height: 700)
     }
 }

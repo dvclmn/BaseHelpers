@@ -12,29 +12,31 @@ import Grainient
 import MarkdownEditor
 
 
-
-final class ConversationHandler: ObservableObject {
+@Observable
+final class ConversationHandler {
     
-    @Published var currentConversationID: Conversation.ID? = nil
+    var currentConversationID: Conversation.ID? = nil
     
-    @Published var searchText: String = ""
-    @Published var isSearching: Bool = false
+    var userPrompt: String = ""
     
-    @Published var isEditorFocused: Bool = false
+    var searchText: String = ""
+    var isSearching: Bool = false
+    
+    var isEditorFocused: Bool = false
     
 //    @Published var grainientSeed: Int? = nil
     
-    @Published var isResponseLoading: Bool = false
+    var isResponseLoading: Bool = false
     
-    @Published var currentRequest: AppAction = .none
+    var currentRequest: AppAction = .none
     
-    @Published var isConversationEditorShowing: Bool = false
+    var isConversationEditorShowing: Bool = false
     
-    @Published var scrolledMessageID: Message.ID?
-    @Published var scrolledMessagePreview: String?
+    var scrolledMessageID: Message.ID?
+    var scrolledMessagePreview: String?
     
-    @Published var streamingGPTMessageTimestamp: Date? = nil
-    @Published var streamedResponse: String = ""
+    var streamingGPTMessageTimestamp: Date? = nil
+    var streamedResponse: String = ""
     
     var editorHeight: Double = ConversationHandler.defaultEditorHeight
     
@@ -135,44 +137,6 @@ final class ConversationHandler: ObservableObject {
         }
     } // END total tokens
     
-    
-//    var descriptor: FetchDescriptor<Message> {
-//        switch self {
-//        case .all:
-//            FetchDescriptor<Message>(predicate: MessageCount.allMessagesPredicate)
-//        case .bookmarked:
-//            FetchDescriptor<Message>(predicate: MessageCount.bookmarkPredicate)
-//        case .wishlisted:
-//            FetchDescriptor<Message>(predicate: MessageCount.wishlistPredicate)
-//        case .steam:
-//            FetchDescriptor<Message>(predicate: MessageCount.allMessagesPredicate)
-//        case .gog:
-//            FetchDescriptor<Message>(predicate: MessageCount.allMessagesPredicate)
-//        }
-//    }
-//    
-//    /// Predicates
-//    static let allMessagesPredicate: Predicate<Message> = #Predicate<Message> {
-//        /// I've chosen something that is almost certainly not going to be false?
-//        !$0.title.isEmpty
-//    }
-//    
-//    static let libraryPredicate: Predicate<Message> = #Predicate<Message> {
-//        $0.inLibrary && !$0.isHidden
-//    }
-//    
-//    static let bookmarkPredicate: Predicate<Message> = #Predicate<Message> {
-//        $0.inLibrary && !$0.isHidden && $0.isBookmarked
-//    }
-//    static let wishlistPredicate: Predicate<Message> = #Predicate<Message> {
-//        $0.inLibrary && !$0.isHidden && $0.isOnWishlist
-//    }
-//    static let hiddenPredicate: Predicate<Message> = #Predicate<Message> {
-//        $0.inLibrary && $0.isHidden
-//    }
-//    
-    
-    
 }
 
 enum ConversationState {
@@ -268,3 +232,25 @@ enum ConversationState {
 } // END coversation state
 
 
+
+struct DataStreamer: AsyncSequence {
+    typealias Element = String
+    
+    struct AsyncIterator: AsyncIteratorProtocol {
+        private var index = 0
+        private let data = ["Hello", " ", "World", "!", "\n"]
+        
+        mutating func next() async throws -> String? {
+            print("Let's make some fake data")
+            guard index < data.count else { return nil }
+            let element = data[index]
+            index += 1
+            try await Task.sleep(nanoseconds: 500_000_000) // Simulate delay
+            return element
+        }
+    }
+    
+    func makeAsyncIterator() -> AsyncIterator {
+        return AsyncIterator()
+    }
+}

@@ -35,10 +35,7 @@ struct DetailView: View {
                         conversationName: $conversation.name,
                         conversationGrainientSeed: $conversation.grainientSeed.boundInt
                     ) {
-                        ConversationView(
-                            conversation: conversation,
-                            filter: #Predicate<Message> { $0.conversation != nil }
-                            )
+                        ConversationView(conversation: conversation)
                     } // END detail wrapper
                     
                 } else {

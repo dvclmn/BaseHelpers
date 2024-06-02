@@ -25,7 +25,7 @@ struct ContentView: View {
     @Environment(\.undoManager) var undoManager
     
     @EnvironmentObject var bk: BanksiaHandler
-    @EnvironmentObject var conv: ConversationHandler
+    @Environment(ConversationHandler.self) private var conv
     @EnvironmentObject var nav: NavigationHandler
     @EnvironmentObject var popup: PopupHandler
     @EnvironmentObject var sidebar: SidebarHandler
@@ -350,7 +350,7 @@ extension ContentView {
 #if DEBUG
 #Preview {
     ContentView()
-        .environmentObject(ConversationHandler())
+        .environment(ConversationHandler())
         .environmentObject(BanksiaHandler())
         .environmentObject(NavigationHandler())
     

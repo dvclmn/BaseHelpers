@@ -19,36 +19,20 @@ import Popup
 import Grainient
 
 struct ConversationView: View {
-    @Environment(\.modelContext) private var modelContext
+    @Environment(\.modelContext) var modelContext
     @EnvironmentObject var bk: BanksiaHandler
-    @EnvironmentObject var conv: ConversationHandler
+    @Environment(ConversationHandler.self) private var conv
     @EnvironmentObject var popup: PopupHandler
     @EnvironmentObject var sidebar: SidebarHandler
     
-    @Query private var messages: [Message]
-    
     @Bindable var conversation: Conversation
-    
-    @State private var userPrompt: String = ""
-    
-    init(
-        conversation: Conversation,
-        filter: Predicate<Message>? = nil,
-        sort: SortDescriptor<Message> = SortDescriptor(\Message.timestamp, order: .forward)
-    ) {
-        self.conversation = conversation
-        if let filter = filter {
-            _messages = Query(filter: filter, sort: [sort])
-            
-        } else {
-            _messages = Query(sort: [sort])
-        }
-    }
     
     var body: some View {
         
+        @Bindable var conv = conv
+        
         VStack {
-//            if let conversationMessages = conversation.messages {
+            if let messages = conversation.messages {
                 
                 var searchResults: [Message] {
                     messages
@@ -115,19 +99,18 @@ struct ConversationView: View {
                         Text(conv.streamedResponse)
                         Text(getLatestGPTMessageTimestamp())
                         MessageInputView(
-                            conversation: conversation,
-                            userPrompt: $userPrompt
+                            conversation: conversation
                         )
                     }
                 }
                 .sheet(isPresented: $conv.isConversationEditorShowing) {
                     ConversationSettingsView(conversation: conversation)
                 }
-//            } else {
-//                
-//                Text("No messages here?")
-//                
-//            }// END has messages check
+            } else {
+                
+                Text("No messages here?")
+                
+            }// END has messages check
             
         } // END Vstack
         //        .task(id: conversation.grainientSeed) {
@@ -169,6 +152,9 @@ struct ConversationView: View {
             if let message = conversation.messages?.last {
                 message.content += "Some butts man!"
             }
+//            if bk.isTestMode {
+                conv.userPrompt = ExampleText.conversationTitles.randomElement() ?? "No random"
+//            }
         }
         
         
@@ -186,11 +172,13 @@ extension ConversationView {
         return conv.getMessageTimestamp(message.timestamp)
     }
     
+    
+    
     private func sendMessage() async {
         
         print("\n\n|--- Send message \(bk.isTestMode ? "Test mode" : "") --->\n")
         
-        guard !userPrompt.isEmpty else {
+        guard !conv.userPrompt.isEmpty else {
             print("No query to send")
             return
         }
@@ -200,13 +188,14 @@ extension ConversationView {
         
         /// Create new `Message` object and add to database
         let newUserMessage = Message(
-            content: userPrompt,
-            type: .user,
-            conversation: conversation
+            content: conv.userPrompt,
+            type: .user
         )
         modelContext.insert(newUserMessage)
         
-        userPrompt = ""
+        newUserMessage.conversation = conversation
+        
+        conv.userPrompt = ""
         conv.editorHeight = ConversationHandler.defaultEditorHeight
         
         
@@ -219,11 +208,12 @@ extension ConversationView {
         
         let newGPTMessage = Message(
             content: "",
-            type: .assistant,
-            conversation: conversation
+            type: .assistant
         )
-        
         modelContext.insert(newGPTMessage)
+        
+        newGPTMessage.conversation = conversation
+//        newGPTMessage.content += "Cool shorts my bro"
         
         print("Created new GPT message with ID: \(newGPTMessage.persistentModelID)")
         
@@ -232,9 +222,20 @@ extension ConversationView {
         // MARK: - Test mode
         guard !bk.isTestMode else {
             
-            guard let lastMessage = conversation.messages?.last(where: { $0.type == .assistant }) else { return }
-            
-            lastMessage.content = ExampleText.paragraphs.randomElement() ?? "Couldn't randomise"
+//            func updateMessageContent(message: Message) async {
+//                let streamer = DataStreamer()
+//                
+//                do {
+//                    for try await chunk in streamer {
+//                        await MainActor.run {
+//                            newGPTMessage.content += chunk
+//                            conv.streamedResponse += chunk
+//                        }
+//                    }
+//                } catch {
+//                    print("There was a problem in Single Message view")
+//                }
+//            }
             
             conv.isResponseLoading = false
             
@@ -243,23 +244,6 @@ extension ConversationView {
         
         // MARK: - Live mode
         do {
-            
-            //            let requestBody = RequestBody(
-            //                model: bk.gptModel.model,
-            //                messages: messageHistory,
-            //                stream: true,
-            //                temperature: bk.gptTemperature
-            //            )
-            //
-            //            let url = URL(string: OpenAIHandler.chatURL)!
-            //
-            //            var request = URLRequest(url: url)
-            //            request.httpMethod = "POST"
-            //            request.httpBody = try JSONEncoder().encode(requestBody)
-            //            request.allHTTPHeaderFields = [
-            //                "Content-Type": "application/json",
-            //                "Authorization": "Bearer \(apiKey)"
-            //            ]
             
             guard let request = try makeRequest(content: messageHistory) else {
                 print("Could not make the request")
@@ -278,7 +262,8 @@ extension ConversationView {
                     continue
                 }
                 
-                conv.streamedResponse += messageChunk
+                newGPTMessage.content += messageChunk
+//                conv.streamedResponse += messageChunk
                 
                 print("Streamed conversation name: \(conversation.name)")
                 
