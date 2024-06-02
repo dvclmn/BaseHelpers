@@ -52,7 +52,7 @@ struct ConversationView: View {
                             
                             // MARK: - Scrollview
                             ScrollView(.vertical) {
-                                LazyVStack(spacing: 12) {
+                                VStack(spacing: 12) {
                                     ForEach(searchResults, id: \.persistentModelID) { message in
                                         
                                         SingleMessageView(
@@ -62,13 +62,14 @@ struct ConversationView: View {
                                         
                                     } // END ForEach
                                 } // END lazy vstack
-                                .padding(.vertical, 40)
+                                .padding(.top, 60)
+                                .padding(.bottom, 200)
                                 .scrollTargetLayout()
                             } // END scrollview
                             .safeAreaPadding(.top, Styles.toolbarHeight)
                             .safeAreaPadding(.bottom, conv.editorHeight)
                             .defaultScrollAnchor(.bottom)
-                            .scrollPosition(id: $conv.scrolledMessageID, anchor: .bottom)
+//                            .scrollPosition(id: $conv.scrolledMessageID, anchor: .bottom)
                             
                             .overlay(alignment: .bottomTrailing) {
                                 Button {
@@ -134,7 +135,7 @@ struct ConversationView: View {
         }
         .task {
             //            if bk.isTestMode {
-            conv.userPrompt = ExampleText.conversationTitles.randomElement() ?? "No random"
+//            conv.userPrompt = ExampleText.conversationTitles.randomElement() ?? "No random"
             //            }
         }
         
@@ -178,7 +179,7 @@ extension ConversationView {
             with: bk.systemPrompt
         )
         
-        print("Message history:\n\n\(messageHistory.prettyPrinted)")
+        
         
         let newGPTMessage = Message(
             content: "",
@@ -224,14 +225,29 @@ extension ConversationView {
             /// for helping me figure out streaming
             let (stream, _) = try await URLSession.shared.bytes(for: request)
             
+            var finalUsage: GPTUsage?
+            
             for try await line in stream.lines {
-                
-                guard let messageChunk = parse(line) else {
+                guard let (messageChunk, usage) = parse(line) else {
                     print("Couldn't parse?")
                     continue
                 }
-                newGPTMessage.content += messageChunk
+                
+                if let content = messageChunk {
+                    newGPTMessage.content += content
+                }
+                
+                if let usageData = usage {
+                    finalUsage = usageData
+                }
             }
+            
+            if let usage = finalUsage {
+                newGPTMessage.promptTokens = usage.prompt_tokens
+                newGPTMessage.completionTokens = usage.completion_tokens
+            }
+            
+//            newGPTMessage.promptTokens = stream
             
         } catch {
             print("Error getting GPT response")
@@ -251,6 +267,8 @@ extension ConversationView {
             model: bk.gptModel.model,
             messages: content,
             stream: true,
+            stream_options: .init(include_usage: true),
+            max_tokens: nil,
             temperature: bk.gptTemperature
         )
         let url = URL(string: "https://api.openai.com/v1/chat/completions")!
@@ -264,27 +282,41 @@ extension ConversationView {
         return request
     }
     
-    func parse(_ line: String) -> String? {
+    func parse(_ line: String) -> (String?, GPTUsage?)? {
         print("\n\n|--- Parse streamed response --->\n")
-        //        print("Received line: \(line)")
         
         let components = line.split(separator: ":", maxSplits: 1, omittingEmptySubsequences: true)
         
         guard components.count == 2, components[0] == "data" else {
             print("Component count was not equal to 2, or the first item in component array was not 'data'")
-            return nil
+            return (nil, nil)
         }
         
         let message = components[1].trimmingCharacters(in: .whitespacesAndNewlines)
         
-        // Decode into Chunk object
-        let chunk = try? JSONDecoder().decode(GPTStreamedResponse.self, from: message.data(using: .utf8)!)
-        
-        if let finishReason = chunk?.choices.first?.finish_reason, finishReason == "stop" {
-            return "\n"
+        if message == "[DONE]" {
+          return ("\n", nil)
         } else {
-            return chunk?.choices.first?.delta.content
+          let chunk = try? JSONDecoder().decode(GPTChunk.self, from: message.data(using: .utf8)!)
+            
+            let content = chunk?.choices.first?.delta.content
+                        let usage = chunk?.usage
+                        return (content, usage)
+            
+            
+//          return chunk?.choices.first?.delta.content
         }
+        
+//        // Decode into Chunk object
+//        let chunk = try? JSONDecoder().decode(GPTChunk.self, from: message.data(using: .utf8)!)
+        
+        
+//        if let finishReason = chunk?.choices.first?.finish_reason, finishReason == "stop" {
+//            return "\n"
+//        } else {
+//            return chunk?.choices.first?.delta.content
+//        }
     } // Stream parsing
+
     
 }

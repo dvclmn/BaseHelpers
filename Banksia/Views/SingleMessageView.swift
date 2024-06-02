@@ -64,15 +64,17 @@ struct SingleMessageView: View {
 //                Label(message.type.name, systemImage: message.type.defaultIcon)
 //                    .labelStyle(.customLabel())
                 
-                Text(highlighted)
-                    .foregroundStyle(.primary.opacity(0.9))
-                    .font(.system(size: 15, weight: .medium))
-                //                MarkdownEditorView(
-                //                    text: $message.content,
-                //                    placeholderText: "",
-                //                    isFocused: $isFocused,
-                //                    isEditable: false
-                //                )
+//                Text(highlighted)
+//                    .foregroundStyle(.primary.opacity(0.9))
+//                    .font(.system(size: 15, weight: .medium))
+//                    .textSelection(.enabled)
+                
+                                MarkdownEditorView(
+                                    text: $message.content,
+                                    placeholderText: "",
+                                    isFocused: $isFocused,
+                                    isEditable: false
+                                )
                 
                 if bk.isMessageInfoShowing {
                     

@@ -33,6 +33,11 @@ class BanksiaHandler: ObservableObject {
     
     @Published var isToolbarExpanded: Bool = false
     
+    /// Debug window
+    @AppStorage("isColumnOneShowingKey") var isColumnOneShowing: Bool = true
+    @AppStorage("isColumnTwoShowingKey") var isColumnTwoShowing: Bool = true
+    @AppStorage("isColumnthreeShowingKey") var isColumnThreeShowing: Bool = true
+    
     @AppStorage("textScaleKey") var textScale: Double = 1.0
     @AppStorage("gptTemperatureKey") var gptTemperature: Double = 0.5
     @AppStorage("gptModelKey") var gptModel: GPTModel = GPTModel.gpt_4_turbo

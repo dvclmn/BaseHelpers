@@ -28,6 +28,8 @@ struct DebugView: View {
     let rowPaddingHorizontal: Double = 8
     let rowPaddingVertical: Double = 4
     
+    let faded: Double = 0.3
+    
     @State private var sorting: DebugColumn = .title
     
     @State private var isHoveringDebug: Bool = false
@@ -52,7 +54,10 @@ struct DebugView: View {
             ),
             DebugRow(
                 title: "Editor height",
-                state: DebugState(main:"\(bk.editorHeight)"),
+                state: DebugState(main:"\(bk.editorHeight)", log: [
+                    "Real time: \(conv.editorHeight)",
+                    "User defaults: \(bk.editorHeight)"
+                ]),
                 definedOn: .bk
             ),
             DebugRow(
@@ -77,18 +82,66 @@ struct DebugView: View {
                 state: DebugState(main:"\(conv.currentRequest.focus.name)"),
                 definedOn: .conv
             )
-        ]
+        ] // END rows
+        
+        var visibleColumns: [DebugColumn] {
+            var columns: [DebugColumn] = []
+            
+            if bk.isColumnOneShowing {
+                columns.append(.title)
+            }
+            if bk.isColumnTwoShowing {
+                columns.append(.state)
+            }
+            if bk.isColumnThreeShowing {
+                columns.append(.definedOn)
+            }
+            
+            return columns
+        }
+        
         
         VStack(alignment: .leading, spacing: 20) {
             
-            Text("Debug")
-                .font(.system(size: 22))
-                .foregroundStyle(.secondary)
-                .padding(4)
-            
+            HStack {
+                Text("Debug")
+                    .font(.system(size: 22))
+                    .foregroundStyle(.secondary)
+                    .padding(4)
+                
+                Spacer()
+                
+                ControlGroup {
+                    
+                    Button {
+                        bk.isColumnOneShowing.toggle()
+                    } label: {
+                        Label("Toggle Title", systemImage: "1.square")
+                    }
+                    .opacity(bk.isColumnOneShowing ? 1 : faded)
+                    
+                    Button {
+                        bk.isColumnTwoShowing.toggle()
+                    } label: {
+                        Label("Toggle State", systemImage: "2.square")
+                    }
+                    .opacity(bk.isColumnTwoShowing ? 1 : faded)
+                    
+                    
+                    Button {
+                        bk.isColumnThreeShowing.toggle()
+                    } label: {
+                        Label("Toggle Defined On", systemImage: "3.square")
+                    }
+                    .opacity(bk.isColumnThreeShowing ? 1 : faded)
+                }
+                .controlGroupStyle(.customControlGroup(paddingH: 4, paddingV: 4, spacing: 4))
+                .buttonStyle(.customButton(size: .mini, hasBackground: false, labelDisplay: .iconOnly))
+                
+            }
             VStack {
                 HStack(alignment: .top, spacing: 0) {
-                    ForEach(DebugColumn.allCases, id: \.self) { column in
+                    ForEach(visibleColumns, id: \.self) { column in
                         CustomTableColumn(
                             column: column,
                             rows: debugRows,
@@ -180,7 +233,7 @@ extension DebugView {
             case .title:
                 return .infinity
             case .state:
-                return 80
+                return .infinity
             case .definedOn:
                 return .infinity
             }

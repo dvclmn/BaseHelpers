@@ -71,23 +71,6 @@ struct ContentView: View {
         )
         .ignoresSafeArea()
         .background(Swatch.slate.colour)
-        //        .overlay(alignment: .bottomLeading) {
-        //            if isPreview {
-        //                HStack {
-        //                    VStack {
-        //                        Spacer()
-        //                        Button {
-        //                            bk.toggleQuickOpen()
-        //                        } label: {
-        //                            Label("Toggle QO", systemImage: Icons.text.icon)
-        //                        }
-        //                        .padding(.bottom, bk.editorHeight + 10)
-        //                    }
-        //                    Spacer()
-        //                }
-        //            }
-        //        }
-        
         
         .onAppear {
             
@@ -131,7 +114,6 @@ struct ContentView: View {
                 modelContext.insert(testConversation)
                 
             }
-            
 #endif
             
             
@@ -181,14 +163,7 @@ struct ContentView: View {
                 break
             }
         }
-        //        .alert(isPresented: $isAlerting) {
-        //            Alert(
-        //                title: Text("Save Result"),
-        //                message: Text(alertMessage),
-        //                dismissButton: .default(Text("OK"))
-        //            )
-        //        }
-        
+
         .alert("Export results", isPresented: $isAlerting) {
             if didExport, let exportLocation = exportLocation {
                 Button("Show in Finder") {
@@ -228,7 +203,6 @@ extension ContentView {
     
     private func bringAppToForeground() {
         NSApp.activate(ignoringOtherApps: true)
-        
     }
     
     
@@ -292,15 +266,11 @@ extension ContentView {
     }
     
 
-    
-    
-    
     func testConversationExists(_ conversationName: String) -> Bool {
         return conversations.contains(where: {$0.name == conversationName})
     }
     
     func newConversation() {
-        
         let newGrainientSeed = GrainientSettings.generateGradientSeed()
         let newConversation = Conversation(
             name: ExampleText.conversationTitles.randomElement() ?? "Title here",
@@ -310,6 +280,7 @@ extension ContentView {
         nav.path.append(Page.conversation(newConversation))
         popup.showPopup(title: "Added new conversation")
     }
+    
     
     func deleteCurrentConversation() {
         

@@ -13,10 +13,14 @@ struct OpenAIHandler {
 }
 
 /// This and `RequestMessage` are created by me, to *send* to OpenAI, not based on data being received
+/// Visit https://platform.openai.com/docs/api-reference/chat/create#chat-create-stream_options
+/// For a lot more parameters such as `frequency_penalty` etc to learn about, and consider including in Banksia
 struct RequestBody: Codable {
     let model: String
     let messages: [RequestMessage]
     let stream: Bool
+    let stream_options: GPTStreamOptions
+    let max_tokens: Int?
     let temperature: Double
 }
 
@@ -25,6 +29,9 @@ struct RequestMessage: Codable {
     let content: String
 }
 
+struct GPTStreamOptions: Codable {
+    let include_usage: Bool
+}
 
 
 struct TestResponse: Codable {
@@ -38,33 +45,35 @@ struct TestResponseData: Codable {
     let owned_by: String
 }
 
-struct GPTResponse: Codable {
-    let id: String
-    let object: String
-    let created: Int
-    let model: String
-    let usage: APIUsage
-    let choices: [GPTChoice]
-}
-
-struct GPTChoice: Codable {
-    let index: Int
-    let message: GPTMessage
-    let finish_reason: String
-}
-
-struct GPTMessage: Codable {
-    let role: String
-    let content: String
-}
-
-struct GPTStreamedResponse: Codable {
-    let id: String
-    let object: String
-    let created: Int
-    let model: String
+/// Non-streamed DTOs
+//struct GPTResponse: Codable {
+//    let id: String
+//    let object: String
+//    let created: Int
+//    let model: String
 //    let usage: APIUsage
+//    let choices: [GPTChoice]
+//}
+//
+//struct GPTChoice: Codable {
+//    let index: Int
+//    let message: GPTMessage
+//    let finish_reason: String
+//}
+//
+//struct GPTMessage: Codable {
+//    let role: String
+//    let content: String
+//}
+
+///Reference:  https://platform.openai.com/docs/api-reference/chat/object
+struct GPTChunk: Codable {
+    let id: String
+    let object: String /// The object type, which is always chat.completion
+    let created: Int
+    let model: String
     let choices: [GPTStreamedChoice]
+    let usage: GPTUsage? /// An optional field that will only be present when you set stream_options: {"include_usage": true} in your request
 }
 
 struct GPTStreamedChoice: Codable {
@@ -78,8 +87,7 @@ struct GPTStreamedMessage: Codable {
     let content: String?
 }
 
-
-struct APIUsage: Codable {
+struct GPTUsage: Codable {
     let prompt_tokens: Int
     let completion_tokens: Int
     let total_tokens: Int

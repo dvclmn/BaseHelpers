@@ -74,7 +74,7 @@ final class ConversationHandler {
             let prunedHistory = history.suffix(maxMessagesInHistory * 2)
             
             print("This pruned history should display 2x messages from user, and 2x messages from assistant, in order from oldest first, to newest at the end:")
-            print(prunedHistory)
+            print(Array(prunedHistory).prettyPrinted(keyPath: \.content))
             
             let historicalMessages: [RequestMessage] = prunedHistory.map { message in
                 let role: String
@@ -111,7 +111,9 @@ final class ConversationHandler {
     func getMessageTimestamp(_ date: Date) -> String {
         let dateFormatter = DateFormatter()
 
-        dateFormatter.dateFormat = "hh:mm:ss.SSS a"
+        dateFormatter.dateFormat = "hh:mm:ss a"
+        /// "SSS" provides milliseconds, which we don't need right now
+//        dateFormatter.dateFormat = "hh:mm:ss.SSS a"
 
         let formattedDate = dateFormatter.string(from: date)
 
