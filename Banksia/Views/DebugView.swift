@@ -14,6 +14,8 @@ import Icons
 import GeneralUtilities
 import Table
 
+
+
 struct DebugView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(BanksiaHandler.self) private var bk
@@ -22,16 +24,7 @@ struct DebugView: View {
     @EnvironmentObject var pref: Preferences
     @EnvironmentObject var sidebar: SidebarHandler
     @EnvironmentObject var nav: NavigationHandler
-    
-    @State private var rowHeights: [Int: CGFloat] = [:]
-    
-    @SceneStorage("isColumnOneShowingKey") var isColumnOneShowing: Bool = true
-    @SceneStorage("isColumnTwoShowingKey") var isColumnTwoShowing: Bool = true
-    @SceneStorage("isColumnthreeShowingKey") var isColumnThreeShowing: Bool = true
-    
-    
-    
-    let faded: Double = 0.3
+        
     
     @State private var sorting: DebugColumn = .label
     
@@ -39,56 +32,52 @@ struct DebugView: View {
     
     var body: some View {
         
+        
         let columns: [DebugColumn] = DebugColumn.allCases
-            let rows: [Row<DebugColumn>] = [
-                Row(cells: [
-                    Cell(column: .label, value: "Row 1 Title"),
-                    Cell(column: .state, value: "Active"),
-                    Cell(column: .definedOn, value: "2023-10-01")
-                ]),
-                Row(cells: [
-                    Cell(column: .label, value: "Row 2 Title"),
-                    Cell(column: .state, value: "Inactive"),
-                    Cell(column: .definedOn, value: "2023-10-02")
-                ])
-            ]
         
+        let rows: [CustomRow<DebugColumn>] = [
+            CustomRow(cells: [
+                .label: "Sidebar visible",
+                .state: "\(sidebar.isSidebarVisible)",
+                .definedOn: DefinedOn.sidebar.rawValue
+            ]),
+            CustomRow(cells: [
+                .label: "Sidebar dismissed",
+                .state: "\(sidebar.isSidebarDismissed)",
+                .definedOn: DefinedOn.sidebar.rawValue
+            ]),
+            CustomRow(cells: [
+                .label: "Editor height",
+                .state: "\(pref.editorHeight)",
+                .definedOn: DefinedOn.bk.rawValue
+            ]),
+            CustomRow(cells: [
+                .label: "Current request",
+                .state: "\(conv.currentRequest)",
+                .definedOn: DefinedOn.conv.rawValue
+            ]),
+            CustomRow(cells: [
+                .label: "Current Focus",
+                .state: "\(conv.currentRequest.focus.name)",
+                .definedOn: DefinedOn.conv.rawValue
+            ])
+        ]
         
-//        var visibleColumns: [DebugColumn] {
-//            var columns: [DebugColumn] = []
-//            
-//            if isColumnOneShowing {
-//                columns.append(.label)
-//            }
-//            if isColumnTwoShowing {
-//                columns.append(.state)
-//            }
-//            if isColumnThreeShowing {
-//                columns.append(.definedOn)
-//            }
-//            
-//            return columns
-//        }
-//        
+
+       
+        
         CustomTable(title: "Debug", columns: columns, rows: rows)
         
-        .grainient(
-            seed: GrainientPreset.algae.seed,
-            version: .v1,
-            dimming: $pref.uiDimming
-        )
-        .ignoresSafeArea()
-        .background(Swatch.slate.colour)
+                .grainient(
+                    seed: GrainientPreset.algae.seed,
+                    version: .v1,
+                    dimming: $pref.uiDimming
+                )
+                .ignoresSafeArea()
+                .background(Swatch.slate.colour)
     }
 }
 
-extension DebugView {
-    
-    
-    
-    
-    
-}
 
 #Preview {
     DebugView()

@@ -31,7 +31,7 @@ struct DebugState {
 
 
 
-enum DebugColumn: CaseIterable, Columnable {
+enum DebugColumn: CaseIterable, Columnable  {
     
     case label
     case state
@@ -51,15 +51,18 @@ enum DebugColumn: CaseIterable, Columnable {
             "Defined On"
         }
     }
-    var position: ColumnPosition {
+    var minWidth: Double {
         switch self {
         case .label:
-                .beginning
+            100
         case .state:
-                .middle
+            90
         case .definedOn:
-                .end
+            100
         }
+    }
+    var maxWidth: Double {
+        return .infinity
     }
 
 }
