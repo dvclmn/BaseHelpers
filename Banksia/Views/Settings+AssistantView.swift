@@ -20,34 +20,25 @@ struct Settings_AssistantView: View {
     
     var body: some View {
         Section("Customise AI") {
-            FormLabel(
-                label: "GPT Temperature",
-                icon: Icons.snowflake.icon) {
-                    Text("\(bk.gptTemperature, specifier: "%.1f")")
-                        .monospacedDigit()
-                    
-                    Slider(
-                        value: $bk.gptTemperature,
-                        in: 0.0...1.0,
-                        step: 0.1
-                    )
-                    .frame(
-                        minWidth: 80,
-                        maxWidth: 140
-                    )
-                }
             
+            LabeledContent {
+                Text("\(bk.gptTemperature, specifier: "%.1f")")
+                    .monospacedDigit()
+                
+                Slider(
+                    value: $bk.gptTemperature,
+                    in: 0.0...1.0,
+                    step: 0.1
+                )
+                .frame(
+                    minWidth: 80,
+                    maxWidth: 140
+                )
+            } label: {
+                Label("GPT Temperature", systemImage: Icons.snowflake.icon)
+            }
             
-            FormLabel(
-                label: "System-wide prompt",
-                icon: Icons.text.icon,
-                message: "This will be included for each message in each conversation."
-            ) {
-                Text(bk.systemPrompt)
-                    .multilineTextAlignment(.leading)
-                    .lineLimit(6)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-            } content: {
+            LabeledContent {
                 
                 Button {
                     bk.isEditingLongFormText.toggle()
@@ -56,7 +47,18 @@ struct Settings_AssistantView: View {
                 }
                 .buttonStyle(.customButton(size: .small))
                 
+            } label: {
+                
+                Label("System-wide prompt", systemImage: Icons.text.icon)
+                Text("This will be included for each message in each conversation.")
             }
+            
+            Text(bk.systemPrompt)
+                .multilineTextAlignment(.leading)
+                .lineLimit(6)
+                .frame(maxWidth: .infinity, alignment: .leading)
+            
+            
             .sheet(isPresented: $bk.isEditingLongFormText) {
 
                 TextEditorView(
@@ -76,4 +78,5 @@ struct Settings_AssistantView: View {
 
 #Preview {
     Settings_AssistantView()
+        .environmentObject(BanksiaHandler())
 }

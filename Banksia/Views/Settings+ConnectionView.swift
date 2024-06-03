@@ -30,56 +30,56 @@ struct Settings_ConnectionView: View {
         
         Section("Connection") {
             
-            FormLabel(
-                label: "API Key",
-                icon: Icons.key.icon
-            ) {
-                if !apiKey.isEmpty {
-                    HStack(spacing: 0) {
-                        Text("Status: **\(isConnectedToOpenAI ? "Connected" : "No connection")**")
-                        if isLoadingConnection {
-                            Image(systemName: Icons.rays.icon)
-                                .spinning()
-                        }
-                    }
-                    .fixedSize(horizontal: true, vertical: false)
-                }
-            } content: {
-                HStack {
-                    if isKeyUnlocked {
-                        TextField("API Key", text: $apiKey, prompt: Text("Enter API Key"))
-                            .onSubmit {
-                                Task {
-                                    await submitAPIKey()
-                                }
-                            }
-                    } else {
-                        SecureField("API Key", text: $apiKey, prompt: Text("Enter API Key"))
-                            .foregroundStyle(.secondary)
-                            .onSubmit {
-                                Task {
-                                    await submitAPIKey()
-                                }
-                            }
-                    }
-                    Button {
-                        isKeyUnlocked.toggle()
-                    } label: {
-                        Label(isKeyUnlocked ? "Hide key" : "Show key", systemImage: Icons.eye.icon)
-                    }
-                    .buttonStyle(.customButton(size: .mini, status: isKeyUnlocked ? .active : .normal, hasBackground: false, labelDisplay: .iconOnly))
-                    .onAppear {
-                        Task {
-                            if let key = KeychainHandler.shared.readString(for: apiKeyString) {
-                                apiKey = key
-                                isConnectedToOpenAI = await verifyOpenAIConnection()
-                            }
-                        }
-                    } // END on appear
-                    
-                } // END group
-                .labelsHidden()
-            }
+//            FormLabel(
+//                label: "API Key",
+//                icon: Icons.key.icon
+//            ) {
+//                if !apiKey.isEmpty {
+//                    HStack(spacing: 0) {
+//                        Text("Status: **\(isConnectedToOpenAI ? "Connected" : "No connection")**")
+//                        if isLoadingConnection {
+//                            Image(systemName: Icons.rays.icon)
+//                                .spinning()
+//                        }
+//                    }
+//                    .fixedSize(horizontal: true, vertical: false)
+//                }
+//            } content: {
+//                HStack {
+//                    if isKeyUnlocked {
+//                        TextField("API Key", text: $apiKey, prompt: Text("Enter API Key"))
+//                            .onSubmit {
+//                                Task {
+//                                    await submitAPIKey()
+//                                }
+//                            }
+//                    } else {
+//                        SecureField("API Key", text: $apiKey, prompt: Text("Enter API Key"))
+//                            .foregroundStyle(.secondary)
+//                            .onSubmit {
+//                                Task {
+//                                    await submitAPIKey()
+//                                }
+//                            }
+//                    }
+//                    Button {
+//                        isKeyUnlocked.toggle()
+//                    } label: {
+//                        Label(isKeyUnlocked ? "Hide key" : "Show key", systemImage: Icons.eye.icon)
+//                    }
+//                    .buttonStyle(.customButton(size: .mini, status: isKeyUnlocked ? .active : .normal, hasBackground: false, labelDisplay: .iconOnly))
+//                    .onAppear {
+//                        Task {
+//                            if let key = KeychainHandler.shared.readString(for: apiKeyString) {
+//                                apiKey = key
+//                                isConnectedToOpenAI = await verifyOpenAIConnection()
+//                            }
+//                        }
+//                    } // END on appear
+//                    
+//                } // END group
+//                .labelsHidden()
+//            }
             
             
             
@@ -88,22 +88,22 @@ struct Settings_ConnectionView: View {
             
             
             
-            FormLabel(
-                label: "Select model",
-                icon: Icons.shocked.icon) {
-                    Text("Current:\t\t\t**\(bk.gptModel.name)**")
-                    Text("Context length:\t**\(bk.gptModel.contextLength) tokens**")
-                    Text("Training cut-off:\t**\(bk.gptModel.cutoff)**")
-                } content: {
-                    Picker("Select model", selection: $bk.gptModel) {
-                        ForEach(GPTModel.allCases, id: \.self) { model in
-                            Text(model.name).tag(model.model)
-                        }
-                    }
-                    .labelsHidden()
-                    .pickerStyle(.menu)
-                }
-            
+//            FormLabel(
+//                label: "Select model",
+//                icon: Icons.shocked.icon) {
+//                    Text("Current:\t\t\t**\(bk.gptModel.name)**")
+//                    Text("Context length:\t**\(bk.gptModel.contextLength) tokens**")
+//                    Text("Training cut-off:\t**\(bk.gptModel.cutoff)**")
+//                } content: {
+//                    Picker("Select model", selection: $bk.gptModel) {
+//                        ForEach(GPTModel.allCases, id: \.self) { model in
+//                            Text(model.name).tag(model.model)
+//                        }
+//                    }
+//                    .labelsHidden()
+//                    .pickerStyle(.menu)
+//                }
+//            
         } // End connection section
 
     }

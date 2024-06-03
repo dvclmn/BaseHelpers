@@ -10,6 +10,7 @@ import SwiftUI
 import SwiftData
 import Grainient
 import MarkdownEditor
+import KeychainHandler
 
 
 @Observable
@@ -143,6 +144,15 @@ final class ConversationHandler {
             return 0
         }
     } // END total tokens
+    
+    @MainActor
+    func hasAPIKeySetUp() -> Bool {
+        if let apiKey = KeychainHandler.shared.readString(for: "openAIAPIKey") {
+            return true
+        } else {
+            return false
+        }
+    }
     
 }
 

@@ -126,13 +126,6 @@ struct MessageInputView: View {
             // MARK: - Text area Buttons
             .overlay(alignment: .bottom) {
                 
-//                Button {
-//                    
-//                } label: {
-//                    Label("Add to Message", systemImage: Icons.plus.icon)
-//                }
-//                .offset(y: -30)
-                
                 EditorControls()
                 //
                     .onContinuousHover { phase in
@@ -175,8 +168,6 @@ extension MessageInputView {
     func EditorControls() -> some View {
         HStack(spacing: 18) {
             
-            
-            
             Group {
                 Label(bk.gptModel.name, systemImage: Icons.shocked.icon)
                 Label("\(conv.totalTokens(for: conversation))", systemImage: Icons.token.icon)
@@ -204,7 +195,7 @@ extension MessageInputView {
                 Label(conv.isResponseLoading ? "Loading…" : "Send", systemImage: Icons.text.icon)
             }
             .buttonStyle(.customButton(size: .small, status: conv.userPrompt.isEmpty ? .disabled : .normal, labelDisplay: .titleOnly))
-            .disabled(conv.userPrompt.isEmpty)
+            .disabled(conv.userPrompt.isEmpty || !conv.hasAPIKeySetUp())
             
         }
         .opacity(isUIFaded ? 0.2 : 1.0)

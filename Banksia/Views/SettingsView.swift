@@ -21,6 +21,9 @@ import TextEditor
 import MarkdownEditor
 import GrainientPicker
 import Sidebar
+import ComponentBase
+import ScrollMask
+import SmoothGradient
 
 enum SettingsTab: CaseIterable {
     case interface
@@ -67,12 +70,10 @@ struct SettingsView: View {
     
     @State private var settingsTab: SettingsTab = .interface
     
-    
-    
     var body: some View {
         
-        
         VStack(spacing: 0) {
+            
             HStack(spacing: 0) {
                 
                 ForEach(SettingsTab.allCases, id: \.name) { tab in
@@ -97,21 +98,23 @@ struct SettingsView: View {
             )
             .background(.ultraThinMaterial)
             
-            CustomForm {
+            Form {
                 
                 switch settingsTab {
                     
                 case .interface:
                     
-                    FormLabel(
-                        label: "Name",
-                        icon: Icons.person.icon,
-                        message: "(Optional) Provide your name to personalise responses."
-                    ) {
+                    // MARK: - Name
+                    LabeledContent {
                         TextField("", text: bk.$userName.boundString, prompt: Text("Enter your name"))
+                            .textFieldStyle(.customField(text: bk.$userName.boundString))
+                    } label: {
+                        Label("Your Name", systemImage: Icons.person.icon)
                     }
                     
-                    FormLabel(label: "UI Dimming", icon: Icons.contrast.icon) {
+                    
+                    // MARK: - UI Dimming
+                    LabeledContent {
                         Text("\(bk.uiDimming * 100, specifier: "%.0f")%")
                             .monospacedDigit()
                         Slider(
@@ -123,27 +126,28 @@ struct SettingsView: View {
                             minWidth: 80,
                             maxWidth: 140
                         )
+                    } label: {
+                        Label("UI Dimming", systemImage: Icons.contrast.icon)
                     }
                     
-                    FormLabel(
-                        label: "Default background",
-                        icon: Icons.gradient.icon,
-                        message: "Customise the gradient background that appears when no conversation is selected."
-                    ) {
+                    // MARK: - Grainient
+                    LabeledContent {
                         GrainientPicker(
                             seed: $bk.defaultGrainientSeed,
                             popup: popup,
                             viewSeedEnabled: false
                         )
-                        
+                    } label: {
+                        Label("Default background", systemImage: Icons.gradient.icon)
+                        Text("Customise the gradient background that appears when no conversation is selected.")
                     }
                     
                     GrainientPreviews(seed: $bk.defaultGrainientSeed)
                     
-
-                case .assistant:
                     Settings_AssistantView()
                     
+                case .assistant:
+                    EmptyView()
                 case .connections:
                     Settings_ConnectionView()
                     
@@ -152,11 +156,12 @@ struct SettingsView: View {
                 }
                 
             } // END form
-            .background(Swatch.slate.colour.opacity(0.6))
-            .background(.ultraThickMaterial)
+            .formStyle(.customForm())
             
-
+            
         } // END main vstack
+        .background(Swatch.slate.colour.opacity(0.6))
+        .background(.ultraThickMaterial)
         .frame(
             minWidth: 380,
             idealWidth: 500,
@@ -168,7 +173,7 @@ struct SettingsView: View {
         .grainient(seed: bk.defaultGrainientSeed, version: .v1)
         .onAppear {
             if isPreview {
-                settingsTab = .assistant
+                settingsTab = .interface
             }
         }
         
@@ -187,34 +192,82 @@ struct SettingsView: View {
     
     .environmentObject(PopupHandler())
     .environmentObject(SidebarHandler())
-    .frame(width: 480, height: 600)
+    .frame(width: 480, height: 300)
     
 }
 
 #endif
 
 
-
-public struct CustomForm<Content: View>: View {
+public struct CustomLabeledContent: LabeledContentStyle {
     
-    let content: Content
+    var size: ElementSize
+    var labelDisplay: LabelDisplay
     
-    public init(
-        @ViewBuilder content: () -> Content
-    ) {
-        self.content = content()
-    }
-    
-    public var body: some View {
-        ScrollView(.vertical) {
-            VStack {
-                content
+    public func makeBody(configuration: Configuration) -> some View {
+        
+        HStack(alignment: .firstTextBaseline, spacing: 24) {
+            VStack(alignment: .leading) {
+                configuration.label
             }
-            .padding(Styles.paddingGenerous)
+            .labelStyle(.customLabel())
+            
+            HStack {
+                configuration.content
+                    .frame(maxWidth: .infinity, alignment: .trailing)
+            }
         }
-        .scrollIndicators(.hidden)
         
     }
 }
+
+public extension LabeledContentStyle where Self == CustomLabeledContent {
+    static func customLabeledContent(
+        size: ElementSize = .normal,
+        labelDisplay: LabelDisplay = .titleAndIcon
+    ) -> CustomLabeledContent {
+        CustomLabeledContent(
+            size: size,
+            labelDisplay: labelDisplay
+        )
+    }
+}
+
+public struct CustomFormStyle: FormStyle {
+    
+    @State private var isMasked: Bool = true
+    @State private var isScrolling: Bool = false
+    
+    public func makeBody(configuration: Configuration) -> some View {
+        
+        ScrollView(.vertical) {
+            VStack(alignment: .leading, spacing: 16) {
+                configuration.content
+                    .labeledContentStyle(.customLabeledContent())
+            }
+            .padding(Styles.paddingGenerous)
+            .onScrollThreshold(
+                threshold: 10,
+                isScrolling: $isScrolling
+            ) { thresholdReached in
+                withAnimation(Styles.animation) {
+                    isMasked = thresholdReached
+                }
+            }
+//            .compositingGroup()
+        }
+        .scrollMask(isMasked, maskMode: .overlay)
+        .coordinateSpace(name: "scroll")
+        .scrollIndicators(.hidden)
+    }
+}
+public extension FormStyle where Self == CustomFormStyle {
+    static func customForm(
+    ) -> CustomFormStyle {
+        CustomFormStyle(
+        )
+    }
+}
+
 
 

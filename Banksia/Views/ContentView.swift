@@ -17,6 +17,7 @@ import Swatches
 import Icons
 import KeyboardShortcuts
 import MarkdownEditor
+import KeychainHandler
 
 struct ContentView: View {
     @Environment(\.openWindow) var openWindow
@@ -73,6 +74,8 @@ struct ContentView: View {
         .background(Swatch.slate.colour)
         
         .onAppear {
+            
+            
             
             KeyboardShortcuts.onKeyUp(for: .summonBanksia) {
                 bringAppToForeground()
@@ -200,6 +203,7 @@ struct ContentView: View {
 }
 
 extension ContentView {
+
     
     private func bringAppToForeground() {
         NSApp.activate(ignoringOtherApps: true)

@@ -11,12 +11,13 @@ import Navigation
 import GeneralStyles
 
 
-
 extension Styles {
     static let paddingGutter: Double = 12
 }
 
 class BanksiaHandler: ObservableObject {
+    
+    @Published var hasProvidedAPIKey: Bool = false
     
     @Published var isQuickOpenShowing: Bool = false
     
