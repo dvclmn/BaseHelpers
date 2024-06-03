@@ -121,7 +121,7 @@ struct SingleMessageView: View {
             //            .fixedSize(horizontal: false, vertical: true)
             .padding()
             .frame(maxWidth: 620, alignment: .leading)
-            .background(Color(message.type == .user ? Swatch.eggplant.colour.opacity(0.2) : .gray.opacity(0.2)))
+            .background(Color(message.type == .user ? pref.accentColour.colour.opacity(0.2) : .gray.opacity(0.2)))
             .clipShape(.rect(cornerRadius: Styles.roundingMedium))
             .onHover { hovering in
                 
@@ -196,6 +196,7 @@ extension SingleMessageView {
         )
         .environment(BanksiaHandler())
         .environmentObject(SidebarHandler())
+        .environmentObject(Preferences())
         .environmentObject(PopupHandler())
         .environment(ConversationHandler())
         .frame(width: 500, height: 700)

@@ -15,6 +15,7 @@ import GeneralUtilities
 import Sidebar
 import Button
 import GrainientPicker
+import Form
 
 struct ToolbarExpandedView: View {
 
@@ -61,7 +62,7 @@ struct ToolbarExpandedView: View {
                         Label(pref.isMessageInfoShowing ? "Hide Message info" : "Show Message info", systemImage: Icons.info.icon)
                     }
                     
-                    CustomSection(label: "Debug pane", icon: "window.horizontal.closed", level: .child) {
+                    CustomSection(label: "Debug pane", icon: "window.horizontal.closed") {
                         
                         Button {
                             pref.isDebugShowing.toggle()

@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Swatches
 
 final class Preferences: ObservableObject {
     
@@ -14,6 +15,8 @@ final class Preferences: ObservableObject {
     @AppStorage("gptTemperatureKey") var gptTemperature: Double = 0.5
     
     @AppStorage("gptModelKey") var gptModel: GPTModel = GPTModel.gpt_4_turbo
+    
+    @AppStorage("accentColourKey") var accentColour: Swatch = Swatch.lavendar
     
     @AppStorage("editorHeightKey") var editorHeight: Double = 180
     
@@ -30,5 +33,7 @@ final class Preferences: ObservableObject {
     @AppStorage("defaultGrainientSeedKey") var defaultGrainientSeed: Int = 358962
     
     @AppStorage("isMessageInfoShowingKey") var isMessageInfoShowing: Bool = true
+    
+    
     
 }
