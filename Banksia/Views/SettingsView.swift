@@ -9,7 +9,6 @@ import SwiftUI
 import SwiftData
 import Grainient
 import Swatches
-import KeychainHandler
 import Popup
 import Icons
 import Button
@@ -135,6 +134,7 @@ extension SettingsView {
                     labelDisplay: .stacked
                 ))
                 .symbolVariant(.fill)
+                
             }
         }
         .frame(

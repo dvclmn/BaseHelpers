@@ -14,7 +14,7 @@ import Button
 import StateView
 import Sidebar
 import MarkdownEditor
-import KeychainHandler
+import KeychainSwift
 import Popup
 import Grainient
 
@@ -22,6 +22,8 @@ struct ConversationView: View {
     @Environment(\.modelContext) var modelContext
     @Environment(BanksiaHandler.self) private var bk
     @Environment(ConversationHandler.self) private var conv
+    
+    let keychain = KeychainSwift()
     
     @EnvironmentObject var pref: Preferences
     @EnvironmentObject var popup: PopupHandler
@@ -151,6 +153,12 @@ extension ConversationView {
     
     private func sendMessage() async {
         
+        guard let apiKey = keychain.get("openAIAPIKey") else {
+            popup.showPopup(title: "No API Key found", message: "Please visit app Settings (⌘,) to set up your API Key")
+            return
+        }
+            
+        
         print("\n\n|--- Send message \(pref.isTestMode ? "Test mode" : "") --->\n")
         
         guard !conv.userPrompt.isEmpty else {
@@ -217,7 +225,7 @@ extension ConversationView {
         // MARK: - Live mode
         do {
             
-            guard let request = try makeRequest(content: messageHistory) else {
+            guard let request = try makeRequest(content: messageHistory, key: apiKey) else {
                 print("Could not make the request")
                 return
             }
@@ -258,12 +266,7 @@ extension ConversationView {
     } // END send message
     
     
-    func makeRequest(content: [RequestMessage]) throws -> URLRequest? {
-        
-        guard let apiKey = KeychainHandler.shared.readString(for: "openAIAPIKey") else {
-            popup.showPopup(title: "No API Key found", message: "Please visit app Settings (⌘,) to set up your API Key")
-            return nil
-        }
+    func makeRequest(content: [RequestMessage], key: String) throws -> URLRequest? {
         
         let query = RequestBody(
             model: pref.gptModel.model,
@@ -279,7 +282,7 @@ extension ConversationView {
         request.httpBody = try JSONEncoder().encode(query)
         request.allHTTPHeaderFields = [
             "Content-Type": "application/json",
-            "Authorization": "Bearer \(apiKey)"
+            "Authorization": "Bearer \(key)"
         ]
         return request
     }

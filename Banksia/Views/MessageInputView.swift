@@ -15,7 +15,6 @@ import Swatches
 import Resizable
 import Icons
 import APIHandler
-import KeychainHandler
 import Popup
 import ScrollMask
 import MarkdownEditor
@@ -178,6 +177,8 @@ extension MessageInputView {
             
             Spacer()
             
+#if DEBUG
+
             Toggle(isOn: $pref.isTestMode, label: {
                 Label("Test mode", systemImage: Icons.fish.icon)
                     .labelStyle(.customLabel(size: .small, labelDisplay: .titleOnly))
@@ -188,6 +189,9 @@ extension MessageInputView {
             .controlSize(.mini)
             .tint(.secondary)
             .animation(Styles.animationQuick, value: pref.isTestMode)
+
+#endif
+            
             
             
             Button {

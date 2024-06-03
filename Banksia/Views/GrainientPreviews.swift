@@ -17,7 +17,15 @@ struct GrainientPreviews: View {
     let spacing: Double = 20
     
     @State private var presets: [GrainientPreset] = [
-        .algae, .blueSky, .electricPurple, .gunMetalGrey, .lagoon, .oliveGarden
+        .sunset,
+        .peachFuzz,
+        .greenGlow,
+        .toadstool,
+        .sherbet,
+        .lilac,
+        .dyingStar,
+        .bubblegum,
+        .twilight
     ]
     
     var body: some View {
@@ -37,40 +45,51 @@ struct GrainientPreviews: View {
             )
         ]
         
-        Button {
-            let newPreset = GrainientPreset(
-                seed: seed,
-                name: "New",
-                version: .v2
-            )
+        VStack {
+            //            Button {
+            //                let newPreset = GrainientPreset(
+            //                    seed: seed,
+            //                    name: "New",
+            //                    version: .v3
+            //                )
+            //
+            //                presets.append(newPreset)
+            //
+            //            } label: {
+            //                Label("Add new", systemImage: Icons.plus.icon)
+            //            }
             
-            presets.append(newPreset)
-            
-        } label: {
-            Label("Add new", systemImage: Icons.plus.icon)
+            LazyVGrid(columns: columns, spacing: spacing) {
+                
+                ForEach(presets) { preset in
+                    Color.clear
+                        .aspectRatio(1.3, contentMode: .fill)
+                        .grainient(
+                            seed: preset.seed,
+                            version: preset.version,
+                            grainOpacity: 0,
+                            blurAmount: 10,
+                            dimming: .constant(0)
+                        )
+                        .clipShape(.rect(cornerRadius: Styles.roundingMedium))
+                        .onTapGesture {
+                            seed = preset.seed
+                        }
+                }
+            } // END lazy grid
         }
-        
-        LazyVGrid(columns: columns, spacing: spacing, content: {
-            ForEach(presets) { preset in
-                Color.clear
-                    .aspectRatio(1.3, contentMode: .fill)
-                    .grainient(
-                        seed: preset.seed,
-                        version: preset.version,
-                        grainOpacity: 0,
-                        blurAmount: 10,
-                        dimming: .constant(0)
-                    )
-                    .clipShape(.rect(cornerRadius: Styles.roundingMedium))
-                    .onTapGesture {
-                        seed = preset.seed
-                    }
-            }
-        })
     }
 }
 
-//#Preview {
-//    GrainientPreviews(seed: .constant(GrainientPreset.blueMetal.seed))
-//        .environmentObject(SidebarHandler())
-//}
+#if DEBUG
+
+
+#Preview {
+    GrainientPreviews(seed: .constant(GrainientPreset.blueMetal.seed))
+        .environmentObject(SidebarHandler())
+        .frame(width: 500, height: 600)
+        .padding()
+}
+
+#endif
+

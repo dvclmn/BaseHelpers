@@ -17,7 +17,6 @@ import Swatches
 import Icons
 import KeyboardShortcuts
 import MarkdownEditor
-import KeychainHandler
 
 struct ContentView: View {
     @Environment(\.openWindow) var openWindow
@@ -43,6 +42,8 @@ struct ContentView: View {
     @State private var exportLocation: URL? = nil
     
     var body: some View {
+        
+        @Bindable var bk = bk
         
         NavigationStack(path: $nav.path) {
             
@@ -70,7 +71,7 @@ struct ContentView: View {
         .grainient(
             seed: nav.fetchCurrentConversationStatic(from: conversations)?.grainientSeed ?? pref.defaultGrainientSeed,
             version: .v3,
-            dimming: $pref.uiDimming
+            dimming: $bk.uiDimming
         )
         .ignoresSafeArea()
         .background(Swatch.slate.colour)
@@ -331,6 +332,7 @@ extension ContentView {
         .environment(BanksiaHandler())
         .environmentObject(NavigationHandler())
     
+        .environmentObject(Preferences())
         .environmentObject(PopupHandler())
         .environmentObject(SidebarHandler())
         .modelContainer(try! ModelContainer.sample())

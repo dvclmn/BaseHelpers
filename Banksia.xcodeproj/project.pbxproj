@@ -11,7 +11,6 @@
 		F60499BB2C08FAEF00527BD6 /* Components in Frameworks */ = {isa = PBXBuildFile; productRef = F60499BA2C08FAEF00527BD6 /* Components */; };
 		F60499BD2C09010100527BD6 /* Settings+AssistantView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F60499BC2C09010100527BD6 /* Settings+AssistantView.swift */; };
 		F60B6A732C005D7B007EDCDD /* SidebarHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F60B6A722C005D7B007EDCDD /* SidebarHandler.swift */; };
-		F636A11C2B05B23D00C24891 /* GeneralSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F636A11B2B05B23D00C24891 /* GeneralSettingsView.swift */; };
 		F639D8CA2BD51B2A0035226E /* CodeSyntaxTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = F639D8C92BD51B2A0035226E /* CodeSyntaxTheme.swift */; };
 		F64F8E032B02136D00C72E51 /* ModelContainerPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = F64F8E022B02136D00C72E51 /* ModelContainerPreview.swift */; };
 		F64F8E082B02140F00C72E51 /* SampleData+Conversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F64F8E072B02140F00C72E51 /* SampleData+Conversation.swift */; };
@@ -41,7 +40,6 @@
 		F6BC6B612C072B9500CD0FE4 /* DebugView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6BC6B602C072B9500CD0FE4 /* DebugView.swift */; };
 		F6BCC7902C08647000B9751D /* Styles in Frameworks */ = {isa = PBXBuildFile; productRef = F6BCC78F2C08647000B9751D /* Styles */; };
 		F6BCC7922C08647000B9751D /* Utilities in Frameworks */ = {isa = PBXBuildFile; productRef = F6BCC7912C08647000B9751D /* Utilities */; };
-		F6BCC7942C08648000B9751D /* KeychainHandler in Frameworks */ = {isa = PBXBuildFile; productRef = F6BCC7932C08648000B9751D /* KeychainHandler */; };
 		F6BCC7962C08648A00B9751D /* Grainient in Frameworks */ = {isa = PBXBuildFile; productRef = F6BCC7952C08648A00B9751D /* Grainient */; };
 		F6BCC7992C08658900B9751D /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = F6BCC7982C08658900B9751D /* Sparkle */; };
 		F6BCC79B2C08678E00B9751D /* UpdaterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6BCC79A2C08678E00B9751D /* UpdaterView.swift */; };
@@ -69,7 +67,6 @@
 		F60B6A722C005D7B007EDCDD /* SidebarHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarHandler.swift; sourceTree = "<group>"; };
 		F610453E2C061E3200F7632E /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Config.xcconfig; path = Banksia/Config.xcconfig; sourceTree = "<group>"; };
 		F610453F2C061ED300F7632E /* version.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; name = version.sh; path = Banksia/version.sh; sourceTree = "<group>"; };
-		F636A11B2B05B23D00C24891 /* GeneralSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralSettingsView.swift; sourceTree = "<group>"; };
 		F639D8C92BD51B2A0035226E /* CodeSyntaxTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeSyntaxTheme.swift; sourceTree = "<group>"; };
 		F6479B422C07057F00CAF351 /* Icons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Icons.swift; path = "../_Natives Workspace/Shared/Icons.swift"; sourceTree = "<group>"; };
 		F6479B432C07057F00CAF351 /* Styles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Styles.swift; path = "../_Natives Workspace/Shared/Styles.swift"; sourceTree = "<group>"; };
@@ -129,7 +126,6 @@
 				F6BCC7922C08647000B9751D /* Utilities in Frameworks */,
 				F6BCC7962C08648A00B9751D /* Grainient in Frameworks */,
 				F6823E1F2C07139B00C8749F /* Popup in Frameworks */,
-				F6BCC7942C08648000B9751D /* KeychainHandler in Frameworks */,
 				F6BCC7A22C08B4D600B9751D /* KeyboardShortcuts in Frameworks */,
 				F6823E1D2C07139B00C8749F /* MarkdownEditor in Frameworks */,
 				F60499BB2C08FAEF00527BD6 /* Components in Frameworks */,
@@ -166,7 +162,6 @@
 				F6FA92EE2B052B9800D1D9B8 /* SettingsView.swift */,
 				F6BCC7A72C08B5CA00B9751D /* Settings+ConnectionView.swift */,
 				F6BCC7A52C08B5A300B9751D /* Settings+ShortcutsView.swift */,
-				F636A11B2B05B23D00C24891 /* GeneralSettingsView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -286,7 +281,6 @@
 				F6823E1E2C07139B00C8749F /* Popup */,
 				F6BCC78F2C08647000B9751D /* Styles */,
 				F6BCC7912C08647000B9751D /* Utilities */,
-				F6BCC7932C08648000B9751D /* KeychainHandler */,
 				F6BCC7952C08648A00B9751D /* Grainient */,
 				F6BCC7982C08658900B9751D /* Sparkle */,
 				F6BCC7A12C08B4D600B9751D /* KeyboardShortcuts */,
@@ -375,7 +369,6 @@
 				F64F8E222B03090600C72E51 /* ContentView.swift in Sources */,
 				F687189C2BFF4F2100955B43 /* DetailView.swift in Sources */,
 				F6FA92EF2B052B9800D1D9B8 /* SettingsView.swift in Sources */,
-				F636A11C2B05B23D00C24891 /* GeneralSettingsView.swift in Sources */,
 				F6BCC79D2C088F2200B9751D /* NotionModel.swift in Sources */,
 				F6BCC79F2C08929F00B9751D /* FeedbackView.swift in Sources */,
 				F6F393112B09DB7D005046F4 /* ConversationView.swift in Sources */,
@@ -681,10 +674,6 @@
 		F6BCC7912C08647000B9751D /* Utilities */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Utilities;
-		};
-		F6BCC7932C08648000B9751D /* KeychainHandler */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = KeychainHandler;
 		};
 		F6BCC7952C08648A00B9751D /* Grainient */ = {
 			isa = XCSwiftPackageProductDependency;

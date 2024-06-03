@@ -10,11 +10,13 @@ import SwiftUI
 import SwiftData
 import Grainient
 import MarkdownEditor
-import KeychainHandler
+import KeychainSwift
 
 
 @Observable
 final class ConversationHandler {
+    
+    let keychain = KeychainSwift()
     
     var currentConversationID: Conversation.ID? = nil
     
@@ -147,7 +149,7 @@ final class ConversationHandler {
     
     @MainActor
     func hasAPIKeySetUp() -> Bool {
-        if let apiKey = KeychainHandler.shared.readString(for: "openAIAPIKey") {
+        if let apiKey = keychain.get("openAIAPIKey") {
             return true
         } else {
             return false

@@ -18,7 +18,7 @@ import GrainientPicker
 import Form
 
 struct ToolbarExpandedView: View {
-
+    
     @Environment(\.modelContext) var modelContext
     @Environment(ConversationHandler.self) private var conv
     
@@ -31,21 +31,38 @@ struct ToolbarExpandedView: View {
     
     
     @FocusState private var isFocused
-
+    
     @Binding var conversationGrainientSeed: Int
     
     var body: some View {
         
-        if bk.isToolbarExpanded {
+        @Bindable var bk = bk
         
-            VStack(alignment: .leading) {
+        if bk.isToolbarExpanded || isPreview {
+            Form {
                 CustomSection(label: "Conversation", icon: Icons.messageAlt.icon) {
-
+                    
+                    LabeledContent {
+                        GrainientPicker(
+                            seed: $pref.defaultGrainientSeed,
+                            popup: popup,
+                            viewSeedEnabled: false
+                        )
+                    } label: {
+                        Label("Default background", systemImage: Icons.gradient.icon)
+                        Text("Customise the gradient background that appears when no conversation is selected.")
+                            .caption()
+                    }
+                    
+                    GrainientPreviews(seed: $pref.defaultGrainientSeed)
+                    
+                    
+                    
                     GrainientPicker(seed: $conversationGrainientSeed, popup: popup)
                     
                     Button(role: .destructive) {
-//                        modelContext.delete(conversation)
-//                        try? modelContext.save()
+                        //                        modelContext.delete(conversation)
+                        //                        try? modelContext.save()
                         
                         conv.currentRequest = .delete
                         
@@ -55,24 +72,21 @@ struct ToolbarExpandedView: View {
                 }
                 
                 
-                
                 CustomSection(label: "Debug", icon: Icons.debug.icon) {
                     
                     Toggle(isOn: $pref.isMessageInfoShowing) {
                         Label(pref.isMessageInfoShowing ? "Hide Message info" : "Show Message info", systemImage: Icons.info.icon)
                     }
+                    .tint(pref.accentColour.colour)
                     
-                    CustomSection(label: "Debug pane", icon: "window.horizontal.closed") {
-                        
-                        Button {
-                            pref.isDebugShowing.toggle()
-                        } label: {
-                            Label("Toggle debug pane", systemImage: Icons.debug.icon)
-                        }
-
+                    
+                    Button {
+                        pref.isDebugShowing.toggle()
+                    } label: {
+                        Label("Toggle debug pane", systemImage: Icons.debug.icon)
                     }
                     
-
+                    
                     Button {
                         popup.showPopup(title: "Here's a **popup title**", message: "And a *short* message with further info.")
                     } label: {
@@ -81,43 +95,52 @@ struct ToolbarExpandedView: View {
                     
                 } // END custom section
                 
-                
+                Spacer()
                 
             } // END Vstack
+            .formStyle(.customForm())
             .focusable()
             .focused($isFocused)
             .focusEffectDisabled()
-//            .frame(maxWidth: .infinity)
-            .padding(Styles.paddingGenerous)
-//            .padding(.top, Styles.toolbarHeight)
-            .safeAreaPadding(.leading, !sidebar.isSidebarVisible ? Styles.toolbarSpacing : (sidebar.isSidebarVisible ? sidebar.sidebarWidth : Styles.paddingToolbarTrafficLightsWidth))
-            .padding(.leading, sidebar.isSidebarVisible ? 0 : 30)
-            .background {
-                Rectangle().fill(.thickMaterial)
-                    .safeAreaPadding(.leading, sidebar.isSidebarVisible ? sidebar.sidebarWidth : 0)
-            }
+            .frame(maxWidth: .infinity, maxHeight: 300)
+            
+            
+            
             .onExitCommand {
                 bk.isToolbarExpanded = false
             }
             .onAppear {
                 isFocused = true
             }
+            .background {
+                Rectangle()
+                //                    .fill(.thickMaterial)
+                    .fill(.red)
+            }
+            .clipShape(
+                RoundedRectangle(cornerRadius: Styles.roundingMedium)
+            )
+            .safeAreaPadding(.leading, sidebar.isSidebarVisible ? sidebar.sidebarWidth : 0)
+            .padding()
+            
         }
     }
 }
 
-//#if DEBUG
-//
-//
-//#Preview() {
-//    ToolbarExpandedView(conversationGrainientSeed: .constant(568309))
-//        .environment(ConversationHandler())
-//        .environment(BanksiaHandler())
-//        .environmentObject(NavigationHandler())
-//        
-//        .environmentObject(PopupHandler())
-//        .environmentObject(SidebarHandler())
-//}
-//
-//#endif
+#if DEBUG
+
+
+#Preview() {
+    ToolbarExpandedView(conversationGrainientSeed: .constant(568309))
+        .environment(ConversationHandler())
+        .environment(BanksiaHandler())
+        .environmentObject(NavigationHandler())
+        .environmentObject(Preferences())
+        .environmentObject(PopupHandler())
+        .environmentObject(SidebarHandler())
+        .background(.black)
+    //        .frame(width: 400, height: 400)
+}
+
+#endif
 
