@@ -96,7 +96,8 @@ struct SettingsView: View {
             
             
         } // END main vstack
-        .background(Swatch.slate.colour.opacity(0.6))
+        .background(Swatch.slate.colour.opacity(min(1.0, max(0.6, bk.uiDimming * 1.6))))
+//        .background(Swatch.slate.colour.opacity(min(1.0, bk.uiDimming * 1.5)))
         .background(.ultraThickMaterial)
         .frame(
             minWidth: 380,

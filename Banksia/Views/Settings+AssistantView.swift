@@ -41,12 +41,13 @@ struct Settings_AssistantView: View {
                 Slider(
                     value: $bk.uiDimming,
                     in: 0.01...0.89,
-                    onEditingChanged: { changed in
-                        if changed {
-                            pref.uiDimming = bk.uiDimming
-                        }
+                    onEditingChanged: { _ in
+                        pref.uiDimming = bk.uiDimming
                     }
                 )
+                .onAppear {
+                    bk.uiDimming = pref.uiDimming
+                }
                 .tint(pref.accentColour.colour)
                 .controlSize(.mini)
                 //                            .tint(Swatch.lightGrey.colour)
@@ -63,43 +64,9 @@ struct Settings_AssistantView: View {
             LabeledContent {
                 HStack(spacing: 12) {
                     
-                    let swatchSize: Double = 28
-                    
                     ForEach(swatches) { swatch in
-                        Button {
-                            withAnimation(Styles.animation) {
-                                pref.accentColour = swatch
-                            }
-                        } label: {
-                            RimLightShape(colour: AnyShapeStyle(swatch.colour)) {
-                                Circle()
-                            }
-                            .frame(width: swatchSize, height: swatchSize)
-                            .offset(y: pref.accentColour == swatch ? -6 : 0)
-//                            .overlay {
-//                                Circle()
-//                                    .stroke(pref.accentColour == swatch ? Color.secondary : Color.clear, lineWidth: 2)
-//                            }
-//                            .overlay(alignment: .bottom) {
-//                                if pref.accentColour == swatch {
-                                    
-                                    //                                    Circle()
-                                    //                                        .fill(.secondary)
-                                    //                                        .offset(y: swatchSize * 0.5)
-                                    //                                        .frame(width: 7)
-//                                }
-//                            }
-                        } // END button
-                        .buttonStyle(.plain)
+                        SwatchButtonView(swatch: swatch)
                     }
-                    
-                    //                                ForEach(swatches, id: \.id) { swatch in
-                    //                                    RimLightShape(colour: AnyShapeStyle(swatch.colour)) {
-                    //                                        Circle()
-                    //                                    }
-                    //                                    .tag(swatch)
-                    //                                    .frame(width: swatchSize, height: swatchSize)
-                    //                                }
                 }
             } label: {
                 Label("Accent colour", systemImage: Icons.palette.icon)
@@ -145,6 +112,7 @@ struct Settings_AssistantView: View {
                     in: 0.0...1.0,
                     step: 0.1
                 )
+                .tint(pref.accentColour.colour)
                 .frame(
                     minWidth: 80,
                     maxWidth: 140

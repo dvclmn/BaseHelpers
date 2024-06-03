@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F600B2852C0DD7C700C9DF67 /* SwatchButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F600B2842C0DD7C700C9DF67 /* SwatchButtonView.swift */; };
 		F60499BB2C08FAEF00527BD6 /* Components in Frameworks */ = {isa = PBXBuildFile; productRef = F60499BA2C08FAEF00527BD6 /* Components */; };
 		F60499BD2C09010100527BD6 /* Settings+AssistantView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F60499BC2C09010100527BD6 /* Settings+AssistantView.swift */; };
 		F60B6A732C005D7B007EDCDD /* SidebarHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F60B6A722C005D7B007EDCDD /* SidebarHandler.swift */; };
@@ -63,6 +64,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		F600B2842C0DD7C700C9DF67 /* SwatchButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwatchButtonView.swift; sourceTree = "<group>"; };
 		F60499BC2C09010100527BD6 /* Settings+AssistantView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Settings+AssistantView.swift"; sourceTree = "<group>"; };
 		F60B6A722C005D7B007EDCDD /* SidebarHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarHandler.swift; sourceTree = "<group>"; };
 		F610453E2C061E3200F7632E /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Config.xcconfig; path = Banksia/Config.xcconfig; sourceTree = "<group>"; };
@@ -141,6 +143,7 @@
 		F64F8E0D2B0214CC00C72E51 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				F600B2842C0DD7C700C9DF67 /* SwatchButtonView.swift */,
 				F60499BC2C09010100527BD6 /* Settings+AssistantView.swift */,
 				F6BCC7A92C08DC9F00B9751D /* GrainientPreviews.swift */,
 				F6BCC79E2C08929F00B9751D /* FeedbackView.swift */,
@@ -377,6 +380,7 @@
 				F6BCC79F2C08929F00B9751D /* FeedbackView.swift in Sources */,
 				F6F393112B09DB7D005046F4 /* ConversationView.swift in Sources */,
 				F6D6E2DB2BC80AA2000D2051 /* MessageInputView.swift in Sources */,
+				F600B2852C0DD7C700C9DF67 /* SwatchButtonView.swift in Sources */,
 				F697B8682B0B48160091CE79 /* ConversationStateView.swift in Sources */,
 				F64F8E082B02140F00C72E51 /* SampleData+Conversation.swift in Sources */,
 				F6E4BC6B2BCFD1E100BFD550 /* QuickOpenView.swift in Sources */,
