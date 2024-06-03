@@ -16,7 +16,7 @@ import Popup
 
 struct Settings_ConnectionView: View {
     
-    @EnvironmentObject var bk: BanksiaHandler
+    @Environment(BanksiaHandler.self) private var bk
     @EnvironmentObject var popup: PopupHandler
     
     @State private var isConnectedToOpenAI: Bool = false

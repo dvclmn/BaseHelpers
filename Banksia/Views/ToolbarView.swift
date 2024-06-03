@@ -21,9 +21,10 @@ import Swatches
 struct ToolbarView: View {
     @Environment(\.modelContext) var modelContext
     @Environment(ConversationHandler.self) private var conv
-    @EnvironmentObject var bk: BanksiaHandler
+    @Environment(BanksiaHandler.self) private var bk
     @EnvironmentObject var nav: NavigationHandler
     
+    @EnvironmentObject var pref: Preferences
     @EnvironmentObject var popup: PopupHandler
     @EnvironmentObject var sidebar: SidebarHandler
     
@@ -43,7 +44,7 @@ struct ToolbarView: View {
         
         VStack(spacing:0) {
             
-            if bk.isToolbarShowing {
+            if pref.isToolbarShowing {
                 
                 HStack(spacing: 14) {
                     
@@ -135,7 +136,7 @@ struct ToolbarView: View {
             
             HStack(spacing: 0) {
 
-                if bk.isToolbarShowing {
+                if pref.isToolbarShowing {
                     Button {
                         sidebar.toggleSidebar()
                     } label: {

@@ -17,8 +17,9 @@ import KeyboardShortcuts
 struct BanksiaApp: App {
     
     @State private var conv = ConversationHandler()
-    @StateObject private var bk = BanksiaHandler()
+    @State private var bk = BanksiaHandler()
     @StateObject private var nav = NavigationHandler()
+    @StateObject private var pref = Preferences()
     @StateObject private var popup = PopupHandler()
     @StateObject private var sidebar = SidebarHandler()
     
@@ -32,7 +33,8 @@ struct BanksiaApp: App {
         Window("Banksia", id: "main") {
             ContentView()
                 .environment(conv)
-                .environmentObject(bk)
+                .environment(bk)
+                .environmentObject(pref)
                 .environmentObject(nav)
                 .environmentObject(popup)
                 .environmentObject(sidebar)
@@ -47,6 +49,7 @@ struct BanksiaApp: App {
                 bk: bk,
                 conv: conv,
                 sidebar: sidebar,
+                pref: pref,
                 updaterController: updaterController
             )
         }
@@ -56,7 +59,8 @@ struct BanksiaApp: App {
             Window("Banksia Debug", id: "debug") {
                 DebugView()
                     .environment(conv)
-                    .environmentObject(bk)
+                    .environment(bk)
+                    .environmentObject(pref)
                     .environmentObject(nav)
                     .environmentObject(popup)
                     .environmentObject(sidebar)
@@ -71,7 +75,8 @@ struct BanksiaApp: App {
 #if os(macOS)
         Settings {
             SettingsView()
-                .environmentObject(bk)
+                .environment(bk)
+                .environmentObject(pref)
                 .environmentObject(popup)
                 .environmentObject(sidebar)
                 .task {

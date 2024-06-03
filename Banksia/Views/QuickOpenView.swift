@@ -14,7 +14,7 @@ import Navigation
 struct QuickOpenView: View {
     @Environment(\.modelContext) private var modelContext
     
-    @EnvironmentObject var bk: BanksiaHandler
+    @Environment(BanksiaHandler.self) private var bk
     @EnvironmentObject var nav: NavigationHandler
     
     @Query private var conversations: [Conversation]
@@ -199,7 +199,7 @@ struct QuickOpenView: View {
 //#Preview {
 //    ModelContainerPreview(ModelContainer.sample) {
 //        QuickOpenView()
-//            .environmentObject(BanksiaHandler())
+//            .environment(BanksiaHandler())
 //            .frame(width: 600, height: 700)
 //    }
 //}

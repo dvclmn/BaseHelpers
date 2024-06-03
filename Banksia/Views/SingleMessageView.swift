@@ -17,8 +17,10 @@ import Popup
 
 struct SingleMessageView: View {
 
-    @EnvironmentObject var bk: BanksiaHandler
+    @Environment(BanksiaHandler.self) private var bk
     @Environment(ConversationHandler.self) private var conv
+    
+    @EnvironmentObject var pref: Preferences
     @EnvironmentObject var popup: PopupHandler
     @EnvironmentObject var sidebar: SidebarHandler
     
@@ -76,7 +78,7 @@ struct SingleMessageView: View {
                                     isEditable: false
                                 )
                 
-                if bk.isMessageInfoShowing {
+                if pref.isMessageInfoShowing {
                     
 //                    Button {
 //                        message.content += "butts "
@@ -192,7 +194,7 @@ extension SingleMessageView {
             conversation: Conversation.appKitDrawing,
             message: Message(content: ExampleText.paragraphs[3])
         )
-        .environmentObject(BanksiaHandler())
+        .environment(BanksiaHandler())
         .environmentObject(SidebarHandler())
         .environmentObject(PopupHandler())
         .environment(ConversationHandler())

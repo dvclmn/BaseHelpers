@@ -13,9 +13,10 @@ import Sparkle
 
 struct MenuCommands: Commands {
     
-    @ObservedObject var bk: BanksiaHandler
+    @Bindable var bk: BanksiaHandler
     @Bindable var conv: ConversationHandler
     @ObservedObject var sidebar: SidebarHandler
+    @ObservedObject var pref: Preferences
     
     let updaterController: SPUStandardUpdaterController
     
@@ -51,7 +52,7 @@ struct MenuCommands: Commands {
             
             Divider()
             
-            Button(bk.isToolbarShowing ? "Hide Toolbar" : "Show Toolbar") {
+            Button(pref.isToolbarShowing ? "Hide Toolbar" : "Show Toolbar") {
                 conv.currentRequest = .toggleToolbar
             }
             .keyboardShortcut(AppAction.toggleToolbar.shortcut)
@@ -63,7 +64,7 @@ struct MenuCommands: Commands {
             
             Divider()
             
-            Button(bk.isDebugShowing ? "Hide Debug Window" : "Show Debug Window") {
+            Button(pref.isDebugShowing ? "Hide Debug Window" : "Show Debug Window") {
                 conv.currentRequest = .toggleDebug
             }
             .keyboardShortcut(AppAction.toggleDebug.shortcut)

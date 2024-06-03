@@ -13,7 +13,7 @@ import StateView
 import GeneralUtilities
 
 struct DetailView: View {
-    @EnvironmentObject var bk: BanksiaHandler
+    @Environment(BanksiaHandler.self) private var bk
     
     @Query private var conversations: [Conversation]
     

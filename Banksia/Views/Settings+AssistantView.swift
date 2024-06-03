@@ -14,19 +14,25 @@ import MarkdownEditor
 
 struct Settings_AssistantView: View {
     
-    @EnvironmentObject var bk: BanksiaHandler
+    @Environment(BanksiaHandler.self) private var bk
+    
+    @EnvironmentObject var pref: Preferences
     
     @FocusState private var isEditorFocused
     
+    
     var body: some View {
+        
+        @Bindable var bk = bk
+        
         Section("Customise AI") {
             
             LabeledContent {
-                Text("\(bk.gptTemperature, specifier: "%.1f")")
+                Text("\(pref.gptTemperature, specifier: "%.1f")")
                     .monospacedDigit()
                 
                 Slider(
-                    value: $bk.gptTemperature,
+                    value: $pref.gptTemperature,
                     in: 0.0...1.0,
                     step: 0.1
                 )
@@ -53,7 +59,7 @@ struct Settings_AssistantView: View {
                 Text("This will be included for each message in each conversation.")
             }
             
-            Text(bk.systemPrompt)
+            Text(pref.systemPrompt)
                 .multilineTextAlignment(.leading)
                 .lineLimit(6)
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -62,7 +68,7 @@ struct Settings_AssistantView: View {
             .sheet(isPresented: $bk.isEditingLongFormText) {
 
                 TextEditorView(
-                    text: bk.$systemPrompt,
+                    text: $pref.systemPrompt,
                     isPresented: $bk.isEditingLongFormText) { text in
                         MarkdownEditorView(
                             text: text,
@@ -78,5 +84,5 @@ struct Settings_AssistantView: View {
 
 #Preview {
     Settings_AssistantView()
-        .environmentObject(BanksiaHandler())
+        .environment(BanksiaHandler())
 }

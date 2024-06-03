@@ -15,11 +15,14 @@ extension Styles {
     static let paddingGutter: Double = 12
 }
 
-class BanksiaHandler: ObservableObject {
+@Observable
+class BanksiaHandler {
     
-    @Published var hasProvidedAPIKey: Bool = false
+    var hasProvidedAPIKey: Bool = false
     
-    @Published var isQuickOpenShowing: Bool = false
+    var isQuickOpenShowing: Bool = false
+    
+    var uiDimming: Double = 0
     
 //    @Published var appFocus: AppFocus = .editor
     
@@ -30,34 +33,12 @@ class BanksiaHandler: ObservableObject {
     //    @Published var isPreviousQuickOpenAvailable: Bool = false
     
     //    @Published var isGlobalConversationPreferencesShowing: Bool = false
-    @Published var isEditingLongFormText: Bool = false
+    var isEditingLongFormText: Bool = false
     
-    @Published var isToolbarExpanded: Bool = false
+    var isToolbarExpanded: Bool = false
     
     /// Debug window
-    @AppStorage("isColumnOneShowingKey") var isColumnOneShowing: Bool = true
-    @AppStorage("isColumnTwoShowingKey") var isColumnTwoShowing: Bool = true
-    @AppStorage("isColumnthreeShowingKey") var isColumnThreeShowing: Bool = true
     
-    @AppStorage("textScaleKey") var textScale: Double = 1.0
-    @AppStorage("gptTemperatureKey") var gptTemperature: Double = 0.5
-    @AppStorage("gptModelKey") var gptModel: GPTModel = GPTModel.gpt_4_turbo
-    
-    @AppStorage("editorHeightKey") var editorHeight: Double = 180
-    
-    @AppStorage("userNameKey") var userName: String?
-
-    @AppStorage("isToolbarShowingKey") var isToolbarShowing: Bool = true
-    
-    @AppStorage("isDebugShowingKey") var isDebugShowing: Bool = false
-    @AppStorage("isTestModeKey") var isTestMode: Bool = false
-    
-    @AppStorage("systemPromptKey") var systemPrompt: String = ""
-    
-    @AppStorage("uiDimmingKey") var uiDimming: Double = 0.30
-    @AppStorage("defaultGrainientSeedKey") var defaultGrainientSeed: Int = 358962
-    
-    @AppStorage("isMessageInfoShowingKey") var isMessageInfoShowing: Bool = true
     
     func toggleQuickOpen() {
         withAnimation(Styles.animation) {
@@ -90,8 +71,12 @@ class BanksiaHandler: ObservableObject {
     
     
     
-    func exportDataToJSON(conversations: [Conversation]) -> URL? {
-        let exportData = ExportData(systemPrompt: self.systemPrompt, created: Date().timeIntervalSince1970, conversations: conversations)
+    func exportDataToJSON(conversations: [Conversation], systemPrompt: String) -> URL? {
+        let exportData = ExportData(
+            systemPrompt: systemPrompt,
+            created: Date().timeIntervalSince1970,
+            conversations: conversations
+        )
         
         let encoder = JSONEncoder()
         encoder.outputFormatting = .prettyPrinted

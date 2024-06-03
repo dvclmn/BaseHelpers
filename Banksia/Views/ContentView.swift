@@ -25,8 +25,10 @@ struct ContentView: View {
     @Environment(\.modelContext) var modelContext
     @Environment(\.undoManager) var undoManager
     
-    @EnvironmentObject var bk: BanksiaHandler
+    @Environment(BanksiaHandler.self) private var bk
     @Environment(ConversationHandler.self) private var conv
+    
+    @EnvironmentObject var pref: Preferences
     @EnvironmentObject var nav: NavigationHandler
     @EnvironmentObject var popup: PopupHandler
     @EnvironmentObject var sidebar: SidebarHandler
@@ -66,9 +68,9 @@ struct ContentView: View {
             }
         }
         .grainient(
-            seed: nav.fetchCurrentConversationStatic(from: conversations)?.grainientSeed ?? bk.defaultGrainientSeed,
+            seed: nav.fetchCurrentConversationStatic(from: conversations)?.grainientSeed ?? pref.defaultGrainientSeed,
             version: .v3,
-            dimming: $bk.uiDimming
+            dimming: $pref.uiDimming
         )
         .ignoresSafeArea()
         .background(Swatch.slate.colour)
@@ -154,12 +156,12 @@ struct ContentView: View {
                 
             case .toggleToolbar:
                 withAnimation(Styles.animation) {
-                    bk.isToolbarShowing.toggle()
+                    pref.isToolbarShowing.toggle()
                 }
                 conv.currentRequest = .none
                 
             case .toggleDebug:
-                bk.isDebugShowing.toggle()
+                pref.isDebugShowing.toggle()
                 conv.currentRequest = .none
                 
             default:
@@ -186,8 +188,8 @@ struct ContentView: View {
             conv.currentConversationID = nav.fetchCurrentConversationStatic(from: conversations)?.persistentModelID
             nav.updateLastDestination()
         }
-        .task(id: bk.isDebugShowing) {
-            if bk.isDebugShowing {
+        .task(id: pref.isDebugShowing) {
+            if pref.isDebugShowing {
                 openWindow.callAsFunction(id: "debug")
             } else {
                 closeWindow.callAsFunction(id: "debug")
@@ -245,7 +247,7 @@ extension ContentView {
     
     
     func exportAllData() {
-        if let url = bk.exportDataToJSON(conversations: conversations) {
+        if let url = bk.exportDataToJSON(conversations: conversations, systemPrompt: pref.systemPrompt) {
             exportLocation = url
             didExport = true
             alertMessage = "File saved to: \(url.path)"
@@ -326,7 +328,7 @@ extension ContentView {
 #Preview {
     ContentView()
         .environment(ConversationHandler())
-        .environmentObject(BanksiaHandler())
+        .environment(BanksiaHandler())
         .environmentObject(NavigationHandler())
     
         .environmentObject(PopupHandler())

@@ -24,8 +24,9 @@ import Button
 
 struct MessageInputView: View {
     @Environment(ConversationHandler.self) private var conv
-    @EnvironmentObject var bk: BanksiaHandler
+    @Environment(BanksiaHandler.self) private var bk
     
+    @EnvironmentObject var pref: Preferences
     @EnvironmentObject var popup: PopupHandler
     @EnvironmentObject var sidebar: SidebarHandler
     
@@ -84,9 +85,9 @@ struct MessageInputView: View {
                 .coordinateSpace(name: "scroll")
                 
                 
-                .resizable(startingHeight: $bk.editorHeight, maxHeight: sidebar.windowSize.height * 0.8) { onChangeHeight, onEndHeight in
+                .resizable(startingHeight: $conv.editorHeight, maxHeight: sidebar.windowSize.height * 0.8) { onChangeHeight, onEndHeight in
                     conv.editorHeight = onChangeHeight
-                    bk.editorHeight = onEndHeight
+                    pref.editorHeight = onEndHeight
                 }
                 .onTapGesture {
                     isFocused = true
@@ -140,7 +141,7 @@ struct MessageInputView: View {
             
             .onAppear {
                 //                userPrompt = ExampleText.paragraphs[3]
-                conv.editorHeight = bk.editorHeight
+                conv.editorHeight = pref.editorHeight
             }
             
             
@@ -169,7 +170,7 @@ extension MessageInputView {
         HStack(spacing: 18) {
             
             Group {
-                Label(bk.gptModel.name, systemImage: Icons.shocked.icon)
+                Label(pref.gptModel.name, systemImage: Icons.shocked.icon)
                 Label("\(conv.totalTokens(for: conversation))", systemImage: Icons.token.icon)
             }
             .labelStyle(.customLabel(size: .mini))
@@ -177,16 +178,16 @@ extension MessageInputView {
             
             Spacer()
             
-            Toggle(isOn: $bk.isTestMode, label: {
+            Toggle(isOn: $pref.isTestMode, label: {
                 Label("Test mode", systemImage: Icons.fish.icon)
                     .labelStyle(.customLabel(size: .small, labelDisplay: .titleOnly))
             })
-            .foregroundStyle(bk.isTestMode ? .secondary : .quaternary)
+            .foregroundStyle(pref.isTestMode ? .secondary : .quaternary)
             .disabled(conv.isResponseLoading)
             .toggleStyle(.switch)
             .controlSize(.mini)
             .tint(.secondary)
-            .animation(Styles.animationQuick, value: bk.isTestMode)
+            .animation(Styles.animationQuick, value: pref.isTestMode)
             
             
             Button {
@@ -217,7 +218,7 @@ extension MessageInputView {
         }
     }
     .environment(ConversationHandler())
-    .environmentObject(BanksiaHandler())
+    .environment(BanksiaHandler())
     
     .environmentObject(SidebarHandler())
     .frame(width: 380, height: 700)

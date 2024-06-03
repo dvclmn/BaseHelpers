@@ -21,9 +21,10 @@ struct ToolbarExpandedView: View {
     @Environment(\.modelContext) var modelContext
     @Environment(ConversationHandler.self) private var conv
     
-    @EnvironmentObject var bk: BanksiaHandler
+    @Environment(BanksiaHandler.self) private var bk
     @EnvironmentObject var nav: NavigationHandler
     
+    @EnvironmentObject var pref: Preferences
     @EnvironmentObject var popup: PopupHandler
     @EnvironmentObject var sidebar: SidebarHandler
     
@@ -56,14 +57,14 @@ struct ToolbarExpandedView: View {
                 
                 CustomSection(label: "Debug", icon: Icons.debug.icon) {
                     
-                    Toggle(isOn: $bk.isMessageInfoShowing) {
-                        Label(bk.isMessageInfoShowing ? "Hide Message info" : "Show Message info", systemImage: Icons.info.icon)
+                    Toggle(isOn: $pref.isMessageInfoShowing) {
+                        Label(pref.isMessageInfoShowing ? "Hide Message info" : "Show Message info", systemImage: Icons.info.icon)
                     }
                     
                     CustomSection(label: "Debug pane", icon: "window.horizontal.closed", level: .child) {
                         
                         Button {
-                            bk.isDebugShowing.toggle()
+                            pref.isDebugShowing.toggle()
                         } label: {
                             Label("Toggle debug pane", systemImage: Icons.debug.icon)
                         }
@@ -110,7 +111,7 @@ struct ToolbarExpandedView: View {
 //#Preview() {
 //    ToolbarExpandedView(conversationGrainientSeed: .constant(568309))
 //        .environment(ConversationHandler())
-//        .environmentObject(BanksiaHandler())
+//        .environment(BanksiaHandler())
 //        .environmentObject(NavigationHandler())
 //        
 //        .environmentObject(PopupHandler())

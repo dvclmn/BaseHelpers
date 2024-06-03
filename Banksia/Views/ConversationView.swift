@@ -20,8 +20,10 @@ import Grainient
 
 struct ConversationView: View {
     @Environment(\.modelContext) var modelContext
-    @EnvironmentObject var bk: BanksiaHandler
+    @Environment(BanksiaHandler.self) private var bk
     @Environment(ConversationHandler.self) private var conv
+    
+    @EnvironmentObject var pref: Preferences
     @EnvironmentObject var popup: PopupHandler
     @EnvironmentObject var sidebar: SidebarHandler
     
@@ -149,7 +151,7 @@ extension ConversationView {
     
     private func sendMessage() async {
         
-        print("\n\n|--- Send message \(bk.isTestMode ? "Test mode" : "") --->\n")
+        print("\n\n|--- Send message \(pref.isTestMode ? "Test mode" : "") --->\n")
         
         guard !conv.userPrompt.isEmpty else {
             print("No query to send")
@@ -176,7 +178,7 @@ extension ConversationView {
         let messageHistory: [RequestMessage] = await conv.createMessageHistory(
             for: conversation,
             latestMessage: newUserMessage,
-            with: bk.systemPrompt
+            with: pref.systemPrompt
         )
         
         
@@ -190,7 +192,7 @@ extension ConversationView {
         newGPTMessage.conversation = conversation
         
         // MARK: - Test mode
-        guard !bk.isTestMode else {
+        guard !pref.isTestMode else {
             
             //            func updateMessageContent(message: Message) async {
             //                let streamer = DataStreamer()
@@ -264,12 +266,12 @@ extension ConversationView {
         }
         
         let query = RequestBody(
-            model: bk.gptModel.model,
+            model: pref.gptModel.model,
             messages: content,
             stream: true,
             stream_options: .init(include_usage: true),
             max_tokens: nil,
-            temperature: bk.gptTemperature
+            temperature: pref.gptTemperature
         )
         let url = URL(string: "https://api.openai.com/v1/chat/completions")!
         var request = URLRequest(url: url)

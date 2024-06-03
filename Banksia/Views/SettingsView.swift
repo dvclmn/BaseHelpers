@@ -63,14 +63,18 @@ struct SettingsView: View {
     
     @Environment(\.modelContext) private var modelContext
     
-    @EnvironmentObject var popup: PopupHandler
     
-    @EnvironmentObject var bk: BanksiaHandler
+    @Environment(BanksiaHandler.self) private var bk
+    
+    @EnvironmentObject var pref: Preferences
+    @EnvironmentObject var popup: PopupHandler
     @EnvironmentObject var sidebar: SidebarHandler
     
     @State private var settingsTab: SettingsTab = .interface
     
     var body: some View {
+        
+        @Bindable var bk = bk
         
         VStack(spacing: 0) {
             
@@ -106,8 +110,8 @@ struct SettingsView: View {
                     
                     // MARK: - Name
                     LabeledContent {
-                        TextField("", text: bk.$userName.boundString, prompt: Text("Enter your name"))
-                            .textFieldStyle(.customField(text: bk.$userName.boundString))
+                        TextField("", text: $pref.userName.boundString, prompt: Text("Enter your name"))
+                            .textFieldStyle(.customField(text: $pref.userName.boundString))
                     } label: {
                         Label("Your Name", systemImage: Icons.person.icon)
                     }
@@ -119,7 +123,13 @@ struct SettingsView: View {
                             .monospacedDigit()
                         Slider(
                             value: $bk.uiDimming,
-                            in: 0.01...0.89)
+                            in: 0.01...0.89,
+                            onEditingChanged: { changed in
+                                if changed {
+                                    pref.uiDimming = bk.uiDimming
+                                }
+                            }
+                        )
                         .controlSize(.mini)
                         .tint(Swatch.lightGrey.colour)
                         .frame(
@@ -131,18 +141,19 @@ struct SettingsView: View {
                     }
                     
                     // MARK: - Grainient
-                    LabeledContent {
-                        GrainientPicker(
-                            seed: $bk.defaultGrainientSeed,
-                            popup: popup,
-                            viewSeedEnabled: false
-                        )
-                    } label: {
-                        Label("Default background", systemImage: Icons.gradient.icon)
-                        Text("Customise the gradient background that appears when no conversation is selected.")
-                    }
-                    
-                    GrainientPreviews(seed: $bk.defaultGrainientSeed)
+                // TODO: Hiding the below for now, as i'm not sure a 'default grainient' is actually going to be enough of a thing
+//                    LabeledContent {
+//                        GrainientPicker(
+//                            seed: $bk.defaultGrainientSeed,
+//                            popup: popup,
+//                            viewSeedEnabled: false
+//                        )
+//                    } label: {
+//                        Label("Default background", systemImage: Icons.gradient.icon)
+//                        Text("Customise the gradient background that appears when no conversation is selected.")
+//                    }
+//                    
+//                    GrainientPreviews(seed: $bk.defaultGrainientSeed)
                     
                     Settings_AssistantView()
                     
@@ -170,7 +181,7 @@ struct SettingsView: View {
             idealHeight: 600,
             maxHeight: .infinity
         )
-        .grainient(seed: bk.defaultGrainientSeed, version: .v1)
+        .grainient(seed: pref.defaultGrainientSeed, version: .v3)
         .onAppear {
             if isPreview {
                 settingsTab = .interface
@@ -188,11 +199,11 @@ struct SettingsView: View {
         SettingsView()
             .padding(.top,1)
     }
-    .environmentObject(BanksiaHandler())
+    .environment(BanksiaHandler())
     
     .environmentObject(PopupHandler())
     .environmentObject(SidebarHandler())
-    .frame(width: 480, height: 300)
+    .frame(width: 480, height: 700)
     
 }
 
@@ -241,7 +252,7 @@ public struct CustomFormStyle: FormStyle {
     public func makeBody(configuration: Configuration) -> some View {
         
         ScrollView(.vertical) {
-            VStack(alignment: .leading, spacing: 16) {
+            VStack(alignment: .leading, spacing: 36) {
                 configuration.content
                     .labeledContentStyle(.customLabeledContent())
             }

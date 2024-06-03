@@ -15,12 +15,18 @@ import GeneralUtilities
 
 struct DebugView: View {
     @Environment(\.modelContext) private var modelContext
-    @EnvironmentObject var bk: BanksiaHandler
+    @Environment(BanksiaHandler.self) private var bk
     @Environment(ConversationHandler.self) private var conv
+    
+    @EnvironmentObject var pref: Preferences
     @EnvironmentObject var sidebar: SidebarHandler
     @EnvironmentObject var nav: NavigationHandler
     
     @State private var rowHeights: [Int: CGFloat] = [:]
+    
+    @SceneStorage("isColumnOneShowingKey") var isColumnOneShowing: Bool = true
+    @SceneStorage("isColumnTwoShowingKey") var isColumnTwoShowing: Bool = true
+    @SceneStorage("isColumnthreeShowingKey") var isColumnThreeShowing: Bool = true
     
     let minWidth: Double = 260
     let minHeight: Double = 190
@@ -54,9 +60,9 @@ struct DebugView: View {
             ),
             DebugRow(
                 title: "Editor height",
-                state: DebugState(main:"\(bk.editorHeight)", log: [
+                state: DebugState(main:"\(pref.editorHeight)", log: [
                     "Real time: \(conv.editorHeight)",
-                    "User defaults: \(bk.editorHeight)"
+                    "User defaults: \(pref.editorHeight)"
                 ]),
                 definedOn: .bk
             ),
@@ -87,13 +93,13 @@ struct DebugView: View {
         var visibleColumns: [DebugColumn] {
             var columns: [DebugColumn] = []
             
-            if bk.isColumnOneShowing {
+            if isColumnOneShowing {
                 columns.append(.title)
             }
-            if bk.isColumnTwoShowing {
+            if isColumnTwoShowing {
                 columns.append(.state)
             }
-            if bk.isColumnThreeShowing {
+            if isColumnThreeShowing {
                 columns.append(.definedOn)
             }
             
@@ -114,26 +120,26 @@ struct DebugView: View {
                 ControlGroup {
                     
                     Button {
-                        bk.isColumnOneShowing.toggle()
+                        isColumnOneShowing.toggle()
                     } label: {
                         Label("Toggle Title", systemImage: "1.square")
                     }
-                    .opacity(bk.isColumnOneShowing ? 1 : faded)
+                    .opacity(isColumnOneShowing ? 1 : faded)
                     
                     Button {
-                        bk.isColumnTwoShowing.toggle()
+                        isColumnTwoShowing.toggle()
                     } label: {
                         Label("Toggle State", systemImage: "2.square")
                     }
-                    .opacity(bk.isColumnTwoShowing ? 1 : faded)
+                    .opacity(isColumnTwoShowing ? 1 : faded)
                     
                     
                     Button {
-                        bk.isColumnThreeShowing.toggle()
+                        isColumnThreeShowing.toggle()
                     } label: {
                         Label("Toggle Defined On", systemImage: "3.square")
                     }
-                    .opacity(bk.isColumnThreeShowing ? 1 : faded)
+                    .opacity(isColumnThreeShowing ? 1 : faded)
                 }
                 .controlGroupStyle(.customControlGroup(paddingH: 4, paddingV: 4, spacing: 4))
                 .buttonStyle(.customButton(size: .mini, hasBackground: false, labelDisplay: .iconOnly))
@@ -173,7 +179,7 @@ struct DebugView: View {
         .grainient(
             seed: GrainientPreset.algae.seed,
             version: .v1,
-            dimming: $bk.uiDimming
+            dimming: $pref.uiDimming
         )
         .ignoresSafeArea()
         .background(Swatch.slate.colour)
@@ -345,7 +351,7 @@ extension DebugView {
 #Preview {
     DebugView()
         .padding(.top,1)
-        .environmentObject(BanksiaHandler())
+        .environment(BanksiaHandler())
         .environment(ConversationHandler())
         .environmentObject(NavigationHandler())
         .environmentObject(SidebarHandler())
