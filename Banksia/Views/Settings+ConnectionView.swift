@@ -25,60 +25,62 @@ struct Settings_ConnectionView: View {
     
     @State private var isConnectedToOpenAI: Bool = false
     @State private var isLoadingConnection: Bool = false
-    @State private var isKeyUnlocked = false
-    @State private var apiKey: String = ""
+    @State private var isKeyLocked = false
+    @State private var apiKeyInput: String = ""
     
     let apiKeyString: String = "openAIAPIKey"
     
     var body: some View {
         
-        Section("Connection") {
+        CustomSection(label: "Connection", isCompact: false) {
             
             LabeledContent {
-                HStack {
-                    if isKeyUnlocked {
-                        TextField("API Key", text: $apiKey, prompt: Text("Enter API Key"))
-                            .onSubmit {
-                                Task {
-                                    await submitAPIKey()
+                    Group {
+                        if !isKeyLocked {
+                            TextField("API Key", text: $apiKeyInput, prompt: Text("Enter API Key"))
+                                
+                                .onSubmit {
+                                    Task {
+                                        await submitAPIKey()
+                                        isKeyLocked = true
+                                    }
                                 }
-                            }
-                    } else {
-                        SecureField("API Key", text: $apiKey, prompt: Text("Enter API Key"))
-                            .foregroundStyle(.secondary)
-                            .onSubmit {
-                                Task {
-                                    await submitAPIKey()
+                        } else {
+                            SecureField("API Key", text: $apiKeyInput, prompt: Text("Enter API Key"))
+                                .foregroundStyle(.secondary)
+                                .onSubmit {
+                                    Task {
+                                        await submitAPIKey()
+                                    }
                                 }
-                            }
-                    }
+                        }
+                    } // END text fields group
+                    .textFieldStyle(.customField(text: $apiKeyInput))
+                
                     Button {
-                        isKeyUnlocked.toggle()
+                        isKeyLocked.toggle()
                     } label: {
-                        Label(isKeyUnlocked ? "Hide key" : "Show key", systemImage: Icons.eye.icon)
+                        Label(isKeyLocked ? "Show key" : "Hide key", systemImage: Icons.eye.icon)
                     }
-                    .buttonStyle(.customButton(size: .mini, status: isKeyUnlocked ? .active : .normal, hasBackground: false, labelDisplay: .iconOnly))
+                    .buttonStyle(.customButton(size: .mini, status: isKeyLocked ? .disabled : .active, hasBackground: false, labelDisplay: .iconOnly))
                     .onAppear {
                         Task {
-                            
-                            keychain.set("hello world", forKey: apiKeyString)
-                                
                             if let key = keychain.get(apiKeyString) {
-                                apiKey = key
+                                apiKeyInput = key
                                 isConnectedToOpenAI = await verifyOpenAIConnection()
                             } else {
+                                keychain.set(apiKeyInput, forKey: apiKeyString)
                                 isConnectedToOpenAI = false
                             }
                             
                         }
                     } // END on appear
                     
-                } // END group
                 .labelsHidden()
             } label: {
                 Label("API Key", systemImage: Icons.key.icon)
                 
-                if !apiKey.isEmpty {
+                if !apiKeyInput.isEmpty {
                     HStack(spacing: 0) {
                         Text("Status: **\(isConnectedToOpenAI ? "Connected" : "No connection")**")
                         if isLoadingConnection {
@@ -89,6 +91,8 @@ struct Settings_ConnectionView: View {
                     .fixedSize(horizontal: true, vertical: false)
                 }
             }
+            
+            
 
             
             
@@ -101,6 +105,9 @@ struct Settings_ConnectionView: View {
                 .labelsHidden()
                 .pickerStyle(.menu)
             } label: {
+                
+                
+                
                 Label("Select model", systemImage: Icons.shocked.icon)
                 Text("Current:\t\t\t**\(pref.gptModel.name)**")
                 Text("Context length:\t**\(pref.gptModel.contextLength) tokens**")
@@ -148,7 +155,7 @@ extension Settings_ConnectionView {
     
     private func submitAPIKey() async {
         
-        if keychain.set(self.apiKey, forKey: apiKeyString) {
+        if keychain.set(self.apiKeyInput, forKey: apiKeyString) {
             self.isConnectedToOpenAI = await verifyOpenAIConnection()
         } else {
             popup.showPopup(title: "Issue saving API Key", message: "Please try again.")
@@ -156,7 +163,11 @@ extension Settings_ConnectionView {
     }
 }
 
-//
-//#Preview {
-//    Settings_ConnectionView()
-//}
+
+#Preview {
+    Settings_ConnectionView()
+        .environment(BanksiaHandler())
+        .environmentObject(Preferences())
+        .environmentObject(PopupHandler())
+        .padding(30)
+}

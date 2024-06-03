@@ -14,7 +14,7 @@ import Sidebar
 struct GrainientPreviews: View {
     
     @Binding var seed: Int
-    let spacing: Double = 20
+    let spacing: Double = 16
     
     @State private var presets: [GrainientPreset] = [
         .sunset,
@@ -62,19 +62,22 @@ struct GrainientPreviews: View {
             LazyVGrid(columns: columns, spacing: spacing) {
                 
                 ForEach(presets) { preset in
-                    Color.clear
-                        .aspectRatio(1.3, contentMode: .fill)
-                        .grainient(
-                            seed: preset.seed,
-                            version: preset.version,
-                            grainOpacity: 0,
-                            blurAmount: 10,
-                            dimming: .constant(0)
-                        )
-                        .clipShape(.rect(cornerRadius: Styles.roundingMedium))
-                        .onTapGesture {
-                            seed = preset.seed
-                        }
+                    Button {
+                        seed = preset.seed
+                    } label: {
+                        Color.clear
+                            .aspectRatio(1.3, contentMode: .fill)
+                            .grainient(
+                                seed: preset.seed,
+                                version: preset.version,
+                                grainOpacity: 0,
+                                blurAmount: 14,
+                                dimming: .constant(0)
+                            )
+                            .clipShape(.rect(cornerRadius: Styles.roundingMedium))
+
+                    } // END button
+                    .buttonStyle(.plain)
                 }
             } // END lazy grid
         }

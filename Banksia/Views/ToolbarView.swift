@@ -191,3 +191,24 @@ extension ToolbarView {
         }
     }
 }
+
+#if DEBUG
+
+
+#Preview() {
+    ToolbarView(
+        conversationName: .constant("Butts"),
+        conversationGrainientSeed: .constant(GrainientPreset.sunset.seed)
+    )
+        .environment(ConversationHandler())
+        .environment(BanksiaHandler())
+        .environmentObject(NavigationHandler())
+        .environmentObject(Preferences())
+        .environmentObject(PopupHandler())
+        .environmentObject(SidebarHandler())
+        .background(.black)
+            .frame(width: 500, height: 700)
+}
+
+#endif
+

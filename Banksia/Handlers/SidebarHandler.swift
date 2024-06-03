@@ -20,9 +20,9 @@ class SidebarHandler: Sidebarable, ObservableObject {
     @Published var windowSize: CGSize = .zero
     
     /// This value is the desired content width, not including the sidebar
-    @Published var contentMinWidth: Double = 480
+    @Published var contentMinWidth: Double = 560
     
-    let sidebarToggleBuffer: Double = 20
+    let sidebarToggleBuffer: Double = 40
     
     static let sidebarPadding: Double = 12
     

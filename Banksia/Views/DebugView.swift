@@ -12,6 +12,7 @@ import Sidebar
 import Swatches
 import Icons
 import GeneralUtilities
+import Table
 
 struct DebugView: View {
     @Environment(\.modelContext) private var modelContext
@@ -28,153 +29,48 @@ struct DebugView: View {
     @SceneStorage("isColumnTwoShowingKey") var isColumnTwoShowing: Bool = true
     @SceneStorage("isColumnthreeShowingKey") var isColumnThreeShowing: Bool = true
     
-    let minWidth: Double = 260
-    let minHeight: Double = 190
     
-    let rowPaddingHorizontal: Double = 8
-    let rowPaddingVertical: Double = 4
     
     let faded: Double = 0.3
     
-    @State private var sorting: DebugColumn = .title
+    @State private var sorting: DebugColumn = .label
     
     @State private var isHoveringDebug: Bool = false
     
     var body: some View {
         
-        let debugRows: [DebugRow] = [
-            DebugRow(
-                title: "Editor focused",
-                state: DebugState(main:"\(conv.isEditorFocused)"),
-                definedOn: .conv
-            ),
-            DebugRow(
-                title: "Sidebar visible",
-                state: DebugState(main:"\(sidebar.isSidebarVisible)"),
-                definedOn: .sidebar
-            ),
-            DebugRow(
-                title: "Sidebar dismissed",
-                state: DebugState(main:"\(sidebar.isSidebarDismissed)"),
-                definedOn: .sidebar
-            ),
-            DebugRow(
-                title: "Editor height",
-                state: DebugState(main:"\(pref.editorHeight)", log: [
-                    "Real time: \(conv.editorHeight)",
-                    "User defaults: \(pref.editorHeight)"
+        let columns: [DebugColumn] = DebugColumn.allCases
+            let rows: [Row<DebugColumn>] = [
+                Row(cells: [
+                    Cell(column: .label, value: "Row 1 Title"),
+                    Cell(column: .state, value: "Active"),
+                    Cell(column: .definedOn, value: "2023-10-01")
                 ]),
-                definedOn: .bk
-            ),
-            DebugRow(
-                title: "Current request",
-                state: DebugState(main: "\(conv.currentRequest)"),
-//                state: DebugState(main: "\(conv.currentRequest)", log: [
-//                    "\(conv.currentRequest)",
-//                    "\(conv.currentRequest)",
-//                    "\(conv.currentRequest)",
-//                    "\(conv.currentRequest)",
-//                    "\(conv.currentRequest)"
-//                ]),
-                definedOn: .conv
-            ),
-//            DebugRow(
-//                title: "Visible message",
-//                state: DebugState(main:"\(conv.scrolledMessageID ?? "None")"),
-//                definedOn: .conv
-//            ),
-            DebugRow(
-                title: "Current Focus",
-                state: DebugState(main:"\(conv.currentRequest.focus.name)"),
-                definedOn: .conv
-            )
-        ] // END rows
-        
-        var visibleColumns: [DebugColumn] {
-            var columns: [DebugColumn] = []
-            
-            if isColumnOneShowing {
-                columns.append(.title)
-            }
-            if isColumnTwoShowing {
-                columns.append(.state)
-            }
-            if isColumnThreeShowing {
-                columns.append(.definedOn)
-            }
-            
-            return columns
-        }
+                Row(cells: [
+                    Cell(column: .label, value: "Row 2 Title"),
+                    Cell(column: .state, value: "Inactive"),
+                    Cell(column: .definedOn, value: "2023-10-02")
+                ])
+            ]
         
         
-        VStack(alignment: .leading, spacing: 20) {
-            
-            HStack {
-                Text("Debug")
-                    .font(.system(size: 22))
-                    .foregroundStyle(.secondary)
-                    .padding(4)
-                
-                Spacer()
-                
-                ControlGroup {
-                    
-                    Button {
-                        isColumnOneShowing.toggle()
-                    } label: {
-                        Label("Toggle Title", systemImage: "1.square")
-                    }
-                    .opacity(isColumnOneShowing ? 1 : faded)
-                    
-                    Button {
-                        isColumnTwoShowing.toggle()
-                    } label: {
-                        Label("Toggle State", systemImage: "2.square")
-                    }
-                    .opacity(isColumnTwoShowing ? 1 : faded)
-                    
-                    
-                    Button {
-                        isColumnThreeShowing.toggle()
-                    } label: {
-                        Label("Toggle Defined On", systemImage: "3.square")
-                    }
-                    .opacity(isColumnThreeShowing ? 1 : faded)
-                }
-                .controlGroupStyle(.customControlGroup(paddingH: 4, paddingV: 4, spacing: 4))
-                .buttonStyle(.customButton(size: .mini, hasBackground: false, labelDisplay: .iconOnly))
-                
-            }
-            VStack {
-                HStack(alignment: .top, spacing: 0) {
-                    ForEach(visibleColumns, id: \.self) { column in
-                        CustomTableColumn(
-                            column: column,
-                            rows: debugRows,
-                            rowHeights: $rowHeights,
-                            columnPosition: column.columnPosition
-                        )
-                        .lineLimit(1)
-                    }
-                }
-            }
-            .onPreferenceChange(RowHeightPreferenceKey.self) { value in
-                rowHeights = value
-            }
-            
-            Spacer()
-        }
-        .padding(18)
-        .safeAreaPadding(.top, isPreview ? 0 : 30)
-        .font(.system(size: 12))
-        .frame(
-            minWidth: minWidth,
-            idealWidth: .infinity,
-            maxWidth: .infinity,
-            minHeight: minHeight,
-            maxHeight: .infinity,
-            alignment: .leading
-        )
+//        var visibleColumns: [DebugColumn] {
+//            var columns: [DebugColumn] = []
+//            
+//            if isColumnOneShowing {
+//                columns.append(.label)
+//            }
+//            if isColumnTwoShowing {
+//                columns.append(.state)
+//            }
+//            if isColumnThreeShowing {
+//                columns.append(.definedOn)
+//            }
+//            
+//            return columns
+//        }
+//        
+        CustomTable(title: "Debug", columns: columns, rows: rows)
         
         .grainient(
             seed: GrainientPreset.algae.seed,
@@ -188,163 +84,9 @@ struct DebugView: View {
 
 extension DebugView {
     
-    @ViewBuilder
-    func CustomTableColumn(
-        column: DebugColumn,
-        rows: [DebugRow],
-        rowHeights: Binding<[Int : CGFloat]>,
-        columnPosition: ColumnPosition = .middle
-    ) -> some View {
-        
-        let rounding: Double = Styles.roundingSmall
-        
-        var corners: UnevenRoundedRectangle {
-            switch columnPosition {
-            case .beginning:
-                return .rect(
-                    topLeadingRadius: rounding,
-                    bottomLeadingRadius: rounding,
-                    bottomTrailingRadius: 0,
-                    topTrailingRadius: 0
-                )
-            case .middle:
-                return .rect(
-                    topLeadingRadius: 0,
-                    bottomLeadingRadius: 0,
-                    bottomTrailingRadius: 0,
-                    topTrailingRadius: 0
-                )
-            case .end:
-                return .rect(
-                    topLeadingRadius: 0,
-                    bottomLeadingRadius: 0,
-                    bottomTrailingRadius: rounding,
-                    topTrailingRadius: rounding
-                )
-            }
-        }
-        
-        var columnMinWidth: Double {
-            switch column {
-            case .title:
-                return 100
-            case .state:
-                return 60
-            case .definedOn:
-                return 100
-            }
-        }
-        var columnMaxWidth: Double {
-            switch column {
-            case .title:
-                return .infinity
-            case .state:
-                return .infinity
-            case .definedOn:
-                return .infinity
-            }
-        }
-        
-        
-        VStack(alignment: .leading, spacing: 0) {
-            
-            CustomTableHeader(column.rawValue)
-                .frame(maxWidth: columnMaxWidth, alignment: .leading)
-            
-            ForEach(Array(rows.enumerated()), id: \.element.id) { index, row in
-                
-                Group {
-                    switch column {
-                    case .title:
-                        CustomTableRow(content: row.title, rowIndex: index, column: column)
-                    case .state:
-                        CustomTableRow(content: row.state.main, subItems: row.state.log, rowIndex: index, column: column)
-                    case .definedOn:
-                        CustomTableRow(content: row.definedOn.rawValue, rowIndex: index, column: column)
-                    }
-                }
-                .frame(
-                    minWidth: columnMinWidth,
-                    maxWidth: columnMaxWidth,
-                    minHeight: rowHeights.wrappedValue[index] ?? .zero,
-                    alignment: .topLeading
-                )
-                .padding(.horizontal, rowPaddingHorizontal)
-                .padding(.vertical, rowPaddingVertical)
-                .background(index % 2 == 0 ? Color.black.opacity(0.1) : Color.clear)
-                .clipShape(corners)
-            } // END foreach
-        } // END vstack
-    } // END table column
     
-    @ViewBuilder
-    func CustomTableHeader(_ label: String) -> some View {
-        Text(label)
-            .textCase(.uppercase)
-            .foregroundStyle(.tertiary)
-            .fontWeight(.semibold)
-            .padding(.horizontal, rowPaddingHorizontal)
-            .padding(.vertical, rowPaddingVertical + 4)
-    }
     
-    @ViewBuilder
-    func CustomTableRow(
-        content: String,
-        subItems: [String] = [],
-        rowIndex: Int,
-        column: DebugColumn
-    ) -> some View {
-        
-        var booleanStyle: Color {
-            if content == "true" {
-                Swatch.eggplant.colour
-            } else if content == "false" {
-                Swatch.peach.colour.opacity(0.8)
-            } else {
-                .secondary
-            }
-        }
-        
-        VStack(alignment: .leading) {
-            
-            Group {
-                switch column {
-                case .title:
-                    Text(content)
-                        .foregroundStyle(.primary)
-                    
-                case .state:
-                    Text(content)
-                        .foregroundStyle(booleanStyle)
-                        .monospaced()
-                        .padding(.horizontal, 3)
-                        .padding(.vertical, 1)
-                        .background(.black.opacity(0.2))
-                        .clipShape(.rect(cornerRadius: Styles.roundingTiny))
-                    
-                    
-                case .definedOn:
-                    Text(content)
-                        .foregroundStyle(.secondary)
-                }
-                ForEach(subItems, id: \.self) { item in
-                    Text(item)
-                }
-            }
-            .fontWeight(.medium)
-            
-            
-            
-            
-            
-        }
-        
-        .background(
-            GeometryReader { geometry in
-                Color.clear.preference(key: RowHeightPreferenceKey.self, value: [rowIndex: geometry.size.height])
-            }
-        )
-    }
+    
     
 }
 
@@ -353,6 +95,7 @@ extension DebugView {
         .padding(.top,1)
         .environment(BanksiaHandler())
         .environment(ConversationHandler())
+        .environmentObject(Preferences())
         .environmentObject(NavigationHandler())
         .environmentObject(SidebarHandler())
         .frame(width: 400, height: 600)

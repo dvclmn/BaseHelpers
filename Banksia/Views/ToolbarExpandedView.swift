@@ -102,7 +102,7 @@ struct ToolbarExpandedView: View {
             .focusable()
             .focused($isFocused)
             .focusEffectDisabled()
-            .frame(maxWidth: .infinity, maxHeight: 300)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
             
             
             
@@ -114,14 +114,16 @@ struct ToolbarExpandedView: View {
             }
             .background {
                 Rectangle()
-                //                    .fill(.thickMaterial)
-                    .fill(.red)
+                    .fill(.thickMaterial)
             }
             .clipShape(
                 RoundedRectangle(cornerRadius: Styles.roundingMedium)
             )
             .safeAreaPadding(.leading, sidebar.isSidebarVisible ? sidebar.sidebarWidth : 0)
-            .padding()
+            .padding(.top, Styles.paddingGenerous)
+            .padding(.horizontal, Styles.paddingGenerous)
+            .padding(.bottom, Styles.paddingGenerous + conv.editorHeight)
+            
             
         }
     }
@@ -138,8 +140,8 @@ struct ToolbarExpandedView: View {
         .environmentObject(Preferences())
         .environmentObject(PopupHandler())
         .environmentObject(SidebarHandler())
-        .background(.black)
-    //        .frame(width: 400, height: 400)
+        .frame(width: 400, height: 600)
+//        .background(.red.opacity(0.8))
 }
 
 #endif

@@ -7,37 +7,53 @@
 
 import Foundation
 import SwiftUI
-
-
-struct DebugRow: Identifiable {
-    var id = UUID()
-    var title: String
-    var state: DebugState
-    var definedOn: DefinedOn
-}
+import Table
 
 struct DebugState {
     var main: String
     var log: [String] = []
 }
 
-struct RowHeightPreferenceKey: PreferenceKey {
-    static var defaultValue: [Int: CGFloat] = [:]
-    static func reduce(value: inout [Int: CGFloat], nextValue: () -> [Int: CGFloat]) {
-        for (index, height) in nextValue() {
-            value[index] = max(value[index] ?? 0, height)
+//
+//struct DebugRow: Identifiable, Rowable {
+//    var id = UUID()
+//    var content: [String : Any]
+//    
+//    init(title: String, state: DebugState, definedOn: DefinedOn) {
+//            self.content = [
+//                "title": title,
+//                "state": state,
+//                "definedOn": definedOn
+//            ]
+//        }
+//}
+
+
+
+
+enum DebugColumn: CaseIterable, Columnable {
+    
+    case label
+    case state
+    case definedOn
+    
+    var id: String {
+        self.title
+    }
+    
+    var title: String {
+        switch self {
+        case .label:
+            "Title"
+        case .state:
+            "State"
+        case .definedOn:
+            "Defined On"
         }
     }
-}
-
-enum DebugColumn: String, CaseIterable {
-    case title = "Title"
-    case state = "State"
-    case definedOn = "Defined on"
-    
-    var columnPosition: ColumnPosition {
+    var position: ColumnPosition {
         switch self {
-        case .title:
+        case .label:
                 .beginning
         case .state:
                 .middle
@@ -45,6 +61,7 @@ enum DebugColumn: String, CaseIterable {
                 .end
         }
     }
+
 }
 
 enum DefinedOn: String {
@@ -52,11 +69,5 @@ enum DefinedOn: String {
     case sidebar = "SidebarHandler"
     case bk = "BanksiaHandler"
     case nav = "NavigationHandler"
-}
-
-enum ColumnPosition {
-    case beginning
-    case middle
-    case end
 }
 
