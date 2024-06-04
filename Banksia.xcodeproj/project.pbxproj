@@ -18,6 +18,9 @@
 		F64F8E202B03082100C72E51 /* BanksiaHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F64F8E1F2B03082100C72E51 /* BanksiaHandler.swift */; };
 		F64F8E222B03090600C72E51 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F64F8E212B03090600C72E51 /* ContentView.swift */; };
 		F64F8E2E2B04254100C72E51 /* ConversationHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F64F8E2D2B04254100C72E51 /* ConversationHandler.swift */; };
+		F6601F422C0ED67900D23A9C /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6601F412C0ED67900D23A9C /* WelcomeView.swift */; };
+		F6601F442C0EDC1000D23A9C /* OstiaAntica-Italic.otf in Resources */ = {isa = PBXBuildFile; fileRef = F6601F432C0EDC1000D23A9C /* OstiaAntica-Italic.otf */; };
+		F6601F462C0EDC8C00D23A9C /* OstiaAntica-BookItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = F6601F452C0EDC8C00D23A9C /* OstiaAntica-BookItalic.otf */; };
 		F6795C7D2BCE70920093BC9C /* ConversationSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6795C7C2BCE70920093BC9C /* ConversationSettingsView.swift */; };
 		F6795C7F2BCE7A4D0093BC9C /* GlobalConversationSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6795C7E2BCE7A4D0093BC9C /* GlobalConversationSettingsView.swift */; };
 		F6823E192C07139B00C8749F /* APIHandler in Frameworks */ = {isa = PBXBuildFile; productRef = F6823E182C07139B00C8749F /* APIHandler */; };
@@ -77,6 +80,9 @@
 		F64F8E1F2B03082100C72E51 /* BanksiaHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BanksiaHandler.swift; sourceTree = "<group>"; };
 		F64F8E212B03090600C72E51 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		F64F8E2D2B04254100C72E51 /* ConversationHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationHandler.swift; sourceTree = "<group>"; };
+		F6601F412C0ED67900D23A9C /* WelcomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeView.swift; sourceTree = "<group>"; };
+		F6601F432C0EDC1000D23A9C /* OstiaAntica-Italic.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OstiaAntica-Italic.otf"; sourceTree = "<group>"; };
+		F6601F452C0EDC8C00D23A9C /* OstiaAntica-BookItalic.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OstiaAntica-BookItalic.otf"; sourceTree = "<group>"; };
 		F6795C7C2BCE70920093BC9C /* ConversationSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationSettingsView.swift; sourceTree = "<group>"; };
 		F6795C7E2BCE7A4D0093BC9C /* GlobalConversationSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalConversationSettingsView.swift; sourceTree = "<group>"; };
 		F687189B2BFF4F2100955B43 /* DetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailView.swift; sourceTree = "<group>"; };
@@ -139,6 +145,7 @@
 		F64F8E0D2B0214CC00C72E51 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				F6601F412C0ED67900D23A9C /* WelcomeView.swift */,
 				F600B2842C0DD7C700C9DF67 /* SwatchButtonView.swift */,
 				F60499BC2C09010100527BD6 /* Settings+AssistantView.swift */,
 				F6BCC7A92C08DC9F00B9751D /* GrainientPreviews.swift */,
@@ -185,6 +192,8 @@
 		F64F8E2F2B042A0300C72E51 /* Support */ = {
 			isa = PBXGroup;
 			children = (
+				F6601F432C0EDC1000D23A9C /* OstiaAntica-Italic.otf */,
+				F6601F452C0EDC8C00D23A9C /* OstiaAntica-BookItalic.otf */,
 				F6E4BC752BD0DA5000BFD550 /* AttributedStringReference.swift */,
 				F6C161E02B0F63B800F4AB62 /* banksia_icons.json */,
 				F639D8C92BD51B2A0035226E /* CodeSyntaxTheme.swift */,
@@ -333,7 +342,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				F6C161E12B0F63B800F4AB62 /* banksia_icons.json in Resources */,
+				F6601F442C0EDC1000D23A9C /* OstiaAntica-Italic.otf in Resources */,
 				F6A7BEF12B01C57500D3CE25 /* Assets.xcassets in Resources */,
+				F6601F462C0EDC8C00D23A9C /* OstiaAntica-BookItalic.otf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -357,6 +368,7 @@
 				F60B6A732C005D7B007EDCDD /* SidebarHandler.swift in Sources */,
 				F6A5E1B72BC6EE480018B1B5 /* PreferencesHandler.swift in Sources */,
 				F64F8E202B03082100C72E51 /* BanksiaHandler.swift in Sources */,
+				F6601F422C0ED67900D23A9C /* WelcomeView.swift in Sources */,
 				F6ACAFF82C0B7F450009DC15 /* DebugHandler.swift in Sources */,
 				F6BCC7A82C08B5CA00B9751D /* Settings+ConnectionView.swift in Sources */,
 				F6EBCA882C047FC7007C452A /* ClaudeModel.swift in Sources */,

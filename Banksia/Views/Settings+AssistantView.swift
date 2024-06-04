@@ -45,9 +45,6 @@ struct Settings_AssistantView: View {
                         pref.uiDimming = bk.uiDimming
                     }
                 )
-                .onAppear {
-                    bk.uiDimming = pref.uiDimming
-                }
                 .tint(pref.accentColour.colour)
                 .controlSize(.mini)
                 //                            .tint(Swatch.lightGrey.colour)

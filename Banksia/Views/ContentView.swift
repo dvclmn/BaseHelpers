@@ -41,6 +41,8 @@ struct ContentView: View {
     @State private var alertMessage: String = ""
     @State private var exportLocation: URL? = nil
     
+    @State private var isWelcomeScreenShowing: Bool = true
+    
     var body: some View {
         
         @Bindable var bk = bk
@@ -78,6 +80,8 @@ struct ContentView: View {
         
         .onAppear {
             
+            
+                bk.uiDimming = pref.uiDimming
             
             
             KeyboardShortcuts.onKeyUp(for: .summonBanksia) {
@@ -195,6 +199,9 @@ struct ContentView: View {
             } else {
                 closeWindow.callAsFunction(id: "debug")
             }
+        }
+        .sheet(isPresented: $isWelcomeScreenShowing) {
+            WelcomeView()
         }
         
         

@@ -34,6 +34,6 @@ final class Preferences: ObservableObject {
     
     @AppStorage("isMessageInfoShowingKey") var isMessageInfoShowing: Bool = true
     
-    
+    @AppStorage("isWelcomeScreenEnabledKey") var isWelcomeScreenEnabled: Bool = true
     
 }

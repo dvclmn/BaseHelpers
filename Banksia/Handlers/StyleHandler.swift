@@ -15,3 +15,13 @@ extension Styles {
     
     static let paddingText:             Double = 18
 }
+
+enum OstiaFont: String {
+    case italic = "-Italic"
+    case bookItalic = "-BookItalic"
+    
+    var font: String {
+        "OstiaAntica" + self.rawValue
+    }
+    
+}
