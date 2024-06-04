@@ -67,7 +67,8 @@ struct DebugView: View {
        
         
         CustomTable(title: "Debug", columns: columns, rows: rows)
-        
+            .padding(18)
+            .safeAreaPadding(.top, isPreview ? 0 : 30)
                 .grainient(
                     seed: GrainientPreset.algae.seed,
                     version: .v1,

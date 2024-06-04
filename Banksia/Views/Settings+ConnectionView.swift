@@ -113,24 +113,55 @@ struct Settings_ConnectionView: View {
             
             Label("Select model", systemImage: Icons.shocked.icon)
             
-            
-                               
-            
-            //                    Label("Select model", systemImage: Icons.shocked.icon)
-            //                    Text("Current:\t\t\t**\(pref.gptModel.name)**")
-            //                    Text("Context length:\t**\(pref.gptModel.contextLength) tokens**")
-            //                    Text("Training cut-off:\t**\(pref.gptModel.cutoff)**")
+            Text("Current:\t\t\t**\(pref.gptModel.name)**")
+            Text("Context length:\t**\(pref.gptModel.contextLength) tokens**")
+            Text("Training cut-off:\t**\(pref.gptModel.cutoff)**")
         }
         .labeledContentStyle(.customLabeledContent())
         
-        let rows: [CustomRow<GPTColumns>] = GPTModel.allCases.map { $0.toCustomRow() }
+        let rows: [CustomRow<CurrentGPTModel>] = [
+            .init(cells: [
+                .title : "Current:",
+                .value : pref.gptModel.name
+            ]),
+            .init(cells: [
+                .title : "Context length:",
+                .value : pref.gptModel.contextLength + " tokens"
+            ]),
+            .init(cells: [
+                .title : "Knowledge cutoff:",
+                .value : pref.gptModel.cutoff
+            ])
+        ]
         
-        CustomTable(columns: GPTColumns.allCases, rows: rows)
+        CustomTable(
+            columns: CurrentGPTModel.allCases,
+            rows: rows,
+            isCompact: true
+        )
+        .foregroundStyle(.secondary)
         
         
         
-        //        } // End connection section
         
+    }
+}
+
+enum CurrentGPTModel: String, Columnable, CaseIterable {
+    case title
+    case value
+    
+    var id: String {
+        return self.rawValue
+    }
+    
+    var minWidth: Double {
+        switch self {
+        case .title:
+            20
+        case .value:
+            30
+        }
     }
 }
 

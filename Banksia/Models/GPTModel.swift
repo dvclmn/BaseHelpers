@@ -199,20 +199,16 @@ enum GPTColumns: String, CaseIterable, Columnable {
     case cutoff = "Knowledge Cutoff"
     
     public var id: String {
-        self.title
+        self.rawValue
     }
     
-    public var title: String {
+    public var title: String? {
         self.rawValue
     }
     
     public var minWidth: Double {
         return 40
     }
-    public var maxWidth: Double {
-        return .infinity
-    }
-    
 }
 
 extension GPTModel {

@@ -31,25 +31,18 @@ struct DebugState {
 
 
 
-enum DebugColumn: CaseIterable, Columnable  {
+enum DebugColumn: String, CaseIterable, Columnable  {
     
-    case label
-    case state
-    case definedOn
+    case label = "Title"
+    case state = "State"
+    case definedOn = "Defined on"
     
     var id: String {
-        self.title
+        self.rawValue
     }
     
-    var title: String {
-        switch self {
-        case .label:
-            "Title"
-        case .state:
-            "State"
-        case .definedOn:
-            "Defined On"
-        }
+    var title: String? {
+        return self.rawValue
     }
     var minWidth: Double {
         switch self {
