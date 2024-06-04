@@ -7,6 +7,7 @@
 
 import Foundation
 import APIHandler
+import Table
 
 struct OpenAIHandler {
     static let chatURL: String = "https://api.openai.com/v1/chat/completions"
@@ -101,12 +102,16 @@ struct GPTUsage: Codable {
 //}
 
 
-enum GPTModel: String, AIModel, Codable, CaseIterable {
+enum GPTModel: String, AIModel, Codable, CaseIterable, Rowable {
     
     case gpt_4o
     case gpt_4_turbo
     case gpt_4
     case gpt_3_5
+    
+    var id: String {
+        self.name
+    }
     
     var name: String {
         switch self {
@@ -175,9 +180,52 @@ enum GPTModel: String, AIModel, Codable, CaseIterable {
         }
     }
     
+    var content: [String: Any] {
+            return [
+                GPTColumns.model.rawValue: self.name,
+                GPTColumns.contextLength.rawValue: self.contextLength,
+                GPTColumns.cutoff.rawValue: self.cutoff
+            ]
+        }
+    
     static let openAIModelInfoURL: String = "https://platform.openai.com/docs/models"
     
 } // END AIModel
+
+enum GPTColumns: String, CaseIterable, Columnable {
+    
+    case model = "Model"
+    case contextLength = "Context Length"
+    case cutoff = "Knowledge Cutoff"
+    
+    public var id: String {
+        self.title
+    }
+    
+    public var title: String {
+        self.rawValue
+    }
+    
+    public var minWidth: Double {
+        return 40
+    }
+    public var maxWidth: Double {
+        return .infinity
+    }
+    
+}
+
+extension GPTModel {
+    func toCustomRow() -> CustomRow<GPTColumns> {
+        var cells: [GPTColumns: String] = [:]
+        for column in GPTColumns.allCases {
+            if let value = self.content[column.rawValue] as? String {
+                cells[column] = value
+            }
+        }
+        return CustomRow(cells: cells)
+    }
+}
 
 enum GPTError: Error  {
     case couldNotGetLastResponse

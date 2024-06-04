@@ -167,15 +167,24 @@ extension MessageInputView {
     func EditorControls() -> some View {
         HStack(spacing: 18) {
             
-            Group {
-                Label(pref.gptModel.name, systemImage: Icons.shocked.icon)
-                Label("\(conv.totalTokens(for: conversation))", systemImage: Icons.token.icon)
+            if bk.hasProvidedAPIKey {
+                Group {
+                    Label(pref.gptModel.name, systemImage: Icons.shocked.icon)
+                    Label("\(conv.totalTokens(for: conversation))", systemImage: Icons.token.icon)
+                }
+                .labelStyle(.customLabel(size: .mini))
+                .padding(.leading, Styles.paddingNSTextViewCompensation)
             }
-            .labelStyle(.customLabel(size: .mini))
-            .padding(.leading, Styles.paddingNSTextViewCompensation)
             
+            
+            
+
             Spacer()
             
+            
+            
+            if bk.hasProvidedAPIKey {
+                
 #if DEBUG
 
             Toggle(isOn: $pref.isTestMode, label: {
@@ -190,16 +199,20 @@ extension MessageInputView {
             .animation(Styles.animationQuick, value: pref.isTestMode)
 
 #endif
-            
-            
-            
-            Button {
-                conv.currentRequest = .sendQuery
-            } label: {
-                Label(conv.isResponseLoading ? "Loading…" : "Send", systemImage: Icons.text.icon)
+                
+                Button {
+                    conv.currentRequest = .sendQuery
+                } label: {
+                    Label(conv.isResponseLoading ? "Loading…" : "Send", systemImage: Icons.text.icon)
+                }
+                .buttonStyle(.customButton(size: .small, status: conv.userPrompt.isEmpty ? .disabled : .normal, labelDisplay: .titleOnly))
+                .disabled(conv.userPrompt.isEmpty || !conv.hasAPIKeySetUp())
+            } else {
+                SettingsLink {
+                    Label("Set up API Key…", systemImage: Icons.key.icon)
+                }
+                .buttonStyle(.customButton(labelDisplay: .titleOnly))
             }
-            .buttonStyle(.customButton(size: .small, status: conv.userPrompt.isEmpty ? .disabled : .normal, labelDisplay: .titleOnly))
-            .disabled(conv.userPrompt.isEmpty || !conv.hasAPIKeySetUp())
             
         }
         .opacity(isUIFaded ? 0.2 : 1.0)
@@ -222,7 +235,7 @@ extension MessageInputView {
     }
     .environment(ConversationHandler())
     .environment(BanksiaHandler())
-    
+    .environmentObject(Preferences())
     .environmentObject(SidebarHandler())
     .frame(width: 380, height: 700)
     .background(.contentBackground)

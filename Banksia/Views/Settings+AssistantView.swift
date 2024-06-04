@@ -157,6 +157,11 @@ struct Settings_AssistantView: View {
 }
 
 #Preview {
-    Settings_AssistantView()
-        .environment(BanksiaHandler())
+    Form {
+        Settings_AssistantView()
+            .environment(BanksiaHandler())
+            .environmentObject(Preferences())
+    }
+    .formStyle(.customForm())
+    .background(.black.opacity(0.4))
 }

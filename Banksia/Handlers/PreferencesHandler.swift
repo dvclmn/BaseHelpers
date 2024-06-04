@@ -16,7 +16,7 @@ final class Preferences: ObservableObject {
     
     @AppStorage("gptModelKey") var gptModel: GPTModel = GPTModel.gpt_4_turbo
     
-    @AppStorage("accentColourKey") var accentColour: Swatch = Swatch.lavendar
+    @AppStorage("accentColourKey") var accentColour: Swatch = Swatch.chalkBlue
     
     @AppStorage("editorHeightKey") var editorHeight: Double = 180
     

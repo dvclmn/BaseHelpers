@@ -13,6 +13,11 @@ import TextEditor
 import MarkdownEditor
 import APIHandler
 import Popup
+import Button
+import Table
+
+
+
 
 struct Settings_ConnectionView: View {
     
@@ -25,101 +30,111 @@ struct Settings_ConnectionView: View {
     
     @State private var isConnectedToOpenAI: Bool = false
     @State private var isLoadingConnection: Bool = false
-    @State private var isKeyLocked = false
+    @State private var isKeyLocked = true
     @State private var apiKeyInput: String = ""
     
     let apiKeyString: String = "openAIAPIKey"
     
     var body: some View {
         
-        CustomSection(label: "Connection", isCompact: false) {
-            
-            LabeledContent {
-                    Group {
-                        if !isKeyLocked {
-                            TextField("API Key", text: $apiKeyInput, prompt: Text("Enter API Key"))
-                                
-                                .onSubmit {
-                                    Task {
-                                        await submitAPIKey()
-                                        isKeyLocked = true
-                                    }
-                                }
-                        } else {
-                            SecureField("API Key", text: $apiKeyInput, prompt: Text("Enter API Key"))
-                                .foregroundStyle(.secondary)
-                                .onSubmit {
-                                    Task {
-                                        await submitAPIKey()
-                                    }
-                                }
-                        }
-                    } // END text fields group
-                    .textFieldStyle(.customField(text: $apiKeyInput))
-                
-                    Button {
-                        isKeyLocked.toggle()
-                    } label: {
-                        Label(isKeyLocked ? "Show key" : "Hide key", systemImage: Icons.eye.icon)
-                    }
-                    .buttonStyle(.customButton(size: .mini, status: isKeyLocked ? .disabled : .active, hasBackground: false, labelDisplay: .iconOnly))
-                    .onAppear {
-                        Task {
-                            if let key = keychain.get(apiKeyString) {
-                                apiKeyInput = key
-                                isConnectedToOpenAI = await verifyOpenAIConnection()
-                            } else {
-                                keychain.set(apiKeyInput, forKey: apiKeyString)
-                                isConnectedToOpenAI = false
-                            }
-                            
-                        }
-                    } // END on appear
+        //        CustomSection(label: "Connection", isCompact: false) {
+        
+        
+        LabeledContent {
+            Group {
+                if !isKeyLocked {
+                    TextField("API Key", text: $apiKeyInput, prompt: Text("Enter API Key"))
                     
-                .labelsHidden()
-            } label: {
-                Label("API Key", systemImage: Icons.key.icon)
-                
-                if !apiKeyInput.isEmpty {
-                    HStack(spacing: 0) {
-                        Text("Status: **\(isConnectedToOpenAI ? "Connected" : "No connection")**")
-                        if isLoadingConnection {
-                            Image(systemName: Icons.rays.icon)
-                                .spinning()
+                        .onSubmit {
+                            Task {
+                                await submitAPIKey()
+                                isKeyLocked = true
+                            }
                         }
+                } else {
+                    SecureField("API Key", text: $apiKeyInput, prompt: Text("Enter API Key"))
+                        .foregroundStyle(.secondary)
+                        .onSubmit {
+                            Task {
+                                await submitAPIKey()
+                            }
+                        }
+                }
+            } // END text fields group
+            .textFieldStyle(.customField(
+                text: $apiKeyInput,
+                status: isKeyLocked ? .disabled : .active,
+                actionLabel: isKeyLocked ? "Show key" : "Hide key",
+                actionIcon: Icons.eye.icon
+            ) {
+                isKeyLocked.toggle()
+            })
+            
+            .onAppear {
+                
+                Task {
+                    if let key = keychain.get(apiKeyString) {
+                        apiKeyInput = key
+                        isConnectedToOpenAI = await verifyOpenAIConnection()
+                    } else {
+                        keychain.set(apiKeyInput, forKey: apiKeyString)
+                        isConnectedToOpenAI = false
                     }
-                    .fixedSize(horizontal: true, vertical: false)
+                    
+                }
+            } // END on appear
+        } label: {
+            Label("API Key", systemImage: Icons.key.icon)
+            
+            if !apiKeyInput.isEmpty {
+                HStack(spacing: 0) {
+                    Text("Status: **\(isConnectedToOpenAI ? "Connected" : "No connection")**")
+                    if isLoadingConnection {
+                        Image(systemName: Icons.rays.icon)
+                            .spinning()
+                    }
+                }
+                //                        .fixedSize(horizontal: true, vertical: false)
+            }
+        }
+        .labeledContentStyle(.customLabeledContent())
+        
+        
+        
+        LabeledContent {
+            Picker("Select model", selection: $pref.gptModel) {
+                ForEach(GPTModel.allCases, id: \.self) { model in
+                    Text(model.name).tag(model.model)
                 }
             }
+            .labelsHidden()
+            .pickerStyle(.menu)
+        } label: {
+            
+            Label("Select model", systemImage: Icons.shocked.icon)
             
             
-
+                               
             
-            
-            LabeledContent {
-                Picker("Select model", selection: $pref.gptModel) {
-                    ForEach(GPTModel.allCases, id: \.self) { model in
-                        Text(model.name).tag(model.model)
-                    }
-                }
-                .labelsHidden()
-                .pickerStyle(.menu)
-            } label: {
-                
-                
-                
-                Label("Select model", systemImage: Icons.shocked.icon)
-                Text("Current:\t\t\t**\(pref.gptModel.name)**")
-                Text("Context length:\t**\(pref.gptModel.contextLength) tokens**")
-                Text("Training cut-off:\t**\(pref.gptModel.cutoff)**")
-            }
-
-            
-            
-        } // End connection section
-
+            //                    Label("Select model", systemImage: Icons.shocked.icon)
+            //                    Text("Current:\t\t\t**\(pref.gptModel.name)**")
+            //                    Text("Context length:\t**\(pref.gptModel.contextLength) tokens**")
+            //                    Text("Training cut-off:\t**\(pref.gptModel.cutoff)**")
+        }
+        .labeledContentStyle(.customLabeledContent())
+        
+        let rows: [CustomRow<GPTColumns>] = GPTModel.allCases.map { $0.toCustomRow() }
+        
+        CustomTable(columns: GPTColumns.allCases, rows: rows)
+        
+        
+        
+        //        } // End connection section
+        
     }
 }
+
+
 
 extension Settings_ConnectionView {
     
@@ -165,9 +180,10 @@ extension Settings_ConnectionView {
 
 
 #Preview {
-    Settings_ConnectionView()
+    
+    SettingsView()
         .environment(BanksiaHandler())
         .environmentObject(Preferences())
         .environmentObject(PopupHandler())
-        .padding(30)
+        .frame(width: 400, height: 700)
 }

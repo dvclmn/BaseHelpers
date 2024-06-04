@@ -109,7 +109,7 @@ struct SettingsView: View {
         .grainient(seed: pref.defaultGrainientSeed, version: .v3)
         .onAppear {
             if isPreview {
-                settingsTab = .general
+                settingsTab = .connections
             }
         }
         

@@ -12,6 +12,7 @@ import Icons
 import GeneralStyles
 import Swatches
 import Easing
+import GeneralUtilities
 
 struct WelcomeView: View {
     @Environment(\.dismiss) private var dismiss
@@ -23,28 +24,30 @@ struct WelcomeView: View {
     
     @State private var isHovering: Bool = false
     
-    @State private var rotationFactor: CGFloat = 0.0
-    @State private var rotationAngle: Double = 0.0
+    @State private var isUserDismissingWelcomeScreen: Bool = true
     
-    // Adjustable parameters
-    let maxRotation: Double = 15.0
-    let duration: Double = 2.0
-    let wiggleFrequency: Double = 10.0
-    let easing: EasingType = .easeInOut
+    let minWidth: Double = 460
+    let maxWidth: Double = 600
+    
+    @State private var testWidth: Double = 480
+    
+    let paddingBase: Double = 40
     
     var body: some View {
         
-        VStack {
+        VStack(spacing: 42) {
             
-            Spacer()
             
-            Group {
+            HStack {
                 Text("Welcome to ").foregroundStyle(.secondary) + Text("Banksia")
             }
             .font(.custom(OstiaFont.bookItalic.font, size: 46))
+            .fixedSize(horizontal: false, vertical: true)
+            //                .padding(.bottom, 14)
             
-            
-            VStack(spacing: 20) {
+            // MARK: - Dialogue box
+            VStack(spacing: 18) {
+                
                 Rectangle()
                     .fill(Swatch.grey.colour)
                     .frame(height: elementHeight + 6)
@@ -61,13 +64,14 @@ struct WelcomeView: View {
                         .padding(.leading, 14)
                     } // END circles overlay
                 
-                VStack(alignment: .leading) {
+                VStack(alignment: .leading, spacing: 16) {
                     HStack(spacing: 30) {
-                        
                         Text("🔒")
                             .font(.system(size: 48))
                             .rotationEffect(.degrees(-2.6))
+                            .opacity(0.9)
                         
+                        /// White textfield
                         RoundedRectangle(cornerRadius: Styles.roundingMedium)
                             .fill(Swatch.offWhite.colour)
                             .frame(height: elementHeight)
@@ -75,99 +79,116 @@ struct WelcomeView: View {
                         
                     }
                     
-                    Spacer()
                     
-                    HStack{
+                    
+                    HStack(spacing: 22) {
                         FakeButton("Always Allow", colour: Swatch.olive.colour, angle: -0.8)
-                            .rotationEffect(.degrees(rotationAngle))
-                            .onAppear {
-                                withAnimation(
-                                    Animation.linear(duration: duration)
-                                        .repeatForever(autoreverses: false)
-                                ) {
-                                    self.rotationFactor = 1.0
-                                }
-                            }
-                            .onChange(of: rotationFactor) {
-                                let easedValue = applyEasing(rotationFactor, easing: easing)
-                                let wiggleValue = sin(rotationFactor * .pi * wiggleFrequency)
-                                self.rotationAngle = easedValue * maxRotation * wiggleValue
-                            }
-                        
-                        
-                        
-                        
-                        
                         
                         Spacer()
                         FakeButton("", colour: Swatch.offWhite.colour, angle: 0.4)
                         
                     }
                     
-                }
+                } // END guts of dialogue vstack
                 .padding(.horizontal, Styles.paddingGenerous)
                 .padding(.bottom, Styles.paddingGenerous)
             } // END vstack
-            .aspectRatio(2.1, contentMode: .fit)
-            .frame(width: 400)
+            .frame(maxWidth: 480)
             .background(Swatch.lightGrey.colour)
             .clipShape(.rect(cornerRadius: Styles.roundingHuge))
-            .basicShadow(opacity: 0.8, radius: 14, distanceY: 30)
-            .padding(.bottom, 40)
+            .basicShadow(opacity: 0.7, radius: 16, distanceY: 24)
             
             
+            let byo = Text("BYO API Key").fontWeight(.semibold).foregroundStyle(.primary)
+            let alwaysAllow = Text("Always Allow").fontWeight(.semibold).foregroundStyle(.primary)
             
-            let byo = Text("BYO API Key").fontWeight(.bold).foregroundStyle(.primary)
-            
-            Group {
-                Text("Banksia is ") + byo + Text(" other stuff")
+            HStack {
+                Text("Banksia is a ") + byo + Text(" app. Your data is stored securely in the macOS Keychain, which will usually prompt a dialogue like the above. Click ") + alwaysAllow + Text(" to prevent seeing this message on each startup.")
             }
             .foregroundStyle(.secondary)
-            .font(.system(size: 15, weight: .medium))
-            
-            
-            Spacer()
+            .font(.system(size: 14, weight: .medium))
+            .fixedSize(horizontal: false, vertical: true)
+            .frame(maxWidth: Styles.readingWidthDialogue)
+            .padding(.bottom)
             
             //                .overlay {
-            GrainientPicker(seed: $welcomeGrainientSeed)
+            //            GrainientPicker(seed: $welcomeGrainientSeed)
             //                        .padding(.top, 60)
             //                }
             
-            HStack(alignment: .bottom, spacing: 20) {
+            HStack(alignment: .firstTextBaseline, spacing: 12) {
                 
-                Button {
-                    
-                } label: {
-                    Label("I 􀊵 gradients", systemImage: Icons.text.icon)
+                //                Button {
+                //                    withAnimation(Styles.animationRelaxed) {
+                //                        welcomeGrainientSeed = GrainientSettings.generateGradientSeed()
+                //                    }
+                //                } label: {
+                //                    Label("I 􀊵 gradients", systemImage: Icons.text.icon)
+                //                }
+                //                .buttonStyle(.customButton(size: .small, labelDisplay: .titleOnly))
+                //                .opacity(isHovering ? 1.0 : 0.3)
+                //                .hoverAsync { hovering in
+                //                    isHovering = hovering
+                //                }
+                
+                
+                Toggle(isOn: $isUserDismissingWelcomeScreen) {
+                    Label("Don't show again", systemImage: Icons.command.icon)
+                        .labelStyle(.customLabel(size: .small, labelDisplay: .titleOnly))
+                        .opacity(0.8)
+                        .lineLimit(1)
                 }
-                .buttonStyle(.customButton(size: .small, labelDisplay: .titleOnly))
-                .opacity(isHovering ? 1.0 : 0.3)
-                .hoverAsync { hovering in
-                    isHovering = hovering
-                }
+                .controlSize(.mini)
+                .toggleStyle(.switch)
+                .tint(pref.accentColour.colour)
                 
                 Spacer()
                 
-                Toggle(isOn: $pref.isWelcomeScreenEnabled) {
-                    Label("Don't show again", systemImage: Icons.command.icon)
-                        .labelStyle(.customLabel(labelDisplay: .titleOnly))
+                
+                SettingsLink {
+                    Label("Set up key now…", systemImage: Icons.key.icon)
                 }
-                .controlSize(.small)
-                .toggleStyle(.switch)
-                .tint(pref.accentColour.colour)
+                .buttonStyle(.customButton(size: .small, status: .active, labelDisplay: .titleOnly))
                 
                 Button {
                     dismiss()
                 } label: {
-                    Label("Get started", systemImage: Icons.text.icon)
+                    Label("I'll do it later", systemImage: Icons.text.icon)
                 }
-                .buttonStyle(.customButton(labelDisplay: .titleOnly))
+                .buttonStyle(.customButton(size: .small, labelDisplay: .titleOnly))
                 
-            }
+                
+            } // END hstack
+            
         } // END vstack
-        .padding(Styles.paddingGenerous)
-        .sheetFrame()
+        .padding(.top, paddingBase * 1.4)
+        .padding(.horizontal, paddingBase)
+        .padding(.bottom, paddingBase * 1.2)
+        
+        .frame(
+            minWidth: minWidth,
+            //            maxWidth: isPreview ? testWidth : maxWidth
+            maxWidth: maxWidth,
+            maxHeight: .infinity
+        )
+        
         .grainient(seed: welcomeGrainientSeed, version: .v3)
+        //        .task(id: isUserDismissingWelcomeScreen) {
+        //            if isUserDismissingWelcomeScreen {
+        //                pref.isWelcomeScreenEnabled = false
+        //            }
+        //        }
+        //        .onAppear {
+        //            withAnimation(Styles.animationLoopSlow) {
+        //                testWidth = minWidth
+        //            }
+        //        }
+        .onDisappear {
+            // Update the AppStorage property when the view disappears
+            pref.isWelcomeScreenEnabled = !isUserDismissingWelcomeScreen
+        }
+        
+        
         
     }
 }
@@ -182,17 +203,21 @@ extension WelcomeView {
         Text(text)
             .foregroundStyle(.primary)
             .fontWeight(.semibold)
-            .frame(width: 140, height: elementHeight)
+            .frame(
+                maxWidth: 130,
+                minHeight: elementHeight,
+                maxHeight: elementHeight
+            )
             .background(colour)
             .clipShape(.rect(cornerRadius: Styles.roundingMedium))
-        //            .rotationEffect(.degrees(angle))
+                    .rotationEffect(.degrees(angle))
     }
 }
 
 #Preview {
     WelcomeView()
         .environmentObject(Preferences())
-        .frame(width: 600, height: 700)
+        .frame(width: 460, height: 700)
 }
 
 

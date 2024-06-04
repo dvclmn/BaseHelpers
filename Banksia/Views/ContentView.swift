@@ -41,7 +41,7 @@ struct ContentView: View {
     @State private var alertMessage: String = ""
     @State private var exportLocation: URL? = nil
     
-    @State private var isWelcomeScreenShowing: Bool = true
+//    @State private var isWelcomeScreenShowing: Bool = true
     
     var body: some View {
         
@@ -80,7 +80,12 @@ struct ContentView: View {
         
         .onAppear {
             
-            
+#if DEBUG
+
+            pref.isWelcomeScreenEnabled = true
+
+#endif
+
                 bk.uiDimming = pref.uiDimming
             
             
@@ -200,7 +205,7 @@ struct ContentView: View {
                 closeWindow.callAsFunction(id: "debug")
             }
         }
-        .sheet(isPresented: $isWelcomeScreenShowing) {
+        .sheet(isPresented: $pref.isWelcomeScreenEnabled) {
             WelcomeView()
         }
         

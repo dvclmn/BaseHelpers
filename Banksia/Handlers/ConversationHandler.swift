@@ -114,7 +114,7 @@ final class ConversationHandler {
     func getMessageTimestamp(_ date: Date) -> String {
         let dateFormatter = DateFormatter()
 
-        dateFormatter.dateFormat = "hh:mm:ss a"
+        dateFormatter.dateFormat = "hh:mm a"
         /// "SSS" provides milliseconds, which we don't need right now
 //        dateFormatter.dateFormat = "hh:mm:ss.SSS a"
 
@@ -149,7 +149,7 @@ final class ConversationHandler {
     
     @MainActor
     func hasAPIKeySetUp() -> Bool {
-        if let apiKey = keychain.get("openAIAPIKey") {
+        if keychain.get("openAIAPIKey") != nil {
             return true
         } else {
             return false
