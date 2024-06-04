@@ -123,19 +123,22 @@ struct SingleMessageView: View {
             .frame(maxWidth: 620, alignment: .leading)
             .background(Color(message.type == .user ? pref.accentColour.colour.opacity(0.2) : .gray.opacity(0.2)))
             .clipShape(.rect(cornerRadius: Styles.roundingMedium))
-            .onHover { hovering in
-                
-                if hovering {
-                    withAnimation(Styles.animationQuick) {
-                        isHovering = true
-                    }
-                } else {
-                    withAnimation(Styles.animationEased) {
-                        isHovering = false
-                    }
-                }
-                
+            .hoverAsync { hovering in
+                isHovering = hovering
             }
+//            .onHover { hovering in
+//                
+//                if hovering {
+//                    withAnimation(Styles.animationQuick) {
+//                        isHovering = true
+//                    }
+//                } else {
+//                    withAnimation(Styles.animationEased) {
+//                        isHovering = false
+//                    }
+//                }
+//                
+//            }
             .padding(.leading, message.type == .user ? authorAltPadding : 0)
             .padding(.trailing, message.type == .user ? 0 : authorAltPadding)
             .padding(.bottom, 40)

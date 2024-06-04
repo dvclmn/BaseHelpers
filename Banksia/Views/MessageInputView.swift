@@ -120,7 +120,6 @@ struct MessageInputView: View {
                 
                 
                 
-                
             } // END user text field hstack
             
             // MARK: - Text area Buttons
