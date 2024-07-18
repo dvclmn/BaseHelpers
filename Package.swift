@@ -16,6 +16,7 @@ let package = Package(
             "BaseUtilities",
             "HoverAsync",
             "MultiSelect",
+            "PerformanceMonitor",
             "ReadSize",
             "Renamable",
             "Resizable",
@@ -36,11 +37,12 @@ let package = Package(
         .target(name: "TokenHandler", dependencies: [.product(name: "KeychainSwift", package: "keychain-swift"), "APIHandler", "BaseUtilities"]),
         
         
-        /// Styles
+        /// Utilties
         .target(name: "Shaders"),
         .target(name: "BaseUtilities", dependencies: ["ScrollKit", "TestStrings"]),
         .target(name: "HoverAsync"),
         .target(name: "MultiSelect"),
+        .target(name: "PerformanceMonitor"),
         .target(name: "ReadSize"),
         .target(name: "Renamable"),
         .target(name: "Resizable", dependencies: ["BaseUtilities", "TestStrings", "ReadSize"]),

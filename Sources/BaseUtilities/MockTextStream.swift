@@ -15,14 +15,18 @@ enum TextChunkError: Error {
 
 public class MockupTextStream {
     
-    public static func chunks(from text: String? = nil, chunkSize: Int = 5) -> AsyncThrowingStream<String, Error> {
+    public static func chunks(
+        from text: String? = nil,
+        chunkSize: Int = 5,
+        speed: Int = 200
+    ) -> AsyncThrowingStream<String, Error> {
         AsyncThrowingStream { continuation in
             Task {
                 do {
                     for chunk in splitContentPreservingWhitespace(text, chunkSize: chunkSize) {
                         try Task.checkCancellation()
                         continuation.yield(chunk)
-                        try await Task.sleep(for: .milliseconds(200))
+                        try await Task.sleep(for: .milliseconds(speed))
                     }
                     continuation.finish()
                 } catch {
