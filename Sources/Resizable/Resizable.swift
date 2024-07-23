@@ -29,13 +29,16 @@ public struct Resizable: ViewModifier {
     var handleVisibleWhenResized: Bool
     var lengthMin: CGFloat
     var lengthMax: CGFloat
+    var shouldRememberLength: Bool
     /// DO NOT try to feed this value back to the property providing the `contentLength`, or it will get caught in a loop.
     ///`contentLength` is ingested, clamped, and returned below, so that other UI elements can recieve and respond to the length if need be
-    var finalLength: (_ metrics: String, _ length: CGFloat) -> Void
+    var finalLength: (_ metrics: String, _ onChanged: CGFloat, _ onEnded: CGFloat) -> Void
     
     @State private var isHoveringLocal: Bool = false
     @State private var isResizing: Bool = false
     @State private var manualLength: CGFloat = .zero
+    
+    @AppStorage("resizableSavedLength") private var savedLength: Double = .zero
     
     private let grabArea: Double = 26
     private let unfocusedLengthReduction = 0.6
@@ -46,7 +49,11 @@ public struct Resizable: ViewModifier {
         if let contentLength = contentLength {
             return contentLength.constrained(lengthMin, lengthMax)
         } else {
-            return (lengthMin + lengthMax) * 0.5
+            if shouldRememberLength && savedLength != .zero {
+                return savedLength
+            } else {
+                return (lengthMin + lengthMax) * 0.5
+            }
         }
     }
     
@@ -74,12 +81,13 @@ public struct Resizable: ViewModifier {
         }
         
         content
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
 
-            .animation(isAnimated ? animation : nil, value: actualLength)
+//            .animation(isAnimated ? animation : nil, value: actualLength)
             .overlay(alignment: edge.alignment) {
                 if isResizable {
                     Grabber()
-                        .animation(isAnimated ? animation : nil, value: actualLength)
+//                        .animation(isAnimated ? animation : nil, value: actualLength)
                         .gesture(
                             ExclusiveGesture(
                                 DragGesture(minimumDistance: 0.5)
@@ -107,7 +115,7 @@ public struct Resizable: ViewModifier {
                                         manualLength = newValue.constrained(lengthMin, lengthMax)
                                         
                                         /// Sending out the calculated length, as we actively resize
-                                        finalLength(metrics, actualLength)
+                                        finalLength(metrics, actualLength, .zero)
                                         
                                     } // END on changed
                                 
@@ -116,7 +124,11 @@ public struct Resizable: ViewModifier {
                                         isHoveringLocal = false
                                         isResizing = false
                                         
-                                        finalLength(metrics, actualLength)
+                                        finalLength(metrics, actualLength, actualLength)
+                                        
+                                        if shouldRememberLength {
+                                            savedLength = Double(actualLength)
+                                        }
                                     }
                                 ,
                                 /// Reset editor height to defaults
@@ -128,7 +140,8 @@ public struct Resizable: ViewModifier {
                                         
                                         /// Important to set the manual length here so it's keeping up with the dynamic content, behind the scenes
                                         manualLength = unwrappedContentLength
-                                        finalLength(metrics, unwrappedContentLength)
+                                        finalLength(metrics, unwrappedContentLength, .zero)
+                                        savedLength = .zero
                                     }
                             )
                         ) // END gesture
@@ -136,20 +149,17 @@ public struct Resizable: ViewModifier {
                 } // END isResizable check
             } // END overlay
         
-                    
-        
-        
             .onAppear {
                 /// Get manual length ready to go, just in case
                 manualLength = unwrappedContentLength
-                finalLength(metrics, unwrappedContentLength)
+                finalLength(metrics, unwrappedContentLength, .zero)
             }
         
             .task(id: contentLength) {
                 if !isManualMode {
                     /// This is here to ensure that when it comes time for manual length to take over, it should be already exactly the same value as the dynamic length
                     manualLength = unwrappedContentLength
-                    finalLength(metrics, unwrappedContentLength)
+                    finalLength(metrics, unwrappedContentLength, .zero)
                 }
 
             }
@@ -298,19 +308,19 @@ public extension Edge {
 
 public extension View {
     func resizable(
-        
         contentLength: CGFloat? = nil,
         isManualMode: Binding<Bool>,
         edge: Edge = .top,
         isResizable: Bool = true,
         isShowingFrames: Bool = false,
-        isAnimated: Bool = false,
+        isAnimated: Bool = true,
         handleColour: Color = .white,
         handleSize: Double = 6,
         handleVisibleWhenResized: Bool = true,
         lengthMin: CGFloat,
         lengthMax: CGFloat,
-        finalLength: @escaping (_ metrics: String, _ length: CGFloat) -> Void = {metrics,length in }
+        shouldRememberLength: Bool = false,
+        finalLength: @escaping (_ metrics: String, _ onChanged: CGFloat, _ onEnded: CGFloat) -> Void = {metrics, onChanged, onEnded in }
         
     ) -> some View {
         self.modifier(
@@ -326,6 +336,7 @@ public extension View {
                 handleVisibleWhenResized: handleVisibleWhenResized,
                 lengthMin: lengthMin,
                 lengthMax: lengthMax,
+                shouldRememberLength: shouldRememberLength,
                 finalLength: finalLength
             )
         )

@@ -1,6 +1,6 @@
 //
 //  File.swift
-//  
+//
 //
 //  Created by Dave Coleman on 26/6/2024.
 //
@@ -20,30 +20,31 @@ public struct ScrollMask: ViewModifier {
     var length: CGFloat
     
     var offset: CGFloat
-
-    public func body(content: Content) -> some View {
     
-            switch maskMode {
-            case .mask:
-                content
-                    .mask {
-                        MaskEffect()
-                            .allowsHitTesting(false)
-                    }
-            case .overlay:
-                content
-                    .overlay {
-                        MaskEffect()
-                            .blendMode(.multiply)
-                            .allowsHitTesting(false)
-                    }
-            }
-
+    public func body(content: Content) -> some View {
+        
+        switch maskMode {
+        case .mask:
+            content
+                .mask {
+                    MaskEffect()
+                        .allowsHitTesting(false)
+                }
+                .ignoresSafeArea()
+        case .overlay:
+            content
+                .overlay {
+                    MaskEffect()
+                        .blendMode(.multiply)
+                        .allowsHitTesting(false)
+                }
+        }
+        
     }
     
     @ViewBuilder
     func MaskEffect() -> some View {
-
+        
         switch edge {
         case .top:
             VStack(spacing: 0) {
@@ -92,13 +93,13 @@ public struct ScrollMask: ViewModifier {
     
     @ViewBuilder
     func MaskGradient(opacity: Double) -> some View {
-
+        
         ZStack {
             LinearGradient(
                 colors: [
                     .black.opacity(startOpacity),
                     .black.opacity(endOpacity)
-                        ],
+                ],
                 startPoint: edge.off,
                 endPoint: isEffectActive ? edge.on : edge.off
             )
@@ -106,16 +107,16 @@ public struct ScrollMask: ViewModifier {
                 colors: [
                     .black.opacity(startOpacity),
                     .black.opacity(endOpacity)
-                        ],
+                ],
                 startPoint: edge.off,
                 endPoint: isEffectActive ? edge.onQuarter : edge.off
             )
         }
         
-//        .frame(
-//            width: abs(edge.axis == .horizontal ? length : .infinity),
-//            height: abs(edge.axis == .vertical ? length : .infinity)
-//        )
+        //        .frame(
+        //            width: abs(edge.axis == .horizontal ? length : .infinity),
+        //            height: abs(edge.axis == .vertical ? length : .infinity)
+        //        )
         
         .frame(
             maxWidth: abs(edge.axis == .horizontal ? length : .infinity),
@@ -142,7 +143,7 @@ extension ScrollMask {
             
         }
     }
-
+    
     var endOpacity: Double {
         switch maskMode {
         case .mask:
@@ -151,7 +152,7 @@ extension ScrollMask {
             return 0.0
         }
     }
-
+    
 }
 
 public extension View {
