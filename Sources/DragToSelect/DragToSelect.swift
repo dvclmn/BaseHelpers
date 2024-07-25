@@ -8,9 +8,6 @@
 import SwiftUI
 
 
-enum ScrollDirection {
-    case up, down
-}
 
 struct CaptureItemFrame<Data: Identifiable>: ViewModifier {
     let item: Data
@@ -42,12 +39,15 @@ struct ItemFramePreferenceKey: PreferenceKey {
     }
 }
 
-struct ScrollOffsetPreferenceKey: PreferenceKey {
-    static var defaultValue: CGFloat = 0
-    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
-        value = nextValue()
-    }
-}
+//enum ScrollDirection {
+//    case up, down
+//}
+//struct ScrollOffsetPreferenceKey: PreferenceKey {
+//    static var defaultValue: CGFloat = 0
+//    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+//        value = nextValue()
+//    }
+//}
 
 extension String: Identifiable {
     public var id: String {
@@ -66,7 +66,7 @@ struct DragToSelect<Data, Content>: View where Data: Identifiable & Hashable, Co
     
     @State private var scrollOffset: CGFloat = 0
     
-    @State private var autoScrollTimer: Timer?
+//    @State private var autoScrollTimer: Timer?
     @State private var lastDragLocation: CGPoint?
     
     
@@ -93,22 +93,19 @@ struct DragToSelect<Data, Content>: View where Data: Identifiable & Hashable, Co
                                 .padding(8)
                                 .background(selectedItems.contains(item) ? Color.blue.opacity(0.3) : Color.clear)
                                 .modifier(CaptureItemFrame(item: item))
-                            //                                .onTapGesture(count: 1) {
-                            //                                    handleItemTap(item)
-                            //                                }
                         }
                         
                     } // END interior vstack
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
-                    .background(GeometryReader { proxy in
-                        Color.clear.preference(key: ScrollOffsetPreferenceKey.self, value: proxy.frame(in: .named("scroll")).minY)
-                    })
+//                    .background(GeometryReader { proxy in
+//                        Color.clear.preference(key: ScrollOffsetPreferenceKey.self, value: proxy.frame(in: .named("scroll")).minY)
+//                    })
                     .border(Color.orange.opacity(0.3))
                 }
-                .coordinateSpace(name: "scroll")
-                .onPreferenceChange(ScrollOffsetPreferenceKey.self) { value in
-                    scrollOffset = value
-                }
+//                .coordinateSpace(name: "scroll")
+//                .onPreferenceChange(ScrollOffsetPreferenceKey.self) { value in
+//                    scrollOffset = value
+//                }
                 
                 if isDragging {
                     Rectangle()
@@ -126,12 +123,12 @@ struct DragToSelect<Data, Content>: View where Data: Identifiable & Hashable, Co
                         lastDragLocation = value.location
                         updateSelectionRect(start: value.startLocation, current: value.location)
                         updateSelectedItems()
-                        startAutoScrollIfNeeded(geometry: geometry)
+//                        startAutoScrollIfNeeded(geometry: geometry)
                     }
                     .onEnded { _ in
                         isDragging = false
                         selectionRect = .zero
-                        stopAutoScroll()
+//                        stopAutoScroll()
                     }
             )
             
@@ -146,62 +143,39 @@ struct DragToSelect<Data, Content>: View where Data: Identifiable & Hashable, Co
 
 extension DragToSelect {
     
-    private func startAutoScrollIfNeeded(geometry: GeometryProxy) {
-        guard let location = lastDragLocation else { return }
-        let threshold: CGFloat = 50
-        
-        if location.y < threshold {
-            startAutoScroll(direction: .up)
-        } else if location.y > geometry.size.height - threshold {
-            startAutoScroll(direction: .down)
-        } else {
-            stopAutoScroll()
-        }
-    }
-    
-    private func startAutoScroll(direction: ScrollDirection) {
-        stopAutoScroll()
-        autoScrollTimer = Timer.scheduledTimer(withTimeInterval: 0.05, repeats: true) { _ in
-            let scrollAmount: CGFloat = 5
-            let newOffset = direction == .up ? scrollOffset + scrollAmount : scrollOffset - scrollAmount
-            scrollOffset = newOffset
-            
-            if let location = lastDragLocation {
-                updateSelectionRect(start: selectionRect.origin, current: CGPoint(x: location.x, y: location.y - scrollOffset))
-                updateSelectedItems()
-            }
-        }
-    }
-    
-    private func stopAutoScroll() {
-        autoScrollTimer?.invalidate()
-        autoScrollTimer = nil
-    }
-    
-    //    private func handleItemTap(_ item: String) {
-    //        if NSEvent.modifierFlags.contains(.command) {
-    //            if selectedItems.contains(item) {
-    //                selectedItems.remove(item)
-    //            } else {
-    //                selectedItems.insert(item)
-    //            }
-    //        } else if NSEvent.modifierFlags.contains(.shift), let lastSelected = lastSelectedItem {
-    //            let range = getItemRange(from: lastSelected, to: item)
-    //            selectedItems = Set(range)
-    //        } else {
-    //            selectedItems = [item]
-    //        }
-    //        lastSelectedItem = item
-    //    }
-    
-    //    private func getItemRange(from: String, to: String) -> [String] {
-    //        guard let fromIndex = items.firstIndex(of: from),
-    //              let toIndex = items.firstIndex(of: to) else {
-    //            return []
-    //        }
-    //        return Array(items[min(fromIndex, toIndex)...max(fromIndex, toIndex)])
-    //    }
-    
+//    private func startAutoScrollIfNeeded(geometry: GeometryProxy) {
+//        guard let location = lastDragLocation else { return }
+//        let threshold: CGFloat = 50
+//        
+//        if location.y < threshold {
+//            startAutoScroll(direction: .up)
+//        } else if location.y > geometry.size.height - threshold {
+//            startAutoScroll(direction: .down)
+//        } else {
+//            stopAutoScroll()
+//        }
+//    }
+//    
+//    private func startAutoScroll(direction: ScrollDirection) {
+//        stopAutoScroll()
+//        autoScrollTimer = Timer.scheduledTimer(withTimeInterval: 0.05, repeats: true) { _ in
+//            let scrollAmount: CGFloat = 5
+//            let newOffset = direction == .up ? scrollOffset + scrollAmount : scrollOffset - scrollAmount
+//            scrollOffset = newOffset
+//            
+//            if let location = lastDragLocation {
+//                updateSelectionRect(start: selectionRect.origin, current: CGPoint(x: location.x, y: location.y - scrollOffset))
+//                updateSelectedItems()
+//            }
+//        }
+//    }
+//    
+//    private func stopAutoScroll() {
+//        autoScrollTimer?.invalidate()
+//        autoScrollTimer = nil
+//    }
+//    
+
     private func updateSelectionRect(start: CGPoint, current: CGPoint) {
         let minX = min(start.x, current.x)
         let maxX = max(start.x, current.x)
