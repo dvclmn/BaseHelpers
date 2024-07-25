@@ -6,30 +6,7 @@
 //
 
 import SwiftUI
-
-
-struct CaptureItemFrame: ViewModifier {
-    let id: AnyHashable
-    
-    func body(content: Content) -> some View {
-        content
-            .background(GeometryReader { geometry in
-                Color.clear.preference(
-                    key: ItemFramePreferenceKey.self,
-                    value: [id: geometry.frame(in: .named("listContainer"))]
-                )
-            })
-    }
-}
-
-struct ItemFramePreferenceKey: PreferenceKey {
-    static var defaultValue: [AnyHashable: CGRect] = [:]
-    
-    static func reduce(value: inout [AnyHashable: CGRect], nextValue: () -> [AnyHashable: CGRect]) {
-        value.merge(nextValue()) { $1 }
-    }
-}
-
+import ModifierKeys
 
 public struct DragToSelect<Data, Content>: View
 where Data: RandomAccessCollection,
@@ -37,29 +14,29 @@ where Data: RandomAccessCollection,
       Data.Index == Int,
       Content: View {
     
+    @Environment(\.modifierKeys) private var modifierKeys
+
+    
     let items: Data
+    @Binding var selectedItemIDs: Set<Data.Element.ID>
     let accentColour: Color
     let content: (Data.Element, Bool) -> Content
     
-    @State private var selectedItemIDs: Set<AnyHashable> = []
-    @State private var itemFrames: [AnyHashable: CGRect] = [:]
+    @State private var itemFrames: [Data.Element.ID: CGRect] = [:]
     @State private var selectionRect: CGRect = .zero
     @State private var isDragging: Bool = false
     @State private var lastSelectedItem: Data.Element?
-    
     @State private var geometrySize: CGSize = .zero
-    
-    
-    @State private var scrollOffset: CGFloat = 0
-    
     @State private var lastDragLocation: CGPoint?
     
     public init(
         items: Data,
+        selectedItemIDs: Binding<Set<Data.Element.ID>>,
         accentColour: Color = .blue,
         @ViewBuilder content: @escaping (Data.Element, Bool) -> Content
     ) {
         self.items = items
+        self._selectedItemIDs = selectedItemIDs
         self.accentColour = accentColour
         self.content = content
     }
@@ -72,18 +49,16 @@ where Data: RandomAccessCollection,
                     .contentShape(Rectangle())
                 
                 VStack(alignment: .leading, spacing: 8) {
-                    
                     ForEach(Array(items.enumerated()), id: \.element.id) { index, item in
-                        let isSelected = selectedItemIDs.contains(AnyHashable(item.id))
+                        let isSelected = selectedItemIDs.contains(item.id)
                         content(item, isSelected)
-                            .border(Color.blue.opacity(0.3))
-                            .modifier(CaptureItemFrame(id: AnyHashable(item.id)))
+                        
+                            .modifier(CaptureItemFrame(id: item.id))
                     }
                     
                     
                 } // END interior vstack
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
-                
                 
                 if isDragging {
                     Rectangle()
@@ -95,7 +70,7 @@ where Data: RandomAccessCollection,
                             y: max(selectionRect.height / 2, min(selectionRect.midY, geometrySize.height - selectionRect.height / 2))
                         )
                 }
-
+                
             }
             .frame(width: geometry.size.width, height: geometry.size.height)
             .coordinateSpace(name: "listContainer")
@@ -113,12 +88,11 @@ where Data: RandomAccessCollection,
                     .onEnded { _ in
                         isDragging = false
                         selectionRect = .zero
-                        //                        stopAutoScroll()
                     }
             )
             
         }
-        .onPreferenceChange(ItemFramePreferenceKey.self) { frames in
+        .onPreferenceChange(ItemFramePreferenceKey<Data.Element.ID>.self) { frames in
             self.itemFrames = frames
         }
     }
@@ -134,21 +108,38 @@ public extension DragToSelect {
         
         selectionRect = CGRect(x: minX, y: minY, width: maxX - minX, height: maxY - minY)
     }
-
-    //
-    //    private func handleItemTap(_ item: Data.Element) {
-    //        let itemID = AnyHashable(item.id)
-    //        if selectedItemIDs.contains(itemID) {
-    //            selectedItemIDs.remove(itemID)
-    //        } else {
-    //            selectedItemIDs.insert(itemID)
-    //        }
-    //    }
     
     private func updateSelectedItems() {
+        let threshold: CGFloat = 1 // Adjust this value as needed
         selectedItemIDs = Set(itemFrames.filter { _, frame in
-            frame.intersects(selectionRect.offsetBy(dx: 0, dy: scrollOffset))
-        }.keys)
+            frame.insetBy(dx: -threshold, dy: -threshold).intersects(selectionRect)
+        }.compactMap { key, _ in
+            key
+        })
+    }
+}
+
+struct CaptureItemFrame<ID: Hashable>: ViewModifier {
+    let id: ID
+    
+    func body(content: Content) -> some View {
+        content
+            .background(GeometryReader { geometry in
+                Color.clear.preference(
+                    key: ItemFramePreferenceKey<ID>.self,
+                    value: [id: geometry.frame(in: .named("listContainer"))]
+                )
+            })
+    }
+}
+
+struct ItemFramePreferenceKey<ID: Hashable>: PreferenceKey {
+    static var defaultValue: [ID: CGRect] {
+        get { [:] }
     }
     
+    static func reduce(value: inout [ID: CGRect], nextValue: () -> [ID: CGRect]) {
+        value.merge(nextValue()) { $1 }
+    }
 }
+

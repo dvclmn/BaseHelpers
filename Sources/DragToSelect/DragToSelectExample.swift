@@ -8,7 +8,7 @@
 import SwiftUI
 
 
-struct Item: Identifiable {
+struct Item: Identifiable, Hashable {
     let id = UUID()
     let title: String
 }
@@ -17,9 +17,11 @@ struct DragSelectExample: View {
     
     let items = [Item(title: "Item 1"), Item(title: "Item 2"), Item(title: "Item 3")]
     
+    @State private var selectedItems: Set<Item.ID> = []
+    
     var body: some View {
         
-        DragToSelect(items: items) { item, isSelected in
+        DragToSelect(items: items, selectedItemIDs: $selectedItems) { item, isSelected in
             
             Text(item.title)
                 .padding()
@@ -27,7 +29,6 @@ struct DragSelectExample: View {
                 .foregroundColor(.white)
             
         }
-        .border(Color.purple.opacity(0.3))
     }
 }
 #Preview {
