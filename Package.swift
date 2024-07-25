@@ -39,7 +39,7 @@ let package = Package(
         .target(name: "TokenHandler", dependencies: [.product(name: "KeychainSwift", package: "keychain-swift"), "APIHandler", "BaseUtilities"]),
         .target(name: "Shaders"),
         .target(name: "BaseUtilities", dependencies: ["TestStrings", ]),
-        .target(name: "DragToSelect", dependencies: ["ModifierKeys"]),
+        .target(name: "DragToSelect", dependencies: ["ModifierKeys", "ReadSize"]),
         .target(name: "HoverAsync"),
         .target(name: "ModifierKeys"),
         .target(name: "MultiSelect"),

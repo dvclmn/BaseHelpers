@@ -17,10 +17,7 @@ public struct ScrollOffsetModifier: ViewModifier {
     let output: (_ offset: CGPoint) -> Void
     
     @State private var isMasked: Bool = false
-    //    public init(output: @escaping (_ offset: CGPoint) -> Void) {
-    //        self.output = output
-    //    }
-    
+
     public func body(content: Content) -> some View {
         
         ScrollViewWithOffsetTracking(showsIndicators: true) { offset in

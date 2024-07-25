@@ -7,6 +7,7 @@
 
 import SwiftUI
 import ModifierKeys
+import ReadSize
 
 public struct DragToSelect<Data, Content>: View
 where Data: RandomAccessCollection,
@@ -15,7 +16,6 @@ where Data: RandomAccessCollection,
       Content: View {
     
     @Environment(\.modifierKeys) private var modifierKeys
-
     
     let items: Data
     @Binding var selectedItemIDs: Set<Data.Element.ID>
@@ -28,6 +28,8 @@ where Data: RandomAccessCollection,
     @State private var lastSelectedItem: Data.Element?
     @State private var geometrySize: CGSize = .zero
     @State private var lastDragLocation: CGPoint?
+    
+    @State private var initialSelection = Set<Data.Element.ID>()
     
     public init(
         items: Data,
@@ -42,59 +44,53 @@ where Data: RandomAccessCollection,
     }
     
     public var body: some View {
-        GeometryReader { geometry in
-            ZStack {
+        
+        
+        
+        VStack(alignment: .leading, spacing: 8) {
+            ForEach(Array(items.enumerated()), id: \.element.id) { index, item in
+                let isSelected = selectedItemIDs.contains(item.id)
+                content(item, isSelected)
                 
-                Color.clear
-                    .contentShape(Rectangle())
-                
-                VStack(alignment: .leading, spacing: 8) {
-                    ForEach(Array(items.enumerated()), id: \.element.id) { index, item in
-                        let isSelected = selectedItemIDs.contains(item.id)
-                        content(item, isSelected)
-                        
-                            .modifier(CaptureItemFrame(id: item.id))
-                    }
-                    
-                    
-                } // END interior vstack
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
-                
-                if isDragging {
-                    Rectangle()
-                        .fill(accentColour.opacity(0.2))
-                        .border(accentColour)
-                        .frame(width: selectionRect.width, height: selectionRect.height)
-                        .position(
-                            x: max(selectionRect.width / 2, min(selectionRect.midX, geometrySize.width - selectionRect.width / 2)),
-                            y: max(selectionRect.height / 2, min(selectionRect.midY, geometrySize.height - selectionRect.height / 2))
-                        )
-                }
-                
+                    .modifier(CaptureItemFrame(id: item.id))
             }
-            .frame(width: geometry.size.width, height: geometry.size.height)
-            .coordinateSpace(name: "listContainer")
-            .task(id: geometry.size) {
-                geometrySize = geometry.size
-            }
-            .gesture(
-                DragGesture(minimumDistance: 0)
-                    .onChanged { value in
-                        isDragging = true
-                        lastDragLocation = value.location
-                        updateSelectionRect(start: value.startLocation, current: value.location)
-                        updateSelectedItems()
-                    }
-                    .onEnded { _ in
-                        isDragging = false
-                        selectionRect = .zero
-                    }
-            )
             
+            
+        } // END interior vstack
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+        .coordinateSpace(name: "listContainer")
+        .readSize { size in
+            self.geometrySize = size
         }
+        .border(Color.green.opacity(0.3))
+        .gesture(dragGesture)
         .onPreferenceChange(ItemFramePreferenceKey<Data.Element.ID>.self) { frames in
             self.itemFrames = frames
         }
+        .readModifierKeys()
+        
+        .overlay {
+            if isDragging {
+                Rectangle()
+                    .fill(accentColour.opacity(0.2))
+                    .border(accentColour)
+                    .frame(width: selectionRect.width, height: selectionRect.height)
+                    .position(
+                        x: max(selectionRect.width / 2, min(selectionRect.midX, geometrySize.width - selectionRect.width / 2)),
+                        y: max(selectionRect.height / 2, min(selectionRect.midY, geometrySize.height - selectionRect.height / 2))
+                    )
+            }
+        }
+        
+        
+        
+        //            .task(id: geometry.size) {
+        //                geometrySize = geometry.size
+        //            }
+        
+        
+        
+        
     }
 }
 
@@ -108,15 +104,68 @@ public extension DragToSelect {
         
         selectionRect = CGRect(x: minX, y: minY, width: maxX - minX, height: maxY - minY)
     }
-    
+
     private func updateSelectedItems() {
         let threshold: CGFloat = 1 // Adjust this value as needed
-        selectedItemIDs = Set(itemFrames.filter { _, frame in
+        let newSelection = Set(itemFrames.filter { _, frame in
             frame.insetBy(dx: -threshold, dy: -threshold).intersects(selectionRect)
         }.compactMap { key, _ in
             key
         })
+        
+        if modifierKeys.contains(.command) {
+            if modifierKeys.contains(.shift) {
+                // If Command and Shift are pressed, remove the new selection from the existing selection
+                selectedItemIDs.subtract(newSelection)
+            } else {
+                // If only Command is pressed, add new items to the selection without removing any
+                selectedItemIDs.formUnion(newSelection)
+            }
+        } else {
+            // If neither Command nor Shift is pressed, replace the selection
+            selectedItemIDs = newSelection
+        }
     }
+    
+    
+    //    private func updateSelectedItems() {
+    //            let now = Date()
+    //            guard now.timeIntervalSince(lastUpdateTime) > 0.1 else { return } // 100ms debounce
+    //            lastUpdateTime = now
+    //
+    //            let threshold: CGFloat = 1
+    //            let newSelection = Set(itemFrames.filter { _, frame in
+    //                frame.insetBy(dx: -threshold, dy: -threshold).intersects(selectionRect)
+    //            }.compactMap { key, _ in
+    //                key
+    //            })
+    //
+    //            if modifierKeys.contains(.command) {
+    //                let toToggle = newSelection.subtracting(initialSelection)
+    //                selectedItemIDs.formSymmetricDifference(toToggle)
+    //            } else {
+    //                selectedItemIDs = newSelection
+    //            }
+    //        }
+    //
+    private var dragGesture: some Gesture {
+        DragGesture(minimumDistance: 0)
+            .onChanged { value in
+                if !isDragging {
+                    initialSelection = selectedItemIDs
+                }
+                isDragging = true
+                lastDragLocation = value.location
+                updateSelectionRect(start: value.startLocation, current: value.location)
+                updateSelectedItems()
+            }
+            .onEnded { _ in
+                isDragging = false
+                selectionRect = .zero
+                initialSelection = []
+            }
+    }
+    
 }
 
 struct CaptureItemFrame<ID: Hashable>: ViewModifier {
