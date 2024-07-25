@@ -8,26 +8,17 @@
 import SwiftUI
 
 
-
-struct CaptureItemFrame<Data: Identifiable>: ViewModifier {
-    let item: Data
+struct CaptureItemFrame: ViewModifier {
+    let id: AnyHashable
     
     func body(content: Content) -> some View {
         content
             .background(GeometryReader { geometry in
                 Color.clear.preference(
                     key: ItemFramePreferenceKey.self,
-                    value: [AnyHashable(item.id): geometry.frame(in: .named("listContainer"))]
+                    value: [id: geometry.frame(in: .named("listContainer"))]
                 )
             })
-    }
-}
-
-struct AnyIdentifiable: Identifiable {
-    let id: AnyHashable
-    
-    init<T: Identifiable>(_ value: T) {
-        self.id = AnyHashable(value.id)
     }
 }
 
@@ -39,83 +30,78 @@ struct ItemFramePreferenceKey: PreferenceKey {
     }
 }
 
-//enum ScrollDirection {
-//    case up, down
-//}
-//struct ScrollOffsetPreferenceKey: PreferenceKey {
-//    static var defaultValue: CGFloat = 0
-//    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
-//        value = nextValue()
-//    }
-//}
 
-extension String: Identifiable {
-    public var id: String {
-        self
-    }
-}
-
-
-struct DragToSelect<Data, Content>: View where Data: Identifiable & Hashable, Content: View {
+public struct DragToSelect<Data, Content>: View
+where Data: RandomAccessCollection,
+      Data.Element: Identifiable,
+      Data.Index == Int,
+      Content: View {
     
-    @State private var selectedItems: Set<Data> = []
+    let items: Data
+    let accentColour: Color
+    let content: (Data.Element, Bool) -> Content
+    
+    @State private var selectedItemIDs: Set<AnyHashable> = []
     @State private var itemFrames: [AnyHashable: CGRect] = [:]
     @State private var selectionRect: CGRect = .zero
     @State private var isDragging: Bool = false
-    @State private var lastSelectedItem: Data?
+    @State private var lastSelectedItem: Data.Element?
+    
+    @State private var geometrySize: CGSize = .zero
+    
     
     @State private var scrollOffset: CGFloat = 0
     
-//    @State private var autoScrollTimer: Timer?
     @State private var lastDragLocation: CGPoint?
     
-    
-    
-    let items: [Data]
-    let content: (Data) -> Content
-    
-    init(
-        items: [Data],
-        @ViewBuilder content: @escaping (Data) -> Content
+    public init(
+        items: Data,
+        accentColour: Color = .blue,
+        @ViewBuilder content: @escaping (Data.Element, Bool) -> Content
     ) {
         self.items = items
+        self.accentColour = accentColour
         self.content = content
     }
     
-    var body: some View {
+    public var body: some View {
         GeometryReader { geometry in
             ZStack {
-                ScrollView {
-                    VStack(alignment: .leading, spacing: 8) {
-                        
-                        ForEach(items) { item in
-                            content(item)
-                                .padding(8)
-                                .background(selectedItems.contains(item) ? Color.blue.opacity(0.3) : Color.clear)
-                                .modifier(CaptureItemFrame(item: item))
-                        }
-                        
-                    } // END interior vstack
-                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
-//                    .background(GeometryReader { proxy in
-//                        Color.clear.preference(key: ScrollOffsetPreferenceKey.self, value: proxy.frame(in: .named("scroll")).minY)
-//                    })
-                    .border(Color.orange.opacity(0.3))
-                }
-//                .coordinateSpace(name: "scroll")
-//                .onPreferenceChange(ScrollOffsetPreferenceKey.self) { value in
-//                    scrollOffset = value
-//                }
+                
+                Color.clear
+                    .contentShape(Rectangle())
+                
+                VStack(alignment: .leading, spacing: 8) {
+                    
+                    ForEach(Array(items.enumerated()), id: \.element.id) { index, item in
+                        let isSelected = selectedItemIDs.contains(AnyHashable(item.id))
+                        content(item, isSelected)
+                            .border(Color.blue.opacity(0.3))
+                            .modifier(CaptureItemFrame(id: AnyHashable(item.id)))
+                    }
+                    
+                    
+                } // END interior vstack
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+                
                 
                 if isDragging {
                     Rectangle()
-                        .fill(Color.blue.opacity(0.2))
-                        .border(Color.blue)
+                        .fill(accentColour.opacity(0.2))
+                        .border(accentColour)
                         .frame(width: selectionRect.width, height: selectionRect.height)
-                        .position(x: selectionRect.midX, y: selectionRect.midY)
+                        .position(
+                            x: max(selectionRect.width / 2, min(selectionRect.midX, geometrySize.width - selectionRect.width / 2)),
+                            y: max(selectionRect.height / 2, min(selectionRect.midY, geometrySize.height - selectionRect.height / 2))
+                        )
                 }
+
             }
+            .frame(width: geometry.size.width, height: geometry.size.height)
             .coordinateSpace(name: "listContainer")
+            .task(id: geometry.size) {
+                geometrySize = geometry.size
+            }
             .gesture(
                 DragGesture(minimumDistance: 0)
                     .onChanged { value in
@@ -123,12 +109,11 @@ struct DragToSelect<Data, Content>: View where Data: Identifiable & Hashable, Co
                         lastDragLocation = value.location
                         updateSelectionRect(start: value.startLocation, current: value.location)
                         updateSelectedItems()
-//                        startAutoScrollIfNeeded(geometry: geometry)
                     }
                     .onEnded { _ in
                         isDragging = false
                         selectionRect = .zero
-//                        stopAutoScroll()
+                        //                        stopAutoScroll()
                     }
             )
             
@@ -136,69 +121,34 @@ struct DragToSelect<Data, Content>: View where Data: Identifiable & Hashable, Co
         .onPreferenceChange(ItemFramePreferenceKey.self) { frames in
             self.itemFrames = frames
         }
-        .border(Color.green.opacity(0.3))
-
     }
 }
 
-extension DragToSelect {
+public extension DragToSelect {
     
-//    private func startAutoScrollIfNeeded(geometry: GeometryProxy) {
-//        guard let location = lastDragLocation else { return }
-//        let threshold: CGFloat = 50
-//        
-//        if location.y < threshold {
-//            startAutoScroll(direction: .up)
-//        } else if location.y > geometry.size.height - threshold {
-//            startAutoScroll(direction: .down)
-//        } else {
-//            stopAutoScroll()
-//        }
-//    }
-//    
-//    private func startAutoScroll(direction: ScrollDirection) {
-//        stopAutoScroll()
-//        autoScrollTimer = Timer.scheduledTimer(withTimeInterval: 0.05, repeats: true) { _ in
-//            let scrollAmount: CGFloat = 5
-//            let newOffset = direction == .up ? scrollOffset + scrollAmount : scrollOffset - scrollAmount
-//            scrollOffset = newOffset
-//            
-//            if let location = lastDragLocation {
-//                updateSelectionRect(start: selectionRect.origin, current: CGPoint(x: location.x, y: location.y - scrollOffset))
-//                updateSelectedItems()
-//            }
-//        }
-//    }
-//    
-//    private func stopAutoScroll() {
-//        autoScrollTimer?.invalidate()
-//        autoScrollTimer = nil
-//    }
-//    
-
     private func updateSelectionRect(start: CGPoint, current: CGPoint) {
-        let minX = min(start.x, current.x)
-        let maxX = max(start.x, current.x)
-        let minY = min(start.y, current.y)
-        let maxY = max(start.y, current.y)
+        let minX = max(0, min(start.x, current.x))
+        let maxX = min(geometrySize.width, max(start.x, current.x))
+        let minY = max(0, min(start.y, current.y))
+        let maxY = min(geometrySize.height, max(start.y, current.y))
         
         selectionRect = CGRect(x: minX, y: minY, width: maxX - minX, height: maxY - minY)
     }
-    
-    private func updateSelectedItems() {
-        selectedItems = Set(itemFrames.filter { _, frame in
-            frame.intersects(selectionRect.offsetBy(dx: 0, dy: scrollOffset))
-        }.compactMap { key, _ in
-            items.first(where: { AnyHashable($0.id) == key })
-        })
-    }
-    
-    
-    //    private func updateSelectedItems() {
-    //        selectedItems = Set(itemFrames.filter { _, frame in
-    //            frame.intersects(selectionRect.offsetBy(dx: 0, dy: scrollOffset))
-    //        }.keys)
+
+    //
+    //    private func handleItemTap(_ item: Data.Element) {
+    //        let itemID = AnyHashable(item.id)
+    //        if selectedItemIDs.contains(itemID) {
+    //            selectedItemIDs.remove(itemID)
+    //        } else {
+    //            selectedItemIDs.insert(itemID)
+    //        }
     //    }
     
+    private func updateSelectedItems() {
+        selectedItemIDs = Set(itemFrames.filter { _, frame in
+            frame.intersects(selectionRect.offsetBy(dx: 0, dy: scrollOffset))
+        }.keys)
+    }
     
 }

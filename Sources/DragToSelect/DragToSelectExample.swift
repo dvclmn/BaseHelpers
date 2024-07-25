@@ -8,7 +8,7 @@
 import SwiftUI
 
 
-struct Item: Identifiable, Hashable {
+struct Item: Identifiable {
     let id = UUID()
     let title: String
 }
@@ -19,11 +19,11 @@ struct DragSelectExample: View {
     
     var body: some View {
         
-        DragToSelect(items: items) { item in
+        DragToSelect(items: items) { item, isSelected in
             
             Text(item.title)
                 .padding()
-                .background(Color.blue)
+                .background(isSelected ? Color.blue.opacity(0.3) : Color.clear)
                 .foregroundColor(.white)
             
         }
