@@ -12,22 +12,32 @@ enum ScrollDirection {
     case up, down
 }
 
-struct CaptureItemFrame: ViewModifier {
-    let id: String
+struct CaptureItemFrame<Data: Identifiable>: ViewModifier {
+    let item: Data
     
     func body(content: Content) -> some View {
         content
             .background(GeometryReader { geometry in
-                Color.clear.preference(key: ItemFramePreferenceKey.self,
-                                       value: [id: geometry.frame(in: .named("listContainer"))])
+                Color.clear.preference(
+                    key: ItemFramePreferenceKey.self,
+                    value: [AnyHashable(item.id): geometry.frame(in: .named("listContainer"))]
+                )
             })
     }
 }
 
-struct ItemFramePreferenceKey: PreferenceKey {
-    static var defaultValue: [String: CGRect] = [:]
+struct AnyIdentifiable: Identifiable {
+    let id: AnyHashable
     
-    static func reduce(value: inout [String: CGRect], nextValue: () -> [String: CGRect]) {
+    init<T: Identifiable>(_ value: T) {
+        self.id = AnyHashable(value.id)
+    }
+}
+
+struct ItemFramePreferenceKey: PreferenceKey {
+    static var defaultValue: [AnyHashable: CGRect] = [:]
+    
+    static func reduce(value: inout [AnyHashable: CGRect], nextValue: () -> [AnyHashable: CGRect]) {
         value.merge(nextValue()) { $1 }
     }
 }
@@ -46,79 +56,54 @@ extension String: Identifiable {
 }
 
 
-struct DragSelectExample: View {
+struct DragToSelect<Data, Content>: View where Data: Identifiable & Hashable, Content: View {
     
-    @State private var exampleItems: [String] = (1...20).map { "Item \($0)" }
-//    @State private var data:
-    
-    var body: some View {
-        
-        DragToSelect(items: exampleItems) { item in
-            Text(item)
-        }
-        
-    }
-}
-#Preview {
-    DragSelectExample()
-        .padding(40)
-        .frame(width: 600, height: 700)
-        .background(.black.opacity(0.6))
-}
-
-public struct DragToSelect<Data: Identifiable, Content: View>: View {
-    
-    @State private var selectedItems: Set<String> = []
-    @State private var itemFrames: [String: CGRect] = [:]
+    @State private var selectedItems: Set<Data> = []
+    @State private var itemFrames: [AnyHashable: CGRect] = [:]
     @State private var selectionRect: CGRect = .zero
     @State private var isDragging: Bool = false
-    @State private var lastSelectedItem: String?
+    @State private var lastSelectedItem: Data?
     
     @State private var scrollOffset: CGFloat = 0
-    
     
     @State private var autoScrollTimer: Timer?
     @State private var lastDragLocation: CGPoint?
     
+    
+    
     let items: [Data]
+    let content: (Data) -> Content
     
-    let content: (Data) -> (Content, Data)
-    
-    public init(items: [Data], @ViewBuilder content: @escaping (Data) -> (Content, Data)) {
+    init(
+        items: [Data],
+        @ViewBuilder content: @escaping (Data) -> Content
+    ) {
         self.items = items
         self.content = content
     }
     
-    public var body: some View {
-        
-        
+    var body: some View {
         GeometryReader { geometry in
             ZStack {
                 ScrollView {
                     VStack(alignment: .leading, spacing: 8) {
                         
                         ForEach(items) { item in
-                            let (view, _) = content(item)
-                            view
+                            content(item)
                                 .padding(8)
                                 .background(selectedItems.contains(item) ? Color.blue.opacity(0.3) : Color.clear)
-                                .modifier(CaptureItemFrame(id: item))
-                                .onTapGesture(count: 1) {
-                                    handleItemTap(item)
-                                }
+                                .modifier(CaptureItemFrame(item: item))
+                            //                                .onTapGesture(count: 1) {
+                            //                                    handleItemTap(item)
+                            //                                }
                         }
                         
-                        
-                        
-                        
-                        
-                        
-                        content()
-                    }
+                    } // END interior vstack
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
                     .background(GeometryReader { proxy in
                         Color.clear.preference(key: ScrollOffsetPreferenceKey.self, value: proxy.frame(in: .named("scroll")).minY)
                     })
-                    
+                    .border(Color.orange.opacity(0.3))
                 }
                 .coordinateSpace(name: "scroll")
                 .onPreferenceChange(ScrollOffsetPreferenceKey.self) { value in
@@ -149,12 +134,13 @@ public struct DragToSelect<Data: Identifiable, Content: View>: View {
                         stopAutoScroll()
                     }
             )
+            
         }
         .onPreferenceChange(ItemFramePreferenceKey.self) { frames in
             self.itemFrames = frames
         }
         .border(Color.green.opacity(0.3))
-        
+
     }
 }
 
@@ -192,29 +178,29 @@ extension DragToSelect {
         autoScrollTimer = nil
     }
     
-    private func handleItemTap(_ item: String) {
-        if NSEvent.modifierFlags.contains(.command) {
-            if selectedItems.contains(item) {
-                selectedItems.remove(item)
-            } else {
-                selectedItems.insert(item)
-            }
-        } else if NSEvent.modifierFlags.contains(.shift), let lastSelected = lastSelectedItem {
-            let range = getItemRange(from: lastSelected, to: item)
-            selectedItems = Set(range)
-        } else {
-            selectedItems = [item]
-        }
-        lastSelectedItem = item
-    }
+    //    private func handleItemTap(_ item: String) {
+    //        if NSEvent.modifierFlags.contains(.command) {
+    //            if selectedItems.contains(item) {
+    //                selectedItems.remove(item)
+    //            } else {
+    //                selectedItems.insert(item)
+    //            }
+    //        } else if NSEvent.modifierFlags.contains(.shift), let lastSelected = lastSelectedItem {
+    //            let range = getItemRange(from: lastSelected, to: item)
+    //            selectedItems = Set(range)
+    //        } else {
+    //            selectedItems = [item]
+    //        }
+    //        lastSelectedItem = item
+    //    }
     
-    private func getItemRange(from: String, to: String) -> [String] {
-        guard let fromIndex = items.firstIndex(of: from),
-              let toIndex = items.firstIndex(of: to) else {
-            return []
-        }
-        return Array(items[min(fromIndex, toIndex)...max(fromIndex, toIndex)])
-    }
+    //    private func getItemRange(from: String, to: String) -> [String] {
+    //        guard let fromIndex = items.firstIndex(of: from),
+    //              let toIndex = items.firstIndex(of: to) else {
+    //            return []
+    //        }
+    //        return Array(items[min(fromIndex, toIndex)...max(fromIndex, toIndex)])
+    //    }
     
     private func updateSelectionRect(start: CGPoint, current: CGPoint) {
         let minX = min(start.x, current.x)
@@ -228,11 +214,17 @@ extension DragToSelect {
     private func updateSelectedItems() {
         selectedItems = Set(itemFrames.filter { _, frame in
             frame.intersects(selectionRect.offsetBy(dx: 0, dy: scrollOffset))
-        }.keys)
+        }.compactMap { key, _ in
+            items.first(where: { AnyHashable($0.id) == key })
+        })
     }
     
     
-    
+    //    private func updateSelectedItems() {
+    //        selectedItems = Set(itemFrames.filter { _, frame in
+    //            frame.intersects(selectionRect.offsetBy(dx: 0, dy: scrollOffset))
+    //        }.keys)
+    //    }
     
     
 }
