@@ -284,6 +284,12 @@ public extension View {
 
 #endif
 
+public extension Int {
+    func string() -> String {
+        return String(self)
+    }
+}
+
 public extension CGFloat {
     func displayAsInt() -> String {
         return String(format: "%0.f", self)

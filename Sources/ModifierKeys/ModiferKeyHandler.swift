@@ -14,23 +14,23 @@ public protocol ModifierKeyCollection {
     func holding(_ modifiers: [NSEvent.ModifierFlags]) -> Bool
 }
 
-public extension Array where Element == ModifierKey {
-    func holding(_ modifiers: NSEvent.ModifierFlags...) -> Bool {
-        holding(modifiers)
-    }
-    
-    func holding(_ modifiers: [NSEvent.ModifierFlags]) -> Bool {
-        let activeModifiers = Set(self.map { $0.modifier })
-        return Set(modifiers).isSubset(of: activeModifiers)
-    }
-}
-
-public extension Array where Element == ModifierKey {
-    func holding(_ modifier: NSEvent.ModifierFlags) -> Bool {
-        contains { $0.modifier == modifier }
-    }
-}
-
+//public extension Array where Element == ModifierKey {
+//    func holding(_ modifiers: NSEvent.ModifierFlags...) -> Bool {
+//        holding(modifiers)
+//    }
+//    
+//    func holding(_ modifiers: [NSEvent.ModifierFlags]) -> Bool {
+//        let activeModifiers = Set(self.map { $0.modifier })
+//        return Set(modifiers).isSubset(of: activeModifiers)
+//    }
+//}
+//
+//public extension Array where Element == ModifierKey {
+//    func holding(_ modifier: NSEvent.ModifierFlags) -> Bool {
+//        contains { $0.modifier == modifier }
+//    }
+//}
+//
 extension NSEvent.ModifierFlags: Hashable {
     public func hash(into hasher: inout Hasher) {
         hasher.combine(rawValue)
@@ -39,8 +39,21 @@ extension NSEvent.ModifierFlags: Hashable {
 
 
 
+extension Set: ModifierKeyCollection where Element == NSEvent.ModifierFlags {
+    public func holding(_ modifiers: NSEvent.ModifierFlags...) -> Bool {
+        holding(modifiers)
+    }
+    
+    public func holding(_ modifiers: [NSEvent.ModifierFlags]) -> Bool {
+        modifiers.allSatisfy { self.contains($0) }
+    }
+}
 
-
+extension Set where Element == NSEvent.ModifierFlags {
+    public func holding(_ modifier: NSEvent.ModifierFlags) -> Bool {
+        contains(modifier)
+    }
+}
 
 
 public extension KeyboardShortcut {

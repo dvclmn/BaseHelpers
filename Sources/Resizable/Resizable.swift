@@ -371,6 +371,7 @@ extension Resizable {
                 width: edge.axis == .horizontal ? grabArea : nil,
                 height: edge.axis == .vertical ? grabArea : nil
             )
+            .ignoresSafeArea()
             .background(.blue.opacity( isShowingFrames ? 0.2 : 0))
             .contentShape(Rectangle())
             .onHover { hovering in

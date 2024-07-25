@@ -8,29 +8,20 @@
 import Foundation
 import SwiftUI
 
-
-
-
-public struct ModifierKey: Sendable, Identifiable, Hashable {
-    public var id: UInt {
-        self.modifier.rawValue
-    }
-    public var modifier: NSEvent.ModifierFlags
+public struct ModifierFlagsKey: EnvironmentKey {
+    public static let defaultValue = Set<NSEvent.ModifierFlags>()
 }
 
-public struct ModifierKeysKey: EnvironmentKey {
-    public static let defaultValue = Set<ModifierKey>()
-}
 
 public extension EnvironmentValues {
-    var modifierKeys: Set<ModifierKey> {
-        get { self[ModifierKeysKey.self] }
-        set { self[ModifierKeysKey.self] = newValue }
+    var modifierKeys: Set<NSEvent.ModifierFlags> {
+        get { self[ModifierFlagsKey.self] }
+        set { self[ModifierFlagsKey.self] = newValue }
     }
 }
 
 public struct ModifierKeysModifier: ViewModifier {
-    @State private var modifierKeys = Set<ModifierKey>()
+    @State private var modifierKeys = Set<NSEvent.ModifierFlags>()
     
     private let allModifiers: Set<NSEvent.ModifierFlags> = [
         .shift,
@@ -43,14 +34,10 @@ public struct ModifierKeysModifier: ViewModifier {
         content
             .onAppear {
                 NSEvent.addLocalMonitorForEvents(matching: [.flagsChanged]) { event in
-                    let activeModifiers = allModifiers.filter { flag in
-                        event.modifierFlags.contains(flag)
-                    }
-                    modifierKeys = Set(activeModifiers.map { ModifierKey(modifier: $0) })
+                    modifierKeys = allModifiers.filter { event.modifierFlags.contains($0) }
                     return event
                 }
             }
-        
             .environment(\.modifierKeys, modifierKeys)
     }
 }
