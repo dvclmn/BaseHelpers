@@ -23,6 +23,7 @@ let package = Package(
             "ScrollOffset",
             "ReadSize",
             "Renamable",
+            "WindowSize",
             "Resizable",
             "ScrollMask",
         ]),
@@ -32,6 +33,7 @@ let package = Package(
         .package(url: "https://github.com/evgenyneu/keychain-swift.git", from: "24.0.0"),
         .package(url: "https://github.com/danielsaidi/ScrollKit.git", from: "0.5.1"),
         .package(url: "https://github.com/raymondjavaxx/SmoothGradient.git", from: "1.0.0"),
+        .package(url: "https://github.com/pointfreeco/swift-dependencies.git", from: "1.3.3"),
         
     ],
     targets: [
@@ -39,13 +41,14 @@ let package = Package(
         .target(name: "TokenHandler", dependencies: [.product(name: "KeychainSwift", package: "keychain-swift"), "APIHandler", "BaseUtilities"]),
         .target(name: "Shaders"),
         .target(name: "BaseUtilities", dependencies: ["TestStrings", ]),
-        .target(name: "DragToSelect", dependencies: ["ModifierKeys", "ReadSize"]),
+        .target(name: "DragToSelect", dependencies: ["ModifierKeys", "ReadSize", "ScrollOffset"]),
         .target(name: "HoverAsync"),
         .target(name: "ModifierKeys"),
         .target(name: "MultiSelect"),
         .target(name: "PerformanceMonitor"),
         .target(name: "ScrollOffset", dependencies: ["ScrollKit", "ScrollMask"]),
         .target(name: "ReadSize"),
+        .target(name: "WindowSize", dependencies: [.product(name: "Dependencies", package: "swift-dependencies")]),
         .target(name: "Renamable"),
         .target(name: "Resizable", dependencies: ["BaseUtilities", "TestStrings", "ReadSize"]),
         .target(name: "ScrollMask", dependencies: ["SmoothGradient"])

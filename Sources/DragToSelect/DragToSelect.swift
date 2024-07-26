@@ -8,6 +8,7 @@
 import SwiftUI
 import ModifierKeys
 import ReadSize
+import ScrollOffset
 
 public struct DragToSelect<Data, Content>: View
 where Data: RandomAccessCollection,
@@ -46,29 +47,28 @@ where Data: RandomAccessCollection,
     public var body: some View {
         
         
-        
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: 4) {
             ForEach(Array(items.enumerated()), id: \.element.id) { index, item in
                 let isSelected = selectedItemIDs.contains(item.id)
                 content(item, isSelected)
                 
                     .modifier(CaptureItemFrame(id: item.id))
             }
-            
-            
+            Spacer()
         } // END interior vstack
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+        .scrollWithOffset()
+        .contentShape(Rectangle())
         .coordinateSpace(name: "listContainer")
-        .readSize { size in
-            self.geometrySize = size
-        }
-        .border(Color.green.opacity(0.3))
         .gesture(dragGesture)
+        //        .highPriorityGesture(dragGesture)
         .onPreferenceChange(ItemFramePreferenceKey<Data.Element.ID>.self) { frames in
             self.itemFrames = frames
         }
         .readModifierKeys()
-        
+        .readSize { size in
+            self.geometrySize = size
+        }
         .overlay {
             if isDragging {
                 Rectangle()
@@ -81,14 +81,6 @@ where Data: RandomAccessCollection,
                     )
             }
         }
-        
-        
-        
-        //            .task(id: geometry.size) {
-        //                geometrySize = geometry.size
-        //            }
-        
-        
         
         
     }
@@ -104,7 +96,7 @@ public extension DragToSelect {
         
         selectionRect = CGRect(x: minX, y: minY, width: maxX - minX, height: maxY - minY)
     }
-
+    
     private func updateSelectedItems() {
         let threshold: CGFloat = 1 // Adjust this value as needed
         let newSelection = Set(itemFrames.filter { _, frame in
@@ -128,26 +120,6 @@ public extension DragToSelect {
     }
     
     
-    //    private func updateSelectedItems() {
-    //            let now = Date()
-    //            guard now.timeIntervalSince(lastUpdateTime) > 0.1 else { return } // 100ms debounce
-    //            lastUpdateTime = now
-    //
-    //            let threshold: CGFloat = 1
-    //            let newSelection = Set(itemFrames.filter { _, frame in
-    //                frame.insetBy(dx: -threshold, dy: -threshold).intersects(selectionRect)
-    //            }.compactMap { key, _ in
-    //                key
-    //            })
-    //
-    //            if modifierKeys.contains(.command) {
-    //                let toToggle = newSelection.subtracting(initialSelection)
-    //                selectedItemIDs.formSymmetricDifference(toToggle)
-    //            } else {
-    //                selectedItemIDs = newSelection
-    //            }
-    //        }
-    //
     private var dragGesture: some Gesture {
         DragGesture(minimumDistance: 0)
             .onChanged { value in

@@ -303,8 +303,8 @@ public extension Double {
 }
 
 public extension Comparable {
-    func constrained(_ minValue: Self, _ maxValue: Self) -> Self {
-        return min(max(self, minValue), maxValue)
+    func constrained(_ atLeast: Self, _ atMost: Self) -> Self {
+        return min(max(self, atLeast), atMost)
     }
 }
 

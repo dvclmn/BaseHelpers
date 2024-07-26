@@ -38,7 +38,7 @@ public struct ScrollOffsetModifier: ViewModifier {
 
 public extension View {
     
-    func readScrollOffset(
+    func scrollWithOffset(
         maskEnabled: Bool = true,
         topPadding: Double = .zero,
         _ output: @escaping (_ offset: CGPoint) -> Void = { _ in }

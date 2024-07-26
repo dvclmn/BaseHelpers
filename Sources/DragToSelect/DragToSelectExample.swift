@@ -21,16 +21,19 @@ struct DragSelectExample: View {
     
     var body: some View {
         
-        ScrollView {
+        
             DragToSelect(items: items, selectedItemIDs: $selectedItems) { item, isSelected in
                 
                 Text(item.title)
                     .padding()
                     .background(isSelected ? Color.blue.opacity(0.3) : Color.clear)
                     .foregroundColor(.white)
+                    .onTapGesture {
+                        print("Tapped")
+                    }
                 
             }
-        }
+
     }
 }
 #Preview {
