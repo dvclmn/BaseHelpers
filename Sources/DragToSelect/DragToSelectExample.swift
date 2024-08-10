@@ -5,6 +5,9 @@
 //  Created by Dave Coleman on 25/7/2024.
 //
 
+#if os(macOS)
+
+
 import SwiftUI
 
 
@@ -42,3 +45,5 @@ struct DragSelectExample: View {
         .frame(width: 500, height: 700)
         .background(.black.opacity(0.6))
 }
+
+#endif

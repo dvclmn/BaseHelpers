@@ -11,39 +11,34 @@ import Dependencies
 
 
 public extension DependencyValues {
-    var windowSize: WindowSizeHandler {
-        get { self[WindowSizeKey.self] }
-        set { self[WindowSizeKey.self] = newValue }
+    var windowDimensions: WindowSizeHandler {
+        get { self[WindowSizeHandler.self] }
+        set { self[WindowSizeHandler.self] = newValue }
     }
 }
 
-public struct WindowSizeKey: DependencyKey {
+extension WindowSizeHandler: DependencyKey {
     public static let liveValue = WindowSizeHandler()
     public static var testValue = WindowSizeHandler()
 }
 
-
-public struct WindowSize: Sendable {
+@Observable
+public class WindowSizeHandler {
+    
     public var width: CGFloat
     public var height: CGFloat
     
-    public init(width: CGFloat, height: CGFloat) {
+    public init(
+        width: CGFloat = .zero,
+        height: CGFloat = .zero
+    ) {
         self.width = width
         self.height = height
     }
 }
 
-@Observable
-public class WindowSizeHandler {
-    public var size: WindowSize
-
-    public init(size: WindowSize = WindowSize(width: .zero, height: .zero)) {
-        self.size = size
-    }
-}
-
 public struct WindowSizeModifier: ViewModifier {
-    @Dependency(\.windowSize) var windowSizeHolder
+    @Dependency(\.windowDimensions) var windowSize
     
     public func body(content: Content) -> some View {
         content
@@ -51,14 +46,11 @@ public struct WindowSizeModifier: ViewModifier {
                 GeometryReader { geometry in
                     Color.clear
                         .task(id: geometry.size) {
-                            updateWindowSize(geometry.size)
+                            windowSize.width = geometry.size.width
+                            windowSize.height = geometry.size.height
                         }
                 }
             )
-    }
-    
-    private func updateWindowSize(_ size: CGSize) {
-        windowSizeHolder.size = WindowSize(width: size.width, height: size.height)
     }
 }
 

@@ -8,7 +8,10 @@
 import SwiftUI
 import ModifierKeys
 import ReadSize
-import ScrollOffset
+import Scrolling
+
+#if os(macOS)
+
 
 public struct DragToSelect<Data, Content>: View
 where Data: RandomAccessCollection,
@@ -164,3 +167,4 @@ struct ItemFramePreferenceKey<ID: Hashable>: PreferenceKey {
     }
 }
 
+#endif
