@@ -34,6 +34,17 @@ public enum LogLevel: String {
   case debug, info, warning, error, success
 }
 
+
+//public protocol Loggable {
+//  var loggableDescription: String { get }
+//}
+//
+//extension Array: Loggable where Element: Loggable {
+//  public var loggableDescription: String {
+//    return "[\n" + map { "  " + $0.loggableDescription }.joined(separator: ",\n") + "\n]"
+//  }
+//}
+
 public class Logger {
   
   /// Note: The items beginning with a `#` below are special symbols in Swift, called
