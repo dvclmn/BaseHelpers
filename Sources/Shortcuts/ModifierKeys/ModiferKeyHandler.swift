@@ -75,7 +75,7 @@ public protocol ModifierKeyCollection {
 //    }
 //}
 //
-extension NSEvent.ModifierFlags: Hashable {
+extension NSEvent.ModifierFlags: @retroactive Hashable {
     public func hash(into hasher: inout Hasher) {
         hasher.combine(rawValue)
     }

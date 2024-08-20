@@ -3,64 +3,84 @@
 
 import SwiftUI
 
+
+
+/// Usage
+/// From this:
+/// ```swift
+/// if textView.string != self.text {
+///    textView.string = self.text
+/// }
+/// ```
+/// To this: `textView.string ?= self.text`
+///
+infix operator ?=: AssignmentPrecedence
+
+public func ?=<T: Equatable>(lhs: inout T, rhs: T) {
+  if lhs != rhs {
+    lhs = rhs
+  }
+}
+
+
 // MARK: - Optional bindings
 /// By SwiftfulThinking
 public extension Optional where Wrapped == String {
-    var _boundString: String? {
-        get {
-            return self
-        }
-        set {
-            self = newValue
-        }
+  var _boundString: String? {
+    get {
+      return self
     }
-    var boundString: String {
-        get {
-            return _boundString ?? ""
-        }
-        set {
-            _boundString = newValue.isEmpty ? nil : newValue
-        }
+    set {
+      self = newValue
     }
+  }
+  var boundString: String {
+    get {
+      return _boundString ?? ""
+    }
+    set {
+      _boundString = newValue.isEmpty ? nil : newValue
+    }
+  }
 }
 
 public extension Optional where Wrapped == Int {
-    var _boundInt: Int? {
-        get {
-            return self
-        }
-        set {
-            self = newValue
-        }
+  var _boundInt: Int? {
+    get {
+      return self
     }
-    
-    var boundInt: Int {
-        get {
-            return _boundInt ?? 0
-        }
-        set {
-            _boundInt = (newValue == 0) ? nil : newValue
-        }
+    set {
+      self = newValue
     }
+  }
+  
+  var boundInt: Int {
+    get {
+      return _boundInt ?? 0
+    }
+    set {
+      _boundInt = (newValue == 0) ? nil : newValue
+    }
+  }
 }
 public extension Optional where Wrapped == Bool {
-    var _boundBool: Bool? {
-        get {
-            return self
-        }
-        set {
-            self = newValue
-        }
+  var _boundBool: Bool? {
+    get {
+      return self
     }
-    
-    var boundBool: Bool {
-        get {
-            return _boundBool ?? false
-        }
-        set {
-            _boundBool = (newValue == false) ? nil : newValue
-        }
+    set {
+      self = newValue
     }
+  }
+  
+  var boundBool: Bool {
+    get {
+      return _boundBool ?? false
+    }
+    set {
+      _boundBool = (newValue == false) ? nil : newValue
+    }
+  }
 }
 
 //func ??<Bool>(lhs: Binding<Optional<Bool>>, rhs: Bool) -> Binding<Bool> {
@@ -72,45 +92,45 @@ public extension Optional where Wrapped == Bool {
 
 // MARK: - Random colour
 public extension ShapeStyle where Self == Color {
-    static var random: Color {
-        Color(
-            red: .random(in: 0...1),
-            green: .random(in: 0...1),
-            blue: .random(in: 0...1)
-        )
-    }
+  static var random: Color {
+    Color(
+      red: .random(in: 0...1),
+      green: .random(in: 0...1),
+      blue: .random(in: 0...1)
+    )
+  }
 }
 
 // MARK: - Visual effect
 #if os(macOS)
 public struct VisualEffectView: NSViewRepresentable {
-    public func makeNSView(context: Context) -> NSView {
-        let view = NSVisualEffectView()
-        view.blendingMode = .behindWindow
-        view.state = .active
-        view.material = .underWindowBackground
-        return view
-    }
-    public func updateNSView(_ view: NSView, context: Context) { }
+  public func makeNSView(context: Context) -> NSView {
+    let view = NSVisualEffectView()
+    view.blendingMode = .behindWindow
+    view.state = .active
+    view.material = .underWindowBackground
+    return view
+  }
+  public func updateNSView(_ view: NSView, context: Context) { }
 }
 #endif
 
 
 // MARK: - Check if is Preview
 public var isPreview: Bool {
-    return ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] == "1"
+  return ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] == "1"
 }
 
 
 
 public func downloadImage(from url: URL) async throws -> Data {
-    let (data, response) = try await URLSession.shared.data(from: url)
-    
-    // Check for a valid HTTP response
-    guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
-        throw URLError(.badServerResponse)
-    }
-    return data
+  let (data, response) = try await URLSession.shared.data(from: url)
+  
+  // Check for a valid HTTP response
+  guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+    throw URLError(.badServerResponse)
+  }
+  return data
 }
 
 
@@ -125,15 +145,15 @@ import AppKit
 
 
 public extension Image {
-    init?(data: Data) {
+  init?(data: Data) {
 #if canImport(UIKit)
-        guard let uiImage = UIImage(data: data) else { return nil }
-        self.init(uiImage: uiImage)
+    guard let uiImage = UIImage(data: data) else { return nil }
+    self.init(uiImage: uiImage)
 #elseif canImport(AppKit)
-        guard let nsImage = NSImage(data: data) else { return nil }
-        self.init(nsImage: nsImage)
+    guard let nsImage = NSImage(data: data) else { return nil }
+    self.init(nsImage: nsImage)
 #endif
-    }
+  }
 }
 
 //#if canImport(UIKit)
@@ -146,146 +166,114 @@ public extension Image {
 
 #if canImport(AppKit)
 public extension NSImage {
-    var cgImage: CGImage? {
-        var rect = CGRect(origin: .zero, size: self.size)
-        return self.cgImage(forProposedRect: &rect, context: nil, hints: nil)
-    }
+  var cgImage: CGImage? {
+    var rect = CGRect(origin: .zero, size: self.size)
+    return self.cgImage(forProposedRect: &rect, context: nil, hints: nil)
+  }
 }
 #endif
 
 
 
 public func ??<T>(lhs: Binding<Optional<T>>, rhs: T) -> Binding<T> {
-    Binding(
-        get: { lhs.wrappedValue ?? rhs },
-        set: { lhs.wrappedValue = $0 }
-    )
+  Binding(
+    get: { lhs.wrappedValue ?? rhs },
+    set: { lhs.wrappedValue = $0 }
+  )
 }
 
 
-public extension Collection {
-    func prettyPrinted<T>(keyPaths: [KeyPath<Element, T>]) -> String {
-        var result = "[\n"
-        for element in self {
-            let values = keyPaths.map { keyPath in
-                return "\(element[keyPath: keyPath])"
-            }.joined(separator: ", ")
-            result += "    \(values),\n"
-        }
-        result += "]"
-        return result
-    }
-}
 
-public extension Collection where Element == (key: String, value: Int) {
-    func prettyPrinted(
-        delimiter: String = ".",
-        keyFirst: Bool = true,
-        stripCharacters: Bool = false
-    ) -> String {
-        var result = "Headers:\n\n"
-        for element in self {
-            let key = stripCharacters ? element.key.filter { !$0.isWhitespace && $0.isLetter } : element.key
-            let value = element.value
-            if keyFirst {
-                result += "\(value)\(delimiter) \"\(key)\"\n"
-            } else {
-                result += "\"\(key)\"\(delimiter) \(value)\n"
-            }
-        }
-        return result
-    }
-}
 
 
 
 
 public extension String {
-    var wordCount: Int {
-        let words = self.split { !$0.isLetter }
-        return words.count
-    }
+  var wordCount: Int {
+    let words = self.split { !$0.isLetter }
+    return words.count
+  }
 }
 
 
 public extension Array where Element: Equatable {
-    func indexOf(_ item: Element?) -> Int? {
-        
-        if let item = item {
-            return self.firstIndex(of: item)
-        } else {
-            return nil
-        }
-    }
+  func indexOf(_ item: Element?) -> Int? {
     
-    func nextIndex(after item: Element?) -> Int? {
-        guard let currentIndex = self.indexOf(item) else { return nil }
-        let nextIndex = currentIndex + 1
-        return nextIndex < self.count ? nextIndex : nil
+    if let item = item {
+      return self.firstIndex(of: item)
+    } else {
+      return nil
     }
-    
-    func previousIndex(before item: Element?) -> Int? {
-        guard let currentIndex = self.indexOf(item) else { return nil }
-        let previousIndex = currentIndex - 1
-        return previousIndex >= 0 ? previousIndex : nil
+  }
+  
+  func nextIndex(after item: Element?) -> Int? {
+    guard let currentIndex = self.indexOf(item) else { return nil }
+    let nextIndex = currentIndex + 1
+    return nextIndex < self.count ? nextIndex : nil
+  }
+  
+  func previousIndex(before item: Element?) -> Int? {
+    guard let currentIndex = self.indexOf(item) else { return nil }
+    let previousIndex = currentIndex - 1
+    return previousIndex >= 0 ? previousIndex : nil
+  }
+  
+  func secondToLast() -> Element? {
+    if self.count < 2 {
+      return nil
     }
-    
-    func secondToLast() -> Element? {
-        if self.count < 2 {
-            return nil
-        }
-        let index = self.count - 2
-        return self[index]
-    }
+    let index = self.count - 2
+    return self[index]
+  }
 }
 
 
 
 public extension Int {
-    func string() -> String {
-        return String(self)
-    }
+  func string() -> String {
+    return String(self)
+  }
 }
 
 public extension CGFloat {
-    func displayAsInt() -> String {
-        return String(format: "%0.f", self)
-    }
+  func displayAsInt() -> String {
+    return String(format: "%0.f", self)
+  }
 }
 
 public extension Double {
-    func displayAsInt() -> String {
-        return String(format: "%0.f", self)
-    }
+  func displayAsInt() -> String {
+    return String(format: "%0.f", self)
+  }
 }
 
 public extension Comparable {
-    func constrained(_ atLeast: Self, _ atMost: Self) -> Self {
-        return min(max(self, atLeast), atMost)
-    }
+  func constrained(_ atLeast: Self, _ atMost: Self) -> Self {
+    return min(max(self, atLeast), atMost)
+  }
 }
 
 public extension Comparable where Self: FloatingPoint {
-    func normalised(from originalRange: (min: Self, max: Self)) -> Self {
-        guard originalRange.min < originalRange.max else { return self }
-        return (self - originalRange.min) / (originalRange.max - originalRange.min) * 100
-    }
+  func normalised(from originalRange: (min: Self, max: Self)) -> Self {
+    guard originalRange.min < originalRange.max else { return self }
+    return (self - originalRange.min) / (originalRange.max - originalRange.min) * 100
+  }
 }
 
 public extension Int64 {
-    func getString() -> String {
-        return String(self)
-    }
+  func getString() -> String {
+    return String(self)
+  }
 }
 
-extension UUID: RawRepresentable {
-    public var rawValue: String {
-        self.uuidString
-    }
-
-    public typealias RawValue = String
-
-    public init?(rawValue: RawValue) {
-        self.init(uuidString: rawValue)
-    }
+extension UUID: @retroactive RawRepresentable {
+  public var rawValue: String {
+    self.uuidString
+  }
+  
+  public typealias RawValue = String
+  
+  public init?(rawValue: RawValue) {
+    self.init(uuidString: rawValue)
+  }
 }
