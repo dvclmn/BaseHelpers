@@ -244,18 +244,16 @@ struct ConsoleOutput {
     let headerLines = header.split(separator: "\n")
     let contentLines = content.split(separator: "\n")
     
-    /// This represents:
+    /// This `paddingSize` value compensates for:
+    ///
     /// 1. The leading wall character
     /// 2. A leading space
-    /// 3. An ellipsis
+    /// 3. An ellipsis or space character
     /// 4 A trailing space
     /// 5. The trailing wall character
     ///
     let paddingSize: Int = 5
-    
-    
-    
-    
+
     /// Horizontal lines
     ///
     let topLine = createHorizontal(for: topAndBottom, with: width)
@@ -267,35 +265,37 @@ struct ConsoleOutput {
     let bottomLine = createHorizontal(for: topAndBottom, with: width)
     let boxBottom = "\(cornerBottomLeft)\(bottomLine)\(cornerBottomRight)"
     
-    
     /// Header
     ///
-    var header = ""
-    
+    var headerText = ""
     for line in headerLines {
-      
       var paddingCharacter = spaceOrEllipsis(for: line, width: width, padding: paddingSize)
-      
-      let paddedLine = line.padding(toLength: width-paddingSize, withPad: " ", startingAt: 0)
-      
-      
-      
-      header = "\(leftOrRightWall) \(paddedLine)\(paddingCharacter) \(leftOrRightWall)"
+      let paddedLine = line.padding(
+        toLength: width-paddingSize,
+        withPad: " ",
+        startingAt: 0
+      )
+      headerText += paddedLine
     }
+    let header = "\(leftOrRightWall) \(headerText) \(leftOrRightWall)"
     
-
     /// Content
     ///
-    var content = ""
+    var contentOnly = ""
     for line in contentLines {
       
       var paddingCharacter = spaceOrEllipsis(for: line, width: width, padding: paddingSize)
       
-      let paddedLine = line.padding(toLength: width-paddingSize, withPad: " ", startingAt: 0)
-      content = "\(leftOrRightWall) \(paddedLine)\(paddingCharacter) \(leftOrRightWall)"
+      
+      let paddedLine = line.padding(
+        toLength: width-paddingSize,
+        withPad: " ",
+        startingAt: 0
+      )
+      
+      contentOnly += paddedLine
     }
-
-    
+    let content = "\(leftOrRightWall) \(contentOnly) \(leftOrRightWall)"
     
     let finalResult = """
     \(boxTop)
@@ -324,8 +324,6 @@ struct ConsoleOutput {
       return " "
     }
   }
-  
-  
 }
 
 struct BoxPrintView: View {
@@ -334,7 +332,7 @@ struct BoxPrintView: View {
     
     VStack(spacing: 30) {
       VStack{
-        Text("Width: 30")
+        Text("Width: 20")
         Text(ConsoleOutput.draw(
           header: "It's a long header, with more",
           content: TestStrings.paragraphs[1],
@@ -342,7 +340,7 @@ struct BoxPrintView: View {
         ))
       }
       VStack{
-        Text("Width: 30")
+        Text("Width: 40")
         Text(ConsoleOutput.draw(
           header: "It's a header",
           content: TestStrings.paragraphs[1],
@@ -350,6 +348,7 @@ struct BoxPrintView: View {
         ))
       }
       VStack{
+        Text("Width: 60")
         Text(ConsoleOutput.draw(
           header: "It's a header",
           content: TestStrings.paragraphs[1],

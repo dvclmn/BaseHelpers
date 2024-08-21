@@ -10,6 +10,35 @@ import SwiftUI
 
 // Credit: https://github.com/krzyzanowskim/STTextKitPlus/blob/main/Sources/STTextKitPlus/NSRange.swift
 
+//extension Range where Bound == String.Index {
+//  
+//  /// Converts a `Range<String.Index>` to an `NSTextRange`
+//  /// - Parameter string: The string that this range is associated with
+//  /// - Returns: An equivalent `NSTextRange`
+//  func toNSTextRange(in string: String) -> NSTextRange? {
+//    guard let start = NSTextLocation(string.distance(from: string.startIndex, to: self.lowerBound)),
+//          let end = NSTextLocation(string.distance(from: string.startIndex, to: self.upperBound)) else {
+//      return nil
+//    }
+//    return NSTextRange(location: start, end: end)
+//  }
+//  
+//  /// Creates a `Range<String.Index>` from an `NSTextRange`
+//  /// - Parameters:
+//  ///   - nsRange: The `NSTextRange` to convert
+//  ///   - string: The string that this range is associated with
+//  /// - Returns: An equivalent `Range<String.Index>`
+//  static func fromNSTextRange(_ nsRange: NSTextRange, in string: String) -> Range<String.Index>? {
+//    guard let startOffset = nsRange.location.rawValue,
+//          let endOffset = nsRange.endLocation.rawValue,
+//          let startIndex = string.index(string.startIndex, offsetBy: startOffset, limitedBy: string.endIndex),
+//          let endIndex = string.index(string.startIndex, offsetBy: endOffset, limitedBy: string.endIndex) else {
+//      return nil
+//    }
+//    return startIndex..<endIndex
+//  }
+//}
+
 
 public extension NSRange {
   
