@@ -13,7 +13,7 @@ let package = Package(
     .library(name: "Utilities", targets: [
       
       "Geometry",
-      "PerformanceMonitor",
+      "Profiler",
       "Renamable",
       "Logging",
       "Resizable",
@@ -30,7 +30,7 @@ let package = Package(
   ],
   targets: [
     .target(name: "Geometry", dependencies: [.product(name: "Dependencies", package: "swift-dependencies")]),
-    .target(name: "PerformanceMonitor"),
+    .target(name: "Profiler"),
     .target(name: "Renamable"),
     .target(name: "Logging", dependencies: ["Helpers"]),
     .target(name: "Resizable", dependencies: ["Helpers", "Geometry"]),
