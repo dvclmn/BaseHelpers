@@ -23,40 +23,110 @@ public struct DiagnosticInformation {
   }
 }
 
+
+//@resultBuilder
+//struct PrintWrapperBuilder {
+//  static func buildBlock(_ components: Any...) -> [Any] {
+//    return components
+//  }
+//}
+//
+//func printWrapper(
+//  diagnostics: DiagnosticInformation = .init(),
+//  @PrintWrapperBuilder content: () -> [Any]
+//) {
+//  let header: String = formatPrintHeader(diagnostics: diagnostics)
+//  let footer: String = ConsoleOutput.line
+//  
+//  print(header)
+//  print("")
+//  for component in content() {
+//    print(component)
+//  }
+//  print("")
+//  print(footer)
+//}
+
+
+
+
+public func printWrapper(
+  diagnostics: DiagnosticInformation = .init(),
+  function: () -> Void
+) {
+  
+  let header: String = formatPrintHeader(diagnostics: diagnostics)
+  let footer: String = ConsoleOutput.line
+  
+  print(header)
+  print("")
+  function()
+  print("")
+  print(footer)
+  
+}
+
 public func printValue<T: CustomStringConvertible>(
   _ value: T,
-  diagnostics: DiagnosticInformation = .init()
+  title: String? = nil,
+  diagnostics: DiagnosticInformation = .init(),
+  hasTrailingLine: Bool = true
 ) {
   
   var valueString = "Value: \(value)"
 
-  let output = formatPrintInfo("Title here", value: valueString, diagnostics: diagnostics)
+  let output = formatPrintInfo(
+    title,
+    value: valueString,
+    diagnostics: diagnostics,
+    hasTrailingLine: hasTrailingLine
+  )
   
   print(output)
 }
 
-func formatPrintInfo(
-  _ title: String? = nil,
-  value: String,
+func formatPrintHeader(
+  title: String? = nil,
+  value: Any? = nil,
   diagnostics: DiagnosticInformation
 ) -> String {
-  
-  let mirror = Mirror(reflecting: value)
-  let typeName = String(describing: type(of: value))
-  
-  /// Header
-  ///
+
   let fileAndLine = "File & Line: \t[\(URL(fileURLWithPath: diagnostics.fileName).lastPathComponent):\(diagnostics.line)]"
   let functionName = "Function: \t\(diagnostics.functionName)"
-  let type = "Type: \t\t\(typeName)"
   
-  let headerInfo = [(title ?? ""), fileAndLine, functionName, type].joined(separator: "\n")
+  var typeString: String = ""
+  
+  if let value = value {
+    let mirror = Mirror(reflecting: value)
+    let typeName = String(describing: type(of: value))
+    typeString = "Type: \t\t\(typeName)"
+  }
+
+  let headerInfo = [(title ?? ""), fileAndLine, functionName, typeString].joined(separator: "\n")
+  
   let formattedHeader = ConsoleOutput.header(headerInfo)
-  let finalLine = ConsoleOutput.line
+  
+  return formattedHeader
+}
+
+func formatPrintInfo(
+  _ title: String? = nil,
+  value: Any,
+  diagnostics: DiagnosticInformation,
+  hasTrailingLine: Bool = true
+) -> String {
+  
+  let header = formatPrintHeader(
+    title: title,
+    value: value,
+    diagnostics: diagnostics
+  )
+
+  let finalLine = hasTrailingLine ? ConsoleOutput.line : ""
   
   let output: String = """
   
-  \(formattedHeader)
+  \(header)
   
   \(value)
   
@@ -136,7 +206,6 @@ struct ConsoleOutput {
     \(line)
     """
   }
-  
   
   static let line: String = "---------------------------------------------------------"
 }
