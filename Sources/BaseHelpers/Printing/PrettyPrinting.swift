@@ -54,9 +54,9 @@ import Foundation
 //        .first { $0.label == label }?
 //        .value as? PartialKeyPath<Element>
 //    }
-//    
+//
 //    let useKeyPaths = keyPaths ?? defaultKeyPaths
-//    
+//
 //    var result = "[\n"
 //    for element in self {
 //      let values = useKeyPaths.map { keyPath in
@@ -75,31 +75,15 @@ import Foundation
 ///
 
 
-
-public extension Collection {
-  func prettyPrinted(keyPaths: [PartialKeyPath<Element>]) -> String {
-    var result = "[\n"
-    for element in self {
-      let values = keyPaths.map { keyPath in
-        let value = element[keyPath: keyPath]
-        let label = String(describing: keyPath).split(separator: ".").last ?? ""
-        return "\(label): \(value)"
-      }.joined(separator: ", ")
-      result += "    \(values),\n"
-    }
-    result += "]"
-    return result
-  }
-}
-
-//
 //
 //public extension Collection {
-//  func prettyPrinted<T>(keyPaths: [KeyPath<Element, T>]) -> String {
+//  func prettyPrinted(keyPaths: [PartialKeyPath<Element>]) -> String {
 //    var result = "[\n"
 //    for element in self {
 //      let values = keyPaths.map { keyPath in
-//        return "\(element[keyPath: keyPath])"
+//        let value = element[keyPath: keyPath]
+//        let label = String(describing: keyPath).split(separator: ".").last ?? ""
+//        return "\(label): \(value)"
 //      }.joined(separator: ", ")
 //      result += "    \(values),\n"
 //    }
@@ -108,7 +92,60 @@ public extension Collection {
 //  }
 //}
 
-
+public extension Collection {
+  func prettyPrinted(keyPaths: [PartialKeyPath<Element>], indent: String = "  ") -> String {
+    func formatValue<T>(_ value: T, depth: Int) -> String {
+      let nextIndent = String(repeating: indent, count: depth + 1)
+      
+      func formatCollection<C: Collection>(_ collection: C) -> String {
+        if collection.isEmpty {
+          return "[]"
+        }
+        var result = "[\n"
+        for (index, item) in collection.enumerated() {
+          result += "\(nextIndent)// \(index + 1)\n"
+          result += "\(nextIndent)\(formatValue(item, depth: depth + 1)),\n"
+        }
+        result += "\(String(repeating: indent, count: depth))]"
+        return result
+      }
+      
+      if let collection = value as? any Collection {
+        return formatCollection(collection)
+      } else if let describable = value as? CustomStringConvertible {
+        let description = describable.description
+        if description.contains("(") && description.contains(")") {
+          let components = description.components(separatedBy: "(")
+          let name = components[0]
+          let params = components[1].dropLast()
+          let paramPairs = params.components(separatedBy: ",")
+          
+          var result = "\(name)(\n"
+          for param in paramPairs {
+            result += "\(nextIndent)\(param.trimmingCharacters(in: .whitespaces)),\n"
+          }
+          result += "\(String(repeating: indent, count: depth)))"
+          return result
+        }
+      }
+      
+      return String(describing: value)
+    }
+    
+    var result = "[\n"
+    for (index, element) in self.enumerated() {
+      result += "\(indent)// \(index + 1)\n"
+      for keyPath in keyPaths {
+        let value = element[keyPath: keyPath]
+        let label = String(describing: keyPath).split(separator: ".").last ?? ""
+        result += "\(indent)\(label): \(formatValue(value, depth: 1)),\n"
+      }
+      result += "\n"
+    }
+    result += "]"
+    return result
+  }
+}
 
 
 

@@ -10,6 +10,24 @@ import Foundation
 public extension TestStrings {
     
     struct Markdown {
+      
+      public static let anotherMarkdownString: String = """
+  # This is the beginning of a really long heading so i can see what it does
+  ## First, a message
+  ### And a third, a header that's small
+  I will build a library of `Message` objects, as `[String]`, and can ~~you write~~ me up a *function* that simply selects one of the **paragraphs** (i.e. items in the array), and returns it? Also, we need some ***extra emphasis*** on this text.
+  
+  ```
+  func updateNSView(_ nsView: NSTextView, context: Context) {
+      nsView.textStorage?.setAttributedString(text)
+  }
+  ```
+  
+  As well as some text down here.
+  
+  And some here just in case
+  """
+
         
         public static let shortMarkdownBasics: String = """
         # Markdown samples
