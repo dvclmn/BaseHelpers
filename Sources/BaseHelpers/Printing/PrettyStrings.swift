@@ -7,7 +7,6 @@
 
 import Foundation
 
-
 /// #Example usage:
 ///
 /// ```swift
@@ -165,6 +164,106 @@ public extension Collection where Element == (key: String, value: Int) {
         result += "\"\(key)\"\(delimiter) \(value)\n"
       }
     }
+    return result
+  }
+}
+
+//public extension Regex<AnyRegexOutput.RegexOutput>.Match {
+//  var prettyDescription: String {
+//    var result = "Match:\n"
+//    result += "  Range: \(self.range)\n"
+//    result += "  Matched text: \"\(self.0)\"\n"
+//
+//    let mirror = Mirror(reflecting: self.output)
+//    let captureGroups = mirror.children.dropFirst() // Skip the full match
+//
+//    if !captureGroups.isEmpty {
+//      result += "  Captured groups:\n"
+//      for (index, capture) in captureGroups.enumerated() {
+//        if let value = capture.value as? Substring, !value.isEmpty {
+//          result += "    Group \(index + 1): \"\(value)\"\n"
+//        }
+//      }
+//    }
+//
+//    result += "  Output:\n"
+//    result += "    Full match: \"\(self.output.0)\"\n"
+//
+//    for (index, capture) in captureGroups.enumerated() {
+//      if let value = capture.value as? Substring {
+//        result += "    Capture \(index + 1): \"\(value)\"\n"
+//      }
+//    }
+//
+//    return result
+//  }
+//}
+
+
+public extension Regex<Regex<(
+  Substring,
+  leading: Substring,
+  content: Substring,
+  trailing: Substring
+)>.RegexOutput>.Match {
+  
+  var prettyDescription: String {
+    
+    
+      var result = "Match:\n"
+      result += "  Range: \(self.range)\n"
+      result += "  Matched text: \"\(self.0)\"\n"
+      result += "  Output:\n"
+      result += "    Full match: \"\(self.0)\"\n"
+      result += "    Leading: \"\(self.leading)\"\n"
+      result += "    Content: \"\(self.content)\"\n"
+      result += "    Trailing: \"\(self.trailing)\"\n"
+      return result
+    
+  
+    
+  }
+  
+  func boxedDescription(header: String) -> String {
+    return ConsoleOutput.draw(
+      header: header,
+      content: self.prettyDescription
+    )
+  }
+}
+
+public extension Regex<Regex<(Substring, Substring)>.RegexOutput>.Match {
+  
+  var prettyDescription: String {
+    var result = "Match:\n"
+    result += "  Range: \(self.range)\n"
+    result += "  Matched text: \"\(self.0)\"\n"
+    
+    if !self.1.isEmpty {
+      result += "  Captured group: \"\(self.1)\"\n"
+    }
+    
+    result += "  Output:\n"
+    result += "    Full match: \"\(self.output.0)\"\n"
+    result += "    Capture: \"\(self.output.1)\"\n"
+    return result
+  }
+  
+  func boxedDescription(header: String) -> String {
+    return ConsoleOutput.draw(header: header, content: self.prettyDescription)
+  }
+  
+  
+}
+
+public extension Regex<Regex<Substring>.RegexOutput>.Match {
+  var prettyDescription: String {
+    var result = "Match:\n"
+    result += "  Range: \(self.range)\n"
+    result += "  Matched text: \"\(self)\"\n"
+    
+    result += "  Output:\n"
+    result += "  Full match: \"\(self.output)\"\n"
     return result
   }
 }
