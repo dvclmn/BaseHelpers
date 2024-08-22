@@ -35,6 +35,13 @@ extension String {
       return range.range(in: self).flatMap({ self[$0] })
     }
   }
+  
+  /// A `prefix(_ maxLength: Int)` alternative, returning a `String` rather than `Substring`
+  ///
+  func preview(_ maxLength: Int) -> String {
+    return String(self.prefix(maxLength))
+  }
+  
 }
 
 extension NSString {
