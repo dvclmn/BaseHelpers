@@ -49,7 +49,7 @@ extension String {
   
   func reflowText(width: Int, maxLines: Int?) -> String {
     
-    var lines = trimLines(width: width, maxLines: maxLines)
+    let lines = trimLines(width: width, maxLines: maxLines)
     
     let joinedResult = lines.map { line in
       line

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 extension ConsoleOutput {
   
@@ -39,7 +40,54 @@ extension ConsoleOutput {
   /// `╯` corner bottom trailing
   ///
   
-  public enum Theme {
+  public struct Theme {
+    
+    var set: Theme.GlyphSet
+    var colours: Theme.GlyphColor
+    
+    public init(
+      set: Theme.GlyphSet = .sharp,
+      colours: Theme.GlyphColor = .init()
+    ) {
+      self.set = set
+      self.colours = colours
+    }
+    
+    var textForeground: Color {
+      return colours.text.foreground
+    }
+    var invisiblesForeground: Color {
+      return colours.invisibles.foreground
+    }
+    var frameForeground: Color {
+      return colours.frame.foreground
+    }
+    
+    
+  }
+  
+  
+}
+
+extension Theme {
+  
+  public struct GlyphColor {
+    var text: ColorSet
+    var invisibles: ColorSet
+    var frame: ColorSet
+    
+    public init(
+      text: ColorSet = .init(foreground: Color.primary),
+      invisibles: ColorSet = .init(foreground: Color.secondary.opacity(0.6)),
+      frame: ColorSet = .init(foreground: Color.secondary)
+    ) {
+      self.text = text
+      self.invisibles = invisibles
+      self.frame = frame
+    }
+  }
+  
+  public enum GlyphSet {
     
     case rounded
     case sharp
@@ -50,8 +98,8 @@ extension ConsoleOutput {
     
     public var string: String {
       switch self {
-        //                 0 0 0 0 0 1 1 1 1 1 2 2 2
-        //                 0 2 4 6 8 0 2 4 6 8 0 2 4
+          //                 0 0 0 0 0 1 1 1 1 1 2 2 2
+          //                 0 2 4 6 8 0 2 4 6 8 0 2 4
         case .rounded:    "━ ─ ┯ ┷ ┃ │ ┠ ┨ ┼ ╭ ╮ ╰ ╯"
           
         case .sharp:      "─ ─ ┬ ┴ │ │ ├ ┤ ┼ ┌ ┐ └ ┘"
@@ -66,9 +114,52 @@ extension ConsoleOutput {
           
       }
     }
-  }
+    
+  } // END glyph set
   
-  static let invisibles: String = ""
+  public enum Invisibles {
+    case line(LineType)
+    case space
+    case tab
+    case padding
+    
+    public enum LineType {
+      case new
+      case end
+    }
+    
+    public var character: String {
+      switch self {
+        case .line(.new): "¬"
+        case .line(.end): "¶"
+        case .space: "•"
+        case .tab: "→"
+        case .padding: "○"
+      }
+    }
+  }
+}
+
+
+extension Theme.GlyphColor {
+  
+  public struct ColorSet {
+    var foreground: Color
+    var background: Color?
+    
+    public init(foreground: Color, background: Color? = nil) {
+      self.foreground = foreground
+      self.background = background
+    }
+    
+    var container: AttributeContainer {
+      var attrContainer = AttributeContainer()
+      attrContainer.foregroundColor = self.foreground
+      attrContainer.backgroundColor = self.background
+      
+      return attrContainer
+    }
+  }
 }
 
 
@@ -98,7 +189,7 @@ extension Part {
   public func character(with config: Config) -> String {
     
     let index = self.themeIndex
-    let themeString = config.theme.string
+    let themeString = config.theme.set.string
     
     let output: String = String(themeString[themeString.index(themeString.startIndex, offsetBy: index)])
     

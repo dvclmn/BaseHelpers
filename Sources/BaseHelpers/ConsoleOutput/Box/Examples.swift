@@ -12,7 +12,7 @@ struct BoxPrintView: View {
   @State private var output: ConsoleOutput = ConsoleOutput(
     header: TestStrings.paragraphs[0],
     content: TestStrings.paragraphs[1],
-    config: Config(contentLineLimit: 10)
+    config: Config(width: 40, contentLineLimit: 10)
   )
   
   var body: some View {
@@ -22,7 +22,6 @@ struct BoxPrintView: View {
       VStack{
         Text(output.attributedString)
       }
-
       .textSelection(.enabled)
     }
     
@@ -35,18 +34,18 @@ struct BoxPrintView: View {
 }
 
 extension BoxPrintView {
-//  var string: AttributedString {
-//    var output: AttributedString = ""
-//    ConsoleOutput(
-//      header: ,
-//      content: ,
-//      config: .default
-//    ) { text in
-//      output = text
-//    }
-//
-//    return output
-//  }
+  //  var string: AttributedString {
+  //    var output: AttributedString = ""
+  //    ConsoleOutput(
+  //      header: ,
+  //      content: ,
+  //      config: .default
+  //    ) { text in
+  //      output = text
+  //    }
+  //
+  //    return output
+  //  }
 }
 
 

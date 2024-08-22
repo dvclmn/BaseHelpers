@@ -22,9 +22,7 @@ public struct ConsoleOutput {
   var config: Config
   
   var attributedString: AttributedString {
-    
-    var outputString = AttributedString(self.drawBox())
-    return outputString
+    return self.drawBox()
   }
   
   
@@ -45,7 +43,7 @@ public struct ConsoleOutput {
     var contentLineLimit: Int?
     
     public init(
-      theme: Theme = .sharp,
+      theme: Theme = Theme(),
       width: Int = 60,
       headerLineLimit: Int? = 3,
       contentLineLimit: Int? = nil

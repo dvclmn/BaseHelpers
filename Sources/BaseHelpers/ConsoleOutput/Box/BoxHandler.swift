@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUICore
 
 public extension ConsoleOutput {
   
@@ -18,43 +19,33 @@ public extension ConsoleOutput {
   ///
   private static let paddingSize: Int = 4
   
-  func drawBox() -> String {
+  func drawBox() -> AttributedString {
     
+    var output = AttributedString()
+    let width: Int = self.config.width - ConsoleOutput.paddingSize
     
-    var headerOutput = ""
-    var contentOutput = ""
+    /// 1. Create top-most line — the roof of the box
+    ///
+    output += self.processBoxLine(type: .top).addNewLine
     
-    let topLine = self.processBoxLine(type: .top)
-    let dividerLine = self.processBoxLine(type: .divider)
-    let bottomLine = self.processBoxLine(type: .bottom)
-    
-    
-    let headerLines: [String] = self.header.reflowText(
-      width: self.config.width - ConsoleOutput.paddingSize,
-      maxLines: config.headerLineLimit
-    )
-    let contentLines: [String] = self.content.reflowText(
-      width: self.config.width - ConsoleOutput.paddingSize,
-      maxLines: config.contentLineLimit
-    )
+    let headerLines: [String] = self.header.reflowText(width: width, maxLines: config.headerLineLimit)
+    let contentLines: [String] = self.content.reflowText(width: width, maxLines: config.contentLineLimit)
     
     for line in headerLines {
-      headerOutput += self.processBoxLine(line, type: .header)
+      output += self.processBoxLine(line, type: .header).addNewLine
     }
+    
+    output += self.processBoxLine(type: .divider)
+    output += AttributedString("\n")
     
     for line in contentLines {
-      contentOutput += self.processBoxLine(line, type: .header)
+      output += self.processBoxLine(line, type: .content)
+      output += AttributedString("\n")
     }
     
-    let finalOutput = """
-    \(topLine)
-    \(headerOutput)
-    \(dividerLine)
-    \(contentOutput)
-    \(bottomLine)
-    """
+    output += self.processBoxLine(type: .bottom)
     
-    return finalOutput
+    return output
   }
   
   /// From the top down, what are the line types that can be generated?
@@ -65,32 +56,30 @@ public extension ConsoleOutput {
   /// - content lines
   /// - bottom line
   ///
-  func processBoxLine(_ reflowedLine: String? = nil, type: Line) -> String {
+  func processBoxLine(_ reflowedLine: String? = nil, type: Line) -> AttributedString {
     
-    var output: String = ""
+    var output = AttributedString()
     var capLeading: Part
     var capTrailing: Part
     
+    /// Caps (these are not the lines themselves, just the caps)
+    ///
     switch type {
       case .top:
         capLeading = Part.corner(.top(.leading))
         capTrailing = Part.corner(.top(.trailing))
         
-      case .header:
+      case .header, .content:
         capLeading = Part.vertical(location: .exterior)
-       capTrailing = Part.vertical(location: .exterior)
+        capTrailing = Part.vertical(location: .exterior)
         
       case .divider:
         capLeading = Part.vertical(join: .leading, location: .exterior)
         capTrailing = Part.vertical(join: .trailing, location: .exterior)
         
-      case .content:
-        capLeading = Part.corner(.top(.leading))
-        capTrailing = Part.corner(.top(.trailing))
-        
       case .bottom:
-        capLeading = Part.corner(.top(.leading))
-        capTrailing = Part.corner(.top(.trailing))
+        capLeading = Part.corner(.bottom(.leading))
+        capTrailing = Part.corner(.bottom(.trailing))
     }
     
     output = cappedLine(capLeading, reflowedLine, capTrailing, for: type)
@@ -103,29 +92,66 @@ public extension ConsoleOutput {
     _ text: String?,
     _ capTrailing: Part,
     for type: Line
-  ) -> String {
+  ) -> AttributedString {
     
-    var lineContent: String = ""
-    
+    var output = AttributedString()
+    var paddingCharacter = Theme.Invisibles.padding.character
     
     if let text = text {
-      let leadingSpace = " "
       
-      let paddingLength: Int = self.config.width - Self.paddingSize
+//      let leadingSpace = AttributedString("•", attributes: config.theme.colours.invisibles.container)
       
-      lineContent = leadingSpace + text.padding(toLength: paddingLength, withPad: " ", startingAt: 0)
+      let paddingLength = self.config.width
+      let paddedText = text.padding(toLength: paddingLength, withPad: paddingCharacter, startingAt: 0)
+      
+      output += AttributedString(paddedText, attributes: config.theme.colours.invisibles.container)
+
+//      
+//      // Apply default text color to the actual text
+//      if let textRange = attributedPaddedText.range(of: text) {
+//        attributedPaddedText[textRange].foregroundColor = textForeground
+//      }
+      
+      // Apply padding color to the padding characters
+      attributedPaddedText.foregroundColor = invisiblesForeground
+      
+      lineContent = leadingSpace + attributedPaddedText + AttributedString("\n")
     } else {
-      lineContent = repeatingPart(for: type)
+      lineContent = AttributedString(repeatingPart(for: type))
+      lineContent.foregroundColor = invisiblesForeground
     }
     
+    var capLeadingAttr = AttributedString(capLeading.character(with: config))
+    var capTrailingAttr = AttributedString(capTrailing.character(with: config))
+    capLeadingAttr.foregroundColor = frameForeground
+    capTrailingAttr.foregroundColor = frameForeground
     
-    let output = capLeading.character(with: config)
-    + lineContent
-    + capLeading.character(with: config)
-    + "\n"
-    
-    return output
+    return capLeadingAttr + lineContent + capTrailingAttr
   }
+  
+  //    var lineContent: String = ""
+  //
+  //    if let text = text {
+  //      let leadingSpace = " "
+  //
+  //      let paddingLength: Int = self.config.width
+  //
+  //      lineContent = leadingSpace + text.padding(toLength: paddingLength, withPad: "*", startingAt: 0) + "\n"
+  //
+  //    } else {
+  //      lineContent = repeatingPart(for: type)
+  //    }
+  //
+  //
+  //    let output = capLeading.character(with: config) + lineContent + capLeading.character(with: config)
+  //
+  //    return output
+  //  }
+  
+  
+  
+  
+  
   
   private func repeatingPart(for line: Line) -> String {
     
@@ -147,5 +173,5 @@ public extension ConsoleOutput {
     
     return finalOutput
   }
-
+  
 }
