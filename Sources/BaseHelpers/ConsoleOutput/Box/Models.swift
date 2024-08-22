@@ -11,6 +11,7 @@ public typealias Theme = ConsoleOutput.Theme
 public typealias Config = ConsoleOutput.BoxConfiguration
 public typealias Part = ConsoleOutput.BoxPart
 public typealias Structure = ConsoleOutput.BoxStructure
+public typealias Line = ConsoleOutput.BoxLine
 
 public struct ConsoleOutput {
   
@@ -19,14 +20,14 @@ public struct ConsoleOutput {
   public struct BoxConfiguration {
     var theme: Theme
     var width: Int
-    var headerLineLimit: Int
-    var contentLineLimit: Int
+    var headerLineLimit: Int?
+    var contentLineLimit: Int?
     
     public init(
       theme: Theme = .sharp,
       width: Int = 60,
-      headerLineLimit: Int = 0,
-      contentLineLimit: Int = 0
+      headerLineLimit: Int? = nil,
+      contentLineLimit: Int? = nil
     ) {
       self.theme = theme
       self.width = width
@@ -35,17 +36,17 @@ public struct ConsoleOutput {
     }
   }
   
-
-
-  public enum BoxStyle: String, CaseIterable {
-    case rounded
-    case sharp
-    case double
-    case ascii
-    case stars
-    case hearts
+  /// Currently this implementaiton can only handle horizontal dividers, not vertical.
+  /// So we can process line-by-line vertically in a fairly straightforward way.
+  ///
+  public enum BoxLine {
+    case top
+    case header
+    case divider
+    case content
+    case bottom
   }
-  
+
   public enum BoxStructure {
     
     case horizontal(Structure.Horizontal)
@@ -74,7 +75,6 @@ public struct ConsoleOutput {
       case divider
       case trailing
     }
-    
     
   }
   

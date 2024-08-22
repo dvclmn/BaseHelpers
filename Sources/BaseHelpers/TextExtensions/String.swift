@@ -42,6 +42,55 @@ extension String {
     return String(self.prefix(maxLength))
   }
   
+  func reflowText(width: Int) -> [String] {
+    let lines = processReflow(text: self, width: width)
+    return lines
+  }
+  
+  func reflowText(width: Int) -> String {
+    let lines = processReflow(text: self, width: width)
+    
+    let joinedResult = lines.map { line in
+      line
+    }.joined(separator: "\n")
+    
+    return joinedResult
+  }
+  
+  
+  private func processReflow(text: String, width: Int) -> [String] {
+    
+    let paragraphs = text.components(separatedBy: .newlines)
+    var reflowedLines: [String] = []
+    
+    for paragraph in paragraphs {
+      if paragraph.isEmpty {
+        reflowedLines.append("")
+        continue
+      }
+      
+      let words = paragraph.split(separator: " ")
+      var currentLine = ""
+      
+      for word in words {
+        if currentLine.isEmpty {
+          currentLine = String(word)
+        } else if currentLine.count + word.count + 1 <= width {
+          currentLine += " \(word)"
+        } else {
+          reflowedLines.append(currentLine)
+          currentLine = String(word)
+        }
+      }
+      
+      if !currentLine.isEmpty {
+        reflowedLines.append(currentLine)
+      }
+    }
+    
+    return reflowedLines
+  }
+  
 }
 
 extension NSString {

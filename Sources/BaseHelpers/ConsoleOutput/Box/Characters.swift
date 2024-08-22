@@ -77,4 +77,18 @@ extension Part {
       case .corner(.bottom(.trailing)):   return 20
     }
   }
+  
+  public func character(with config: Config) -> String {
+    
+    let index = self.themeIndex
+    let themeString = config.theme.string
+    
+    let output: String = String(themeString[themeString.index(themeString.startIndex, offsetBy: index)])
+    
+    return output
+  }
+  
+  
+  
+  
 }
