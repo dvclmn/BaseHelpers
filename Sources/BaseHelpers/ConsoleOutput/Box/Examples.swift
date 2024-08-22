@@ -15,9 +15,10 @@ struct BoxPrintView: View {
       
       VStack{
         Text("Width: 60")
-        Text(ConsoleOutput.draw(
+        Text(ConsoleOutput.drawBox(
           header: "It's a header",
           content: TestStrings.paragraphs[1].preview(300),
+          style: ConsoleOutput.Style.double,
           width: 64
         ))
       }
@@ -43,11 +44,7 @@ struct BoxPrintView: View {
       //        ))
       //      }
       HStack {
-        Text(ConsoleOutput.draw(
-          header: "It's a header",
-          content: TestStrings.paragraphs[1].preview(300),
-          width: 30
-        ))
+//        Text(ConsoleOutput)
         
         Text(TestStrings.paragraphs[1].preview(300))
         

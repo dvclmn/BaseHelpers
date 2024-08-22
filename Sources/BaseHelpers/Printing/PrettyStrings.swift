@@ -225,10 +225,12 @@ public extension Regex<Regex<(
   }
   
   func boxedDescription(header: String) -> String {
-    return ConsoleOutput.draw(
-      header: header,
-      content: self.prettyDescription
-    )
+    fatalError("Need to implement this")
+    
+//    return ConsoleOutput.drawBox(
+//      header: header,
+//      content: self.prettyDescription
+//    )
   }
 }
 
@@ -250,7 +252,9 @@ public extension Regex<Regex<(Substring, Substring)>.RegexOutput>.Match {
   }
   
   func boxedDescription(header: String) -> String {
-    return ConsoleOutput.draw(header: header, content: self.prettyDescription)
+    
+    fatalError("Need to implement this")
+//    return ConsoleOutput.draw(header: header, content: self.prettyDescription)
   }
   
   
