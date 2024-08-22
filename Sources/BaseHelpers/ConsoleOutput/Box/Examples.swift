@@ -14,12 +14,10 @@ struct BoxPrintView: View {
     VStack(spacing: 30) {
       
       VStack{
-        Text("Width: 60")
         Text(ConsoleOutput.drawBox(
           header: "It's a header",
           content: TestStrings.paragraphs[1].preview(300),
-          style: ConsoleOutput.Style.double,
-          width: 64
+          config: Config(theme: .sharp, width: 60, headerLineLimit: 0, contentLineLimit: 10)
         ))
       }
       //      HStack {
@@ -43,17 +41,17 @@ struct BoxPrintView: View {
       //          width: 40
       //        ))
       //      }
-      HStack {
-//        Text(ConsoleOutput)
-        
-        Text(TestStrings.paragraphs[1].preview(300))
-        
-      }
+//      HStack {
+////        Text(ConsoleOutput)
+//        
+//        Text(TestStrings.paragraphs[1].preview(300))
+//        
+//      }
       .textSelection(.enabled)
     }
     .monospaced()
     .padding(40)
-    .frame(width: 600, height: 700)
+    .frame(width: 600, height: 300)
     .background(.black.opacity(0.6))
     
   }

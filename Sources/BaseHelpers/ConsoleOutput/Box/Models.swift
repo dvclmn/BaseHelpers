@@ -7,17 +7,35 @@
 
 import Foundation
 
-public typealias Style = ConsoleOutput.BoxStyle
+public typealias Theme = ConsoleOutput.Theme
+public typealias Config = ConsoleOutput.BoxConfiguration
 public typealias Part = ConsoleOutput.BoxPart
 public typealias Structure = ConsoleOutput.BoxStructure
 
 public struct ConsoleOutput {
   
-  public let theme: Theme
+  var config: Config
   
-  public init(theme: Theme = .rounded) {
-    self.theme = theme
+  public struct BoxConfiguration {
+    var theme: Theme
+    var width: Int
+    var headerLineLimit: Int
+    var contentLineLimit: Int
+    
+    public init(
+      theme: Theme = .sharp,
+      width: Int = 60,
+      headerLineLimit: Int = 0,
+      contentLineLimit: Int = 0
+    ) {
+      self.theme = theme
+      self.width = width
+      self.headerLineLimit = headerLineLimit
+      self.contentLineLimit = contentLineLimit
+    }
   }
+  
+
 
   public enum BoxStyle: String, CaseIterable {
     case rounded

@@ -12,6 +12,7 @@ public extension ConsoleOutput {
     for part: BoxPart,
     in theme: Theme
   ) -> Character {
+    
     let index = part.themeIndex
     let themeString = theme.string
     
@@ -70,60 +71,53 @@ public extension ConsoleOutput {
   
   
   
-  //  static func reflowText(_ text: String, width: Int) -> (lines: [String], joined: String) {
-  //    let words = text.split(separator: " ")
-  //    var lines: [String] = []
-  //    var currentLine = ""
-  //
-  //    for word in words {
-  //      if currentLine.isEmpty {
-  //        currentLine = String(word)
-  //      } else if currentLine.count + word.count + 1 <= width {
-  //        currentLine += " \(word)"
-  //      } else {
-  //        lines.append(currentLine)
-  //        currentLine = String(word)
-  //      }
-  //    }
-  //
-  //    if !currentLine.isEmpty {
-  //      lines.append(currentLine)
-  //    }
-  //
-  //    let joinedResult = lines.map { line in
-  //      line
-  //    }.joined(separator: "\n")
-  //
-  //    return (lines, joinedResult)
-  //  }
-  
-  
-  
   public static func drawBox(
     header: String,
     content: String,
-    theme: Theme,
-    width: Int
+    config: Config
   ) -> String {
     
     /// This `paddingSize` value compensates for:
     ///
     /// 1. The leading wall character
     /// 2. A leading space
-    /// 3. An ellipsis or space character
-    /// 4 A trailing space
-    /// 5. The trailing wall character
+    /// 3  A trailing space
+    /// 4. The trailing wall character
     ///
     let paddingSize: Int = 4
     
     var result = ""
     
-    let headerLines: [String] = reflowText(header, width: width - paddingSize)
+    let headerLines: [String] = reflowText(header, width: config.width - paddingSize)
     
-    let contentLines: [String] = reflowText(content, width: width - paddingSize)
+    let contentLines: [String] = reflowText(content, width: config.width - paddingSize)
     
     
-//    
+    var headerText = ""
+
+    //      let paddedLine = line.padding(
+    //        toLength: width-paddingSize,
+    //        withPad: " ",
+    //        startingAt: 0
+    //      )
+    //      headerText += paddedLine
+    //    }
+    //    let header = "\(leftOrRightWall) \(headerText) \(leftOrRightWall)"
+    
+    for line in headerLines {
+      
+      
+      //      result += character(for: .vertical(join: .none, location: .exterior), style: style)
+      //      result += " \(line.padding(toLength: width - 4, withPad: " ", startingAt: 0)) "
+      //      result += character(for: .vertical(join: .none, location: .exterior), style: style) + "\n"
+      //    }
+    }
+    
+    let finalOutput = """
+    \(headerLines)
+    """
+    
+//
 //    // Top of the box
 //    result += character(for: .corner(.topLeading), style: style)
 //    result += String(repeating: character(for: .horizontal(join: .none, location: .exterior), style: style), count: width - 2)
@@ -173,17 +167,10 @@ public extension ConsoleOutput {
 //    result += String(repeating: character(for: .bottomWall, style: style), count: width - 2)
 //    result += character(for: .bottomRight, style: style)
 //    
-    return result
+    return finalOutput
   }
   
-  static func draw(
-    header: String,
-    content: String,
-    width: Int = 40
-  ) -> String {
-    
-    
-//    
+
 //    let headerLines: [String] = reflowText(header, width: width - paddingSize)
 //    let contentLines: [String] = reflowText(content, width: width - paddingSize)
 //    
@@ -239,11 +226,7 @@ public extension ConsoleOutput {
 //    \(content)
 //    \(boxBottom)
 //    """
-    
-    return "finalResult"
-//    return finalResult
-  }
-  
+
 //  func createHorizontal(
 ////    for part: ConsoleOutput.BoxPart,
 //    
@@ -266,36 +249,35 @@ public extension ConsoleOutput {
 //    return horizontal
 //  }
   
-  public static func structure(
-    _ structure: Structure,
-    with theme: Theme,
-    hasCaps: Bool,
-    width: Int
-  ) -> String {
-    
-    var capLeading = ""
-    var capTrailing = ""
-    var repeatedPart = ""
-    
-    capLeading = Part.character(with: style)
-    
-    
-    //        switch self {
-    //          case .top:
-    //
-    //
-    //
-    //
-    //          case .divider:
-    //            <#code#>
-    //          case .bottom:
-    //            <#code#>
-    //        } // END switch
-    
-    let result = capLeading + repeatedPart + capTrailing
-    
-    return result
-  }
+//  public static func structure(
+//    _ structure: Structure,
+//    config: Config,
+//    hasCaps: Bool,
+//  ) -> String {
+//    
+//    var capLeading = ""
+//    var capTrailing = ""
+//    var repeatedPart = ""
+//    
+////    capLeading = Part.character(with: style)
+//    
+//    
+//    //        switch self {
+//    //          case .top:
+//    //
+//    //
+//    //
+//    //
+//    //          case .divider:
+//    //            <#code#>
+//    //          case .bottom:
+//    //            <#code#>
+//    //        } // END switch
+//    
+//    let result = capLeading + repeatedPart + capTrailing
+//    
+//    return result
+//  }
   
   func spaceOrEllipsis(for content: String, width: Int, padding: Int) -> String {
     if content.count > width - padding {
