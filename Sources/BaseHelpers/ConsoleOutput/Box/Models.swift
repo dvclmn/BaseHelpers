@@ -9,10 +9,82 @@
 public struct ConsoleOutput {
   
   public enum BoxPart {
-    case topLeft, topRight, bottomLeft, bottomRight
-    case leftWall, rightWall, topWall, bottomWall
-    case leftJoin, rightJoin
-    case horizontalDivider
+    
+    case horizontal(
+      join: Join = .none,
+      location: Location = .exterior
+    )
+    
+    case vertical(
+      join: Join = .none,
+      location: Location = .exterior
+    )
+    
+    case corner(Corner)
+    
+    public enum Join {
+      
+      case none
+      
+      case horizontalTop
+      case horizontalBottom
+      
+      case verticalLeading
+      case verticalTrailing
+      
+    }
+    
+    public enum Corner {
+      /// ┏
+      case topLeading
+      
+      /// ┓
+      case topTrailing
+      
+      /// ┗
+      case bottomLeading
+      
+      /// ┛
+      case bottomTrailing
+    }
+    
+    
+    
+    public enum Location {
+      case interior
+      case exterior
+    }
+    
+    
+//    case divider
+//    case dividerLeading
+//    case dividerTrailing
+//    
+    case bottom
+    
+    
+    
+//    
+//    
+//    case topLeft, topRight, bottomLeft, bottomRight
+//    case leftWall, rightWall, topWall, bottomWall
+//    case leftJoin, rightJoin
+//
+//    
+    
+    enum Horizontal {
+      case top
+      case divider
+      case bottom
+      
+    }
+    
+    enum Vertical {
+      case wall
+      case join
+    }
+    
+    
   }
   
   public enum Style: String, CaseIterable {
@@ -64,8 +136,21 @@ public struct ConsoleOutput {
     ]
   ]
   
-  public static func character(for part: BoxPart, style: Style) -> String {
-    return styleCharacters[style]?[part] ?? " "
+  public static func character(
+    for part: BoxPart,
+    style: Style,
+    with width: Int? = nil
+  ) -> String {
+    
+    var character: String = styleCharacters[style]?[part] ?? " "
+    
+    if let width = width {
+      character = String(repeating: character, count: width-2)
+      //      character = repeatedCharacter
+    }
+    
+    return character
+    
   }
   
   public enum Structure {
@@ -93,28 +178,6 @@ public struct ConsoleOutput {
   
   static let innerJoin:           String = "─"
   static let topAndBottom:        String = "━"
-  
-  
-  static func header(_ info: String) -> String {
-    return """
-    
-    \(headerExteriorLine)
-    \(info)
-    \(headerInteriorLine)
-    """
-  }
-  
-  
-  static let headerExteriorLine: String = "=============================================================="
-  static let headerInteriorLine: String = "--------------------------------------------------------------"
-  static let footerLine: String = "◠◡◠◡◠◡◠◡◠◡◠◡◠◡◠◡◠◡◠◡◠◡◠◡◠◡◠◡◠◡◠◡◠◡◠◡◠◡◠◡◠◡◠◡◠◡◠◡◠◡◠◡◠◡◠◡◠◡◠◡◠◡◠◡"
-  
-  
-  
-  static let footerLineAlt: String = "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-  
-  
-  
   
   
   
@@ -204,7 +267,13 @@ public struct ConsoleOutput {
   //  }
   
   
-  static func draw(header: String, content: String, width: Int = 40) -> String {
+  
+  public static func drawBox(
+    header: String,
+    content: String,
+    style: ConsoleOutput.Style,
+    width: Int
+  ) -> String {
     
     /// This `paddingSize` value compensates for:
     ///
@@ -215,6 +284,54 @@ public struct ConsoleOutput {
     /// 5. The trailing wall character
     ///
     let paddingSize: Int = 4
+    
+    var result = ""
+    
+    let headerLines: [String] = reflowText(header, width: width - paddingSize)
+    
+    let contentLines: [String] = reflowText(content, width: width - paddingSize)
+    
+    
+    
+    let topLine = createHorizontal(for: topAndBottom, with: width)
+    let boxTop = "\(cornerTopLeft)\(topLine)\(cornerTopRight)"
+    
+    let seperatorLine = createHorizontal(for: innerJoin, with: width)
+    var seperator = "\(leftWallJoin)\(seperatorLine)\(rightWallJoin)"
+    
+    let bottomLine = createHorizontal(for: topAndBottom, with: width)
+    let boxBottom = "\(cornerBottomLeft)\(bottomLine)\(cornerBottomRight)"
+    
+    // Top of the box
+    result += character(for: .topLeft, style: style)
+    result += String(repeating: character(for: .topWall, style: style), count: width - 2)
+    result += character(for: .topRight, style: style) + "\n"
+    
+    // Content
+    for line in contentLines {
+      result += character(for: .leftWall, style: style)
+      result += " \(line.padding(toLength: width - 4, withPad: " ", startingAt: 0)) "
+      result += character(for: .rightWall, style: style) + "\n"
+    }
+    
+    let seperatorLine = createHorizontal(for: innerJoin, with: width)
+    var seperator = "\(leftWallJoin)\(seperatorLine)\(rightWallJoin)"
+    
+    // Bottom of the box
+    result += character(for: .bottomLeft, style: style)
+    result += String(repeating: character(for: .bottomWall, style: style), count: width - 2)
+    result += character(for: .bottomRight, style: style)
+    
+    return result
+  }
+  
+  static func draw(
+    header: String,
+    content: String,
+    width: Int = 40
+  ) -> String {
+    
+    
     
     let headerLines: [String] = reflowText(header, width: width - paddingSize)
     let contentLines: [String] = reflowText(content, width: width - paddingSize)
@@ -283,6 +400,8 @@ public struct ConsoleOutput {
     var horizontal = String(repeating: structure, count: width-2)
     return horizontal
   }
+  
+  static func createHorizontal(for: )
   
   
   static func spaceOrEllipsis(for content: String, width: Int, padding: Int) -> String {
