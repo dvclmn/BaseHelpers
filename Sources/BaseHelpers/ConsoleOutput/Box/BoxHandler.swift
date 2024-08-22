@@ -9,17 +9,17 @@ import Foundation
 
 public extension ConsoleOutput {
   
+  /// This `paddingSize` value compensates for:
+  ///
+  /// 1. The leading wall character
+  /// 2. A leading space
+  /// 3  A trailing space
+  /// 4. The trailing wall character
+  ///
   private static let paddingSize: Int = 4
   
   func drawBox() -> String {
     
-    /// This `paddingSize` value compensates for:
-    ///
-    /// 1. The leading wall character
-    /// 2. A leading space
-    /// 3  A trailing space
-    /// 4. The trailing wall character
-    ///
     
     var headerOutput = ""
     var contentOutput = ""
@@ -67,30 +67,33 @@ public extension ConsoleOutput {
   ///
   func processBoxLine(_ reflowedLine: String? = nil, type: Line) -> String {
     
-    /// If `text` is `nil`, that means we're working with a structural line, not a written-text based line
-    ///
-    
-    var capLeading: String = ""
-    var capTrailing: String = ""
-    
     var output: String = ""
+    var capLeading: Part
+    var capTrailing: Part
     
     switch type {
       case .top:
-        output = cappedLine(.corner(.top(.leading)), nil, .corner(.top(.trailing)), for: type)
+        capLeading = Part.corner(.top(.leading))
+        capTrailing = Part.corner(.top(.trailing))
         
       case .header:
-        output = cappedLine(.horizontal(), reflowedLine, .horizontal(), for: type)
+        capLeading = Part.vertical(location: .exterior)
+       capTrailing = Part.vertical(location: .exterior)
         
       case .divider:
-        output = cappedLine(.corner(.top(.leading)), nil, .corner(.top(.trailing)), for: type)
+        capLeading = Part.vertical(join: .leading, location: .exterior)
+        capTrailing = Part.vertical(join: .trailing, location: .exterior)
         
       case .content:
-        output = cappedLine(.corner(.top(.leading)), reflowedLine, .corner(.top(.trailing)), for: type)
+        capLeading = Part.corner(.top(.leading))
+        capTrailing = Part.corner(.top(.trailing))
         
       case .bottom:
-        output = cappedLine(.corner(.top(.leading)), nil, .corner(.top(.trailing)), for: type)
+        capLeading = Part.corner(.top(.leading))
+        capTrailing = Part.corner(.top(.trailing))
     }
+    
+    output = cappedLine(capLeading, reflowedLine, capTrailing, for: type)
     
     return output
   }
@@ -104,47 +107,45 @@ public extension ConsoleOutput {
     
     var lineContent: String = ""
     
+    
     if let text = text {
-      lineContent = text
+      let leadingSpace = " "
+      
+      let paddingLength: Int = self.config.width - Self.paddingSize
+      
+      lineContent = leadingSpace + text.padding(toLength: paddingLength, withPad: " ", startingAt: 0)
     } else {
       lineContent = repeatingPart(for: type)
     }
     
-    let output = capLeading.character(with: config) + lineContent + capLeading.character(with: config) + "\n"
+    
+    let output = capLeading.character(with: config)
+    + lineContent
+    + capLeading.character(with: config)
+    + "\n"
     
     return output
   }
-
   
   private func repeatingPart(for line: Line) -> String {
     
     var finalOutput: String = ""
+    let repeatCount: Int = self.config.width - (Self.paddingSize - 1)
     
     switch line {
-        
       case .top, .bottom:
-        
-        let part = Part.horizontal(location: .exterior)
-        finalOutput = part.character(with: config)
+        let part = Part.horizontal(location: .exterior).character(with: config)
+        finalOutput = String(repeating: part, count: repeatCount)
         
       case .header, .content:
         break // header and content should produce actual text content, not a structural Part
         
       case .divider:
-        let part = Part.horizontal(location: .interior)
-        finalOutput = part.character(with: config)
+        let part = Part.horizontal(location: .interior).character(with: config)
+        finalOutput = String(repeating: part, count: repeatCount)
     }
     
     return finalOutput
   }
-  
-  func spaceOrEllipsis(for content: String, width: Int, padding: Int) -> String {
-    if content.count > width - padding {
-      return "…"
-    } else {
-      return String(repeating: " ", count: width - padding - content.count)
-    }
-  }
-  
-  
+
 }
