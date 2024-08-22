@@ -9,37 +9,26 @@ import SwiftUI
 
 struct BoxPrintView: View {
   
-  @State private var displayText: AttributedString = AttributedString("")
-  @State private var output: ConsoleOutput
-  
-  init() {
-    _output = State(initialValue: ConsoleOutput(
-      header: "TestStrings.paragraphs[0]",
-      content: TestStrings.paragraphs[1],
-      text: { _ in }  // We'll update this in onAppear
-    ))
-  }
+  @State private var output: ConsoleOutput = ConsoleOutput(
+    header: TestStrings.paragraphs[0],
+    content: TestStrings.paragraphs[1],
+    config: Config(contentLineLimit: 10)
+  )
   
   var body: some View {
     
     VStack(spacing: 30) {
       
       VStack{
-        Text(displayText)
+        Text(output.attributedString)
       }
 
       .textSelection(.enabled)
     }
-    .onAppear {
-      // Update the text closure here
-      output.text = { newText in
-        displayText = newText
-      }
-    }
     
     .monospaced()
     .padding(40)
-    .frame(width: 600, height: 300)
+    .frame(width: 600, height: 700)
     .background(.black.opacity(0.6))
     
   }

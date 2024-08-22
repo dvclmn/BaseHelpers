@@ -24,19 +24,19 @@ public extension ConsoleOutput {
     var headerOutput = ""
     var contentOutput = ""
     
-    let headerLines: [String] = self.header.reflowText(width: self.config.width - ConsoleOutput.paddingSize)
-    let contentLines: [String] = self.content.reflowText(width: self.config.width - ConsoleOutput.paddingSize)
-    
     let topLine = self.processBoxLine(type: .top)
+    let dividerLine = self.processBoxLine(type: .divider)
+    let bottomLine = self.processBoxLine(type: .bottom)
     
-    //      let paddedLine = line.padding(
-    //        toLength: width-paddingSize,
-    //        withPad: " ",
-    //        startingAt: 0
-    //      )
-    //      headerText += paddedLine
-    //    }
-    //    let header = "\(leftOrRightWall) \(headerText) \(leftOrRightWall)"
+    
+    let headerLines: [String] = self.header.reflowText(
+      width: self.config.width - ConsoleOutput.paddingSize,
+      maxLines: config.headerLineLimit
+    )
+    let contentLines: [String] = self.content.reflowText(
+      width: self.config.width - ConsoleOutput.paddingSize,
+      maxLines: config.contentLineLimit
+    )
     
     for line in headerLines {
       headerOutput += self.processBoxLine(line, type: .header)
@@ -49,7 +49,9 @@ public extension ConsoleOutput {
     let finalOutput = """
     \(topLine)
     \(headerOutput)
+    \(dividerLine)
     \(contentOutput)
+    \(bottomLine)
     """
     
     return finalOutput
@@ -75,16 +77,19 @@ public extension ConsoleOutput {
     
     switch type {
       case .top:
-        output = cappedLine(.corner(.top(.leading)), reflowedLine, .corner(.top(.trailing)), for: type)
+        output = cappedLine(.corner(.top(.leading)), nil, .corner(.top(.trailing)), for: type)
         
       case .header:
         output = cappedLine(.horizontal(), reflowedLine, .horizontal(), for: type)
+        
       case .divider:
-        output = cappedLine(.corner(.top(.leading)), reflowedLine, .corner(.top(.trailing)), for: type)
+        output = cappedLine(.corner(.top(.leading)), nil, .corner(.top(.trailing)), for: type)
+        
       case .content:
         output = cappedLine(.corner(.top(.leading)), reflowedLine, .corner(.top(.trailing)), for: type)
+        
       case .bottom:
-        output = cappedLine(.corner(.top(.leading)), reflowedLine, .corner(.top(.trailing)), for: type)
+        output = cappedLine(.corner(.top(.leading)), nil, .corner(.top(.trailing)), for: type)
     }
     
     return output
@@ -123,7 +128,7 @@ public extension ConsoleOutput {
         finalOutput = part.character(with: config)
         
       case .header, .content:
-        break
+        break // header and content should produce actual text content, not a structural Part
         
       case .divider:
         let part = Part.horizontal(location: .interior)

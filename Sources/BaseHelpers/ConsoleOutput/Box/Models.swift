@@ -16,29 +16,26 @@ public typealias Line = ConsoleOutput.BoxLine
 
 public struct ConsoleOutput {
   
+  
+  var header: String
+  var content: String
+  var config: Config
+  
   var attributedString: AttributedString {
     
     var outputString = AttributedString(self.drawBox())
     return outputString
   }
   
-  public typealias TextOutput = (_ text: AttributedString) -> Void
-  
-  var header: String
-  var content: String
-  var config: Config
-  var text: TextOutput
   
   public init(
     header: String,
     content: String,
-    config: Config = .init(),
-    text: @escaping TextOutput = { _ in }
+    config: Config = .init()
   ) {
     self.header = header
     self.content = content
     self.config = config
-    self.text = text
   }
   
   public struct BoxConfiguration {
@@ -50,7 +47,7 @@ public struct ConsoleOutput {
     public init(
       theme: Theme = .sharp,
       width: Int = 60,
-      headerLineLimit: Int? = nil,
+      headerLineLimit: Int? = 3,
       contentLineLimit: Int? = nil
     ) {
       self.theme = theme

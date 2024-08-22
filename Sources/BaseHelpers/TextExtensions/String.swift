@@ -42,19 +42,33 @@ extension String {
     return String(self.prefix(maxLength))
   }
   
-  func reflowText(width: Int) -> [String] {
-    let lines = processReflow(text: self, width: width)
-    return lines
+  func reflowText(width: Int, maxLines: Int?) -> [String] {
+
+    return trimLines(width: width, maxLines: maxLines)
   }
   
-  func reflowText(width: Int) -> String {
-    let lines = processReflow(text: self, width: width)
+  func reflowText(width: Int, maxLines: Int?) -> String {
+    
+    var lines = trimLines(width: width, maxLines: maxLines)
     
     let joinedResult = lines.map { line in
       line
     }.joined(separator: "\n")
     
     return joinedResult
+  }
+  
+  private func trimLines(width: Int, maxLines: Int?) -> [String] {
+    
+    var lines: [String] = []
+    
+    if let maxLines = maxLines {
+      lines = Array(processReflow(text: self, width: width).prefix(maxLines))
+    } else {
+      lines = processReflow(text: self, width: width)
+    }
+
+    return lines
   }
   
   
