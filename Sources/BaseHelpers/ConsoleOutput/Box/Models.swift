@@ -13,9 +13,33 @@ public typealias Part = ConsoleOutput.BoxPart
 public typealias Structure = ConsoleOutput.BoxStructure
 public typealias Line = ConsoleOutput.BoxLine
 
+
 public struct ConsoleOutput {
   
+  var attributedString: AttributedString {
+    
+    var outputString = AttributedString(self.drawBox())
+    return outputString
+  }
+  
+  public typealias TextOutput = (_ text: AttributedString) -> Void
+  
+  var header: String
+  var content: String
   var config: Config
+  var text: TextOutput
+  
+  public init(
+    header: String,
+    content: String,
+    config: Config = .init(),
+    text: @escaping TextOutput = { _ in }
+  ) {
+    self.header = header
+    self.content = content
+    self.config = config
+    self.text = text
+  }
   
   public struct BoxConfiguration {
     var theme: Theme
@@ -34,6 +58,8 @@ public struct ConsoleOutput {
       self.headerLineLimit = headerLineLimit
       self.contentLineLimit = contentLineLimit
     }
+    
+    static let `default`: Config = .init()
   }
   
   /// Currently this implementaiton can only handle horizontal dividers, not vertical.
@@ -142,7 +168,6 @@ public struct ConsoleOutput {
         case trailing
         
       }
-      
     }
     
     public enum Location {
@@ -151,7 +176,4 @@ public struct ConsoleOutput {
     }
      
   }
-  
-
-
 }

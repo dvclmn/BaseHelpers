@@ -35,7 +35,6 @@ extension ConsoleOutput {
   /// `╯` corner bottom trailing
   ///
   
-  
   public enum Theme {
     
     case rounded
@@ -57,6 +56,7 @@ extension ConsoleOutput {
     }
   }
   
+  static let invisibles: String = ""
 }
 
 

@@ -5,16 +5,13 @@
 //  Created by Dave Coleman on 22/8/2024.
 //
 
+import Foundation
 
 public extension ConsoleOutput {
   
-  
   private static let paddingSize: Int = 4
   
-  public func drawBox(
-    header: String,
-    content: String
-  ) -> String {
+  func drawBox() -> String {
     
     /// This `paddingSize` value compensates for:
     ///
@@ -24,12 +21,11 @@ public extension ConsoleOutput {
     /// 4. The trailing wall character
     ///
     
-    
     var headerOutput = ""
     var contentOutput = ""
     
-    let headerLines: [String] = header.reflowText(width: self.config.width - ConsoleOutput.paddingSize)
-    let contentLines: [String] = content.reflowText(width: self.config.width - ConsoleOutput.paddingSize)
+    let headerLines: [String] = self.header.reflowText(width: self.config.width - ConsoleOutput.paddingSize)
+    let contentLines: [String] = self.content.reflowText(width: self.config.width - ConsoleOutput.paddingSize)
     
     let topLine = self.processBoxLine(type: .top)
     
