@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUICore
 
-public extension ConsoleOutput {
+public extension SwiftBox {
   
   /// This `paddingSize` value compensates for:
   ///
@@ -22,7 +22,7 @@ public extension ConsoleOutput {
   func drawBox() -> AttributedString {
     
     var output = AttributedString()
-    let width: Int = self.config.width - ConsoleOutput.paddingSize
+    let width: Int = self.config.width - SwiftBox.paddingSize
     
     /// 1. Create top-most line — the roof of the box
     ///

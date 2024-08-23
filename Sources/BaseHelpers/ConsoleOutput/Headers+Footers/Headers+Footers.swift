@@ -7,7 +7,7 @@
 
 
 
-extension ConsoleOutput {
+extension SwiftBox {
 
   static func header(_ info: String) -> String {
     return """

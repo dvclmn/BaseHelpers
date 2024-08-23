@@ -7,24 +7,22 @@
 
 import Foundation
 
-public typealias Theme = ConsoleOutput.Theme
-public typealias Config = ConsoleOutput.BoxConfiguration
-public typealias Part = ConsoleOutput.BoxPart
-public typealias Structure = ConsoleOutput.BoxStructure
-public typealias Line = ConsoleOutput.BoxLine
+public typealias Theme = SwiftBox.Theme
+public typealias Config = SwiftBox.Configuration
+public typealias Part = SwiftBox.FramePart
+//public typealias Structure = SwiftBox.BoxStructure
+public typealias Line = SwiftBox.BoxLine
 
 
-public struct ConsoleOutput {
+public struct SwiftBox {
   
-  
-  var header: String
-  var content: String
-  var config: Config
-  
-  var attributedString: AttributedString {
+  public var header: String
+  public var content: String
+  public var config: Config
+
+  public var attributedString: AttributedString {
     return self.drawBox()
   }
-  
   
   public init(
     header: String,
@@ -36,22 +34,25 @@ public struct ConsoleOutput {
     self.config = config
   }
   
-  public struct BoxConfiguration {
+  public struct Configuration {
     var theme: Theme
     var width: Int
     var headerLineLimit: Int?
     var contentLineLimit: Int?
+    var showsMetrics: Bool
     
     public init(
       theme: Theme = Theme(),
       width: Int = 60,
       headerLineLimit: Int? = 3,
-      contentLineLimit: Int? = nil
+      contentLineLimit: Int? = nil,
+      showsMetrics: Bool = false
     ) {
       self.theme = theme
       self.width = width
       self.headerLineLimit = headerLineLimit
       self.contentLineLimit = contentLineLimit
+      self.showsMetrics = showsMetrics
     }
     
     static let `default`: Config = .init()
@@ -68,38 +69,38 @@ public struct ConsoleOutput {
     case bottom
   }
 
-  public enum BoxStructure {
-    
-    case horizontal(Structure.Horizontal)
-    case vertical(Structure.Vertical)
-    
-    public enum Horizontal {
-      case top
-      case divider
-      case bottom
-      
-      public var corners: (Part, Part)? {
-        switch self {
-          case .top:
-            (Part.corner(.top(.leading)), Part.corner(.top(.trailing)))
-          case .divider:
-            nil
-          case .bottom:
-            (Part.corner(.bottom(.leading)), Part.corner(.bottom(.trailing)))
-        }
-      }
-
-    }
-    
-    public enum Vertical {
-      case leading
-      case divider
-      case trailing
-    }
-    
-  }
+//  public enum BoxStructure {
+//    
+//    case horizontal(Structure.Horizontal)
+//    case vertical(Structure.Vertical)
+//    
+//    public enum Horizontal {
+//      case top
+//      case divider
+//      case bottom
+//      
+//      public var corners: (Part, Part)? {
+//        switch self {
+//          case .top:
+//            (Part.corner(.top(.leading)), Part.corner(.top(.trailing)))
+//          case .divider:
+//            nil
+//          case .bottom:
+//            (Part.corner(.bottom(.leading)), Part.corner(.bottom(.trailing)))
+//        }
+//      }
+//
+//    }
+//    
+//    public enum Vertical {
+//      case leading
+//      case divider
+//      case trailing
+//    }
+//    
+//  }
   
-  public enum BoxPart: Hashable {
+  public enum FramePart: Hashable {
     
     case horizontal(
       join: Join.Horizontal = .none,

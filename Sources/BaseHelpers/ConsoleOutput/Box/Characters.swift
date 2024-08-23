@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-extension ConsoleOutput {
+extension SwiftBox {
   
   /// `━` horizontal exterior
   ///
@@ -43,41 +43,45 @@ extension ConsoleOutput {
   public struct Theme {
     
     var set: Theme.GlyphSet
-    var colours: Theme.GlyphColor
+    var styles: Theme.GlyphStyle
     
     public init(
       set: Theme.GlyphSet = .sharp,
-      colours: Theme.GlyphColor = .init()
+      styles: Theme.GlyphStyle = .init()
     ) {
       self.set = set
-      self.colours = colours
+      self.styles = styles
     }
     
-    var textForeground: Color {
-      return colours.text.foreground
-    }
-    var invisiblesForeground: Color {
-      return colours.invisibles.foreground
-    }
-    var frameForeground: Color {
-      return colours.frame.foreground
-    }
-    
-    
+    //    var textForeground: Color {
+    //      return colours.text.foreground
+    //    }
+    //    var invisiblesForeground: Color {
+    //      return colours.invisibles.foreground
+    //    }
+    //    var frameForeground: Color {
+    //      return colours.frame.foreground
+    //    }
   }
-  
-  
 }
 
 extension Theme {
   
-  public struct GlyphColor {
+  /// `Theme.GlyphSet` and `Theme.GlyphStyle` being seperate
+  /// makes sense to me, because the two should operate totally independantly.
+  ///
+  /// Then having seperate `AttributeContainer`s for pre-defined semantic
+  /// 'syntax' seems good too — such as text, invisibles, frames.
+  ///
+  public struct GlyphStyle {
+    
     var text: ColorSet
     var invisibles: ColorSet
     var frame: ColorSet
     
     public init(
-      text: ColorSet = .init(foreground: Color.purple.opacity(0.8)),
+      text: ColorSet = .init(foreground: Color.purple.opacity(0.9)),
+      accent: ColorSet = .init(foreground: Color.orange.opacity(0.8)),
       invisibles: ColorSet = .init(foreground: Color.secondary.opacity(0.6)),
       frame: ColorSet = .init(foreground: Color.secondary)
     ) {
@@ -117,6 +121,20 @@ extension Theme {
     
   } // END glyph set
   
+  public struct BoxStyle {
+    var primary: Theme.AttributeSet      // Text
+    var secondary: Theme.AttributeSet    // Box frame
+    var tertiary: Theme.AttributeSet     // Invisibles
+    var accent: Theme.AttributeSet       // Subtle accents
+  }
+  
+  public struct AttributeSet {
+    var foreground: Color
+    var background: Color
+    
+
+  }
+  
   public enum Invisibles {
     case line(LineType)
     case space
@@ -141,7 +159,7 @@ extension Theme {
 }
 
 
-extension Theme.GlyphColor {
+extension Theme.GlyphStyle {
   
   public struct ColorSet {
     var foreground: Color
@@ -152,13 +170,7 @@ extension Theme.GlyphColor {
       self.background = background
     }
     
-    var container: AttributeContainer {
-      var attrContainer = AttributeContainer()
-      attrContainer.foregroundColor = self.foreground
-      attrContainer.backgroundColor = self.background
-      
-      return attrContainer
-    }
+    
   }
 }
 

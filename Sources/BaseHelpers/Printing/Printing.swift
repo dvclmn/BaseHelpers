@@ -74,7 +74,7 @@ func formatHeader(
   
   let headerInfo = [(title ?? ""), fileAndLine, functionName, typeString].joined(separator: "\n")
   
-  let formattedHeader = ConsoleOutput.header(headerInfo)
+  let formattedHeader = SwiftBox.header(headerInfo)
   
   return formattedHeader
 }
@@ -95,7 +95,7 @@ func formatFooter(_ title: String? = nil) -> String {
     footerString = "// END: \(title)"
   }
   
-  let finalLine = ConsoleOutput.footerLine
+  let finalLine = SwiftBox.footerLine
   
   let output = """
   
@@ -159,7 +159,7 @@ public func printCollection<T: Collection>(
   let type = "Type: \t\t\(typeName)"
   
   let headerInfo = [fileAndLine, functionName, type].joined(separator: "\n")
-  let formattedHeader = ConsoleOutput.header(headerInfo)
+  let formattedHeader = SwiftBox.header(headerInfo)
   
   /// Content
   ///
@@ -172,7 +172,7 @@ public func printCollection<T: Collection>(
     info = "Value: \(value)"
   }
   
-  let finalLine = ConsoleOutput.footerLine
+  let finalLine = SwiftBox.footerLine
   
   /// Final output
   ///
