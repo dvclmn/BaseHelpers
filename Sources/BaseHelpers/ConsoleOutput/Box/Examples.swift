@@ -12,7 +12,7 @@ struct BoxPrintView: View {
   @State private var output: ConsoleOutput = ConsoleOutput(
     header: TestStrings.paragraphs[0],
     content: TestStrings.paragraphs[1],
-    config: Config(width: 40, contentLineLimit: 10)
+    config: Config(width: 46, contentLineLimit: 10)
   )
   
   var body: some View {

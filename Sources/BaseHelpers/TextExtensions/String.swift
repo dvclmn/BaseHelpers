@@ -7,7 +7,7 @@
 
 import Foundation
 
-extension String {
+public extension String {
   func nsRange(from range: Range<String.Index>) -> NSRange {
     return NSRange(range, in: self)
   }
@@ -36,6 +36,25 @@ extension String {
     }
   }
   
+  
+  static func repeating(
+    _ mainChar: Character,
+    alternating altChar: Character,
+    every n: Int,
+    count: Int,
+    startingAt offset: Int = 0
+  ) -> String {
+    var result = ""
+    for i in 0..<count {
+      if (i + offset) % n == 0 {
+        result.append(altChar)
+      } else {
+        result.append(mainChar)
+      }
+    }
+    return result
+  }
+  
   /// A `prefix(_ maxLength: Int)` alternative, returning a `String` rather than `Substring`
   ///
   func preview(_ maxLength: Int) -> String {
@@ -43,7 +62,7 @@ extension String {
   }
   
   func reflowText(width: Int, maxLines: Int?) -> [String] {
-
+    
     return trimLines(width: width, maxLines: maxLines)
   }
   
@@ -67,7 +86,7 @@ extension String {
     } else {
       lines = processReflow(text: self, width: width)
     }
-
+    
     return lines
   }
   

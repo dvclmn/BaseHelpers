@@ -26,13 +26,16 @@ public extension ConsoleOutput {
     
     /// 1. Create top-most line — the roof of the box
     ///
-    output += self.processBoxLine(type: .top).addNewLine
+    output += widthCounter(self.config.width)
+    output += self.processBoxLine(type: .top)
+    output.addNewLine()
     
     let headerLines: [String] = self.header.reflowText(width: width, maxLines: config.headerLineLimit)
     let contentLines: [String] = self.content.reflowText(width: width, maxLines: config.contentLineLimit)
     
     for line in headerLines {
-      output += self.processBoxLine(line, type: .header).addNewLine
+      output += self.processBoxLine(line, type: .header)
+      output.addNewLine()
     }
     
     output += self.processBoxLine(type: .divider)
@@ -94,39 +97,47 @@ public extension ConsoleOutput {
     for type: Line
   ) -> AttributedString {
     
-    var output = AttributedString()
-    var paddingCharacter = Theme.Invisibles.padding.character
+    var output = AttributedString("")
+    let paddingCharacter = Theme.Invisibles.padding.character
     
     if let text = text {
       
-//      let leadingSpace = AttributedString("•", attributes: config.theme.colours.invisibles.container)
-      
       let paddingLength = self.config.width
-      let paddedText = text.padding(toLength: paddingLength, withPad: paddingCharacter, startingAt: 0)
       
-      output += AttributedString(paddedText, attributes: config.theme.colours.invisibles.container)
+      output.appendString(text)
+      output.setAttributes(config.theme.colours.text.container)
+      
+      // Calculate the padding length
+      let paddingNeeded = max(0, paddingLength - text.count)
+      
+      if paddingNeeded > 0 {
+        // Create an AttributedString for the padding
+        var paddingString = AttributedString(String(repeating: paddingCharacter, count: paddingNeeded))
+        
+        // Apply attributes to the padding
+        paddingString.setAttributes(config.theme.colours.invisibles.container)
+        
+        // Append the padded part with attributes
+        output += paddingString
+      }
 
-//      
-//      // Apply default text color to the actual text
-//      if let textRange = attributedPaddedText.range(of: text) {
-//        attributedPaddedText[textRange].foregroundColor = textForeground
-//      }
       
-      // Apply padding color to the padding characters
-      attributedPaddedText.foregroundColor = invisiblesForeground
+//      output[paddedText.ra]
+//      output.appendString(paddedText)
+//      output += AttributedString(paddedText, attributes: config.theme.colours.invisibles.container)
       
-      lineContent = leadingSpace + attributedPaddedText + AttributedString("\n")
+      //
+      //      // Apply default text color to the actual text
+      //      if let textRange = attributedPaddedText.range(of: text) {
+      //        attributedPaddedText[textRange].foregroundColor = textForeground
+      //      }
+      
     } else {
-      lineContent = AttributedString(repeatingPart(for: type))
-      lineContent.foregroundColor = invisiblesForeground
+      output += repeatingPart(for: type)
     }
     
-    var capLeadingAttr = AttributedString(capLeading.character(with: config))
-    var capTrailingAttr = AttributedString(capTrailing.character(with: config))
-    capLeadingAttr.foregroundColor = frameForeground
-    capTrailingAttr.foregroundColor = frameForeground
     
-    return capLeadingAttr + lineContent + capTrailingAttr
+    return output
   }
   
   //    var lineContent: String = ""
@@ -153,25 +164,106 @@ public extension ConsoleOutput {
   
   
   
-  private func repeatingPart(for line: Line) -> String {
+  private func repeatingPart(for line: Line) -> AttributedString {
     
-    var finalOutput: String = ""
-    let repeatCount: Int = self.config.width - (Self.paddingSize - 1)
+    var output = AttributedString("")
+    
+    let repeatCount: Int = self.config.width - (Self.paddingSize - 2)
     
     switch line {
       case .top, .bottom:
         let part = Part.horizontal(location: .exterior).character(with: config)
-        finalOutput = String(repeating: part, count: repeatCount)
+        output += AttributedString(String(repeating: part, count: repeatCount))
         
       case .header, .content:
         break // header and content should produce actual text content, not a structural Part
         
       case .divider:
         let part = Part.horizontal(location: .interior).character(with: config)
-        finalOutput = String(repeating: part, count: repeatCount)
+        output += AttributedString(String(repeating: part, count: repeatCount))
     }
     
-    return finalOutput
+    output.setAttributes(config.theme.colours.frame.container)
+    return output
   }
   
+  enum WidthCounterDisplayStyle {
+    case full
+    case compact
+  }
+  
+  func widthCounter(
+    _ width: Int,
+    style: WidthCounterDisplayStyle = .compact
+  ) -> AttributedString {
+    
+    var result = AttributedString("")
+    let adjustedWidth = width + 1 // To make up for starting from 1
+    
+    switch style {
+      case .full:
+        // First line: 10's (with leading zero)
+        var tensLine = ""
+        for i in 1..<adjustedWidth {
+          tensLine += String((i / 10) % 10)
+        }
+        result.appendString(tensLine)
+        result.addNewLine()
+        
+        // Second line: counting up by one
+        var onesLine = ""
+        for i in 1..<adjustedWidth {
+          onesLine += String(i % 10)
+        }
+        result.appendString(onesLine)
+        result.addNewLine()
+        
+      case .compact:
+        var compactLine = "1"
+        var i = 5
+        while i <= width {
+          let spaces = String(repeating: " ", count: i <= 9 ? 4 : 3)
+          if i % 10 == 5 {
+            compactLine += spaces + "· "
+          } else {
+            // Align two-digit numbers with the first digit over the marker
+            if i >= 10 {
+              compactLine += String(repeating: " ", count: 3) + String(i)
+            } else {
+              compactLine += spaces + String(i)
+            }
+          }
+          i += 5
+        }
+        
+        // Handle the final number
+        if width % 5 != 0 {
+          let lastNumberString = String(width)
+          let spacesNeeded = width - compactLine.count - lastNumberString.count
+          if spacesNeeded > 0 {
+            compactLine += String(repeating: " ", count: spacesNeeded) + lastNumberString
+          } else {
+            // If we've overshot, trim the line and add the last number
+            compactLine = String(compactLine.prefix(width - lastNumberString.count)) + lastNumberString
+          }
+        }
+        result.appendString(compactLine)
+        result.addNewLine()
+        result.appendString(
+          String.repeating(
+            ".",
+            alternating: "|",
+            every: 5,
+            count: width
+          )
+        )
+        result.addNewLine()
+    }
+
+    
+    result.setAttributes(config.theme.colours.invisibles.container)
+    return result
+  }
+  
+
 }

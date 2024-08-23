@@ -77,7 +77,7 @@ extension Theme {
     var frame: ColorSet
     
     public init(
-      text: ColorSet = .init(foreground: Color.primary),
+      text: ColorSet = .init(foreground: Color.purple.opacity(0.8)),
       invisibles: ColorSet = .init(foreground: Color.secondary.opacity(0.6)),
       frame: ColorSet = .init(foreground: Color.secondary)
     ) {
@@ -134,7 +134,7 @@ extension Theme {
         case .line(.end): "¶"
         case .space: "•"
         case .tab: "→"
-        case .padding: "○"
+        case .padding: ","
       }
     }
   }
