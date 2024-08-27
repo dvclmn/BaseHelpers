@@ -17,6 +17,7 @@ let package = Package(
       "Renamable",
       "Logging",
       "Resizable",
+      "Debounce",
       "Scrolling",
       "Selection",
       
@@ -32,6 +33,7 @@ let package = Package(
     .target(name: "Geometry", dependencies: [.product(name: "Dependencies", package: "swift-dependencies")]),
     .target(name: "Profiler"),
     .target(name: "Renamable"),
+    .target(name: "Debounce", dependencies: [.product(name: "Dependencies", package: "swift-dependencies")]),
     .target(name: "Logging", dependencies: ["Helpers"]),
     .target(name: "Resizable", dependencies: ["Helpers", "Geometry"]),
     .target(name: "Scrolling", dependencies: ["ScrollKit", .product(name: "SmoothGradient", package: "SmoothGradient")]),
