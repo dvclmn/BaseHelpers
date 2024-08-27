@@ -41,11 +41,11 @@ public extension String {
     _ mainChar: Character,
     alternating altChar: Character,
     every n: Int,
-    count: Int,
+    totalCount: Int,
     startingAt offset: Int = 0
   ) -> String {
     var result = ""
-    for i in 0..<count {
+    for i in 0..<totalCount {
       if (i + offset) % n == 0 {
         result.append(altChar)
       } else {

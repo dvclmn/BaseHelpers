@@ -7,8 +7,8 @@
 
 import SwiftUI
 
-extension AttributedString {
-//  var addNewLine: AttributedString {
+public extension AttributedString {
+//  var addLineBreak: AttributedString {
 //    
 //    var current: AttributedString = self
 //    
@@ -17,12 +17,18 @@ extension AttributedString {
 //    return current
 //  }
   
+  var asString: String {
+    String(self.characters)
+  }
+  
   mutating func appendString(_ newString: String) {
     self.characters.append(contentsOf: newString)
   }
   
-  mutating func addNewLine() {
-    self.characters.append("\n")
+  mutating func addLineBreak() {
+    
+    self.appendString("\n")
+//    self.characters.append("\n")
   }
   
 //  

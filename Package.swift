@@ -16,6 +16,7 @@ let package = Package(
         "HoverAsync",
         "ImageCompression",
         "Shaders",
+        "TouchInertia",
         "Shortcuts",
       ]
     )
@@ -24,6 +25,7 @@ let package = Package(
     .target(name: "BaseHelpers"),
     .target(name: "HoverAsync"),
     .target(name: "ImageCompression"),
+    .target(name: "TouchInertia"),
     .target(name: "Shaders"),
     .target(name: "Shortcuts"),
     

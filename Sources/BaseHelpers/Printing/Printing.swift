@@ -47,37 +47,37 @@ public func printValue<T: CustomStringConvertible>(
 
 // MARK: Print Header
 
-public func printHeader(
-  _ title: String? = nil,
-  value: Any? = nil,
-  diagnostics: DiagnosticInformation
-) {
-  print(formatHeader(title, value: value, diagnostics: diagnostics))
-}
+//public func printHeader(
+//  _ title: String? = nil,
+//  value: Any? = nil,
+//  diagnostics: DiagnosticInformation
+//) {
+//  print(formatHeader(title, value: value, diagnostics: diagnostics))
+//}
 
-func formatHeader(
-  _ title: String? = nil,
-  value: Any? = nil,
-  diagnostics: DiagnosticInformation = .init()
-) -> String {
-  
-  let fileAndLine = "File & Line: \t[\(URL(fileURLWithPath: diagnostics.fileName).lastPathComponent):\(diagnostics.line)]"
-  let functionName = "Function: \t\(diagnostics.functionName)"
-  
-  var typeString: String = ""
-  
-  if let value = value {
-    let mirror = Mirror(reflecting: value)
-    let typeName = String(describing: type(of: value))
-    typeString = "Type: \t\t\(typeName)"
-  }
-  
-  let headerInfo = [(title ?? ""), fileAndLine, functionName, typeString].joined(separator: "\n")
-  
-  let formattedHeader = SwiftBox.header(headerInfo)
-  
-  return formattedHeader
-}
+//func formatHeader(
+//  _ title: String? = nil,
+//  value: Any? = nil,
+//  diagnostics: DiagnosticInformation = .init()
+//) -> String {
+//  
+//  let fileAndLine = "File & Line: \t[\(URL(fileURLWithPath: diagnostics.fileName).lastPathComponent):\(diagnostics.line)]"
+//  let functionName = "Function: \t\(diagnostics.functionName)"
+//  
+//  var typeString: String = ""
+//  
+//  if let value = value {
+//    let mirror = Mirror(reflecting: value)
+//    let typeName = String(describing: type(of: value))
+//    typeString = "Type: \t\t\(typeName)"
+//  }
+//  
+//  let headerInfo = [(title ?? ""), fileAndLine, functionName, typeString].joined(separator: "\n")
+//  
+//  let formattedHeader = SwiftBox.header(headerInfo)
+//  
+//  return formattedHeader
+//}
 
 // MARK: Print Footer
 
@@ -95,12 +95,12 @@ func formatFooter(_ title: String? = nil) -> String {
     footerString = "// END: \(title)"
   }
   
-  let finalLine = SwiftBox.footerLine
+//  let finalLine = SwiftBox.footerLine
   
   let output = """
   
   \(footerString)
-  \(finalLine)
+  \\(finalLine)
   
   
   """
@@ -118,17 +118,17 @@ func formatPrintInfo(
   hasTrailingLine: Bool = true
 ) -> String {
   
-  let header: String = formatHeader(
-    title,
-    value: value,
-    diagnostics: diagnostics
-  )
+//  let header: String = formatHeader(
+//    title,
+//    value: value,
+//    diagnostics: diagnostics
+//  )
   
   let footer: String = hasTrailingLine ? formatFooter(title) : ""
   
   let output: String = """
   
-  \(header)
+  \\(header)
   
   \(value)
   
@@ -159,7 +159,7 @@ public func printCollection<T: Collection>(
   let type = "Type: \t\t\(typeName)"
   
   let headerInfo = [fileAndLine, functionName, type].joined(separator: "\n")
-  let formattedHeader = SwiftBox.header(headerInfo)
+//  let formattedHeader = SwiftBox.header(headerInfo)
   
   /// Content
   ///
@@ -172,17 +172,17 @@ public func printCollection<T: Collection>(
     info = "Value: \(value)"
   }
   
-  let finalLine = SwiftBox.footerLine
+//  let finalLine = SwiftBox.footerLine
   
   /// Final output
   ///
   let finalOutput: String = """
   
-  \(formattedHeader)
+  \\(formattedHeader)
   
   \(info)
   
-  \(finalLine)
+  \\(finalLine)
   
   """
   
