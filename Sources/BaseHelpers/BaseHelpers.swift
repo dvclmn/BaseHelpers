@@ -235,17 +235,33 @@ public extension Int {
   }
 }
 
-public extension CGFloat {
-  func displayAsInt() -> String {
-    return String(format: "%0.f", self)
+public extension BinaryFloatingPoint {
+  
+  var wholeNumber: String {
+    return toDecimalPlace(self, to: 0)
   }
+  func toDecimal(_ place: Int) -> String {
+    return toDecimalPlace(self, to: place)
+  }
+  private func toDecimalPlace<T: FloatingPoint>(_ value: T, to decimalPlace: Int) -> String {
+    
+    guard let value = value as? CVarArg else { return "" }
+    let result = String(format: "%.\(decimalPlace)f", value)
+    
+    return result
+  }
+  
 }
 
-public extension Double {
-  func displayAsInt() -> String {
-    return String(format: "%0.f", self)
-  }
-}
+
+//public extension Double {
+//  var wholeNumber: String {
+//    return toDecimalPlace(self, to: 0)
+//  }
+//  func toDecimal(_ place: Int) -> String {
+//    return toDecimalPlace(self, to: place)
+//  }
+//}
 
 public extension Comparable {
   func constrained(_ atLeast: Self, _ atMost: Self) -> Self {
