@@ -11,7 +11,6 @@ let package = Package(
   ],
   products: [
     .library(name: "Utilities", targets: [
-      
       "Geometry",
       "Profiler",
       "Renamable",
@@ -20,7 +19,6 @@ let package = Package(
       "Debounce",
       "Scrolling",
       "Selection",
-      
     ]),
   ],
   dependencies: [
