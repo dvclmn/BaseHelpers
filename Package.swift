@@ -1,42 +1,33 @@
-// swift-tools-version: 5.6
-// The swift-tools-version declares the minimum version of Swift required to build this package.
+// swift-tools-version:5.6
 
 import PackageDescription
 
 let package = Package(
-  name: "Utilities",
+  name: "Helpers",
   platforms: [
     .iOS("17.0"),
     .macOS("14.0")
   ],
   products: [
-    .library(name: "Utilities", targets: [
-      "Geometry",
-      "Profiler",
-      "Renamable",
-      "Logging",
-      "Resizable",
-      "Debounce",
-      "Scrolling",
-      "Selection",
-    ]),
-  ],
-  dependencies: [
-    .package(name: "Helpers", path: "../Helpers"),
-    .package(url: "https://github.com/pointfreeco/swift-dependencies.git", from: "1.3.3"),
-    .package(url: "https://github.com/danielsaidi/ScrollKit.git", from: "0.5.1"),
-    .package(url: "https://github.com/raymondjavaxx/SmoothGradient.git", from: "1.0.0"),
+    .library(
+      name: "Helpers",
+      targets: [
+        "BaseHelpers",
+        "HoverAsync",
+        "ImageCompression",
+        "Shaders",
+        "TouchInertia",
+        "Shortcuts",
+      ]
+    )
   ],
   targets: [
-    .target(name: "Geometry", dependencies: [.product(name: "Dependencies", package: "swift-dependencies")]),
-    .target(name: "Profiler"),
-    .target(name: "Renamable"),
-    .target(name: "Debounce", dependencies: [.product(name: "Dependencies", package: "swift-dependencies")]),
-    .target(name: "Logging", dependencies: ["Helpers"]),
-    .target(name: "Resizable", dependencies: ["Helpers", "Geometry"]),
-    .target(name: "Scrolling", dependencies: ["ScrollKit", .product(name: "SmoothGradient", package: "SmoothGradient")]),
-    .target(name: "Selection", dependencies: ["Helpers", "Geometry", "Scrolling"]),
+    .target(name: "BaseHelpers"),
+    .target(name: "HoverAsync"),
+    .target(name: "ImageCompression"),
+    .target(name: "TouchInertia"),
+    .target(name: "Shaders"),
+    .target(name: "Shortcuts"),
+    
   ]
 )
-
-

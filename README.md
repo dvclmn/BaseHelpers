@@ -1,2 +1,2 @@
-# Utilities 
-A collection of handy utilities
+# Helpers
+Swift helpers

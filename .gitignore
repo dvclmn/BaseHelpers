@@ -1,11 +1,17 @@
+
 # Dave edits
-.DS_Store
+
 Working/
 *.png
 *.xcbkptlist
 *.xcuserstate
 xcuserdata/
 *.DS_Store
+DerivedData/
+.swiftpm/configuration/registries.json
+.swiftpm/xcode/package.xcworkspace/contents.xcworkspacedata
+.netrc
+
 
 ## compatibility with Xcode 8 and earlier (ignoring not required starting Xcode 9)
 *.xcscmblueprint
@@ -90,4 +96,3 @@ fastlane/test_output
 # https://github.com/johnno1962/injectionforxcode
 
 iOSInjectionProject/
-
