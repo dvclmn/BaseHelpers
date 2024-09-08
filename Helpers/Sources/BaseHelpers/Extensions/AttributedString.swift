@@ -21,8 +21,8 @@ public extension AttributedString {
     String(self.characters)
   }
   
-  mutating func appendString(_ newString: String) {
-    self.characters.append(contentsOf: newString)
+  mutating func appendString(_ newString: String, addsLineBreak: Bool = true) {
+    self.characters.append(contentsOf: newString + (addsLineBreak ? "\n" : ""))
   }
   
   mutating func addLineBreak() {

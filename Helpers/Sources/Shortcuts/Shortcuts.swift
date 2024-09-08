@@ -13,12 +13,25 @@ public struct Keyboard: Sendable {
   public struct Shortcut {
     public let key: String
     public let modifiers: Modifiers
+    public let doesRequireSelection: Bool
     
-    public init(_ key: String, modifiers: Modifiers = []) {
+    
+    public init(
+      _ key: String,
+      modifiers: Modifiers = [],
+      doesRequireSelection: Bool = false
+    ) {
       self.key = key
       self.modifiers = modifiers
+      self.doesRequireSelection = doesRequireSelection
     }
     
+    public var description: String {
+      
+      let modifierResult: String = self.modifiers.
+      
+      return "Shortcut(key: \(self.key), modifiers"
+    }
     
     public var swiftUIShortcut: KeyboardShortcut {
       KeyboardShortcut(KeyEquivalent(Character(key)), modifiers: modifiers.swiftUIModifiers)

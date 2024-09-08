@@ -8,7 +8,6 @@
 import Foundation
 
 
-
 extension NSRegularExpression {
    func matches(in string: String, options: NSRegularExpression.MatchingOptions = []) -> [NSTextCheckingResult] {
       return matches(in: string, options: options, range: NSRange(location: 0, length: string.utf16.count))

@@ -5,8 +5,7 @@
 //  Created by Dave Coleman on 25/8/2024.
 //
 
-import Dependencies
-import SwiftUI
+import Foundation
 
 //public extension DependencyValues {
 //  var windowDimensions: WindowSizeHandler {

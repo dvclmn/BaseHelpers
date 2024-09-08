@@ -11,6 +11,132 @@ public extension TestStrings {
     
     struct Markdown {
       
+      static let twoInlineCode: String = """
+  This brief `inline code`, with text contents, lines `advance expanding` the view in the current writing direction.
+  
+  It does have more than two paragraphs, which I'm hoping will help me to verify that the code is able to count elements of a particular kind of markdown syntax, not just fragments or paragraphs.
+  
+  We'll have to just see if it works.
+  
+  Thank you for sharing your code and explaining your setup. It's great to see you're working on a markdown parsing and styling system using TextKit 2. Let's address your questions and then discuss some ideas for your implementation.
+  
+  Invalidating Attributes:
+  
+  When you call invalidateAttributes(in: NSRange) on a text storage, you're essentially telling the text system that the attributes in the specified range may have changed and need to be recalculated. This doesn't `remove` or modify the attributes directly; instead, it triggers the text system to update its internal caches and redraw the affected text. This is useful when you've made `changes` to the text or its `attributes and want` to ensure that the display is updated correctly.
+  
+  Regarding your markdown parsing and styling setup:
+  
+  Your approach of separating the parsing (which is more expensive) and the styling (which should be more nimble) is a good strategy. Here are some ideas and suggestions to potentially improve `your implementation`.
+  """
+      
+      static let shortSample: String = """
+  This *brief* block quote, with ==text contents==, lines `advance 
+  expanding` the view in the current writing direction.ExampleView".
+  
+  Includes one line break.
+  
+  Followed by another. In addition, here is a list:
+  
+  - [AttributeContainer](http://apple.com) is a container for attributes.
+  - By configuring the container, we can set, replace, and merge
+  - A large number of attributes for a string (or fragment) at once.
+  """
+      
+      static let exampleMarkdown: String = """
+    # Markdown samples
+    ## Overview of the sample
+    
+    ```swift
+    @State private var selectionInfo: EditorInfo.Selection? = nil
+    // @State private var editorHeight: CGFloat = .zero
+    ```
+    # This is also a heading
+    With other stuff below
+    
+    Usually, `NSTextView` manages the *layout* process inside **the viewport** interacting ~~with its delegate~~.
+    
+    - [AttributeContainer](http://apple.com) is a container for attributes.
+    - By configuring the container, we can set, replace, and merge
+    - A large number of attributes for a string (or fragment) at once.
+    
+    ```python
+    // There is also some basic code
+    var x = y
+    ```
+    
+    ### Markdown syntax summary
+    A `viewport` is a _rectangular_ area within a ==flipped coordinate system== expanding along the y-axis, with __bold alternate__, as well as ***bold italic*** emphasis.
+    
+    1. You’d mentioned this is rendered within an OpenGL window
+    2. Despite the implementation details under the hood
+    3. They can only speculate, but perhaps OpenGL here is useful
+    
+    > This *brief* block quote, with ==text contents==, lines `advance expanding` the view in the current writing direction.ExampleView
+    
+    ```swift
+    import SwiftUI
+    import Combine
+    
+    class ChatsViewModel: ObservableObject {
+      @Dependency(.carerDatabase) var carerDatabase
+      @Published var chats = [Chat]()
+      @Published var messagesByChatId = [Int64: [Message]]()
+    
+      func loadChatsAndMessages(forCarer carerId: Int64) async {
+          do {
+              let chats = try await carerDatabase.fetchChatsForCarer(carerId)
+              self.chats = chats
+              for chat in chats {
+                  let messages = try await carerDatabase.fetchMessagesForChat(chat.id)
+                  messagesByChatId[chat.id] = messages
+              }
+          } catch {
+              print("Error fetching chats or messages: ")
+          }
+      }
+    }
+    ```
+    
+    ### Step 2: Create the SwiftUI View
+    
+    Now, let's create a SwiftUI view that uses this ViewModel to display the chats and their corresponding messages.
+    
+    1. You’d mentioned this is rendered within an OpenGL window
+    2. Despite the implementation details under the hood
+    3. They can only speculate, but perhaps OpenGL here is useful
+    
+    > This *brief* block quote, with ==text contents==, lines `advance expanding` the view in the current writing direction.ExampleView
+    
+    ```swift
+    import SwiftUI
+    import Combine
+    
+    class ChatsViewModel: ObservableObject {
+      @Dependency(.carerDatabase) var carerDatabase
+      @Published var chats = [Chat]()
+      @Published var messagesByChatId = [Int64: [Message]]()
+    
+      func loadChatsAndMessages(forCarer carerId: Int64) async {
+          do {
+              let chats = try await carerDatabase.fetchChatsForCarer(carerId)
+              self.chats = chats
+              for chat in chats {
+                  let messages = try await carerDatabase.fetchMessagesForChat(chat.id)
+                  messagesByChatId[chat.id] = messages
+              }
+          } catch {
+              print("Error fetching chats or messages: ")
+          }
+      }
+    }
+    ```
+    
+    ### Step 2: Create the SwiftUI View
+    
+    Now, let's create a SwiftUI view that uses this ViewModel to display the chats and their corresponding messages.
+    
+    """
+      
       public static let anotherMarkdownString: String = """
   # This is the beginning of a really long heading so i can see what it does
   ## First, a message
@@ -39,6 +165,7 @@ public extension TestStrings {
         - A large number of attributes for a string (or fragment) at once.
         
         ### Markdown syntax summary
+        
         A `viewport` is a _rectangular_ area within a ==flipped coordinate system== expanding along the y-axis, with __bold alternate__, as well as ***bold italic*** emphasis, which has a alt version with ___three underscores___ like that.
         
         1. You’d mentioned this is rendered within an OpenGL window
@@ -57,11 +184,16 @@ public extension TestStrings {
         # This is the beginning of a really long heading so i can see what it does
         ## Second heading
         ### Third heading yay
+        
         I will build a library of `Message` objects, as `[String]`, and can ~~you write~~ me up a *function* that simply selects one of the **paragraphs** (i.e. items in the array), and returns it? Also, we need some ***extra emphasis*** on this text.
+        
         ```
         let highlightr = Highlightr()
         highlightr?.setTheme(to: "xcode-dark-butts")
         ```
+        
+        I think this is something worth thinking about in the context of all tooling we use. If I do my job correctly with the IDE, you shouldn't be thinking about much outside of the program you're writing. The goal is to keep you focused, so you never have to stop and reach for the documentation of the IDE, or Zig itself. Based on what you're doing, all information should be right in front of you, or a click/hotkey away if it is too intrusive to display inline. Little sidequests to find what arguments a function takes, lookup a hotkey, etc., should be kept to a minimum. I'll be keeping this in mind as I work on the IDE.
+        
         ## And then this heading
         And some more words here. If you would like to contribute to the development of Highlightr, please follow the guidelines outlined in the CONTRIBUTING.md file in the GitHub repository.
         
