@@ -10,6 +10,8 @@ import SwiftUI
 
 #if os(macOS)
 
+
+
 public struct ModifierFlagsKey: EnvironmentKey {
     public static let defaultValue = Set<NSEvent.ModifierFlags>()
 }

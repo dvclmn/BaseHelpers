@@ -17,23 +17,6 @@ public protocol ModifierKeyCollection {
   func holding(_ modifiers: [NSEvent.ModifierFlags]) -> Bool
 }
 
-//public extension Array where Element == ModifierKey {
-//    func holding(_ modifiers: NSEvent.ModifierFlags...) -> Bool {
-//        holding(modifiers)
-//    }
-//
-//    func holding(_ modifiers: [NSEvent.ModifierFlags]) -> Bool {
-//        let activeModifiers = Set(self.map { $0.modifier })
-//        return Set(modifiers).isSubset(of: activeModifiers)
-//    }
-//}
-//
-//public extension Array where Element == ModifierKey {
-//    func holding(_ modifier: NSEvent.ModifierFlags) -> Bool {
-//        contains { $0.modifier == modifier }
-//    }
-//}
-//
 extension NSEvent.ModifierFlags: @retroactive Hashable {
   public func hash(into hasher: inout Hasher) {
     hasher.combine(rawValue)
@@ -63,7 +46,7 @@ public extension KeyboardShortcut {
   
   func printString(includesKeyLabel: Bool = false) -> String {
     
-    var keyString: String {
+    var keyEquivalent: String {
       if let keySymbol = self.key.keyInfo() {
         let literal: String = keySymbol.symbolLiteral
         
@@ -76,7 +59,8 @@ public extension KeyboardShortcut {
       } else {
         return self.key.character.description.uppercased()
       }
-    }
+    } // END
+    
     var modifierString: String {
       
       var modifiers: String = ""
@@ -88,17 +72,25 @@ public extension KeyboardShortcut {
       return modifiers
     }
     
-    return modifierString + keyString
+    return modifierString + keyEquivalent
   }
 }
 
 public struct KeyInfo {
-  public let label: String?
+  
+  /// E.g. `Delete` or `Control`
+  public let name: String
+  
+  /// E.g. `delete.backward` or `control`
   public let symbolName: String
+  
+  /// E.g. `􁂈` or `􀆍`
   public let symbolLiteral: String
+  
+  
 }
 
-public extension KeyEquivalent {
+public extension SwiftUI.KeyEquivalent {
   
   
   func keyInfo() -> KeyInfo? {
