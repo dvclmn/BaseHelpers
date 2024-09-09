@@ -8,29 +8,56 @@
 
 import SwiftUI
 
-
-
 @MainActor
-public struct Keyboard: Sendable {
+public struct Keyboard: Sendable, Equatable {
   
-  public struct Shortcut {
+  public struct Shortcut: Equatable {
     public let key: Keyboard.Key
-    public let modifiers: [Modifier]
+    public let modifiers: [Keyboard.Modifier]
+    public let label: Label?
     public let requiresTextSelection: Bool
-    
     
     public init(
       _ key: Keyboard.Key,
-      modifiers: [Modifier] = [],
+      modifiers: [Keyboard.Modifier] = [],
+      label: Label? = nil,
       requiresTextSelection: Bool = false
     ) {
       self.key = key
       self.modifiers = modifiers
+      self.label = label
+      self.requiresTextSelection = requiresTextSelection
+    }
+    
+    public init(
+      _ key: Keyboard.Key,
+      modifierFlags: NSEvent.ModifierFlags,
+      label: Label? = nil,
+      requiresTextSelection: Bool = false
+    ) {
+      self.key = key
+      self.modifiers = Keyboard.Modifier.from(modifierFlags)
+      self.label = label
       self.requiresTextSelection = requiresTextSelection
     }
   }
 }
 
+extension Keyboard.Shortcut {
+  
+  public struct Label: Equatable, Sendable {
+    public var title: String
+    public var icon: String
+    
+    public init(
+      title: String,
+      icon: String
+    ) {
+      self.title = title
+      self.icon = icon
+    }
+  }
+}
 
 extension Keyboard {
 
@@ -39,7 +66,7 @@ extension Keyboard {
     case modifier
   }
 
-  public protocol ShortcutKey {
+  public protocol ShortcutKey: Equatable {
     
     /// E.g. `Delete` or `Control`
     var name: String { get }
@@ -52,103 +79,28 @@ extension Keyboard {
     
     var type: KeyType { get }
   }
+  
+  
+  //  public var description: String {
+  //
+  //    let modifierResult: String = self.modifiers.
+  //
+  //    return "Shortcut(key: \(self.key), modifiers"
+  //  }
+  //
+  //  public var swiftUIShortcut: KeyboardShortcut {
+  //    KeyboardShortcut(KeyEquivalent(Character(key)), modifiers: modifiers.swiftUIModifiers)
+  //  }
+  //
+  //  public var appKitModifiers: NSEvent.ModifierFlags {
+  //    modifiers.appKitModifiers
+  //  }
+  //
+  
 }
 
 
-extension Keyboard {
-  
-  public struct Key: ShortcutKey {
-    
-    public let name: String
-    public let symbolName: String
-    public let symbolLiteral: String
-    public let type: Keyboard.KeyType
-    
-    public init(
-      name: String,
-      symbolName: String,
-      symbolLiteral: String,
-      type: Keyboard.KeyType
-    ) {
-      self.name = name
-      self.symbolName = symbolName
-      self.symbolLiteral = symbolLiteral
-      self.type = type
-    }
-    
-  }
-  
-  public enum Modifier: ShortcutKey {
-    
-    case shift, option, command, control, capsLock
-    
-    public var name: String {
-      self.symbolName
-    }
-    
-    public var symbolName: String {
-      switch self {
-        case .shift: "shift"
-        case .option: "option"
-        case .command: "command"
-        case .control: "control"
-        case .capsLock: "capslock"
-      }
-    }
-    
-    public var symbolLiteral: String {
-      switch self {
-        case .shift: "􀆝"
-        case .option: "􀆕"
-        case .command: "􀆔"
-        case .control: "􀆍"
-        case .capsLock: "􀆡"
-      }
-    }
-    
-    public var type: Keyboard.KeyType {
-      .modifier
-    }
-    
-    public var appKit: NSEvent.ModifierFlags {
-      switch self {
-        case .shift: .shift
-        case .option: .option
-        case .command: .command
-        case .control: .control
-        case .capsLock: .capsLock
-      }
-    }
-    
-    public var swiftUI: EventModifiers {
-      switch self {
-        case .shift: .shift
-        case .option: .option
-        case .command: .command
-        case .control: .control
-        case .capsLock: .capsLock
-      }
-    }
-    
-  }
-  
-//  public var description: String {
-//    
-//    let modifierResult: String = self.modifiers.
-//    
-//    return "Shortcut(key: \(self.key), modifiers"
-//  }
-//  
-//  public var swiftUIShortcut: KeyboardShortcut {
-//    KeyboardShortcut(KeyEquivalent(Character(key)), modifiers: modifiers.swiftUIModifiers)
-//  }
-//  
-//  public var appKitModifiers: NSEvent.ModifierFlags {
-//    modifiers.appKitModifiers
-//  }
-//
-  
-}
+
 
 
 //extension Keyboard {
