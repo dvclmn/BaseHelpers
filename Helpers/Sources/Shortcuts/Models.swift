@@ -15,30 +15,25 @@ public struct Keyboard: Sendable, Equatable {
     public let key: Keyboard.Key
     public let modifiers: [Keyboard.Modifier]
     public let label: Label?
-    public let requiresTextSelection: Bool
     
     public init(
       _ key: Keyboard.Key,
       modifiers: [Keyboard.Modifier] = [],
-      label: Label? = nil,
-      requiresTextSelection: Bool = false
+      label: Label? = nil
     ) {
       self.key = key
       self.modifiers = modifiers
       self.label = label
-      self.requiresTextSelection = requiresTextSelection
     }
     
     public init(
       _ key: Keyboard.Key,
       modifierFlags: NSEvent.ModifierFlags,
-      label: Label? = nil,
-      requiresTextSelection: Bool = false
+      label: Label? = nil
     ) {
       self.key = key
       self.modifiers = Keyboard.Modifier.from(modifierFlags)
       self.label = label
-      self.requiresTextSelection = requiresTextSelection
     }
   }
 }
