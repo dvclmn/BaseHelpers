@@ -5,7 +5,7 @@
 //  Created by Dave Coleman on 31/8/2024.
 //
 
-
+import Foundation
 
 
 public extension BinaryFloatingPoint {
@@ -27,3 +27,8 @@ public extension BinaryFloatingPoint {
 }
 
 
+public extension CGSize {
+  var widthOrHeightIsZero: Bool {
+    return self.width.isZero || self.height.isZero
+  }
+}

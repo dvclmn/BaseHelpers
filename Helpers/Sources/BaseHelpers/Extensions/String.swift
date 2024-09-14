@@ -63,6 +63,13 @@ extension NSString {
 
 
 
+public extension Character {
+  var string: String {
+    String(self)
+  }
+}
+
+
 
 /// This extension seems to drive something like the below (as found in Banksia, to highlight search terms)
 /*
