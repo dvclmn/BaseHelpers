@@ -1,4 +1,5 @@
 {
+  "originHash" : "026a16b75c0bcdd0496976a36f8bb18f5aa2acf6b66a157bde375a5d06afeaff",
   "pins" : [
     {
       "identity" : "combine-schedulers",
@@ -73,15 +74,6 @@
       }
     },
     {
-      "identity" : "textcore",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/dvclmn/TextCore.git",
-      "state" : {
-        "branch" : "main",
-        "revision" : "1e61456a5db92d479ad7675ce24946df8d2e9ff8"
-      }
-    },
-    {
       "identity" : "xctest-dynamic-overlay",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pointfreeco/xctest-dynamic-overlay",
@@ -91,5 +83,5 @@
       }
     }
   ],
-  "version" : 2
+  "version" : 3
 }

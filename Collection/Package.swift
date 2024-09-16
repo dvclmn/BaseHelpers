@@ -4,13 +4,17 @@ import PackageDescription
 import CompilerPluginSupport
 
 let package = Package(
-  name: "Helpers",
+  name: "Collection",
   platforms: [
     .iOS("17.0"),
     .macOS("14.0")
   ],
   products: [
     
+    /// Styles
+    .library(name: "BaseStyles", targets: ["BaseStyles"]),
+    
+    /// Utilities
     .library(name: "Utilities", targets: [
       "Geometry",
       "Profiler",
@@ -22,8 +26,7 @@ let package = Package(
       "Selection",
     ]),
     
-      .library(name: "BaseStyles", targets: ["BaseStyles"]),
-    
+    /// Helpers
     .library(
       name: "Helpers",
       targets: [
@@ -35,6 +38,7 @@ let package = Package(
         "Shortcuts",
       ]
     ),
+    /// Macros
     .library(
       name: "Macros",
       targets: ["Macros"]
@@ -48,25 +52,29 @@ let package = Package(
     .package(url: "https://github.com/swiftlang/swift-syntax", from: "510.0.3"),
   ],
   targets: [
+    /// Styles
     .target(name: "BaseStyles", resources: [.copy("Assets.xcassets")]),
+    
+    /// Utilities
     .target(name: "Geometry", dependencies: [.product(name: "Dependencies", package: "swift-dependencies")]),
     .target(name: "Profiler"),
     .target(name: "Renamable"),
-    .target(name: "Logging", dependencies: ["Helpers"]),
-    .target(name: "GlyphGrid", dependencies: ["Helpers", "TextCore"]),
-    .target(name: "Resizable", dependencies: ["Helpers", "Geometry"]),
+    .target(name: "Logging", dependencies: ["BaseHelpers"]),
+    .target(name: "GlyphGrid", dependencies: ["BaseHelpers", "TextCore"]),
+    .target(name: "Resizable", dependencies: ["BaseHelpers", "Geometry"]),
     .target(name: "Scrolling", dependencies: ["ScrollKit", .product(name: "SmoothGradient", package: "SmoothGradient")]),
-    .target(name: "Selection", dependencies: ["Helpers", "Geometry", "Scrolling"]),
+    .target(name: "Selection", dependencies: ["BaseHelpers", "Geometry", "Scrolling"]),
     
-///
-      .target(name: "BaseHelpers"),
-      .target(name: "HoverAsync"),
-      .target(name: "ImageCompression"),
-      .target(name: "TouchInertia"),
-      .target(name: "Shaders"),
-      .target(name: "Shortcuts"),
+    /// Helpers
+    .target(name: "BaseHelpers"),
+    .target(name: "HoverAsync"),
+    .target(name: "ImageCompression"),
+    .target(name: "TouchInertia"),
+    .target(name: "Shaders"),
+    .target(name: "Shortcuts"),
     
-      .target(name: "Macros", dependencies: ["MacroDefinitions"]),
+    /// Macros
+    .target(name: "Macros", dependencies: ["MacroDefinitions"]),
     .macro(
       name: "MacroDefinitions",
       dependencies: [
@@ -74,9 +82,6 @@ let package = Package(
         .product(name: "SwiftCompilerPlugin", package: "swift-syntax")
       ]
     ),
-    
-      
-
   ]
 )
 
