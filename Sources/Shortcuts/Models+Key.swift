@@ -5,7 +5,7 @@
 //  Created by Dave Coleman on 8/9/2024.
 //
 
-
+#if canImport(AppKit)
 
 extension Keyboard {
   
@@ -120,3 +120,5 @@ extension Keyboard {
   }
   
 }
+
+#endif

@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+#if canImport(AppKit)
+
 extension Keyboard {
   
   public enum Modifier: ShortcutKey {
@@ -77,3 +79,4 @@ extension Keyboard {
     
   }
 }
+#endif

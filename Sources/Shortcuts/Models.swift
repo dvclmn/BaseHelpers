@@ -5,6 +5,7 @@
 //  Created by Dave Coleman on 8/9/2024.
 //
 
+#if canImport(AppKit)
 
 import SwiftUI
 
@@ -134,3 +135,5 @@ extension Keyboard {
 //  }
 //  
 //}
+
+#endif

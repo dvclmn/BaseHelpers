@@ -28,7 +28,7 @@ let package = Package(
     
     /// Helpers
     .library(
-      name: "Helpers",
+      name: "BaseHelpers",
       targets: [
         "BaseHelpers",
         "HoverAsync",
@@ -45,10 +45,10 @@ let package = Package(
     ),
   ],
   dependencies: [
-    .package(url: "https://github.com/dvclmn/TextCore.git", branch: "main"),
-    .package(url: "https://github.com/pointfreeco/swift-dependencies.git", from: "1.3.3"),
-    .package(url: "https://github.com/danielsaidi/ScrollKit.git", from: "0.5.1"),
-    .package(url: "https://github.com/raymondjavaxx/SmoothGradient.git", from: "1.0.0"),
+    .package(url: "https://github.com/dvclmn/TextCore", branch: "main"),
+    .package(url: "https://github.com/pointfreeco/swift-dependencies", from: "1.3.3"),
+    .package(url: "https://github.com/danielsaidi/ScrollKit", from: "0.5.1"),
+    .package(url: "https://github.com/raymondjavaxx/SmoothGradient", from: "1.0.0"),
     .package(url: "https://github.com/swiftlang/swift-syntax", from: "510.0.3"),
   ],
   targets: [

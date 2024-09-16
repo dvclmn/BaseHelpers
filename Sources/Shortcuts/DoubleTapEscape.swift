@@ -5,6 +5,8 @@
 //  Created by Dave Coleman on 8/9/2024.
 //
 
+#if canImport(AppKit)
+
 import SwiftUI
 
 public struct EscapeKeyDoubleTapModifier: ViewModifier {
@@ -47,3 +49,5 @@ public extension View {
     self.modifier(EscapeKeyDoubleTapModifier(action: action, bufferMilliseconds: bufferMilliseconds))
   }
 }
+
+#endif
