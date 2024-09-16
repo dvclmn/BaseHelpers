@@ -3,19 +3,17 @@
 import PackageDescription
 
 let package = Package(
-    name: "Styles",
+    name: "BaseStyles",
     platforms: [
         .iOS("17.0"),
         .macOS("14.0")
     ],
     products: [
-        .library(name: "BaseStyles", targets: ["BaseStyles"]),
-        .library(name: "GrainOverlay", targets: ["GrainOverlay"]),
-        .library(name: "Swatches", targets: ["Swatches"]),
+        
+//        .library(name: "GrainOverlay", targets: ["GrainOverlay"]),
+//        .library(name: "Swatches", targets: ["Swatches"]),
     ],
     targets: [
-      .target(name: "BaseStyles", dependencies: ["GrainOverlay", "Swatches"]),
-      .target(name: "GrainOverlay", resources: [.copy("Assets.xcassets")]),
-      .target(name: "Swatches"),
+      
     ]
 )

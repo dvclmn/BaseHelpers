@@ -33,7 +33,7 @@ public func printValue<T: CustomStringConvertible>(
   hasTrailingLine: Bool = true
 ) {
   
-  var valueString = "Value: \(value)"
+  let valueString = "Value: \(value)"
   
   let output = formatPrintInfo(
     title,
@@ -158,7 +158,7 @@ public func printCollection<T: Collection>(
   let functionName = "Function: \t\(function)"
   let type = "Type: \t\t\(typeName)"
   
-  let headerInfo = [fileAndLine, functionName, type].joined(separator: "\n")
+//  let headerInfo = [fileAndLine, functionName, type].joined(separator: "\n")
 //  let formattedHeader = SwiftBox.header(headerInfo)
   
   /// Content

@@ -5,8 +5,8 @@
 //  Created by Dave Coleman on 8/9/2024.
 //
 
+#if canImport(AppKit)
 import AppKit
-
 
 
 protocol ModifierRepresentable {
@@ -124,3 +124,4 @@ public extension NSEvent.ModifierFlags {
   }
   
 }
+#endif
