@@ -53,7 +53,7 @@ let package = Package(
   ],
   targets: [
     /// Styles
-    .target(name: "BaseStyles", resources: [.copy("Assets.xcassets")]),
+    .target(name: "BaseStyles", resources: [.copy("GrainOverlay/Assets.xcassets")]),
     
     /// Utilities
     .target(name: "Geometry", dependencies: [.product(name: "Dependencies", package: "swift-dependencies")]),
