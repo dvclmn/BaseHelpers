@@ -25,6 +25,7 @@ let package = Package(
   ],
   dependencies: [
     .package(name: "Helpers", path: "\(localPackagesRoot)/SwiftCollection/Helpers"),
+    .package(name: "Helpers", path: "\(localPackagesRoot)/TextCore"),
     .package(url: "https://github.com/pointfreeco/swift-dependencies.git", from: "1.3.3"),
     .package(url: "https://github.com/danielsaidi/ScrollKit.git", from: "0.5.1"),
     .package(url: "https://github.com/raymondjavaxx/SmoothGradient.git", from: "1.0.0"),
@@ -34,7 +35,7 @@ let package = Package(
     .target(name: "Profiler"),
     .target(name: "Renamable"),
     .target(name: "Logging", dependencies: ["Helpers"]),
-    .target(name: "GlyphGrid", dependencies: ["Helpers"]),
+    .target(name: "GlyphGrid", dependencies: ["Helpers", "TextCore"]),
     .target(name: "Resizable", dependencies: ["Helpers", "Geometry"]),
     .target(name: "Scrolling", dependencies: ["ScrollKit", .product(name: "SmoothGradient", package: "SmoothGradient")]),
     .target(name: "Selection", dependencies: ["Helpers", "Geometry", "Scrolling"]),

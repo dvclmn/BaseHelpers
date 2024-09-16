@@ -1,0 +1,12 @@
+{
+  "data" : [
+    {
+      "filename" : "sf-symbols.csv",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}
