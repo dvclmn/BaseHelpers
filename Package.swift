@@ -38,18 +38,24 @@ let package = Package(
         "Shortcuts",
       ]
     ),
-    /// Macros
+    
+    /// Networking
     .library(
-      name: "Macros",
-      targets: ["Macros"]
+      name: "Networking",
+      targets: [
+        "APIHandler",
+        "Keychain",
+      ]
     ),
+    
   ],
   dependencies: [
     .package(url: "https://github.com/dvclmn/TextCore", branch: "main"),
     .package(url: "https://github.com/pointfreeco/swift-dependencies", from: "1.3.3"),
     .package(url: "https://github.com/danielsaidi/ScrollKit", from: "0.5.1"),
     .package(url: "https://github.com/raymondjavaxx/SmoothGradient", from: "1.0.0"),
-    .package(url: "https://github.com/swiftlang/swift-syntax", from: "510.0.3"),
+    .package(url: "https://github.com/evgenyneu/keychain-swift", from: "24.0.0"),
+    .package(url: "https://github.com/gohanlon/swift-memberwise-init-macro.git", from: "0.5.0")
   ],
   targets: [
     /// Styles
@@ -73,15 +79,14 @@ let package = Package(
     .target(name: "Shaders"),
     .target(name: "Shortcuts"),
     
-    /// Macros
-    .target(name: "Macros", dependencies: ["MacroDefinitions"]),
-    .macro(
-      name: "MacroDefinitions",
-      dependencies: [
-        .product(name: "SwiftSyntaxMacros", package: "swift-syntax"),
-        .product(name: "SwiftCompilerPlugin", package: "swift-syntax")
-      ]
-    ),
+    /// Networking
+    .target(name: "APIHandler", dependencies: [
+      "BaseHelpers",
+      .product(name: "KeychainSwift", package: "keychain-swift"),
+      .product(name: "MemberwiseInit", package: "swift-memberwise-init-macro")
+    ]),
+    .target(name: "Keychain", dependencies: [.product(name: "KeychainSwift", package: "keychain-swift"), .product(name: "Dependencies", package: "swift-dependencies")]),
+    
   ]
 )
 

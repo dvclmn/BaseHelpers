@@ -1,6 +1,6 @@
 //
 //  File.swift
-//  
+//
 //
 //  Created by Dave Coleman on 16/6/2024.
 //
@@ -8,10 +8,10 @@
 import Foundation
 
 public extension TestStrings {
+  
+  struct Markdown {
     
-    struct Markdown {
-      
-      static let twoInlineCode: String = """
+    static let twoInlineCode: String = """
   This brief `inline code`, with text contents, lines `advance expanding` the view in the current writing direction.
   
   It does have more than two paragraphs, which I'm hoping will help me to verify that the code is able to count elements of a particular kind of markdown syntax, not just fragments or paragraphs.
@@ -28,8 +28,8 @@ public extension TestStrings {
   
   Your approach of separating the parsing (which is more expensive) and the styling (which should be more nimble) is a good strategy. Here are some ideas and suggestions to potentially improve `your implementation`.
   """
-      
-      static let shortSample: String = """
+    
+    static let shortSample: String = """
   This *brief* block quote, with ==text contents==, lines `advance 
   expanding` the view in the current writing direction.ExampleView".
   
@@ -41,8 +41,8 @@ public extension TestStrings {
   - By configuring the container, we can set, replace, and merge
   - A large number of attributes for a string (or fragment) at once.
   """
-      
-      static let exampleMarkdown: String = """
+    
+    static let exampleMarkdown: String = """
     # Markdown samples
     ## Overview of the sample
     
@@ -136,8 +136,8 @@ public extension TestStrings {
     Now, let's create a SwiftUI view that uses this ViewModel to display the chats and their corresponding messages.
     
     """
-      
-      public static let anotherMarkdownString: String = """
+    
+    public static let anotherMarkdownString: String = """
   # This is the beginning of a really long heading so i can see what it does
   ## First, a message
   ### And a third, a header that's small
@@ -153,9 +153,9 @@ public extension TestStrings {
   
   And some here just in case
   """
-
-        
-        public static let shortMarkdownBasics: String = """
+    
+    
+    public static let shortMarkdownBasics: String = """
         # Markdown samples
         ## Overview of the sample
         Usually, `NSTextView` manages the *layout* process inside **the viewport** interacting ~~with its delegate~~.
@@ -179,8 +179,8 @@ public extension TestStrings {
         
         > This *brief* block quote, with ==text contents==, lines `advance expanding` the view in the current writing direction.ExampleView
         """
-        
-        public static let basicMarkdown: String = """
+    
+    public static let basicMarkdown: String = """
         # This is the beginning of a really long heading so i can see what it does
         ## Second heading
         ### Third heading yay
@@ -191,6 +191,10 @@ public extension TestStrings {
         let highlightr = Highlightr()
         highlightr?.setTheme(to: "xcode-dark-butts")
         ```
+        
+        - I `think this is something` worth thinking about in the context of all tooling we use. 
+        - If I do my job correctly with the IDE, you shouldn't be thinking about much outside of the program you're writing. 
+        - The goal is to keep you focused, so you never have to stop and reach for the documentation of the IDE, or Zig itself. Based on what you're doing
         
         I think this is something worth thinking about in the context of all tooling we use. If I do my job correctly with the IDE, you shouldn't be thinking about much outside of the program you're writing. The goal is to keep you focused, so you never have to stop and reach for the documentation of the IDE, or Zig itself. Based on what you're doing, all information should be right in front of you, or a click/hotkey away if it is too intrusive to display inline. Little sidequests to find what arguments a function takes, lookup a hotkey, etc., should be kept to a minimum. I'll be keeping this in mind as I work on the IDE.
         
@@ -249,11 +253,13 @@ public extension TestStrings {
         As well as some text down here.
         
         And some here just in case
+        
+        I will build a library of `Message` objects, as `[String]`, and can ~~you write~~ me up a *function* that simply selects one of the **paragraphs** (i.e. items in the array), and returns it? Also, we need some ***extra emphasis*** on this text.
         """
-        
-        
-        
-        public static let bigText = """
+    
+    
+    
+    public static let bigText = """
     
     Links: [Hello](https://www.google.com)
     
@@ -1196,8 +1202,8 @@ public extension TestStrings {
     
     Emojis are allowed 😊
     """
-        
-        
-    }
     
+    
+  }
+  
 }

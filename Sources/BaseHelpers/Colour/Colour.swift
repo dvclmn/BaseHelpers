@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 /// This extension allows you to create a `Color` instance from a hex string in SwiftUI. It supports the following formats:
 
@@ -36,7 +37,13 @@ import Foundation
 ///     }
 /// }
 
-import SwiftUI
+
+public extension Color {
+  var nsColour: NSColor {
+    NSColor(self)
+  }
+}
+
 
 public extension Color {
     init(hex: String) {
