@@ -40,7 +40,7 @@ public struct Resizable: ViewModifier {
   /// `returnedLength` back to the property providing the `contentLength`, or it
   /// will get caught in a loop. `contentLength` is ingested, clamped, and returned
   /// below, so that other UI elements can recieve and respond to the length if need be.
-  var returnedLength: (_ metrics: String, _ onChanged: CGFloat?, _ onEnded: CGFloat?) -> Void
+  var returnedLength: (_ metrics: String, _ onChanged: CGFloat, _ onEnded: CGFloat) -> Void
   
   
   public init(
@@ -56,7 +56,7 @@ public struct Resizable: ViewModifier {
     lengthMin: CGFloat,
     lengthMax: CGFloat,
     persistenceKey: String? = nil,
-    returnedLength: @escaping (_: String, _: CGFloat?, _: CGFloat?) -> Void
+    returnedLength: @escaping (_: String, _: CGFloat, _: CGFloat) -> Void
   ) {
     self.contentLength = contentLength
     self._isManualMode = isManualMode
@@ -136,7 +136,7 @@ public struct Resizable: ViewModifier {
   }
   
   /// This is optional so that `isResizable` can return nil if false
-  var actualLength: CGFloat? {
+  var actualLength: CGFloat {
     if isResizable {
       if isManualMode {
         return manualLength.constrained(lengthMinConstrained, lengthMaxConstrained)
@@ -144,7 +144,7 @@ public struct Resizable: ViewModifier {
         return unwrappedContentLength
       }
     } else {
-      return nil
+      return unwrappedContentLength
     }
   }
   
@@ -157,7 +157,7 @@ public struct Resizable: ViewModifier {
             Supplied length:    \(String(format: "%0.f", contentLength ?? .zero))
             Inferred length:    \(String(format: "%0.f", unwrappedContentLength))
             Manual length:      \(String(format: "%0.f", manualLength))
-            Final length:       \(String(format: "%0.f", actualLength ?? .zero))
+            Final length:       \(String(format: "%0.f", actualLength))
             Min length:         \(String(format: "%0.f", lengthMin))
             Min constr. length:         \(String(format: "%0.f", lengthMinConstrained))
             Max length:         \(String(format: "%0.f", lengthMax))
@@ -179,7 +179,7 @@ public struct Resizable: ViewModifier {
                     
                     isManualMode = true
                     isResizing = true
-                    let lengthBeforeResize = actualLength
+                    let lengthBeforeResize: CGFloat = actualLength
                     
                     var newValue: CGFloat = .zero
                     
@@ -199,7 +199,7 @@ public struct Resizable: ViewModifier {
                     manualLength = newValue.constrained(lengthMinConstrained, lengthMaxConstrained)
                     
                     /// Sending out the calculated length, as we actively resize
-                    /// `(_ metrics: String, _ onChanged: CGFloat?, _ onEnded: CGFloat?)`
+                    /// `(_ metrics: String, _ onChanged: CGFloat, _ onEnded: CGFloat)`
                     returnedLength(metrics, actualLength, lengthBeforeResize)
                     
                   } // END on changed
@@ -282,7 +282,7 @@ public extension View {
     lengthMin: CGFloat,
     lengthMax: CGFloat,
     persistenceKey: String? = nil,
-    returnedLength: @escaping (_ metrics: String, _ onChanged: CGFloat?, _ onEnded: CGFloat?) -> Void = {metrics, onChanged, onEnded in }
+    returnedLength: @escaping (_ metrics: String, _ onChanged: CGFloat, _ onEnded: CGFloat) -> Void = {metrics, onChanged, onEnded in }
     
   ) -> some View {
     self.modifier(
