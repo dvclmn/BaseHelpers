@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import APIHandler
 
 public struct OpenAIConfirmationResponse: Codable {
     let object: String

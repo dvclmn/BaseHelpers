@@ -196,6 +196,30 @@ public extension TestStrings {
         - If I do my job correctly with the IDE, you shouldn't be thinking about much outside of the program you're writing. 
         - The goal is to keep you focused, so you never have to stop and reach for the documentation of the IDE, or Zig itself. Based on what you're doing
         
+        1. First, calculate the available width:
+         ```swift
+         let availableWidth = self.windowSize.size.width - AppHandler.windowSizeBuffer
+         ```
+        
+        2. Define helper properties for panel widths:
+        ```swift
+        var sidebarWidth: Double {
+        sidebar.isEnabled ? sidebar.width : 0
+        }
+        
+        var inspectorWidth: Double {
+        inspector.isEnabled ? inspector.width : 0
+        }
+        ```
+        
+        3. Calculate if there's room for content and each panel:
+        ```swift
+        let roomForContent = availableWidth >= AppHandler.contentMinWidth
+        let roomForSidebar = availableWidth >= (AppHandler.contentMinWidth + sidebarWidth)
+        let roomForInspector = availableWidth >= (AppHandler.contentMinWidth + inspectorWidth)
+        let roomForBoth = availableWidth >= (AppHandler.contentMinWidth + sidebarWidth + inspectorWidth)
+        ```
+        
         I think this is something worth thinking about in the context of all tooling we use. If I do my job correctly with the IDE, you shouldn't be thinking about much outside of the program you're writing. The goal is to keep you focused, so you never have to stop and reach for the documentation of the IDE, or Zig itself. Based on what you're doing, all information should be right in front of you, or a click/hotkey away if it is too intrusive to display inline. Little sidequests to find what arguments a function takes, lookup a hotkey, etc., should be kept to a minimum. I'll be keeping this in mind as I work on the IDE.
         
         ## And then this heading

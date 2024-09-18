@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import Shortcuts
+//import Shortcuts
 import Geometry
 import Scrolling
 
@@ -19,7 +19,7 @@ where Data: RandomAccessCollection,
       Data.Index == Int,
       Content: View {
     
-    @Environment(\.modifierKeys) private var modifierKeys
+//    @Environment(\.modifierKeys) private var modifierKeys
     
     let items: Data
     @Binding var selectedItemIDs: Set<Data.Element.ID>
@@ -68,7 +68,7 @@ where Data: RandomAccessCollection,
         .onPreferenceChange(ItemFramePreferenceKey<Data.Element.ID>.self) { frames in
             self.itemFrames = frames
         }
-        .readModifierKeys()
+//        .readModifierKeys()
         .readSize { size in
             self.geometrySize = size
         }
@@ -108,18 +108,18 @@ public extension DragToSelect {
             key
         })
         
-        if modifierKeys.contains(.command) {
-            if modifierKeys.contains(.shift) {
-                // If Command and Shift are pressed, remove the new selection from the existing selection
-                selectedItemIDs.subtract(newSelection)
-            } else {
-                // If only Command is pressed, add new items to the selection without removing any
-                selectedItemIDs.formUnion(newSelection)
-            }
-        } else {
+//        if modifierKeys.contains(.command) {
+//            if modifierKeys.contains(.shift) {
+//                // If Command and Shift are pressed, remove the new selection from the existing selection
+//                selectedItemIDs.subtract(newSelection)
+//            } else {
+//                // If only Command is pressed, add new items to the selection without removing any
+//                selectedItemIDs.formUnion(newSelection)
+//            }
+//        } else {
             // If neither Command nor Shift is pressed, replace the selection
             selectedItemIDs = newSelection
-        }
+//        }
     }
     
     

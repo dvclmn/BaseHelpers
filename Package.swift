@@ -12,7 +12,11 @@ let package = Package(
   products: [
     
     /// Styles
-    .library(name: "BaseStyles", targets: ["BaseStyles"]),
+    .library(name: "BaseStyles", targets: [
+      "BaseStyles",
+      "Grainient"
+    ]),
+
     
     /// Utilities
     .library(name: "Utilities", targets: [
@@ -35,7 +39,7 @@ let package = Package(
         "ImageCompression",
         "Shaders",
         "TouchInertia",
-        "Shortcuts",
+//        "Shortcuts",
       ]
     ),
     
@@ -50,16 +54,18 @@ let package = Package(
     
   ],
   dependencies: [
-    .package(url: "https://github.com/dvclmn/TextCore", branch: "main"),
-    .package(url: "https://github.com/pointfreeco/swift-dependencies", from: "1.3.3"),
-    .package(url: "https://github.com/danielsaidi/ScrollKit", from: "0.5.1"),
-    .package(url: "https://github.com/raymondjavaxx/SmoothGradient", from: "1.0.0"),
-    .package(url: "https://github.com/evgenyneu/keychain-swift", from: "24.0.0"),
+    .package(url: "https://github.com/dvclmn/TextCore.git", branch: "main"),
+    .package(url: "https://github.com/pointfreeco/swift-dependencies.git", from: "1.4.0"),
+    .package(url: "https://github.com/danielsaidi/ScrollKit.git", from: "0.5.1"),
+    .package(url: "https://github.com/raymondjavaxx/SmoothGradient.git", from: "1.0.0"),
+    .package(url: "https://github.com/evgenyneu/keychain-swift.git", from: "24.0.0"),
     .package(url: "https://github.com/gohanlon/swift-memberwise-init-macro.git", from: "0.5.0")
   ],
+  
   targets: [
     /// Styles
     .target(name: "BaseStyles", resources: [.copy("GrainOverlay/Assets.xcassets")]),
+    .target(name: "Grainient", dependencies: ["BaseStyles"]),
     
     /// Utilities
     .target(name: "Geometry", dependencies: [.product(name: "Dependencies", package: "swift-dependencies")]),
@@ -77,7 +83,7 @@ let package = Package(
     .target(name: "ImageCompression"),
     .target(name: "TouchInertia"),
     .target(name: "Shaders"),
-    .target(name: "Shortcuts"),
+//    .target(name: "Shortcuts"),
     
     /// Networking
     .target(name: "APIHandler", dependencies: [
@@ -85,7 +91,10 @@ let package = Package(
       .product(name: "KeychainSwift", package: "keychain-swift"),
       .product(name: "MemberwiseInit", package: "swift-memberwise-init-macro")
     ]),
-    .target(name: "Keychain", dependencies: [.product(name: "KeychainSwift", package: "keychain-swift"), .product(name: "Dependencies", package: "swift-dependencies")]),
+    .target(name: "Keychain", dependencies: [
+      .product(name: "KeychainSwift", package: "keychain-swift"),
+      .product(name: "Dependencies", package: "swift-dependencies")
+    ]),
     
   ]
 )

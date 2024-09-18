@@ -22,7 +22,6 @@ extension Resizable {
     /// 2. Is there an explicit length supplied from this view, or should it be inferred?
     ///     Every Resizable needs some length to fall back on, when not in manual mode
     
-    
     var minWidth: CGFloat? {
         switch edge.axis {
         case .horizontal:
@@ -44,15 +43,6 @@ extension Resizable {
         }
     }
     
-    //    var idealWidth: CGFloat? {
-    //        switch axis {
-    //        case .horizontal:
-    //            actualLength
-    //        case .vertical:
-    //                .infinity
-    //        }
-    //    }
-    
     var minHeight: CGFloat? {
         switch edge.axis {
         case .horizontal:
@@ -72,17 +62,7 @@ extension Resizable {
             isManualMode ? actualLength : nil
         }
     }
-    
-    //    var idealHeight: CGFloat? {
-    //        switch axis {
-    //        case .horizontal:
-    //                .infinity
-    //        case .vertical:
-    //            actualLength
-    //        }
-    //    }
-    
-    
+
     
 }
 

@@ -10,29 +10,6 @@ import OSLog
 import BaseHelpers
 import Geometry
 
-@propertyWrapper
-struct DynamicKeyAppStorage<T: Codable> {
-  private let key: String
-  private let defaultValue: T
-  
-  init(key: String, defaultValue: T) {
-    self.key = key
-    self.defaultValue = defaultValue
-  }
-  
-  var wrappedValue: T {
-    get {
-      let data = UserDefaults.standard.data(forKey: key)
-      let value = data.flatMap { try? JSONDecoder().decode(T.self, from: $0) }
-      return value ?? defaultValue
-    }
-    set {
-      let data = try? JSONEncoder().encode(newValue)
-      UserDefaults.standard.set(data, forKey: key)
-    }
-  }
-}
-
 
 public struct Resizable: ViewModifier {
   
@@ -42,8 +19,12 @@ public struct Resizable: ViewModifier {
   /// This is `@Binding`, to allow users of Resizable to toggle manual mode (e.g. after sending a message, to 'reset' editor view)
   @Binding var isManualMode: Bool
   
+  /// Defines the dimension along which the view should be resizable
   var edge: Edge
+  
+  /// Useful for toggling resizability on/off.
   var isResizable: Bool
+  
   var isShowingFrames: Bool
   var isAnimated: Bool
   var handleColour: Color
@@ -51,13 +32,15 @@ public struct Resizable: ViewModifier {
   var handleVisibleWhenResized: Bool
   var lengthMin: CGFloat
   var lengthMax: CGFloat
+  
+  /// If provided, this enables persisting the resized length to UserDefaults
   var persistenceKey: String?
   
   /// Important: In your code (outside of this package), DO NOT try to feed this value
-  /// `finalLength` back to the property providing the `contentLength`, or it
+  /// `returnedLength` back to the property providing the `contentLength`, or it
   /// will get caught in a loop. `contentLength` is ingested, clamped, and returned
   /// below, so that other UI elements can recieve and respond to the length if need be.
-  var finalLength: (_ metrics: String, _ onChanged: CGFloat?, _ onEnded: CGFloat?) -> Void
+  var returnedLength: (_ metrics: String, _ onChanged: CGFloat?, _ onEnded: CGFloat?) -> Void
   
   
   public init(
@@ -73,7 +56,7 @@ public struct Resizable: ViewModifier {
     lengthMin: CGFloat,
     lengthMax: CGFloat,
     persistenceKey: String? = nil,
-    finalLength: @escaping (_: String, _: CGFloat?, _: CGFloat?) -> Void
+    returnedLength: @escaping (_: String, _: CGFloat?, _: CGFloat?) -> Void
   ) {
     self.contentLength = contentLength
     self._isManualMode = isManualMode
@@ -87,7 +70,7 @@ public struct Resizable: ViewModifier {
     self.lengthMin = lengthMin
     self.lengthMax = lengthMax
     self.persistenceKey = persistenceKey
-    self.finalLength = finalLength
+    self.returnedLength = returnedLength
     
     
     if let key = persistenceKey {
@@ -99,6 +82,14 @@ public struct Resizable: ViewModifier {
   
   @State var isHoveringLocal: Bool = false
   @State var isResizing: Bool = false
+  
+  /// This state property is used to hold an 'actively resized' length value.
+  /// `Resizable` has a few features that don't actually pertain to *resizing*
+  /// a view specifically (such as averaging min and max lengths, clamping etc).
+  ///
+  /// However, the below deals directly/exclusively with the length as it is
+  /// resized by the user.
+  ///
   @State private var manualLength: CGFloat = .zero
   
   @DynamicKeyAppStorage(key: "defaultKey", defaultValue: .zero) var savedLength: Double
@@ -108,6 +99,9 @@ public struct Resizable: ViewModifier {
   let animation = Animation.easeOut(duration: 0.2)
   let grabAreaOuterPercentage = 0.3
   
+  /// These two computed properties ensure that `lengthMin`
+  /// and `lengthMax` both sit safely between a minimum of
+  /// `zero`, and a maximum of `infinity`.
   var lengthMinConstrained: CGFloat {
     lengthMin.constrained(.zero, .infinity)
   }
@@ -115,14 +109,28 @@ public struct Resizable: ViewModifier {
     lengthMax.constrained(.zero, .infinity)
   }
   
+  /// "Unwrapped" here refers to taking the optional value of
+  /// `contentLength`, and deciding concretely on how to
+  /// handle it's value, or lack of value.
+  ///
   var unwrappedContentLength: CGFloat {
+    
     if let contentLength = contentLength {
+      /// The user has provided a desired length. All we need to do is
+      /// constrain it between the provided min and max lengths.
       return contentLength.constrained(lengthMinConstrained, lengthMaxConstrained)
     } else {
       if persistenceKey != nil && savedLength != .zero {
+        /// Still superstitiously wrapping in `max()`, despite the above
+        /// non-zero check, to insure against negative values
         return max(savedLength, .zero)
       } else {
-        return max((lengthMinConstrained + lengthMaxConstrained) * 0.5, .zero)
+        /// There was no previously saved value in UserDefaults,
+        /// nor was there a specific provided `contentLength`.
+        /// So we calculate a simple 'ideal' length, by averaging the
+        /// (mandatory) provided min and max lengths.
+        let idealLength: CGFloat = (lengthMinConstrained + lengthMaxConstrained) * 0.5
+        return max(idealLength, .zero)
       }
     }
   }
@@ -164,7 +172,6 @@ public struct Resizable: ViewModifier {
       .overlay(alignment: edge.alignment) {
         if isResizable {
           Grabber()
-          //                        .animation(isAnimated ? animation : nil, value: actualLength)
             .gesture(
               ExclusiveGesture(
                 DragGesture(minimumDistance: 0.5)
@@ -172,12 +179,11 @@ public struct Resizable: ViewModifier {
                     
                     isManualMode = true
                     isResizing = true
-                    
-                    /// ALWAYS CLAMP HERE IN THE ONCHANGED
-                    /// `min(max(lengthMin, manualLength), lengthMax)` etc
+                    let lengthBeforeResize = actualLength
                     
                     var newValue: CGFloat = .zero
                     
+                    /// This switch allows us to only care about translation values along a certain axis
                     switch edge {
                       case .top:
                         newValue = manualLength + gesture.translation.height * -1
@@ -189,10 +195,12 @@ public struct Resizable: ViewModifier {
                         newValue = manualLength + gesture.translation.width
                     }
                     
+                    /// Feed the new value to `manualLength`, always clamping to the provided min and max lengths
                     manualLength = newValue.constrained(lengthMinConstrained, lengthMaxConstrained)
                     
                     /// Sending out the calculated length, as we actively resize
-                    finalLength(metrics, actualLength, .zero)
+                    /// `(_ metrics: String, _ onChanged: CGFloat?, _ onEnded: CGFloat?)`
+                    returnedLength(metrics, actualLength, lengthBeforeResize)
                     
                   } // END on changed
                 
@@ -201,17 +209,17 @@ public struct Resizable: ViewModifier {
                     isHoveringLocal = false
                     isResizing = false
                     
-                    finalLength(metrics, actualLength, actualLength)
+                    returnedLength(metrics, actualLength, actualLength)
                     
                     if persistenceKey != nil {
                       
                       
-                      //                                            updateSavedLength(to: Double(actualLength ?? 0))
+//                                                                  updateSavedLength(to: Double(actualLength ?? 0))
                       
                     }
                   }
                 ,
-                /// Reset editor height to defaults
+                /// Double tap to reset editor height to
                 TapGesture(count: 2)
                   .onEnded {
                     isManualMode = false
@@ -220,7 +228,7 @@ public struct Resizable: ViewModifier {
                     
                     /// Important to set the manual length here so it's keeping up with the dynamic content, behind the scenes
                     manualLength = unwrappedContentLength
-                    finalLength(metrics, unwrappedContentLength, .zero)
+                    returnedLength(metrics, unwrappedContentLength, .zero)
                     //                                        savedLength = .zero
                   }
               )
@@ -232,14 +240,14 @@ public struct Resizable: ViewModifier {
       .onAppear {
         /// Get manual length ready to go, just in case
         manualLength = unwrappedContentLength
-        finalLength(metrics, unwrappedContentLength, .zero)
+        returnedLength(metrics, unwrappedContentLength, unwrappedContentLength)
       }
     
       .task(id: contentLength) {
         if !isManualMode {
           /// This is here to ensure that when it comes time for manual length to take over, it should be already exactly the same value as the dynamic length
           manualLength = unwrappedContentLength
-          finalLength(metrics, unwrappedContentLength, .zero)
+          returnedLength(metrics, unwrappedContentLength, .zero)
         }
         
       }
@@ -249,13 +257,11 @@ public struct Resizable: ViewModifier {
         alignment: edge.alignmentOpposite
       )
       .frame(
-        minWidth: minWidth,
-        //                idealWidth: idealWidth,
-        maxWidth: maxWidth,
-        minHeight: minHeight,
-        //                idealHeight: idealHeight,
-        maxHeight: maxHeight,
-        alignment: edge.alignmentOpposite
+        minWidth: self.minWidth,
+        maxWidth: self.maxWidth,
+        minHeight: self.minHeight,
+        maxHeight: self.maxHeight,
+        alignment: self.edge.alignmentOpposite
       )
       .border(Color.green.opacity(isShowingFrames ? 0.2 : 0))
   }
@@ -276,7 +282,7 @@ public extension View {
     lengthMin: CGFloat,
     lengthMax: CGFloat,
     persistenceKey: String? = nil,
-    finalLength: @escaping (_ metrics: String, _ onChanged: CGFloat?, _ onEnded: CGFloat?) -> Void = {metrics, onChanged, onEnded in }
+    returnedLength: @escaping (_ metrics: String, _ onChanged: CGFloat?, _ onEnded: CGFloat?) -> Void = {metrics, onChanged, onEnded in }
     
   ) -> some View {
     self.modifier(
@@ -293,7 +299,7 @@ public extension View {
         lengthMin: lengthMin,
         lengthMax: lengthMax,
         persistenceKey: persistenceKey,
-        finalLength: finalLength
+        returnedLength: returnedLength
       )
     )
   }

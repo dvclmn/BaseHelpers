@@ -7,7 +7,6 @@
 
 import Foundation
 import OSLog
-import APIHandler
 
 public struct ParseMessage {
     
