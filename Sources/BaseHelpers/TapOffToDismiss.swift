@@ -12,15 +12,14 @@ import SwiftUI
 
 
 public struct TapOffToDismiss: ViewModifier {
-    
-    let alignment: Alignment
+
     let action: () -> Void
     
     public func body(content: Content) -> some View {
     
         ZStack {
             Color.clear
-                .frame(maxWidth:.infinity, maxHeight:.infinity, alignment: .leading)
+                .frame(maxWidth:.infinity, maxHeight:.infinity)
                 .ignoresSafeArea()
                 .contentShape(Rectangle())
                 .onTapGesture {
@@ -32,21 +31,15 @@ public struct TapOffToDismiss: ViewModifier {
                         action()
                     }
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: alignment)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
             
     }
 }
 public extension View {
-    func tapOffToDismiss(
-        alignment: Alignment = .leading,
-        action: @escaping () -> Void = { }
-    ) -> some View {
+    func tapOffToDismiss(action: @escaping () -> Void) -> some View {
         self.modifier(
-            TapOffToDismiss(
-                alignment: alignment,
-                action: action
-            )
+            TapOffToDismiss(action: action)
         )
     }
 }

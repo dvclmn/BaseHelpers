@@ -6,9 +6,10 @@
 //
 
 import SwiftUI
+import BaseHelpers
 
 extension Resizable {
-
+  
   @ViewBuilder
   func Grabber() -> some View {
     
@@ -30,7 +31,9 @@ extension Resizable {
       
     }
     
+    
     Color.clear
+//    Color.blue.opacity(0.3)
       .frame(
         width: edge.axis == .horizontal ? grabArea : nil,
         height: edge.axis == .vertical ? grabArea : nil
@@ -53,6 +56,8 @@ extension Resizable {
             maxHeight: edge.axis == .vertical ? handleSize : .infinity
           )
       }
+      
+    
     
     
   }

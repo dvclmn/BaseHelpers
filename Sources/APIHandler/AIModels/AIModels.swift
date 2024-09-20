@@ -3,10 +3,14 @@
 
 import Foundation
 
-public enum AIProvider: CaseIterable, Codable, Sendable, Equatable {
+public enum AIProvider: CaseIterable, Codable, Sendable, Equatable, Identifiable {
   
   case openAI
   case anthropic
+  
+  public var id: String {
+    self.name
+  }
   
   public var name: String {
     switch self {
@@ -86,7 +90,7 @@ enum AIConnectionError: Error {
 @MainActor
 public struct OpenAITestConnection: ProviderTestable {
   public static func test(using key: String) async -> Bool {
-    print("Let's make a request, using key: `\(key)` to check connection to OpenAI")
+    print("Let's make a request to check connection to OpenAI")
     
     do {
       guard let request = try APIHandler.createRequest(
