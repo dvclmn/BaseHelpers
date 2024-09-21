@@ -20,7 +20,9 @@ public protocol StreamedResponse: Decodable, Sendable {
   var responseData: StreamedResponseMessage? { get }
   var usage: StreamedResponseUsage? { get }
 }
+
 public extension StreamedResponse {
+  /// Sets to `nil` as default
   var responseData: StreamedResponseMessage? { nil }
   var usage: StreamedResponseUsage? { nil }
 }

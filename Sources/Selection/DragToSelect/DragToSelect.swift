@@ -102,8 +102,10 @@ public extension DragToSelect {
   private func updateSelectedItems() {
     let threshold: CGFloat = 1
     
-    let selectionFilter = itemFrames.filter { _, frame in
-      frame.insetBy(dx: -threshold, dy: -threshold).intersects(selectionRect)
+    let selectionFilter = itemFrames.filter { item, frame in
+
+      frame.insetBy(dx: -threshold, dy: -threshold).intersects(selectionRect)      
+      
     }
     
     let compactedSelection = selectionFilter.compactMap { key, _ in

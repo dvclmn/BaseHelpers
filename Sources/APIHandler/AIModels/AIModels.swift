@@ -330,7 +330,10 @@ public enum AIModel: String, CaseIterable, Identifiable, Codable, Equatable, Sen
         return 8192
       case .gpt_3_5_turbo:
         return 16385
-      case .claude_3_5_sonnet, .claude_3_opus, .claude_3_sonnet, .claude_3_haiku:
+      case .claude_3_5_sonnet,
+          .claude_3_opus,
+          .claude_3_sonnet,
+          .claude_3_haiku:
         return 200000
     }
   }
@@ -397,7 +400,7 @@ public enum AIModel: String, CaseIterable, Identifiable, Codable, Equatable, Sen
         return nil
         
       case .claude_3_5_sonnet, .claude_3_opus, .claude_3_sonnet, .claude_3_haiku:
-        return 4096
+        return 8192
     }
   }
   

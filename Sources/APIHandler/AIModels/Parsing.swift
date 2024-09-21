@@ -1,178 +1,180 @@
 //
 //  File.swift
-//  
+//
 //
 //  Created by Dave Coleman on 20/7/2024.
 //
 
 import Foundation
-import OSLog
 
-public struct ParseMessage {
+public struct ParseHandler {
+  
+  public private(set) var tokens: Tokens
+  
+  public struct Tokens {
+    public let inputTokens: Int
+    public let outputTokens: Int
     
-    public static func parseMessage(_ line: String, for provider: AIProvider) -> (String?, Int?, Int?) {
+    public init(
+      inputTokens: Int = 0,
+      outputTokens: Int = 0
+    ) {
+      self.inputTokens = inputTokens
+      self.outputTokens = outputTokens
+    }
+  }
+  
+  mutating func updateTokens(
+    inputTokens: Int? = nil,
+    outputTokens: Int? = nil
+  ) {
+    self.tokens = Tokens(
+      inputTokens: inputTokens ?? tokens.inputTokens,
+      outputTokens: outputTokens ?? tokens.outputTokens
+    )
+  }
+  
+  
+  
+  public mutating func parseLine(_ line: String, for provider: AIProvider) -> String? {
+    
+    /// Regarding input/output tokens
+    ///
+    /// Anthropic:
+    /// The `usage.input_tokens` value in the `message_start` event type
+    /// counts the total number of tokens, including system/conversation prompt etc,
+    /// from the user's prompt.
+    ///
+    /// Then, to obtain the final `output_tokens` count, use the `usage.output_tokens`
+    /// value from the `message_delta` event type.
+    ///
+    /// Remember:
+    /// `input_tokens` = What the user wrote to the LLM
+    /// `output_tokens` = What the LLM wrote back in response
+    ///
+    
+    /// Example SSE output:
+    ///
+    /// ```
+    /// event: ping
+    /// data: {"type": "ping"}
+    ///
+    /// ```
+    
+    /// The below applies to both Anthropic and OpenAI, unless otherwise specificed
+    ///
+    guard line.starts(with: "data: ") else {
+      print("Line didn't start with `data: `, so discarding it: \(line)")
+      return nil
+    }
+    
+    guard !line.contains("[DONE]") || !line.contains("message_stop") else {
+      print("Message is all finished")
+      return "\n"
+    }
+    
+    /// Remove white space
+    let trimmed = line.trimmingCharacters(in: .whitespacesAndNewlines)
+    
+    /// Omit `data:` so it doesn't invalidate the JSON decoding
+    let message = String(trimmed.dropFirst("data: ".count))
+    
+    var content: String? = nil
+    
+    switch provider {
         
-//        /// This should keep `event:` out of the mix
-//        guard !line.starts(with: "event: ") else {
-//            os_log("No need for lines beginning `event: `")
-//            return (nil, nil, nil)
-//        }
-//
-        /// This applies to both Anth and OpenAI
-        guard line.starts(with: "data: ") else {
-            os_log("Line didn't start with `data: `, so ignoring it: \(line)")
-            return (nil, nil, nil)
+      case .openAI:
+        
+        var inputTokens: Int? = nil
+        var outputTokens: Int? = nil
+        
+        
+        guard let chunk: OpenAIStreamedResponse =  ParseHandler.decodeStreamedResponse(message) else {
+          return nil
         }
+        content = chunk.responseData?.text
         
-        guard !line.contains("[DONE]") || !line.contains("message_stop") else {
-            print("Message is all finished")
-            return ("\n", nil, nil)
-        }
+        updateTokens(
+          inputTokens: chunk.usage?.input_tokens,
+          outputTokens: chunk.usage?.output_tokens
+        )
         
-        /// Remove white space
-        let trimmed = line.trimmingCharacters(in: .whitespacesAndNewlines)
+        ParseHandler.printInfo(
+          for: (
+            content,
+            inputTokens,
+            nil,
+            nil,
+            outputTokens
+          ),
+          withTitle: "This is OpenAI, initial and remaining output token values will be nil, as they're not relevant"
+        )
         
-        /// Omit `data:` so it doesn't invalidate the JSON decoding
-        let message = String(trimmed.dropFirst("data: ".count))
         
-        switch provider {
-        case .openAI:
-            
-            var content: String? = nil
-            var inputTokens: Int? = nil
-            var outputTokens: Int? = nil
-            
-            
-                guard let chunk: OpenAIStreamedResponse =  decodeStreamedResponse(message) else {
-                    return (nil, nil, nil)
-                }
-                content = chunk.responseData?.text
-                inputTokens = chunk.usage?.input_tokens
-                outputTokens = chunk.usage?.output_tokens
-                
-                printInfo(
-                    for: (
-                        content,
-                        inputTokens,
-                        nil,
-                        nil,
-                        outputTokens
-                    ),
-                    withTitle: "This is OpenAI, initial and remaining output token values will be nil, as they're not relevant"
-                )
-                
-            
-            return (content, inputTokens, outputTokens)
-            
-        case .anthropic:
-            
-            var content: String? = nil
-            var inputTokens: Int? = nil
-            
-            var initialOutputTokens: Int? = nil
-            
-            var remainingOutputTokens: Int? = nil
-            
-            var totalOutputTokens: Int? = nil
-            
-            if message.contains("message_start") {
-                
-                os_log("Operating on a line that contains `message_start`: \(message)")
-                
-                /// `message_start` contains only the input tokens, and initial output tokens, in terms of useful data
-                
-                    guard let chunk: AnthropicMessageStart =  decodeStreamedResponse(message) else {
-                        os_log("No result for `message_start`: \(message)")
-                        return (nil, nil, nil)
-                    }
-                    content = nil
-                    inputTokens = chunk.responseData?.usage?.input_tokens
-                    initialOutputTokens = chunk.responseData?.usage?.output_tokens
-                    remainingOutputTokens = nil
-                    
-                    printInfo(
-                        for: (
-                            content,
-                            inputTokens,
-                            initialOutputTokens,
-                            remainingOutputTokens,
-                            totalOutputTokens
-                        ),
-                        withTitle: "message_start"
-                    )
-                
-                
-            } else if message.contains("content_block_delta") {
-                
-                os_log("Operating on a line that contains `content_block_delta`: \(message)")
-                
-                
-                    /// `content_block_delta` contains the actual response text
-                    guard let chunk: AnthropicContentBlockDelta =  decodeStreamedResponse(message) else {
-                        os_log("No result for `content_block_delta`: \(message)")
-                        return (nil, nil, nil)
-                    }
-                    content = chunk.responseData?.text
-                    inputTokens = nil
-                    initialOutputTokens = nil
-                    remainingOutputTokens = nil
-                    
-                    printInfo(
-                        for: (
-                            content,
-                            inputTokens,
-                            initialOutputTokens,
-                            remainingOutputTokens,
-                            totalOutputTokens
-                        ),
-                        withTitle: "content_block_delta"
-                    )
-                
-                
-            } else if message.contains("message_delta") {
-                
-                os_log("Operating on a line that contains `message_delta`: \(message)")
-                
-                /// `message_delta` contains the remaining output tokens usage, which we will then add to the total output token count
-                
-                    guard let chunk: AnthropicMessageDelta =  decodeStreamedResponse(message) else {
-                        os_log("No result for `message_delta`: \(message)")
-                        return (nil, nil, nil)
-                    }
-                    content = nil
-                    inputTokens = nil
-                    initialOutputTokens = nil
-                    remainingOutputTokens = chunk.usage?.output_tokens
-                    
-                    if let initialOutput = initialOutputTokens, let remaining = remainingOutputTokens {
-                        totalOutputTokens = initialOutput + remaining
-                    }
-                    
-                    printInfo(
-                        for: (
-                            content,
-                            inputTokens,
-                            initialOutputTokens,
-                            remainingOutputTokens,
-                            totalOutputTokens
-                        ),
-                        withTitle: "message_delta"
-                    )
-                
-                
-            } else {
-                os_log("No need to process this line, does not contain information that I need for now: \(message)")
-            } // END line contains "x" checks
-            
-            return (content, inputTokens, totalOutputTokens)
-            
-        } // END provider switch
+      case .anthropic:
         
-    } // END parse message
+        if message.contains("message_start") {
+          
+          print("Operating on a line that contains `message_start`: \(message)")
+          
+          /// `message_start` contains *only* the input tokens, in terms of useful data
+          
+          guard let chunk: AnthropicMessageStart =  ParseHandler.decodeStreamedResponse(message) else {
+            print("No result for `message_start`: \(message)")
+            return nil
+          }
+          
+          updateTokens(
+            inputTokens: chunk.usage?.input_tokens
+          )
+          
+          
+          
+        } else if message.contains("content_block_delta") {
+          
+          print("Operating on a line that contains `content_block_delta`: \(message)")
+          
+          
+          /// `content_block_delta` contains the actual response text
+          ///
+          guard let chunk: AnthropicContentBlockDelta =  ParseHandler.decodeStreamedResponse(message) else {
+            print("No result for `content_block_delta`: \(message)")
+            return nil
+          }
+          content = chunk.responseData?.text
+          
+          
+        } else if message.contains("message_delta") {
+          
+          print("Operating on a line that contains `message_delta`: \(message)")
+          
+          /// `message_delta` contains the remaining output tokens usage, which we will then add to the total output token count
+          
+          guard let chunk: AnthropicMessageDelta =  ParseHandler.decodeStreamedResponse(message) else {
+            print("No result for `message_delta`: \(message)")
+            return nil
+          }
+          
+          /// `message_delta` only provides output tokens
+          updateTokens(
+            outputTokens: chunk.usage?.output_tokens
+          )
+          
+          
+          
+        } else {
+          print("No need to process this line, does not contain information that I need for now: \(message)")
+        } // END line contains "x" checks
+        
+        
+    } // END provider switch
+    return content
     
-    
-    private static func printInfo(for data: (String?, Int?, Int?, Int?, Int?), withTitle title: String) {
-        os_log("""
+  } // END parse message
+  
+  
+  private static func printInfo(for data: (String?, Int?, Int?, Int?, Int?), withTitle title: String) {
+    print("""
         Here's what we got from `\(title)`:
         content: \(String(describing: data.0))
         inputTokens: \(String(describing: data.1))
@@ -180,28 +182,28 @@ public struct ParseMessage {
         remainingOutputTokens: \(String(describing: data.3))
         totalOutputTokens: \(String(describing: data.4))
         """
-        )
+    )
+  }
+  
+  public static func decodeStreamedResponse<T: StreamedResponse>(_ line: String) -> T? {
+    
+    guard let data = line.data(using: .utf8) else {
+      print("Couldn't convert string to data")
+      return nil
     }
     
-    public static func decodeStreamedResponse<T: StreamedResponse>(_ line: String) -> T? {
-        
-        guard let data = line.data(using: .utf8) else {
-            os_log("Couldn't convert string to data")
-            return nil
-        }
-        
-        let decoder = JSONDecoder()
-
-        do {
-            let decodedResponse = try decoder.decode(T.self, from: data)
-            return decodedResponse
-        } catch {
-            os_log("Error decoding streamed line: \(error)")
-        }
-        
-        return nil
-        
-        
-    } // END parse message
+    let decoder = JSONDecoder()
     
+    do {
+      let decodedResponse = try decoder.decode(T.self, from: data)
+      return decodedResponse
+    } catch {
+      print("Error decoding streamed line: \(error)")
+    }
+    
+    return nil
+    
+    
+  } // END parse message
+  
 }
