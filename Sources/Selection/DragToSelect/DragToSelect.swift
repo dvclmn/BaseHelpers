@@ -24,6 +24,7 @@ where Data: RandomAccessCollection,
   @Binding var selectedItemIDs: Set<Data.Element.ID>
   let accentColour: Color
   let content: (Data.Element, Bool) -> Content
+  let isSelectionEnabled: Bool
   
   /// A dictionary that keeps track of the frame bounds and ID, for each selectable item
   @State private var itemFrames: [Data.Element.ID: CGRect] = [:]
@@ -38,11 +39,13 @@ where Data: RandomAccessCollection,
   public init(
     items: Data,
     selectedItemIDs: Binding<Set<Data.Element.ID>>,
+    isSelectionEnabled: Bool = true,
     accentColour: Color = .blue,
     @ViewBuilder content: @escaping (_ item: Data.Element, _ isSelected: Bool) -> Content
   ) {
     self.items = items
     self._selectedItemIDs = selectedItemIDs
+    self.isSelectionEnabled = isSelectionEnabled
     self.accentColour = accentColour
     self.content = content
   }
@@ -132,20 +135,24 @@ public extension DragToSelect {
   private var dragGesture: some Gesture {
     DragGesture(minimumDistance: 0)
       .onChanged { value in
-        if !isDragging {
-          initialSelection = selectedItemIDs
+        if isSelectionEnabled {
+          if !isDragging {
+            initialSelection = selectedItemIDs
+          }
+          isDragging = true
+          lastDragLocation = value.location
+          
+          /// This handles the actual drawing of the bounding shape
+          updateSelectionRect(start: value.startLocation, current: value.location)
+          updateSelectedItems()
         }
-        isDragging = true
-        lastDragLocation = value.location
-        
-        /// This handles the actual drawing of the bounding shape
-        updateSelectionRect(start: value.startLocation, current: value.location)
-        updateSelectedItems()
       }
       .onEnded { _ in
-        isDragging = false
-        selectionRect = .zero
-        initialSelection = []
+        if isSelectionEnabled {
+          isDragging = false
+          selectionRect = .zero
+          initialSelection = []
+        }
       }
   }
   

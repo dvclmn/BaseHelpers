@@ -33,7 +33,7 @@ public struct ScrollOffsetModifier: ViewModifier {
       .contentMargins(safeAreaPadding.0, safeAreaPadding.1, for: .scrollIndicators)
 //              .frame(maxWidth: .infinity, maxHeight: .infinity)
       .scrollMask(isMasked)
-      .padding(.top, 0.5)
+      .padding(.top, 1)
    }
 }
 

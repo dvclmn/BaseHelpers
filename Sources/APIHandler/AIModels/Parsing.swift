@@ -9,34 +9,42 @@ import Foundation
 
 public struct ParseHandler {
   
-  public private(set) var tokens: Tokens
+  public init() {}
   
-  public struct Tokens {
-    public let inputTokens: Int
-    public let outputTokens: Int
-    
-    public init(
-      inputTokens: Int = 0,
-      outputTokens: Int = 0
-    ) {
-      self.inputTokens = inputTokens
-      self.outputTokens = outputTokens
-    }
-  }
+//  public private(set) var tokens: Tokens = .init()
+//  
+//  public init() {
+//  }
+//  
+//  public struct Tokens {
+//    public let inputTokens: Int
+//    public let outputTokens: Int
+//    
+//    public init(
+//      inputTokens: Int = 0,
+//      outputTokens: Int = 0
+//    ) {
+//      self.inputTokens = inputTokens
+//      self.outputTokens = outputTokens
+//    }
+//  }
+//  
+//  mutating func updateTokens(
+//    inputTokens: Int? = nil,
+//    outputTokens: Int? = nil
+//  ) {
+//    
+//    print("Updating tokens.")
+//    
+//    self.tokens = Tokens(
+//      inputTokens: inputTokens ?? tokens.inputTokens,
+//      outputTokens: outputTokens ?? tokens.outputTokens
+//    )
+//  }
   
-  mutating func updateTokens(
-    inputTokens: Int? = nil,
-    outputTokens: Int? = nil
-  ) {
-    self.tokens = Tokens(
-      inputTokens: inputTokens ?? tokens.inputTokens,
-      outputTokens: outputTokens ?? tokens.outputTokens
-    )
-  }
   
   
-  
-  public mutating func parseLine(_ line: String, for provider: AIProvider) -> String? {
+  public mutating func parseLine(_ line: String, for provider: AIProvider) -> (String?, Int?, Int?) {
     
     /// Regarding input/output tokens
     ///
@@ -65,12 +73,12 @@ public struct ParseHandler {
     ///
     guard line.starts(with: "data: ") else {
       print("Line didn't start with `data: `, so discarding it: \(line)")
-      return nil
+      return (nil, nil, nil)
     }
     
     guard !line.contains("[DONE]") || !line.contains("message_stop") else {
       print("Message is all finished")
-      return "\n"
+      return ("\n", nil, nil)
     }
     
     /// Remove white space
@@ -79,38 +87,21 @@ public struct ParseHandler {
     /// Omit `data:` so it doesn't invalidate the JSON decoding
     let message = String(trimmed.dropFirst("data: ".count))
     
-    var content: String? = nil
+    var content: String?
+    var inputTokens: Int?
+    var outputTokens: Int?
     
     switch provider {
         
       case .openAI:
         
-        var inputTokens: Int? = nil
-        var outputTokens: Int? = nil
-        
-        
-        guard let chunk: OpenAIStreamedResponse =  ParseHandler.decodeStreamedResponse(message) else {
-          return nil
+        guard let chunk: OpenAIStreamedResponse = ParseHandler.decodeStreamedResponse(message) else {
+          return (nil, nil, nil)
         }
         content = chunk.responseData?.text
-        
-        updateTokens(
-          inputTokens: chunk.usage?.input_tokens,
-          outputTokens: chunk.usage?.output_tokens
-        )
-        
-        ParseHandler.printInfo(
-          for: (
-            content,
-            inputTokens,
-            nil,
-            nil,
-            outputTokens
-          ),
-          withTitle: "This is OpenAI, initial and remaining output token values will be nil, as they're not relevant"
-        )
-        
-        
+        inputTokens = chunk.usage?.input_tokens
+        outputTokens = chunk.usage?.output_tokens
+
       case .anthropic:
         
         if message.contains("message_start") {
@@ -119,14 +110,14 @@ public struct ParseHandler {
           
           /// `message_start` contains *only* the input tokens, in terms of useful data
           
-          guard let chunk: AnthropicMessageStart =  ParseHandler.decodeStreamedResponse(message) else {
+          guard let chunk: AnthropicMessageStart = ParseHandler.decodeStreamedResponse(message) else {
             print("No result for `message_start`: \(message)")
-            return nil
+            return (nil, nil, nil)
           }
-          
-          updateTokens(
-            inputTokens: chunk.usage?.input_tokens
-          )
+         
+          content = nil
+          inputTokens = chunk.usage?.input_tokens
+          outputTokens = nil
           
           
           
@@ -134,14 +125,15 @@ public struct ParseHandler {
           
           print("Operating on a line that contains `content_block_delta`: \(message)")
           
-          
           /// `content_block_delta` contains the actual response text
           ///
           guard let chunk: AnthropicContentBlockDelta =  ParseHandler.decodeStreamedResponse(message) else {
             print("No result for `content_block_delta`: \(message)")
-            return nil
+            return (nil, nil, nil)
           }
           content = chunk.responseData?.text
+          inputTokens = nil
+          outputTokens = nil
           
           
         } else if message.contains("message_delta") {
@@ -149,26 +141,23 @@ public struct ParseHandler {
           print("Operating on a line that contains `message_delta`: \(message)")
           
           /// `message_delta` contains the remaining output tokens usage, which we will then add to the total output token count
-          
           guard let chunk: AnthropicMessageDelta =  ParseHandler.decodeStreamedResponse(message) else {
             print("No result for `message_delta`: \(message)")
-            return nil
+            return (nil, nil, nil)
           }
           
           /// `message_delta` only provides output tokens
-          updateTokens(
-            outputTokens: chunk.usage?.output_tokens
-          )
-          
-          
-          
+          content = nil
+          inputTokens = nil
+          outputTokens = chunk.usage?.output_tokens
+
         } else {
           print("No need to process this line, does not contain information that I need for now: \(message)")
         } // END line contains "x" checks
         
         
     } // END provider switch
-    return content
+    return (content, inputTokens, outputTokens)
     
   } // END parse message
   

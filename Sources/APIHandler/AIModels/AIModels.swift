@@ -90,7 +90,7 @@ enum AIConnectionError: Error {
 @MainActor
 public struct OpenAITestConnection: ProviderTestable {
   public static func test(using key: String) async -> Bool {
-    print("Let's make a request to check connection to OpenAI")
+//    print("Let's make a request to check connection to OpenAI")
     
     do {
       guard let request = try APIHandler.createRequest(
@@ -106,7 +106,7 @@ public struct OpenAITestConnection: ProviderTestable {
       
       do {
         if let _: OpenAIConfirmationResponse = try await APIHandler.fetch(request: request) {
-          print("Connected to open ai")
+//          print("Connected to open ai")
           return true
         } else {
           //          throw AIConnectionError.unknownError("Unexpected response format")
