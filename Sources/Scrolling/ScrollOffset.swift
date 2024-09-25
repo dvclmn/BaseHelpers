@@ -10,47 +10,53 @@ import SwiftUI
 import ScrollKit
 
 public struct ScrollOffsetModifier: ViewModifier {
-   
-   let maskEnabled: Bool
-   let safeAreaPadding: (Edge.Set, CGFloat?)
-   let output: (_ offset: CGPoint) -> Void
-   
-   @State private var isMasked: Bool = false
-   
-   public func body(content: Content) -> some View {
-      
-      ScrollViewWithOffsetTracking(showsIndicators: true) { offset in
-         if maskEnabled {
-            withAnimation(.snappy(duration: 0.3)) {
-               isMasked = offset.y < -1
-            }
-         }
-         output(offset)
-      } content: {
-         content
-            .safeAreaPadding(safeAreaPadding.0, safeAreaPadding.1)
+  
+  let maskEnabled: Bool
+  let maskMode: MaskMode
+  let isClipDisabled: Bool
+  let safeAreaPadding: (Edge.Set, CGFloat?)
+  let output: (_ offset: CGPoint) -> Void
+  
+  @State private var isMasked: Bool = false
+  
+  public func body(content: Content) -> some View {
+    
+    ScrollViewWithOffsetTracking(showsIndicators: true) { offset in
+      if maskEnabled {
+        withAnimation(.snappy(duration: 0.3)) {
+          isMasked = offset.y < -1
+        }
       }
-      .contentMargins(safeAreaPadding.0, safeAreaPadding.1, for: .scrollIndicators)
-//              .frame(maxWidth: .infinity, maxHeight: .infinity)
-      .scrollMask(isMasked)
-      .padding(.top, 1)
-   }
+      output(offset)
+    } content: {
+      content
+        .safeAreaPadding(safeAreaPadding.0, safeAreaPadding.1)
+    }
+    .contentMargins(safeAreaPadding.0, safeAreaPadding.1, for: .scrollIndicators)
+    //              .frame(maxWidth: .infinity, maxHeight: .infinity)
+    .scrollClipDisabled(isClipDisabled)
+    .scrollMask(isMasked, maskMode: maskMode)
+  }
 }
 
 public extension View {
-   
-   func scrollWithOffset(
-      maskEnabled: Bool = true,
-      safeAreaPadding: (Edge.Set, CGFloat?) = (.all, .zero),
-      _ output: @escaping (_ offset: CGPoint) -> Void = { _ in }
-   ) -> some View {
-      self.modifier(ScrollOffsetModifier(
-         maskEnabled: maskEnabled,
-         safeAreaPadding: safeAreaPadding,
-         output: output
-      ))
-   }
-   
+  
+  func scrollWithOffset(
+    maskEnabled: Bool = true,
+    maskMode: MaskMode = .mask,
+    isClipDisabled: Bool = false,
+    safeAreaPadding: (Edge.Set, CGFloat?) = (.all, .zero),
+    _ output: @escaping (_ offset: CGPoint) -> Void = { _ in }
+  ) -> some View {
+    self.modifier(ScrollOffsetModifier(
+      maskEnabled: maskEnabled,
+      maskMode: maskMode,
+      isClipDisabled: isClipDisabled,
+      safeAreaPadding: safeAreaPadding,
+      output: output
+    ))
+  }
+  
 }
 
 

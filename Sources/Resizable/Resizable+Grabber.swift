@@ -41,11 +41,16 @@ extension Resizable {
       .ignoresSafeArea()
       .background(.blue.opacity( isShowingFrames ? 0.2 : 0))
       .contentShape(Rectangle())
-      .onHover { hovering in
+      .debouncedHover { hovering in
         withAnimation(isAnimated ? animation : nil) {
           isHoveringLocal = hovering
         }
       }
+//      .onHover { hovering in
+//        withAnimation(isAnimated ? animation : nil) {
+//          isHoveringLocal = hovering
+//        }
+//      }
       .offset(offset)
       .background(alignment: edge.alignment) {
         handleColour.opacity(grabberOpacity)

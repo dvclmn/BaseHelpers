@@ -11,7 +11,7 @@ struct GrainientExample: View {
     var body: some View {
         Text("Hello, World!")
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .grainient(seed: 98365, version: .v3)
+        .grainient(seed: 98365)
     }
 }
 

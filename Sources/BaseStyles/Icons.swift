@@ -80,6 +80,7 @@ public enum Icons: String, CaseIterable, Identifiable, Codable, Equatable {
     case empty              = "light.max"
     case search             = "magnifyingglass"
     case folder             = "folder"
+    case escape             = "escape"
     case calendar           = "calendar"
     case text               = "text.alignleft"
     case background         = "rectangle.tophalf.inset.filled"

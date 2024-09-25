@@ -22,9 +22,10 @@ where Data: RandomAccessCollection,
   
   let items: Data
   @Binding var selectedItemIDs: Set<Data.Element.ID>
+  let isSelectionEnabled: Bool
+  let verticalSpacing: CGFloat
   let accentColour: Color
   let content: (Data.Element, Bool) -> Content
-  let isSelectionEnabled: Bool
   
   /// A dictionary that keeps track of the frame bounds and ID, for each selectable item
   @State private var itemFrames: [Data.Element.ID: CGRect] = [:]
@@ -40,19 +41,21 @@ where Data: RandomAccessCollection,
     items: Data,
     selectedItemIDs: Binding<Set<Data.Element.ID>>,
     isSelectionEnabled: Bool = true,
+    verticalSpacing: CGFloat = 4,
     accentColour: Color = .blue,
     @ViewBuilder content: @escaping (_ item: Data.Element, _ isSelected: Bool) -> Content
   ) {
     self.items = items
     self._selectedItemIDs = selectedItemIDs
     self.isSelectionEnabled = isSelectionEnabled
+    self.verticalSpacing = verticalSpacing
     self.accentColour = accentColour
     self.content = content
   }
   
   public var body: some View {
     
-    VStack(alignment: .leading, spacing: 4) {
+    VStack(alignment: .leading, spacing: verticalSpacing) {
       ForEach(Array(items.enumerated()), id: \.element.id) { index, item in
         let isSelected = selectedItemIDs.contains(item.id)
         content(item, isSelected)
@@ -61,8 +64,9 @@ where Data: RandomAccessCollection,
       }
       Spacer()
     } // END interior vstack
-    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
-    .scrollWithOffset()
+//    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+    .scrollWithOffset(maskMode: .mask)
+//    .scrollWithOffset(maskMode: .overlay, isClipDisabled: true)
     .contentShape(Rectangle())
     .coordinateSpace(name: "listContainer")
     .gesture(dragGesture)
