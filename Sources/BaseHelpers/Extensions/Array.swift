@@ -5,7 +5,11 @@
 //  Created by Dave Coleman on 31/8/2024.
 //
 
-
+public extension Set {
+  var array: [Element] {
+    Array(self)
+  }
+}
 
 
 public extension Array where Element: Equatable {

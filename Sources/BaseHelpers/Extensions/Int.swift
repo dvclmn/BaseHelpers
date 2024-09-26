@@ -11,7 +11,7 @@ public extension Int {
     self % 2 == 0
   }
 
-  func string() -> String {
+  var string: String {
     return String(self)
   }
 }

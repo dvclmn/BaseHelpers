@@ -17,22 +17,28 @@ struct ScaleEffectForShadow: GeometryEffect {
   }
 }
 
+public struct ShadowDepth {
+  var rounding: CGFloat
+  var distance: CGFloat
+}
+
 public struct ShadowModifier: ViewModifier {
   
   var opacity: Double
   var radius: Double
   var distanceY: Double
-  var distanceZ: Double
+  var depth: ShadowDepth?
   
   public func body(content: Content) -> some View {
     
-    var depth: Double {
-      return min(1.0, max(0.0, distanceZ))
-    }
+//    var depth: Double {
+//      return min(1.0, max(0.0, distanceZ))
+//    }
     
     
     content
-      .shadow(color: .black.opacity(opacity), radius: radius / 2, x: 0, y: 1)
+      .shadow(color: .black.opacity(opacity), radius: radius * 0.5, x: 0, y: 2)
+      .shadow(color: .black.opacity(opacity / 2), radius: radius * 0.7, x: 0, y: max(1, (distanceY / 2)))
       .shadow(color: .black.opacity(opacity), radius: radius * 2, x: 0, y: distanceY)
     
     
@@ -53,13 +59,13 @@ public extension View {
     opacity: Double = 0.2,
     radius: Double = 4,
     distanceY: Double = 6,
-    distanceZ: Double = 0.9
+    depth: ShadowDepth? = nil
   ) -> some View {
     self.modifier(ShadowModifier(
       opacity: opacity,
       radius: radius,
       distanceY: distanceY,
-      distanceZ: distanceZ
+      depth: depth
     ))
   }
 }

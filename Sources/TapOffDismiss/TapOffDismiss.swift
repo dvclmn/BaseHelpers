@@ -24,7 +24,8 @@ public struct TapOffToDismiss: ViewModifier {
 
       content
         .overlay {
-          Color.blue.opacity(0.2)
+          Color.clear
+//          Color.blue.opacity(0.1)
           //              .ignoresSafeArea()
             .frame(width: windowSize.size.width, height: windowSize.size.height)
             .contentShape(Rectangle())
