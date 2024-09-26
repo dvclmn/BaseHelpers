@@ -7,9 +7,20 @@
 
 //let pluralizeWord = { $0 == 1 ? $1 : "\($1)s" }
 // Credit: Sparkle swift package
-public func pluralise(_ count: Int, _ word: String) -> String {
+public func pluralise(
+  _ count: Int,
+  _ word: String,
+  includeCount: Bool = false
+) -> String {
   if count > 1 {
-    return word + "s"
+    
+    if includeCount {
+      return "\(count.string) " + word + "s"
+      
+    } else {
+      return word + "s"
+    }
+    
   } else {
     return word
   }

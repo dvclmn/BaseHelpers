@@ -8,19 +8,26 @@
 import Foundation
 import SwiftUI
 
-struct ScaleEffectForShadow: GeometryEffect {
-  var scale: CGFloat
-  
-  func effectValue(size: CGSize) -> ProjectionTransform {
-    let scaleTransform = CGAffineTransform(scaleX: scale, y: scale)
-    return ProjectionTransform(scaleTransform)
-  }
-}
+//struct ScaleEffectForShadow: GeometryEffect {
+//  var scale: CGFloat
+//  
+//  func effectValue(size: CGSize) -> ProjectionTransform {
+//    let scaleTransform = CGAffineTransform(scaleX: scale, y: scale)
+//    return ProjectionTransform(scaleTransform)
+//  }
+//}
 
 public struct ShadowDepth {
   var rounding: CGFloat
   var distance: CGFloat
+  
+  public init(rounding: CGFloat, distance: CGFloat) {
+    self.rounding = rounding
+    self.distance = distance
+  }
 }
+
+
 
 public struct ShadowModifier: ViewModifier {
   
@@ -30,27 +37,45 @@ public struct ShadowModifier: ViewModifier {
   var depth: ShadowDepth?
   
   public func body(content: Content) -> some View {
-    
-//    var depth: Double {
-//      return min(1.0, max(0.0, distanceZ))
-//    }
-    
-    
+
     content
-      .shadow(color: .black.opacity(opacity), radius: radius * 0.5, x: 0, y: 2)
-      .shadow(color: .black.opacity(opacity / 2), radius: radius * 0.7, x: 0, y: max(1, (distanceY / 2)))
-      .shadow(color: .black.opacity(opacity), radius: radius * 2, x: 0, y: distanceY)
+      .modifier(LayeredShadow(opacity: opacity, radius: radius, distanceY: distanceY, isOn: !hasDepth))
+      
     
-    
-//      .background {
-//        content
-//          .scaleEffect(depth)
-//          .shadow(color: .black.opacity(opacity), radius: radius / 2, x: 0, y: 1)
-//          .shadow(color: .black.opacity(opacity), radius: radius * 2, x: 0, y: distanceY)
-//      }
-//
+      .background {
+        if let depth = depth {
+          RoundedRectangle(cornerRadius: depth.rounding)
+            .fill(.ultraThinMaterial)
+            .modifier(LayeredShadow(opacity: opacity, radius: radius, distanceY: distanceY, isOn: hasDepth))
+            .scaleEffect(min(1.0, max(0.0, depth.distance)))
+        }
+        
+        
+      }
   }
   
+}
+
+public struct LayeredShadow: ViewModifier {
+  
+  var opacity: Double
+  var radius: Double
+  var distanceY: Double
+  var isOn: Bool
+  
+  public func body(content: Content) -> some View {
+    content
+      .shadow(color: .black.opacity(isOn ? opacity : 0), radius: radius * 0.5, x: 0, y: 2)
+      .shadow(color: .black.opacity(isOn ? opacity * 0.5 : 0), radius: radius * 0.7, x: 0, y: max(1, (distanceY / 2)))
+      .shadow(color: .black.opacity(isOn ? opacity : 0), radius: radius * 2, x: 0, y: distanceY)
+  }
+}
+
+
+extension ShadowModifier {
+  var hasDepth: Bool {
+    self.depth != nil
+  }
 }
 
 
@@ -76,67 +101,41 @@ private struct ShadowExampleView: View {
   
   var body: some View {
     
-    VStack {
+    VStack(spacing: 90) {
       
-      Spacer()
-      
-      VStack {
-        Rectangle()
-          .fill(.gray)
-          .frame(height: 34)
-          .overlay(alignment: .leading) {
-            HStack(spacing: 8) {
-              ForEach(1...3, id: \.self) { circle in
-                Circle()
-                  .frame(width: 14)
-                  .opacity(0.2)
-              }
-            } // END hstack
-            .padding(.leading, 14)
-          } // END circles overlay
+        RoundedRectangle(cornerRadius: 20)
+        .fill(.ultraThinMaterial)
+          .aspectRatio(3.1, contentMode: .fit)
+          .frame(width: 380)
+          .overlay {
+            Text("Depth effect ON")
+              .font(.system(size: 15, weight: .medium))
+          }
         
-        VStack(alignment: .leading) {
-          RoundedRectangle(cornerRadius: 10)
-            .frame(height: 30)
-            .padding(.leading, 50)
-            .opacity(0.7)
-          
-          
-          Spacer()
-          
-          Text("Always Allow")
-            .foregroundStyle(.primary)
-            .fontWeight(.semibold)
-            .frame(width: 140, height: 30)
-            .background(.teal)
-            .clipShape(.rect(cornerRadius: 10))
-            .rotationEffect(.degrees(-1))
-          
-        }
-        .padding(38)
-      } // END vstack
-      .aspectRatio(2.1, contentMode: .fit)
-      .frame(width: 400)
-      .background(.gray)
-      .clipShape(.rect(cornerRadius: 20))
-      .customShadow(opacity: 0.7, radius: 16, distanceY: 50)
+
+          .customShadow(opacity: 0.9, radius: 16, distanceY: 40, depth: ShadowDepth(rounding: 20, distance: 0.9))
       .padding(.bottom, 40)
       
       
+        RoundedRectangle(cornerRadius: 20)
+          .fill(.gray)
+          .aspectRatio(3.1, contentMode: .fit)
+          .frame(width: 380)
+          .customShadow(opacity: 0.7, radius: 16, distanceY: 50)
+          .overlay {
+              Text("Depth effect OFF")
+                .font(.system(size: 15, weight: .medium))
+          }
+
       
-      let byo = Text("BYO API Key").fontWeight(.bold).foregroundStyle(.primary)
       
-      Group {
-        Text("Banksia is ") + byo + Text(" other stuff")
-      }
-      .foregroundStyle(.secondary)
-      .font(.system(size: 15, weight: .medium))
+     
       
       
-      Spacer()
+
       
     }
-    .frame(maxWidth: .infinity)
+    .frame(maxWidth: .infinity, maxHeight: .infinity)
     .padding(38)
     .background(.teal.opacity(0.2))
     
