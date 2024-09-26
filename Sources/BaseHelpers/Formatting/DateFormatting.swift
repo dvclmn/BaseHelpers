@@ -69,8 +69,8 @@ public extension Date {
     
     if let seconds = components.second, let minutes = components.minute, let hours = components.hour, let days = components.day {
       if seconds < 30 {
-        friendlyPart = "Just now "
-        formatter.dateFormat = "(h:mm:ss a)"
+        friendlyPart = "Just now, "
+        formatter.dateFormat = "h:mm:ss a"
       } else if minutes == 0 {
         friendlyPart = "Less than a minute ago "
       } else if minutes < 60 {

@@ -24,6 +24,7 @@ where Data: RandomAccessCollection,
   @Binding var selectedItemIDs: Set<Data.Element.ID>
   let isSelectionEnabled: Bool
   let verticalSpacing: CGFloat
+  let clipProofPadding: CGFloat
   let accentColour: Color
   let content: (Data.Element, Bool) -> Content
   
@@ -41,7 +42,8 @@ where Data: RandomAccessCollection,
     items: Data,
     selectedItemIDs: Binding<Set<Data.Element.ID>>,
     isSelectionEnabled: Bool = true,
-    verticalSpacing: CGFloat = 4,
+    verticalSpacing: CGFloat = 0,
+    clipProofPadding: CGFloat = 2,
     accentColour: Color = .blue,
     @ViewBuilder content: @escaping (_ item: Data.Element, _ isSelected: Bool) -> Content
   ) {
@@ -49,6 +51,7 @@ where Data: RandomAccessCollection,
     self._selectedItemIDs = selectedItemIDs
     self.isSelectionEnabled = isSelectionEnabled
     self.verticalSpacing = verticalSpacing
+    self.clipProofPadding = clipProofPadding
     self.accentColour = accentColour
     self.content = content
   }
@@ -59,13 +62,19 @@ where Data: RandomAccessCollection,
       ForEach(Array(items.enumerated()), id: \.element.id) { index, item in
         let isSelected = selectedItemIDs.contains(item.id)
         content(item, isSelected)
-        
+          .padding(clipProofPadding)
           .modifier(CaptureItemFrame(id: item.id))
       }
       Spacer()
     } // END interior vstack
 //    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
-    .scrollWithOffset(maskMode: .mask)
+    
+    /// > Note
+    /// If ugly clipping is occuring around this view, that's likely because
+    /// of this scrollview. Add some padding to clear the clipped elements
+    /// away from the very edges, if possible.
+    ///
+    .scrollWithOffset(maskMode: .mask, showsIndicators: false)
 //    .scrollWithOffset(maskMode: .overlay, isClipDisabled: true)
     .contentShape(Rectangle())
     .coordinateSpace(name: "listContainer")

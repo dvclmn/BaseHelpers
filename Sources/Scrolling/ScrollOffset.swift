@@ -14,6 +14,7 @@ public struct ScrollOffsetModifier: ViewModifier {
   let maskEnabled: Bool
   let maskMode: MaskMode
   let isClipDisabled: Bool
+  let showsIndicators: Bool
   let safeAreaPadding: (Edge.Set, CGFloat?)
   let output: (_ offset: CGPoint) -> Void
   
@@ -21,7 +22,7 @@ public struct ScrollOffsetModifier: ViewModifier {
   
   public func body(content: Content) -> some View {
     
-    ScrollViewWithOffsetTracking(showsIndicators: true) { offset in
+    ScrollViewWithOffsetTracking(showsIndicators: showsIndicators) { offset in
       if maskEnabled {
         withAnimation(.snappy(duration: 0.3)) {
           isMasked = offset.y < -1
@@ -45,6 +46,7 @@ public extension View {
     maskEnabled: Bool = true,
     maskMode: MaskMode = .mask,
     isClipDisabled: Bool = false,
+    showsIndicators: Bool = true,
     safeAreaPadding: (Edge.Set, CGFloat?) = (.all, .zero),
     _ output: @escaping (_ offset: CGPoint) -> Void = { _ in }
   ) -> some View {
@@ -52,6 +54,7 @@ public extension View {
       maskEnabled: maskEnabled,
       maskMode: maskMode,
       isClipDisabled: isClipDisabled,
+      showsIndicators: showsIndicators,
       safeAreaPadding: safeAreaPadding,
       output: output
     ))

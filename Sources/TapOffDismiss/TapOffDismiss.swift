@@ -9,6 +9,7 @@ import Foundation
 import SwiftUI
 import Dependencies
 import Geometry
+import BaseHelpers
 
 #if os(macOS)
 
@@ -20,26 +21,23 @@ public struct TapOffToDismiss: ViewModifier {
   let action: () -> Void
   
   public func body(content: Content) -> some View {
-    
-    ZStack {
-      
-      Color.blue.opacity(0.2)
-        
-        .ignoresSafeArea()
-        .contentShape(Rectangle())
-        .onTapGesture {
-          action()
-        }
-      
-      
+
       content
-        .onExitCommand {
-          action()
+        .overlay {
+          Color.blue.opacity(0.2)
+          //              .ignoresSafeArea()
+            .frame(width: windowSize.size.width, height: windowSize.size.height)
+            .contentShape(Rectangle())
+            .onTapGesture {
+              action()
+            }
+            .onExitCommand {
+              action()
+            }
+        } // END overlay
+        .task {
+          print("Window size: \(windowSize.size.width) x \(windowSize.size.height)")
         }
-    }
-    .frame(width: windowSize.size.width, height: windowSize.size.height)
-    .ignoresSafeArea()
-    .fixedSize(horizontal: true, vertical: true)
   }
 }
 public extension View {
@@ -50,3 +48,31 @@ public extension View {
   }
 }
 #endif
+
+
+
+//struct TapOffExampleView: View {
+//  
+//  @State private var background: Color = .red
+//  
+//  var body: some View {
+//    
+//    VStack {
+//      Text("Hello")
+//        .tapOffToDismiss {
+//          //          background = Color.random
+//          print("Tapped")
+//        }
+//    }
+//    
+//    .padding(40)
+//    .frame(width: 600, height: 700)
+//    .background(background.opacity(0.2))
+//    
+//  }
+//}
+//#Preview {
+//  TapOffExampleView()
+//}
+//
+
