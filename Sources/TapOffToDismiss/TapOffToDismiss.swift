@@ -13,7 +13,6 @@ import BaseHelpers
 
 #if os(macOS)
 
-
 public struct TapOffToDismiss: ViewModifier {
   
   @Dependency(\.windowDimensions) var windowSize

@@ -24,7 +24,6 @@ extension NSEvent.ModifierFlags: @retroactive Hashable {
 }
 
 
-
 extension Set: ModifierKeyCollection where Element == NSEvent.ModifierFlags {
   public func holding(_ modifiers: NSEvent.ModifierFlags...) -> Bool {
     holding(modifiers)

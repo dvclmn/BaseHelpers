@@ -10,35 +10,50 @@ import SwiftUI
 
 #if os(macOS)
 
+public enum ModifierKey: Hashable, Sendable {
+  case shift, control, option, command
+}
 
+public typealias Modifiers = Set<ModifierKey>
 
-public struct ModifierFlagsKey: EnvironmentKey {
-  public static let defaultValue = Set<NSEvent.ModifierFlags>()
+extension NSEvent.ModifierFlags {
+  func toModifierKey() -> ModifierKey? {
+    switch self {
+      case .shift: return .shift
+      case .control: return .control
+      case .option: return .option
+      case .command: return .command
+      default: return nil
+    }
+  }
 }
 
 
+public struct ModifierFlagsKey: EnvironmentKey {
+  public static let defaultValue = Modifiers()
+}
+
 public extension EnvironmentValues {
-  var modifierKeys: Set<NSEvent.ModifierFlags> {
+  var modifierKeys: Modifiers {
     get { self[ModifierFlagsKey.self] }
     set { self[ModifierFlagsKey.self] = newValue }
   }
 }
 
+
+
 public struct ModifierKeysModifier: ViewModifier {
-  @State private var modifierKeys = Set<NSEvent.ModifierFlags>()
+  @State private var modifierKeys = Modifiers()
   
-  private let allModifiers: Set<NSEvent.ModifierFlags> = [
-    .shift,
-    .control,
-    .option,
-    .command
-  ]
+  private let allModifiers: [NSEvent.ModifierFlags] = [.shift, .control, .option, .command]
   
   public func body(content: Content) -> some View {
     content
       .onAppear {
         NSEvent.addLocalMonitorForEvents(matching: [.flagsChanged]) { event in
-          modifierKeys = allModifiers.filter { event.modifierFlags.contains($0) }
+          modifierKeys = Set(allModifiers.compactMap { flag in
+            event.modifierFlags.contains(flag) ? flag.toModifierKey() : nil
+          })
           return event
         }
       }

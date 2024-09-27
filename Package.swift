@@ -21,7 +21,7 @@ let package = Package(
     /// Utilities
     .library(name: "Utilities", targets: [
       "Geometry",
-      "TapOffDismiss",
+      "TapOffToDismiss",
       "Profiler",
       "Renamable",
       "Logging",
@@ -70,7 +70,7 @@ let package = Package(
     
     /// Utilities
     .target(name: "Geometry", dependencies: [.product(name: "Dependencies", package: "swift-dependencies")]),
-    .target(name: "TapOffDismiss", dependencies: ["BaseHelpers", "Geometry", .product(name: "Dependencies", package: "swift-dependencies")]),
+    .target(name: "TapOffToDismiss", dependencies: ["BaseHelpers", "Geometry", .product(name: "Dependencies", package: "swift-dependencies")]),
     .target(name: "Profiler"),
     .target(name: "Renamable"),
     .target(name: "Logging", dependencies: ["BaseHelpers"]),
