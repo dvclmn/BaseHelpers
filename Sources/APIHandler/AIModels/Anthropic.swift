@@ -38,8 +38,6 @@ public struct Anthropic: Codable, Sendable {
   public static let betaHeaderKey: String = "anthropic-beta"
   public static let betaHeaderValue: String = "max-tokens-3-5-sonnet-2024-07-15"
   
-  public static let maxOutputTokens: Int = 8192 // ~6,200 words
-  
   public static func headers(with key: String) -> [String : String] {
     return [
       authHeaderKey : key,

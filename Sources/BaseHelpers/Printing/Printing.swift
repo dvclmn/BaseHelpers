@@ -167,7 +167,8 @@ public func printCollection<T: Collection>(
   var info = ""
   
   if !keyPaths.isEmpty && !mirror.children.isEmpty {
-    info = value.prettyPrinted(keyPaths: keyPaths)
+    fatalError("I need to fix this, I'm part-way through re-looking at pretty printing.")
+//    info = value.prettyPrinted(keyPaths: keyPaths)
   } else {
     info = "Value: \(value)"
   }

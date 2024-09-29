@@ -8,6 +8,78 @@
 import Foundation
 import SwiftUI
 
+public struct FormatOptions {
+  var length: DateLength
+  var components: [DateComponents]
+  var seperator: Character
+  
+  public init(
+    length: DateLength = .medium,
+    components: [DateComponents] = [.time, .dayOfWeek],
+    seperator: Character = "–"
+  ) {
+    self.length = length
+    self.components = components
+    self.seperator = seperator
+  }
+  
+  public enum DateComponents {
+    case time
+    case dayOfWeek
+    case year
+  }
+  
+  public enum DateLength {
+    case short
+    case medium
+    case long
+    
+    var dayOfWeek: String {
+      switch self {
+        case .short:
+          "E"
+        case .medium:
+          "EEEE"
+        case .long:
+          "EEEE"
+      }
+    }
+    
+    var day: String {
+      switch self {
+        case .short:
+          "d"
+        case .medium:
+          "dd"
+        case .long:
+          "dd"
+      }
+    }
+    
+    var month: String {
+      switch self {
+        case .short:
+          "MMM"
+        case .medium:
+          "MMM"
+        case .long:
+          "MMMM"
+      }
+    }
+    
+    
+    var year: String {
+      switch self {
+        case .short, .medium, .long:
+          "yyyy"
+      }
+    }
+  }
+  
+}
+
+
+
 public extension Date {
   
   // Date Format Cheatsheet:
@@ -41,6 +113,46 @@ public extension Date {
   // "E, MMM d, yy"                 -> "Thu, Jul 6, 23"
   // "yyyy-MM-dd'T'HH:mm:ss"        -> "2023-07-06T13:34:56"
   // "h:mm a 'on' MMMM d, yyyy"     -> "1:34 PM on July 6, 2023"
+  
+
+  /// Wednesday, 12 October, 2024
+  /// Wed, 12 October, 2024
+  /// 12 October, 2024
+  /// 12 Oct, 2024
+  ///
+  /// 12:54pm
+  ///
+
+  
+  
+  
+  
+  func quickFormat(_ options: FormatOptions) -> AttributedString {
+
+    let timeFormatter = DateFormatter()
+    let dateFormatter = DateFormatter()
+    
+    let time = options.components.contains(.time) ? "h:mma \(options.seperator) " : ""
+    let dayOfWeek = options.components.contains(.dayOfWeek) ? "\(options.length.dayOfWeek), " : ""
+    let day = "\(options.length.day) "
+    let month = "\(options.length.month) "
+    let year = options.components.contains(.year) ? options.length.year : ""
+    
+    timeFormatter.dateFormat = time
+    dateFormatter.dateFormat = dayOfWeek + day + month + year
+    
+    let timeResult = timeFormatter.string(from: self).replacingOccurrences(of: "AM", with: "am").replacingOccurrences(of: "PM", with: "pm")
+    let dateResult = dateFormatter.string(from: self)
+    
+    var attributedString = AttributedString(timeResult + dateResult)
+    attributedString.foregroundColor = .primary.opacity(0.7)
+    
+    if let dateRange = attributedString.range(of: dateResult) {
+      attributedString[dateRange].foregroundColor = .secondary.opacity(0.7)
+    }
+    
+    return attributedString
+  }
   
   /// Returns the date formatted as "Thu, July 11, 2024"
   var mediumDateFormat: String {
@@ -129,7 +241,7 @@ public extension Date {
     return formatter.string(from: self).replacingOccurrences(of: "AM", with: "am").replacingOccurrences(of: "PM", with: "pm")
   }
   
-  /// Returns the date formatted as "July 11 2024"
+  /// Returns the date formatted as "October 11 2024"
   var shortDateFormat: String {
     let formatter = DateFormatter()
     formatter.dateFormat = "MMMM d yyyy"

@@ -9,6 +9,7 @@ import SwiftUI
 //import Shortcuts
 import Geometry
 import Scrolling
+import BaseHelpers
 
 #if os(macOS)
 
@@ -18,6 +19,8 @@ where Data: RandomAccessCollection,
       Data.Index == Int,
       Content: View {
   
+  public typealias Output = (_ item: Data.Element, _ isSelected: Bool, _ position: SelectionPosition?) -> Content
+  
   //    @Environment(\.modifierKeys) private var modifierKeys
   
   let items: Data
@@ -26,7 +29,8 @@ where Data: RandomAccessCollection,
   let verticalSpacing: CGFloat
   let clipProofPadding: CGFloat
   let accentColour: Color
-  let content: (Data.Element, Bool) -> Content
+  let content: Output
+  
   
   /// A dictionary that keeps track of the frame bounds and ID, for each selectable item
   @State private var itemFrames: [Data.Element.ID: CGRect] = [:]
@@ -45,7 +49,7 @@ where Data: RandomAccessCollection,
     verticalSpacing: CGFloat = 0,
     clipProofPadding: CGFloat = 2,
     accentColour: Color = .blue,
-    @ViewBuilder content: @escaping (_ item: Data.Element, _ isSelected: Bool) -> Content
+    @ViewBuilder content: @escaping Output
   ) {
     self.items = items
     self._selectedItemIDs = selectedItemIDs
@@ -60,8 +64,18 @@ where Data: RandomAccessCollection,
     
     VStack(alignment: .leading, spacing: verticalSpacing) {
       ForEach(Array(items.enumerated()), id: \.element.id) { index, item in
+        
         let isSelected = selectedItemIDs.contains(item.id)
-        content(item, isSelected)
+        
+        let position = selectedItemIDs.selectionPosition(
+          for: item.id,
+          idForElement: { $0 },
+          in: sortedIDs,
+          isPreviousSelected: { selectedItemIDs.contains($0) },
+          isNextSelected: { selectedItemIDs.contains($0) }
+        )
+
+        content(item, isSelected, position)
           .padding(clipProofPadding)
           .modifier(CaptureItemFrame(id: item.id))
       }
@@ -106,6 +120,10 @@ where Data: RandomAccessCollection,
 
 public extension DragToSelect {
   
+  var sortedIDs: [Data.Element.ID] {
+    items.map { $0.id }
+  }
+  
   private func updateSelectionRect(start: CGPoint, current: CGPoint) {
     let minX = max(0, min(start.x, current.x))
     let maxX = min(geometrySize.width, max(start.x, current.x))
@@ -146,7 +164,7 @@ public extension DragToSelect {
   
   
   private var dragGesture: some Gesture {
-    DragGesture(minimumDistance: 0)
+    DragGesture(minimumDistance: 6)
       .onChanged { value in
         if isSelectionEnabled {
           if !isDragging {

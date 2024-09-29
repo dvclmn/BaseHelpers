@@ -70,6 +70,7 @@ public extension GrainientPreset {
   static let darkToLight         = GrainientPreset(seed: 923765, name: "Dark to Light", version: .v3)
   static let moss         = GrainientPreset(seed: 903099, name: "Moss", version: .v3)
   static let trippy         = GrainientPreset(seed: 725389, name: "Trippy", version: .v3)
+  static let jungleFlower         = GrainientPreset(seed: 31251, name: "Jungle Flower", version: .v3)
   
   
   

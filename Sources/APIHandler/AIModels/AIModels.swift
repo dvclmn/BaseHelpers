@@ -313,10 +313,13 @@ public enum AIModel: String, CaseIterable, Identifiable, Codable, Equatable, Sen
         
       case .claude_3_5_sonnet:
         return "Fast"
+        
       case .claude_3_opus:
         return "Moderately fast"
+        
       case .claude_3_sonnet:
         return "Fast"
+        
       case .claude_3_haiku:
         return "Fastest"
     }
@@ -326,15 +329,18 @@ public enum AIModel: String, CaseIterable, Identifiable, Codable, Equatable, Sen
     switch self {
       case .gpt_4o, .gpt_4o_mini, .gpt_4_turbo:
         return 128000
+        
       case .gpt_4:
         return 8192
+        
       case .gpt_3_5_turbo:
         return 16385
+        
       case .claude_3_5_sonnet,
           .claude_3_opus,
           .claude_3_sonnet,
           .claude_3_haiku:
-        return 200000
+        return 200_000
     }
   }
   
@@ -349,15 +355,12 @@ public enum AIModel: String, CaseIterable, Identifiable, Codable, Equatable, Sen
       case .gpt_4, .gpt_3_5_turbo:
         "Sep 2021"
         
-        
       case .claude_3_5_sonnet:
         "April 2024"
         
-      case .claude_3_opus, .claude_3_sonnet:
+      case .claude_3_opus, .claude_3_sonnet, .claude_3_haiku:
         "August 2023"
         
-      case .claude_3_haiku:
-        "March 2024"
     }
   }
   
@@ -365,6 +368,7 @@ public enum AIModel: String, CaseIterable, Identifiable, Codable, Equatable, Sen
     switch self {
       case .gpt_3_5_turbo:
           .gpt_4o_mini
+        
       default: nil
     }
   }
@@ -394,12 +398,15 @@ public enum AIModel: String, CaseIterable, Identifiable, Codable, Equatable, Sen
     }
   }
   
-  public var maxTokenOutput: Double? {
+  public var maxTokenOutput: Int? {
     switch self {
       case .gpt_4o, .gpt_4o_mini, .gpt_4_turbo, .gpt_4, .gpt_3_5_turbo:
         return nil
         
-      case .claude_3_5_sonnet, .claude_3_opus, .claude_3_sonnet, .claude_3_haiku:
+      case .claude_3_haiku, .claude_3_opus, .claude_3_sonnet:
+        return 4096
+        
+      case .claude_3_5_sonnet:
         return 8192
     }
   }

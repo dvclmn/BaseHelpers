@@ -45,7 +45,9 @@ public extension String {
   
   /// A `prefix(_ maxLength: Int)` alternative, returning a `String` rather than `Substring`
   ///
-  func preview(_ maxLength: Int) -> String {
+  func preview(_ maxLength: Int = 20) -> String {
+    
+    
     return String(self.prefix(maxLength))
   }
   

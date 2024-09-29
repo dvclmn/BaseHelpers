@@ -43,7 +43,7 @@ public struct ShadowModifier: ViewModifier {
       
     
       .background {
-        if let depth = depth {
+        if let depth = depth, opacity > 0.0 {
           RoundedRectangle(cornerRadius: depth.rounding)
             .fill(.ultraThinMaterial)
             .modifier(LayeredShadow(opacity: opacity, radius: radius, distanceY: distanceY, isOn: hasDepth))
@@ -103,6 +103,19 @@ private struct ShadowExampleView: View {
     
     VStack(spacing: 90) {
       
+      
+      RoundedRectangle(cornerRadius: 20)
+        .fill(.ultraThinMaterial)
+        .aspectRatio(3.1, contentMode: .fit)
+        .frame(width: 380)
+        .overlay {
+          Text("Opacity Zero")
+            .font(.system(size: 15, weight: .medium))
+        }
+        .customShadow(opacity: 0.0, radius: 16, distanceY: 40, depth: ShadowDepth(rounding: 20, distance: 0.9))
+      
+      
+      
         RoundedRectangle(cornerRadius: 20)
         .fill(.ultraThinMaterial)
           .aspectRatio(3.1, contentMode: .fit)
@@ -111,9 +124,8 @@ private struct ShadowExampleView: View {
             Text("Depth effect ON")
               .font(.system(size: 15, weight: .medium))
           }
-        
-
           .customShadow(opacity: 0.9, radius: 16, distanceY: 40, depth: ShadowDepth(rounding: 20, distance: 0.9))
+      
       .padding(.bottom, 40)
       
       

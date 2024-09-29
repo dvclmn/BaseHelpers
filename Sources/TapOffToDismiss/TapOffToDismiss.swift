@@ -35,9 +35,9 @@ public struct TapOffToDismiss: ViewModifier {
               action()
             }
         } // END overlay
-        .task {
-          print("Window size: \(windowSize.size.width) x \(windowSize.size.height)")
-        }
+//        .task {
+//          print("Window size: \(windowSize.size.width) x \(windowSize.size.height)")
+//        }
   }
 }
 public extension View {

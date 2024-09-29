@@ -14,43 +14,38 @@ public extension Set {
   }
 }
 
+public enum SelectionPosition {
+  case single
+  case top
+  case middle
+  case bottom
+}
 
-public extension Set {
-  enum SelectionPosition {
-    case single
-    case first
-    case middle
-    case last
-    case notSelected
-  }
-  
-  func selectionPosition<ID: Hashable>(
-    for id: ID,
-    idForElement: (Element) -> ID,
-    in sortedIDs: [ID],
-    isPreviousSelected: (ID) -> Bool,
-    isNextSelected: (ID) -> Bool
-  ) -> SelectionPosition {
-    guard self.contains(where: { idForElement($0) == id }) else { return .notSelected }
+extension Set where Element: Hashable {
+  public func selectionPosition<T: Hashable>(
+    for id: Element,
+    idForElement: (T) -> Element,
+    in sortedElements: [T],
+    isPreviousSelected: (Element) -> Bool,
+    isNextSelected: (Element) -> Bool
+  ) -> SelectionPosition? {
+    guard self.contains(id) else { return nil }
     
-    guard let currentIndex = sortedIDs.firstIndex(of: id) else { return .notSelected }
+    guard let index = sortedElements.firstIndex(where: { idForElement($0) == id }) else {
+      return .single
+    }
     
-    let previousSelected = currentIndex > 0 ? isPreviousSelected(sortedIDs[currentIndex - 1]) : false
-    let nextSelected = currentIndex < sortedIDs.count - 1 ? isNextSelected(sortedIDs[currentIndex + 1]) : false
+    let previousSelected = index > 0 ? isPreviousSelected(idForElement(sortedElements[index - 1])) : false
+    let nextSelected = index < sortedElements.count - 1 ? isNextSelected(idForElement(sortedElements[index + 1])) : false
     
     switch (previousSelected, nextSelected) {
-      case (false, false):
-        return .single
-      case (false, true):
-        return .first
-      case (true, false):
-        return .last
-      case (true, true):
-        return .middle
+      case (false, false): return .single
+      case (true, false): return .bottom
+      case (false, true): return .top
+      case (true, true): return .middle
     }
   }
 }
-
 
 
 

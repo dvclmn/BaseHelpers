@@ -7,6 +7,21 @@
 
 import Foundation
 
+
+public extension Dictionary {
+  var prettyPrinted: String {
+    var result = "[\n"
+    for (key, value) in self {
+      result += "  \"\(key)\": \"\(value)\",\n"
+    }
+    result = String(result.dropLast(2)) // Remove the last comma and newline
+    result += "\n]"
+    return result
+  }
+}
+
+
+
 /// #Example usage:
 ///
 /// ```swift
@@ -91,82 +106,82 @@ import Foundation
 //  }
 //}
 
-public extension Collection {
-  func prettyPrinted(keyPaths: [PartialKeyPath<Element>], indent: String = "  ") -> String {
-    func formatValue<T>(_ value: T, depth: Int) -> String {
-      let nextIndent = String(repeating: indent, count: depth + 1)
-      
-      func formatCollection<C: Collection>(_ collection: C) -> String {
-        if collection.isEmpty {
-          return "[]"
-        }
-        var result = "[\n"
-        for (index, item) in collection.enumerated() {
-          result += "\(nextIndent)// \(index + 1)\n"
-          result += "\(nextIndent)\(formatValue(item, depth: depth + 1)),\n"
-        }
-        result += "\(String(repeating: indent, count: depth))]"
-        return result
-      }
-      
-      if let collection = value as? any Collection {
-        return formatCollection(collection)
-      } else if let describable = value as? CustomStringConvertible {
-        let description = describable.description
-        if description.contains("(") && description.contains(")") {
-          let components = description.components(separatedBy: "(")
-          let name = components[0]
-          let params = components[1].dropLast()
-          let paramPairs = params.components(separatedBy: ",")
-          
-          var result = "\(name)(\n"
-          for param in paramPairs {
-            result += "\(nextIndent)\(param.trimmingCharacters(in: .whitespaces)),\n"
-          }
-          result += "\(String(repeating: indent, count: depth)))"
-          return result
-        }
-      }
-      
-      return String(describing: value)
-    }
+//public extension Collection {
+//  func prettyPrinted(keyPaths: [PartialKeyPath<Element>], indent: String = "  ") -> String {
+//    func formatValue<T>(_ value: T, depth: Int) -> String {
+//      let nextIndent = String(repeating: indent, count: depth + 1)
+//      
+//      func formatCollection<C: Collection>(_ collection: C) -> String {
+//        if collection.isEmpty {
+//          return "[]"
+//        }
+//        var result = "[\n"
+//        for (index, item) in collection.enumerated() {
+//          result += "\(nextIndent)// \(index + 1)\n"
+//          result += "\(nextIndent)\(formatValue(item, depth: depth + 1)),\n"
+//        }
+//        result += "\(String(repeating: indent, count: depth))]"
+//        return result
+//      }
+//      
+//      if let collection = value as? any Collection {
+//        return formatCollection(collection)
+//      } else if let describable = value as? CustomStringConvertible {
+//        let description = describable.description
+//        if description.contains("(") && description.contains(")") {
+//          let components = description.components(separatedBy: "(")
+//          let name = components[0]
+//          let params = components[1].dropLast()
+//          let paramPairs = params.components(separatedBy: ",")
+//          
+//          var result = "\(name)(\n"
+//          for param in paramPairs {
+//            result += "\(nextIndent)\(param.trimmingCharacters(in: .whitespaces)),\n"
+//          }
+//          result += "\(String(repeating: indent, count: depth)))"
+//          return result
+//        }
+//      }
+//      
+//      return String(describing: value)
+//    }
     
-    var result = "[\n"
-    for (index, element) in self.enumerated() {
-      result += "\(indent)// \(index + 1)\n"
-      for keyPath in keyPaths {
-        let value = element[keyPath: keyPath]
-        let label = String(describing: keyPath).split(separator: ".").last ?? ""
-        result += "\(indent)\(label): \(formatValue(value, depth: 1)),\n"
-      }
-      result += "\n"
-    }
-    result += "]"
-    return result
-  }
-}
+//    var result = "[\n"
+//    for (index, element) in self.enumerated() {
+//      result += "\(indent)// \(index + 1)\n"
+//      for keyPath in keyPaths {
+//        let value = element[keyPath: keyPath]
+//        let label = String(describing: keyPath).split(separator: ".").last ?? ""
+//        result += "\(indent)\(label): \(formatValue(value, depth: 1)),\n"
+//      }
+//      result += "\n"
+//    }
+//    result += "]"
+//    return result
+//  }
+//}
 
 
 
-public extension Collection where Element == (key: String, value: Int) {
-  func prettyPrinted(
-    delimiter: String = ".",
-    keyFirst: Bool = true,
-    stripCharacters: Bool = false
-  ) -> String {
-    var result = "Headers:\n\n"
-    for element in self {
-      let key = stripCharacters ? element.key.filter { !$0.isWhitespace && $0.isLetter } : element.key
-      let value = element.value
-      if keyFirst {
-        result += "\(value)\(delimiter) \"\(key)\"\n"
-      } else {
-        result += "\"\(key)\"\(delimiter) \(value)\n"
-      }
-    }
-    return result
-  }
-}
+//public extension Collection where Element == (key: String, value: Int) {
+//  func prettyPrinted(
+//    delimiter: String = ".",
+//    keyFirst: Bool = true,
+//    stripCharacters: Bool = false
+//  ) -> String {
+//    var result = "Headers:\n\n"
+//    for element in self {
+//      let key = stripCharacters ? element.key.filter { !$0.isWhitespace && $0.isLetter } : element.key
+//      let value = element.value
+//      if keyFirst {
+//        result += "\(value)\(delimiter) \"\(key)\"\n"
+//      } else {
+//        result += "\"\(key)\"\(delimiter) \(value)\n"
+//      }
+//    }
+//    return result
+//  }
+//}
 
 //public extension Regex<AnyRegexOutput.RegexOutput>.Match {
 //  var prettyDescription: String {
