@@ -23,10 +23,10 @@ public struct TapOffToDismiss: ViewModifier {
 
       content
         .overlay {
-          Color.clear
-//          Color.blue.opacity(0.1)
+//          Color.clear
+          Color.blue.opacity(0.1)
           //              .ignoresSafeArea()
-            .frame(width: windowSize.size.width, height: windowSize.size.height)
+//            .frame(width: windowSize.size.width, height: windowSize.size.height)
             .contentShape(Rectangle())
             .onTapGesture {
               action()

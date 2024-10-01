@@ -132,7 +132,8 @@ public extension Date {
     let timeFormatter = DateFormatter()
     let dateFormatter = DateFormatter()
     
-    let time = options.components.contains(.time) ? "h:mma \(options.seperator) " : ""
+    let time = options.components.contains(.time) ? "h:mma" : ""
+    let seperator = options.components.contains(.time) ? " \(options.seperator) " : ""
     let dayOfWeek = options.components.contains(.dayOfWeek) ? "\(options.length.dayOfWeek), " : ""
     let day = "\(options.length.day) "
     let month = "\(options.length.month) "
@@ -144,11 +145,11 @@ public extension Date {
     let timeResult = timeFormatter.string(from: self).replacingOccurrences(of: "AM", with: "am").replacingOccurrences(of: "PM", with: "pm")
     let dateResult = dateFormatter.string(from: self)
     
-    var attributedString = AttributedString(timeResult + dateResult)
-    attributedString.foregroundColor = .primary.opacity(0.7)
+    var attributedString = AttributedString(timeResult + seperator + dateResult)
+    attributedString.foregroundColor = .secondary.opacity(0.7)
     
-    if let dateRange = attributedString.range(of: dateResult) {
-      attributedString[dateRange].foregroundColor = .secondary.opacity(0.7)
+    if let timeRange = attributedString.range(of: timeResult) {
+      attributedString[timeRange].foregroundColor = .primary.opacity(0.7)
     }
     
     return attributedString

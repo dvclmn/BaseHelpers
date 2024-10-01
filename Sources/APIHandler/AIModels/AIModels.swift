@@ -38,6 +38,14 @@ public enum AIProvider: CaseIterable, Codable, Sendable, Equatable, Identifiable
     }
   }
   
+  public var defaultModel: AIModel {
+    switch self {
+      case .openAI:
+          .gpt_4o
+      case .anthropic:
+          .claude_3_5_sonnet
+    }
+  }
   //    public var streamOptions: OpenAIRequestBody.StreamOptions? {
   //        switch self {
   //        case .openAI:
@@ -73,6 +81,7 @@ public enum AIProvider: CaseIterable, Codable, Sendable, Equatable, Identifiable
         AnthropicTestConnection.self
     }
   }
+
 }
 
 
