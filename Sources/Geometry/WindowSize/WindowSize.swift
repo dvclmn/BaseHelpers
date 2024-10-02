@@ -19,7 +19,7 @@ public extension DependencyValues {
 
 extension WindowSizeHandler: DependencyKey {
   public static let liveValue = WindowSizeHandler()
-  public static var testValue = WindowSizeHandler()
+  public static let testValue = WindowSizeHandler()
 }
 
 @Observable

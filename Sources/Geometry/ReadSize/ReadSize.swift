@@ -17,7 +17,7 @@ public extension View {
 }
 
 private struct SizePreferenceKey: PreferenceKey {
-    static var defaultValue: CGSize = .zero
+    static let defaultValue: CGSize = .zero
     static func reduce(value: inout CGSize, nextValue: () -> CGSize) {}
 }
 
@@ -36,8 +36,9 @@ public extension View {
         .onPreferenceChange(FramePreferenceKey.self, perform: onChange)
     }
 }
+
 private struct FramePreferenceKey: PreferenceKey {
-    static var defaultValue: CGPoint = .zero
+    static let defaultValue: CGPoint = .zero
     static func reduce(value: inout CGPoint, nextValue: () -> CGPoint) {}
 }
 

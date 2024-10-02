@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import KeychainSwift
+@preconcurrency import KeychainSwift
 import Dependencies
 
 // MARK: - Keychain

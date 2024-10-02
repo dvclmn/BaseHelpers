@@ -8,7 +8,7 @@
 import Foundation
 
 
-public struct GrainientPreset: Identifiable, Hashable, Codable, Equatable {
+public struct GrainientPreset: Identifiable, Hashable, Codable, Equatable, Sendable {
   public var id: UUID
   public var seed: Int
   public var name: String

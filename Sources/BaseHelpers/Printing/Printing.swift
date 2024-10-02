@@ -150,13 +150,13 @@ public func printCollection<T: Collection>(
 ) {
   
   let mirror = Mirror(reflecting: value)
-  let typeName = String(describing: type(of: value))
+//  let typeName = String(describing: type(of: value))
   
   /// Header
   ///
-  let fileAndLine = "File & Line: \t[\(URL(fileURLWithPath: file).lastPathComponent):\(line)]"
-  let functionName = "Function: \t\(function)"
-  let type = "Type: \t\t\(typeName)"
+//  let fileAndLine = "File & Line: \t[\(URL(fileURLWithPath: file).lastPathComponent):\(line)]"
+//  let functionName = "Function: \t\(function)"
+//  let type = "Type: \t\t\(typeName)"
   
 //  let headerInfo = [fileAndLine, functionName, type].joined(separator: "\n")
 //  let formattedHeader = SwiftBox.header(headerInfo)

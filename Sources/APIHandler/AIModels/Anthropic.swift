@@ -9,7 +9,15 @@ import Foundation
 
 public struct Anthropic: Codable, Sendable {
   public static let name: String = "Anthropic"
-  public static let apiKey: String = "anthropicAPISecretKey"
+  
+  
+#if DEBUG
+  static let apiKey: String = "anthropicAPIKeyDebug"
+#else
+  static let apiKey: String = "anthropicAPIKey"
+#endif
+  
+  
   public static let endpoint: URL? = URL(string: "https://api.anthropic.com/v1/messages")
   public static let modelInfoURL: URL? = URL(string: "https://docs.anthropic.com/en/docs/about-claude/models")
   

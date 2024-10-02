@@ -113,7 +113,7 @@ public struct GrainientSettings {
 } // END Gradient Settings
 
 
-public enum GrainientVersion: Codable {
+public enum GrainientVersion: Codable, Sendable {
   case v1
   case v2
   case v3

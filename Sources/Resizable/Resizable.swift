@@ -219,7 +219,7 @@ public struct Resizable: ViewModifier {
                     }
                   }
                 ,
-                /// Double tap to reset editor height to
+                /// Double tap to reset editor height to it's innate, unresized height
                 TapGesture(count: 2)
                   .onEnded {
                     isManualMode = false

@@ -20,7 +20,14 @@ public struct OpenAIConfirmationResponseData: Codable {
 
 public struct OpenAI: Codable, Sendable {
   static let name: String = "OpenAI"
-  static let apiKey: String = "openAIAPISecretKey"
+  
+#if DEBUG
+  static let apiKey: String = "openAIAPIKeyDebug"
+  #else
+  static let apiKey: String = "openAIAPIKey"
+#endif
+  
+  
   static let endpoint: URL? = URL(string: "https://api.openai.com/v1/chat/completions")
   static let modelInfoURL: URL? = URL(string: "https://platform.openai.com/docs/models")
   

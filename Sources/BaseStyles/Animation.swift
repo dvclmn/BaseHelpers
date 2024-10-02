@@ -96,6 +96,7 @@ struct AnimationExamples: View {
     }
 }
 
+@MainActor
 struct SingleAnimationView: View {
     
     @Binding var animationItem: AnimationTest
@@ -167,7 +168,8 @@ struct SingleAnimationView: View {
             isAnimating.toggle()
             
             animationTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
-                isAnimating.toggle()
+              fatalError("Need to address this concurrency warning")
+//                isAnimating.toggle()
             }
         }
         
@@ -249,7 +251,7 @@ extension SingleAnimationView {
         .background(.black.opacity(0.6))
 }
 
-func nonOptionalBinding<T>(_ binding: Binding<T?>, defaultValue: T) -> Binding<T> {
+func nonOptionalBinding<T: Sendable>(_ binding: Binding<T?>, defaultValue: T) -> Binding<T> {
     Binding<T>(
         get: { binding.wrappedValue ?? defaultValue },
         set: { newValue in

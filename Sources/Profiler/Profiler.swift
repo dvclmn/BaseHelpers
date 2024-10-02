@@ -91,30 +91,33 @@ actor Profiler {
 /// }
 /// ```
 ///
-extension Profiler {
-  func measureBackgroundTaskTime(_ task: @escaping () async -> Void) async -> Double {
-    let startTime = ProcessInfo.processInfo.systemUptime
-    
-    await Task.detached(priority: .background) {
-      await self.profile("Parse markdown") {
-        await task()
-      }
-    }.value
-    
-    let endTime = ProcessInfo.processInfo.systemUptime
-    
-    let timeInterval = endTime - startTime
-    
-    return timeInterval * 1000 // Convert to milliseconds
-  }
-
-
-  func profile(_ name: String, operation: @escaping () async -> Void) async {
-    let start = Date()
-    await operation()
-    let duration = Date().timeIntervalSince(start)
-    
-    await self.addOrUpdateProfile(ProfileInfo(name: name, duration: duration))
-  }
-
-}
+//extension Profiler {
+//  func measureBackgroundTaskTime(_ task: @escaping () async -> Void) async -> Double {
+//    let startTime = ProcessInfo.processInfo.systemUptime
+//    
+//    await Task.detached(priority: .background) { [weak self] in
+//      
+//      guard let self = self else { return }
+//      
+//      await self.profile("Parse markdown") {
+//        await task()
+//      }
+//    }.value
+//    
+//    let endTime = ProcessInfo.processInfo.systemUptime
+//    
+//    let timeInterval = endTime - startTime
+//    
+//    return timeInterval * 1000 // Convert to milliseconds
+//  }
+//
+//
+//  func profile(_ name: String, operation: @escaping () async -> Void) async {
+//    let start = Date()
+//    await operation()
+//    let duration = Date().timeIntervalSince(start)
+//    
+//    self.addOrUpdateProfile(ProfileInfo(name: name, duration: duration))
+//  }
+//
+//}
