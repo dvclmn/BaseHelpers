@@ -8,12 +8,41 @@
 import Foundation
 import SwiftUI
 
-public enum MaskMode: String, CaseIterable, Identifiable {
+public enum MaskMode: CaseIterable, Identifiable, Equatable, Sendable {
+  
   case mask
-  case overlay
+  case overlay(opacity: CGFloat = 0.4)
+  case off
+  
+  public static let allCases: [MaskMode] = [.mask, .overlay()]
   
   public var id: String {
-    self.rawValue
+    self.name
+  }
+  
+  public var name: String {
+    switch self {
+      case .mask:
+        "Mask"
+      case .overlay:
+        "Overlay"
+        
+      case .off:
+        "No Masking"
+    }
+  }
+  
+  public var opacity: CGFloat {
+    switch self {
+      case .mask:
+        1.0
+        
+      case .overlay(let opacity):
+        opacity
+        
+      case .off:
+        1.0
+    }
   }
   
 }

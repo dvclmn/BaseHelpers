@@ -11,16 +11,10 @@ import SmoothGradient
 
 public struct ScrollMask: ViewModifier {
   
-  var offset: CGFloat
-  
+  var scrollOffset: CGFloat
   var maskMode: MaskMode
-  
   var edge: Edge
-  
-  var opacity: CGFloat
   var length: CGFloat
-  
-  private let maxOffset: CGFloat = 200
   
   public func body(content: Content) -> some View {
     
@@ -39,6 +33,8 @@ public struct ScrollMask: ViewModifier {
               .blendMode(.multiply)
               .allowsHitTesting(false)
           }
+      case .off:
+        content
     }
     
   }
@@ -49,7 +45,7 @@ public struct ScrollMask: ViewModifier {
     switch edge {
       case .top:
         VStack(spacing: 0) {
-          MaskGradient(opacity: opacity)
+          MaskGradient()
           MaskBlock()
         }
         .frame(maxHeight: .infinity, alignment: .top)
@@ -57,7 +53,7 @@ public struct ScrollMask: ViewModifier {
         
       case .leading:
         HStack(spacing: 0) {
-          MaskGradient(opacity: opacity)
+          MaskGradient()
           MaskBlock()
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -66,7 +62,7 @@ public struct ScrollMask: ViewModifier {
       case .bottom:
         VStack(spacing: 0) {
           MaskBlock()
-          MaskGradient(opacity: opacity)
+          MaskGradient()
         }
         .frame(maxHeight: .infinity, alignment: .bottom)
         
@@ -74,7 +70,7 @@ public struct ScrollMask: ViewModifier {
       case .trailing:
         HStack(spacing: 0) {
           MaskBlock()
-          MaskGradient(opacity: opacity)
+          MaskGradient()
         }
         .frame(maxWidth: .infinity, alignment: .trailing)
         
@@ -93,7 +89,7 @@ public struct ScrollMask: ViewModifier {
   }
   
   @ViewBuilder
-  func MaskGradient(opacity: CGFloat) -> some View {
+  func MaskGradient() -> some View {
     
     ZStack {
       LinearGradient(
@@ -134,9 +130,9 @@ public struct ScrollMask: ViewModifier {
 extension ScrollMask {
   
   
-  private func normalizeScrollOffset(_ offset: CGFloat, maxOffset: CGFloat) -> CGFloat {
-    guard maxOffset > 0 else { return 0 }
-    return min(max(offset / maxOffset, 0), 1)
+  private func normalizeScrollOffset(_ offset: CGFloat) -> CGFloat {
+    guard length > 0 else { return 0 }
+    return min(max(offset / length, 0), 1)
   }
   
   var startOpacity: CGFloat {
@@ -144,11 +140,14 @@ extension ScrollMask {
       case .mask:
         /// Starting at fully transparent means the content will be completely
         /// faded out at the top, and fade in as it goes down
-        return (-1 * normalizeScrollOffset(offset, maxOffset: maxOffset))
+        return (-1 * normalizeScrollOffset(scrollOffset))
       case .overlay:
         /// This is the opposite
-        return min(opacity, normalizeScrollOffset(offset, maxOffset: maxOffset))
+        return min(maskMode.opacity, normalizeScrollOffset(scrollOffset))
 //        return isEffectActive ? opacity : 0.0
+        
+      case .off:
+        return 1.0
         
     }
   }
@@ -159,6 +158,9 @@ extension ScrollMask {
         return 1.0
       case .overlay:
         return 0.0
+        
+      case .off:
+        return 1.0
     }
   }
   
@@ -166,21 +168,17 @@ extension ScrollMask {
 
 public extension View {
   func scrollMask(
-    offset: CGFloat,
-    //        _ isEffectActive: Bool,
+    scrollOffset: CGFloat,
     maskMode: MaskMode = .mask,
     edge: Edge = .top,
-    opacity: CGFloat = 0.2,
     length: CGFloat = 130
-    //        offset: CGFloat = .zero
+  
   ) -> some View {
     self.modifier(
       ScrollMask(
-//        isEffectActive: isEffectActive,
-        offset: offset,
+        scrollOffset: scrollOffset,
         maskMode: maskMode,
         edge: edge,
-        opacity: opacity,
         length: length
       )
     )

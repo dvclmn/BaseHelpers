@@ -11,7 +11,7 @@ import SwiftUI
 struct ScrollMaskExample: View {
   
   var axes: [Edge] = [.top, .bottom]
-  var maskModes: [MaskMode] = [.overlay, .mask]
+  var maskModes: [MaskMode] = [.overlay(), .mask]
   
   
   //  @State private var offSet: CGFloat = .zero
