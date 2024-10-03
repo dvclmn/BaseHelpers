@@ -11,7 +11,7 @@ import SwiftUI
 public enum MaskMode: CaseIterable, Identifiable, Equatable, Sendable {
   
   case mask
-  case overlay(opacity: CGFloat = 0.4)
+  case overlay(opacity: CGFloat = 0.2)
   case off
   
   public static let allCases: [MaskMode] = [.mask, .overlay()]

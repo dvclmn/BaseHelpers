@@ -17,14 +17,25 @@ public struct ScrollMask: ViewModifier {
   var edgePadding: CGFloat
   var length: CGFloat
   
+  public init(
+    scrollOffset: CGFloat,
+    config: MaskConfig
+  ) {
+    self.scrollOffset = scrollOffset
+    self.maskMode = config.mode
+    self.edge = config.edge
+    self.edgePadding = config.edgePadding
+    self.length = config.length
+  }
+  
   public func body(content: Content) -> some View {
     
     switch maskMode {
       case .mask:
         content
           .safeAreaPadding(edge.edgeSet, edgePadding)
-          .overlay {
-//          .mask {
+//          .overlay {
+          .mask {
             MaskEffect()
               .allowsHitTesting(false)
           }
@@ -84,10 +95,14 @@ public struct ScrollMask: ViewModifier {
   
   @ViewBuilder
   func MaskBlock() -> some View {
-    Rectangle()
-      .fill(.cyan.opacity(0.1))
-      .frame(maxWidth: .infinity, maxHeight: .infinity)
-      .ignoresSafeArea()
+    
+    /// This is only useful to mask mode
+    if maskMode == .mask {
+      Rectangle()
+        .fill(.black)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .ignoresSafeArea()
+    }
 
   }
   
@@ -103,13 +118,10 @@ public struct ScrollMask: ViewModifier {
         endPoint: edge.on
       )
       .frame(maxWidth: .infinity, maxHeight: .infinity)
-//      .border(Color.orange.opacity(0.3))
       
       /// This double-up looks nice for the overlay mode (smooths out gradient steps),
       /// but causes mask to hide too much of the view, in mask mode.
-      
       if maskMode == .overlay() {
-      
         LinearGradient(
           colors: [
             .black.opacity(startOpacity),
@@ -117,32 +129,18 @@ public struct ScrollMask: ViewModifier {
           ],
           startPoint: edge.off,
           endPoint: edge.onQuarter
-  //        endPoint: isEffectActive ? edge.onQuarter : edge.off
         )
         .frame(maxWidth: .infinity, maxHeight: .infinity)
       }
 
     }
-    
-    //        .frame(
-    //            width: abs(edge.axis == .horizontal ? length : .infinity),
-    //            height: abs(edge.axis == .vertical ? length : .infinity)
-    //        )
-    
+
     .frame(
       width: edge.axis == .horizontal ? max(0, length) : nil,
       height: edge.axis == .vertical ? max(0, length) : nil,
       alignment: edge.alignment
     )
-    
-//    .frame(
-//      maxWidth: abs(edge.axis == .horizontal ? length : .infinity),
-//      maxHeight: abs(edge.axis == .vertical ? length : .infinity),
-//      alignment: edge.alignment
-//    )
-    //        .padding(Edge.Set(edge), offset)
-    
-    
+
   }
 }
 
@@ -211,19 +209,12 @@ extension ScrollMask {
 public extension View {
   func scrollMask(
     scrollOffset: CGFloat,
-    maskMode: MaskMode = .mask,
-    edge: Edge = .top,
-    edgePadding: CGFloat = 20,
-    length: CGFloat = 130
-  
+    config: MaskConfig
   ) -> some View {
     self.modifier(
       ScrollMask(
         scrollOffset: scrollOffset,
-        maskMode: maskMode,
-        edge: edge,
-        edgePadding: edgePadding,
-        length: length
+        config: config
       )
     )
   }

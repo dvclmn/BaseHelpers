@@ -14,22 +14,25 @@ import ScrollKit
 public struct MaskConfig {
   var mode: MaskMode
   var edge: Edge
+  var edgePadding: CGFloat
   var length: CGFloat
   
   public init(
     mode: MaskMode = .mask,
     edge: Edge = .top,
+    edgePadding: CGFloat,
     length: CGFloat = 130
   ) {
     self.mode = mode
     self.edge = edge
+    self.edgePadding = edgePadding
     self.length = length
   }
 }
 
 public struct ScrollOffsetModifier: ViewModifier {
   
-  let mask: MaskConfig
+  let maskConfig: MaskConfig
   let showsIndicators: Bool
   let safeAreaPadding: (edge: Edge.Set, padding: CGFloat?)
   let output: (_ offset: CGPoint) -> Void
@@ -39,7 +42,7 @@ public struct ScrollOffsetModifier: ViewModifier {
   public func body(content: Content) -> some View {
     
     ScrollViewWithOffsetTracking(showsIndicators: showsIndicators) { offset in
-      if mask.mode != .off {
+      if maskConfig.mode != .off {
         scrollOffset = offset.y * -1
       }
       output(offset)
@@ -48,13 +51,9 @@ public struct ScrollOffsetModifier: ViewModifier {
         .safeAreaPadding(safeAreaPadding.edge, safeAreaPadding.padding)
     }
     .contentMargins(safeAreaPadding.edge, safeAreaPadding.padding, for: .scrollIndicators)
-    //              .frame(maxWidth: .infinity, maxHeight: .infinity)
-    //    .scrollClipDisabled(isClipDisabled)
     .scrollMask(
       scrollOffset: scrollOffset,
-      maskMode: mask.mode,
-      edge: mask.edge,
-      length: mask.length
+      config: maskConfig
     )
   }
 }
@@ -64,61 +63,26 @@ public extension View {
   func scrollWithOffset(
     maskMode: MaskMode = .mask,
     edge: Edge = .top,
+    edgePadding: CGFloat = 30,
     maskLength: CGFloat = 130,
-//    mask: MaskConfig = MaskConfig(),
     showsIndicators: Bool = true,
     safeAreaPadding: (Edge.Set, CGFloat?) = (.all, .zero),
     _ output: @escaping (_ offset: CGPoint) -> Void = { _ in }
   ) -> some View {
-    self.modifier(ScrollOffsetModifier(
-      mask: MaskConfig(mode: maskMode, edge: edge, length: maskLength),
-      showsIndicators: showsIndicators,
-      safeAreaPadding: safeAreaPadding,
-      output: output
-    ))
+    self.modifier(
+      ScrollOffsetModifier(
+        maskConfig: MaskConfig(
+          mode: maskMode,
+          edge: edge,
+          edgePadding: edgePadding,
+          length: maskLength
+        ),
+        showsIndicators: showsIndicators,
+        safeAreaPadding: safeAreaPadding,
+        output: output
+      )
+    )
   }
   
 }
 
-
-
-//public extension View {
-//    func readSize(
-//        onChange: @escaping (CGSize) -> Void
-//    ) -> some View {
-//
-//        background(
-//            GeometryReader { geometryProxy in
-//                Color.clear
-//                    .preference(key: SizePreferenceKey.self, value: geometryProxy.size)
-//            }
-//        )
-//        .onPreferenceChange(SizePreferenceKey.self, perform: onChange)
-//    }
-//}
-//
-//private struct SizePreferenceKey: PreferenceKey {
-//    static var defaultValue: CGSize = .zero
-//    static func reduce(value: inout CGSize, nextValue: () -> CGSize) {}
-//}
-//
-
-
-//public struct ScrollOffset: Sendable {
-//    public var offset: CGPoint
-//
-//    public init(offset: CGPoint) {
-//        self.offset = offset
-//    }
-//}
-//
-//public struct ScrollOffsetKey: EnvironmentKey {
-//    public static let defaultValue = ScrollOffset(offset: .zero)
-//}
-//
-//public extension EnvironmentValues {
-//    var scrollOffset: ScrollOffset {
-//        get { self[ScrollOffsetKey.self] }
-//        set { self[ScrollOffsetKey.self] = newValue }
-//    }
-//}
