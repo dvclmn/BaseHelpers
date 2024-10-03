@@ -9,34 +9,47 @@ import Foundation
 import SwiftUI
 import ScrollKit
 
+/// Will make this optional, and do away with the `maskEnabled`
+/// property, as a nil value for a mask config will serve the same purpose.
+public struct MaskConfig {
+  var mode: MaskMode
+  var edges: Edge.Set
+  
+  public init(
+    mode: MaskMode = .mask,
+    edges: Edge.Set
+  ) {
+    self.mode = mode
+    self.edges = edges
+  }
+}
+
 public struct ScrollOffsetModifier: ViewModifier {
   
-  let maskEnabled: Bool
-  let maskMode: MaskMode
-  let isClipDisabled: Bool
+  let mask: MaskConfig?
+  
   let showsIndicators: Bool
-  let safeAreaPadding: (Edge.Set, CGFloat?)
+  let safeAreaPadding: (edge: Edge.Set, padding: CGFloat?)
   let output: (_ offset: CGPoint) -> Void
   
-  @State private var isMasked: Bool = false
+  @State private var scrollOffset: CGFloat = .zero
   
   public func body(content: Content) -> some View {
     
     ScrollViewWithOffsetTracking(showsIndicators: showsIndicators) { offset in
-      if maskEnabled {
-        withAnimation(.snappy(duration: 0.3)) {
-          isMasked = offset.y < -1
-        }
+      if mask != nil {
+        scrollOffset = offset.y * -1
+        
       }
       output(offset)
     } content: {
       content
-        .safeAreaPadding(safeAreaPadding.0, safeAreaPadding.1)
+        .safeAreaPadding(safeAreaPadding.edge, safeAreaPadding.padding)
     }
-    .contentMargins(safeAreaPadding.0, safeAreaPadding.1, for: .scrollIndicators)
+    .contentMargins(safeAreaPadding.edge, safeAreaPadding.padding, for: .scrollIndicators)
     //              .frame(maxWidth: .infinity, maxHeight: .infinity)
-    .scrollClipDisabled(isClipDisabled)
-    .scrollMask(isMasked, maskMode: maskMode)
+    //    .scrollClipDisabled(isClipDisabled)
+    .scrollMask(offset: scrollOffset, maskMode: maskMode)
   }
 }
 
@@ -45,7 +58,7 @@ public extension View {
   func scrollWithOffset(
     maskEnabled: Bool = true,
     maskMode: MaskMode = .mask,
-    isClipDisabled: Bool = false,
+    //    isClipDisabled: Bool = false,
     showsIndicators: Bool = true,
     safeAreaPadding: (Edge.Set, CGFloat?) = (.all, .zero),
     _ output: @escaping (_ offset: CGPoint) -> Void = { _ in }
@@ -53,7 +66,7 @@ public extension View {
     self.modifier(ScrollOffsetModifier(
       maskEnabled: maskEnabled,
       maskMode: maskMode,
-      isClipDisabled: isClipDisabled,
+      //      isClipDisabled: isClipDisabled,
       showsIndicators: showsIndicators,
       safeAreaPadding: safeAreaPadding,
       output: output
