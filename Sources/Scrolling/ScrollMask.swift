@@ -21,7 +21,8 @@ public struct ScrollMask: ViewModifier {
     switch maskMode {
       case .mask:
         content
-          .mask {
+          .overlay {
+//          .mask {
             MaskEffect()
               .allowsHitTesting(false)
           }

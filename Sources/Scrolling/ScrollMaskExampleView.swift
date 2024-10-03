@@ -24,12 +24,13 @@ struct ScrollMaskExample: View {
     ]
     
     LazyVGrid(columns: columns, spacing: 60) {
-      ForEach(maskModes) { mode in
+      ForEach(MaskMode.allCases) { mode in
+        
         ForEach(axes, id: \.self) { edge in
-          
           VStack {
+          
             ForEach(1..<5) { item in
-              Text("Mode: \(mode.rawValue.capitalized), Edge: \(edge.name)")
+              Text("Mode: \(mode.name), Edge: \(edge.name)")
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
           }
@@ -37,7 +38,6 @@ struct ScrollMaskExample: View {
             maskMode: mode
           )
           
-          .border(Color.green.opacity(0.2))
           .frame(width: 180, height: 300)
           .scrollIndicators(.hidden)
           .background(.orange.opacity(0.1))
@@ -61,7 +61,7 @@ struct ScrollMaskExample: View {
     .frame(maxHeight: .infinity)
     .background(.green.opacity(0.1))
 #if os(macOS)
-    .frame(width: 600, height: 700)
+    .frame(width: 480, height: 700)
 #endif
 }
 

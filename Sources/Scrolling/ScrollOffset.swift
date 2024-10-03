@@ -55,13 +55,14 @@ public struct ScrollOffsetModifier: ViewModifier {
 public extension View {
   
   func scrollWithOffset(
-    mask: MaskConfig = MaskConfig(),
+    maskMode: MaskMode = .mask,
+//    mask: MaskConfig = MaskConfig(),
     showsIndicators: Bool = true,
     safeAreaPadding: (Edge.Set, CGFloat?) = (.all, .zero),
     _ output: @escaping (_ offset: CGPoint) -> Void = { _ in }
   ) -> some View {
     self.modifier(ScrollOffsetModifier(
-      mask: mask,
+      mask: MaskConfig(mode: maskMode),
       showsIndicators: showsIndicators,
       safeAreaPadding: safeAreaPadding,
       output: output
