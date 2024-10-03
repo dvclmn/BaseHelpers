@@ -34,17 +34,19 @@ public enum MaskMode: CaseIterable, Identifiable, Equatable, Sendable {
   
   public var opacity: CGFloat {
     switch self {
-      case .mask:
+      case .mask, .off:
         1.0
         
       case .overlay(let opacity):
         opacity
-        
-      case .off:
-        1.0
+
     }
   }
   
+}
+
+extension UnitPoint {
+  static let halfway = UnitPoint(x: Edge.halfway, y: Edge.halfway)
 }
 
 extension Edge {
@@ -68,16 +70,7 @@ extension Edge {
   }
   
   var on: UnitPoint {
-    switch self {
-      case .top:
-        UnitPoint(x: Edge.halfway, y: Edge.halfway)
-      case .leading:
-        UnitPoint(x: Edge.halfway, y: Edge.halfway)
-      case .bottom:
-        UnitPoint(x: Edge.halfway, y: Edge.halfway)
-      case .trailing:
-        UnitPoint(x: Edge.halfway, y: Edge.halfway)
-    }
+    UnitPoint.halfway
   }
   
   var onQuarter: UnitPoint {
@@ -96,48 +89,34 @@ extension Edge {
   
   var name: String {
     switch self {
-      case .top:
-        "Top"
-      case .leading:
-        "Leading"
-      case .bottom:
-        "Bottom"
-      case .trailing:
-        "Trailing"
+      case .top: "Top"
+      case .leading: "Leading"
+      case .bottom: "Bottom"
+      case .trailing: "Trailing"
     }
   }
   
   var axis: Axis {
     switch self {
-      case .top, .bottom:
-          .vertical
-      case .leading, .trailing:
-          .horizontal
+      case .top, .bottom: .vertical
+      case .leading, .trailing: .horizontal
     }
   }
   var alignment: Alignment {
     switch self {
-      case .top:
-          .top
-      case .bottom:
-          .bottom
-      case .leading:
-          .leading
-      case .trailing:
-          .trailing
+      case .top: .top
+      case .bottom: .bottom
+      case .leading: .leading
+      case .trailing: .trailing
         
     }
   }
   var edgeSet: Edge.Set {
     switch self {
-      case .top:
-          .top
-      case .leading:
-          .leading
-      case .bottom:
-          .bottom
-      case .trailing:
-          .trailing
+      case .top: .top
+      case .leading: .leading
+      case .bottom: .bottom
+      case .trailing: .trailing
     }
   }
   

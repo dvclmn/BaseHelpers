@@ -14,20 +14,22 @@ import ScrollKit
 public struct MaskConfig {
   var mode: MaskMode
   var edge: Edge
+  var length: CGFloat
   
   public init(
     mode: MaskMode = .mask,
-    edge: Edge = .top
+    edge: Edge = .top,
+    length: CGFloat = 130
   ) {
     self.mode = mode
     self.edge = edge
+    self.length = length
   }
 }
 
 public struct ScrollOffsetModifier: ViewModifier {
   
   let mask: MaskConfig
-  
   let showsIndicators: Bool
   let safeAreaPadding: (edge: Edge.Set, padding: CGFloat?)
   let output: (_ offset: CGPoint) -> Void
@@ -48,7 +50,12 @@ public struct ScrollOffsetModifier: ViewModifier {
     .contentMargins(safeAreaPadding.edge, safeAreaPadding.padding, for: .scrollIndicators)
     //              .frame(maxWidth: .infinity, maxHeight: .infinity)
     //    .scrollClipDisabled(isClipDisabled)
-    .scrollMask(scrollOffset: scrollOffset, maskMode: mask.mode)
+    .scrollMask(
+      scrollOffset: scrollOffset,
+      maskMode: mask.mode,
+      edge: mask.edge,
+      length: mask.length
+    )
   }
 }
 
@@ -56,13 +63,15 @@ public extension View {
   
   func scrollWithOffset(
     maskMode: MaskMode = .mask,
+    edge: Edge = .top,
+    maskLength: CGFloat = 130,
 //    mask: MaskConfig = MaskConfig(),
     showsIndicators: Bool = true,
     safeAreaPadding: (Edge.Set, CGFloat?) = (.all, .zero),
     _ output: @escaping (_ offset: CGPoint) -> Void = { _ in }
   ) -> some View {
     self.modifier(ScrollOffsetModifier(
-      mask: MaskConfig(mode: maskMode),
+      mask: MaskConfig(mode: maskMode, edge: edge, length: maskLength),
       showsIndicators: showsIndicators,
       safeAreaPadding: safeAreaPadding,
       output: output
