@@ -30,11 +30,13 @@ public struct MaskConfig {
   }
 }
 
+public typealias SafePadding = (edges: Edge.Set, padding: CGFloat?)
+
 public struct ScrollOffsetModifier: ViewModifier {
   
   let maskConfig: MaskConfig
   let showsIndicators: Bool
-  let safeAreaPadding: (edge: Edge.Set, padding: CGFloat?)
+  let safePadding: SafePadding
   let output: (_ offset: CGPoint) -> Void
   
   @State private var scrollOffset: CGFloat = .zero
@@ -48,9 +50,9 @@ public struct ScrollOffsetModifier: ViewModifier {
       output(offset)
     } content: {
       content
-        .safeAreaPadding(safeAreaPadding.edge, safeAreaPadding.padding)
+        .safeAreaPadding(safePadding.edges, safePadding.padding)
     }
-    .contentMargins(safeAreaPadding.edge, safeAreaPadding.padding, for: .scrollIndicators)
+    .contentMargins(safePadding.edges, safePadding.padding, for: .scrollIndicators)
     .scrollMask(
       scrollOffset: scrollOffset,
       config: maskConfig
@@ -66,7 +68,7 @@ public extension View {
     edgePadding: CGFloat = 30,
     maskLength: CGFloat = 130,
     showsIndicators: Bool = true,
-    safeAreaPadding: (Edge.Set, CGFloat?) = (.all, .zero),
+    safePadding: SafePadding = (.all, .zero),
     _ output: @escaping (_ offset: CGPoint) -> Void = { _ in }
   ) -> some View {
     self.modifier(
@@ -78,7 +80,7 @@ public extension View {
           length: maskLength
         ),
         showsIndicators: showsIndicators,
-        safeAreaPadding: safeAreaPadding,
+        safePadding: safePadding,
         output: output
       )
     )
