@@ -13,7 +13,7 @@ import Shortcuts
 
 public struct Resizable: ViewModifier {
   
-  @Environment(\.modifierKeys) private var modifiers
+  @Environment(\.modifierKeys) var modifiers
   
   /// If this value is not supplied, Resizable will default to averaging the min and max lengths to obtain an *ideal* length (as well as clamping to the min and max as well)
   var contentLength: CGFloat?
@@ -30,6 +30,7 @@ public struct Resizable: ViewModifier {
   var isShowingFrames: Bool
   var isAnimated: Bool
   var handleColour: Color
+  var accentColour: Color
   var handleSize: Double
   var handleVisibleWhenResized: Bool
   var lengthMin: CGFloat
@@ -44,6 +45,8 @@ public struct Resizable: ViewModifier {
   /// below, so that other UI elements can recieve and respond to the length if need be.
   var returnedLength: (_ metrics: String, _ onChanged: CGFloat, _ onEnded: CGFloat) -> Void
   
+  let dismissShapeRightInset: CGFloat = 10
+  let dismissShapeSize = CGSize(width: 120, height: 17)
   
   public init(
     contentLength: CGFloat?,
@@ -52,6 +55,7 @@ public struct Resizable: ViewModifier {
     isResizable: Bool,
     isShowingFrames: Bool,
     isAnimated: Bool,
+    accentColour: Color,
     handleColour: Color,
     handleSize: Double,
     handleVisibleWhenResized: Bool,
@@ -66,6 +70,7 @@ public struct Resizable: ViewModifier {
     self.isResizable = isResizable
     self.isShowingFrames = isShowingFrames
     self.isAnimated = isAnimated
+    self.accentColour = accentColour
     self.handleColour = handleColour
     self.handleSize = handleSize
     self.handleVisibleWhenResized = handleVisibleWhenResized
@@ -96,7 +101,7 @@ public struct Resizable: ViewModifier {
   
   @DynamicKeyAppStorage(key: "defaultKey", defaultValue: .zero) var savedLength: Double
   
-  let grabArea: Double = 26
+  let grabArea: Double = 34
   private let unfocusedLengthReduction = 0.6
   let animation = Animation.easeOut(duration: 0.2)
   let grabAreaOuterPercentage = 0.3
@@ -278,6 +283,7 @@ public extension View {
     isResizable: Bool = true,
     isShowingFrames: Bool = false,
     isAnimated: Bool = true,
+    accentColour: Color = .accentColor,
     handleColour: Color = .white,
     handleSize: Double = 6,
     handleVisibleWhenResized: Bool = true,
@@ -295,6 +301,7 @@ public extension View {
         isResizable: isResizable,
         isShowingFrames: isShowingFrames,
         isAnimated: isAnimated,
+        accentColour: accentColour,
         handleColour: handleColour,
         handleSize: handleSize,
         handleVisibleWhenResized: handleVisibleWhenResized,

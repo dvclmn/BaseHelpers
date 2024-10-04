@@ -23,23 +23,6 @@ struct ResizableExample: View {
         
         VStack(spacing: 0) {
             
-            VStack {
-                HStack(spacing: 20) {
-                    ForEach(1...5, id: \.self) { item in
-                        Text(item.description)
-                            .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    }
-                }
-            } // END sidebar vstack
-            .background(.purple.opacity(0.2))
-            .resizable(
-                //                contentLength: toolbarDynamicHeight,
-                isManualMode: $manualModeToolbar,
-                edge: .bottom,
-                isShowingFrames: true,
-                lengthMin: 40,
-                lengthMax: 200)
-            
             
             HStack(spacing: 0) {
                 //
@@ -63,62 +46,27 @@ struct ResizableExample: View {
                     isShowingFrames: true,
                     lengthMin: 80,
                     lengthMax: 300)
-                //
-                //
-                //                VStack {
-                //                    Text("Messages")
-                //                }
-                //                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                //                .background(.red.opacity(0.2))
-                //
-                //                .overlay(alignment: .bottom) {
-                //
-                //                    ScrollView {
-                //                        VStack {
-                //                            ForEach(1...10, id: \.self) { item in
-                //                                Text("Random")
-                //                            }
-                //                        }
-                //                        .frame(maxWidth: .infinity)
-                //                        .opacity(0.2)
-                //                    }
-                //                    .background(.teal.opacity(0.4))
-                //                    .resizable(
-                //                        contentLength: editorContentHeight,
-                //                        isManualMode: $manualModeEditor,
-                //                        edge: .top,
-                //                        isShowingFrames: true,
-                //                        lengthMin: 80,
-                //                        lengthMax: 400)
-                //
-                //                } // END overlay
-                //
-                //
-                //                VStack {
-                //
-                //                    Text("Inspector")
-                //                    VStack(spacing: 20) {
-                //                        ForEach(1...5, id: \.self) { item in
-                //                            Text(item.description)
-                //                                .frame(maxWidth: .infinity, maxHeight: 20)
-                //                        }
-                //                    }
-                //                    .padding()
-                //                    Spacer()
-                //
-                //                } // END sidebar vstack
-                //
-                //                .background(.orange.opacity(0.2))
-                //                .resizable(
-                //                    //                    contentLength: inspectorDynamicHeight,
-                //                    isManualMode: $manualModeInspector,
-                //                    edge: .leading,
-                //                    isShowingFrames: true,
-                //                    lengthMin: 80,
-                //                    lengthMax: 300)
-                //
-                //
+
             } // END hstack
+          
+          VStack {
+            HStack(spacing: 20) {
+              ForEach(1...5, id: \.self) { item in
+                Text(item.description)
+                  .frame(maxWidth: .infinity, maxHeight: .infinity)
+              }
+            }
+          } // END sidebar vstack
+          .background(.purple.opacity(0.2))
+          .resizable(
+            //                contentLength: toolbarDynamicHeight,
+            isManualMode: $manualModeToolbar,
+            edge: .top,
+            isShowingFrames: true,
+            lengthMin: 40,
+            lengthMax: 200)
+          
+          
             
         } // END main vstack
     }

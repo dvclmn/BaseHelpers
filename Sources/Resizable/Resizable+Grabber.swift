@@ -8,6 +8,7 @@
 import SwiftUI
 import BaseHelpers
 import Shortcuts
+import BaseStyles
 //import BaseComponents
 
 extension Resizable {
@@ -55,58 +56,97 @@ extension Resizable {
 //      }
       .offset(offset)
       .background(alignment: edge.alignment) {
-        
-//        ShapeDebug {
-//          CustomRoundedShape()
-//        }
-        
+
+        Group {
+          adjustedHandleColour.opacity(grabberOpacity)
+            .frame(
+              minWidth: edge.axis == .horizontal ? handleSize : nil,
+              maxWidth: edge.axis == .horizontal ? handleSize : .infinity,
+              minHeight: edge.axis == .vertical ? handleSize : nil,
+              maxHeight: edge.axis == .vertical ? handleSize : .infinity
+            )
+
+            .overlay(alignment: .topTrailing) {
+              
+              // TODO: Will expand this to support other orientations of course
+              if isShowingDismiss {
+                ZStack {
+                
+                  //              ShapeDebug {
+                  CustomRoundedShape(
+                    height: dismissShapeSize.height,
+                    width: dismissShapeSize.width
+  //                  rightOffset: dismissShapeRightInset
+                  )
+                  .fill(accentColour)
+                  Text("Dismiss")
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .border(Color.green.opacity(0.3))
+                  //              }
+                } // END zstack
+                .frame(width: dismissShapeSize.width, alignment: .center)
+                .offset(x: -dismissShapeRightInset, y: handleSize)
+                
+              }
+              
+            }
+        } // END group
+        .animation(Styles.animationSpringSubtle, value: isShowingFrames)
           
-        
-        handleColour.opacity(grabberOpacity)
-          .frame(
-            minWidth: edge.axis == .horizontal ? handleSize : nil,
-            maxWidth: edge.axis == .horizontal ? handleSize : .infinity,
-            minHeight: edge.axis == .vertical ? handleSize : nil,
-            maxHeight: edge.axis == .vertical ? handleSize : .infinity
-          )
       }
+      
       
     
     
     
   }
   
+  var isShowingDismiss: Bool {
+    return (isHoveringLocal && edge == .top && modifiers.contains(.command)) || isPreview
+  }
+  
+  var adjustedHandleColour: Color {
+    return isShowingDismiss ? accentColour : handleColour
+  }
+  
   var grabberOpacity: Double {
     
-    let baseOpacity: Double = 0.09
-    let emphasisedOpacity: Double = 0.14
-    
-    if isManualMode {
+    if isShowingDismiss {
       
-      if isHoveringLocal {
-        if handleVisibleWhenResized {
-          return emphasisedOpacity
+      return 1.0
+      
+    } else {
+      
+      let baseOpacity: Double = 0.09
+      let emphasisedOpacity: Double = 0.14
+      
+      if isManualMode {
+        
+        if isHoveringLocal {
+          if handleVisibleWhenResized {
+            return emphasisedOpacity
+          } else {
+            return baseOpacity
+          }
         } else {
-          return baseOpacity
+          if handleVisibleWhenResized {
+            return baseOpacity
+          } else if isResizing {
+            return baseOpacity
+          } else {
+            return 0
+          }
         }
+        
       } else {
-        if handleVisibleWhenResized {
-          return baseOpacity
-        } else if isResizing {
+        
+        if isHoveringLocal {
           return baseOpacity
         } else {
           return 0
         }
+        
       }
-      
-    } else {
-      
-      if isHoveringLocal {
-        return baseOpacity
-      } else {
-        return 0
-      }
-      
     }
   }
 }
@@ -114,9 +154,23 @@ extension Resizable {
 
 
 
-struct CustomRoundedShape: Shape {
+public struct CustomRoundedShape: Shape {
   
-  func path(in rect: CGRect) -> Path {
+  let height: CGFloat
+  let width: CGFloat
+//  let rightOffset: CGFloat
+  
+  public init(
+    height: CGFloat,
+    width: CGFloat
+//    rightOffset: CGFloat
+  ) {
+    self.height = height
+    self.width = width
+//    self.rightOffset = rightOffset
+  }
+  
+  public func path(in rect: CGRect) -> Path {
     var path = Path()
     
 //    guard points.count > 1 else {
@@ -124,23 +178,26 @@ struct CustomRoundedShape: Shape {
 //    }
     
     
-    let shapeHeight: CGFloat = 30
-    let shapeWidth: CGFloat = 120
-    let diagonalThing: CGFloat = 40
+    let diagonalThing: CGFloat = 50
+    
+//    let insetRight: CGFloat = 10
     
     let shapeOriginY: CGFloat = 0
-    let shapeOriginX: CGFloat = 10
+    let shapeOriginX: CGFloat = rect.maxX - width
     
     let rounding: CGFloat = diagonalThing * 0.6
     
     let start = CGPoint(x: shapeOriginX, y: shapeOriginY)
     
-    let bottomLeft = CGPoint(x: shapeOriginX + diagonalThing, y: shapeHeight)
-    let bottomRight = CGPoint(x: shapeWidth - diagonalThing, y: shapeHeight)
-    let topRight = CGPoint(x: shapeWidth, y: shapeOriginY)
+    let bottomLeft = CGPoint(x: shapeOriginX + diagonalThing, y: height)
+    let bottomRight = bottomLeft.shiftRight(width - (diagonalThing * 2))
+//    let bottomRight = bottomLeft.shiftRight(shapeWidth - diagonalThing)
+    let topRight = start.shiftRight(width)
     
     path.move(to: start)
-    path.addLine(to: bottomLeft)
+    
+    path.addCurve(to: bottomLeft, control1: start.shiftRight(rounding), control2: bottomLeft.shiftLeft(rounding))
+    
     path.addLine(to: bottomRight)
 //    path.addLine(to: topRight)
     
