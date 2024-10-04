@@ -75,7 +75,7 @@ let package = Package(
     .target(name: "Renamable"),
     .target(name: "Logging", dependencies: ["BaseHelpers"]),
     .target(name: "GlyphGrid", dependencies: ["BaseHelpers", "TextCore"]),
-    .target(name: "Resizable", dependencies: ["BaseHelpers", "Geometry"]),
+    .target(name: "Resizable", dependencies: ["BaseHelpers", "Geometry", "Shortcuts"]),
     .target(name: "Scrolling", dependencies: ["ScrollKit", .product(name: "SmoothGradient", package: "SmoothGradient")]),
     .target(name: "Selection", dependencies: ["BaseHelpers", "Geometry", "Scrolling"]),
     

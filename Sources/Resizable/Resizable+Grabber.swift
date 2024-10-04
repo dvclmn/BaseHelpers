@@ -7,6 +7,8 @@
 
 import SwiftUI
 import BaseHelpers
+import Shortcuts
+//import BaseComponents
 
 extension Resizable {
   
@@ -41,7 +43,7 @@ extension Resizable {
       .ignoresSafeArea()
       .background(.blue.opacity( isShowingFrames ? 0.2 : 0))
       .contentShape(Rectangle())
-      .debouncedHover { hovering in
+      .debouncedHover(seconds: 0.1) { hovering in
         withAnimation(isAnimated ? animation : nil) {
           isHoveringLocal = hovering
         }
@@ -53,6 +55,13 @@ extension Resizable {
 //      }
       .offset(offset)
       .background(alignment: edge.alignment) {
+        
+//        ShapeDebug {
+//          CustomRoundedShape()
+//        }
+        
+          
+        
         handleColour.opacity(grabberOpacity)
           .frame(
             minWidth: edge.axis == .horizontal ? handleSize : nil,
@@ -68,9 +77,9 @@ extension Resizable {
   }
   
   var grabberOpacity: Double {
+    
     let baseOpacity: Double = 0.09
     let emphasisedOpacity: Double = 0.14
-    
     
     if isManualMode {
       
@@ -101,3 +110,68 @@ extension Resizable {
     }
   }
 }
+
+
+
+
+struct CustomRoundedShape: Shape {
+  
+  func path(in rect: CGRect) -> Path {
+    var path = Path()
+    
+//    guard points.count > 1 else {
+//      return path
+//    }
+    
+    
+    let shapeHeight: CGFloat = 30
+    let shapeWidth: CGFloat = 120
+    let diagonalThing: CGFloat = 40
+    
+    let shapeOriginY: CGFloat = 0
+    let shapeOriginX: CGFloat = 10
+    
+    let rounding: CGFloat = diagonalThing * 0.6
+    
+    let start = CGPoint(x: shapeOriginX, y: shapeOriginY)
+    
+    let bottomLeft = CGPoint(x: shapeOriginX + diagonalThing, y: shapeHeight)
+    let bottomRight = CGPoint(x: shapeWidth - diagonalThing, y: shapeHeight)
+    let topRight = CGPoint(x: shapeWidth, y: shapeOriginY)
+    
+    path.move(to: start)
+    path.addLine(to: bottomLeft)
+    path.addLine(to: bottomRight)
+//    path.addLine(to: topRight)
+    
+    path.addCurve(
+      to: topRight,
+      control1: bottomRight.shiftRight(rounding),
+      control2: topRight.shiftLeft(rounding)
+    )
+//    for i in 0..<points.count {
+//      let currentPoint = points[i]
+//      let nextPoint = points[(i + 1) % points.count]
+//      let previousPoint = points[(i - 1 + points.count) % points.count]
+//      
+//      if i == 0 {
+//        path.move(to: currentPoint)
+//      } else {
+//        let controlPoint1 = CGPoint(
+//          x: previousPoint.x + (currentPoint.x - previousPoint.x) * (1 - cornerRadius),
+//          y: previousPoint.y + (currentPoint.y - previousPoint.y) * (1 - cornerRadius)
+//        )
+//        let controlPoint2 = CGPoint(
+//          x: currentPoint.x + (nextPoint.x - currentPoint.x) * cornerRadius,
+//          y: currentPoint.y + (nextPoint.y - currentPoint.y) * cornerRadius
+//        )
+//        
+//        path.addCurve(to: controlPoint2, control1: controlPoint1, control2: currentPoint)
+//      }
+//    }
+    
+    path.closeSubpath()
+    return path
+  }
+}
+

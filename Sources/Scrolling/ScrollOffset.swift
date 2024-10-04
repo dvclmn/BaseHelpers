@@ -30,7 +30,17 @@ public struct MaskConfig {
   }
 }
 
-public typealias SafePadding = (edges: Edge.Set, padding: CGFloat?)
+public struct SafePadding {
+  let edges: Edge.Set
+  let padding: CGFloat
+  
+  public init(_ edges: Edge.Set, _ padding: CGFloat) {
+    self.edges = edges
+    self.padding = padding
+  }
+}
+
+//public typealias SafePadding = (edges: Edge.Set, padding: CGFloat?)
 
 public struct ScrollOffsetModifier: ViewModifier {
   
@@ -68,7 +78,7 @@ public extension View {
     edgePadding: CGFloat = 30,
     maskLength: CGFloat = 130,
     showsIndicators: Bool = true,
-    safePadding: SafePadding = (.all, .zero),
+    safePadding: SafePadding = .init(.all, .zero),
     _ output: @escaping (_ offset: CGPoint) -> Void = { _ in }
   ) -> some View {
     self.modifier(

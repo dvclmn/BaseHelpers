@@ -9,9 +9,11 @@ import SwiftUI
 import OSLog
 import BaseHelpers
 import Geometry
-
+import Shortcuts
 
 public struct Resizable: ViewModifier {
+  
+  @Environment(\.modifierKeys) private var modifiers
   
   /// If this value is not supplied, Resizable will default to averaging the min and max lengths to obtain an *ideal* length (as well as clamping to the min and max as well)
   var contentLength: CGFloat?

@@ -149,16 +149,16 @@ extension ScrollMask {
   
   private func normalizeScrollOffset(_ offset: CGFloat, inverted: Bool = false) -> CGFloat {
     
+    /// This allows the user to set edge padding of `zero`, without causing issues with the offset mask effect
+    let minimumEffectValue: CGFloat = 16
+    let clampedValue = max(edgePadding, minimumEffectValue)
+    let result = min(max(offset / clampedValue, 0), 1)
     
-    guard edgePadding > 0 else { return 0 }
-    
-    let result = min(max(offset / edgePadding, 0), 1)
-    
-    if maskMode == .mask {
-      print("Scroll Offset: \(offset)")
-      print("Edge padding: \(edgePadding)")
-      print("Normalised: \(result)")
-    }
+//    if maskMode == .mask {
+//      print("Scroll Offset: \(offset)")
+//      print("Edge padding: \(edgePadding)")
+//      print("Normalised: \(result)")
+//    }
     
     return inverted ? 1.0 - result : result
   }
