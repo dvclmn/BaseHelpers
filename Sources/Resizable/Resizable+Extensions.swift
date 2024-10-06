@@ -23,6 +23,7 @@ extension Resizable {
     ///     Every Resizable needs some length to fall back on, when not in manual mode
     
     var minWidth: CGFloat? {
+      
         switch edge.axis {
         case .horizontal:
             isManualMode ? actualLength : lengthMin

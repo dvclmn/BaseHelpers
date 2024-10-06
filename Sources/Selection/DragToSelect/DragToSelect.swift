@@ -88,7 +88,7 @@ where Data: RandomAccessCollection,
     /// of this scrollview. Add some padding to clear the clipped elements
     /// away from the very edges, if possible.
     ///
-    .scrollWithOffset(maskMode: .mask, showsIndicators: false)
+    .scrollWithOffset(maskMode: .mask, edgePadding: 4, showsIndicators: false)
 //    .scrollWithOffset(maskMode: .overlay, isClipDisabled: true)
     .contentShape(Rectangle())
     .coordinateSpace(name: "listContainer")

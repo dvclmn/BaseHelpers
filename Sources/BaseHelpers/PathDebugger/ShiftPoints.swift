@@ -37,6 +37,34 @@ public extension CGPoint {
   func shift(by point: CGPoint) -> CGPoint {
     return CGPoint(x: self.x + point.x, y: self.y + point.y)
   }
+  
+  /// Find a point along the line between two points
+  /// Example usage
+  ///
+  /// ```
+  /// let point1 = CGPoint(x: 0, y: 0)
+  /// let point2 = CGPoint(x: 100, y: 100)
+  ///
+  /// let midpoint = CGPoint.pointAlong(from: point1, to: point2, t: 0.5)
+  /// print("Midpoint: \(midpoint)") // Should print (50, 50)
+  ///
+  /// let quarterPoint = point1.pointAlong(to: point2, t: 0.25)
+  /// print("Quarter point: \(quarterPoint)") // Should print (25, 25)
+  ///
+  /// ```
+  
+  static func pointAlong(from start: CGPoint, to end: CGPoint, t: CGFloat) -> CGPoint {
+    let clampedT = max(0, min(1, t)) // Ensure t is between 0 and 1
+    return CGPoint(
+      x: start.x + (end.x - start.x) * clampedT,
+      y: start.y + (end.y - start.y) * clampedT
+    )
+  }
+  
+  // Convenience method to find a point along a line starting from self
+  func pointAlong(to end: CGPoint, t: CGFloat) -> CGPoint {
+    return CGPoint.pointAlong(from: self, to: end, t: t)
+  }
 }
 
 // Example usage

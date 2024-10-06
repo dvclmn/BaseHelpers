@@ -15,6 +15,7 @@ public struct Resizable: ViewModifier {
   
   @Environment(\.modifierKeys) var modifiers
   
+  var isPassthroughMode: Bool
   /// If this value is not supplied, Resizable will default to averaging the min and max lengths to obtain an *ideal* length (as well as clamping to the min and max as well)
   var contentLength: CGFloat?
   
@@ -45,10 +46,12 @@ public struct Resizable: ViewModifier {
   /// below, so that other UI elements can recieve and respond to the length if need be.
   var returnedLength: (_ metrics: String, _ onChanged: CGFloat, _ onEnded: CGFloat) -> Void
   
+  let isDismissEnabled: Bool = false
   let dismissShapeRightInset: CGFloat = 10
   let dismissShapeSize = CGSize(width: 120, height: 17)
   
   public init(
+    isPassthroughMode: Bool,
     contentLength: CGFloat?,
     isManualMode: Binding<Bool>,
     edge: Edge,
@@ -64,6 +67,7 @@ public struct Resizable: ViewModifier {
     persistenceKey: String? = nil,
     returnedLength: @escaping (_: String, _: CGFloat, _: CGFloat) -> Void
   ) {
+    self.isPassthroughMode = isPassthroughMode
     self.contentLength = contentLength
     self._isManualMode = isManualMode
     self.edge = edge
@@ -142,7 +146,6 @@ public struct Resizable: ViewModifier {
     }
   }
   
-  /// This is optional so that `isResizable` can return nil if false
   var actualLength: CGFloat {
     if isResizable {
       if isManualMode {
@@ -172,111 +175,121 @@ public struct Resizable: ViewModifier {
             """
     }
     
-    content
-      .frame(maxWidth: .infinity, maxHeight: .infinity)
-    
-      .animation(isAnimated ? (isResizing ? nil : animation) : nil, value: actualLength)
-      .overlay(alignment: edge.alignment) {
-        if isResizable {
-          Grabber()
-            .gesture(
-              ExclusiveGesture(
-                DragGesture(minimumDistance: 0.5)
-                  .onChanged { gesture in
-                    
-                    isManualMode = true
-                    isResizing = true
-                    let lengthBeforeResize: CGFloat = actualLength
-                    
-                    var newValue: CGFloat = .zero
-                    
-                    /// This switch allows us to only care about translation values along a certain axis
-                    switch edge {
-                      case .top:
-                        newValue = manualLength + gesture.translation.height * -1
-                      case .bottom:
-                        newValue = manualLength + gesture.translation.height
-                      case .leading:
-                        newValue = manualLength + gesture.translation.width * -1
-                      case .trailing:
-                        newValue = manualLength + gesture.translation.width
+//    if isPassthroughMode {
+//      content
+//    } else {
+      content
+      
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+      
+        .animation(isAnimated ? (isResizing ? nil : animation) : nil, value: actualLength)
+        .overlay(alignment: edge.alignment) {
+          if isResizable && !isPassthroughMode {
+            Grabber()
+              .gesture(
+                ExclusiveGesture(
+                  DragGesture(minimumDistance: 0.5)
+                    .onChanged { gesture in
+                      
+                      isManualMode = true
+                      isResizing = true
+                      let lengthBeforeResize: CGFloat = actualLength
+                      
+                      var newValue: CGFloat = .zero
+                      
+                      /// This switch allows us to only care about translation values along a certain axis
+                      switch edge {
+                        case .top:
+                          newValue = manualLength + gesture.translation.height * -1
+                        case .bottom:
+                          newValue = manualLength + gesture.translation.height
+                        case .leading:
+                          newValue = manualLength + gesture.translation.width * -1
+                        case .trailing:
+                          newValue = manualLength + gesture.translation.width
+                      }
+                      
+                      /// Feed the new value to `manualLength`, always clamping to the provided min and max lengths
+                      manualLength = newValue.constrained(lengthMinConstrained, lengthMaxConstrained)
+                      
+                      /// Sending out the calculated length, as we actively resize
+                      /// `(_ metrics: String, _ onChanged: CGFloat, _ onEnded: CGFloat)`
+                      returnedLength(metrics, actualLength, lengthBeforeResize)
+                      
+                    } // END on changed
+                  
+                    .onEnded { _ in
+                      
+                      isHoveringLocal = false
+                      isResizing = false
+                      
+                      returnedLength(metrics, actualLength, actualLength)
+                      
+                      if persistenceKey != nil {
+                        
+                        
+                        //                                                                  updateSavedLength(to: Double(actualLength ?? 0))
+                        
+                      }
                     }
-                    
-                    /// Feed the new value to `manualLength`, always clamping to the provided min and max lengths
-                    manualLength = newValue.constrained(lengthMinConstrained, lengthMaxConstrained)
-                    
-                    /// Sending out the calculated length, as we actively resize
-                    /// `(_ metrics: String, _ onChanged: CGFloat, _ onEnded: CGFloat)`
-                    returnedLength(metrics, actualLength, lengthBeforeResize)
-                    
-                  } // END on changed
-                
-                  .onEnded { _ in
-                    
-                    isHoveringLocal = false
-                    isResizing = false
-                    
-                    returnedLength(metrics, actualLength, actualLength)
-                    
-                    if persistenceKey != nil {
+                  ,
+                  /// Double tap to reset editor height to it's innate, unresized height
+                  TapGesture(count: 2)
+                    .onEnded {
+                      isManualMode = false
+                      isHoveringLocal = false
+                      isResizing = false
                       
-                      
-//                                                                  updateSavedLength(to: Double(actualLength ?? 0))
-                      
+                      /// Important to set the manual length here so it's keeping up with the dynamic content, behind the scenes
+                      manualLength = unwrappedContentLength
+                      returnedLength(metrics, unwrappedContentLength, .zero)
+                      //                                        savedLength = .zero
                     }
-                  }
-                ,
-                /// Double tap to reset editor height to it's innate, unresized height
-                TapGesture(count: 2)
-                  .onEnded {
-                    isManualMode = false
-                    isHoveringLocal = false
-                    isResizing = false
-                    
-                    /// Important to set the manual length here so it's keeping up with the dynamic content, behind the scenes
-                    manualLength = unwrappedContentLength
-                    returnedLength(metrics, unwrappedContentLength, .zero)
-                    //                                        savedLength = .zero
-                  }
-              )
-            ) // END gesture
-          
-        } // END isResizable check
-      } // END overlay
-    
-      .onAppear {
-        /// Get manual length ready to go, just in case
-        manualLength = unwrappedContentLength
-        returnedLength(metrics, unwrappedContentLength, unwrappedContentLength)
-      }
-    
-      .task(id: contentLength) {
-        if !isManualMode {
-          /// This is here to ensure that when it comes time for manual length to take over, it should be already exactly the same value as the dynamic length
+                )
+              ) // END gesture
+            
+          } // END isResizable check
+        } // END overlay
+      
+        .onAppear {
+          /// Get manual length ready to go, just in case
           manualLength = unwrappedContentLength
-          returnedLength(metrics, unwrappedContentLength, .zero)
+          returnedLength(metrics, unwrappedContentLength, unwrappedContentLength)
         }
-        
-      }
-      .frame(
-        width: edge.axis == .horizontal ? actualLength : nil,
-        height: edge.axis == .vertical ? actualLength : nil,
-        alignment: edge.alignmentOpposite
-      )
-      .frame(
-        minWidth: self.minWidth,
-        maxWidth: self.maxWidth,
-        minHeight: self.minHeight,
-        maxHeight: self.maxHeight,
-        alignment: self.edge.alignmentOpposite
-      )
-      .border(Color.green.opacity(isShowingFrames ? 0.2 : 0))
+      
+        .task(id: actualLength) {
+          print("Actual length: \(actualLength)")
+        }
+      
+        .task(id: contentLength) {
+          if !isManualMode {
+            /// This is here to ensure that when it comes time for manual length to take over, it should be already exactly the same value as the dynamic length
+            manualLength = unwrappedContentLength
+            returnedLength(metrics, unwrappedContentLength, .zero)
+          }
+          
+        }
+        .frame(
+          width:      isPassthroughMode ? nil : (edge.axis == .horizontal ? max(0, min(actualLength, 9999)) : nil),
+          height:     isPassthroughMode ? nil : (edge.axis == .vertical ? max(0, min(actualLength, 9999)) : nil),
+          alignment:  isPassthroughMode ? .center : edge.alignmentOpposite
+        )
+        .frame(
+          minWidth:    isPassthroughMode ? nil : self.minWidth,
+          maxWidth:    isPassthroughMode ? nil : self.maxWidth,
+          minHeight:   isPassthroughMode ? nil : self.minHeight,
+          maxHeight:   isPassthroughMode ? nil : self.maxHeight,
+          alignment:   isPassthroughMode ? .center : self.edge.alignmentOpposite
+        )
+        .border(Color.green.opacity(isShowingFrames ? 0.2 : 0))
+//    } // END is passthrough mode
   }
 }
 
 
 public extension View {
   func resizable(
+    isPassthroughMode: Bool = false,
     contentLength: CGFloat? = nil,
     isManualMode: Binding<Bool>,
     edge: Edge = .top,
@@ -295,6 +308,7 @@ public extension View {
   ) -> some View {
     self.modifier(
       Resizable(
+        isPassthroughMode: isPassthroughMode,
         contentLength: contentLength,
         isManualMode: isManualMode,
         edge: edge,

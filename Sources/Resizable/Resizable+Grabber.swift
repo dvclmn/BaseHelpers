@@ -57,7 +57,7 @@ extension Resizable {
       .offset(offset)
       .background(alignment: edge.alignment) {
 
-        Group {
+//        Group {
           adjustedHandleColour.opacity(grabberOpacity)
             .frame(
               minWidth: edge.axis == .horizontal ? handleSize : nil,
@@ -66,32 +66,32 @@ extension Resizable {
               maxHeight: edge.axis == .vertical ? handleSize : .infinity
             )
 
-            .overlay(alignment: .topTrailing) {
-              
-              // TODO: Will expand this to support other orientations of course
-              if isShowingDismiss {
-                ZStack {
-                
-                  //              ShapeDebug {
-                  CustomRoundedShape(
-                    height: dismissShapeSize.height,
-                    width: dismissShapeSize.width
-  //                  rightOffset: dismissShapeRightInset
-                  )
-                  .fill(accentColour)
-                  Text("Dismiss")
-                    .frame(maxWidth: .infinity, alignment: .center)
-                    .border(Color.green.opacity(0.3))
-                  //              }
-                } // END zstack
-                .frame(width: dismissShapeSize.width, alignment: .center)
-                .offset(x: -dismissShapeRightInset, y: handleSize)
-                
-              }
-              
-            }
-        } // END group
-        .animation(Styles.animationSpringSubtle, value: isShowingFrames)
+//            .overlay(alignment: .topTrailing) {
+//              
+//              // TODO: Will expand this to support other orientations of course
+////              if isShowingDismiss {
+//                ZStack {
+//                
+//                  //              ShapeDebug {
+//                  CustomRoundedShape(
+//                    height: dismissShapeSize.height,
+//                    width: dismissShapeSize.width
+//  //                  rightOffset: dismissShapeRightInset
+//                  )
+//                  .fill(accentColour)
+//                  Text("Dismiss")
+//                    .frame(maxWidth: .infinity, alignment: .center)
+//                    .border(Color.green.opacity(0.3))
+//                  //              }
+//                } // END zstack
+//                .frame(width: dismissShapeSize.width, alignment: .center)
+//                .offset(x: -dismissShapeRightInset, y: handleSize)
+//                
+////              }
+//              
+//            } // Dismiss overlay
+//        } // END group
+//        .animation(Styles.animationSpringSubtle, value: isShowingFrames)
           
       }
       
@@ -102,7 +102,7 @@ extension Resizable {
   }
   
   var isShowingDismiss: Bool {
-    return (isHoveringLocal && edge == .top && modifiers.contains(.command)) || isPreview
+    return isHoveringLocal && edge == .top && modifiers.contains(.command) && isDismissEnabled
   }
   
   var adjustedHandleColour: Color {

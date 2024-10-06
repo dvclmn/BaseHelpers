@@ -78,14 +78,19 @@ public struct Styles {
     public static let animationEased:               Animation = .easeInOut(duration: 0.35)
     public static let animationEasedQuick:          Animation = .easeInOut(duration: 0.15)
     public static let animationEasedSlow:           Animation = .easeInOut(duration: 0.6)
+  
     public static let animationSmooth:              Animation = .smooth(duration: 0.35, extraBounce: 0.15)
-    public static let animationRelaxed:              Animation = .smooth(duration: 2.8, extraBounce: 0.45)
+    public static let animationQuickNSmooth:        Animation = .smooth(duration: 0.25, extraBounce: 0.2)
+  
+    public static let animationRelaxed:             Animation = .smooth(duration: 2.8, extraBounce: 0.45)
     
     /// Dynamic — springs and bounces
     public static let animationBounce:              Animation = .bouncy(duration: 0.3, extraBounce: 0.5)
     public static let animationSpring:              Animation = .snappy(duration: 0.4, extraBounce: 0.5)
     public static let animationSpringSubtle:        Animation = .snappy(duration: 0.35, extraBounce: 0.2)
     public static let animationSpringQuick:         Animation = .snappy(duration: 0.2, extraBounce: 0.15)
+    public static let animationSpringQuickNSubtle:  Animation = .snappy(duration: 0.25, extraBounce: 0.08)
+    public static let animationSpringExtraQuick:    Animation = .snappy(duration: 0.08, extraBounce: 0.1)
     
     public static let animationLoop:                Animation = .easeInOut(duration: 0.6).repeatForever(autoreverses: true)
     public static let animationLoopSlow:                Animation = .easeInOut(duration: 4.6).repeatForever(autoreverses: true)

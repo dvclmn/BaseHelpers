@@ -8,14 +8,6 @@
 import Foundation
 import SwiftUI
 
-//struct ScaleEffectForShadow: GeometryEffect {
-//  var scale: CGFloat
-//  
-//  func effectValue(size: CGSize) -> ProjectionTransform {
-//    let scaleTransform = CGAffineTransform(scaleX: scale, y: scale)
-//    return ProjectionTransform(scaleTransform)
-//  }
-//}
 
 public struct ShadowDepth {
   var rounding: CGFloat
@@ -27,8 +19,6 @@ public struct ShadowDepth {
   }
 }
 
-
-
 public struct ShadowModifier: ViewModifier {
   
   var opacity: Double
@@ -37,10 +27,9 @@ public struct ShadowModifier: ViewModifier {
   var depth: ShadowDepth?
   
   public func body(content: Content) -> some View {
-
+    
     content
       .modifier(LayeredShadow(opacity: opacity, radius: radius, distanceY: distanceY, isOn: !hasDepth))
-      
     
       .background {
         if let depth = depth, opacity > 0.0 {
@@ -116,35 +105,28 @@ private struct ShadowExampleView: View {
       
       
       
-        RoundedRectangle(cornerRadius: 20)
+      RoundedRectangle(cornerRadius: 20)
         .fill(.ultraThinMaterial)
-          .aspectRatio(3.1, contentMode: .fit)
-          .frame(width: 380)
-          .overlay {
-            Text("Depth effect ON")
-              .font(.system(size: 15, weight: .medium))
-          }
-          .customShadow(opacity: 0.9, radius: 16, distanceY: 40, depth: ShadowDepth(rounding: 20, distance: 0.9))
+        .aspectRatio(3.1, contentMode: .fit)
+        .frame(width: 380)
+        .overlay {
+          Text("Depth effect ON")
+            .font(.system(size: 15, weight: .medium))
+        }
+        .customShadow(opacity: 0.9, radius: 16, distanceY: 40, depth: ShadowDepth(rounding: 20, distance: 0.9))
       
-      .padding(.bottom, 40)
-      
-      
-        RoundedRectangle(cornerRadius: 20)
-          .fill(.gray)
-          .aspectRatio(3.1, contentMode: .fit)
-          .frame(width: 380)
-          .customShadow(opacity: 0.7, radius: 16, distanceY: 50)
-          .overlay {
-              Text("Depth effect OFF")
-                .font(.system(size: 15, weight: .medium))
-          }
-
+        .padding(.bottom, 40)
       
       
-     
-      
-      
-
+      RoundedRectangle(cornerRadius: 20)
+        .fill(.gray)
+        .aspectRatio(3.1, contentMode: .fit)
+        .frame(width: 380)
+        .customShadow(opacity: 0.7, radius: 16, distanceY: 50)
+        .overlay {
+          Text("Depth effect OFF")
+            .font(.system(size: 15, weight: .medium))
+        }
       
     }
     .frame(maxWidth: .infinity, maxHeight: .infinity)
