@@ -53,15 +53,31 @@ public extension CGPoint {
   ///
   /// ```
   
+  
+  /// Returns a point along the line defined by `start` and `end`.
+  /// - Parameters:
+  ///   - start: The starting point of the line.
+  ///   - end: The ending point of the line.
+  ///   - t: A factor determining the point's position along the line.
+  ///        When t = 0, the result is `start`.
+  ///        When t = 1, the result is `end`.
+  ///        Values less than 0 or greater than 1 will extrapolate beyond the line segment.
+  /// - Returns: A point along the line defined by `start` and `end`.
   static func pointAlong(from start: CGPoint, to end: CGPoint, t: CGFloat) -> CGPoint {
-    let clampedT = max(0, min(1, t)) // Ensure t is between 0 and 1
     return CGPoint(
-      x: start.x + (end.x - start.x) * clampedT,
-      y: start.y + (end.y - start.y) * clampedT
+      x: start.x + (end.x - start.x) * t,
+      y: start.y + (end.y - start.y) * t
     )
   }
   
-  // Convenience method to find a point along a line starting from self
+  /// Returns a point along the line from this point to `end`.
+  /// - Parameters:
+  ///   - end: The ending point of the line.
+  ///   - t: A factor determining the point's position along the line.
+  ///        When t = 0, the result is this point.
+  ///        When t = 1, the result is `end`.
+  ///        Values less than 0 or greater than 1 will extrapolate beyond the line segment.
+  /// - Returns: A point along the line from this point to `end`.
   func pointAlong(to end: CGPoint, t: CGFloat) -> CGPoint {
     return CGPoint.pointAlong(from: self, to: end, t: t)
   }

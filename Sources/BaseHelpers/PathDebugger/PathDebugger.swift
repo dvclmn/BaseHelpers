@@ -197,40 +197,13 @@ public struct ShapeDebug<S: Shape>: View {
           paths.connections.stroke(debugger.config.controlPoint.guideColour, lineWidth: debugger.config.stroke.width)
           
           // Default nodes
-          paths.nodes.fill(debugger.config.node.colour)
+          paths.nodes.stroke(debugger.config.node.colour, lineWidth: debugger.config.stroke.width)
+//          paths.nodes.fill(debugger.config.node.colour)
           
-          // Colored nodes
-          //          ForEach(paths.coloredNodes, id: \.point) { node in
-          //            Circle()
-          //              .fill(node.color)
-          //              .frame(width: debugger.config.pointSize.value, height: debugger.config.pointSize.value)
-          //              .position(node.point)
-          //          }
-          
+
           // Default control points
-          paths.controlPoints.fill(debugger.config.controlPoint.colour)
-          
-          // Colored control points
-          //          ForEach(paths.coloredControlPoints, id: \.point) { controlPoint in
-          //            Circle()
-          //              .fill(controlPoint.color)
-          //              .frame(width: debugger.config.pointSize.value, height: debugger.config.pointSize.value)
-          //              .position(controlPoint.point)
-          //          }
-          
-          //          paths.nodes.stroke(debugger.config.node.colour, lineWidth: debugger.config.stroke.width)
-          
-          
-          //          paths.controlPoints.stroke(debugger.config.controlPoint.colour, lineWidth: debugger.config.stroke.width)
-          
-          // Labels
-          //          ForEach(paths.labels, id: \.point) { labelInfo in
-          //            Text(labelInfo.label.text)
-          //              .font(.system(size: debugger.config.labelFontSize))
-          //              .foregroundColor(labelInfo.label.colour)
-          //              .position(labelInfo.point.offsetBy(dx: 0, dy: -debugger.config.pointSize.value))
-          //          }
-          
+          paths.controlPoints.stroke(debugger.config.controlPoint.colour, lineWidth: debugger.config.stroke.width)
+//          paths.controlPoints.fill(debugger.config.controlPoint.colour)
           
           
         } // END zstack
