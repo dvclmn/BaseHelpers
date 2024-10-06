@@ -13,63 +13,47 @@ import BaseHelpers
 
 #if os(macOS)
 
+/// This should be placed somewhere in `ContentView`, that will allow full coverage of the window.
+///
+/// Views that want to use this should be placed *above* this modifier, so they're not covered up by it.
+///
 public struct TapOffToDismiss: ViewModifier {
   
-  @Dependency(\.windowDimensions) var windowSize
-  
+  let isPresented: Bool
   let action: () -> Void
   
   public func body(content: Content) -> some View {
     
-    ZStack {
-      Color.blue.opacity(0.1)
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .contentShape(Rectangle())
-        .onTapGesture {
-          action()
-        }
-        .onExitCommand {
-          action()
-        }
-      
-      content
-    }
-    
+    content
+      .overlay {
+        if isPresented {
+//          Color.clear
+                Color.blue.opacity(0.6)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .contentShape(Rectangle())
+            .onTapGesture {
+              print("Tapped on the dismiss area")
+              action()
+            }
+            .onExitCommand {
+              print("Pressed Esc to dismiss dialogue")
+              action()
+            }
+        } // END is presented check
+      } // END overlay
   }
 }
 public extension View {
-  func tapOffToDismiss(action: @escaping () -> Void) -> some View {
+  func tapOffToDismiss(
+    isPresented: Bool,
+    action: @escaping () -> Void
+  ) -> some View {
     self.modifier(
-      TapOffToDismiss(action: action)
+      TapOffToDismiss(
+        isPresented: isPresented,
+        action: action
+      )
     )
   }
 }
 #endif
-
-
-
-//struct TapOffExampleView: View {
-//
-//  @State private var background: Color = .red
-//
-//  var body: some View {
-//
-//    VStack {
-//      Text("Hello")
-//        .tapOffToDismiss {
-//          //          background = Color.random
-//          print("Tapped")
-//        }
-//    }
-//
-//    .padding(40)
-//    .frame(width: 600, height: 700)
-//    .background(background.opacity(0.2))
-//
-//  }
-//}
-//#Preview {
-//  TapOffExampleView()
-//}
-//
-
