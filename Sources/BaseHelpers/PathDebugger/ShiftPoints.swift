@@ -81,6 +81,43 @@ public extension CGPoint {
   func pointAlong(to end: CGPoint, t: CGFloat) -> CGPoint {
     return CGPoint.pointAlong(from: self, to: end, t: t)
   }
+  
+  
+  
+  
+  /// Returns a point at a specified distance along the line defined by `start` and `end`.
+  /// - Parameters:
+  ///   - start: The starting point of the line.
+  ///   - end: The ending point of the line.
+  ///   - distance: The absolute distance from the `start` point.
+  /// - Returns: A point along the line defined by `start` and `end` at the specified distance.
+  static func pointAlong(from start: CGPoint, to end: CGPoint, distance: CGFloat) -> CGPoint {
+    let dx = end.x - start.x
+    let dy = end.y - start.y
+    let totalDistance = sqrt(dx * dx + dy * dy)
+    
+    // Calculate the unit vector in the direction from start to end
+    let unitVectorX = dx / totalDistance
+    let unitVectorY = dy / totalDistance
+    
+    // Calculate the new point at the specified distance
+    return CGPoint(
+      x: start.x + unitVectorX * distance,
+      y: start.y + unitVectorY * distance
+    )
+  }
+  
+
+  
+  
+  /// Returns a point at a specified distance along the line from this point to `end`.
+  /// - Parameters:
+  ///   - end: The ending point of the line.
+  ///   - distance: The absolute distance from this point.
+  /// - Returns: A point along the line from this point to `end` at the specified distance.
+  func pointAlong(to end: CGPoint, distance: CGFloat) -> CGPoint {
+    return CGPoint.pointAlong(from: self, to: end, distance: distance)
+  }
 }
 
 // Example usage
