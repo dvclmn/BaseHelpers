@@ -56,7 +56,11 @@ public extension Color {
   }
 }
 
+
+
 public extension Color {
+  
+  
     init(hex: String) {
         let hex = hex.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
         var int: UInt64 = 0
@@ -81,6 +85,20 @@ public extension Color {
             opacity: Double(a) / 255
         )
     }
+  
+  // Helper function to get a more readable color description
+//  var info: String {
+//    if let sRGBColor = self.usingColorSpace(.sRGB) {
+//      let red = Int(sRGBColor.redComponent * 255)
+//      let green = Int(sRGBColor.greenComponent * 255)
+//      let blue = Int(sRGBColor.blueComponent * 255)
+//      let alpha = Int(sRGBColor.alphaComponent * 100)
+//      return "RGB(\(red), \(green), \(blue), \(alpha)%)"
+//    } else {
+//      return color.description
+//    }
+//  }
+
 }
 
 public struct TrafficLightsModifier: ViewModifier {
@@ -119,3 +137,79 @@ public extension View {
     }
 }
 
+/// This is cool and all, but there already exists a `NSColor.colorNameComponent` 🥲
+//func namedColorDescription(_ color: NSColor) -> String? {
+//  let namedColors: [(NSColor, String)] = [
+//    (.systemBlue, "systemBlue"),
+//    (.systemBrown, "systemBrown"),
+//    (.systemGray, "systemGray"),
+//    (.systemGreen, "systemGreen"),
+//    (.systemIndigo, "systemIndigo"),
+//    (.systemOrange, "systemOrange"),
+//    (.systemPink, "systemPink"),
+//    (.systemPurple, "systemPurple"),
+//    (.systemRed, "systemRed"),
+//    (.systemTeal, "systemTeal"),
+//    (.systemYellow, "systemYellow"),
+//    (.black, "black"),
+//    (.blue, "blue"),
+//    (.brown, "brown"),
+//    (.clear, "clear"),
+//    (.cyan, "cyan"),
+//    (.darkGray, "darkGray"),
+//    (.gray, "gray"),
+//    (.green, "green"),
+//    (.lightGray, "lightGray"),
+//    (.magenta, "magenta"),
+//    (.orange, "orange"),
+//    (.purple, "purple"),
+//    (.red, "red"),
+//    (.white, "white"),
+//    (.yellow, "yellow")
+//  ]
+//  
+//  for (namedColor, name) in namedColors {
+//    if color.isClose(to: namedColor) {
+//      return name
+//    }
+//  }
+//  
+//  return nil
+//}
+//
+//func colorDescription(_ color: NSColor) -> String {
+//  if let name = namedColorDescription(color) {
+//    return name
+//  }
+//  
+//  if let sRGBColor = color.usingColorSpace(.sRGB) {
+//    let red = Int(sRGBColor.redComponent * 255)
+//    let green = Int(sRGBColor.greenComponent * 255)
+//    let blue = Int(sRGBColor.blueComponent * 255)
+//    let alpha = Int(sRGBColor.alphaComponent * 100)
+//    return "RGB(\(red), \(green), \(blue), \(alpha)%)"
+//  } else {
+//    return color.description
+//  }
+//}
+//
+//public extension NSColor {
+//  
+//  var displayName: String {
+//    colorDescription(self)
+//  }
+//  
+//  func isClose(to other: NSColor, tolerance: CGFloat = 0.01) -> Bool {
+//    guard let rgb1 = self.usingColorSpace(.sRGB),
+//          let rgb2 = other.usingColorSpace(.sRGB) else {
+//      return false
+//    }
+//    
+//    let redDiff = abs(rgb1.redComponent - rgb2.redComponent)
+//    let greenDiff = abs(rgb1.greenComponent - rgb2.greenComponent)
+//    let blueDiff = abs(rgb1.blueComponent - rgb2.blueComponent)
+//    let alphaDiff = abs(rgb1.alphaComponent - rgb2.alphaComponent)
+//    
+//    return redDiff <= tolerance && greenDiff <= tolerance && blueDiff <= tolerance && alphaDiff <= tolerance
+//  }
+//}

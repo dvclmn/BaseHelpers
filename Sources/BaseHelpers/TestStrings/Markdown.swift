@@ -197,11 +197,13 @@ public extension TestStrings {
         - The goal is to keep you focused, so you never have to stop and reach for the documentation of the IDE, or Zig itself. Based on what you're doing
         
         1. First, calculate the available width:
+        
          ```swift
          let availableWidth = self.windowSize.size.width - AppHandler.windowSizeBuffer
          ```
         
         2. Define helper properties for panel widths:
+        
         ```swift
         var sidebarWidth: Double {
         sidebar.isEnabled ? sidebar.width : 0
@@ -213,6 +215,7 @@ public extension TestStrings {
         ```
         
         3. Calculate if there's room for content and each panel:
+        
         ```swift
         let roomForContent = availableWidth >= AppHandler.contentMinWidth
         let roomForSidebar = availableWidth >= (AppHandler.contentMinWidth + sidebarWidth)

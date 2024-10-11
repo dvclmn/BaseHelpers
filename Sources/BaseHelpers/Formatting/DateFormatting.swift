@@ -170,7 +170,8 @@ public extension Date {
   }
   
   /// Returns the date and time formatted as "Updated: Just now" or "Updated: X minutes/hours ago" or "Today, 1:34pm", etc.
-  var friendlyDateAndTime: AttributedString {
+  var friendlyDateAndTime: String {
+//  var friendlyDateAndTime: AttributedString {
     let now = Date()
     let calendar = Calendar.current
     let components = calendar.dateComponents([.day, .hour, .minute, .second], from: self, to: now)
@@ -223,7 +224,7 @@ public extension Date {
       attributedString.foregroundColor = .primary.opacity(0.7)
     }
     
-    return attributedString
+    return String(attributedString.characters)
   }
   
   

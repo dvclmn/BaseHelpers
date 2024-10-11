@@ -28,27 +28,34 @@ public extension String {
     return self[range]
   }
   
-  subscript(range: Range<Int>) -> Substring? {
-    get {
-      let start = index(startIndex, offsetBy: range.lowerBound)
-      let end = index(start, offsetBy: range.count)
-      
-      return self[start..<end]
-    }
-  }
-  
-  subscript(range: NSRange) -> Substring? {
-    get {
-      return range.range(in: self).flatMap({ self[$0] })
-    }
-  }
-  
   /// A `prefix(_ maxLength: Int)` alternative, returning a `String` rather than `Substring`
   ///
-  func preview(_ maxLength: Int = 20) -> String {
+  func preview(
+    _ maxLength: Int = 20,
+    hasDividers: Bool = true,
+    showsEnd: Bool = true
+  ) -> String {
     
     
-    return String(self.prefix(maxLength))
+    let prefix: String = "\(self.prefix(maxLength))...\n"
+    let suffix: String = showsEnd ? "...\(self.suffix(maxLength))" : ""
+    
+    if hasDividers {
+      
+      let result = "\n---\n"
+      + prefix
+      + suffix
+      + "\n---\n\n"
+      
+      return result
+      
+    } else {
+      let result = prefix + suffix
+      
+      return result
+    }
+    
+    
   }
   
   

@@ -354,14 +354,19 @@ public struct TestStrings {
         
         Could you explain 'non-greedy’?
         
+        ```
+        // This is a brief code comment
+        var text: String = "Example text"
+        ```
+        
         Also, how would you suggest i could *include* the backticks, so they are caught in the styled attributed string?
         """,
-                """
-                The text within backticks, including the backticks themselves, is styled with the specified attributes (red color and bold font in this case).
-                """,
-                """
-                Could you explain 'non-greedy’?
-                """,
+        """
+        The text within backticks, including the backticks themselves, is styled with the specified attributes (red color and bold font in this case).
+        """,
+        """
+        Could you explain 'non-greedy’?
+        """,
         """
         1. **Regular Expression**: The pattern `("```\\n)(.*?)(\\n```")` is used to match blocks of text that start and end with triple backticks, considering the line breaks. It uses `.*?` for non-greedy matching of any characters between the backticks, including new lines due to the `.dotMatchesLineSeparators` option.
         
@@ -470,15 +475,15 @@ public struct TestStrings {
         
         This approach allows you to include and style the backticks along with the text they enclose, directly within your SwiftUI view.
         """,
-        """
-        Thanks!
-        
-        Could you explain 'non-greedy’?
-        
-        Also, how would you suggest i could *include* the backticks, so they are caught in the styled attributed string?
-        """,
+
         """
         The text within backticks, including the backticks themselves, is styled with the specified attributes (red color and bold font in this case).
+                
+        ```
+        // This is a brief code comment
+        var text: String = "Example text"
+        ```
+        
         """,
         """
         Could you explain 'non-greedy’?

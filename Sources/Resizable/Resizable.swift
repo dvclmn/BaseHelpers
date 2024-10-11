@@ -258,7 +258,7 @@ public struct Resizable: ViewModifier {
         }
       
         .task(id: actualLength) {
-          print("Actual length: \(actualLength)")
+//          print("Actual length: \(actualLength)")
         }
       
         .task(id: contentLength) {

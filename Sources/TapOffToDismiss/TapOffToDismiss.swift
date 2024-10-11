@@ -35,10 +35,7 @@ public struct TapOffToDismiss: ViewModifier {
               print("Tapped on the dismiss area")
               action()
             }
-            .onExitCommand {
-              print("Pressed Esc to dismiss dialogue")
-              action()
-            }
+
         } // END is presented check
       } // END overlay
   }

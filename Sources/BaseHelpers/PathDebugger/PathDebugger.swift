@@ -151,7 +151,7 @@ struct PathDebugExampleView: View {
       ShapeDebug {
         
         RoundedRectangle(cornerRadius: 20)
-//        CustomBubbleShape(
+//        DialogueArrowShape(
 //          cornerRadius: 70,
 //          arrowHeight: 80,
 //          arrowWidth: 180,

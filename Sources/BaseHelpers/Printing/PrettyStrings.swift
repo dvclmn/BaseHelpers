@@ -6,7 +6,7 @@
 //
 
 import Foundation
-
+import AppKit
 
 public extension Dictionary {
   var prettyPrinted: String {
@@ -20,6 +20,34 @@ public extension Dictionary {
   }
 }
 
+/// Below moved here from MDE, need to fix up
+//func condensedElementSummary<Something>(_ elements: [Something]): String {
+//  let elementCounts = Dictionary(grouping: elements, by: { $0.syntax })
+//    .mapValues { $0.count }
+//  /// The below sorts by frequency within the source text
+//  //      .sorted { $0.value > $1.value }
+//  
+//  /// This sorts alphabetically
+//    .sorted { $0.key.name < $1.key.name }
+//  
+//  let summaries = elementCounts.map { syntax, count in
+//    count > 1 ? "\(syntax.name) (x\(count))" : syntax.name
+//  }
+//  
+//  return summaries.joined(separator: ", ")
+//}
+//
+//
+//func printElementSummary(tlm: NSTextLayoutManager) {
+//  var textElementCount = 0
+//  tlm.textContentManager?.enumerateTextElements(from: tlm.documentRange.location, using: { _ in
+//    textElementCount += 1
+//    return true
+//  })
+//  
+//  print("Total elements: \(textElementCount)")
+//  print("Elements: \(condensedElementSummary)")
+//}
 
 
 /// #Example usage:
