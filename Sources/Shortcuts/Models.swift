@@ -91,8 +91,13 @@ extension KBShortcut: CustomStringConvertible {
   
   public var description: String {
     
-    let modifierResult: String = self.modifiers.reduce(into: "") { result, element in
-      result += element.name
+    
+    let modifierResult = self.modifiers.enumerated().reduce(into: "") { partialResult, element in
+      let (index, modifier) = element
+      if index > 0 {
+        partialResult += ", "
+      }
+      partialResult += modifier.symbolLiteral
     }
     
     // Pressed shortcut: KBShortcut(key: Shortcuts.KBShortcut.Key.character("b"), modifiers: [Shortcuts.KBShortcut.Modifier.command], label: nil)
