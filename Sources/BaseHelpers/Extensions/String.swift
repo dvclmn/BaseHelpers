@@ -35,27 +35,34 @@ public extension String {
     hasDividers: Bool = true,
     showsEnd: Bool = true
   ) -> String {
+    let totalLength = self.count
     
-    
-    let prefix: String = "\(self.prefix(maxLength))...\n"
-    let suffix: String = showsEnd ? "...\(self.suffix(maxLength))" : ""
-    
-    if hasDividers {
+    /// Handle the case where the provided string is actually *shorter*
+    /// than the `maxLength`
+    if totalLength <= maxLength {
       
-      let result = "\n---\n"
-      + prefix
-      + suffix
-      + "\n---\n\n"
+      if self.isEmpty {
+        
+        return "(Empty line)"
+      } else {
+        return hasDividers ? "\n---\n\(self)\n---\n\n" : self
+      }
       
-      return result
-      
-    } else {
-      let result = prefix + suffix
-      
-      return result
     }
     
+    let prefixLength = min(maxLength / 2, totalLength / 2)
+    let suffixLength = min(maxLength - prefixLength - 3, totalLength - prefixLength - 3)
     
+    let prefix = self.prefix(prefixLength)
+    let suffix = showsEnd ? self.suffix(suffixLength) : ""
+    
+    let result = "\(prefix)...\(suffix)"
+    
+    if hasDividers {
+      return "\n---\n\(result)\n---\n\n"
+    } else {
+      return result
+    }
   }
   
   
