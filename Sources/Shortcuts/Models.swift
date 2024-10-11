@@ -8,6 +8,7 @@
 #if canImport(AppKit)
 
 import SwiftUI
+import BaseHelpers
 
 /// SwiftUI uses: `KeyboardShortcut`
 
@@ -91,21 +92,16 @@ extension KBShortcut: CustomStringConvertible {
   
   public var description: String {
     
+    let key = self.key.name.uppercased()
+    let modifierLiterals = self.modifiers.summarise(key: \.symbolLiteral, delimiter: nil)
+    let modifierNames = self.modifiers.summarise(key: \.symbolName)
     
-    let modifierResult = self.modifiers.enumerated().reduce(into: "") { partialResult, element in
-      let (index, modifier) = element
-      if index > 0 {
-        partialResult += ", "
-      }
-      partialResult += modifier.symbolLiteral
-    }
-    
-    // Pressed shortcut: KBShortcut(key: Shortcuts.KBShortcut.Key.character("b"), modifiers: [Shortcuts.KBShortcut.Modifier.command], label: nil)
     let result: String = """
     
+    \(modifierLiterals)\(key)
     Shortcut(
-      key: \(self.key.name), 
-      modifiers: \(modifierResult)
+      key: \(key), 
+      modifiers: \(modifierNames)
     )
     """
     

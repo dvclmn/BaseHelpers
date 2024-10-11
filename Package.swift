@@ -85,7 +85,7 @@ let package = Package(
     .target(name: "ImageCompression"),
     .target(name: "TouchInertia"),
     .target(name: "Shaders"),
-    .target(name: "Shortcuts"),
+    .target(name: "Shortcuts", dependencies: ["BaseHelpers"]),
     
     /// Networking
     .target(name: "APIHandler", dependencies: [

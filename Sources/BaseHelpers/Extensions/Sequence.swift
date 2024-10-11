@@ -21,14 +21,16 @@ public extension Sequence where Element: Identifiable {
 public extension Sequence {
   func summarise<T: CustomStringConvertible>(
     key: KeyPath<Element, T>,
-    delimiter: Character = ","
+    delimiter: Character? = ","
   ) -> String {
     return self.map { $0[keyPath: key].description }
       .enumerated()
       .reduce(into: "") { (result, element) in
         let (index, value) = element
         if index > 0 {
-          result += "\(delimiter) "
+          if let delimiter {
+            result += "\(delimiter) "
+          }
         }
         result += value
       }
