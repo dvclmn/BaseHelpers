@@ -9,38 +9,38 @@
 
 import SwiftUI
 
-@MainActor
-public struct Keyboard: Sendable, Equatable {
+/// SwiftUI uses: `KeyboardShortcut`
+
+// MARK: - Main Shortcut model
+public struct KBShortcut: Equatable, Sendable {
+  public let key: KBShortcut.Key
+  public let modifiers: [KBShortcut.Modifier]
+  public let label: KBShortcut.Label?
   
-  public struct Shortcut: Equatable {
-    public let key: Keyboard.Key
-    public let modifiers: [Keyboard.Modifier]
-    public let label: Label?
-    
-    public init(
-      _ key: Keyboard.Key,
-      modifiers: [Keyboard.Modifier] = [],
-      label: Label? = nil
-    ) {
-      self.key = key
-      self.modifiers = modifiers
-      self.label = label
-    }
-    
-    public init(
-      _ key: Keyboard.Key,
-      modifierFlags: NSEvent.ModifierFlags,
-      label: Label? = nil
-    ) {
-      self.key = key
-      self.modifiers = Keyboard.Modifier.from(modifierFlags)
-      self.label = label
-    }
+  public init(
+    _ key: KBShortcut.Key,
+    modifiers: [KBShortcut.Modifier] = [],
+    label: Label? = nil
+  ) {
+    self.key = key
+    self.modifiers = modifiers
+    self.label = label
+  }
+  
+  /// AppKit init
+  public init(
+    _ key: KBShortcut.Key,
+    modifierFlags: NSEvent.ModifierFlags,
+    label: KBShortcut.Label? = nil
+  ) {
+    self.key = key
+    self.modifiers = KBShortcut.Modifier.from(modifierFlags)
+    self.label = label
   }
 }
 
-extension Keyboard.Shortcut {
-  
+
+extension KBShortcut {
   public struct Label: Equatable, Sendable {
     public var title: String
     public var icon: String
@@ -55,14 +55,14 @@ extension Keyboard.Shortcut {
   }
 }
 
-extension Keyboard {
-
-  public enum KeyType {
+public extension KBShortcut {
+  
+  enum KeyType {
     case key
     case modifier
   }
-
-  public protocol ShortcutKey: Equatable {
+  
+  protocol ShortcutKey: Equatable, Sendable {
     
     /// E.g. `Delete` or `Control`
     var name: String { get }
@@ -75,24 +75,37 @@ extension Keyboard {
     
     var type: KeyType { get }
   }
+
+//  public var swiftUIShortcut: KeyboardShortcut {
+//    KeyboardShortcut(KeyEquivalent(Character(self.key)), modifiers: modifiers)
+//  }
+//  
+//  public var appKitModifiers: NSEvent.ModifierFlags {
+//    modifiers.appKitModifiers
+//  }
   
   
-  //  public var description: String {
-  //
-  //    let modifierResult: String = self.modifiers.
-  //
-  //    return "Shortcut(key: \(self.key), modifiers"
-  //  }
-  //
-  //  public var swiftUIShortcut: KeyboardShortcut {
-  //    KeyboardShortcut(KeyEquivalent(Character(key)), modifiers: modifiers.swiftUIModifiers)
-  //  }
-  //
-  //  public var appKitModifiers: NSEvent.ModifierFlags {
-  //    modifiers.appKitModifiers
-  //  }
-  //
+}
+
+extension KBShortcut: CustomStringConvertible {
   
+  public var description: String {
+    
+    let modifierResult: String = self.modifiers.reduce(into: "") { result, element in
+      result += element.name
+    }
+    
+    // Pressed shortcut: KBShortcut(key: Shortcuts.KBShortcut.Key.character("b"), modifiers: [Shortcuts.KBShortcut.Modifier.command], label: nil)
+    let result: String = """
+    
+    Shortcut(
+      key: \(self.key.name), 
+      modifiers: \(modifierResult)
+    )
+    """
+    
+    return result
+  }
 }
 
 
@@ -100,20 +113,20 @@ extension Keyboard {
 
 
 //extension Keyboard {
-//  
+//
 //  public struct Modifiers: OptionSet, Sendable {
 //    public let rawValue: Int
-//    
+//
 //    public init(rawValue: Int) {
 //      self.rawValue = rawValue
 //    }
-//    
+//
 //    public static let command = Modifiers(rawValue: 1 << 0)
 //    public static let option = Modifiers(rawValue: 1 << 1)
 //    public static let control = Modifiers(rawValue: 1 << 2)
 //    public static let shift = Modifiers(rawValue: 1 << 3)
-//    
-//    
+//
+//
 //    var swiftUIModifiers: SwiftUI.EventModifiers {
 //      var modifiers: SwiftUI.EventModifiers = []
 //      if contains(.command) { modifiers.insert(.command) }
@@ -122,7 +135,7 @@ extension Keyboard {
 //      if contains(.shift) { modifiers.insert(.shift) }
 //      return modifiers
 //    }
-//    
+//
 //    var appKitModifiers: NSEvent.ModifierFlags {
 //      var modifiers: NSEvent.ModifierFlags = []
 //      if contains(.command) { modifiers.insert(.command) }
@@ -131,9 +144,9 @@ extension Keyboard {
 //      if contains(.shift) { modifiers.insert(.shift) }
 //      return modifiers
 //    }
-//    
+//
 //  }
-//  
+//
 //}
 
 #endif

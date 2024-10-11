@@ -9,7 +9,7 @@ import SwiftUI
 
 #if canImport(AppKit)
 
-extension Keyboard {
+extension KBShortcut {
   
   public enum Modifier: ShortcutKey {
     
@@ -43,7 +43,7 @@ extension Keyboard {
       }
     }
     
-    public var type: Keyboard.KeyType {
+    public var type: KBShortcut.KeyType {
       .modifier
     }
     

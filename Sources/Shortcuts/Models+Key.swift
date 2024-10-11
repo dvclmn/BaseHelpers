@@ -7,30 +7,12 @@
 
 #if canImport(AppKit)
 
-extension Keyboard {
-  
-  //  public struct Key: ShortcutKey {
-  //
-  //    public let name: String
-  //    public let symbolName: String
-  //    public let symbolLiteral: String
-  //    public let type: Keyboard.KeyType
-  //
-  //    public init(
-  //      name: String,
-  //      symbolName: String,
-  //      symbolLiteral: String,
-  //      type: Keyboard.KeyType
-  //    ) {
-  //      self.name = name
-  //      self.symbolName = symbolName
-  //      self.symbolLiteral = symbolLiteral
-  //      self.type = type
-  //    }
-  //
-  //  }
+extension KBShortcut {
+
+  /// These are the **non-Modifier** keys
   
   public enum Key: ShortcutKey {
+    
     case character(Character)
     case clear
     case delete
@@ -50,7 +32,7 @@ extension Keyboard {
     
     public var name: String {
       switch self {
-        case .character(let character): "\(character)"
+        case .character(let character): "\(character.lowercased())"
         case .clear: "Clear"
         case .delete: "Delete"
         case .deleteForward: "Delete Forward"
@@ -113,7 +95,7 @@ extension Keyboard {
       }
     }
     
-    public var type: Keyboard.KeyType {
+    public var type: KBShortcut.KeyType {
       .key
     }
     
