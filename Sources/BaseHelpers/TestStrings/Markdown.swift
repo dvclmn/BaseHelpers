@@ -11,6 +11,38 @@ public extension TestStrings {
   
   struct Markdown {
     
+    public static let codeBlocks: String = """
+    
+    Some Swift code:
+    
+    ```swift
+    import Shortcuts
+    import Scrolling
+    
+    struct MessageInputView: View {
+    
+    @Environment(\\.store) private var store
+    
+    @State private var metrics: String = ""
+    @State private var isManualMode: Bool = false
+    
+    //  @State private var editorHeight: CGFloat = .zero
+    
+    @Bindable var conversationStore: StoreOf<SingleConversation>
+    
+    let syntaxButtons: [Markdown.Syntax] = [.bold, .italic, .inlineCode]
+    
+    @FocusState var focused: Focus.State.Element?
+    
+    //  @Bindable var conversation: StoreOf<SingleConversation>
+    
+    var body: some View {
+    
+    @Bindable var focus = store.scope(state: \\.focus, action: \\.focus)
+    @Bindable var preferences: StoreOf<Preferences> = store.scope(state: \\.preferences, action: \\.preferences)
+    ```
+    """
+    
     static let twoInlineCode: String = """
   This brief `inline code`, with text contents, lines `advance expanding` the view in the current writing direction.
   
@@ -187,7 +219,7 @@ public extension TestStrings {
         
         I will build a library of `Message` objects, as `[String]`, and can ~~you write~~ me up a *function* that simply selects one of the **paragraphs** (i.e. items in the array), and returns it? Also, we need some ***extra emphasis*** on this text.
         
-        ```
+        ```swift
         let highlightr = Highlightr()
         highlightr?.setTheme(to: "xcode-dark-butts")
         ```

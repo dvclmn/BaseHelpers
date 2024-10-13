@@ -11,7 +11,25 @@ extension KBShortcut {
 
   /// These are the **non-Modifier** keys
   
-  public enum Key: ShortcutKey {
+  public enum Key: ShortcutKey, CaseIterable {
+    static public let allCases: [KBShortcut.Key] = [
+      .character("a"),
+      .clear,
+      .delete,
+      .deleteForward,
+      .upArrow,
+      .downArrow,
+      .leftArrow,
+      .rightArrow,
+      .escape,
+      .home,
+      .end,
+      .pageUp,
+      .pageDown,
+      .`return`,
+      .space,
+      .tab,
+    ]
     
     case character(Character)
     case clear
@@ -74,9 +92,9 @@ extension KBShortcut {
       }
     }
     
-    public var symbolLiteral: String {
+    public var symbolLiteral: Character {
       switch self {
-        case .character(let character): "\(character)"
+        case .character(let character): character
         case .clear: "􀆄"
         case .delete: "􁂈"
         case .deleteForward: "􁂒"
@@ -92,6 +110,16 @@ extension KBShortcut {
         case .`return`: "􀅇"
         case .space: "􁁺"
         case .tab: "􁂎"
+      }
+    }
+    
+    public var alternativeLiteral: Character? {
+      switch self {
+        case .upArrow: "↑"
+        case .downArrow: "↓"
+        case .leftArrow: "←"
+        case .rightArrow: "→"
+        default: nil
       }
     }
     

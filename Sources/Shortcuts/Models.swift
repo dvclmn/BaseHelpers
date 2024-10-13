@@ -63,7 +63,9 @@ public extension KBShortcut {
     case modifier
   }
   
-  protocol ShortcutKey: Equatable, Sendable {
+  protocol ShortcutKey: Equatable, Sendable, Identifiable {
+    
+    var id: String { get }
     
     /// E.g. `Delete` or `Control`
     var name: String { get }
@@ -72,20 +74,14 @@ public extension KBShortcut {
     var symbolName: String { get }
     
     /// E.g. `􁂈` or `􀆍`
-    var symbolLiteral: String { get }
+    var symbolLiteral: Character { get }
     
     var type: KeyType { get }
   }
+}
 
-//  public var swiftUIShortcut: KeyboardShortcut {
-//    KeyboardShortcut(KeyEquivalent(Character(self.key)), modifiers: modifiers)
-//  }
-//  
-//  public var appKitModifiers: NSEvent.ModifierFlags {
-//    modifiers.appKitModifiers
-//  }
-  
-  
+public extension KBShortcut.ShortcutKey {
+  var id: String { symbolName }
 }
 
 extension KBShortcut: CustomStringConvertible {
@@ -110,6 +106,69 @@ extension KBShortcut: CustomStringConvertible {
 }
 
 
+
+struct ShortcutDescriptionsView: View {
+  
+  let modifierList: [KBShortcut.Modifier] = KBShortcut.Modifier.allCases
+  let shortKeyList: [KBShortcut.Key] = KBShortcut.Key.allCases
+  
+  let columns: [GridItem] = Array(
+    repeating: GridItem(
+      .flexible(),
+      spacing: 20
+    ),
+    count: 3
+  )
+  
+  var body: some View {
+    
+    
+    LazyVGrid(columns: columns) {
+      ForEach(modifierList) { modifier in
+        
+        ShortcutPreview(
+          symbolLiteral: modifier.symbolLiteral,
+          name: modifier.name
+        )
+        
+      }
+      ForEach(shortKeyList) { key in
+        ShortcutPreview(
+          symbolLiteral: key.symbolLiteral,
+          name: key.name
+        )
+      }
+    } // END grid
+    .padding(40)
+    .frame(width: 400, height: 700)
+    .background(.black.opacity(0.6))
+    
+  }
+}
+
+extension ShortcutDescriptionsView {
+  
+  @ViewBuilder
+  func ShortcutPreview(
+    symbolLiteral: Character,
+    name: String
+  ) -> some View {
+    
+    VStack(spacing: 20) {
+      Text("\(symbolLiteral)")
+        .font(.title2)
+      Text(name)
+        .foregroundStyle(.secondary)
+    }
+    .frame(width: 110, height: 80)
+  }
+}
+
+#if DEBUG
+#Preview {
+  ShortcutDescriptionsView()
+}
+#endif
 
 
 

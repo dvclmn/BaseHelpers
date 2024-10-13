@@ -11,7 +11,7 @@ import SwiftUI
 
 extension KBShortcut {
   
-  public enum Modifier: ShortcutKey {
+  public enum Modifier: ShortcutKey, CaseIterable {
     
     case shift
     case option
@@ -33,7 +33,7 @@ extension KBShortcut {
       }
     }
     
-    public var symbolLiteral: String {
+    public var symbolLiteral: Character {
       switch self {
         case .shift: "􀆝"
         case .option: "􀆕"
