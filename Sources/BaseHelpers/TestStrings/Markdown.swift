@@ -223,6 +223,10 @@ public extension TestStrings {
         let highlightr = Highlightr()
         highlightr?.setTheme(to: "xcode-dark-butts")
         ```
+        I `think this is something` worth thinking about in the context of all tooling we use. 
+        If I do my job correctly with the IDE, you shouldn't be thinking about much outside of the program you're writing. 
+        The goal is to keep you focused, so you never have to stop and reach for the documentation of the IDE, or Zig itself. Based on what you're doing
+
         
         - I `think this is something` worth thinking about in the context of all tooling we use. 
         - If I do my job correctly with the IDE, you shouldn't be thinking about much outside of the program you're writing. 

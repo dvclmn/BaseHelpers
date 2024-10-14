@@ -29,6 +29,7 @@ let package = Package(
       "GlyphGrid",
       "Scrolling",
       "Selection",
+      "FocusHelper",
     ]),
     
     /// Helpers
@@ -55,6 +56,7 @@ let package = Package(
     
   ],
   dependencies: [
+    .package(url: "https://github.com/pointfreeco/swift-composable-architecture.git", from: "1.15.0"),
     .package(url: "https://github.com/dvclmn/TextCore.git", branch: "main"),
     .package(url: "https://github.com/pointfreeco/swift-dependencies.git", from: "1.4.0"),
     .package(url: "https://github.com/danielsaidi/ScrollKit.git", from: "0.5.1"),
@@ -78,6 +80,9 @@ let package = Package(
     .target(name: "Resizable", dependencies: ["BaseHelpers", "Geometry", "Shortcuts"]),
     .target(name: "Scrolling", dependencies: ["ScrollKit", .product(name: "SmoothGradient", package: "SmoothGradient")]),
     .target(name: "Selection", dependencies: ["BaseHelpers", "Geometry", "Scrolling"]),
+    .target(name: "FocusHelper", dependencies: [
+      .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
+    ]),
     
     /// Helpers
     .target(name: "BaseHelpers"),
