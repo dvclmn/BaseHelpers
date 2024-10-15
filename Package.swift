@@ -29,7 +29,7 @@ let package = Package(
       "GlyphGrid",
       "Scrolling",
       "Selection",
-      "FocusHelper",
+//      "FocusHelper",
     ]),
     
     /// Helpers
@@ -80,13 +80,15 @@ let package = Package(
     .target(name: "Resizable", dependencies: ["BaseHelpers", "Geometry", "Shortcuts"]),
     .target(name: "Scrolling", dependencies: ["ScrollKit", .product(name: "SmoothGradient", package: "SmoothGradient")]),
     .target(name: "Selection", dependencies: ["BaseHelpers", "Geometry", "Scrolling"]),
-    .target(name: "FocusHelper", dependencies: [
-      "BaseHelpers",
-      .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
-    ]),
+//    .target(name: "FocusHelper", dependencies: [
+//      "BaseHelpers",
+//      .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
+//    ]),
     
     /// Helpers
-    .target(name: "BaseHelpers"),
+      .target(name: "BaseHelpers", dependencies: [
+        .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
+      ]),
     .target(name: "HoverAsync"),
     .target(name: "ImageCompression"),
     .target(name: "TouchInertia"),
