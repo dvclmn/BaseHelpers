@@ -81,6 +81,7 @@ let package = Package(
     .target(name: "Scrolling", dependencies: ["ScrollKit", .product(name: "SmoothGradient", package: "SmoothGradient")]),
     .target(name: "Selection", dependencies: ["BaseHelpers", "Geometry", "Scrolling"]),
     .target(name: "FocusHelper", dependencies: [
+      "BaseHelpers",
       .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
     ]),
     

@@ -7,6 +7,11 @@
 
 import SwiftUI
 import ComposableArchitecture
+import BaseHelpers
+
+public protocol FocusableItem: Hashable {
+  var name: String { get }
+}
 
 /// IMPORTANT: For `onAppear` focus to work, make sure this modifier
 /// is applied to a view that is *within* a conditional, that only shows this
@@ -16,15 +21,33 @@ import ComposableArchitecture
 /// the view hierarchy, then `onAppear` will already have been called,
 /// at an earlier/irrelevant time.
 ///
-public struct FocusHelper<FocusableItem: Hashable>: ViewModifier {
+public struct FocusHelper<Item: FocusableItem>: ViewModifier {
   
-  @FocusState var focused: FocusableItem?
-  let focusStore: StoreOf<Focus<FocusableItem>>
+  @FocusState var focused: Item?
+  let focusStore: StoreOf<Focus<Item>>
   
-  let focusElement: FocusableItem
+  /// 
+  let focusElement: Item
   let shouldFocusOnAppear: Bool
   
   let onExitAction: () -> Void
+  
+  public init(
+    focusElement: Item,
+    shouldFocusOnAppear: Bool = false,
+    onExitAction: @escaping () -> Void
+  ) {
+    self.focusElement = focusElement
+    self.shouldFocusOnAppear = shouldFocusOnAppear
+    self.onExitAction = onExitAction
+    
+    let store = Store(initialState: Focus<Item>.State()) {
+      Focus<Item>()
+    }
+    
+    self.focusStore = store
+    
+  }
   
   public func body(content: Content) -> some View {
     
@@ -45,19 +68,21 @@ public struct FocusHelper<FocusableItem: Hashable>: ViewModifier {
         onExitAction()
       }
       .bind($focusStore.focusedElement, to: $focused)
+      .task(id: focusElement) {
+        print("Focused element: \(focusElement.name). Focused @ \(Date.now.friendlyDateAndTime)")
+      }
   }
 }
 
-extension View {
-  func focusHelper<FocusableItem: Hashable>(
+public extension View {
+  func focusHelper<Item: FocusableItem>(
     
-    element: FocusableItem,
+    element: Item,
     shouldFocusOnAppear: Bool = true,
     onExit: @escaping () -> Void = {}
   ) -> some View {
     self.modifier(
       FocusHelper(
-        
         focusElement: element,
         shouldFocusOnAppear: shouldFocusOnAppear,
         onExitAction: onExit
@@ -69,15 +94,15 @@ extension View {
 
 
 @Reducer
-public struct Focus<FocusableItem: Hashable> {
+public struct Focus<Item: FocusableItem> {
   
   @ObservableState
   public struct State: Equatable, Sendable {
     
-    var focusedElement: FocusableItem?
+    var focusedElement: Item?
     
     public init(
-      focusedElement: FocusableItem? = nil
+      focusedElement: Item? = nil
     ) {
       self.focusedElement = focusedElement
     }
@@ -101,5 +126,17 @@ public struct Focus<FocusableItem: Hashable> {
     //    ._printChanges()
   }
   
+}
+
+public extension DependencyValues {
+  var windowDimensions: Focus {
+    get { self[WindowSizeHandler.self] }
+    set { self[WindowSizeHandler.self] = newValue }
+  }
+}
+
+extension WindowSizeHandler: DependencyKey {
+  public static let liveValue = WindowSizeHandler()
+  public static let testValue = WindowSizeHandler()
 }
 
