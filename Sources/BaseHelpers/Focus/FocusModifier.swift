@@ -7,6 +7,10 @@
 
 import SwiftUI
 
+public enum FocusAction {
+  case submit
+  case exit
+}
 
 public protocol FocusableItem: Hashable {
   var name: String { get }
@@ -22,7 +26,7 @@ public protocol FocusableItem: Hashable {
 ///
 public struct FocusHelper<Item: FocusableItem>: ViewModifier {
   
-  public typealias Action = () -> Void
+  public typealias Action = (FocusAction) -> Void
   
   /// This is neccesary local binding State, required by SwiftUI. Which
   /// must then be synced up to TCA via the `.bind()` modifier they supply
@@ -37,21 +41,18 @@ public struct FocusHelper<Item: FocusableItem>: ViewModifier {
   /// (e.g. sidebar renaming field) is being handled by this Modifier instance.
   let focusElement: Item
   let shouldFocusOnAppear: Bool
-  let onSubmit: Action?
-  let onExit: Action?
+  let onAction: Action
   
   public init(
     storeFocus: Binding<Item?>,
     focusElement: Item,
     shouldFocusOnAppear: Bool = false,
-    onSubmit: Action?,
-    onExit: Action?
+    onAction: @escaping Action
   ) {
     self._storeFocus = storeFocus
     self.focusElement = focusElement
     self.shouldFocusOnAppear = shouldFocusOnAppear
-    self.onSubmit = onSubmit
-    self.onExit = onExit
+    self.onAction = onAction
   }
   
   public func body(content: Content) -> some View {
@@ -61,17 +62,10 @@ public struct FocusHelper<Item: FocusableItem>: ViewModifier {
       .focusEffectDisabled()
       .focused($focused, equals: focusElement)
       .onSubmit {
-        if let onSubmit {
-          onSubmit()
-        }
+        onAction(.submit)
       }
       .onExitCommand {
-        if let onExit {
-          onExit()
-        } else {
-          /// Adds a default action, of removing focus altogether, if no action is supplied
-          storeFocus = nil
-        }
+        onAction(.exit)
       }
       .onAppear {
         if shouldFocusOnAppear {
@@ -99,16 +93,14 @@ public extension View {
     /// conforming enum, e.g.: `FocusElement.sidebar(.rename)`
     element: Item,
     shouldFocusOnAppear: Bool = true,
-    onSubmit: @escaping () -> Void = {},
-    onExit: @escaping () -> Void = {}
+    onAction: @escaping FocusHelper.Action = { _ in }
   ) -> some View {
     self.modifier(
       FocusHelper(
         storeFocus: storeFocus,
         focusElement: element,
         shouldFocusOnAppear: shouldFocusOnAppear,
-        onSubmit: onSubmit,
-        onExit: onExit
+        onAction: onAction
       )
     )
   }
