@@ -14,7 +14,15 @@ public protocol IdentifiedElement: Identifiable, Equatable, Sendable {
   init(name: String, grainientSeed: Int?)
   
   var id: UUID { get }
-  var name: String { get }
+  var name: String { get set }
+  var grainientSeed: Int? { get set }
+  var dateDeleted: Date? { get set }
+}
+
+public extension IdentifiedElement {
+  var isDeleted: Bool {
+    dateDeleted != nil
+  }
 }
 
 
