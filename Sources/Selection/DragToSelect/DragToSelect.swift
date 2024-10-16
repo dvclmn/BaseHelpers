@@ -19,14 +19,16 @@ where Data: RandomAccessCollection,
       Data.Index == Int,
       Content: View {
   
+  /// This should allow use of `.disabled(_:)` to control whether selectability is enabled
+  @Environment(\.isEnabled) private var isEnabled
+  
   public typealias Output = (_ item: Data.Element, _ isSelected: Bool, _ position: SelectionPosition?) -> Content
   
-  //    @Environment(\.modifierKeys) private var modifierKeys
+  public typealias SelectedIDs = Set<Data.Element.ID>
+  
   
   let items: Data
-  @Binding var selectedItemIDs: Set<Data.Element.ID>
-  let isSelectionEnabled: Bool
-  let verticalSpacing: CGFloat
+  @Binding var selectedItemIDs: SelectedIDs
   let clipProofPadding: CGFloat
   let accentColour: Color
   let content: Output
@@ -40,21 +42,17 @@ where Data: RandomAccessCollection,
   @State private var geometrySize: CGSize = .zero
   @State private var lastDragLocation: CGPoint?
   
-  @State private var initialSelection = Set<Data.Element.ID>()
+  @State private var initialSelection = SelectedIDs()
   
   public init(
     items: Data,
-    selectedItemIDs: Binding<Set<Data.Element.ID>>,
-    isSelectionEnabled: Bool = true,
-    verticalSpacing: CGFloat = 0,
+    selectedItemIDs: Binding<SelectedIDs>,
     clipProofPadding: CGFloat = 2,
     accentColour: Color = .blue,
     @ViewBuilder content: @escaping Output
   ) {
     self.items = items
     self._selectedItemIDs = selectedItemIDs
-    self.isSelectionEnabled = isSelectionEnabled
-    self.verticalSpacing = verticalSpacing
     self.clipProofPadding = clipProofPadding
     self.accentColour = accentColour
     self.content = content
@@ -62,7 +60,11 @@ where Data: RandomAccessCollection,
   
   public var body: some View {
     
-    VStack(alignment: .leading, spacing: verticalSpacing) {
+    /// Spacing is set to zero here, to prevent 'dead zones' between items,
+    /// where clicking does nothing. Visual padding can be added outside
+    /// this package as desired.
+    ///
+    VStack(alignment: .leading, spacing: 0) {
       ForEach(Array(items.enumerated()), id: \.element.id) { index, item in
         
         let isSelected = selectedItemIDs.contains(item.id)
@@ -81,19 +83,19 @@ where Data: RandomAccessCollection,
       }
       Spacer()
     } // END interior vstack
-    //    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
     
-    /// > Note
+    /// > NOTE
     /// If ugly clipping is occuring around this view, that's likely because
     /// of this scrollview. Add some padding to clear the clipped elements
     /// away from the very edges, if possible.
     ///
+    /// IIRC, an example of the clipping was a focusEffect border being cut off.
+    ///
     .scrollWithOffset(maskMode: .mask, edgePadding: 4, showsIndicators: false)
-    //    .scrollWithOffset(maskMode: .overlay, isClipDisabled: true)
+
     .contentShape(Rectangle())
     .coordinateSpace(name: "listContainer")
     .gesture(dragGesture)
-    //        .highPriorityGesture(dragGesture)
     .onPreferenceChange(ItemFramePreferenceKey<Data.Element.ID>.self) { frames in
       self.itemFrames = frames
     }
@@ -166,7 +168,7 @@ public extension DragToSelect {
   private var dragGesture: some Gesture {
     DragGesture(minimumDistance: 6)
       .onChanged { value in
-        if isSelectionEnabled {
+        if isEnabled {
           if !isDragging {
             initialSelection = selectedItemIDs
           }
@@ -179,7 +181,7 @@ public extension DragToSelect {
         }
       }
       .onEnded { _ in
-        if isSelectionEnabled {
+        if isEnabled {
           isDragging = false
           selectionRect = .zero
           initialSelection = []
@@ -189,6 +191,7 @@ public extension DragToSelect {
   
 }
 
+// TODO: Incorporate this as additional functionality in the Geometry package
 struct CaptureItemFrame<ID: Hashable>: ViewModifier {
   let id: ID
   

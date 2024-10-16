@@ -8,26 +8,40 @@
 import ComposableArchitecture
 import Foundation
 
-public protocol IdentifiedElement: Identifiable {
-  var name: String { get }
-}
-
 @Reducer
 public struct FilterSorter<Element: IdentifiedElement> {
   
+  public init() {}
+  
+  public typealias Elements = IdentifiedArrayOf<Element>
+  public typealias Sorting = [SortDescriptor<Element>]
+  public typealias Filtering = (Element) -> Bool
+  
   @ObservableState
   public struct State {
-    var originalElements: IdentifiedArrayOf<Element>
-    var filteredElements: IdentifiedArrayOf<Element>
-    var searchText: String = ""
-    var sortDescriptors: [SortDescriptor<Element>] = []
-    var filterPredicate: ((Element) -> Bool)?
+    public var originalElements: Elements
+    public var filteredElements: Elements = []
+    public var searchText: String
+    public var sortDescriptors: Sorting
+    public var filterPredicate: Filtering?
+    
+    public init(
+      elements: Elements,
+      searchText: String = "",
+      sortDescriptors: Sorting = [],
+      filterPredicate: Filtering? = nil
+    ) {
+      self.originalElements = elements
+      self.searchText = searchText
+      self.sortDescriptors = sortDescriptors
+      self.filterPredicate = filterPredicate
+    }
   }
   
   public enum Action {
     case setSearchText(String)
-    case setSortDescriptors([SortDescriptor<Element>])
-    case setFilterPredicate((Element) -> Bool)
+    case setSortDescriptors(Sorting)
+    case setFilterPredicate(Filtering)
     case applyFilterAndSort
   }
   
