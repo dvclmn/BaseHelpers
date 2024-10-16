@@ -74,14 +74,14 @@ where Data: RandomAccessCollection,
           isPreviousSelected: { selectedItemIDs.contains($0) },
           isNextSelected: { selectedItemIDs.contains($0) }
         )
-
+        
         content(item, isSelected, position)
           .padding(clipProofPadding)
           .modifier(CaptureItemFrame(id: item.id))
       }
       Spacer()
     } // END interior vstack
-//    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+    //    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
     
     /// > Note
     /// If ugly clipping is occuring around this view, that's likely because
@@ -89,7 +89,7 @@ where Data: RandomAccessCollection,
     /// away from the very edges, if possible.
     ///
     .scrollWithOffset(maskMode: .mask, edgePadding: 4, showsIndicators: false)
-//    .scrollWithOffset(maskMode: .overlay, isClipDisabled: true)
+    //    .scrollWithOffset(maskMode: .overlay, isClipDisabled: true)
     .contentShape(Rectangle())
     .coordinateSpace(name: "listContainer")
     .gesture(dragGesture)
@@ -137,8 +137,8 @@ public extension DragToSelect {
     let threshold: CGFloat = 1
     
     let selectionFilter = itemFrames.filter { item, frame in
-
-      frame.insetBy(dx: -threshold, dy: -threshold).intersects(selectionRect)      
+      
+      frame.insetBy(dx: -threshold, dy: -threshold).intersects(selectionRect)
       
     }
     
