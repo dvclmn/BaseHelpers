@@ -48,7 +48,7 @@ public struct StoreKey: EnvironmentKey {
   public static let defaultValue: AnyStoreProtocol? = nil
 }
 
-// Extend EnvironmentValues to access our store
+
 public extension EnvironmentValues {
   var anyStore: AnyStoreProtocol? {
     get { self[StoreKey.self] }
@@ -57,22 +57,22 @@ public extension EnvironmentValues {
 }
 
 // Create a property wrapper to easily access typed stores from the environment
-@propertyWrapper
-public struct StoreEnvironment<R: Reducer> {
-  @Environment(\.anyStore) private var anyStore
-  
-  public var wrappedValue: StoreOf<R> {
-//    guard let store = anyStore as? StoreOf<R> else {
-//      fatalError("Store of type \(R.self) not found in environment")
-//    }
-    return StoreOf<R>
-  }
-  
-  public init() {}
-}
+//@propertyWrapper
+//public struct StoreEnvironment<R: Reducer> {
+//  @Environment(\.anyStore) private var anyStore
+//  
+//  public var wrappedValue: StoreOf<R> {
+////    guard let store = anyStore as? StoreOf<R> else {
+////      fatalError("Store of type \(R.self) not found in environment")
+////    }
+//    return StoreOf<R>
+//  }
+//  
+//  public init() {}
+//}
 
 // View modifier to inject stores into the environment
-public struct StoreModifier<R: Reducer>: ViewModifier {
+public struct StoreModifier<R: Reducer>: ViewModifier where R.State: ObservableState {
   let store: StoreOf<R>
   
   public func body(content: Content) -> some View {
@@ -82,7 +82,7 @@ public struct StoreModifier<R: Reducer>: ViewModifier {
 
 // Convenient View extension
 public extension View {
-  func withStore<R: Reducer>(_ store: StoreOf<R>) -> some View {
+  func withStore<R: Reducer>(_ store: StoreOf<R>) -> some View where R.State: ObservableState {
     modifier(StoreModifier<R>(store: store))
   }
 }
