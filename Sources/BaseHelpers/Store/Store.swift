@@ -9,34 +9,55 @@
 import ComposableArchitecture
 import SwiftUI
 
-public struct StoreTypeID<State, Action>: Hashable {
-  public static func == (lhs: StoreTypeID<State, Action>, rhs: StoreTypeID<State, Action>) -> Bool {
-    true // Same types will always be equal
+public struct ReducerTypeID<R: Reducer>: Hashable {
+  public static func == (lhs: ReducerTypeID<R>, rhs: ReducerTypeID<R>) -> Bool {
+    true
   }
-  
-  public init() {}
   
   public func hash(into hasher: inout Hasher) {
-    // Hash the type names for consistency
-    hasher.combine(String(describing: State.self))
-    hasher.combine(String(describing: Action.self))
+    hasher.combine(String(describing: R.self))
   }
 }
 
-public protocol AnyReducerProtocol: Reducer where State: ObservableState {
-//  associatedtype Body = ReducerOf<Self>
-  
-//  var body: Body { get }
-  
-  func reduce(into state: inout State, action: Action) -> Effect<Action>
+
+
+//
+//
+//public struct StoreTypeID<State, Action>: Hashable {
+//  public static func == (lhs: StoreTypeID<State, Action>, rhs: StoreTypeID<State, Action>) -> Bool {
+//    true // Same types will always be equal
+//  }
+//  
+//  public init() {}
+//  
+//  public func hash(into hasher: inout Hasher) {
+//    // Hash the type names for consistency
+//    hasher.combine(String(describing: State.self))
+//    hasher.combine(String(describing: Action.self))
+//  }
+//}
+
+//public protocol AnyReducerProtocol: Reducer where State: ObservableState {
+////  associatedtype Body = ReducerOf<Self>
+//  
+////  var body: Body { get }
+//  
+//  func reduce(into state: inout State, action: Action) -> Effect<Action>
+//}
+//
+//// Make Reducer conform to our protocol
+//extension Reducer where Self: AnyReducerProtocol {
+//  public var body: some ReducerOf<Self> {
+//    self
+//  }
+//}
+
+
+// Environment key that works with any Reducer
+struct ReducerStoreKey<R: Reducer>: EnvironmentKey {
+  static var defaultValue: StoreOf<R>? { nil }
 }
 
-// Make Reducer conform to our protocol
-extension Reducer where Self: AnyReducerProtocol {
-  public var body: some ReducerOf<Self> {
-    self
-  }
-}
 
 // Type-erasing wrapper for reducers
 @dynamicMemberLookup
@@ -62,44 +83,45 @@ public struct StoreKey<State, Action>: EnvironmentKey {
   public static var defaultValue: StoreOf<AnyReducer<State, Action>>? { nil }
 }
 
-
 public extension EnvironmentValues {
-  subscript<State, Action>(storeID: StoreTypeID<State, Action>) -> StoreOf<AnyReducer<State, Action>>? {
-    get { self[StoreKey<State, Action>.self] }
-    set { self[StoreKey<State, Action>.self] = newValue }
+  subscript<R: Reducer>(reducerID: ReducerTypeID<R>) -> StoreOf<R>? {
+    get { self[ReducerStoreKey<R>.self] }
+    set { self[ReducerStoreKey<R>.self] = newValue }
   }
 }
 
-@propertyWrapper
-public struct StoreEnvironment<R: Reducer> {
-  @Environment private var store: StoreOf<AnyReducer<R.State, R.Action>>?
-  
-  public init() {
-    self._store = Environment(\.[StoreTypeID<R.State, R.Action>()])
-  }
-  
-  public var wrappedValue: StoreOf<R> {
-    guard let store = store else {
-      fatalError("Store for reducer of type \(R.self) not found in environment")
-    }
-    return store
-  }
-}
+//@propertyWrapper
+//public struct ReducerStore<R: Reducer> {
+//  @Environment var store: StoreOf<R>?
+//  
+//  public init() {
+//    self._store = Environment(\.[ReducerTypeID<R>()])
+//  }
+//  
+//  public var wrappedValue: StoreOf<R> {
+//    guard let store = store else {
+//      fatalError("Store for reducer type \(R.self) not found in environment")
+//    }
+//    return store
+//  }
+//}
 
-public struct StoreModifier<R: Reducer>: ViewModifier {
+public struct ReducerStoreModifier<R: Reducer>: ViewModifier {
   public let store: StoreOf<R>
   
+  public init(store: StoreOf<R>) {
+    self.store = store
+  }
+  
   public func body(content: Content) -> some View {
-    content.environment(
-      \.[StoreTypeID<R.State, R.Action>()],
-       store
-    )
+    content.environment(\.[ReducerTypeID<R>()], store)
   }
 }
 
+// Extension that uses type inference from the Reducer
 public extension View {
-  func withStore<R: Reducer>(_ store: StoreOf<R>) -> some View {
-    modifier(StoreModifier<R>(store: store))
+  func withReducerStore<R: Reducer>(_ type: R.Type, store: StoreOf<R>) -> some View {
+    modifier(ReducerStoreModifier<R>(store: store))
   }
 }
 
