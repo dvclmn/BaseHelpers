@@ -44,8 +44,6 @@ public extension StreamedResponseMessage {
   var input_tokens: Int? { nil }
 }
 
-
-@MainActor
 public struct APIHandler: Sendable {
   
   public static func encodeBody<T: Encodable>(_ body: T) -> Data? {

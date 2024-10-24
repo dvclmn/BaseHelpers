@@ -11,7 +11,6 @@ import SwiftUI
 
 #if os(macOS)
 
-
 public protocol ModifierKeyCollection {
   func holding(_ modifiers: NSEvent.ModifierFlags...) -> Bool
   func holding(_ modifiers: [NSEvent.ModifierFlags]) -> Bool

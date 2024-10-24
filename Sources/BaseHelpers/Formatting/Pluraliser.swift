@@ -12,17 +12,16 @@ public func pluralise(
   _ word: String,
   includeCount: Bool = false
 ) -> String {
-  if count > 1 {
+  
+  let wordResult: String = includeCount ? "\(count.string) " + word : word
+  
+  if count == 1 {
     
-    if includeCount {
-      return "\(count.string) " + word + "s"
-      
-    } else {
-      return word + "s"
-    }
+    return wordResult
     
   } else {
-    return word
+    
+    return wordResult + "s"
   }
 }
 

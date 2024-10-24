@@ -28,13 +28,13 @@ public extension TestStrings {
     
     //  @State private var editorHeight: CGFloat = .zero
     
-    @Bindable var conversationStore: StoreOf<SingleConversation>
+    @Bindable var conversationStore: StoreOf<SingleShrimConversation>
     
     let syntaxButtons: [Markdown.Syntax] = [.bold, .italic, .inlineCode]
     
     @FocusState var focused: Focus.State.Element?
     
-    //  @Bindable var conversation: StoreOf<SingleConversation>
+    //  @Bindable var conversation: StoreOf<SingleChumeConversation>
     
     var body: some View {
     
