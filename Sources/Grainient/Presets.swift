@@ -71,6 +71,8 @@ public extension GrainientPreset {
   static let moss         = GrainientPreset(seed: 903099, name: "Moss", version: .v3)
   static let trippy         = GrainientPreset(seed: 725389, name: "Trippy", version: .v3)
   static let jungleFlower         = GrainientPreset(seed: 31251, name: "Jungle Flower", version: .v3)
+  static let sunset02         = GrainientPreset(seed: 67024, name: "Sunset 02", version: .v3)
+  static let greenVoid         = GrainientPreset(seed: 29189, name: "Green Void", version: .v3)
   
   
   

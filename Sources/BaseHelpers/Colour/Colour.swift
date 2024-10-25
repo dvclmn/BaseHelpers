@@ -126,14 +126,8 @@ public struct TrafficLightsModifier: ViewModifier {
     }
 }
 public extension View {
-    func trafficLights(
-        
-    ) -> some View {
-        self.modifier(
-            TrafficLightsModifier(
-                
-            )
-        )
+    func trafficLightsPreview() -> some View {
+        self.modifier(TrafficLightsModifier())
     }
 }
 
