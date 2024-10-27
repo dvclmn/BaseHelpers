@@ -105,7 +105,7 @@ public struct Resizable: ViewModifier {
   
   @DynamicKeyAppStorage(key: "defaultKey", defaultValue: .zero) var savedLength: Double
   
-  let grabArea: Double = 34
+  let grabArea: Double = 24
   private let unfocusedLengthReduction = 0.6
   let animation = Animation.easeOut(duration: 0.2)
   let grabAreaOuterPercentage = 0.3

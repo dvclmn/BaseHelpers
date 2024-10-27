@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import ComposableArchitecture
 
 public enum FocusAction {
   case submit
@@ -15,6 +16,22 @@ public enum FocusAction {
 public protocol FocusableItem: Hashable {
   var name: String { get }
 }
+
+//public struct FocusStoreKey: @preconcurrency EnvironmentKey {
+//  @MainActor
+//  public static let defaultValue = Store(initialState: SidebarHandler.State()) {
+//    SidebarHandler()
+//  }
+//  
+//}
+//
+//public extension EnvironmentValues {
+//  var sidebar: StoreOf<SidebarHandler> {
+//    get { self[SidebarStoreKey.self] }
+//    set { self[SidebarStoreKey.self] = newValue }
+//  }
+//}
+
 
 /// IMPORTANT: For `onAppear` focus to work, make sure this modifier
 /// is applied to a view that is *within* a conditional, that only shows this
@@ -59,14 +76,14 @@ public struct FocusHelper<Item: FocusableItem>: ViewModifier {
     
     content
       .focusable()
-      .focusEffectDisabled()
+//      .focusEffectDisabled()
       .focused($focused, equals: focusElement)
-      .onSubmit {
-        onAction(.submit)
-      }
-      .onExitCommand {
-        onAction(.exit)
-      }
+//      .onSubmit {
+//        onAction(.submit)
+//      }
+//      .onExitCommand {
+//        onAction(.exit)
+//      }
       .onAppear {
         if shouldFocusOnAppear {
           DispatchQueue.main.async {

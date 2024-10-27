@@ -157,7 +157,7 @@ public struct GrainientConfiguration {
   
   public init(
     version: GrainientVersion = .v3,
-    grainOpacity: CGFloat = 0.4,
+    grainOpacity: CGFloat = 0.3,
     blur: CGFloat = 50,
     opacity: CGFloat = 1.0,
     rounding: CGFloat = 0
