@@ -5,6 +5,8 @@
 //  Created by Dave Coleman on 9/10/2024.
 //
 
+#if canImport(AppKit)
+
 import AppKit
 
 public extension NSLineBreakMode {
@@ -22,3 +24,5 @@ public extension NSLineBreakMode {
     }
   }
 }
+
+#endif

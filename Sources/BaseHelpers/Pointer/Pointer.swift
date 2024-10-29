@@ -5,6 +5,8 @@
 //  Created by Dave Coleman on 19/9/2024.
 //
 
+#if canImport(AppKit)
+
 import SwiftUI
 
 @available(macOS 15, *)
@@ -31,3 +33,5 @@ public extension View {
     }
   }
 }
+
+#endif

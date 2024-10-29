@@ -17,21 +17,6 @@ public protocol FocusableItem: Hashable {
   var name: String { get }
 }
 
-//public struct FocusStoreKey: @preconcurrency EnvironmentKey {
-//  @MainActor
-//  public static let defaultValue = Store(initialState: SidebarHandler.State()) {
-//    SidebarHandler()
-//  }
-//  
-//}
-//
-//public extension EnvironmentValues {
-//  var sidebar: StoreOf<SidebarHandler> {
-//    get { self[SidebarStoreKey.self] }
-//    set { self[SidebarStoreKey.self] = newValue }
-//  }
-//}
-
 
 /// IMPORTANT: For `onAppear` focus to work, make sure this modifier
 /// is applied to a view that is *within* a conditional, that only shows this
@@ -41,33 +26,40 @@ public protocol FocusableItem: Hashable {
 /// the view hierarchy, then `onAppear` will already have been called,
 /// at an earlier/irrelevant time.
 ///
-public struct FocusHelper<Item: FocusableItem>: ViewModifier {
+public struct TCAFocusHelper: ViewModifier {
   
   public typealias Action = (FocusAction) -> Void
+  public typealias FocusItem = AnyHashable
   
   /// This is neccesary local binding State, required by SwiftUI. Which
   /// must then be synced up to TCA via the `.bind()` modifier they supply
-  @FocusState var focused: Item?
+  @FocusState private var viewFocus: FocusItem?
+  
+  /// This is here in case there's already a `@FocusState` established
+  /// in the view, and the caller just wants the convenience of the default
+  /// `onExit` behaviours, `focusable` already defined, etc.
+  var viewFocusBinding: FocusState<FocusItem?>.Binding?
   
   /// Don't know if this will work. But this should bind with the focus
   /// property held by the TCA Reducer, in turn held by the app using
   /// this Modifier.
-  @Binding var storeFocus: Item?
+  @Binding var storeFocus: FocusItem?
   
   /// And this is provided by the View, to specify which focusable item
   /// (e.g. sidebar renaming field) is being handled by this Modifier instance.
-  let focusElement: Item
+//  let focusElement: Item
   let shouldFocusOnAppear: Bool
-  let onAction: Action
+  let onAction: Action?
   
   public init(
-    storeFocus: Binding<Item?>,
-    focusElement: Item,
+    storeFocus: Binding<FocusItem?> = .constant(nil),
+    viewFocusBinding: FocusState<FocusItem?>.Binding? = nil,
+//    focusElement: Item,
     shouldFocusOnAppear: Bool = false,
     onAction: @escaping Action
   ) {
     self._storeFocus = storeFocus
-    self.focusElement = focusElement
+//    self.focusElement = focusElement
     self.shouldFocusOnAppear = shouldFocusOnAppear
     self.onAction = onAction
   }
@@ -77,26 +69,40 @@ public struct FocusHelper<Item: FocusableItem>: ViewModifier {
     content
       .focusable()
 //      .focusEffectDisabled()
-      .focused($focused, equals: focusElement)
-//      .onSubmit {
-//        onAction(.submit)
-//      }
-//      .onExitCommand {
-//        onAction(.exit)
-//      }
+      .focused($viewFocus, equals: storeFocus)
+      .onSubmit {
+        if let onAction {
+          onAction(.submit)
+        }
+      }
+#if canImport(AppKit)
+      .onExitCommand {
+        if let onAction {
+          onAction(.exit)
+        } else {
+          viewFocus = nil
+        }
+      }
+    #endif
       .onAppear {
         if shouldFocusOnAppear {
           DispatchQueue.main.async {
-            focused = focusElement
+            viewFocus = storeFocus
           }
         }
       }
-      .task(id: focusElement) {
-        print("Focused element: \(focusElement.name). Focused @ \(Date.now.friendlyDateAndTime)")
-      }
-      .bind($storeFocus, to: $focused)
+//      .task(id: focusElement) {
+//        print("Focused element: \(focusElement.name). Focused @ \(Date.now.friendlyDateAndTime)")
+//      }
+      .bind($storeFocus, to: $viewFocus)
   }
 }
+
+
+
+/// There should be another version for non-TCA
+
+
 
 public extension View {
   
@@ -104,18 +110,18 @@ public extension View {
   /// behaviours, such as enabling `.focusable`, focusing `onAppear`,
   /// `onExitCommand` (pressing Esc), disabling the focus effect, etc.
   ///
-  func focusHelper<Item: FocusableItem>(
-    storeFocus: Binding<Item?>,
+  func focusHelper(
+    storeFocus: Binding<AnyHashable?>,
     /// Provide the modifier with a single Item, from a `FocusableItem`
     /// conforming enum, e.g.: `FocusElement.sidebar(.rename)`
-    element: Item,
+//    element: Item,
     shouldFocusOnAppear: Bool = true,
-    onAction: @escaping FocusHelper.Action = { _ in }
+    onAction: @escaping TCAFocusHelper.Action = { _ in }
   ) -> some View {
     self.modifier(
-      FocusHelper(
+      TCAFocusHelper(
         storeFocus: storeFocus,
-        focusElement: element,
+//        focusElement: element,
         shouldFocusOnAppear: shouldFocusOnAppear,
         onAction: onAction
       )
@@ -123,3 +129,65 @@ public extension View {
   }
 }
 
+
+//
+//
+//
+//
+//public struct FocusHelper: ViewModifier {
+//  
+//  public typealias Action = (FocusAction) -> Void
+//
+//  /// This is here in case there's already a `@FocusState` established
+//  /// in the view, and the caller just wants the convenience of the default
+//  /// `onExit` behaviours, `focusable` already defined, etc.
+//  var focused: FocusState<AnyHashable?>.Binding
+//
+//  /// And this is provided by the View, to specify which focusable item
+//  /// (e.g. sidebar renaming field) is being handled by this Modifier instance.
+//  //  let focusElement: Item
+//  let shouldFocusOnAppear: Bool
+//  let onAction: Action?
+//  
+//  public init(
+//    _ focused: FocusState<AnyHashable?>.Binding,
+//    shouldFocusOnAppear: Bool = false,
+//    onAction: @escaping Action
+//  ) {
+//    self.focused = focused
+//    //    self.focusElement = focusElement
+//    self.shouldFocusOnAppear = shouldFocusOnAppear
+//    self.onAction = onAction
+//  }
+//  
+//  public func body(content: Content) -> some View {
+//    
+//    content
+//      .focusable()
+//    //      .focusEffectDisabled()
+//      .focused($viewFocus, equals: storeFocus)
+//      .onSubmit {
+//        if let onAction {
+//          onAction(.submit)
+//        }
+//      }
+//      .onExitCommand {
+//        if let onAction {
+//          onAction(.exit)
+//        } else {
+//          viewFocus = nil
+//        }
+//      }
+//      .onAppear {
+//        if shouldFocusOnAppear {
+//          DispatchQueue.main.async {
+//            viewFocus = storeFocus
+//          }
+//        }
+//      }
+//    //      .task(id: focusElement) {
+//    //        print("Focused element: \(focusElement.name). Focused @ \(Date.now.friendlyDateAndTime)")
+//    //      }
+//      .bind($storeFocus, to: $viewFocus)
+//  }
+//}

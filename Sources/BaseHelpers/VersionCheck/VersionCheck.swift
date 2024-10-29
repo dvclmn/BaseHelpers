@@ -64,46 +64,46 @@ public enum OSVersion {
 //}
 
 
-public struct PointerModifier: ViewModifier{
-  
-  public enum Style {
-    case standard
-    case grabActive
-    case zoomIn
-    case zoomOut
-  }
-  
-  var style: PointerModifier.Style
-  
-  public func body(content: Content) -> some View {
-    
-    if #available(macOS 15.0, *){
-      
-      switch style {
-        case .standard:
-          content.pointerStyle(.default)
-          
-        case .grabActive:
-          content.pointerStyle(.grabActive)
-          
-        case .zoomIn:
-          content.pointerStyle(.zoomIn)
-          
-        case .zoomOut:
-          content.pointerStyle(.zoomOut)
-      }
-      
-    } else {
-      content
-    }
-  }
-}
-
-public extension View{
-  func customPointer(_ style: PointerModifier.Style) -> some View{
-    modifier(PointerModifier(style: style))
-  }
-}
+//public struct PointerModifier: ViewModifier{
+//  
+//  public enum Style {
+//    case standard
+//    case grabActive
+//    case zoomIn
+//    case zoomOut
+//  }
+//  
+//  var style: PointerModifier.Style
+//  
+//  public func body(content: Content) -> some View {
+//    
+//    if #available(macOS 15.0, *){
+//      
+//      switch style {
+//        case .standard:
+//          content.pointerStyle(.default)
+//          
+//        case .grabActive:
+//          content.pointerStyle(.grabActive)
+//          
+//        case .zoomIn:
+//          content.pointerStyle(.zoomIn)
+//          
+//        case .zoomOut:
+//          content.pointerStyle(.zoomOut)
+//      }
+//      
+//    } else {
+//      content
+//    }
+//  }
+//}
+//
+//public extension View{
+//  func customPointer(_ style: PointerModifier.Style) -> some View{
+//    modifier(PointerModifier(style: style))
+//  }
+//}
 
 //public extension View {
 //  /// Applies the given transform if the given condition evaluates to `true`.

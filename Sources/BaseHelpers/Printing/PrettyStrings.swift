@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import AppKit
 
 public extension Dictionary {
   var prettyPrinted: String {

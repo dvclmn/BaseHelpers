@@ -37,12 +37,17 @@ import SwiftUI
 ///     }
 /// }
 
+#if canImport(AppKit)
+
+import AppKit
 
 public extension Color {
   var nsColour: NSColor {
     NSColor(self)
   }
 }
+
+#endif
 
 public extension Color {
   

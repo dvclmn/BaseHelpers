@@ -13,7 +13,7 @@ public extension BinaryFloatingPoint {
   var wholeNumber: String {
     return toDecimalPlace(self, to: 0)
   }
-  func toDecimal(_ place: Int) -> String {
+  func toDecimal(_ place: Int = 0) -> String {
     return toDecimalPlace(self, to: place)
   }
   private func toDecimalPlace<T: FloatingPoint>(_ value: T, to decimalPlace: Int) -> String {
