@@ -18,9 +18,14 @@ public enum GradientType: Codable {
 public struct GrainientSettings {
   
   public var gradientType: GradientType
+  
+  /// The angle in degrees for Linear Gradients
   public var angle: Double
-  public var startSize: Double
-  public var endSize: Double
+  
+  /// Applies only to Radial Gradients
+  public var startRadius: Double
+  public var endRadius: Double
+  
   public var originX: Double
   public var originY: Double
   public var stops: [Gradient.Stop]
@@ -28,7 +33,6 @@ public struct GrainientSettings {
   
   public static func generateGradientSeed() -> Int {
     let randomSeed = Int.random(in: 10000...99999)
-//    print("1 seed: \(randomSeed)")
     return randomSeed
   }
   
@@ -39,8 +43,6 @@ public struct GrainientSettings {
     viewSize: CGSize,
     numberOfColours: Int = 3
   ) -> GrainientSettings {
-    
-    //        print("Let's generate a gradient, with seed \(seed).")
     
     /// Create a seeded random source with the extracted randomSeed
     let randomSource = GKMersenneTwisterRandomSource(seed: UInt64(seed))
@@ -55,10 +57,12 @@ public struct GrainientSettings {
     let sizeMultiplierRange = 1.5 - 0.2
     let sizeMultiplier = randomDouble() * sizeMultiplierRange + 0.2
     
-    let startSize = minDimension * sizeMultiplier
-    let endSizeMultiplierRange = 1.5 - 0.5
-    let endSizeMultiplier = randomDouble() * endSizeMultiplierRange + 0.5
-    let endSize = startSize * endSizeMultiplier
+    let startRadius = minDimension * sizeMultiplier
+    let endRadiusMultiplierRange = 1.5 - 0.5
+    let endRadiusMultiplier = randomDouble() * endRadiusMultiplierRange + 0.5
+    
+    let endRadius = max(startRadius * endRadiusMultiplier, startRadius * 1.1)
+//    let endRadius = startRadius * endRadiusMultiplier
     
     var swatchList: [Swatch] = []
     for _ in 1...numberOfColours {
@@ -67,6 +71,7 @@ public struct GrainientSettings {
       } else {
         // Handle the case where no colour was returned, e.g., add a default color or skip
         print("No valid colour was picked; skipping this slot.")
+        break
       }
     }
     
@@ -74,13 +79,14 @@ public struct GrainientSettings {
       
       let location = CGFloat(index) / CGFloat(numberOfColours - 1)
       return Gradient.Stop(color: swatch.colour, location: location)
+      
     }.sorted(by: { $0.location < $1.location })
     
     return GrainientSettings(
       gradientType: gradientType,
       angle: angle,
-      startSize: startSize,
-      endSize: endSize,
+      startRadius: startRadius,
+      endRadius: endRadius,
       originX: originX,
       originY: originY,
       stops: stops,

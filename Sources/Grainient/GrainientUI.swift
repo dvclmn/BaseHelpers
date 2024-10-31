@@ -10,11 +10,9 @@ import SwiftUI
 import BaseStyles
 
 
-
 // MARK: - Grain overlay
 public struct GrainientModifier: ViewModifier {
   
-//  var style: Grainient?
   var seed: Int?
   
   var config: GrainientConfiguration
@@ -52,28 +50,30 @@ extension GrainientModifier {
         viewSize: viewSize
       )
       
-      let gradient = Gradient(stops: grainientSettings.stops.map { Gradient.Stop(color: $0.color, location: $0.location) })
+      let gradient = Gradient(stops: grainientSettings.stops)
       
-      let angle: Angle = Angle(degrees: grainientSettings.angle)
+      let angle = Angle(degrees: grainientSettings.angle)
       
       Group {
-        if grainientSettings.gradientType == .radial {
-          RadialGradient(
-            gradient: gradient,
-            center: UnitPoint(x: grainientSettings.originX, y: grainientSettings.originY),
-            startRadius: grainientSettings.startSize,
-            endRadius: grainientSettings.endSize
-          )
-          .frame(width: geometry.size.width, height: geometry.size.height)
-        } else {
-          LinearGradient(
-            gradient: gradient,
-            startPoint: UnitPoint(x: 0, y: 0),
-            endPoint: UnitPoint(x: cos(angle.radians), y: sin(angle.radians))
-          )
-          .frame(width: geometry.size.width, height: geometry.size.height)
-        }
-      }
+        switch grainientSettings.gradientType {
+          case .linear:
+            LinearGradient(
+              gradient: gradient,
+              startPoint: UnitPoint(x: 0, y: 0),
+              endPoint: UnitPoint(x: cos(angle.radians), y: sin(angle.radians))
+            )
+            
+          case .radial:
+            RadialGradient(
+              gradient: gradient,
+              center: UnitPoint(x: grainientSettings.originX, y: grainientSettings.originY),
+              startRadius: grainientSettings.startRadius,
+              endRadius: grainientSettings.endRadius
+            )
+        } // END switch
+
+      } // END group
+      .frame(width: geometry.size.width, height: geometry.size.height)
       .task(id: seed) {
         swatchOutput(grainientSettings.colours)
       }
