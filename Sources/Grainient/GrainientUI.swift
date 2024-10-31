@@ -71,7 +71,7 @@ extension GrainientModifier {
               endRadius: grainientSettings.endRadius
             )
         } // END switch
-
+        
       } // END group
       .frame(width: geometry.size.width, height: geometry.size.height)
       .task(id: seed) {
@@ -81,7 +81,6 @@ extension GrainientModifier {
     .blur(radius: config.blur, opaque: true)
     .clipped()
     .opacity(config.opacity)
-    
     
   } // END gradient view builder
 }
@@ -124,7 +123,7 @@ public extension View {
       )
     )
   } // END seed-based grainient
-
+  
 }
 
 
