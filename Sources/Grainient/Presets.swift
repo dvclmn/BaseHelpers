@@ -1,6 +1,6 @@
 //
 //  File.swift
-//  
+//
 //
 //  Created by Dave Coleman on 11/8/2024.
 //
@@ -9,19 +9,19 @@ import Foundation
 
 
 public struct GrainientPreset: Identifiable, Hashable, Codable, Equatable, Sendable {
-  public var id: UUID
+  public var id: Int {
+    self.seed
+  }
   public var seed: Int
   public var name: String
   public var version: GrainientVersion
   
   
   public init(
-    id: UUID = UUID(),
     seed: Int = 358690,
     name: String = "Example",
-    version: GrainientVersion = GrainientVersion.v2
+    version: GrainientVersion = GrainientVersion.v3
   ) {
-    self.id = id
     self.seed = seed
     self.name = name
     self.version = version
@@ -30,31 +30,17 @@ public struct GrainientPreset: Identifiable, Hashable, Codable, Equatable, Senda
 
 public extension GrainientPreset {
   
-  //    /// Version 1
-  //    static let oldCopper        = GrainientPreset(seed: 45976, name: "Old copper", version: .v1)
-  //    static let greyPurple       = GrainientPreset(seed: 53688, name: "Grey purple", version: .v1)
-  //    static let metallic         = GrainientPreset(seed: 69698, name: "Metallic", version: .v1)
-  //    static let electricPurple   = GrainientPreset(seed: 88191, name: "Electric purple", version: .v1)
-  //    static let chalkyBlue       = GrainientPreset(seed: 11146, name: "Chalky blue", version: .v1)
-  //    static let lagoon           = GrainientPreset(seed: 58718, name: "Lagoon", version: .v1)
-  //    static let deepPurple       = GrainientPreset(seed: 11044, name: "Deep purple", version: .v1)
-  //    static let purpleHalo       = GrainientPreset(seed: 33260, name: "Purple halo", version: .v1)
-  //    static let blueSky          = GrainientPreset(seed: 87242, name: "Blue sky", version: .v1)
-  //
-  //    /// Version 2
-  //    static let holoMetal        = GrainientPreset(seed: 70415, name: "Holo metal", version: .v2)
-  //    static let oliveGarden      = GrainientPreset(seed: 42985, name: "Olive garden", version: .v2)
-  //    static let gunMetalGrey     = GrainientPreset(seed: 63693, name: "Gunmetal Grey", version: .v2)
-  //    static let oceana           = GrainientPreset(seed: 95376, name: "Oceana", version: .v2)
-  //    static let blueMetal        = GrainientPreset(seed: 73506, name: "Blue metal", version: .v2)
-  //    static let algae            = GrainientPreset(seed: 93628, name: "Algae", version: .v2)
-  
-  
-  static let sunset            = GrainientPreset(seed: 26171, name: "Sunset", version: .v3)
-  static let peachFuzz         = GrainientPreset(seed: 47917, name: "Peach Fuzz", version: .v3)
-  static let greenGlow         = GrainientPreset(seed: 81745, name: "Green Glow", version: .v3)
+  /// IMPORTANT:
+  ///
+  /// If the fundamentals of  ``GrainientSettings`` are changed, then the
+  /// below will break (i.e., not match the colours/description for each preset).
+  ///
+  ///
+  static let sunset             = GrainientPreset(seed: 26171, name: "Sunset", version: .v3)
+  static let peachFuzz          = GrainientPreset(seed: 47917, name: "Peach Fuzz", version: .v3)
+  static let greenGlow          = GrainientPreset(seed: 81745, name: "Green Glow", version: .v3)
   static let toadstool         = GrainientPreset(seed: 61720, name: "Toadstool", version: .v3)
-  static let sherbet         = GrainientPreset(seed: 78671, name: "Sherbet", version: .v3)
+  static let sherbet            = GrainientPreset(seed: 78671, name: "Sherbet", version: .v3)
   static let lilac         = GrainientPreset(seed: 50411, name: "Lilac", version: .v3)
   static let dyingStar         = GrainientPreset(seed: 57001, name: "Dying Star", version: .v3)
   static let bubblegum         = GrainientPreset(seed: 27079, name: "Bubblegum", version: .v3)
@@ -74,6 +60,29 @@ public extension GrainientPreset {
   static let sunset02         = GrainientPreset(seed: 67024, name: "Sunset 02", version: .v3)
   static let greenVoid         = GrainientPreset(seed: 29189, name: "Green Void", version: .v3)
   
-  
-  
+  static let allPresets: [GrainientPreset] = [
+    sunset,
+    peachFuzz,
+    greenGlow,
+    toadstool,
+    sherbet,
+    lilac,
+    dyingStar,
+    bubblegum,
+    twilight,
+    ozone,
+    nucleus,
+    swampy,
+    underwater,
+    tunnelEntrance,
+    shrinkingViolet,
+    dustStorm,
+    pretty,
+    darkToLight,
+    moss,
+    trippy,
+    jungleFlower,
+    sunset02,
+    greenVoid
+  ]
 }

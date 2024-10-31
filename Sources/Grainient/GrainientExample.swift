@@ -18,3 +18,22 @@ struct GrainientExample: View {
 #Preview {
   GrainientExample()
 }
+
+
+struct GrainientBrowser: View {
+  
+  var body: some View {
+    
+    Text("Hello")
+      .padding(40)
+      .frame(width: 600, height: 700)
+      .background(.black.opacity(0.6))
+    
+  }
+}
+#if DEBUG
+#Preview {
+  GrainientBrowser()
+}
+#endif
+

@@ -62,7 +62,7 @@ let package = Package(
     .package(url: "https://github.com/danielsaidi/ScrollKit.git", from: "0.5.1"),
     .package(url: "https://github.com/raymondjavaxx/SmoothGradient.git", from: "1.0.0"),
     .package(url: "https://github.com/evgenyneu/keychain-swift.git", from: "24.0.0"),
-    .package(url: "https://github.com/gohanlon/swift-memberwise-init-macro.git", from: "0.5.0")
+    .package(url: "https://github.com/gohanlon/swift-memberwise-init-macro.git", from: "0.5.0"),
   ],
   
   targets: [
