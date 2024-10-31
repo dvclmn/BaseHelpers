@@ -15,11 +15,6 @@ public enum GradientType: Codable {
   case linear, radial
 }
 
-public struct GradientStop {
-  public var color: Color
-  public var location: CGFloat
-}
-
 public struct GrainientSettings {
   
   public var gradientType: GradientType
@@ -28,7 +23,7 @@ public struct GrainientSettings {
   public var endSize: Double
   public var originX: Double
   public var originY: Double
-  public var stops: [GradientStop]
+  public var stops: [Gradient.Stop]
   public var colours: [Swatch]
   
   public static func generateGradientSeed() -> Int {
@@ -75,10 +70,10 @@ public struct GrainientSettings {
       }
     }
     
-    let stops = swatchList.enumerated().compactMap { (index, swatch) -> GradientStop? in
+    let stops = swatchList.enumerated().compactMap { (index, swatch) -> Gradient.Stop? in
       
       let location = CGFloat(index) / CGFloat(numberOfColours - 1)
-      return GradientStop(color: swatch.colour, location: location)
+      return Gradient.Stop(color: swatch.colour, location: location)
     }.sorted(by: { $0.location < $1.location })
     
     return GrainientSettings(
@@ -97,16 +92,13 @@ public struct GrainientSettings {
     from includedColours: [Swatch],
     using randomSource: GKRandomSource
   ) -> Swatch? {
-    //        print("\n\n|--- Get random Swatch colour --->\n")
-    //        print("Let's return a Swatch, ensuring that it is from the included colours: \(includedColours)\n")
-    
+
     guard !includedColours.isEmpty else {
-      //            print("No colours to pick from.")
-      return nil  // Return nil or handle appropriately
+      print("No colours to pick from.")
+      return nil
     }
     
     let randomIndex = randomSource.nextInt(upperBound: includedColours.count)
-    //        print("Picked one! It is: \(includedColours[randomIndex])")
     return includedColours[randomIndex]
   }
   

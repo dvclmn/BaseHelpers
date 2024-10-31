@@ -7,24 +7,38 @@
 
 import SwiftUI
 
-struct GrainientExample: View {
-    var body: some View {
-        Text("Hello, World!")
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .grainient(seed: 98365)
-    }
-}
-
-#Preview {
-  GrainientExample()
-}
+//struct GrainientExample: View {
+//    var body: some View {
+//        Text("Hello, World!")
+//        .frame(maxWidth: .infinity, maxHeight: .infinity)
+//        .grainient(seed: 98365)
+//    }
+//}
+//
+//#Preview {
+//  GrainientExample()
+//}
 
 
 struct GrainientBrowser: View {
   
   var body: some View {
     
-    Text("Hello")
+    let columns: [GridItem] = Array(repeating: GridItem(.flexible()), count: 4)
+    
+    LazyVGrid(columns: columns) {
+      ForEach(GrainientPreset.allPresets) { preset in
+        Color.clear
+          .aspectRatio(0.8, contentMode: .fit)
+          .grainient(seed: preset.seed)
+          .clipShape(.rect(cornerRadius: 10))
+          .overlay {
+            Text(preset.name)
+              .foregroundStyle(.secondary)
+              .fontWeight(.medium)
+          }
+      }
+    }
       .padding(40)
       .frame(width: 600, height: 700)
       .background(.black.opacity(0.6))
