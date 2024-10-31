@@ -44,40 +44,43 @@ extension GrainientModifier {
       let viewSize = geometry.size
       
       // TODO: A lot of this code seems to get called whenever the geometry view size changes. There may be a way to save some performance by only redrawing what needs to be?
+//      let rng = GranientRNG(seed: seed, viewSize: viewSize)
       let grainientSettings = GrainientSettings.generateGradient(
         seed: seed,
-        version: config.version,
+        version: .v3,
         viewSize: viewSize
       )
-      
-      let gradient = Gradient(stops: grainientSettings.stops)
-      
-      let angle = Angle(degrees: grainientSettings.angle)
-      
-      Group {
-        switch grainientSettings.gradientType {
-          case .linear:
-            LinearGradient(
-              gradient: gradient,
-              startPoint: UnitPoint(x: 0, y: 0),
-              endPoint: UnitPoint(x: cos(angle.radians), y: sin(angle.radians))
-            )
-            
-          case .radial:
-            RadialGradient(
-              gradient: gradient,
-              center: UnitPoint(x: grainientSettings.originX, y: grainientSettings.originY),
-              startRadius: grainientSettings.startRadius,
-              endRadius: grainientSettings.endRadius
-            )
-        } // END switch
         
-      } // END group
-      .frame(width: geometry.size.width, height: geometry.size.height)
-      .task(id: seed) {
-        swatchOutput(grainientSettings.colours)
-      }
-    }
+        let gradient = Gradient(stops: grainientSettings.stops)
+        
+        let angle = Angle(degrees: grainientSettings.angle)
+        
+        Group {
+          switch grainientSettings.gradientType {
+            case .linear:
+              LinearGradient(
+                gradient: gradient,
+                startPoint: UnitPoint(x: 0, y: 0),
+                endPoint: UnitPoint(x: cos(angle.radians), y: sin(angle.radians))
+              )
+              
+            case .radial:
+              RadialGradient(
+                gradient: gradient,
+                center: UnitPoint(x: grainientSettings.originX, y: grainientSettings.originY),
+                startRadius: grainientSettings.startRadius,
+                endRadius: grainientSettings.endRadius
+              )
+          } // END switch
+        } // END group
+        .frame(width: geometry.size.width, height: geometry.size.height)
+        .task(id: seed) {
+          swatchOutput(grainientSettings.colours)
+        }
+//      } else {
+//        Text("Grainient Error?")
+//      } // END grainient settings check
+    } // END geo reader
     .blur(radius: config.blur, opaque: true)
     .clipped()
     .opacity(config.opacity)

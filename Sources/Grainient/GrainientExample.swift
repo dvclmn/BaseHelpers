@@ -24,12 +24,12 @@ struct GrainientBrowser: View {
   
   var body: some View {
     
-    let columns: [GridItem] = Array(repeating: GridItem(.flexible()), count: 3)
+    let columns: [GridItem] = Array(repeating: GridItem(.flexible()), count: 4)
     
     LazyVGrid(columns: columns) {
       ForEach(GrainientPreset.allPresets) { preset in
         Color.clear
-          .aspectRatio(4.4, contentMode: .fit)
+          .aspectRatio(1.8, contentMode: .fit)
           .grainient(seed: preset.seed)
           .clipShape(.rect(cornerRadius: 10))
           .overlay {

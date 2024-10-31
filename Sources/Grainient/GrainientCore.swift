@@ -33,124 +33,131 @@ import BaseStyles
 /// }
 /// ```
 
-public enum GradientAttribute {
-  case gradientType(GradientType)
-  case angle(Double)
-  case startRadius(Double)
-  case endRadius(Double)
-  case originX(Double)
-  case originY(Double)
-  case colorCount(Int)
-}
-
-public struct GradientRNG {
-  private let seed: Int
-  private let likelihoodOfRadial: Double
-  private let viewSize: CGSize
+//public enum GrainientAttribute {
+//  case gradientType(GradientType)
+//  case angle(Double)
+//  case startRadius(Double)
+//  case endRadius(Double)
+//  case originX(Double)
+//  case originY(Double)
+//  case colorCount(Int)
+//}
+//
+//public struct GranientRNG {
+//  private let seed: Int
+//  private let likelihoodOfRadial: Double
+//  private let viewSize: CGSize
+//  
+//  public init(
+//    seed: Int,
+//    likelihoodOfRadial: Double = 0.5,
+//    viewSize: CGSize
+//  ) {
+//    self.seed = seed
+//    self.likelihoodOfRadial = likelihoodOfRadial
+//    self.viewSize = viewSize
+//  }
+//  
+//  private func getRandomDouble(for keyPath: KeyPath<GranientRNG, GrainientAttribute>) -> Double {
+//    let attributeSeed = "\(seed)-\(String(describing: keyPath))".hash
+//    print("Attribute seed: \(attributeSeed)")
+//    let attributeRandomSource = GKMersenneTwisterRandomSource(seed: UInt64(attributeSeed))
+//    return Double(attributeRandomSource.nextInt(upperBound: 1000)) / 1000.0
+//  }
+//  
+//  // Computed properties for each attribute
+//  public var gradientType: GrainientAttribute {
+//    .gradientType(getRandomDouble(for: \.gradientType) < likelihoodOfRadial ? .radial : .linear)
+//  }
+//  
+//  public var angle: GrainientAttribute {
+//    .angle(getRandomDouble(for: \.angle) * 360.0)
+//  }
+//  
+//  public var originX: GrainientAttribute {
+//    .originX(getRandomDouble(for: \.originX))
+//  }
+//  
+//  public var originY: GrainientAttribute {
+//    .originY(getRandomDouble(for: \.originY))
+//  }
+//  
+//  public var startRadius: GrainientAttribute {
+//    let minDimension = min(viewSize.width, viewSize.height)
+//    let sizeMultiplierRange = 1.5 - 0.2
+//    let sizeMultiplier = getRandomDouble(for: \.startRadius) * sizeMultiplierRange + 0.2
+//    return .startRadius(minDimension * sizeMultiplier)
+//  }
+//  
+//  public var endRadius: GrainientAttribute {
+//    if case .startRadius(let startRadius) = self.startRadius {
+//      let endRadiusMultiplierRange = 1.5 - 0.5
+//      let endRadiusMultiplier = getRandomDouble(for: \.endRadius) * endRadiusMultiplierRange + 0.5
+//      return .endRadius(startRadius * endRadiusMultiplier)
+//    }
+//    return .endRadius(0) // Fallback, should never happen
+//  }
+//  
   
-  public init(
-    seed: Int,
-    likelihoodOfRadial: Double = 0.5,
-    viewSize: CGSize
-  ) {
-    self.seed = seed
-    self.likelihoodOfRadial = likelihoodOfRadial
-    self.viewSize = viewSize
-  }
+//  // Legacy mode for backward compatibility
+//  private func legacyGenerate() -> GrainientSettings {
+//    let randomSource = GKMersenneTwisterRandomSource(seed: UInt64(seed))
+//    let randomDouble = { Double(randomSource.nextInt(upperBound: 1000)) / 1000.0 }
+//    
+//    // Your original logic here
+//    let gradientType = randomDouble() < likelihoodOfRadial ? .radial : .linear
+//    let angle = randomDouble() * 360.0
+//    // etc...
+//  }
   
-  private func getRandomDouble(for keyPath: KeyPath<GradientRNG, GradientAttribute>) -> Double {
-    let attributeSeed = "\(seed)-\(String(describing: keyPath))".hash
-    let attributeRandomSource = GKMersenneTwisterRandomSource(seed: UInt64(attributeSeed))
-    return Double(attributeRandomSource.nextInt(upperBound: 1000)) / 1000.0
-  }
   
-  // Computed properties for each attribute
-  public var gradientType: GradientAttribute {
-    .gradientType(getRandomDouble(for: \.gradientType) < likelihoodOfRadial ? .radial : .linear)
-  }
   
-  public var angle: GradientAttribute {
-    .angle(getRandomDouble(for: \.angle) * 360.0)
-  }
-  
-  public var originX: GradientAttribute {
-    .originX(getRandomDouble(for: \.originX))
-  }
-  
-  public var originY: GradientAttribute {
-    .originY(getRandomDouble(for: \.originY))
-  }
-  
-  public var startRadius: GradientAttribute {
-    let minDimension = min(viewSize.width, viewSize.height)
-    let sizeMultiplierRange = 1.5 - 0.2
-    let sizeMultiplier = getRandomDouble(for: \.startRadius) * sizeMultiplierRange + 0.2
-    return .startRadius(minDimension * sizeMultiplier)
-  }
-  
-  public var endRadius: GradientAttribute {
-    if case .startRadius(let startRadius) = self.startRadius {
-      let endRadiusMultiplierRange = 1.5 - 0.5
-      let endRadiusMultiplier = getRandomDouble(for: \.endRadius) * endRadiusMultiplierRange + 0.5
-      return .endRadius(startRadius * endRadiusMultiplier)
-    }
-    return .endRadius(0) // Fallback, should never happen
-  }
-  
-  // Helper function to generate the complete settings
-  public func generateSettings(version: GrainientVersion, numberOfColours: Int = 3) -> GrainientSettings? {
-    // Extract values using pattern matching
-    guard
-      case .gradientType(let type) = gradientType,
-      case .angle(let angleValue) = angle,
-      case .startRadius(let start) = startRadius,
-      case .endRadius(let end) = endRadius,
-      case .originX(let x) = originX,
-      case .originY(let y) = originY
-    else { return nil }
-    
-    let swatches = generateSwatches(numberOfColours: numberOfColours, version: version)
-    let stops = swatches.enumerated().map { index, swatch in
-      Gradient.Stop(
-        color: swatch.colour,
-        location: CGFloat(index) / max(CGFloat(numberOfColours - 1), 1)
-      )
-    }.sorted(by: { $0.location < $1.location })
-    
-    return GrainientSettings(
-      gradientType: type,
-      angle: angleValue,
-      startRadius: start,
-      endRadius: end,
-      originX: x,
-      originY: y,
-      stops: stops,
-      colours: swatches
-    )
-  }
-  
-  private func generateSwatches(numberOfColours: Int, version: GrainientVersion) -> [Swatch] {
-    (0..<numberOfColours).compactMap { i in
-      let swatchSeed = "\(seed)-swatch-\(i)".hash
-      let swatchRandomSource = GKMersenneTwisterRandomSource(seed: UInt64(swatchSeed))
-      return Self.randomColourForGrainient(from: version.swatches, using: swatchRandomSource)
-    }
-  }
-  
-  public static func randomColourForGrainient(
-    from includedColours: [Swatch],
-    using randomSource: GKRandomSource
-  ) -> Swatch? {
-    
-    guard !includedColours.isEmpty else {
-      print("No colours to pick from.")
-      return nil
-    }
-    
-    let randomIndex = randomSource.nextInt(upperBound: includedColours.count)
-    return includedColours[randomIndex]
-  }
-}
+//  
+//  // Helper function to generate the complete settings
+//  public func generateSettings(
+//    version: GrainientVersion,
+//    numberOfColours: Int = 3
+//  ) -> GrainientSettings? {
+//    // Extract values using pattern matching
+//    guard
+//      case .gradientType(let type) = gradientType,
+//      case .angle(let angleValue) = angle,
+//      case .startRadius(let start) = startRadius,
+//      case .endRadius(let end) = endRadius,
+//      case .originX(let x) = originX,
+//      case .originY(let y) = originY
+//    else { return nil }
+//    
+//    let swatches = generateSwatches(numberOfColours: numberOfColours, version: version)
+//    let stops = swatches.enumerated().map { index, swatch in
+//      Gradient.Stop(
+//        color: swatch.colour,
+//        location: CGFloat(index) / max(CGFloat(numberOfColours - 1), 1)
+//      )
+//    }.sorted(by: { $0.location < $1.location })
+//    
+//    return GrainientSettings(
+//      gradientType: type,
+//      angle: angleValue,
+//      startRadius: start,
+//      endRadius: end,
+//      originX: x,
+//      originY: y,
+//      stops: stops,
+//      colours: swatches
+//    )
+//  }
+//  
+//  private func generateSwatches(numberOfColours: Int, version: GrainientVersion) -> [Swatch] {
+//    (0..<numberOfColours).compactMap { i in
+//      let swatchSeed = "\(seed)-swatch-\(i)".hash
+//      let swatchRandomSource = GKMersenneTwisterRandomSource(seed: UInt64(swatchSeed))
+//      return Self.randomColourForGrainient(from: version.swatches, using: swatchRandomSource)
+//    }
+//  }
+//  
+//
+//}
 
 
 public enum GradientType: Codable {
@@ -179,7 +186,7 @@ public struct GrainientSettings {
     return randomSeed
   }
   
-  // MARK: - Generate a predictable Gradient from a Seed (deterministic)
+//  // MARK: - Generate a predictable Gradient from a Seed (deterministic)
   public static func generateGradient(
     seed: Int,
     version: GrainientVersion,
@@ -210,7 +217,7 @@ public struct GrainientSettings {
     
     var swatchList: [Swatch] = []
     for _ in 1...numberOfColours {
-      if let swatch = randomColourForGrainient(from: version.swatches, using: randomSource) {
+      if let swatch = Self.randomColourForGrainient(from: version.swatches, using: randomSource) {
         swatchList.append(swatch)
       } else {
         // Handle the case where no colour was returned, e.g., add a default color or skip
@@ -238,7 +245,19 @@ public struct GrainientSettings {
     )
   } // END generateGradient
   
+  public static func randomColourForGrainient(
+      from includedColours: [Swatch],
+      using randomSource: GKRandomSource
+    ) -> Swatch? {
   
+      guard !includedColours.isEmpty else {
+        print("No colours to pick from.")
+        return nil
+      }
+  
+      let randomIndex = randomSource.nextInt(upperBound: includedColours.count)
+      return includedColours[randomIndex]
+    }
   
 } // END Gradient Settings
 
