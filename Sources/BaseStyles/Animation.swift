@@ -131,27 +131,27 @@ struct SingleAnimationView: View {
                 .padding(.bottom)
                 .frame(maxWidth: .infinity, alignment: .leading)
             
-            AnimationProperty(
+            AnimatableProperty(
                 nonOptionalBinding($animationItem.duration, defaultValue: 0.5),
                 name: "Duration"
             )
             
-            AnimationProperty(
+            AnimatableProperty(
                 nonOptionalBinding($animationItem.bounce, defaultValue: 0.5),
                 name: "Bounce"
             )
             
-            AnimationProperty(
+            AnimatableProperty(
                 nonOptionalBinding($animationItem.mass, defaultValue: 1.0),
                 name: "Mass"
             )
             
-            AnimationProperty(
+            AnimatableProperty(
                 nonOptionalBinding($animationItem.stiffness, defaultValue: 100),
                 name: "Stiffness"
             )
             
-            AnimationProperty(
+            AnimatableProperty(
                 nonOptionalBinding($animationItem.damping, defaultValue: 10),
                 name: "Damping"
             )
@@ -179,7 +179,7 @@ struct SingleAnimationView: View {
 extension SingleAnimationView {
     
     @ViewBuilder
-    func AnimationProperty(
+    func AnimatableProperty(
         _ property: Binding<Double>,
         name: String,
         start: Double = 0.1,

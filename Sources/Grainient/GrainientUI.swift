@@ -9,68 +9,6 @@ import Foundation
 import SwiftUI
 import BaseStyles
 
-//
-//public struct Grainient: ShapeStyle {
-//  
-//  public let seed: Int?
-//  public let viewSize: CGSize?
-//  
-//  public func resolve(in environment: EnvironmentValues) -> some ShapeStyle {
-//    if let seed = seed {
-//      return grainyGradient(seed, viewSize: viewSize)
-//    } else {
-//      return AnyShapeStyle(Color.clear)
-//    }
-//  }
-//  
-//  func grainyGradient(_ seed: Int, viewSize: CGSize?) -> AnyShapeStyle {
-//    
-//    let grainientSettings = GrainientSettings.generateGradient(
-//      seed: seed,
-//      version: .v3,
-//      viewSize: viewSize ?? .zero
-//    )
-//    
-//    let gradient = Gradient(stops: grainientSettings.stops.map { Gradient.Stop(color: $0.color, location: $0.location) })
-//    
-//    let angle: Angle = Angle(degrees: grainientSettings.angle)
-//    
-//    
-//    if grainientSettings.gradientType == .radial {
-//      return AnyShapeStyle(RadialGradient(
-//        gradient: gradient,
-//        center: UnitPoint(x: grainientSettings.originX, y: grainientSettings.originY),
-//        startRadius: grainientSettings.startSize,
-//        endRadius: grainientSettings.endSize
-//      ))
-//      //          .frame(width: geometry.size.width, height: geometry.size.height)
-//    } else {
-//      return AnyShapeStyle(LinearGradient(
-//        gradient: gradient,
-//        startPoint: UnitPoint(x: 0, y: 0),
-//        endPoint: UnitPoint(x: cos(angle.radians), y: sin(angle.radians))
-//      ))
-//      //          .frame(width: geometry.size.width, height: geometry.size.height)
-//    }
-//    
-//    //      .task(id: seed) {
-//    //        swatchOutput(grainientSettings.colours)
-//    //      }
-//    
-//    //
-//    
-//    
-//  } // END gradient view builder
-//}
-//
-//public extension ShapeStyle where Self == Grainient {
-//  static func grainient(with seed: Int?) -> Grainient {
-//    Grainient(seed: seed, viewSize: nil)
-//  }
-//  //  static var text: ThemeColor { ThemeColor(\.text) }
-//  //  static var highlight: ThemeColor { ThemeColor(\.highlight) }
-//}
-
 
 
 // MARK: - Grain overlay
