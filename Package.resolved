@@ -1,5 +1,5 @@
 {
-  "originHash" : "6e6b34ad0bd129a8997b6e207d95d668b38b2c8954e5a4315e2779a52b9a14a4",
+  "originHash" : "2fd6fc1c496305fdb35321b45d0cdf27a4fd624c4fb5ab3b30c2be4e1b619208",
   "pins" : [
     {
       "identity" : "combine-schedulers",
@@ -17,15 +17,6 @@
       "state" : {
         "revision" : "5e1b02b6a9dac2a759a1d5dbc175c86bd192a608",
         "version" : "24.0.0"
-      }
-    },
-    {
-      "identity" : "nsui",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/mattmassicotte/nsui",
-      "state" : {
-        "revision" : "8792b2f789bf03be1be9ecb4df43d2bfe0e5d361",
-        "version" : "1.3.0"
       }
     },
     {
@@ -152,15 +143,6 @@
       "state" : {
         "revision" : "82a453c2dfa335c7e778695762438dfe72b328d2",
         "version" : "600.0.0-prerelease-2024-07-24"
-      }
-    },
-    {
-      "identity" : "textcore",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/dvclmn/TextCore.git",
-      "state" : {
-        "branch" : "main",
-        "revision" : "1e61456a5db92d479ad7675ce24946df8d2e9ff8"
       }
     },
     {

@@ -28,6 +28,7 @@ let package = Package(
       "GlyphGrid",
       "Scrolling",
       "Selection",
+      "Popup",
     ]),
     
     /// Helpers
@@ -53,9 +54,11 @@ let package = Package(
     
   ],
   dependencies: [
+
     .package(url: "https://github.com/pointfreeco/swift-composable-architecture.git", from: "1.15.0"),
-    .package(url: "https://github.com/dvclmn/TextCore.git", branch: "main"),
     .package(url: "https://github.com/pointfreeco/swift-dependencies.git", from: "1.4.0"),
+    
+//    .package(url: "https://github.com/dvclmn/TextCore.git", branch: "main"),
     .package(url: "https://github.com/danielsaidi/ScrollKit.git", from: "0.5.1"),
     .package(url: "https://github.com/raymondjavaxx/SmoothGradient.git", from: "1.0.0"),
     .package(url: "https://github.com/evgenyneu/keychain-swift.git", from: "24.0.0"),
@@ -72,10 +75,11 @@ let package = Package(
     .target(name: "TapOffToDismiss", dependencies: ["BaseHelpers", "Geometry", .product(name: "Dependencies", package: "swift-dependencies")]),
     .target(name: "Profiler"),
     .target(name: "Renamable"),
-    .target(name: "GlyphGrid", dependencies: ["BaseHelpers", "TextCore"]),
+    .target(name: "GlyphGrid", dependencies: ["BaseHelpers"]),
     .target(name: "Resizable", dependencies: ["BaseHelpers", "Geometry", "Shortcuts"]),
     .target(name: "Scrolling", dependencies: ["ScrollKit", .product(name: "SmoothGradient", package: "SmoothGradient")]),
     .target(name: "Selection", dependencies: ["BaseHelpers", "Geometry", "Scrolling"]),
+    .target(name: "Popup", dependencies: [.product(name: "Dependencies", package: "swift-dependencies")]),
 
     /// Helpers
       .target(name: "BaseHelpers", dependencies: [
