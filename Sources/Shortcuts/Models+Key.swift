@@ -7,11 +7,11 @@
 
 #if canImport(AppKit)
 
-extension KBShortcut {
+public extension KBShortcut {
 
   /// These are the **non-Modifier** keys
   
-  public enum Key: ShortcutKey, CaseIterable {
+  enum Key: ShortcutKey, CaseIterable {
     static public let allCases: [KBShortcut.Key] = [
       .character("a"),
       .clear,

@@ -41,8 +41,8 @@ public struct KBShortcut: Equatable, Sendable {
 }
 
 
-extension KBShortcut {
-  public struct Label: Equatable, Sendable {
+public extension KBShortcut {
+  struct Label: Equatable, Sendable {
     public var title: String
     public var icon: String
     

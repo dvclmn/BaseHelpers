@@ -24,7 +24,6 @@ let package = Package(
       "TapOffToDismiss",
       "Profiler",
       "Renamable",
-      "Logging",
       "Resizable",
       "GlyphGrid",
       "Scrolling",
@@ -36,7 +35,6 @@ let package = Package(
       name: "BaseHelpers",
       targets: [
         "BaseHelpers",
-        "HoverAsync",
         "ImageCompression",
         "Shaders",
         "TouchInertia",
@@ -74,7 +72,6 @@ let package = Package(
     .target(name: "TapOffToDismiss", dependencies: ["BaseHelpers", "Geometry", .product(name: "Dependencies", package: "swift-dependencies")]),
     .target(name: "Profiler"),
     .target(name: "Renamable"),
-    .target(name: "Logging", dependencies: ["BaseHelpers"]),
     .target(name: "GlyphGrid", dependencies: ["BaseHelpers", "TextCore"]),
     .target(name: "Resizable", dependencies: ["BaseHelpers", "Geometry", "Shortcuts"]),
     .target(name: "Scrolling", dependencies: ["ScrollKit", .product(name: "SmoothGradient", package: "SmoothGradient")]),
@@ -84,7 +81,6 @@ let package = Package(
       .target(name: "BaseHelpers", dependencies: [
         .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
       ]),
-    .target(name: "HoverAsync"),
     .target(name: "ImageCompression"),
     .target(name: "TouchInertia"),
     .target(name: "Shaders"),

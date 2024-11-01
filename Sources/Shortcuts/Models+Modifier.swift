@@ -9,7 +9,7 @@ import SwiftUI
 
 #if canImport(AppKit)
 
-extension KBShortcut {
+public extension KBShortcut {
   
   public enum Modifier: ShortcutKey, CaseIterable {
     

@@ -16,7 +16,7 @@ public enum ModifierKey: Hashable, Sendable {
 
 public typealias Modifiers = Set<ModifierKey>
 
-extension NSEvent.ModifierFlags {
+public extension NSEvent.ModifierFlags {
   func toModifierKey() -> ModifierKey? {
     switch self {
       case .shift: return .shift
