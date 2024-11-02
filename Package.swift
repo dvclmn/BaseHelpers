@@ -24,7 +24,6 @@ let package = Package(
       "Renamable",
       "Resizable",
       "GlyphGrid",
-      "Scrolling",
       "Selection",
       "PathDebugger"
     ]),
@@ -51,9 +50,6 @@ let package = Package(
     
   ],
   dependencies: [
-//    .package(url: "https://github.com/danielsaidi/ScrollKit.git", from: "0.5.1"),
-    .package(url: "https://github.com/raymondjavaxx/SmoothGradient.git", from: "1.0.0"),
-    
     .package(url: "https://github.com/gohanlon/swift-memberwise-init-macro.git", from: "0.5.0"),
   ],
   
@@ -68,8 +64,7 @@ let package = Package(
     .target(name: "PathDebugger"),
     .target(name: "GlyphGrid", dependencies: ["BaseHelpers"]),
     .target(name: "Resizable", dependencies: ["BaseHelpers", "Shortcuts"]),
-    .target(name: "Scrolling", dependencies: [.product(name: "SmoothGradient", package: "SmoothGradient")]),
-    .target(name: "Selection", dependencies: ["BaseHelpers", "Scrolling"]),
+    .target(name: "Selection", dependencies: ["BaseHelpers"]),
 
     /// Helpers
     .target(name: "BaseHelpers"),

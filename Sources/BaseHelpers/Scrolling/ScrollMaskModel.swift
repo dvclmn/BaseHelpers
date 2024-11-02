@@ -8,6 +8,39 @@
 import Foundation
 import SwiftUI
 
+
+/// Will make this optional, and do away with the `maskEnabled`
+/// property, as a nil value for a mask config will serve the same purpose.
+public struct MaskConfig {
+  var mode: MaskMode
+  var edge: Edge
+  var edgePadding: CGFloat
+  var length: CGFloat
+  
+  public init(
+    mode: MaskMode = .mask,
+    edge: Edge = .top,
+    edgePadding: CGFloat = 30,
+    length: CGFloat = 130
+  ) {
+    self.mode = mode
+    self.edge = edge
+    self.edgePadding = edgePadding
+    self.length = length
+  }
+}
+
+public struct SafePadding {
+  let edges: Edge.Set
+  let padding: CGFloat
+  
+  public init(_ edges: Edge.Set, _ padding: CGFloat) {
+    self.edges = edges
+    self.padding = padding
+  }
+}
+
+
 public enum MaskMode: CaseIterable, Identifiable, Equatable, Sendable {
   
   case mask

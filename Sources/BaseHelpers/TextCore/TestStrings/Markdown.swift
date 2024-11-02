@@ -17,7 +17,7 @@ public extension TestStrings {
     
     ```swift
     import Shortcuts
-    import Scrolling
+    import BaseHelpers
     
     struct MessageInputView: View {
     

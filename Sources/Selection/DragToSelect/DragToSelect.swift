@@ -7,7 +7,6 @@
 
 import SwiftUI
 //import Shortcuts
-import Scrolling
 import BaseHelpers
 
 #if os(macOS)
@@ -63,25 +62,27 @@ where Data: RandomAccessCollection,
     /// where clicking does nothing. Visual padding can be added outside
     /// this package as desired.
     ///
-    VStack(alignment: .leading, spacing: 0) {
-      ForEach(Array(items.enumerated()), id: \.element.id) { index, item in
-        
-        let isSelected = selectedItemIDs.contains(item.id)
-        
-        let position = selectedItemIDs.selectionPosition(
-          for: item.id,
-          idForElement: { $0 },
-          in: sortedIDs,
-          isPreviousSelected: { selectedItemIDs.contains($0) },
-          isNextSelected: { selectedItemIDs.contains($0) }
-        )
-        
-        content(item, isSelected, position)
-          .padding(clipProofPadding)
-          .modifier(CaptureItemFrame(id: item.id))
-      }
-      Spacer()
-    } // END interior vstack
+    OffsetScroll {
+      VStack(alignment: .leading, spacing: 0) {
+        ForEach(Array(items.enumerated()), id: \.element.id) { index, item in
+          
+          let isSelected = selectedItemIDs.contains(item.id)
+          
+          let position = selectedItemIDs.selectionPosition(
+            for: item.id,
+            idForElement: { $0 },
+            in: sortedIDs,
+            isPreviousSelected: { selectedItemIDs.contains($0) },
+            isNextSelected: { selectedItemIDs.contains($0) }
+          )
+          
+          content(item, isSelected, position)
+            .padding(clipProofPadding)
+            .modifier(CaptureItemFrame(id: item.id))
+        }
+        Spacer()
+      } // END interior vstack
+    }
     
     /// > NOTE
     /// If ugly clipping is occuring around this view, that's likely because
@@ -90,7 +91,7 @@ where Data: RandomAccessCollection,
     ///
     /// IIRC, an example of the clipping was a focusEffect border being cut off.
     ///
-    .scrollWithOffset(maskMode: .mask, edgePadding: 4, showsIndicators: false)
+//    .scrollWithOffset(maskMode: .mask, edgePadding: 4, showsIndicators: false)
 
     .contentShape(Rectangle())
     .coordinateSpace(name: "listContainer")
