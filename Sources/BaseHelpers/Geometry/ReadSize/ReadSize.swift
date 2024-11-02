@@ -24,7 +24,9 @@ private struct SizePreferenceKey: PreferenceKey {
 
 
 /// https://saeedrz.medium.com/detect-scroll-position-in-swiftui-3d6e0d81fc6b
-/// For `readFrame` to work, the `readFrame` modifier must be placed on a view (e.g. VStack) *within* the ScrollView, and a `.coordinateSpace(name: "scroll")` modifier placed on the ScrollView itself.
+/// For `readFrame` to work, the `readFrame` modifier must be placed on a view (e.g. VStack) *within*
+/// the ScrollView, and a `.coordinateSpace(name: "scroll")` modifier placed on the ScrollView itself.
+/// 
 public extension View {
     func readFrame(coordinateSpaceName name: String = "scroll", onChange: @escaping (CGPoint) -> Void) -> some View {
         background(

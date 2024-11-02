@@ -8,7 +8,6 @@ import Foundation
 import SwiftUI
 import OSLog
 import BaseHelpers
-import Geometry
 import Shortcuts
 
 public struct Resizable: ViewModifier {

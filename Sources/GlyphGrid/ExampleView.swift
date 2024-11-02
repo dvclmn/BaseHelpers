@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import TextCore
+import BaseHelpers
 
 
 struct TextCoreExampleView: View {

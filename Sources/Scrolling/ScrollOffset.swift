@@ -7,7 +7,7 @@
 
 import Foundation
 import SwiftUI
-import ScrollKit
+//import ScrollKit
 
 /// Will make this optional, and do away with the `maskEnabled`
 /// property, as a nil value for a mask config will serve the same purpose.
@@ -53,20 +53,25 @@ public struct ScrollOffsetModifier: ViewModifier {
   
   public func body(content: Content) -> some View {
     
-    ScrollViewWithOffsetTracking(showsIndicators: showsIndicators) { offset in
-      if maskConfig.mode != .off {
-        scrollOffset = offset.y * -1
+    content
+      .overlay {
+        Text("Need to implement")
       }
-      output(offset)
-    } content: {
-      content
-        .safeAreaPadding(safePadding.edges, safePadding.padding)
-    }
-    .contentMargins(safePadding.edges, safePadding.padding, for: .scrollIndicators)
-    .scrollMask(
-      scrollOffset: scrollOffset,
-      config: maskConfig
-    )
+    
+//    ScrollViewWithOffsetTracking(showsIndicators: showsIndicators) { offset in
+//      if maskConfig.mode != .off {
+//        scrollOffset = offset.y * -1
+//      }
+//      output(offset)
+//    } content: {
+//      content
+//        .safeAreaPadding(safePadding.edges, safePadding.padding)
+//    }
+//    .contentMargins(safePadding.edges, safePadding.padding, for: .scrollIndicators)
+//    .scrollMask(
+//      scrollOffset: scrollOffset,
+//      config: maskConfig
+//    )
   }
 }
 

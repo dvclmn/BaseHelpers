@@ -7,7 +7,6 @@
 
 import SwiftUI
 //import Shortcuts
-import Geometry
 import Scrolling
 import BaseHelpers
 

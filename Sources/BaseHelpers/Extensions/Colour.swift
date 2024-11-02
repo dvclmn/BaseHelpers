@@ -1,6 +1,6 @@
 //
 //  File.swift
-//  
+//
 //
 //  Created by Dave Coleman on 23/7/2024.
 //
@@ -80,74 +80,76 @@ public extension ShapeStyle where Self == Color {
 public extension Color {
   
   
-    init(hex: String) {
-        let hex = hex.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
-        var int: UInt64 = 0
-        Scanner(string: hex).scanHexInt64(&int)
-        let a, r, g, b: UInt64
-        switch hex.count {
-        case 3: // RGB (12-bit)
-            (a, r, g, b) = (255, (int >> 8) * 17, (int >> 4 & 0xF) * 17, (int & 0xF) * 17)
-        case 6: // RGB (24-bit)
-            (a, r, g, b) = (255, int >> 16, int >> 8 & 0xFF, int & 0xFF)
-        case 8: // ARGB (32-bit)
-            (a, r, g, b) = (int >> 24, int >> 16 & 0xFF, int >> 8 & 0xFF, int & 0xFF)
-        default:
-            (a, r, g, b) = (1, 1, 1, 0)
-        }
-
-        self.init(
-            .sRGB,
-            red: Double(r) / 255,
-            green: Double(g) / 255,
-            blue:  Double(b) / 255,
-            opacity: Double(a) / 255
-        )
+  init(hex: String) {
+    let hex = hex.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
+    var int: UInt64 = 0
+    Scanner(string: hex).scanHexInt64(&int)
+    let a, r, g, b: UInt64
+    switch hex.count {
+      case 3: // RGB (12-bit)
+        (a, r, g, b) = (255, (int >> 8) * 17, (int >> 4 & 0xF) * 17, (int & 0xF) * 17)
+      case 6: // RGB (24-bit)
+        (a, r, g, b) = (255, int >> 16, int >> 8 & 0xFF, int & 0xFF)
+      case 8: // ARGB (32-bit)
+        (a, r, g, b) = (int >> 24, int >> 16 & 0xFF, int >> 8 & 0xFF, int & 0xFF)
+      default:
+        (a, r, g, b) = (1, 1, 1, 0)
     }
+    
+    self.init(
+      .sRGB,
+      red: Double(r) / 255,
+      green: Double(g) / 255,
+      blue:  Double(b) / 255,
+      opacity: Double(a) / 255
+    )
+  }
   
   // Helper function to get a more readable color description
-//  var info: String {
-//    if let sRGBColor = self.usingColorSpace(.sRGB) {
-//      let red = Int(sRGBColor.redComponent * 255)
-//      let green = Int(sRGBColor.greenComponent * 255)
-//      let blue = Int(sRGBColor.blueComponent * 255)
-//      let alpha = Int(sRGBColor.alphaComponent * 100)
-//      return "RGB(\(red), \(green), \(blue), \(alpha)%)"
-//    } else {
-//      return color.description
-//    }
-//  }
-
+  //  var info: String {
+  //    if let sRGBColor = self.usingColorSpace(.sRGB) {
+  //      let red = Int(sRGBColor.redComponent * 255)
+  //      let green = Int(sRGBColor.greenComponent * 255)
+  //      let blue = Int(sRGBColor.blueComponent * 255)
+  //      let alpha = Int(sRGBColor.alphaComponent * 100)
+  //      return "RGB(\(red), \(green), \(blue), \(alpha)%)"
+  //    } else {
+  //      return color.description
+  //    }
+  //  }
+  
 }
+
 
 public struct TrafficLightsModifier: ViewModifier {
-    
-    let lights: [Color] = [
-        (Color(hex: "FE6057")),
-        (Color(hex: "FFBC2E")),
-        (Color(hex: "28C840")),
-    ]
-    
-    public func body(content: Content) -> some View {
-        content
-            .overlay(alignment: .topLeading) {
-                if isPreview {
-                    HStack {
-                        ForEach(lights, id: \.self) { light in
-                            Circle()
-                                .fill(light)
-                        }
-                    }
-                    .frame(height: 12)
-                    .padding(20)
-                }
-            }
-    }
+  
+  
+  public func body(content: Content) -> some View {
+    content
+      .overlay(alignment: .topLeading) {
+        if isPreview {
+          HStack {
+            
+            Circle()
+              .fill(Color(hex: "FE6057"))
+            
+            Circle()
+              .fill(Color(hex: "FFBC2E"))
+            
+            Circle()
+              .fill(Color(hex: "28C840"))
+            
+          }
+          .frame(height: 12)
+          .padding(20)
+        }
+      }
+  }
 }
 public extension View {
-    func trafficLightsPreview() -> some View {
-        self.modifier(TrafficLightsModifier())
-    }
+  func trafficLightsPreview() -> some View {
+    self.modifier(TrafficLightsModifier())
+  }
 }
 
 /// This is cool and all, but there already exists a `NSColor.colorNameComponent` 🥲
@@ -180,13 +182,13 @@ public extension View {
 //    (.white, "white"),
 //    (.yellow, "yellow")
 //  ]
-//  
+//
 //  for (namedColor, name) in namedColors {
 //    if color.isClose(to: namedColor) {
 //      return name
 //    }
 //  }
-//  
+//
 //  return nil
 //}
 //
@@ -194,7 +196,7 @@ public extension View {
 //  if let name = namedColorDescription(color) {
 //    return name
 //  }
-//  
+//
 //  if let sRGBColor = color.usingColorSpace(.sRGB) {
 //    let red = Int(sRGBColor.redComponent * 255)
 //    let green = Int(sRGBColor.greenComponent * 255)
@@ -207,22 +209,22 @@ public extension View {
 //}
 //
 //public extension NSColor {
-//  
+//
 //  var displayName: String {
 //    colorDescription(self)
 //  }
-//  
+//
 //  func isClose(to other: NSColor, tolerance: CGFloat = 0.01) -> Bool {
 //    guard let rgb1 = self.usingColorSpace(.sRGB),
 //          let rgb2 = other.usingColorSpace(.sRGB) else {
 //      return false
 //    }
-//    
+//
 //    let redDiff = abs(rgb1.redComponent - rgb2.redComponent)
 //    let greenDiff = abs(rgb1.greenComponent - rgb2.greenComponent)
 //    let blueDiff = abs(rgb1.blueComponent - rgb2.blueComponent)
 //    let alphaDiff = abs(rgb1.alphaComponent - rgb2.alphaComponent)
-//    
+//
 //    return redDiff <= tolerance && greenDiff <= tolerance && blueDiff <= tolerance && alphaDiff <= tolerance
 //  }
 //}

@@ -11,7 +11,7 @@ import SwiftUI
 
 public extension KBShortcut {
   
-  public enum Modifier: ShortcutKey, CaseIterable {
+  enum Modifier: ShortcutKey, CaseIterable {
     
     case shift
     case option

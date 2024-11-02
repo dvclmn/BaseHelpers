@@ -20,14 +20,12 @@ let package = Package(
     
     /// Utilities
     .library(name: "Utilities", targets: [
-      "Geometry",
       "Profiler",
       "Renamable",
       "Resizable",
       "GlyphGrid",
       "Scrolling",
       "Selection",
-      "Popup",
       "PathDebugger"
     ]),
     
@@ -48,20 +46,14 @@ let package = Package(
       name: "Networking",
       targets: [
         "APIHandler",
-        "Keychain",
       ]
     ),
     
   ],
   dependencies: [
-
-    .package(url: "https://github.com/pointfreeco/swift-composable-architecture.git", from: "1.15.0"),
-    .package(url: "https://github.com/pointfreeco/swift-dependencies.git", from: "1.4.0"),
-    
-//    .package(url: "https://github.com/dvclmn/TextCore.git", branch: "main"),
-    .package(url: "https://github.com/danielsaidi/ScrollKit.git", from: "0.5.1"),
+//    .package(url: "https://github.com/danielsaidi/ScrollKit.git", from: "0.5.1"),
     .package(url: "https://github.com/raymondjavaxx/SmoothGradient.git", from: "1.0.0"),
-    .package(url: "https://github.com/evgenyneu/keychain-swift.git", from: "24.0.0"),
+    
     .package(url: "https://github.com/gohanlon/swift-memberwise-init-macro.git", from: "0.5.0"),
   ],
   
@@ -71,20 +63,16 @@ let package = Package(
     .target(name: "Grainient", dependencies: ["BaseStyles"]),
     
     /// Utilities
-    .target(name: "Geometry", dependencies: [.product(name: "Dependencies", package: "swift-dependencies")]),
     .target(name: "Profiler"),
     .target(name: "Renamable"),
     .target(name: "PathDebugger"),
     .target(name: "GlyphGrid", dependencies: ["BaseHelpers"]),
-    .target(name: "Resizable", dependencies: ["BaseHelpers", "Geometry", "Shortcuts"]),
-    .target(name: "Scrolling", dependencies: ["ScrollKit", .product(name: "SmoothGradient", package: "SmoothGradient")]),
-    .target(name: "Selection", dependencies: ["BaseHelpers", "Geometry", "Scrolling"]),
-    .target(name: "Popup", dependencies: [.product(name: "Dependencies", package: "swift-dependencies")]),
+    .target(name: "Resizable", dependencies: ["BaseHelpers", "Shortcuts"]),
+    .target(name: "Scrolling", dependencies: [.product(name: "SmoothGradient", package: "SmoothGradient")]),
+    .target(name: "Selection", dependencies: ["BaseHelpers", "Scrolling"]),
 
     /// Helpers
-      .target(name: "BaseHelpers", dependencies: [
-        .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
-      ]),
+    .target(name: "BaseHelpers"),
     .target(name: "ImageCompression"),
     .target(name: "TouchInertia"),
     .target(name: "Shaders"),
@@ -93,13 +81,10 @@ let package = Package(
     /// Networking
     .target(name: "APIHandler", dependencies: [
       "BaseHelpers",
-      .product(name: "KeychainSwift", package: "keychain-swift"),
+//      .product(name: "KeychainSwift", package: "keychain-swift"),
       .product(name: "MemberwiseInit", package: "swift-memberwise-init-macro")
     ]),
-    .target(name: "Keychain", dependencies: [
-      .product(name: "KeychainSwift", package: "keychain-swift"),
-      .product(name: "Dependencies", package: "swift-dependencies")
-    ]),
+
     
   ]
 )
