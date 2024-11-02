@@ -30,23 +30,24 @@ public struct ScrollMask: ViewModifier {
   public func body(content: Content) -> some View {
     
     switch maskMode {
+        // MARK: - Mask
       case .mask:
         content
-          .safeAreaPadding(edge.edgeSet, edgePadding)
-//          .overlay {
           .mask {
             MaskEffect()
               .allowsHitTesting(false)
           }
-//          .ignoresSafeArea()
+
+        // MARK: - Overlay
       case .overlay:
         content
-          .safeAreaPadding(edge.edgeSet, edgePadding)
           .overlay {
             MaskEffect()
               .blendMode(.multiply)
               .allowsHitTesting(false)
           }
+        
+        // MARK: - Off
       case .off:
         content
     }
@@ -148,10 +149,12 @@ extension ScrollMask {
   
   private func normalizeScrollOffset(_ offset: CGFloat, inverted: Bool = false) -> CGFloat {
     
+    let reversedOffset: CGFloat = offset * -1
+    
     /// This allows the user to set edge padding of `zero`, without causing issues with the offset mask effect
-    let minimumEffectValue: CGFloat = 16
+    let minimumEffectValue: CGFloat = 12
     let clampedValue = max(edgePadding, minimumEffectValue)
-    let result = min(max(offset / clampedValue, 0), 1)
+    let result = min(max(reversedOffset / clampedValue, 0), 1)
     
 //    if maskMode == .mask {
 //      print("Scroll Offset: \(offset)")
@@ -168,10 +171,12 @@ extension ScrollMask {
         /// Starting at fully transparent means the content will be completely
         /// faded out at the top, and fade in as it goes down
         return normalizeScrollOffset(scrollOffset, inverted: true)
+        
+        
       case .overlay:
         
         /// This is the opposite
-        return min(maskMode.opacity, normalizeScrollOffset(scrollOffset))
+        return min(maskMode.opacity, normalizeScrollOffset(scrollOffset, inverted: false))
 //        return isEffectActive ? opacity : 0.0
         
       case .off:

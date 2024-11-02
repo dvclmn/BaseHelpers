@@ -17,7 +17,7 @@ public struct OffsetScroll<Content: View>: View {
   let maskConfig: MaskConfig
   let showsIndicators: Bool
   let safePadding: SafePadding
-  let output: OffsetOutput
+  //  let output: OffsetOutput?
   
   let content: Content
   
@@ -26,13 +26,13 @@ public struct OffsetScroll<Content: View>: View {
     
     showsIndicators: Bool = true,
     safePadding: SafePadding = .init(.all, .zero),
-    output: @escaping OffsetOutput,
+    //    output: OffsetOutput? = nil,
     @ViewBuilder content: @escaping () -> Content
   ) {
     self.maskConfig = config
     self.showsIndicators = showsIndicators
     self.safePadding = safePadding
-    self.output = output
+    //    self.output = output
     self.content = content()
   }
   
@@ -41,14 +41,13 @@ public struct OffsetScroll<Content: View>: View {
     ScrollView {
       VStack {
         content
+          .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
       }
-      //      .trackScrollOffset { point in
-      ////        print("Debounced scroll offset: \(point)")
-      //        self.offset = point.y
-      //      }
+      .safeAreaPadding(.top, maskConfig.edgePadding)
+      
       .readFrame { point in
         self.offset = point.y
-        self.output(point)
+        //        self.offset = convertedOffset(point)
       }
     }
     .scrollMask(
@@ -56,12 +55,32 @@ public struct OffsetScroll<Content: View>: View {
       config: maskConfig
     )
     .coordinateSpace(name: "scroll")
-    //    .overlay(alignment: .topLeading) {
-    //      Text("Scroll offset: \(self.offset)")
-    //    }
+//    .overlay(alignment: .topLeading) {
+//      Text("Scroll offset: \(self.offset)")
+//    }
     
   }
 }
+
+public extension OffsetScroll {
+  private func convertedOffset(_ point: CGPoint) -> CGFloat {
+    let offset = point.y
+    let result = max(offset, .zero)
+    return result
+  }
+}
+
+#if DEBUG
+#Preview {
+  OffsetScroll(config: .init(mode: .overlay(opacity: 1.0))) {
+    //    ForEach(0..<10, id: \.self) { digit in
+    Text("Hello")
+    //    }
+  }
+  .frame(width: 600, height: 700)
+}
+#endif
+
 
 
 
