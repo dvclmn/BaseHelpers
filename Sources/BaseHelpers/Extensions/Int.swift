@@ -15,3 +15,9 @@ public extension Int {
     return String(self)
   }
 }
+
+public extension Int64 {
+  func getString() -> String {
+    return String(self)
+  }
+}

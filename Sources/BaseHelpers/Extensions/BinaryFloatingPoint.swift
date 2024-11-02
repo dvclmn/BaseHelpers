@@ -27,6 +27,18 @@ public extension BinaryFloatingPoint {
 }
 
 
+//public extension Double {
+//  var wholeNumber: String {
+//    return toDecimalPlace(self, to: 0)
+//  }
+//  func toDecimal(_ place: Int) -> String {
+//    return toDecimalPlace(self, to: place)
+//  }
+//}
+
+
+
+
 public extension CGSize {
   var widthOrHeightIsZero: Bool {
     return self.width.isZero || self.height.isZero

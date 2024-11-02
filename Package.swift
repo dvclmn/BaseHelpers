@@ -29,6 +29,7 @@ let package = Package(
       "Scrolling",
       "Selection",
       "Popup",
+      "PathDebugger"
     ]),
     
     /// Helpers
@@ -75,6 +76,7 @@ let package = Package(
     .target(name: "TapOffToDismiss", dependencies: ["BaseHelpers", "Geometry", .product(name: "Dependencies", package: "swift-dependencies")]),
     .target(name: "Profiler"),
     .target(name: "Renamable"),
+    .target(name: "PathDebugger"),
     .target(name: "GlyphGrid", dependencies: ["BaseHelpers"]),
     .target(name: "Resizable", dependencies: ["BaseHelpers", "Geometry", "Shortcuts"]),
     .target(name: "Scrolling", dependencies: ["ScrollKit", .product(name: "SmoothGradient", package: "SmoothGradient")]),
