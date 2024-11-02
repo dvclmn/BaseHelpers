@@ -7,58 +7,8 @@
 
 import Foundation
 
-//public extension DependencyValues {
-//  var windowDimensions: WindowSizeHandler {
-//    get { self[WindowSizeHandler.self] }
-//    set { self[WindowSizeHandler.self] = newValue }
-//  }
-//}
-//
-//extension WindowSizeHandler: DependencyKey {
-//  public static let liveValue = WindowSizeHandler()
-//  public static var testValue = WindowSizeHandler()
-//}
-//
-//@Observable
-//public class WindowSizeHandler {
-//  
-//  public var width: CGFloat
-//  public var height: CGFloat
-//  
-//  public init(
-//    width: CGFloat = .zero,
-//    height: CGFloat = .zero
-//  ) {
-//    self.width = width
-//    self.height = height
-//  }
-//}
-//
-//public struct WindowSizeModifier: ViewModifier {
-//  @Dependency(\.windowDimensions) var windowSize
-//  
-//  public func body(content: Content) -> some View {
-//    content
-//      .background(
-//        GeometryReader { geometry in
-//          Color.clear
-//            .task(id: geometry.size) {
-//              windowSize.width = geometry.size.width
-//              windowSize.height = geometry.size.height
-//            }
-//        }
-//      )
-//  }
-//}
-//
-//public extension View {
-//  func readWindowSize() -> some View {
-//    self.modifier(WindowSizeModifier())
-//  }
-//}
-
-
 /// Example usage (seems like this could be improved)
+/// 
 /// ```
 ///    Task {
 ///      await heightHandler.processTask { [weak self] in
@@ -77,9 +27,9 @@ import Foundation
 ///
 public actor Debouncer {
   private var task: Task<Void, Never>?
-  private let interval: Double
+  private let interval: TimeInterval
   
-  public init(interval: Double = 0.1) {
+  public init(interval: TimeInterval = 0.1) {
     self.interval = interval
   }
   
