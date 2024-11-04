@@ -11,7 +11,7 @@ public extension Binding {
   
   static func convert<TInt, TFloat>(_ intBinding: Binding<TInt>) -> Binding<TFloat>
   where TInt: BinaryInteger & Sendable,
-        TFloat: BinaryFloatingPoint{
+        TFloat: BinaryFloatingPoint, TFloat.Stride: BinaryFloatingPoint {
           
           Binding<TFloat> (
             get: { TFloat(intBinding.wrappedValue) },
@@ -21,6 +21,7 @@ public extension Binding {
   
   static func convert<TFloat, TInt>(_ floatBinding: Binding<TFloat>) -> Binding<TInt>
   where TFloat: BinaryFloatingPoint & Sendable,
+        TFloat.Stride: BinaryFloatingPoint,
         TInt: BinaryInteger {
           
           Binding<TInt> (

@@ -3,16 +3,28 @@
 
 import SwiftUI
 
-// MARK: - Use GeometryReader to get the size of the view
+public struct ReadSizeModifier: ViewModifier {
+  
+  @State private var debouncer = DebounceValue(CGSize.zero)
+  
+  public func body(content: Content) -> some View {
+    content
+      .background {
+        GeometryReader { geometryProxy in
+          Color.clear
+            .preference(key: SizePreferenceKey.self, value: geometryProxy.size)
+        }
+      }
+      .onPreferenceChange(SizePreferenceKey.self) { newSize in
+        debouncer.update(with: newSize)
+      }
+
+  }
+}
+
 public extension View {
     func readSize(onChange: @escaping (CGSize) -> Void) -> some View {
-        background(
-            GeometryReader { geometryProxy in
-                Color.clear
-                    .preference(key: SizePreferenceKey.self, value: geometryProxy.size)
-            }
-        )
-        .onPreferenceChange(SizePreferenceKey.self, perform: onChange)
+      modifier(ReadSizeModifier())
     }
 }
 
