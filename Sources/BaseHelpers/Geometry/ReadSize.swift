@@ -5,7 +5,15 @@ import SwiftUI
 
 public struct ReadSizeModifier: ViewModifier {
   
-  @State private var debouncer = DebounceValue(CGSize.zero)
+  @State private var debouncer: DebounceValue<CGSize>
+  
+  let onChange: (CGSize) -> Void
+  
+  public init(onChange: @escaping (CGSize) -> Void) {
+    self.onChange = onChange
+    // Initialize the State wrapper directly
+    _debouncer = State(initialValue: DebounceValue(.zero))
+  }
   
   public func body(content: Content) -> some View {
     content
@@ -19,18 +27,23 @@ public struct ReadSizeModifier: ViewModifier {
         debouncer.update(with: newSize)
       }
 
+      .onAppear {
+        // Set up the callback when the view appears
+        debouncer.valueChanged = onChange
+      }
+
   }
 }
 
 public extension View {
-    func readSize(onChange: @escaping (CGSize) -> Void) -> some View {
-      modifier(ReadSizeModifier())
-    }
+  func readSize(onChange: @escaping (CGSize) -> Void) -> some View {
+    modifier(ReadSizeModifier(onChange: onChange))
+  }
 }
 
 private struct SizePreferenceKey: PreferenceKey {
-    static let defaultValue: CGSize = .zero
-    static func reduce(value: inout CGSize, nextValue: () -> CGSize) {}
+  static let defaultValue: CGSize = .zero
+  static func reduce(value: inout CGSize, nextValue: () -> CGSize) {}
 }
 
 

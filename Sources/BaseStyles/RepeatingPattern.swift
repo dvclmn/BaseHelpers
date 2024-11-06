@@ -27,15 +27,17 @@ public struct RepeatingPattern: ViewModifier {
     content
       .mask {
         
-        if displayMode == .mask {
-          Pattern()
-        } else if displayMode == .maskInverted {
-          Color.white
-            .overlay {
-              Pattern()
-                .blendMode(.destinationOut)
-            }
-            .compositingGroup()
+        if displayMode != .off {
+          if displayMode == .mask {
+            Pattern()
+          } else if displayMode == .maskInverted {
+            Color.white
+              .overlay {
+                Pattern()
+                  .blendMode(.destinationOut)
+              }
+              .compositingGroup()
+          }
         }
 
       } // END mask

@@ -63,6 +63,7 @@ public struct Styles {
   public static let sizeMassive:                       Double = 144
   
   public static let paddingToolbarTrafficLightsWidth:     Double = 82
+  public static let paddingToMatchList:                   Double = 16
   public static let paddingToMatchForm:                   Double = 22
   public static let paddingToolbarHorizontal:             Double = 18
   public static let paddingNSTextViewCompensation:                    Double = 5

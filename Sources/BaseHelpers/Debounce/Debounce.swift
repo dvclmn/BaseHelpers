@@ -12,8 +12,13 @@ import SwiftUI
 @MainActor
 public final class DebounceValue<T> {
   
-  private(set) var value: T
+  private(set) var value: T {
+    didSet {
+      valueChanged?(value)
+    }
+  }
   
+  var valueChanged: ((T) -> Void)?
   private var task: Task<Void, Never>?
   private let interval: Duration
 
@@ -28,7 +33,6 @@ public final class DebounceValue<T> {
   public func update(with newValue: T) {
     task?.cancel()
     task = Task { @MainActor in
-      
       do {
         try await Task.sleep(for: self.interval)
         if !Task.isCancelled {
