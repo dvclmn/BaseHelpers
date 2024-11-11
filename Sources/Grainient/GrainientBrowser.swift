@@ -7,19 +7,6 @@
 
 import SwiftUI
 
-//struct GrainientExample: View {
-//    var body: some View {
-//        Text("Hello, World!")
-//        .frame(maxWidth: .infinity, maxHeight: .infinity)
-//        .grainient(seed: 98365)
-//    }
-//}
-//
-//#Preview {
-//  GrainientExample()
-//}
-
-
 struct GrainientBrowser: View {
   
   var body: some View {
