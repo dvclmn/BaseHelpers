@@ -52,6 +52,23 @@ public enum Swatch: String, Codable, CaseIterable, Identifiable, Sendable {
   case darkPlum
   case darkBlack
   
+  /// System colours
+  case red
+  case orange
+  case yellow
+  case green
+  case mint
+  case teal
+  case cyan
+  case blue
+  case indigo
+  case purple
+  case pink
+  case brown
+  case white
+  case gray
+  case black
+  
   public var id: String {
     self.rawValue
   }
@@ -72,6 +89,24 @@ public enum Swatch: String, Codable, CaseIterable, Identifiable, Sendable {
   
   public var colour: Color {
     switch self {
+        
+        
+      case .red: Color.red
+      case .orange: Color.orange
+      case .yellow: Color.yellow
+      case .green: Color.green
+      case .mint: Color.mint
+      case .teal: Color.teal
+      case .cyan: Color.cyan
+      case .blue: Color.black
+      case .indigo: Color.indigo
+      case .purple: Color.purple
+      case .pink: Color.pink
+      case .brown: Color.brown
+      case .white: Color.white
+      case .gray: Color.gray
+      case .black: Color.black
+        
       case .offWhite:
         Color(.displayP3, red: 0.901, green: 0.888, blue: 0.921, opacity: 1)
         
@@ -157,9 +192,32 @@ public enum Swatch: String, Codable, CaseIterable, Identifiable, Sendable {
     }
   } // END color property
   
+  public static var systemColours: Set<Swatch> {
+    [
+      .red,
+      .orange,
+      .yellow,
+      .green,
+      .mint,
+      .teal,
+      .cyan,
+      .blue,
+      .indigo,
+      .purple,
+      .pink,
+      .brown,
+      .white,
+      .gray,
+      .black,
+    ]
+  }
   
   public static func random(range: SwatchRange = SwatchRange.all) -> Swatch {
-    return range.swatches.randomElement() ?? Swatch.chalkBlue
+    
+    let result = range.swatches.filter { swatch in
+      !Swatch.systemColours.contains(swatch)
+    }
+    return result.randomElement() ?? Swatch.chalkBlue
   }
   
   
@@ -171,6 +229,7 @@ public enum SwatchRange {
   
   var swatches: [Swatch] {
     switch self {
+
       case .all:
         Swatch.allCases
       case .imageBackgrounds:
