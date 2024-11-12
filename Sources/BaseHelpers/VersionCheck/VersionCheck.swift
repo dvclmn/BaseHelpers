@@ -7,19 +7,45 @@
 
 import SwiftUI
 
-public enum OSVersion {
-  case macOS15
-  case macOS14
-  
-  //  var available: String {
-  //    switch self {
-  //      case .macOS15:
-  //        "macOS 15.0, *"
-  //      case .macOS14:
-  //        "macOS 14.0, *"
-  //    }
-  //  }
+public extension View {
+  /// Applies the given transform if the given condition evaluates to `true`.
+  /// - Parameters:
+  ///   - condition: The condition to evaluate.
+  ///   - transform: The transform to apply to the source `View`.
+  /// - Returns: Either the original `View` or the modified `View` if the condition is `true`.
+  @ViewBuilder func macOS15<Content: View>(transform: (Self) -> Content) -> some View {
+      self
+  }
 }
+
+//public extension Bool {
+//  static var macOS15: Bool {
+//    
+//    guard #available(macOS 15, *) else {
+//      
+//      return true
+//    }
+//    
+//    return false
+//  }
+//  
+//}
+
+
+
+//public enum OSVersion {
+//  case macOS15
+//  case macOS14
+//  
+//  //  var available: String {
+//  //    switch self {
+//  //      case .macOS15:
+//  //        "macOS 15.0, *"
+//  //      case .macOS14:
+//  //        "macOS 14.0, *"
+//  //    }
+//  //  }
+//}
 
 //public struct ExampleModifier: ViewModifier {
 //
