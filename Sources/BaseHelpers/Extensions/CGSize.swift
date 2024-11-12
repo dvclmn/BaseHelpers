@@ -22,4 +22,8 @@ public extension CGSize {
   var isNonNegative: Bool {
     return width >= 0 && height >= 0
   }
+  
+  var centrePoint: CGPoint {
+    return CGPoint(x: width / 2, y: height / 2)
+  }
 }
