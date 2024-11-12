@@ -7,11 +7,11 @@
 
 import Foundation
 
-public struct OpenAIConfirmationResponse: Codable {
+public struct OpenAIConfirmationResponse: Codable, Sendable {
   let object: String
   let data: [OpenAIConfirmationResponseData]
 }
-public struct OpenAIConfirmationResponseData: Codable {
+public struct OpenAIConfirmationResponseData: Codable, Sendable {
   let id: String
   let object: String
   let created: Int

@@ -63,7 +63,7 @@ let package = Package(
     .target(name: "Renamable"),
     .target(name: "PathDebugger"),
     .target(name: "GlyphGrid", dependencies: ["BaseHelpers"]),
-    .target(name: "Resizable", dependencies: ["BaseHelpers", "Shortcuts"]),
+    .target(name: "Resizable", dependencies: ["BaseHelpers", "Shortcuts", "BaseStyles"]),
     .target(name: "Selection", dependencies: ["BaseHelpers"]),
 
     /// Helpers
