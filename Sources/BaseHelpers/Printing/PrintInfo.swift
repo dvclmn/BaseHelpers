@@ -5,11 +5,12 @@
 //  Created by Dave Coleman on 23/7/2024.
 //
 
+import SwiftUI
+
 public enum PrintInfo {
     case userDefaultsURL
 }
 
-import SwiftUI
 
 public struct PrintUserDefaults: ViewModifier {
     

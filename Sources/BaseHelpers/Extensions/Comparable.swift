@@ -5,6 +5,8 @@
 //  Created by Dave Coleman on 31/8/2024.
 //
 
+import Foundation
+
 public extension Comparable {
   func constrained(_ atLeast: Self, _ atMost: Self) -> Self {
     return min(max(self, atLeast), atMost)

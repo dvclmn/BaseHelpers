@@ -48,12 +48,12 @@ class SimpleEncryption {
 }
 
 // Usage
-let encryption = SimpleEncryption.shared
-if let encryptedString = encryption.encrypt("Hello, World!") {
-  UserDefaults.standard.set(encryptedString, forKey: "myEncryptedString")
-}
-
-if let retrievedString = UserDefaults.standard.string(forKey: "myEncryptedString"),
-   let decryptedString = encryption.decrypt(retrievedString) {
-  print(decryptedString) // "Hello, World!"
-}
+//let encryption = SimpleEncryption.shared
+//if let encryptedString = encryption.encrypt("Hello, World!") {
+//  UserDefaults.standard.set(encryptedString, forKey: "myEncryptedString")
+//}
+//
+//if let retrievedString = UserDefaults.standard.string(forKey: "myEncryptedString"),
+//   let decryptedString = encryption.decrypt(retrievedString) {
+//  print(decryptedString) // "Hello, World!"
+//}

@@ -19,6 +19,84 @@ public extension Dictionary {
   }
 }
 
+
+public extension Regex<Regex<(
+  Substring,
+  leading: Substring,
+  content: Substring,
+  trailing: Substring
+)>.RegexOutput>.Match {
+  
+  var prettyDescription: String {
+    
+    var result = "Match:\n"
+    result += "  Range: Lower bound: \(self.range.lowerBound), Upper bound: \(self.range.upperBound)\n"
+    result += "  Matched text: \"\(self.0)\"\n"
+    result += "  Output:\n"
+    result += "    Full match: \"\(self.0)\"\n"
+    result += "    Leading: \"\(self.leading)\"\n"
+    result += "    Content: \"\(self.content)\"\n"
+    result += "    Trailing: \"\(self.trailing)\"\n"
+    return result
+    
+  }
+  
+  var briefDescription: String {
+    
+    let result = "Matches (leading, content, trailing):  ░░░░░\"\(self.output.leading)\"░░░░░\"\(self.output.content)\"░░░░░\"\(self.output.trailing)\"░░░░░\n"
+    return result
+    
+  }
+  
+  func boxedDescription(header: String) -> String {
+    fatalError("Need to implement this")
+    
+    //    return SwiftBox.drawBox(
+    //      header: header,
+    //      content: self.prettyDescription
+    //    )
+  }
+}
+
+public extension Regex<Regex<(Substring, Substring)>.RegexOutput>.Match {
+  
+  var prettyDescription: String {
+    var result = "Match:\n"
+    result += "  Range: \(self.range)\n"
+    result += "  Matched text: \"\(self.0)\"\n"
+    
+    if !self.1.isEmpty {
+      result += "  Captured group: \"\(self.1)\"\n"
+    }
+    
+    result += "  Output:\n"
+    result += "    Full match: \"\(self.output.0)\"\n"
+    result += "    Capture: \"\(self.output.1)\"\n"
+    return result
+  }
+  
+  func boxedDescription(header: String) -> String {
+    
+    fatalError("Need to implement this")
+    //    return SwiftBox.draw(header: header, content: self.prettyDescription)
+  }
+  
+  
+}
+
+public extension Regex<Regex<Substring>.RegexOutput>.Match {
+  var prettyDescription: String {
+    var result = "Match:\n"
+    result += "  Range: \(self.range)\n"
+    result += "  Matched text: \"\(self)\"\n"
+    
+    result += "  Output:\n"
+    result += "  Full match: \"\(self.output)\"\n"
+    return result
+  }
+}
+
+
 /// Below moved here from MDE, need to fix up
 //func condensedElementSummary<Something>(_ elements: [Something]): String {
 //  let elementCounts = Dictionary(grouping: elements, by: { $0.syntax })
@@ -241,79 +319,3 @@ public extension Dictionary {
 //  }
 //}
 
-
-public extension Regex<Regex<(
-  Substring,
-  leading: Substring,
-  content: Substring,
-  trailing: Substring
-)>.RegexOutput>.Match {
-  
-  var prettyDescription: String {
-    
-    var result = "Match:\n"
-    result += "  Range: Lower bound: \(self.range.lowerBound), Upper bound: \(self.range.upperBound)\n"
-    result += "  Matched text: \"\(self.0)\"\n"
-    result += "  Output:\n"
-    result += "    Full match: \"\(self.0)\"\n"
-    result += "    Leading: \"\(self.leading)\"\n"
-    result += "    Content: \"\(self.content)\"\n"
-    result += "    Trailing: \"\(self.trailing)\"\n"
-    return result
-
-  }
-  
-  var briefDescription: String {
-    
-    let result = "Matches (leading, content, trailing):  ░░░░░\"\(self.output.leading)\"░░░░░\"\(self.output.content)\"░░░░░\"\(self.output.trailing)\"░░░░░\n"
-    return result
-    
-  }
-  
-  func boxedDescription(header: String) -> String {
-    fatalError("Need to implement this")
-    
-    //    return SwiftBox.drawBox(
-    //      header: header,
-    //      content: self.prettyDescription
-    //    )
-  }
-}
-
-public extension Regex<Regex<(Substring, Substring)>.RegexOutput>.Match {
-  
-  var prettyDescription: String {
-    var result = "Match:\n"
-    result += "  Range: \(self.range)\n"
-    result += "  Matched text: \"\(self.0)\"\n"
-    
-    if !self.1.isEmpty {
-      result += "  Captured group: \"\(self.1)\"\n"
-    }
-    
-    result += "  Output:\n"
-    result += "    Full match: \"\(self.output.0)\"\n"
-    result += "    Capture: \"\(self.output.1)\"\n"
-    return result
-  }
-  
-  func boxedDescription(header: String) -> String {
-    
-    fatalError("Need to implement this")
-    //    return SwiftBox.draw(header: header, content: self.prettyDescription)
-  }
-  
-  
-}
-
-public extension Regex<Regex<Substring>.RegexOutput>.Match {
-  var prettyDescription: String {
-    var result = "Match:\n"
-    result += "  Range: \(self.range)\n"
-    result += "  Matched text: \"\(self)\"\n"
-    
-    result += "  Output:\n"
-    result += "  Full match: \"\(self.output)\"\n"
-    return result
-  }
-}

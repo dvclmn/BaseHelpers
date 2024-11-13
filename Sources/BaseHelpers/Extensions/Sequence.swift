@@ -5,6 +5,7 @@
 //  Created by Dave Coleman on 25/9/2024.
 //
 
+import Foundation
 
 public extension Sequence where Element: Identifiable {
   

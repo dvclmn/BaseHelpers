@@ -5,6 +5,8 @@
 //  Created by Dave Coleman on 23/8/2024.
 //
 
+import Foundation
+
 public extension Int {
   /// A Boolean value indicating whether the integer is even.
   var isEven: Bool {
