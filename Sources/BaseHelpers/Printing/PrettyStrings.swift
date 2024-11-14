@@ -21,7 +21,11 @@ import Foundation
 
 public extension Dictionary {
   var prettyPrinted: String {
-    prettyPrintValue(self, indent: 0)
+    prettyPrintValue(self, indent: 0, currentDepth: 0, maxDepth: 2)
+  }
+  
+  func prettyPrinted(maxDepth: Int = .max) -> String {
+    prettyPrintValue(self, indent: 0, currentDepth: 0, maxDepth: maxDepth)
   }
 }
 
@@ -31,35 +35,61 @@ private func calculatePadding(for children: Mirror.Children) -> Int {
   return maxLength + 1  // Add 1 for the colon
 }
 
-private func prettyPrintValue(_ value: Any, indent: Int = 0) -> String {
+
+// Protocol for types that can be directly printed
+private protocol DirectlyPrintable {
+  var printableString: String { get }
+}
+
+// Extend basic types to conform to DirectlyPrintable
+extension String: DirectlyPrintable {
+  var printableString: String { "\"\(self.replacingOccurrences(of: "\"", with: "\\\""))\"" }
+}
+
+extension Numeric where Self: CustomStringConvertible {
+  var printableString: String { description }
+}
+extension Int: DirectlyPrintable {}
+extension Double: DirectlyPrintable {}
+extension Float: DirectlyPrintable {}
+
+extension Bool: DirectlyPrintable {
+  var printableString: String { description }
+}
+
+extension Date: DirectlyPrintable {
+  var printableString: String { "\"\(ISO8601DateFormatter().string(from: self))\"" }
+}
+
+extension URL: DirectlyPrintable {
+  var printableString: String { "\"\(absoluteString)\"" }
+}
+
+extension Data: DirectlyPrintable {
+  var printableString: String { "\"\(base64EncodedString())\"" }
+}
+
+private func prettyPrintValue(_ value: Any, indent: Int = 0, currentDepth: Int, maxDepth: Int) -> String {
   let indentation = String(repeating: " ", count: indent)
   let nestedIndent = String(repeating: " ", count: indent + 2)
-
-  // Handle basic types
+  
+  // Check depth limit
+  if currentDepth >= maxDepth {
+    return "{...}"
+  }
+  
+  // Handle DirectlyPrintable types
+  if let printable = value as? DirectlyPrintable {
+    return printable.printableString
+  }
+  
   switch value {
-    case let string as String:
-      return "\"\(string.replacingOccurrences(of: "\"", with: "\\\""))\""
-    case let number as Int:
-      return String(number)
-    case let number as Double:
-      return String(number)
-    case let number as Float:
-      return String(number)
-    case let bool as Bool:
-      return String(bool)
-    case let date as Date:
-      let formatter = ISO8601DateFormatter()
-      return "\"\(formatter.string(from: date))\""
-    case let url as URL:
-      return "\"\(url.absoluteString)\""
-    case let data as Data:
-      return "\"\(data.base64EncodedString())\""
     case let array as [Any]:
       if array.isEmpty { return "[]" }
       
       var result = "[\n"
       for element in array {
-        result += "\(nestedIndent)\(prettyPrintValue(element, indent: indent + 2)),\n"
+        result += "\(nestedIndent)\(prettyPrintValue(element, indent: indent + 2, currentDepth: currentDepth + 1, maxDepth: maxDepth)),\n"
       }
       result = String(result.dropLast(2))
       result += "\n\(indentation)]"
@@ -68,41 +98,35 @@ private func prettyPrintValue(_ value: Any, indent: Int = 0) -> String {
     case let dict as [AnyHashable: Any]:
       if dict.isEmpty { return "[:]" }
       
-      /// Find the longest key length for alignment
       let maxKeyLength = dict.keys.map {
-        prettyPrintValue($0, indent: 0).count
+        prettyPrintValue($0, indent: 0, currentDepth: currentDepth, maxDepth: maxDepth).count
       }.max() ?? 0
       
       var result = "[\n"
       for (key, value) in dict {
-        let keyString = prettyPrintValue(key, indent: indent + 2)
-        let valueString = prettyPrintValue(value, indent: indent + 2)
-        let padding = max(0, maxKeyLength - keyString.count + 1)  // Ensure padding is never negative
-//        let padding = String(repeating: " ", count: maxKeyLength - keyString.count + 1)
-        result += "\(nestedIndent)\(keyString):\(padding)\(valueString),\n"
+        let keyString = prettyPrintValue(key, indent: indent + 2, currentDepth: currentDepth, maxDepth: maxDepth)
+        let valueString = prettyPrintValue(value, indent: indent + 2, currentDepth: currentDepth + 1, maxDepth: maxDepth)
+        let padding = max(0, maxKeyLength - keyString.count + 1)
+        result += "\(nestedIndent)\(keyString):\(String(repeating: " ", count: padding))\(valueString),\n"
       }
       result = String(result.dropLast(2))
       result += "\n\(indentation)]"
       return result
       
     default:
-      /// Use Mirror to reflect on custom types
       let mirror = Mirror(reflecting: value)
       if mirror.children.isEmpty {
         return String(describing: value)
       }
       
-      /// Calculate padding based on the longest property name
       let padding = calculatePadding(for: mirror.children)
       
       var result = "{\n"
       for child in mirror.children {
         if let label = child.label {
           let key = "\"\(label)\""
-          let spaces = String(repeating: " ", count: max(0, padding - key.count))  // Ensure padding is never negative
-
-//          let spaces = String(repeating: " ", count: padding - key.count)
-          result += "\(nestedIndent)\(key):\(spaces)\(prettyPrintValue(child.value, indent: indent + 2)),\n"
+          let spaces = String(repeating: " ", count: max(0, padding - key.count))
+          result += "\(nestedIndent)\(key):\(spaces)\(prettyPrintValue(child.value, indent: indent + 2, currentDepth: currentDepth + 1, maxDepth: maxDepth)),\n"
         }
       }
       result = String(result.dropLast(2))
