@@ -9,7 +9,7 @@
 //
 //import SwiftUI
 //
-//@available(macOS 15, *)
+//@available(macOS 15, iOS 18, *)
 //public struct CustomPointerModifier: ViewModifier {
 //  var style: PointerStyle
 //  

@@ -5,6 +5,8 @@
 //  Created by Dave Coleman on 20/6/2024.
 //
 
+#if canImport(AppKit)
+
 import SwiftUI
 import Foundation
 
@@ -76,3 +78,6 @@ struct ResizableExample: View {
         .frame(width: 600, height: 700)
         .background(.black.opacity(0.6))
 }
+
+#endif
+

@@ -7,15 +7,101 @@
 
 import Foundation
 
+//public extension Dictionary {
+//  var prettyPrinted: String {
+//    var result = "[\n"
+//    for (key, value) in self {
+//      result += "  \"\(key)\": \"\(value)\",\n"
+//    }
+//    result = String(result.dropLast(2)) // Remove the last comma and newline
+//    result += "\n]"
+//    return result
+//  }
+//}
+
 public extension Dictionary {
   var prettyPrinted: String {
-    var result = "[\n"
-    for (key, value) in self {
-      result += "  \"\(key)\": \"\(value)\",\n"
-    }
-    result = String(result.dropLast(2)) // Remove the last comma and newline
-    result += "\n]"
-    return result
+    prettyPrintValue(self, indent: 0)
+  }
+}
+
+private func calculatePadding(for children: Mirror.Children) -> Int {
+  // Find the longest key length including quotes
+  let maxLength = children.compactMap { $0.label }.map { $0.count + 2 }.max() ?? 0
+  return maxLength + 1  // Add 1 for the colon
+}
+
+private func prettyPrintValue(_ value: Any, indent: Int = 0) -> String {
+  let indentation = String(repeating: " ", count: indent)
+  let nestedIndent = String(repeating: " ", count: indent + 2)
+  
+  // Handle nil values
+//  if let optional = value as? Any?, case Optional<Any>.none = optional {
+//    return "null"
+//  }
+  
+  // Unwrap optionals
+//  let unwrapped = (value as Any?) ?? value
+  
+  // Handle basic types
+  switch value {
+    case let string as String:
+      return "\"\(string.replacingOccurrences(of: "\"", with: "\\\""))\""
+    case let number as Int:
+      return String(number)
+    case let number as Double:
+      return String(number)
+    case let number as Float:
+      return String(number)
+    case let bool as Bool:
+      return String(bool)
+    case let date as Date:
+      let formatter = ISO8601DateFormatter()
+      return "\"\(formatter.string(from: date))\""
+    case let url as URL:
+      return "\"\(url.absoluteString)\""
+    case let data as Data:
+      return "\"\(data.base64EncodedString())\""
+    case let array as [Any]:
+      if array.isEmpty { return "[]" }
+      
+      var result = "[\n"
+      for element in array {
+        result += "\(nestedIndent)\(prettyPrintValue(element, indent: indent + 2)),\n"
+      }
+      result = String(result.dropLast(2))  // Remove last comma and newline
+      result += "\n\(indentation)]"
+      return result
+      
+    case let dict as [AnyHashable: Any]:
+      if dict.isEmpty { return "[:]" }
+      
+      var result = "[\n"
+      for (key, value) in dict {
+        let keyString = prettyPrintValue(key, indent: indent + 2)
+        let valueString = prettyPrintValue(value, indent: indent + 2)
+        result += "\(nestedIndent)\(keyString): \(valueString),\n"
+      }
+      result = String(result.dropLast(2))  // Remove last comma and newline
+      result += "\n\(indentation)]"
+      return result
+      
+    default:
+      // Use Mirror to reflect on custom types
+      let mirror = Mirror(reflecting: value)
+      if mirror.children.isEmpty {
+        return String(describing: value)
+      }
+      
+      var result = "{\n"
+      for child in mirror.children {
+        if let label = child.label {
+          result += "\(nestedIndent)\"\(label)\" :\t\t\(prettyPrintValue(child.value, indent: indent + 2)),\n"
+        }
+      }
+      result = String(result.dropLast(2))  // Remove last comma and newline
+      result += "\n\(indentation)}"
+      return result
   }
 }
 

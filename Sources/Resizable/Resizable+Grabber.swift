@@ -5,6 +5,8 @@
 //  Created by Dave Coleman on 26/7/2024.
 //
 
+#if canImport(AppKit)
+
 import SwiftUI
 import BaseHelpers
 import Shortcuts
@@ -231,3 +233,5 @@ extension Resizable {
 //  }
 //}
 //
+
+#endif

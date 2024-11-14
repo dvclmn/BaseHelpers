@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import BaseHelpers
 
 extension GlyphCell {
   
@@ -33,7 +34,7 @@ extension GlyphCell {
   /// hit of obtaining the right font.
   ///
   func calculateCellSize(
-    for font: NSFont,
+    for font: OFont,
     minWidth: CGFloat = 1.5
   ) -> CGSize {
     
@@ -46,7 +47,16 @@ extension GlyphCell {
       return .zero
     }
     
-    let glyphWidth: CGFloat = font.advancement(forCGGlyph: cgGlyph).width
+    let glyphWidth: CGFloat
+#if canImport(AppKit)
+    
+    glyphWidth = font.advancement(forCGGlyph: cgGlyph).width
+#elseif canImport(UIKit)
+#warning("This (obviously) needs proper support for iOS")
+    glyphWidth = 20
+    
+    #endif
+    
     
     let glyphHeight: CGFloat = font.ascender - font.descender + font.leading
     

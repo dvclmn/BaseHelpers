@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import BaseHelpers
 
 extension GlyphCell {
   
@@ -24,9 +25,9 @@ extension GlyphCell {
   ///
   func getFonts(
     fontName: String
-  ) -> (NSFont, CTFont)? {
+  ) -> (OFont, CTFont)? {
     
-    guard let nsFont = NSFont.init(name: fontName, size: GlyphGrid.baseFontSize) else { return nil }
+    guard let nsFont = OFont.init(name: fontName, size: GlyphGrid.baseFontSize) else { return nil }
     
     let ctFont = nsFont as CTFont
     

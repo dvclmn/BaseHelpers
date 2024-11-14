@@ -4,6 +4,8 @@
 //
 //  Created by Dave Coleman on 30/4/2024.
 //
+#if canImport(AppKit)
+
 import Foundation
 import SwiftUI
 import OSLog
@@ -327,3 +329,4 @@ public extension View {
   }
 }
 
+#endif

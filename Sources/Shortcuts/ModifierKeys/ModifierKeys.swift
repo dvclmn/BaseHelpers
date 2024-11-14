@@ -8,13 +8,15 @@
 import Foundation
 import SwiftUI
 
-#if os(macOS)
+public typealias Modifiers = Set<ModifierKey>
 
 public enum ModifierKey: Hashable, Sendable {
   case shift, control, option, command
 }
 
-public typealias Modifiers = Set<ModifierKey>
+#if os(macOS)
+
+
 
 public extension NSEvent.ModifierFlags {
   func toModifierKey() -> ModifierKey? {
@@ -61,10 +63,17 @@ public struct ModifierKeysModifier: ViewModifier {
   }
 }
 
+#endif
+
 public extension View {
+#if canImport(AppKit)
   func readModifierKeys() -> some View {
     self.modifier(ModifierKeysModifier())
   }
+#elseif canImport(UIKit)
+  func readModifierKeys() -> some View {
+    self
+  }
+  #endif
 }
 
-#endif

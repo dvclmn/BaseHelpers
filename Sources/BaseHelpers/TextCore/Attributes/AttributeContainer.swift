@@ -8,6 +8,8 @@
 import Foundation
 import SwiftUI
 
+
+
 public extension AttributeContainer {
   
   static var underlineDebug: AttributeContainer {
@@ -51,9 +53,16 @@ public extension AttributeContainer {
     }
   }
   
-  /// Overload, to allow `\.appKit` as default
+#if canImport(UIKit)
+  func getAttributes() -> [NSAttributedString.Key: Any]? {
+    return getAttributes(for: \.uiKit)
+  }
+
+#elseif canImport(AppKit)
   func getAttributes() -> [NSAttributedString.Key: Any]? {
     return getAttributes(for: \.appKit)
   }
+
+#endif
   
 }

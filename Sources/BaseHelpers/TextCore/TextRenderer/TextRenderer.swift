@@ -19,7 +19,7 @@ public struct TextRender<T: TextRenderer>: ViewModifier {
   
   public func body(content: Content) -> some View {
     
-    if #available(macOS 15.0, *) {
+    if #available(macOS 15, iOS 18, *) {
       content
         .textRenderer(renderer)
     } else {
