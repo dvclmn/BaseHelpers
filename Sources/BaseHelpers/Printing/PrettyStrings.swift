@@ -26,7 +26,7 @@ public extension Dictionary {
 }
 
 private func calculatePadding(for children: Mirror.Children) -> Int {
-  // Find the longest key length including quotes
+  /// Find the longest key length including quotes
   let maxLength = children.compactMap { $0.label }.map { $0.count + 2 }.max() ?? 0
   return maxLength + 1  // Add 1 for the colon
 }
@@ -34,15 +34,7 @@ private func calculatePadding(for children: Mirror.Children) -> Int {
 private func prettyPrintValue(_ value: Any, indent: Int = 0) -> String {
   let indentation = String(repeating: " ", count: indent)
   let nestedIndent = String(repeating: " ", count: indent + 2)
-  
-  // Handle nil values
-//  if let optional = value as? Any?, case Optional<Any>.none = optional {
-//    return "null"
-//  }
-  
-  // Unwrap optionals
-//  let unwrapped = (value as Any?) ?? value
-  
+
   // Handle basic types
   switch value {
     case let string as String:
@@ -69,37 +61,51 @@ private func prettyPrintValue(_ value: Any, indent: Int = 0) -> String {
       for element in array {
         result += "\(nestedIndent)\(prettyPrintValue(element, indent: indent + 2)),\n"
       }
-      result = String(result.dropLast(2))  // Remove last comma and newline
+      result = String(result.dropLast(2))
       result += "\n\(indentation)]"
       return result
       
     case let dict as [AnyHashable: Any]:
       if dict.isEmpty { return "[:]" }
       
+      /// Find the longest key length for alignment
+      let maxKeyLength = dict.keys.map {
+        prettyPrintValue($0, indent: 0).count
+      }.max() ?? 0
+      
       var result = "[\n"
       for (key, value) in dict {
         let keyString = prettyPrintValue(key, indent: indent + 2)
         let valueString = prettyPrintValue(value, indent: indent + 2)
-        result += "\(nestedIndent)\(keyString): \(valueString),\n"
+        let padding = max(0, maxKeyLength - keyString.count + 1)  // Ensure padding is never negative
+//        let padding = String(repeating: " ", count: maxKeyLength - keyString.count + 1)
+        result += "\(nestedIndent)\(keyString):\(padding)\(valueString),\n"
       }
-      result = String(result.dropLast(2))  // Remove last comma and newline
+      result = String(result.dropLast(2))
       result += "\n\(indentation)]"
       return result
       
     default:
-      // Use Mirror to reflect on custom types
+      /// Use Mirror to reflect on custom types
       let mirror = Mirror(reflecting: value)
       if mirror.children.isEmpty {
         return String(describing: value)
       }
       
+      /// Calculate padding based on the longest property name
+      let padding = calculatePadding(for: mirror.children)
+      
       var result = "{\n"
       for child in mirror.children {
         if let label = child.label {
-          result += "\(nestedIndent)\"\(label)\" :\t\t\(prettyPrintValue(child.value, indent: indent + 2)),\n"
+          let key = "\"\(label)\""
+          let spaces = String(repeating: " ", count: max(0, padding - key.count))  // Ensure padding is never negative
+
+//          let spaces = String(repeating: " ", count: padding - key.count)
+          result += "\(nestedIndent)\(key):\(spaces)\(prettyPrintValue(child.value, indent: indent + 2)),\n"
         }
       }
-      result = String(result.dropLast(2))  // Remove last comma and newline
+      result = String(result.dropLast(2))
       result += "\n\(indentation)}"
       return result
   }
