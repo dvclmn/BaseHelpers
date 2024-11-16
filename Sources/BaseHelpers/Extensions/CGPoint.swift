@@ -1,13 +1,17 @@
 //
-//  ShiftPoints.swift
+//  CGPoint.swift
 //  Collection
 //
-//  Created by Dave Coleman on 4/10/2024.
+//  Created by Dave Coleman on 16/11/2024.
 //
 
 import SwiftUI
 
 public extension CGPoint {
+  var isEmpy: Bool {
+    x.isZero && y.isZero
+  }
+  
   // Shift right (increases x)
   func shiftRight(_ distance: CGFloat) -> CGPoint {
     return CGPoint(x: self.x + distance, y: self.y)
@@ -25,7 +29,8 @@ public extension CGPoint {
   
   // Shift up (decreases y)
   func shiftUp(_ distance: CGFloat) -> CGPoint {
-    return CGPoint(x: self.x, y: self.y - distance)
+    let copy = self
+    return CGPoint(x: copy.x, y: copy.y - distance)
   }
   
   // Shift diagonally
@@ -107,7 +112,7 @@ public extension CGPoint {
     )
   }
   
-
+  
   
   
   /// Returns a point at a specified distance along the line from this point to `end`.
@@ -119,20 +124,3 @@ public extension CGPoint {
     return CGPoint.pointAlong(from: self, to: end, distance: distance)
   }
 }
-
-// Example usage
-//struct ContentView: View {
-//  var body: some View {
-//    let basePoint = CGPoint(x: 100, y: 100)
-//    
-//    Path { path in
-//      path.move(to: basePoint)
-//      path.addLine(to: basePoint.shiftRight(50))
-//      path.addLine(to: basePoint.shiftRight(50).shiftDown(50))
-//      path.addLine(to: basePoint.shiftDown(50))
-//      path.closeSubpath()
-//    }
-//    .stroke(Color.blue, lineWidth: 2)
-//    .frame(width: 200, height: 200)
-//  }
-//}

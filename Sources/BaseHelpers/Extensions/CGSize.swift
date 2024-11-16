@@ -28,6 +28,6 @@ public extension CGSize {
   }
   
   var asString: String {
-    return "Width: \(width.padLeading(maxDigits: 3)) x Height: \(height.padLeading(maxDigits: 3))"
+    return "Width: \(width.padLeading(maxDigits: 3, decimalPlaces: 2)) x Height: \(height.padLeading(maxDigits: 3, decimalPlaces: 2))"
   }
 }

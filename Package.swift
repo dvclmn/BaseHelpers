@@ -25,7 +25,6 @@ let package = Package(
       "Resizable",
       "GlyphGrid",
       "Selection",
-      "PathDebugger"
     ]),
     
     /// Helpers
@@ -61,7 +60,6 @@ let package = Package(
     /// Utilities
     .target(name: "Profiler"),
     .target(name: "Renamable"),
-    .target(name: "PathDebugger"),
     .target(name: "GlyphGrid", dependencies: ["BaseHelpers"]),
     .target(name: "Resizable", dependencies: ["BaseHelpers", "Shortcuts", "BaseStyles"]),
     .target(name: "Selection", dependencies: ["BaseHelpers"]),

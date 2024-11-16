@@ -14,21 +14,37 @@ public extension Double {
   ///   - maxDigits: Maximum number of digits to pad to
   ///   - padChar: Character to use for padding (default: space)
   /// - Returns: String with appropriate padding
-  func padLeading(maxDigits: Int, with padChar: Character = " ") -> String {
-    let numberStr = String(self)
+  func padLeading(
+    maxDigits: Int = 3,
+    decimalPlaces: Int? = nil,
+    with padChar: Character = " "
+  ) -> String {
+    
+    let maxDigitsIncludingNegativeSign = maxDigits + 1
+    
+    /// First handle decimal places if specified
+    let numberToFormat = self
+    let formattedNumber: String
+    
+    if let places = decimalPlaces {
+      formattedNumber = numberToFormat.formatted(.number.precision(.fractionLength(places)))
+    } else {
+      formattedNumber = String(numberToFormat)
+    }
+    
     let isNegative = self < 0
     
-    /// Split into components, handling the negative sign
-    let absNumberStr = isNegative ? String(numberStr.dropFirst()) : numberStr
+    // Split into components, handling the negative sign
+    let absNumberStr = isNegative ? String(formattedNumber.dropFirst()) : formattedNumber
     let components = absNumberStr.split(separator: ".", maxSplits: 1)
     let integerPart = String(components[0])
     let decimalPart = components.count > 1 ? "." + components[1] : ""
     
-    /// Calculate padding needed, accounting for negative sign
+    // Calculate padding needed, accounting for negative sign
     let effectiveLength = integerPart.count + (isNegative ? 1 : 0)
-    let padding = String(repeating: padChar, count: max(0, maxDigits - effectiveLength))
+    let padding = String(repeating: padChar, count: max(0, maxDigitsIncludingNegativeSign - effectiveLength))
     
-    /// Reconstruct the string with proper padding and sign
+    // Reconstruct the string with proper padding and sign
     if isNegative {
       return padding + "-" + integerPart + decimalPart
     } else {
@@ -48,8 +64,8 @@ public extension Double {
 
 public extension CGFloat {
   
-  func padLeading(maxDigits: Int, with padChar: Character = " ") -> String {
-    Double(self).padLeading(maxDigits: maxDigits, with: padChar)
+  func padLeading(maxDigits: Int, decimalPlaces: Int? = nil, with padChar: Character = " ") -> String {
+    Double(self).padLeading(maxDigits: maxDigits, decimalPlaces: decimalPlaces,  with: padChar)
   }
   
   var toDecimal: String {

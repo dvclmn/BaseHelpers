@@ -60,6 +60,10 @@ public extension Color {
     )
   }
   
+  static var fadedBlack: Color {
+    .black.opacity(0.2)
+  }
+  
   
 }
 
