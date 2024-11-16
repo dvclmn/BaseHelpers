@@ -20,7 +20,6 @@ struct WavyBlur: ViewModifier {
                             .float(startDate.timeIntervalSinceNow)
                         ))
                         .scaleEffect(10)
-//                        .drawingGroup()
                     
                 }
 //                .blur(radius: 6, opaque: true)

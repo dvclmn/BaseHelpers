@@ -146,7 +146,6 @@ public struct ScrollMask: ViewModifier {
 
 extension ScrollMask {
   
-  
   private func normalizeScrollOffset(_ offset: CGFloat, inverted: Bool = false) -> CGFloat {
     
     let reversedOffset: CGFloat = offset * -1

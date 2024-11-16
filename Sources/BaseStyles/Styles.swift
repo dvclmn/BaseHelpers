@@ -91,7 +91,9 @@ public struct Styles {
   public static let animationSpring:              Animation = .snappy(duration: 0.4, extraBounce: 0.5)
   public static let animationSpringSubtle:        Animation = .snappy(duration: 0.35, extraBounce: 0.2)
   public static let animationSpringExtraSubtle:   Animation = .snappy(duration: 0.3, extraBounce: 0.1)
+  public static let animationSpringExtraBouncy:   Animation = .snappy(duration: 0.28, extraBounce: 0.45)
   public static let animationSpringQuick:         Animation = .snappy(duration: 0.2, extraBounce: 0.15)
+  public static let animationSpringQuickNBouncy:  Animation = .snappy(duration: 0.2, extraBounce: 0.35)
   public static let animationSpringQuickNSubtle:  Animation = .snappy(duration: 0.22, extraBounce: 0.06)
   public static let animationSpringExtraQuick:    Animation = .snappy(duration: 0.08, extraBounce: 0.1)
   

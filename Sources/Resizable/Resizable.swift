@@ -253,6 +253,9 @@ public struct Resizable: ViewModifier {
         } // END overlay
       
         .onAppear {
+          
+          print("Checking signal noise for `Resizable`")
+          
           /// Get manual length ready to go, just in case
           manualLength = unwrappedContentLength
           returnedLength(metrics, unwrappedContentLength, unwrappedContentLength)

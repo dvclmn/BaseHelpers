@@ -70,6 +70,7 @@ public struct ReadSizeDebouncedModifier: ViewModifier {
       }
     
       .onAppear {
+        print("Checking signal noise for `ReadSizeDebouncedModifier`")
         // Set up the callback when the view appears
         debouncer.valueChanged = onChange
       }

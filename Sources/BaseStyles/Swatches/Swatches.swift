@@ -98,7 +98,7 @@ public enum Swatch: String, Codable, CaseIterable, Identifiable, Sendable {
       case .mint: Color.mint
       case .teal: Color.teal
       case .cyan: Color.cyan
-      case .blue: Color.black
+      case .blue: Color.blue
       case .indigo: Color.indigo
       case .purple: Color.purple
       case .pink: Color.pink

@@ -7,18 +7,6 @@
 
 import Foundation
 
-//public extension Dictionary {
-//  var prettyPrinted: String {
-//    var result = "[\n"
-//    for (key, value) in self {
-//      result += "  \"\(key)\": \"\(value)\",\n"
-//    }
-//    result = String(result.dropLast(2)) // Remove the last comma and newline
-//    result += "\n]"
-//    return result
-//  }
-//}
-
 public extension Dictionary {
   var prettyPrinted: String {
     prettyPrintValue(self, indent: 0, currentDepth: 0, maxDepth: 2)
@@ -73,12 +61,7 @@ private func prettyPrintValue(_ value: Any, indent: Int = 0, currentDepth: Int, 
   let indentation = String(repeating: " ", count: indent)
   let nestedIndent = String(repeating: " ", count: indent + 2)
   
-  // Check depth limit
-  if currentDepth >= maxDepth {
-    return "{...}"
-  }
-  
-  // Handle DirectlyPrintable types
+  // Handle DirectlyPrintable types (these should always show their value)
   if let printable = value as? DirectlyPrintable {
     return printable.printableString
   }
@@ -86,6 +69,11 @@ private func prettyPrintValue(_ value: Any, indent: Int = 0, currentDepth: Int, 
   switch value {
     case let array as [Any]:
       if array.isEmpty { return "[]" }
+      
+      // If we're at max depth, truncate the array
+      if currentDepth >= maxDepth {
+        return "[...]"
+      }
       
       var result = "[\n"
       for element in array {
@@ -98,6 +86,11 @@ private func prettyPrintValue(_ value: Any, indent: Int = 0, currentDepth: Int, 
     case let dict as [AnyHashable: Any]:
       if dict.isEmpty { return "[:]" }
       
+      // If we're at max depth, truncate the dictionary
+      if currentDepth >= maxDepth {
+        return "{...}"
+      }
+      
       let maxKeyLength = dict.keys.map {
         prettyPrintValue($0, indent: 0, currentDepth: currentDepth, maxDepth: maxDepth).count
       }.max() ?? 0
@@ -105,7 +98,15 @@ private func prettyPrintValue(_ value: Any, indent: Int = 0, currentDepth: Int, 
       var result = "[\n"
       for (key, value) in dict {
         let keyString = prettyPrintValue(key, indent: indent + 2, currentDepth: currentDepth, maxDepth: maxDepth)
-        let valueString = prettyPrintValue(value, indent: indent + 2, currentDepth: currentDepth + 1, maxDepth: maxDepth)
+        
+        // For nested structures at maxDepth, show {...}
+        let valueString: String
+        if shouldTruncateValue(value) && currentDepth + 1 >= maxDepth {
+          valueString = "{...}"
+        } else {
+          valueString = prettyPrintValue(value, indent: indent + 2, currentDepth: currentDepth + 1, maxDepth: maxDepth)
+        }
+        
         let padding = max(0, maxKeyLength - keyString.count + 1)
         result += "\(nestedIndent)\(keyString):\(String(repeating: " ", count: padding))\(valueString),\n"
       }
@@ -119,6 +120,11 @@ private func prettyPrintValue(_ value: Any, indent: Int = 0, currentDepth: Int, 
         return String(describing: value)
       }
       
+      // If we're at max depth, truncate the object
+      if currentDepth >= maxDepth {
+        return "{...}"
+      }
+      
       let padding = calculatePadding(for: mirror.children)
       
       var result = "{\n"
@@ -126,12 +132,34 @@ private func prettyPrintValue(_ value: Any, indent: Int = 0, currentDepth: Int, 
         if let label = child.label {
           let key = "\"\(label)\""
           let spaces = String(repeating: " ", count: max(0, padding - key.count))
-          result += "\(nestedIndent)\(key):\(spaces)\(prettyPrintValue(child.value, indent: indent + 2, currentDepth: currentDepth + 1, maxDepth: maxDepth)),\n"
+          
+          // For nested structures at maxDepth, show {...}
+          let valueString: String
+          if shouldTruncateValue(child.value) && currentDepth + 1 >= maxDepth {
+            valueString = "{...}"
+          } else {
+            valueString = prettyPrintValue(child.value, indent: indent + 2, currentDepth: currentDepth + 1, maxDepth: maxDepth)
+          }
+          
+          result += "\(nestedIndent)\(key):\(spaces)\(valueString),\n"
         }
       }
       result = String(result.dropLast(2))
       result += "\n\(indentation)}"
       return result
+  }
+}
+
+// Helper function to determine if a value should be truncated
+private func shouldTruncateValue(_ value: Any) -> Bool {
+  if value is DirectlyPrintable { return false }
+  
+  switch value {
+    case is [Any], is [AnyHashable: Any]:
+      return true
+    default:
+      let mirror = Mirror(reflecting: value)
+      return !mirror.children.isEmpty
   }
 }
 

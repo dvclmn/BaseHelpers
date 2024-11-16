@@ -86,7 +86,6 @@ extension RepeatingPattern {
         }
         
       } // END canvas
-      //      .drawingGroup()
     } // END isOn check
   }
 }

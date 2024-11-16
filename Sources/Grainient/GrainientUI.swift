@@ -10,6 +10,7 @@ import SwiftUI
 import BaseStyles
 
 
+
 // MARK: - Grain overlay
 public struct GrainientModifier: ViewModifier {
   
@@ -93,20 +94,17 @@ public struct GrainientConfiguration {
   let grainOpacity: CGFloat
   let blur: CGFloat
   let opacity: CGFloat
-  let rounding: CGFloat
   
   public init(
     version: GrainientVersion = .v3,
     grainOpacity: CGFloat = 0.3,
     blur: CGFloat = 50,
-    opacity: CGFloat = 1.0,
-    rounding: CGFloat = 0
+    opacity: CGFloat = 1.0
   ) {
     self.version = version
     self.grainOpacity = grainOpacity
     self.blur = blur
     self.opacity = opacity
-    self.rounding = rounding
   }
 }
 
