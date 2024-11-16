@@ -9,6 +9,23 @@ import Foundation
 
 
 public extension Double {
+  
+  /// Adds leading padding to align numbers based on their integer part
+  /// - Parameters:
+  ///   - maxDigits: Maximum number of digits to pad to
+  ///   - padChar: Character to use for padding (default: space)
+  /// - Returns: String with appropriate padding
+  func padLeading(maxDigits: Int, with padChar: Character = " ") -> String {
+    let numberStr = String(self)
+    let components = numberStr.split(separator: ".", maxSplits: 1)
+    let integerPart = String(components[0])
+    let decimalPart = components.count > 1 ? "." + components[1] : ""
+    
+    let padding = String(repeating: padChar, count: max(0, maxDigits - integerPart.count))
+    return padding + integerPart + decimalPart
+  }
+  
+  
   func toDecimal(_ places: Int = 2) -> String {
     floatToDecimal(value: self, places: places)
   }
@@ -19,6 +36,15 @@ public extension Double {
 }
 
 public extension CGFloat {
+  
+  func padLeading(maxDigits: Int, with padChar: Character = " ") -> String {
+    Double(self).padLeading(maxDigits: maxDigits, with: padChar)
+  }
+  
+  var toDecimal: String {
+    toDecimal()
+  }
+  
   func toDecimal(_ places: Int = 2) -> String {
     floatToDecimal(value: self, places: places)
   }
@@ -26,6 +52,17 @@ public extension CGFloat {
   var toInt: String {
     floatToDecimal(value: self, places: 0)
   }
+  
+  var isPositive: Bool {
+    self > 0
+  }
+  
+  func normalised(against value: CGFloat, isClamped: Bool = true) -> CGFloat {
+    let normalised = self / value
+    
+    return normalised
+  }
+  
 }
 
 

@@ -26,4 +26,8 @@ public extension CGSize {
   var centrePoint: CGPoint {
     return CGPoint(x: width / 2, y: height / 2)
   }
+  
+  var asString: String {
+    return "Width: \(width.padLeading(maxDigits: 3)) x Height: \(height.padLeading(maxDigits: 3))"
+  }
 }

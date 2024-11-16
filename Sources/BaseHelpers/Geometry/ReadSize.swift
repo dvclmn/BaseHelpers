@@ -4,45 +4,24 @@
 import SwiftUI
 
 
-//public extension View {
-//  func readSize(onChange: @escaping (CGSize) -> Void) -> some View {
-//    background(
-//      GeometryReader { geometryProxy in
-//        Color.clear
-//          .preference(key: SizePreferenceKey.self, value: geometryProxy.size)
-//      }
-//    )
-//    .onPreferenceChange(SizePreferenceKey.self, perform: onChange)
-//  }
-//}
-
 public typealias SizeOutput = (CGSize) -> Void
 
-public struct ReadSizeModifier: ViewModifier {
-  
-  @State private var viewSize: CGSize = .zero
-  
-  let onChange: SizeOutput
-  
-  public func body(content: Content) -> some View {
-    content
-      .background {
-        GeometryReader { geometryProxy in
-          Color.clear
-            .task(id: geometryProxy.size) {
-              self.viewSize = geometryProxy.size
-            }
-        }
-      }
-  }
-}
 public extension View {
   func readSize(onChange: @escaping SizeOutput) -> some View {
-    modifier(ReadSizeModifier(onChange: onChange))
+    background(
+      GeometryReader { geometryProxy in
+        Color.clear
+          .preference(key: SizePreferenceKey.self, value: geometryProxy.size)
+      }
+    )
+    .onPreferenceChange(SizePreferenceKey.self, perform: onChange)
   }
 }
 
-
+private struct SizePreferenceKey: PreferenceKey {
+  static let defaultValue: CGSize = .zero
+  static func reduce(value: inout CGSize, nextValue: () -> CGSize) {}
+}
 
 
 public struct ReadSizeDebouncedModifier: ViewModifier {
@@ -82,11 +61,6 @@ public extension View {
   func readSizeDebounced(onChange: @escaping SizeOutput) -> some View {
     modifier(ReadSizeDebouncedModifier(onChange: onChange))
   }
-}
-
-private struct SizePreferenceKey: PreferenceKey {
-  static let defaultValue: CGSize = .zero
-  static func reduce(value: inout CGSize, nextValue: () -> CGSize) {}
 }
 
 
