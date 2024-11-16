@@ -9,7 +9,6 @@ import Foundation
 
 
 public extension Double {
-  
   /// Adds leading padding to align numbers based on their integer part
   /// - Parameters:
   ///   - maxDigits: Maximum number of digits to pad to
@@ -17,12 +16,24 @@ public extension Double {
   /// - Returns: String with appropriate padding
   func padLeading(maxDigits: Int, with padChar: Character = " ") -> String {
     let numberStr = String(self)
-    let components = numberStr.split(separator: ".", maxSplits: 1)
+    let isNegative = self < 0
+    
+    /// Split into components, handling the negative sign
+    let absNumberStr = isNegative ? String(numberStr.dropFirst()) : numberStr
+    let components = absNumberStr.split(separator: ".", maxSplits: 1)
     let integerPart = String(components[0])
     let decimalPart = components.count > 1 ? "." + components[1] : ""
     
-    let padding = String(repeating: padChar, count: max(0, maxDigits - integerPart.count))
-    return padding + integerPart + decimalPart
+    /// Calculate padding needed, accounting for negative sign
+    let effectiveLength = integerPart.count + (isNegative ? 1 : 0)
+    let padding = String(repeating: padChar, count: max(0, maxDigits - effectiveLength))
+    
+    /// Reconstruct the string with proper padding and sign
+    if isNegative {
+      return padding + "-" + integerPart + decimalPart
+    } else {
+      return padding + integerPart + decimalPart
+    }
   }
   
   
