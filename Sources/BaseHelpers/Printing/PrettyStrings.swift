@@ -7,6 +7,16 @@
 
 import Foundation
 
+//public extension Array {
+//  var prettyPrinted: String {
+//    prettyPrintValue(self, indent: 0, currentDepth: 0, maxDepth: 2)
+//  }
+//  
+//  func prettyPrinted(maxDepth: Int = .max) -> String {
+//    prettyPrintValue(self, indent: 0, currentDepth: 0, maxDepth: maxDepth)
+//  }
+//}
+
 public extension Dictionary {
   var prettyPrinted: String {
     prettyPrintValue(self, indent: 0, currentDepth: 0, maxDepth: 2)
@@ -57,7 +67,7 @@ extension Data: DirectlyPrintable {
   var printableString: String { "\"\(base64EncodedString())\"" }
 }
 
-private func prettyPrintValue(_ value: Any, indent: Int = 0, currentDepth: Int, maxDepth: Int) -> String {
+public func prettyPrintValue(_ value: Any, indent: Int = 0, currentDepth: Int, maxDepth: Int) -> String {
   let indentation = String(repeating: " ", count: indent)
   let nestedIndent = String(repeating: " ", count: indent + 2)
   

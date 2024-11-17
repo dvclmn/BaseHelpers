@@ -7,7 +7,6 @@
 
 import SwiftUI
 
-public typealias PointLabel = (point: CGPoint, label: CGPoint.Label)
 public typealias ColouredPoint = (point: CGPoint, color: Color)
 
 public struct DebugPaths {
@@ -15,12 +14,7 @@ public struct DebugPaths {
   public let nodes: Path
   public let controlPoints: Path
   public let connections: Path
-//  public let labels: [PointLabel]
-  
-//  public let coloredNodes: [ColouredPoint]
-//  public let coloredControlPoints: [ColouredPoint]
-  
-  
+
 }
 
 public protocol PointType {

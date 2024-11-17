@@ -17,7 +17,6 @@ let package = Package(
       "Grainient"
     ]),
 
-    
     /// Utilities
     .library(name: "Utilities", targets: [
       "Profiler",
