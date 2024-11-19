@@ -60,9 +60,6 @@ public extension Color {
     )
   }
   
-  static var fadedBlack: Color {
-    .black.opacity(0.2)
-  }
   
   
 }
@@ -77,6 +74,10 @@ public extension ShapeStyle where Self == Color {
       blue: .random(in: 0...1)
     )
   }
+  static var fadedBlack: Color {
+    .black.opacity(0.2)
+  }
+  
 }
 
 
