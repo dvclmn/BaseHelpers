@@ -16,7 +16,7 @@ public enum ContrastType {
 
 
 // MARK: - Swatches
-public enum Swatch: String, Codable, CaseIterable, Identifiable, Sendable {
+public enum Swatch: String, Codable, CaseIterable, Identifiable, Sendable, Hashable {
   
   /// Whites/greys
   case offWhite

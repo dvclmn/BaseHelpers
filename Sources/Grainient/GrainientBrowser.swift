@@ -14,7 +14,7 @@ struct GrainientBrowser: View {
     let columns: [GridItem] = Array(repeating: GridItem(.flexible()), count: 4)
     
     LazyVGrid(columns: columns) {
-      ForEach(GrainientPreset.allPresets) { preset in
+      ForEach(Grainient.allPresets) { preset in
         Color.clear
           .aspectRatio(1.8, contentMode: .fit)
           .grainient(seed: preset.seed)

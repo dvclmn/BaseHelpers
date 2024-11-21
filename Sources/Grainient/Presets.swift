@@ -8,7 +8,7 @@
 import Foundation
 
 
-public struct GrainientPreset: Identifiable, Hashable, Codable, Equatable, Sendable {
+public struct Grainient: Identifiable, Hashable, Codable, Equatable, Sendable {
   public var id: Int {
     self.seed
   }
@@ -28,7 +28,7 @@ public struct GrainientPreset: Identifiable, Hashable, Codable, Equatable, Senda
   }
 }
 
-public extension GrainientPreset {
+public extension Grainient {
   
   /// IMPORTANT:
   ///
@@ -36,31 +36,31 @@ public extension GrainientPreset {
   /// below will break (i.e., not match the colours/description for each preset).
   ///
   ///
-  static let sunset             = GrainientPreset(seed: 26171, name: "Sunset", version: .v3)
-  static let peachFuzz          = GrainientPreset(seed: 47917, name: "Peach Fuzz", version: .v3)
-  static let greenGlow          = GrainientPreset(seed: 81745, name: "Green Glow", version: .v3)
-  static let toadstool         = GrainientPreset(seed: 61720, name: "Toadstool", version: .v3)
-  static let sherbet            = GrainientPreset(seed: 78671, name: "Sherbet", version: .v3)
-  static let lilac         = GrainientPreset(seed: 50411, name: "Lilac", version: .v3)
-  static let dyingStar         = GrainientPreset(seed: 57001, name: "Dying Star", version: .v3)
-  static let bubblegum         = GrainientPreset(seed: 27079, name: "Bubblegum", version: .v3)
-  static let twilight         = GrainientPreset(seed: 33785, name: "Twilight", version: .v3)
-  static let ozone         = GrainientPreset(seed: 68935, name: "Ozone", version: .v3)
-  static let nucleus         = GrainientPreset(seed: 14806, name: "Nucleus", version: .v3)
-  static let swampy         = GrainientPreset(seed: 58259, name: "Swampy", version: .v3)
-  static let underwater         = GrainientPreset(seed: 35498, name: "Underwater", version: .v3)
-  static let tunnelEntrance         = GrainientPreset(seed: 45837, name: "Tunnel Entrance", version: .v3)
-  static let shrinkingViolet         = GrainientPreset(seed: 94281, name: "Shrinking Violet", version: .v3)
-  static let dustStorm         = GrainientPreset(seed: 14687, name: "Dust Storm", version: .v3)
-  static let pretty         = GrainientPreset(seed: 34549, name: "Pretty", version: .v3)
-  static let darkToLight         = GrainientPreset(seed: 923765, name: "Dark to Light", version: .v3)
-  static let moss         = GrainientPreset(seed: 903099, name: "Moss", version: .v3)
-  static let trippy         = GrainientPreset(seed: 725389, name: "Trippy", version: .v3)
-  static let jungleFlower         = GrainientPreset(seed: 31251, name: "Jungle Flower", version: .v3)
-  static let sunset02         = GrainientPreset(seed: 67024, name: "Sunset 02", version: .v3)
-  static let greenVoid         = GrainientPreset(seed: 29189, name: "Green Void", version: .v3)
+  static let sunset             = Self(seed: 26171, name: "Sunset", version: .v3)
+  static let peachFuzz          = Self(seed: 47917, name: "Peach Fuzz", version: .v3)
+  static let greenGlow          = Self(seed: 81745, name: "Green Glow", version: .v3)
+  static let toadstool         = Self(seed: 61720, name: "Toadstool", version: .v3)
+  static let sherbet            = Self(seed: 78671, name: "Sherbet", version: .v3)
+  static let lilac         = Self(seed: 50411, name: "Lilac", version: .v3)
+  static let dyingStar         = Self(seed: 57001, name: "Dying Star", version: .v3)
+  static let bubblegum         = Self(seed: 27079, name: "Bubblegum", version: .v3)
+  static let twilight         = Self(seed: 33785, name: "Twilight", version: .v3)
+  static let ozone         = Self(seed: 68935, name: "Ozone", version: .v3)
+  static let nucleus         = Self(seed: 14806, name: "Nucleus", version: .v3)
+  static let swampy         = Self(seed: 58259, name: "Swampy", version: .v3)
+  static let underwater         = Self(seed: 35498, name: "Underwater", version: .v3)
+  static let tunnelEntrance         = Self(seed: 45837, name: "Tunnel Entrance", version: .v3)
+  static let shrinkingViolet         = Self(seed: 94281, name: "Shrinking Violet", version: .v3)
+  static let dustStorm         = Self(seed: 14687, name: "Dust Storm", version: .v3)
+  static let pretty         = Self(seed: 34549, name: "Pretty", version: .v3)
+  static let darkToLight         = Self(seed: 923765, name: "Dark to Light", version: .v3)
+  static let moss         = Self(seed: 903099, name: "Moss", version: .v3)
+  static let trippy         = Self(seed: 725389, name: "Trippy", version: .v3)
+  static let jungleFlower         = Self(seed: 31251, name: "Jungle Flower", version: .v3)
+  static let sunset02         = Self(seed: 67024, name: "Sunset 02", version: .v3)
+  static let greenVoid         = Self(seed: 29189, name: "Green Void", version: .v3)
   
-  static let allPresets: [GrainientPreset] = [
+  static let allPresets: [Self] = [
     sunset,
     peachFuzz,
     greenGlow,
