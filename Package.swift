@@ -61,11 +61,11 @@ let package = Package(
 //    .target(name: "Renamable"),
     .target(name: "GlyphGrid", dependencies: ["BaseHelpers"]),
 //    .target(name: "Resizable", dependencies: ["BaseHelpers", "Shortcuts", "BaseStyles"]),
-    .target(name: "Selection", dependencies: ["BaseHelpers"]),
+//    .target(name: "Selection", dependencies: ["BaseHelpers"]),
 
     /// Helpers
     .target(name: "BaseHelpers"),
-    .target(name: "ImageCompression"),
+//    .target(name: "ImageCompression"),
     .target(name: "TouchInertia"),
     .target(name: "Shaders"),
     .target(name: "Shortcuts", dependencies: ["BaseHelpers"]),
