@@ -19,11 +19,7 @@ let package = Package(
 
     /// Utilities
     .library(name: "Utilities", targets: [
-      "Profiler",
-      "Renamable",
-      "Resizable",
       "GlyphGrid",
-      "Selection",
     ]),
     
     /// Helpers
@@ -31,9 +27,7 @@ let package = Package(
       name: "BaseHelpers",
       targets: [
         "BaseHelpers",
-        "ImageCompression",
         "Shaders",
-        "TouchInertia",
         "Shortcuts",
       ]
     ),
@@ -57,23 +51,16 @@ let package = Package(
     .target(name: "Grainient", dependencies: ["BaseStyles"]),
     
     /// Utilities
-//    .target(name: "Profiler"),
-//    .target(name: "Renamable"),
     .target(name: "GlyphGrid", dependencies: ["BaseHelpers"]),
-//    .target(name: "Resizable", dependencies: ["BaseHelpers", "Shortcuts", "BaseStyles"]),
-//    .target(name: "Selection", dependencies: ["BaseHelpers"]),
 
     /// Helpers
     .target(name: "BaseHelpers"),
-//    .target(name: "ImageCompression"),
-    .target(name: "TouchInertia"),
     .target(name: "Shaders"),
     .target(name: "Shortcuts", dependencies: ["BaseHelpers"]),
     
     /// Networking
     .target(name: "APIHandler", dependencies: [
       "BaseHelpers",
-//      .product(name: "KeychainSwift", package: "keychain-swift"),
       .product(name: "MemberwiseInit", package: "swift-memberwise-init-macro")
     ]),
 
