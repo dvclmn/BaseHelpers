@@ -77,6 +77,9 @@ public extension ShapeStyle where Self == Color {
   static var fadedBlack: Color {
     .black.opacity(0.2)
   }
+  static var fadedBlackDarker: Color {
+    .black.opacity(0.4)
+  }
   
 }
 

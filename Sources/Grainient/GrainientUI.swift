@@ -21,12 +21,11 @@ public struct GrainientModifier: ViewModifier {
   var swatchOutput: (_ swatches: [Swatch]) -> Void
   
   public func body(content: Content) -> some View {
-    
-    /// Unwrapping seed here allows this modifier to be conditional. Providing the option for no grainient at all, if no seed provided. Caution: Do not place the `content` behind the unwrap, or no content will show in the View
+
     content
       .background {
         if let seed = seed {
-          grainyGradient(seed)
+          GrainientView(seed)
             .allowsHitTesting(false)
             .overlay(.black.opacity(uiDimming))
             .ignoresSafeArea()
@@ -39,17 +38,14 @@ public struct GrainientModifier: ViewModifier {
 
 extension GrainientModifier {
   @ViewBuilder
-  func grainyGradient(_ seed: Int) -> some View {
+  func GrainientView(_ seed: Int) -> some View {
     
     GeometryReader { geometry in
-      let viewSize = geometry.size
-      
-      // TODO: A lot of this code seems to get called whenever the geometry view size changes. There may be a way to save some performance by only redrawing what needs to be?
-//      let rng = GranientRNG(seed: seed, viewSize: viewSize)
+
       let grainientSettings = GrainientSettings.generateGradient(
         seed: seed,
         version: .v3,
-        viewSize: viewSize
+        viewSize: geometry.size
       )
         
         let gradient = Gradient(stops: grainientSettings.stops)
@@ -78,9 +74,7 @@ extension GrainientModifier {
         .task(id: seed) {
           swatchOutput(grainientSettings.colours)
         }
-//      } else {
-//        Text("Grainient Error?")
-//      } // END grainient settings check
+      
     } // END geo reader
     .blur(radius: config.blur, opaque: true)
     .clipped()

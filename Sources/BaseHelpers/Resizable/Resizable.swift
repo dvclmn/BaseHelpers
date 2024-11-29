@@ -10,11 +10,8 @@ import Foundation
 import SwiftUI
 import OSLog
 import BaseHelpers
-import Shortcuts
 
 public struct Resizable: ViewModifier {
-  
-  @Environment(\.modifierKeys) var modifiers
   
   var isPassthroughMode: Bool
   /// If this value is not supplied, Resizable will default to averaging the min and max lengths to obtain an *ideal* length (as well as clamping to the min and max as well)

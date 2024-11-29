@@ -9,7 +9,6 @@
 
 import SwiftUI
 import BaseHelpers
-import Shortcuts
 import BaseStyles
 
 extension Resizable {

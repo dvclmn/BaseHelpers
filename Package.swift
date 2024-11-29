@@ -57,10 +57,10 @@ let package = Package(
     .target(name: "Grainient", dependencies: ["BaseStyles"]),
     
     /// Utilities
-    .target(name: "Profiler"),
-    .target(name: "Renamable"),
+//    .target(name: "Profiler"),
+//    .target(name: "Renamable"),
     .target(name: "GlyphGrid", dependencies: ["BaseHelpers"]),
-    .target(name: "Resizable", dependencies: ["BaseHelpers", "Shortcuts", "BaseStyles"]),
+//    .target(name: "Resizable", dependencies: ["BaseHelpers", "Shortcuts", "BaseStyles"]),
     .target(name: "Selection", dependencies: ["BaseHelpers"]),
 
     /// Helpers
