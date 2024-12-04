@@ -69,6 +69,13 @@ public enum Swatch: String, Codable, CaseIterable, Identifiable, Sendable, Hasha
   case gray
   case black
   
+  /// ASCII colours
+//  case darkBlue
+//  case brightTeal
+//  case dullTeal
+//  case systemGrape
+//  
+  
   public var id: String {
     self.rawValue
   }
@@ -188,6 +195,7 @@ public enum Swatch: String, Codable, CaseIterable, Identifiable, Sendable, Hasha
         
       case .brightRed:
         Color(.displayP3, red: 0.89, green: 0.254, blue: 0.24, opacity: 1)
+        
         
     }
   } // END color property

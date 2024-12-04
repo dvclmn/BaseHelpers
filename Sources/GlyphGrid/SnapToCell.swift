@@ -15,12 +15,12 @@ public extension BinaryFloatingPoint {
     
     if let value = self as? CGFloat {
       
-      let multiplier = (value / cellDimension).rounded()
+      let multiplier = (value / cellDimension).rounded(.down)
       return multiplier * cellDimension
       
     } else if let value = self as? Double {
       
-      let multiplier = (value / cellDimension).rounded()
+      let multiplier = (value / cellDimension).rounded(.down)
       return multiplier * cellDimension
       
     } else {

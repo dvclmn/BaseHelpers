@@ -21,16 +21,16 @@ public struct CellGridModifier: ViewModifier {
 
         Canvas { context, size in
           
-          let cellWidth = grid.cell.size.width
-          let cellHeight = grid.cell.size.height
+          let cellWidth = grid.cellSize.width
+          let cellHeight = grid.cellSize.height
           
           
           var rowCount: Int
           var columnCount: Int
           
           if autoSize {
-            rowCount = size.cellsThatFit(grid.cell.size).rows
-            columnCount = size.cellsThatFit(grid.cell.size).columns
+            rowCount = size.cellsThatFit(grid.cellSize).rows
+            columnCount = size.cellsThatFit(grid.cellSize).columns
           } else {
             rowCount = grid.dimensions.rows
             columnCount = grid.dimensions.columns
@@ -94,30 +94,30 @@ public extension View {
 }
 
 
-struct CellGridExample: View {
-  
-  let grid = GlyphGrid(
-    cell: .init(fontName: .sfMono),
-    dimensions: GridDimensions(rows: 20, columns: 30),
-    type: .canvas(GlyphGrid.Artwork.default)
-  )
-  
-  var body: some View {
-    
-    VStack {
-      Text("Hello")
-        .padding(40)
-        .frame(width: 320.0.snapToCell(cellSize: grid.cell.size), height: 700)
-        .cellGrid(grid: grid)
-        .background(.teal.opacity(0.05))
-    }
-    .frame(width: 600, height: 700)
-    .background(.black.opacity(0.6))
-    
-  }
-}
-#Preview {
-  CellGridExample()
-}
+//struct CellGridExample: View {
+//  
+//  let grid = GlyphGrid(
+//    cell: .init(font: .sfMono),
+//    dimensions: GridDimensions(rows: 20, columns: 30),
+//    type: .canvas(GlyphGrid.Artwork.noArt)
+//  )
+//  
+//  var body: some View {
+//    
+//    VStack {
+//      Text("Hello")
+//        .padding(40)
+//        .frame(width: 320.0.snapToCell(cellSize: grid.cell.size), height: 700)
+//        .cellGrid(grid: grid)
+//        .background(.teal.opacity(0.05))
+//    }
+//    .frame(width: 600, height: 700)
+//    .background(.black.opacity(0.6))
+//    
+//  }
+//}
+//#Preview {
+//  CellGridExample()
+//}
 
 

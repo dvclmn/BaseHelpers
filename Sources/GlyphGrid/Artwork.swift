@@ -9,7 +9,8 @@ import Foundation
 
 
 public extension GlyphGrid.Artwork {
-  static let `default`: GlyphGrid.Artwork = [["N"],["o"],[" "],["a"],["r"],["t"]]
+  
+  static let noArt: GlyphGrid.Artwork = [["N"],["o"],[" "],["a"],["r"],["t"]]
   
   static let empty: GlyphGrid.Artwork = [[Character(" ")]]
 }

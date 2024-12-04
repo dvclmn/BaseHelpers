@@ -11,7 +11,9 @@ public struct GlyphGrid: Equatable, Sendable {
   
   public typealias Artwork = [[Character]]
   
-  public var cell: GlyphCell
+  /// Cell should be a product of the selected Font, and Zoom level?
+//  public var cell: GlyphCell
+  public var cellSize: CGSize
   public var dimensions: GridDimensions
   public var type: GridType
   
@@ -20,11 +22,11 @@ public struct GlyphGrid: Equatable, Sendable {
   public static let baseFontSize: CGFloat = 15
   
   public init(
-    cell: GlyphCell = GlyphCell(),
+    cellSize: CGSize,
     dimensions: GridDimensions = GridDimensions(),
     type: GridType
   ) {
-    self.cell = cell
+    self.cellSize = cellSize
     self.dimensions = dimensions
     self.type = type
   }
@@ -32,24 +34,27 @@ public struct GlyphGrid: Equatable, Sendable {
 } // END GlyphGrid
 
 
-public struct GlyphCell: Equatable, Sendable {
-  
-  public private(set) var fontName: FontName
-  public internal(set) var size: CGSize
-  
-  public init(
-    fontName: FontName = .sfMono
-  ) {
-    self.fontName = fontName
-    self.size = .zero
-    
-    let sizeCalculation = calculateCellSize(fontName: fontName)
-    self.size = sizeCalculation
-    
-    
-  }
-
-}
+//public struct GlyphCell: Equatable, Sendable {
+//  
+//  public private(set) var font: GridFont
+//  public internal(set) var size: CGSize
+//  
+//  static let example: GlyphCell = .init(
+//    font: .menlo,
+//    cellWidth: 10,
+//    cellHeight: 14
+//  )
+//  
+//  public init(
+//    font: GridFont = .sfMono,
+//    cellWidth: CGFloat,
+//    cellHeight: CGFloat
+//  ) {
+//    self.font = font
+//    self.size = CGSize(width: cellWidth, height: cellHeight)
+//  }
+//
+//}
 
 
 public struct GridDimensions: Equatable, Sendable {
@@ -148,7 +153,7 @@ public struct GridPosition: Hashable, Equatable, Sendable {
 
 
 
-public enum FontName: String, CaseIterable, Hashable, Equatable, Sendable, Identifiable {
+public enum GridFont: String, CaseIterable, Hashable, Equatable, Sendable, Identifiable {
   
   case menlo = "Menlo"
   case sfMono = "SF Mono"

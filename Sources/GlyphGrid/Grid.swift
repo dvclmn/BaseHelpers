@@ -10,34 +10,28 @@ import BaseHelpers
 
 public typealias RowsAndColumns = (rows: Int, columns: Int)
 
+public enum DimensionForCell {
+  case width, height
+}
+
 public extension CGSize {
-  
   func cellsThatFit(_ cellSize: CGSize) -> RowsAndColumns {
     cellsThatFitSize(in: self, cellSize: cellSize)
   }
 }
 
-
-
-public enum DimensionForCell {
-  case width, height
-}
-
-
-
 public extension CGFloat {
-  func cellsThatFit(_ cellSize: CGSize, in dimension: DimensionForCell = .width) -> Int {
+  func cellsThatFit(
+    _ cellSize: CGSize,
+    in dimension: DimensionForCell = .width
+  ) -> Int {
 
-//    print("Hello, the value of self is \(self)")
-    
     var size: CGSize
     var result: Int
     
     switch dimension {
       case .width:
         size = CGSize(width: self, height: .zero)
-        
-//        print("The cgsize for `width` is: \(size)")
         result = cellsThatFitSize(in: size, cellSize: cellSize).columns
         
       case .height:
@@ -57,12 +51,8 @@ private func cellsThatFitSize(
 ) -> RowsAndColumns {
   
   let width: CGFloat = size.width / cellSize.width
-//  print("Let's look at width: \(width)")
-  
   let height: CGFloat = size.height / cellSize.height
-  
-//  print("And height: \(height)")
-  
+
   /// IMPORTANT: It's 'unfortunate' that the following feels right
   /// to *say*: "Width and height", and "Rows and column".
   ///
@@ -75,33 +65,12 @@ private func cellsThatFitSize(
   /// `height` ≈ `rows`
   ///
   let result = (Int(max(1, height)), Int(max(1, width)))
-//  print("And result: \(result)")
   
   return result
 }
 
 
 public extension GlyphGrid {
-  
-  /// This is for a single dimension — width, or height, etc
-  
-  /// How many cells fit into the supplied width/height?
-  ///
-//  static func cellsThatFit(in width: CGFloat, ofSize cellSize: CGSize) -> Int {
-//    
-//    let length = Int(width / cellSize.width)
-//    
-//    var result: Int
-//    
-//    if length > 1 {
-//      result = length
-//    } else {
-//      result = 1
-//    }
-//    
-//    return result
-//  }
-  
   
   func characterCount() -> Int {
     
@@ -113,46 +82,46 @@ public extension GlyphGrid {
     
     return count
   }
+
+//  static func createEmpty(
+//    rows: Int,
+//    columns: Int,
+//    font: GridFont = .menlo
+//  ) -> GlyphGrid {
+//    let cell = GlyphCell(font: font)
+//    let dimensions = GridDimensions(rows: rows, columns: columns)
+//    
+//    return GlyphGrid(
+//      cell: cell,
+//      dimensions: dimensions,
+//      type: .canvas(Artwork.empty)
+//    )
+//  }
   
-  static func createEmpty(
-    rows: Int,
-    columns: Int,
-    fontName: FontName = .menlo
-  ) -> GlyphGrid {
-    let cell = GlyphCell(fontName: fontName)
-    let dimensions = GridDimensions(rows: rows, columns: columns)
-    
-    return GlyphGrid(
-      cell: cell,
-      dimensions: dimensions,
-      type: .canvas(Artwork.empty)
-    )
-  }
+//  static func createWithArtwork(_ artwork: Artwork, font: GridFont = .menlo) -> GlyphGrid {
+//    let rows = artwork.count
+//    let columns = artwork.map { $0.count }.max() ?? 0
+//    
+//    let cell = GlyphCell(font: font)
+//    let dimensions = GridDimensions(rows: rows, columns: columns)
+//    
+//    return GlyphGrid(
+//      cell: cell,
+//      dimensions: dimensions,
+//      type: .canvas(artwork)
+//    )
+//  }
   
-  static func createWithArtwork(_ artwork: Artwork, fontName: FontName = .menlo) -> GlyphGrid {
-    let rows = artwork.count
-    let columns = artwork.map { $0.count }.max() ?? 0
-    
-    let cell = GlyphCell(fontName: fontName)
-    let dimensions = GridDimensions(rows: rows, columns: columns)
-    
-    return GlyphGrid(
-      cell: cell,
-      dimensions: dimensions,
-      type: .canvas(artwork)
-    )
-  }
-  
-  static func createInterface(rows: Int, columns: Int, fontName: FontName = .menlo) -> GlyphGrid {
-    let cell = GlyphCell(fontName: fontName)
-    let dimensions = GridDimensions(rows: rows, columns: columns)
-    
-    return GlyphGrid(
-      cell: cell,
-      dimensions: dimensions,
-      type: .interface
-    )
-  }
+//  static func createInterface(rows: Int, columns: Int, font: GridFont = .menlo) -> GlyphGrid {
+//    let cell = GlyphCell(font: font)
+//    let dimensions = GridDimensions(rows: rows, columns: columns)
+//    
+//    return GlyphGrid(
+//      cell: cell,
+//      dimensions: dimensions,
+//      type: .interface
+//    )
+//  }
   
 
 }
@@ -178,7 +147,6 @@ public extension GridDimensions {
     
     return GridDimensions(rows: rows, columns: columns)
   }
-  
   
   
 }

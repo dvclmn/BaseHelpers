@@ -17,20 +17,20 @@ extension GlyphGrid {
     switch type {
       case .interface:
         return GridPosition(
-          row: Int(location.y / cell.size.height),
-          col: Int(location.x / cell.size.width)
+          row: Int(location.y / cellSize.height),
+          col: Int(location.x / cellSize.width)
         )
       case .canvas:
         return GridPosition(
-          row: Int(location.y / (cell.size.height * zoomLevel)),
-          col: Int(location.x / (cell.size.width * zoomLevel))
+          row: Int(location.y / (cellSize.height * zoomLevel)),
+          col: Int(location.x / (cellSize.width * zoomLevel))
         )
     }
   }
   
   public func gridPosition(for location: CGPoint) -> GridPosition {
-    let row = Int(location.y / cell.size.height)
-    let col = Int(location.x / cell.size.width)
+    let row = Int(location.y / cellSize.height)
+    let col = Int(location.x / cellSize.width)
     return GridPosition(row: row, col: col)
   }
   
@@ -40,9 +40,9 @@ extension GlyphGrid {
   }
   
   public func cgRect(for position: GridPosition) -> CGRect {
-    let origin = CGPoint(x: CGFloat(position.col) * cell.size.width,
-                         y: CGFloat(position.row) * cell.size.height)
-    return CGRect(origin: origin, size: cell.size)
+    let origin = CGPoint(x: CGFloat(position.col) * cellSize.width,
+                         y: CGFloat(position.row) * cellSize.height)
+    return CGRect(origin: origin, size: cellSize)
   }
   
 }
