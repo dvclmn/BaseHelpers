@@ -7,7 +7,7 @@
 
 import Foundation
 
-public typealias GridArtwork = [[Character]]
+
 
 public struct GlyphGrid: Equatable, Sendable {
 
@@ -31,25 +31,7 @@ public struct GlyphGrid: Equatable, Sendable {
   
 } // END GlyphGrid
 
-public extension GlyphGrid {
-  struct Artwork: Equatable, Sendable {
-    
-    public var content: GridArtwork
-    
-    public var dimensions: GridDimensions {
-      let rows = content.count
-      let columns = content.isEmpty ? 0 : content[0].count
-      return GridDimensions(rows: rows, columns: columns)
-    }
-    
-    public init(
-      content: [[Character]]
-    ) {
-      self.content = content
-    }
-    
-  }
-}
+
 
 public struct GridDimensions: Equatable, Sendable {
   
