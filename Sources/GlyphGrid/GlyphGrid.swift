@@ -7,12 +7,10 @@
 
 import Foundation
 
+public typealias GridArtwork = [[Character]]
+
 public struct GlyphGrid: Equatable, Sendable {
-  
-  public typealias Artwork = [[Character]]
-  
-  /// Cell should be a product of the selected Font, and Zoom level?
-//  public var cell: GlyphCell
+
   public var cellSize: CGSize
   public var dimensions: GridDimensions
   public var type: GridType
@@ -33,29 +31,25 @@ public struct GlyphGrid: Equatable, Sendable {
   
 } // END GlyphGrid
 
-
-//public struct GlyphCell: Equatable, Sendable {
-//  
-//  public private(set) var font: GridFont
-//  public internal(set) var size: CGSize
-//  
-//  static let example: GlyphCell = .init(
-//    font: .menlo,
-//    cellWidth: 10,
-//    cellHeight: 14
-//  )
-//  
-//  public init(
-//    font: GridFont = .sfMono,
-//    cellWidth: CGFloat,
-//    cellHeight: CGFloat
-//  ) {
-//    self.font = font
-//    self.size = CGSize(width: cellWidth, height: cellHeight)
-//  }
-//
-//}
-
+public extension GlyphGrid {
+  struct Artwork: Equatable, Sendable {
+    
+    public var content: GridArtwork
+    
+    public var dimensions: GridDimensions {
+      let rows = content.count
+      let columns = content.isEmpty ? 0 : content[0].count
+      return GridDimensions(rows: rows, columns: columns)
+    }
+    
+    public init(
+      content: [[Character]]
+    ) {
+      self.content = content
+    }
+    
+  }
+}
 
 public struct GridDimensions: Equatable, Sendable {
   
@@ -75,8 +69,8 @@ public struct GridDimensions: Equatable, Sendable {
   }
   
   public init(
-    rows: Int = 2,
-    columns: Int = 2,
+    rows: Int = 8,
+    columns: Int = 5,
     minValue: Int = 2
   ) {
     self.minValue = minValue
@@ -129,7 +123,7 @@ public struct GridDimensions: Equatable, Sendable {
 ///
 
 public enum GridType: Equatable, Sendable {
-  case canvas(GlyphGrid.Artwork)
+  case canvas(GridArtwork)
   case interface
 }
 

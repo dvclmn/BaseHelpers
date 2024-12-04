@@ -7,10 +7,18 @@
 
 import Foundation
 
+extension GridArtwork {
 
-public extension GlyphGrid.Artwork {
+  public static let noArt: GridArtwork =
+    [
+      ["N"],
+      ["o"],
+      [" "],
+      ["a"],
+      ["r"],
+      ["t"],
+    ]
   
-  static let noArt: GlyphGrid.Artwork = [["N"],["o"],[" "],["a"],["r"],["t"]]
-  
-  static let empty: GlyphGrid.Artwork = [[Character(" ")]]
+
+  public static let empty: GridArtwork =  [[Character(" ")]]
 }
