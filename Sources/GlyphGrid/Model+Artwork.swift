@@ -7,30 +7,33 @@
 
 import Foundation
 
-//extension GlyphGrid {
-//
-//  public struct Artwork: Equatable, Sendable {
-//
-//
-//    public init(
-//      content: GridArtwork
-//    ) {
-//      self.content = content
-//    }
-//
-//  }
-//}
-
 extension GlyphGrid {
-
-  public static func artworkFromCharacters(_ characters: [[Character]]) -> GridArtwork {
-    let result = characters.map { row in
-      row.map { GlyphGrid.Cell(character: $0) }
+  public static func artworkFromCharacters(_ characters: [[Character]]) -> GlyphGrid {
+    let height = characters.count
+    let width = characters.isEmpty ? 0 : characters[0].count
+    
+    var cells: [Cell] = []
+    cells.reserveCapacity(width * height) // Performance optimization
+    
+    for (rowIndex, row) in characters.enumerated() {
+      for (colIndex, char) in row.enumerated() {
+        cells.append(Cell(
+          character: char,
+          isSelected: false,
+          position: GridPosition(row: rowIndex, col: colIndex)
+        ))
+      }
     }
-    return result
+    
+    return GlyphGrid(
+      cellSize: CGSize(width: baseFontSize, height: baseFontSize),
+      width: width,
+      height: height,
+      cells: cells
+    )
   }
-
-  public static let noArt: GridArtwork = artworkFromCharacters([
+  
+  public static let noArt: GlyphGrid = artworkFromCharacters([
     ["N"],
     ["o"],
     [" "],
@@ -38,8 +41,11 @@ extension GlyphGrid {
     ["r"],
     ["t"],
   ])
-
-  public static let empty: GridArtwork = .init()
   
-  
+  public static let empty: GlyphGrid = GlyphGrid(
+    cellSize: CGSize(width: baseFontSize, height: baseFontSize),
+    width: 0,
+    height: 0,
+    cells: []
+  )
 }

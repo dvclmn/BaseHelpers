@@ -6,33 +6,52 @@
 //
 
 import Foundation
-
-public typealias GridArtwork = [[GlyphGrid.Cell]]
+import BaseHelpers
 
 public struct GlyphGrid: Equatable, Sendable {
-
+  
   public var cellSize: CGSize
-//  public var type: GridType
-  public var artwork: GridArtwork
-//  public var dimensions: GridDimensions
+  public var width: Int
+  public var height: Int
+  public var cells: [Cell]
 
   public static let baseFontSize: CGFloat = 15
   
   public init(
-    cellSize: CGSize,
-    artwork: GridArtwork = [],
-//    dimensions: GridDimensions = GridDimensions(),
-//    type: GridType
+    cellSize: CGSize = .defaultCellSize,
+    width: Int = 2,
+    height: Int = 2,
+    cells: [Cell] = []
   ) {
     self.cellSize = cellSize
-    self.artwork = artwork
-//    self.dimensions = dimensions
-//    self.type = type
+    self.width = width
+    self.height = height
+    self.cells = cells
   }
-  
 } // END GlyphGrid
 
 public extension GlyphGrid {
+  
+  /// Convert 2D position to 1D index
+  func index(row: Int, column: Int) -> Int {
+    return row * width + column
+  }
+  
+  /// Convert 1D index to 2D position
+  func position(from index: Int) -> GridPosition {
+    let row = index / width
+    let column = index % width
+    return GridPosition(row: row, col: column)
+  }
+  
+  /// Get cell at position
+  func cell(at position: GridPosition) -> Cell? {
+    guard position.row < height && position.col < width else { return nil }
+    return cells[index(row: position.row, column: position.col)]
+  }
+  
+  
+  
   
 //  func cell(at position: GridPosition) -> Cell? {
 //    guard position.row >= 0 && position.row < dimensions.rows,
@@ -55,6 +74,10 @@ public extension GlyphGrid {
 //      let columns = artwork.isEmpty ? 0 : artwork[0].count
 //      return GridDimensions(rows: rows, columns: columns)
 //  }
+}
+
+public extension CGSize {
+  static let defaultCellSize: CGSize = CGSize(width: 2, height: 4)
 }
 
 public struct GridDimensions: Equatable, Sendable {

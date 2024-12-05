@@ -74,54 +74,28 @@ private func cellsThatFitSize(
 extension GlyphGrid {
 
   public func characterCount() -> Int {
-
-    var count: Int = 0
-    
-    count = self.artwork.reduce(0) { $0 + $1.count }
-    
-    return count
+    return self.cells.count
   }
 
-  //  static func createEmpty(
-  //    rows: Int,
-  //    columns: Int,
-  //    font: GridFont = .menlo
-  //  ) -> GlyphGrid {
-  //    let cell = GlyphCell(font: font)
-  //    let dimensions = GridDimensions(rows: rows, columns: columns)
-  //
-  //    return GlyphGrid(
-  //      cell: cell,
-  //      dimensions: dimensions,
-  //      type: .canvas(Artwork.empty)
-  //    )
-  //  }
-
-  //  static func createWithArtwork(_ artwork: Artwork, font: GridFont = .menlo) -> GlyphGrid {
-  //    let rows = artwork.count
-  //    let columns = artwork.map { $0.count }.max() ?? 0
-  //
-  //    let cell = GlyphCell(font: font)
-  //    let dimensions = GridDimensions(rows: rows, columns: columns)
-  //
-  //    return GlyphGrid(
-  //      cell: cell,
-  //      dimensions: dimensions,
-  //      type: .canvas(artwork)
-  //    )
-  //  }
-
-  //  static func createInterface(rows: Int, columns: Int, font: GridFont = .menlo) -> GlyphGrid {
-  //    let cell = GlyphCell(font: font)
-  //    let dimensions = GridDimensions(rows: rows, columns: columns)
-  //
-  //    return GlyphGrid(
-  //      cell: cell,
-  //      dimensions: dimensions,
-  //      type: .interface
-  //    )
-  //  }
-
+  /// Get a row of characters
+  func row(_ index: Int) -> ArraySlice<Cell> {
+    guard index < height else { return [] }
+    let start = index * width
+    return cells[start..<(start + width)]
+  }
+  
+  /// Get a column of characters
+  func column(_ index: Int) -> [Cell] {
+    guard index < width else { return [] }
+    return stride(from: index, to: cells.count, by: width).map { cells[$0] }
+  }
+  
+  /// Convert back to 2D array if needed
+  func to2DArray() -> [[Cell]] {
+    stride(from: 0, to: height * width, by: width).map {
+      Array(cells[$0..<min($0 + width, cells.count)])
+    }
+  }
 
 }
 
