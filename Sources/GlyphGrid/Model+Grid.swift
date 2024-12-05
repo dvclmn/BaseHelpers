@@ -12,28 +12,27 @@ public typealias GridArtwork = [[GlyphGrid.Cell]]
 public struct GlyphGrid: Equatable, Sendable {
 
   public var cellSize: CGSize
-  public var type: GridType
+//  public var type: GridType
   public var artwork: GridArtwork
-  public var dimensions: GridDimensions
+//  public var dimensions: GridDimensions
 
   public static let baseFontSize: CGFloat = 15
   
   public init(
     cellSize: CGSize,
     artwork: GridArtwork = [],
-    dimensions: GridDimensions = GridDimensions(),
-    type: GridType
+//    dimensions: GridDimensions = GridDimensions(),
+//    type: GridType
   ) {
     self.cellSize = cellSize
     self.artwork = artwork
-    self.dimensions = dimensions
-    self.type = type
+//    self.dimensions = dimensions
+//    self.type = type
   }
   
 } // END GlyphGrid
 
 public extension GlyphGrid {
-  
   
 //  func cell(at position: GridPosition) -> Cell? {
 //    guard position.row >= 0 && position.row < dimensions.rows,
@@ -90,10 +89,10 @@ public struct GridDimensions: Equatable, Sendable {
 
 
 
-public enum GridType: Equatable, Sendable {
-  case canvas
-  case interface
-}
+//public enum GridType: Equatable, Sendable {
+//  case canvas
+//  case interface
+//}
 
 
 

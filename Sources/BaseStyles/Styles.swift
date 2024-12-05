@@ -39,6 +39,7 @@ public struct Styles {
   public static let toolbarHeightSecondary:                   Double = 46
   public static let toolbarHeightTertiary:                   Double = 34
   public static let toolbarHeightQuaternary:                   Double = 26
+  public static let toolbarHeightQuinary:                   Double = 22
   
   /// Info bar
   public static let infoBarHeight:                        Double = 24

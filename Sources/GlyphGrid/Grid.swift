@@ -73,16 +73,14 @@ private func cellsThatFitSize(
 
 extension GlyphGrid {
 
-//  public func characterCount() -> Int {
-//
-//    var count: Int = 0
-//
-//    if let artwork = self.artwork {
-//      count = artwork.reduce(0) { $0 + $1.count }
-//    }
-//
-//    return count
-//  }
+  public func characterCount() -> Int {
+
+    var count: Int = 0
+    
+    count = self.artwork.reduce(0) { $0 + $1.count }
+    
+    return count
+  }
 
   //  static func createEmpty(
   //    rows: Int,

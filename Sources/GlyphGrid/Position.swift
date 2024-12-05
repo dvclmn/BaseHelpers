@@ -34,10 +34,10 @@ extension GlyphGrid {
     return GridPosition(row: row, col: col)
   }
   
-  public func isValidPosition(_ position: GridPosition) -> Bool {
-    return position.row >= 0 && position.row < dimensions.rows &&
-    position.col >= 0 && position.col < dimensions.columns
-  }
+//  public func isValidPosition(_ position: GridPosition) -> Bool {
+//    return position.row >= 0 && position.row < dimensions.rows &&
+//    position.col >= 0 && position.col < dimensions.columns
+//  }
   
   public func cgRect(for position: GridPosition) -> CGRect {
     let origin = CGPoint(x: CGFloat(position.col) * cellSize.width,
