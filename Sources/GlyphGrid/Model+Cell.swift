@@ -13,18 +13,16 @@ public extension GlyphGrid {
     public let id: UUID = UUID()
     public var character: Character
     public var isSelected: Bool
+    public var position: GridPosition
     
     public init(
       character: Character = "?",
-      isSelected: Bool = false
+      isSelected: Bool = false,
+      position: GridPosition = .init()
     ) {
       self.character = character
       self.isSelected = isSelected
+      self.position = position
     }
   }
-}
-
-public extension GlyphGrid.Cell {
-  
-  
 }

@@ -7,31 +7,56 @@
 
 import Foundation
 
-
+public typealias GridArtwork = [[GlyphGrid.Cell]]
 
 public struct GlyphGrid: Equatable, Sendable {
 
   public var cellSize: CGSize
-  public var dimensions: GridDimensions
   public var type: GridType
-  
-  public var artwork: Artwork?
+  public var artwork: GridArtwork
+  public var dimensions: GridDimensions
 
   public static let baseFontSize: CGFloat = 15
   
   public init(
     cellSize: CGSize,
+    artwork: GridArtwork = [],
     dimensions: GridDimensions = GridDimensions(),
     type: GridType
   ) {
     self.cellSize = cellSize
+    self.artwork = artwork
     self.dimensions = dimensions
     self.type = type
   }
   
 } // END GlyphGrid
 
-
+public extension GlyphGrid {
+  
+  
+//  func cell(at position: GridPosition) -> Cell? {
+//    guard position.row >= 0 && position.row < dimensions.rows,
+//          position.col >= 0 && position.col < dimensions.columns else {
+//      return nil
+//    }
+//    let idx = index(for: position)
+//    return artwork[idx]
+//  }
+//  
+//  
+//  
+//  func index(for position: GridPosition) -> Int {
+//    return position.row * dimensions.columns + position.col
+//  }
+  
+  
+//  func dimensionsForArtwork(_ artwork: GridArtwork) -> GridDimensions {
+//      let rows = artwork.count
+//      let columns = artwork.isEmpty ? 0 : artwork[0].count
+//      return GridDimensions(rows: rows, columns: columns)
+//  }
+}
 
 public struct GridDimensions: Equatable, Sendable {
   
@@ -65,47 +90,8 @@ public struct GridDimensions: Equatable, Sendable {
 
 
 
-
-//
-//
-//public struct GridDimensions: Equatable, Sendable {
-//  public var rows: Int
-//  public var columns: Int
-//  
-//  public init(
-//    rows: Int = 10,
-//    columns: Int = 10
-//  ) {
-//    self.rows = rows
-//    self.columns = columns
-//  }
-//  
-//  public static let example: GridDimensions = GridDimensions(rows: 20, columns: 10)
-//  
-//}
-
-
-/// Now, you can use these structures in your app like this:
-///
-/// ```swift
-/// // In your drawing code
-/// if document.selectedCells.contains(glyphGrid.gridPosition(for: somePoint)) {
-///   context.fill(glyphGrid.cgRect(for: selectedPosition),
-///   with: .color(.blue.opacity(0.3)))
-/// }
-///
-/// // Converting a point to a grid position
-/// let position = glyphGrid.gridPosition(for: location)
-///
-/// // Checking if a position is valid
-/// if glyphGrid.isValidPosition(position) {
-///   // Do something with the valid position
-/// }
-/// ```
-///
-
 public enum GridType: Equatable, Sendable {
-  case canvas(GridArtwork)
+  case canvas
   case interface
 }
 
@@ -122,85 +108,6 @@ public struct GridPosition: Hashable, Equatable, Sendable {
     self.row = row
     self.col = col
   }
-  
-  
-  
 }
 
 
-
-public enum GridFont: String, CaseIterable, Hashable, Equatable, Sendable, Identifiable {
-  
-  case menlo = "Menlo"
-  case sfMono = "SF Mono"
-  case courier = "Courier New"
-  case monaco = "Monaco"
-  case ibm = "AcPlus IBM BIOS"
-  
-  public var id: String {
-    self.rawValue
-  }
-  
-  public enum NormaliseParameter {
-    case fontSize
-    case width
-    case weight
-  }
-  
-  public struct Normalisers {
-    let fontSize: CGFloat
-    let width: CGFloat
-    let weight: CGFloat
-  }
-  
-  public var normalisers: Normalisers {
-    switch self {
-      case .menlo:
-        Normalisers(
-          fontSize: 1.0,
-          width: 1.0,
-          weight: 1.0
-        )
-      case .sfMono:
-        Normalisers(
-          fontSize: 1.0,
-          width: 1.0,
-          weight: 1.0
-        )
-      case .courier:
-        Normalisers(
-          fontSize: 1.1,
-          width: 1.0,
-          weight: 1.0
-        )
-      case .monaco:
-        Normalisers(
-          fontSize: 1.0,
-          width: 1.0,
-          weight: 1.0
-        )
-      case .ibm:
-        Normalisers(
-          fontSize: 0.8,
-          width: 1.0,
-          weight: 1.0
-        )
-    }
-  }
-  
-  public func normalised(
-    for parameter: NormaliseParameter = .fontSize,
-    baseValue: CGFloat
-  ) -> CGFloat {
-    let factor: CGFloat
-    switch parameter {
-      case .fontSize:
-        factor = normalisers.fontSize
-      case .width:
-        factor = normalisers.width
-      case .weight:
-        factor = normalisers.weight
-    }
-    return baseValue * factor
-  }
-}

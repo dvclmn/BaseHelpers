@@ -7,38 +7,30 @@
 
 import Foundation
 
-public typealias GridArtwork = [[GlyphGrid.Cell]]
+//extension GlyphGrid {
+//
+//  public struct Artwork: Equatable, Sendable {
+//
+//
+//    public init(
+//      content: GridArtwork
+//    ) {
+//      self.content = content
+//    }
+//
+//  }
+//}
 
 extension GlyphGrid {
-  public struct Artwork: Equatable, Sendable {
 
-    public var content: GridArtwork
-
-    public var dimensions: GridDimensions {
-      let rows = content.count
-      let columns = content.isEmpty ? 0 : content[0].count
-      return GridDimensions(rows: rows, columns: columns)
+  public static func artworkFromCharacters(_ characters: [[Character]]) -> GridArtwork {
+    let result = characters.map { row in
+      row.map { GlyphGrid.Cell(character: $0) }
     }
-
-    public init(
-      content: GridArtwork
-    ) {
-      self.content = content
-    }
-
-  }
-}
-
-extension GlyphGrid.Artwork {
-
-  public static func fromCharacters(_ characters: [[Character]]) -> Self {
-    .init(
-      content: characters.map { row in
-        row.map { GlyphGrid.Cell(character: $0) }
-      })
+    return result
   }
 
-  public static let noArt: Self = fromCharacters([
+  public static let noArt: GridArtwork = artworkFromCharacters([
     ["N"],
     ["o"],
     [" "],
@@ -47,5 +39,7 @@ extension GlyphGrid.Artwork {
     ["t"],
   ])
 
-  public static let empty: Self = .init(content: [[.init(character: " ")]])
+  public static let empty: GridArtwork = .init()
+  
+  
 }
