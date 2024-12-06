@@ -8,44 +8,24 @@
 
 #if canImport(AppKit)
 
-public protocol CompatiblePointerStyle {
-  associatedtype Value
-  
-  @available(macOS 15, iOS 18, *)
-  var containerKeyPath: WritableKeyPath<ContainerValues, Value> { get }
-}
-
-public enum CustomPointer {
-  case `default`
-  
-}
-
 import SwiftUI
 
-//@available(macOS 15, iOS 18, *)
+// MARK: - ViewModifier
+@available(macOS 15, *)
 public struct CustomPointerModifier: ViewModifier {
-  var style: PointerStyle
+  let style: PointerStyle
   
   public func body(content: Content) -> some View {
-    
-    if #available(macOS 15, *) {
-      content
-        .pointerStyle(style)
-    } else {
-      content
-    }
+    content.pointerStyle(style)
   }
 }
 
+// MARK: - View Extension
 public extension View {
   @ViewBuilder
-  func customPointer(_ pointerStyle: CompatiblePointerStyle) -> some View {
+  func customPointer(_ style: @autoclosure () -> PointerStyle) -> some View {
     if #available(macOS 15, *) {
-      if let style = pointerStyle as? PointerStyle {
-        self.modifier(CustomPointerModifier(style: style))
-      } else {
-        self
-      }
+      modifier(CustomPointerModifier(style: style()))
     } else {
       self
     }
@@ -53,3 +33,17 @@ public extension View {
 }
 
 #endif
+
+
+struct BoxPrintView: View {
+  
+  var body: some View {
+    
+    Text("Hello")
+      .customPointer(.grabActive)
+      .padding(40)
+      .frame(width: 600, height: 700)
+      .background(.black.opacity(0.6))
+    
+  }
+}
