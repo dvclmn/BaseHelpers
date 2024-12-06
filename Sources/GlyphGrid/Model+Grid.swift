@@ -51,6 +51,12 @@ public extension GlyphGrid {
   }
   
   
+  var artworkSize: CGSize {
+    CGSize(
+      width: CGFloat(self.width) * self.cellSize.width,
+      height: CGFloat(self.height) * self.cellSize.height
+    )
+  }
   
   
 //  func cell(at position: GridPosition) -> Cell? {
