@@ -58,6 +58,38 @@ public extension GlyphGrid {
     )
   }
   
+//  func gridPosition(from point: CGPoint, withOffset offset: CGPoint) -> GridPosition? {
+//    // Adjust point by pan offset
+//    let adjustedPoint = CGPoint(
+//      x: point.x - offset.x,
+//      y: point.y - offset.y
+//    )
+//    
+//    // Calculate grid coordinates
+//    let col = Int(floor(adjustedPoint.x / cellSize.width))
+//    let row = Int(floor(adjustedPoint.y / cellSize.height))
+//    
+//    // Ensure position is within bounds
+//    guard col >= 0 && col < width && row >= 0 && row < height else {
+//      return nil
+//    }
+//    
+//    return GridPosition(row: row, col: col)
+//  }
+  
+  
+  func gridPosition(from point: CGPoint, withOffset offset: CGPoint) -> GridPosition {
+    let adjustedPoint = CGPoint(
+      x: point.x - offset.x,
+      y: point.y - offset.y
+    )
+    
+    let col = Int(floor(adjustedPoint.x / cellSize.width))
+    let row = Int(floor(adjustedPoint.y / cellSize.height))
+    
+    return GridPosition(row: row, col: col)
+  }
+  
   
 //  func cell(at position: GridPosition) -> Cell? {
 //    guard position.row >= 0 && position.row < dimensions.rows,

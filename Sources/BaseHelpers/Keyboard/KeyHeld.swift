@@ -19,15 +19,19 @@ public struct KeyHeldModifier: ViewModifier {
         keyDownMonitor = NSEvent.addLocalMonitorForEvents(matching: .keyDown) { event in
           if event.characters == String(key.character) {
             isHeld(true)
+            return nil
+          } else {
+            return event
           }
-          return nil
         }
         
         keyUpMonitor = NSEvent.addLocalMonitorForEvents(matching: .keyUp) { event in
           if event.characters == String(key.character) {
             isHeld(false)
+            return nil
+          } else {
+            return event
           }
-          return nil
         }
       }
       .onDisappear {
