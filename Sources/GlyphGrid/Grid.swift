@@ -97,6 +97,33 @@ extension GlyphGrid {
     }
   }
 
+  
+  func debugPrint() {
+    print("Grid dimensions: \(width) x \(height)")
+    print("Total cells: \(cells.count)")
+    
+    for row in 0..<height {
+      let startIndex = row * width
+      let rowCells = cells[startIndex..<(startIndex + width)]
+      let rowString = String(rowCells.map { $0.character })
+      print(rowString)
+    }
+  }
+  
+  func validateDimensions() -> Bool {
+    let expectedCellCount = width * height
+    let actualCellCount = cells.count
+    let dimensionsValid = expectedCellCount == actualCellCount
+    
+    if !dimensionsValid {
+      print("⚠️ Dimension mismatch!")
+      print("Expected cell count: \(expectedCellCount)")
+      print("Actual cell count: \(actualCellCount)")
+      print("Width: \(width), Height: \(height)")
+    }
+    
+    return dimensionsValid
+  }
 }
 
 extension GridDimensions {

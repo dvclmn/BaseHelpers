@@ -12,22 +12,22 @@ extension GlyphGrid {
   
   
   //  public static let example: GlyphGrid = GlyphGrid(cell: .example, dimensions: .example, type: .canvas)
-  
-  public func gridPosition(for location: CGPoint, zoomLevel: CGFloat = 1.0) -> GridPosition {
-    switch type {
-      case .interface:
-        return GridPosition(
-          row: Int(location.y / cellSize.height),
-          col: Int(location.x / cellSize.width)
-        )
-      case .canvas:
-        return GridPosition(
-          row: Int(location.y / (cellSize.height * zoomLevel)),
-          col: Int(location.x / (cellSize.width * zoomLevel))
-        )
-    }
-  }
-  
+//  
+//  public func gridPosition(for location: CGPoint, zoomLevel: CGFloat = 1.0) -> GridPosition {
+//    switch type {
+//      case .interface:
+//        return GridPosition(
+//          row: Int(location.y / cellSize.height),
+//          col: Int(location.x / cellSize.width)
+//        )
+//      case .canvas:
+//        return GridPosition(
+//          row: Int(location.y / (cellSize.height * zoomLevel)),
+//          col: Int(location.x / (cellSize.width * zoomLevel))
+//        )
+//    }
+//  }
+//  
   public func gridPosition(for location: CGPoint) -> GridPosition {
     let row = Int(location.y / cellSize.height)
     let col = Int(location.x / cellSize.width)
