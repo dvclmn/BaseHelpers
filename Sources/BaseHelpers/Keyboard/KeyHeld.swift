@@ -12,6 +12,7 @@ public struct KeyHeldModifier: ViewModifier {
   @State private var keyDownMonitor: Any?
   @State private var keyUpMonitor: Any?
   let isHeld: (Bool) -> Void
+  let onPress: () -> Void
   
   public func body(content: Content) -> some View {
     content
@@ -19,6 +20,7 @@ public struct KeyHeldModifier: ViewModifier {
         keyDownMonitor = NSEvent.addLocalMonitorForEvents(matching: .keyDown) { event in
           if event.characters == String(key.character) {
             isHeld(true)
+            onPress()
             return nil
           } else {
             return event
@@ -54,7 +56,21 @@ public extension View {
     self.modifier(
       KeyHeldModifier(
         key: key,
-        isHeld: isHeld
+        isHeld: isHeld,
+        onPress: {}
+      )
+    )
+  }
+  
+  func keyPressed(
+    _ key: KeyEquivalent,
+    onPress: @escaping () -> Void
+  ) -> some View {
+    self.modifier(
+      KeyHeldModifier(
+        key: key,
+        isHeld: { _ in },
+        onPress: onPress
       )
     )
   }
