@@ -32,10 +32,34 @@ public struct GlyphGrid: Equatable, Sendable {
 
 public extension GlyphGrid {
   
-  /// Convert 2D position to 1D index
+  /// Get cell at position
+  func cell(at position: GridPosition) -> Cell? {
+    // Guard against negative indices
+    guard position.row >= 0, position.col >= 0,
+          // Guard against exceeding bounds
+          position.row < height, position.col < width
+    else { return nil }
+    
+    let idx = index(row: position.row, column: position.col)
+    // Guard against array bounds
+    guard idx >= 0, idx < cells.count else { return nil }
+    
+    return cells[idx]
+  }
+  
+  /// Convert 2D position to 1D index with bounds checking
   func index(row: Int, column: Int) -> Int {
+    // Could add assertions here for debug builds
+    assert(row >= 0 && column >= 0, "Negative indices are invalid")
+    assert(row < height && column < width, "Position exceeds grid bounds")
+    
     return row * width + column
   }
+  
+  /// Convert 2D position to 1D index
+//  func index(row: Int, column: Int) -> Int {
+//    return row * width + column
+//  }
   
   /// Convert 1D index to 2D position
   func position(from index: Int) -> GridPosition {
@@ -45,10 +69,10 @@ public extension GlyphGrid {
   }
   
   /// Get cell at position
-  func cell(at position: GridPosition) -> Cell? {
-    guard position.row < height && position.col < width else { return nil }
-    return cells[index(row: position.row, column: position.col)]
-  }
+//  func cell(at position: GridPosition) -> Cell? {
+//    guard position.row < height && position.col < width else { return nil }
+//    return cells[index(row: position.row, column: position.col)]
+//  }
   
   
   var artworkSize: CGSize {
