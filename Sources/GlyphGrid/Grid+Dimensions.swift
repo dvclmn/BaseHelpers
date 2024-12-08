@@ -52,6 +52,16 @@ public struct GridDimensionChange {
   let dimension: GridDimension
   let edge: GridEdge
   let delta: Int // Positive for addition, negative for removal
+  
+  public init(
+    dimension: GridDimension,
+    edge: GridEdge,
+    delta: Int
+  ) {
+    self.dimension = dimension
+    self.edge = edge
+    self.delta = delta
+  }
 }
 
 
@@ -75,7 +85,7 @@ public extension GlyphGrid {
     
     for row in 0..<oldHeight {
       let oldRowStart = row * oldWidth
-      let newRowStart = row * newWidth
+//      let newRowStart = row * newWidth
       
       switch edge {
         case .leading:
@@ -112,7 +122,7 @@ public extension GlyphGrid {
   }
   
   private mutating func adjustHeight(edge: GridEdge, delta: Int) {
-    let oldHeight = height
+//    let oldHeight = height
     let newHeight = height + delta
     
     switch edge {

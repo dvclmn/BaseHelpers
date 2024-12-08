@@ -8,6 +8,7 @@
 import BaseHelpers
 import Foundation
 import SwiftUI
+import BaseStyles
 
 public struct GlyphGrid: Equatable, Sendable {
 
@@ -15,6 +16,11 @@ public struct GlyphGrid: Equatable, Sendable {
   public var width: Int
   public var height: Int
   public var cells: [Cell]
+  
+  public var foreground: Color = Swatch.lightGrey.colour
+  public var background: Color = Swatch.darkPlum.colour
+  
+  public var original: String = ""
 
   public static let baseFontSize: CGFloat = 15
 
@@ -22,13 +28,81 @@ public struct GlyphGrid: Equatable, Sendable {
     cellSize: CGSize = .defaultCellSize,
     width: Int = 2,
     height: Int = 2,
-    cells: [Cell] = []
+    cells: [Cell] = [],
+    original: String = ""
   ) {
     self.cellSize = cellSize
     self.width = width
     self.height = height
     self.cells = cells
+    self.original = original
   }
+  
+  public init(content: String) {
+    self = GlyphGrid.createGlyphGrid(from: content)
+  }
+
+  private static func createGlyphGrid(from content: String) -> GlyphGrid {
+    let lines = content.split(separator: "\n")
+    
+    /// Calculate dimensions
+    let height = lines.count
+    let width = lines.map { $0.count }.max() ?? 1
+    
+    /// Create cells array with proper capacity
+    var cells: [GlyphGrid.Cell] = []
+    cells.reserveCapacity(width * height)
+    
+    /// Process each line
+    for (rowIndex, line) in lines.enumerated() {
+      let rowCells = processRow(
+        line: line,
+        rowIndex: rowIndex,
+        maxWidth: width
+      )
+      cells.append(contentsOf: rowCells)
+    }
+    
+    return GlyphGrid(
+      cellSize: CGSize(width: GlyphGrid.baseFontSize, height: GlyphGrid.baseFontSize),
+      width: width,
+      height: height,
+      cells: cells,
+      original: content
+    )
+  }
+  
+  private static func processRow(
+    line: Substring,
+    rowIndex: Int,
+    maxWidth: Int
+  ) -> [GlyphGrid.Cell] {
+    
+    var rowCells: [GlyphGrid.Cell] = []
+    rowCells.reserveCapacity(maxWidth)
+    
+    /// Add actual characters
+    for (columnIndex, character) in line.enumerated() {
+      rowCells.append(GlyphGrid.Cell(
+        character: character,
+        position: GridPosition(row: rowIndex, col: columnIndex)
+      ))
+    }
+    
+    /// Pad with spaces if needed
+    let padding: Int = maxWidth - line.count
+    if padding > 0 {
+      for colIndex in line.count..<maxWidth {
+        rowCells.append(GlyphGrid.Cell(
+          character: " ",
+          position: GridPosition(row: rowIndex, col: colIndex)
+        ))
+      }
+    }
+    
+    return rowCells
+  }
+  
 }  // END GlyphGrid
 
 extension GlyphGrid {

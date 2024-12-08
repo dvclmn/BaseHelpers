@@ -51,7 +51,7 @@ let package = Package(
     .target(name: "Grainient", dependencies: ["BaseStyles"]),
     
     /// Utilities
-    .target(name: "GlyphGrid", dependencies: ["BaseHelpers"]),
+    .target(name: "GlyphGrid", dependencies: ["BaseHelpers", "BaseStyles"]),
 
     /// Helpers
     .target(name: "BaseHelpers"),
