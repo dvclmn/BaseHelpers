@@ -10,25 +10,6 @@ import Foundation
 
 public typealias RowsAndColumns = (rows: Int, columns: Int)
 
-public enum SizeDimension {
-  case width
-  case height
-  
-  public var nameInitial: String {
-    switch self {
-      case .width: "W"
-      case .height: "H"
-    }
-  }
-  
-  public var name: String {
-    switch self {
-      case .width: "Width"
-      case .height: "Height"
-    }
-  }
-}
-
 extension CGSize {
   public func cellsThatFit(_ cellSize: CGSize) -> RowsAndColumns {
     cellsThatFitSize(in: self, cellSize: cellSize)
@@ -39,7 +20,7 @@ extension CGFloat {
 
   public func cellsThatFit(
     _ cellSize: CGSize,
-    in dimension: SizeDimension = .width
+    in dimension: GridDimension = .width
   ) -> Int {
 
     var size: CGSize

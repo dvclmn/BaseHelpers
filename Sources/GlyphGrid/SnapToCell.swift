@@ -9,7 +9,7 @@ import Foundation
 
 public extension BinaryFloatingPoint {
   
-  func snapToCell(cellSize: CGSize, dimension: SizeDimension = .width) -> CGFloat {
+  func snapToCell(cellSize: CGSize, dimension: GridDimension = .width) -> CGFloat {
     
     let cellDimension = dimension == .width ? cellSize.width : cellSize.height
     

@@ -69,6 +69,18 @@ extension GlyphGrid {
       height: CGFloat(self.height) * self.cellSize.height
     )
   }
+  
+  public func getCellRect(
+    for position: GridPosition,
+    cellSize: CGSize
+  ) -> CGRect {
+    CGRect(
+      x: (CGFloat(position.col) * cellSize.width),
+      y: (CGFloat(position.row) * cellSize.height),
+      width: cellSize.width,
+      height: cellSize.height
+    )
+  }
 
   public func gridPosition(
     from point: CGPoint,
@@ -97,22 +109,7 @@ extension CGSize {
   public static let defaultCellSize: CGSize = CGSize(width: 2, height: 4)
 }
 
-public struct GridDimensions: Equatable, Sendable {
 
-  private let rows: Int
-  private let columns: Int
-
-  public init(
-    rows: Int = 8,
-    columns: Int = 5
-  ) {
-    assert(rows >= 1 && columns >= 1, "Cannot initialise grid with values of zero or less.")
-    self.rows = max(1, rows)
-    self.columns = max(1, columns)
-  }
-
-  public static let example: GridDimensions = GridDimensions(rows: 20, columns: 10)
-}
 
 public struct GridPosition: Hashable, Equatable, Sendable {
   public let row: Int
