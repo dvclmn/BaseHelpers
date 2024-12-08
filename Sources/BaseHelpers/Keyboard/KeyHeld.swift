@@ -11,6 +11,8 @@ public struct KeyHeldModifier: ViewModifier {
   let key: KeyEquivalent
   @State private var keyDownMonitor: Any?
   @State private var keyUpMonitor: Any?
+  @State private var isKeyCurrentlyPressed: Bool = false
+
   let isHeld: (Bool) -> Void
   let onPress: () -> Void
   
@@ -19,8 +21,12 @@ public struct KeyHeldModifier: ViewModifier {
       .onAppear {
         keyDownMonitor = NSEvent.addLocalMonitorForEvents(matching: .keyDown) { event in
           if event.characters == String(key.character) {
-            isHeld(true)
-            onPress()
+            /// Only process if the key isn't already being held down
+            if !isKeyCurrentlyPressed {
+              isKeyCurrentlyPressed = true
+              isHeld(true)
+              onPress()
+            }
             return nil
           } else {
             return event
@@ -29,6 +35,7 @@ public struct KeyHeldModifier: ViewModifier {
         
         keyUpMonitor = NSEvent.addLocalMonitorForEvents(matching: .keyUp) { event in
           if event.characters == String(key.character) {
+            isKeyCurrentlyPressed = false
             isHeld(false)
             return nil
           } else {

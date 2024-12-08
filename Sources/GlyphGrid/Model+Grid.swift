@@ -7,6 +7,7 @@
 
 import BaseHelpers
 import Foundation
+import SwiftUI
 
 public struct GlyphGrid: Equatable, Sendable {
 
@@ -71,15 +72,25 @@ extension GlyphGrid {
 
   public func gridPosition(
     from point: CGPoint,
-    within size: CGSize
+    within size: CGSize,
+    panOffset: CGPoint
   ) -> GridPosition {
-
-    let col = Int(floor(point.x / cellSize.width))
-    let row = Int(floor(point.y / cellSize.height))
-
+    // Calculate the center offset
+    let centerOffsetX = (size.width - CGFloat(width) * cellSize.width) / 2
+    let centerOffsetY = (size.height - CGFloat(height) * cellSize.height) / 2
+    
+    // Adjust the point for both centering and panning
+    let adjustedPoint = CGPoint(
+      x: point.x - centerOffsetX - panOffset.x,
+      y: point.y - centerOffsetY - panOffset.y
+    )
+    
+    // Calculate grid position
+    let col = Int(floor(adjustedPoint.x / cellSize.width))
+    let row = Int(floor(adjustedPoint.y / cellSize.height))
+    
     return GridPosition(row: row, col: col)
   }
-
 }
 
 extension CGSize {
