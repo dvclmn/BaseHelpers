@@ -8,9 +8,14 @@
 import SwiftUI
 
 public extension CGPoint {
-  var isEmpy: Bool {
+  var isEmpty: Bool {
     x.isZero && y.isZero
   }
+  
+  var isZero: Bool {
+    x.isZero && y.isZero
+  }
+  
   
   // Shift right (increases x)
   func shiftRight(_ distance: CGFloat) -> CGPoint {

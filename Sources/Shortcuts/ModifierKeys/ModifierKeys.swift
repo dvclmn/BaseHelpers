@@ -8,6 +8,24 @@
 import Foundation
 import SwiftUI
 
+/// Important: Don't forget to provide the entry point for the modifier:
+///
+/// ```
+/// import SwiftUI
+/// import Shortcuts
+///
+/// @main
+/// struct ExampleApp: App {
+///
+///   var body: some Scene {
+///     WindowGroup {
+///       ContentView()
+///         .readModifierKeys() // <- Here
+///     }
+///   }
+/// }
+/// ```
+
 public typealias Modifiers = Set<ModifierKey>
 
 public enum ModifierKey: Hashable, Sendable {
@@ -41,8 +59,6 @@ public extension EnvironmentValues {
     set { self[ModifierFlagsKey.self] = newValue }
   }
 }
-
-
 
 public struct ModifierKeysModifier: ViewModifier {
   @State private var modifierKeys = Modifiers()
