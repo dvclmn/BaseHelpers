@@ -8,6 +8,11 @@
 import SwiftUI
 
 public extension CGPoint {
+  
+  func displayString(decimalPlaces: Int = 2) -> String {
+    return "\(self.x.toDecimal(decimalPlaces)) x \(self.y.toDecimal(decimalPlaces))"
+  }
+  
   var isEmpty: Bool {
     x.isZero && y.isZero
   }

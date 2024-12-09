@@ -27,7 +27,31 @@ public extension CGSize {
     return CGPoint(x: width / 2, y: height / 2)
   }
   
+  func displayString(decimalPlaces: Int = 2, style: StringStyle = .short) -> String {
+    
+    let width: String = "\(self.width.toDecimal(decimalPlaces))"
+    let height: String = "\(self.height.toDecimal(decimalPlaces))"
+    
+    switch style {
+      case .short:
+        return "\(width) x \(height)"
+        
+      case .initials:
+        return "W: \(width) x H: \(height)"
+        
+      case .full:
+        return "Width: \(width) x Height: \(height)"
+    }
+  }
+  
+  @available(*, deprecated, message: "This function is deprecated. Use `displayString` instead")
   var asString: String {
     return "Width: \(width.padLeading(maxDigits: 3, decimalPlaces: 2)) x Height: \(height.padLeading(maxDigits: 3, decimalPlaces: 2))"
+  }
+  
+  enum StringStyle {
+    case short
+    case initials
+    case full
   }
 }
