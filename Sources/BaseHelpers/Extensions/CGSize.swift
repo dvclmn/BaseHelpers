@@ -37,10 +37,10 @@ public extension CGSize {
         return "\(width) x \(height)"
         
       case .initials:
-        return "W: \(width) x H: \(height)"
+        return "W \(width)  H \(height)"
         
       case .full:
-        return "Width: \(width) x Height: \(height)"
+        return "Width \(width)  Height \(height)"
     }
   }
   

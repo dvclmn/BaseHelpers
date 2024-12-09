@@ -13,6 +13,26 @@ public extension CGPoint {
     return "\(self.x.toDecimal(decimalPlaces)) x \(self.y.toDecimal(decimalPlaces))"
   }
   
+  func displayString(decimalPlaces: Int = 2, style: StringStyle = .short) -> String {
+    
+    let width: String = "\(self.x.toDecimal(decimalPlaces))"
+    let height: String = "\(self.y.toDecimal(decimalPlaces))"
+    
+    switch style {
+      case .short:
+        return "\(width) x \(height)"
+        
+      case .full:
+        return "X \(width)  Y \(height)"
+        
+    }
+  }
+  
+  enum StringStyle {
+    case short
+    case full
+  }
+  
   var isEmpty: Bool {
     x.isZero && y.isZero
   }
