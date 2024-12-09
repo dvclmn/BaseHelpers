@@ -17,11 +17,6 @@ let package = Package(
       "Grainient"
     ]),
 
-    /// Utilities
-    .library(name: "Utilities", targets: [
-      "GlyphGrid",
-    ]),
-    
     /// Helpers
     .library(
       name: "BaseHelpers",
@@ -49,9 +44,6 @@ let package = Package(
     /// Styles
     .target(name: "BaseStyles", resources: [.copy("GrainOverlay/Assets.xcassets")]),
     .target(name: "Grainient", dependencies: ["BaseStyles"]),
-    
-    /// Utilities
-    .target(name: "GlyphGrid", dependencies: ["BaseHelpers", "BaseStyles"]),
 
     /// Helpers
     .target(name: "BaseHelpers"),

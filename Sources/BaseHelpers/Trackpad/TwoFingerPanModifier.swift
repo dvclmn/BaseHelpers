@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-public struct PanGestureModifier: ViewModifier {
+public struct TwoFingerPanModifier: ViewModifier {
   
   @Binding var panAmount: CGPoint
   @State private var panDelta: CGPoint = .zero
@@ -61,7 +61,7 @@ extension View {
     sensitivity: CGFloat = 0.8
   ) -> some View {
     self.modifier(
-      PanGestureModifier(
+      TwoFingerPanModifier(
         panAmount: panAmount,
         sensitivity: sensitivity
       )
