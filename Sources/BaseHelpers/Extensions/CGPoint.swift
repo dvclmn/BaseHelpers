@@ -9,6 +9,34 @@ import SwiftUI
 
 public extension CGPoint {
   
+  func addingDelta(_ delta: CGPoint) -> CGPoint {
+    let result = CGPoint(
+      x: self.x + (delta.x),
+      y: self.y + (delta.y)
+    )
+    return result
+  }
+  
+  func calculateDelta(
+    from lastPosition: CGPoint,
+    with sensitivity: CGFloat
+  ) -> CGPoint {
+    let result = CGPoint(
+      x: (self.x - lastPosition.x) * sensitivity,
+      y: (self.y - lastPosition.y) * sensitivity
+    )
+    
+    return result
+  }
+  
+  func unitPoint(in size: CGSize) -> UnitPoint {
+    guard size.width > 0 && size.height > 0 else {
+      return .center // or another reasonable default
+    }
+    
+    return UnitPoint(x: x / size.width, y: y / size.height)
+  }
+  
   func displayString(decimalPlaces: Int = 2) -> String {
     return "\(self.x.toDecimal(decimalPlaces)) x \(self.y.toDecimal(decimalPlaces))"
   }
