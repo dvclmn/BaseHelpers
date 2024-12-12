@@ -7,14 +7,91 @@
 
 import SwiftUI
 
+
+// MARK: - Subtraction
+infix operator -: AdditionPrecedence
+
+public func -(lhs: CGPoint, rhs: CGPoint) -> CGPoint {
+  return CGPoint(
+    x: lhs.x - rhs.x,
+    y: lhs.y - rhs.y
+  )
+}
+
+public func -(lhs: CGPoint, rhs: CGSize) -> CGPoint {
+  return CGPoint(
+    x: lhs.x - rhs.width,
+    y: lhs.y - rhs.height
+  )
+}
+
+// MARK: - Addition
+infix operator +: AdditionPrecedence
+
+public func +(lhs: CGPoint, rhs: CGPoint) -> CGPoint {
+  return CGPoint(
+    x: lhs.x + rhs.x,
+    y: lhs.y + rhs.y
+  )
+}
+
+public func +(lhs: CGPoint, rhs: CGSize) -> CGPoint {
+  return CGPoint(
+    x: lhs.x + rhs.width,
+    y: lhs.y + rhs.height
+  )
+}
+
+// MARK: - Multiplication
+infix operator *: MultiplicationPrecedence
+
+public func *(lhs: CGPoint, rhs: CGPoint) -> CGPoint {
+  return CGPoint(
+    x: lhs.x * rhs.x,
+    y: lhs.y * rhs.y
+  )
+}
+
+
+
+//public func -(lhs: CGPoint, rhs: CGSize) -> CGPoint {
+//  return CGPoint(x: lhs.x - rhs.width, y: lhs.y - rhs.height)
+//}
+
 public extension CGPoint {
   
-  func addingDelta(_ delta: CGPoint) -> CGPoint {
-    let result = CGPoint(
-      x: self.x + (delta.x),
-      y: self.y + (delta.y)
+  func removingZoom(_ zoom: CGFloat) -> CGPoint {
+    CGPoint(x: self.x / zoom, y: self.y / zoom)
+  }
+
+  func subtracting(_ point: CGPoint) -> CGPoint {
+    return CGPoint(x: self.x - point.x, y: self.y - point.y)
+  }
+  
+  func subtracting(_ size: CGSize) -> CGPoint {
+    return CGPoint(x: self.x - size.width, y: self.y - size.height)
+  }
+  
+  func adding(_ point: CGPoint) -> CGPoint {
+    return CGPoint(
+      x: self.x + point.x,
+      y: self.y + point.y
     )
-    return result
+  }
+  
+  func multiplying(by value: CGFloat) -> CGPoint {
+    return CGPoint(x: self.x * value, y: self.y * value)
+  }
+  
+  var toCGSize: CGSize {
+    return CGSize(width: self.x, height: self.y)
+  }
+
+  func clamp(_ maxValue: CGFloat) -> CGPoint {
+    return CGPoint(
+      x: max(-maxValue, min(maxValue, self.x)),
+      y: max(-maxValue, min(maxValue, self.y))
+    )
   }
   
   func calculateDelta(
