@@ -14,13 +14,16 @@ public struct TwoFingerPanModifier: ViewModifier {
   @State private var monitor: Any?
   
   let sensitivity: CGFloat
+  let isPanning: (Bool) -> Void
 
   public init(
     panAmount: Binding<CGPoint>,
-    sensitivity: CGFloat = 0.8
+    sensitivity: CGFloat = 0.8,
+  isPanning: @escaping (Bool) -> Void = { _ in }
   ) {
     self._panAmount = panAmount
     self.sensitivity = sensitivity
+    self.isPanning = isPanning
   }
   
   public func body(content: Content) -> some View {

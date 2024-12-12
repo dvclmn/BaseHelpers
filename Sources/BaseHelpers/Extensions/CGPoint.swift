@@ -69,6 +69,10 @@ public extension CGPoint {
     x.isZero && y.isZero
   }
   
+  var isFinite: Bool {
+    x.isFinite && y.isFinite
+  }
+  
   
   // Shift right (increases x)
   func shiftRight(_ distance: CGFloat) -> CGPoint {
