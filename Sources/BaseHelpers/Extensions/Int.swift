@@ -16,6 +16,10 @@ public extension Int {
   var string: String {
     return String(self)
   }
+  
+  func isWithin(_ collection: some Collection) -> Bool {
+    (0..<collection.count).contains(self)
+  }
 }
 
 public extension Int64 {

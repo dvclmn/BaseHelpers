@@ -52,6 +52,23 @@ public func *(lhs: CGPoint, rhs: CGPoint) -> CGPoint {
   )
 }
 
+public func *(lhs: CGPoint, rhs: CGFloat) -> CGPoint {
+  return CGPoint(
+    x: lhs.x * rhs,
+    y: lhs.y * rhs
+  )
+}
+
+// MARK: - Multiplication
+infix operator +=: AssignmentPrecedence
+
+public func +=(lhs: inout CGPoint, rhs: CGPoint) {
+  lhs = lhs + rhs
+}
+
+public func +=(lhs: inout CGPoint, rhs: CGSize) {
+  lhs = lhs + rhs
+}
 
 
 //public func -(lhs: CGPoint, rhs: CGSize) -> CGPoint {
@@ -94,7 +111,7 @@ public extension CGPoint {
     )
   }
   
-  func calculateDelta(
+  func delta(
     from lastPosition: CGPoint,
     with sensitivity: CGFloat
   ) -> CGPoint {
