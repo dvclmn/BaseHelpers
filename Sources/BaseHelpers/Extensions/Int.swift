@@ -18,7 +18,12 @@ public extension Int {
   }
   
   func isWithin(_ collection: some Collection) -> Bool {
-    (0..<collection.count).contains(self)
+    let startIndex = collection.startIndex
+    let endIndex = collection.endIndex
+    guard let index = collection.index(startIndex, offsetBy: self, limitedBy: endIndex) else {
+      return false
+    }
+    return index < endIndex
   }
 }
 

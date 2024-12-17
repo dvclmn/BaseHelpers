@@ -7,25 +7,24 @@
 
 import Foundation
 
-extension NSString {
-  func range(from range: Range<String.Index>) -> NSRange {
-    let utf16Start = range.lowerBound.utf16Offset(in: self as String)
-    let utf16End = range.upperBound.utf16Offset(in: self as String)
-    return NSRange(location: utf16Start, length: utf16End - utf16Start)
-  }
-}
-
-
-
-public extension Character {
-  var string: String {
-    String(self)
-  }
-}
-
-
 
 public extension String {
+  
+  var gridDimensions: (rows: Int, columns: Int) {
+    let columns = self.longestLineLength
+    let rows = self.split(separator: "\n", omittingEmptySubsequences: false).count
+    return (rows, columns)
+  }
+  
+  var longestLineLength: Int {
+    let lines = self.split(
+      separator: "\n",
+      maxSplits: Int.max,
+      omittingEmptySubsequences: false
+    )
+    let longestLine = lines.map { $0.count }.max() ?? 1
+    return longestLine
+  }
   
   func indentingEachLine(_ level: Int = 1, indentChar: String = "\t") -> String {
     let indent = String(repeating: indentChar, count: level)

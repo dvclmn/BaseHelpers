@@ -7,6 +7,12 @@
 
 import Foundation
 
+public extension Character {
+  var string: String {
+    String(self)
+  }
+}
+
 // https://gist.github.com/john-mueller/cb5fe3d39afe47ad7c94a84a6670e010
 extension Character: Codable {
   public func encode(to encoder: Encoder) throws {
@@ -34,4 +40,8 @@ extension Character: Codable {
     
     self = character
   }
+  
+
+  
+
 }
