@@ -7,6 +7,16 @@
 
 import Foundation
 
+// MARK: - Multiplication
+infix operator *: MultiplicationPrecedence
+
+public func *(lhs: CGSize, rhs: CGFloat) -> CGSize {
+  return CGSize(
+    width: lhs.width * rhs,
+    height: lhs.height * rhs
+  )
+}
+
 public extension CGSize {
   /// Returns true if both width and height are greater than zero
   var isPositive: Bool {

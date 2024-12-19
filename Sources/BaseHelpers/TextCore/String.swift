@@ -10,12 +10,6 @@ import Foundation
 
 public extension String {
   
-  var gridDimensions: (rows: Int, columns: Int) {
-    let columns = self.longestLineLength
-    let rows = self.split(separator: "\n", omittingEmptySubsequences: false).count
-    return (rows, columns)
-  }
-  
   var longestLineLength: Int {
     let lines = self.split(
       separator: "\n",

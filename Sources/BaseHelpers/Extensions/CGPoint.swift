@@ -77,6 +77,8 @@ public func +=(lhs: inout CGPoint, rhs: CGSize) {
 
 public extension CGPoint {
   
+  
+  
   func removingZoom(_ zoom: CGFloat) -> CGPoint {
     CGPoint(x: self.x / zoom, y: self.y / zoom)
   }
@@ -165,6 +167,10 @@ public extension CGPoint {
   
   var isFinite: Bool {
     x.isFinite && y.isFinite
+  }
+  
+  var isNan: Bool {
+    x.isNaN && y.isNaN
   }
   
   

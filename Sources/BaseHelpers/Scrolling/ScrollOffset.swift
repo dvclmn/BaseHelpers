@@ -45,10 +45,10 @@ public struct OffsetScroll<Content: View>: View {
       }
       .safeAreaPadding(.top, maskConfig.edgePadding)
       
-      .readFrame { point in
-        self.offset = point.y
-        //        self.offset = convertedOffset(point)
-      }
+//      .readFrame { point in
+//        self.offset = point.y
+//        //        self.offset = convertedOffset(point)
+//      }
     }
     .scrollMask(
       scrollOffset: self.offset,

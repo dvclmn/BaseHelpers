@@ -5,6 +5,33 @@
 //  Created by Dave Coleman on 16/12/2024.
 //
 
+import SwiftUI
+
+@propertyWrapper
+public struct Ignored<T> {
+  public var wrappedValue: T
+  
+  public init(wrappedValue: T) {
+    self.wrappedValue = wrappedValue
+  }
+}
+
+extension Ignored: Encodable where T: Encodable { }
+extension Ignored: Decodable where T: Decodable { }
+extension Ignored: Sendable where T: Sendable { }
+extension Ignored: Equatable where T: Equatable { }
+extension Ignored: Hashable where T: Hashable { }
+
+public extension KeyedEncodingContainer {
+  mutating func encode<T: Encodable>(_ value: Ignored<T>, forKey key: KeyedEncodingContainer<K>.Key) throws { }
+}
+
+public extension KeyedDecodingContainer {
+  func decode<T: Decodable>(_ type: Ignored<T?>.Type, forKey key: KeyedDecodingContainer<K>.Key) throws -> Ignored<T?> {
+    return try .init(wrappedValue: decodeIfPresent(T.self, forKey: key))
+  }
+}
+
 /// For types that should be excluded from persistence
 /// `public protocol Ephemeral: DefaultInitializable {}`
 

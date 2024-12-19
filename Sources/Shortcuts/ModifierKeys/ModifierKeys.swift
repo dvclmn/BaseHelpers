@@ -69,7 +69,7 @@ public struct ModifierKeysModifier: ViewModifier {
     content
       .onAppear {
         
-        print("Checking signal noise for `ModifierKeysModifier`")
+//        print("Checking signal noise for `ModifierKeysModifier`")
         
         NSEvent.addLocalMonitorForEvents(matching: [.flagsChanged]) { event in
           modifierKeys = Set(allModifiers.compactMap { flag in
