@@ -17,7 +17,9 @@ func floatToDecimal<T: BinaryFloatingPoint>(value: T, places: Int) -> String {
 
 public extension Double {
   
-  func toDecimal(_ places: Int = 2, with processing: (Double) -> Double) -> String {
+  var toDecimal: String { toDecimal() }
+  
+  func toDecimal(_ places: Int = 2) -> String {
     floatToDecimal(value: self, places: places)
   }
   
@@ -27,9 +29,7 @@ public extension Double {
 }
 
 public extension CGFloat {
-  var toDecimal: String {
-    toDecimal()
-  }
+  var toDecimal: String { toDecimal() }
   
   func toDecimal(_ places: Int = 2) -> String {
     floatToDecimal(value: self, places: places)

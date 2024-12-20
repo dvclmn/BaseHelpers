@@ -7,34 +7,8 @@
 
 import SwiftUI
 
-public extension Binding {
-  
-  static func convert<TInt, TFloat>(_ intBinding: Binding<TInt>) -> Binding<TFloat>
-  where TInt: BinaryInteger & Sendable,
-        TFloat: BinaryFloatingPoint, TFloat.Stride: BinaryFloatingPoint {
-          
-          Binding<TFloat> (
-            get: { TFloat(intBinding.wrappedValue) },
-            set: { intBinding.wrappedValue = TInt($0) }
-          )
-        }
-  
-  static func convert<TFloat, TInt>(_ floatBinding: Binding<TFloat>) -> Binding<TInt>
-  where TFloat: BinaryFloatingPoint & Sendable,
-        TFloat.Stride: BinaryFloatingPoint,
-        TInt: BinaryInteger {
-          
-          Binding<TInt> (
-            get: { TInt(floatBinding.wrappedValue) },
-            set: { floatBinding.wrappedValue = TFloat($0) }
-          )
-        }
-}
-
-
-// Extension on Binding where the Value is CGFloat
 public extension Binding where Value == CGFloat {
-  // Convert CGFloat Binding to Double Binding
+  /// Convert CGFloat Binding to Double Binding
   var asBoundDouble: Binding<Double> {
     Binding<Double>(
       get: { Double(wrappedValue) },
@@ -43,9 +17,8 @@ public extension Binding where Value == CGFloat {
   }
 }
 
-// Extension on Binding where the Value is Double
 public extension Binding where Value == Double {
-  // Convert Double Binding to CGFloat Binding
+  /// Convert Double Binding to CGFloat Binding
   var asBoundCGFloat: Binding<CGFloat> {
     Binding<CGFloat>(
       get: { CGFloat(wrappedValue) },
@@ -53,3 +26,29 @@ public extension Binding where Value == Double {
     )
   }
 }
+
+
+//public extension Binding {
+//  
+//  static func convert<TInt, TFloat>(_ intBinding: Binding<TInt>) -> Binding<TFloat>
+//  where TInt: BinaryInteger & Sendable,
+//        TFloat: BinaryFloatingPoint, TFloat.Stride: BinaryFloatingPoint {
+//          
+//          Binding<TFloat> (
+//            get: { TFloat(intBinding.wrappedValue) },
+//            set: { intBinding.wrappedValue = TInt($0) }
+//          )
+//        }
+//  
+//  static func convert<TFloat, TInt>(_ floatBinding: Binding<TFloat>) -> Binding<TInt>
+//  where TFloat: BinaryFloatingPoint & Sendable,
+//        TFloat.Stride: BinaryFloatingPoint,
+//        TInt: BinaryInteger {
+//          
+//          Binding<TInt> (
+//            get: { TInt(floatBinding.wrappedValue) },
+//            set: { floatBinding.wrappedValue = TFloat($0) }
+//          )
+//        }
+//}
+
