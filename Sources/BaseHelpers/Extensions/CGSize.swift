@@ -43,7 +43,7 @@ extension CGSize {
   }
 
 
-  public func displayString(decimalPlaces: Int = 2, style: StringStyle = .short) -> String {
+  public func displayString(decimalPlaces: Int = 2, style: DisplayStringStyle = .short) -> String {
 
     let width: String = "\(self.width.toDecimal(decimalPlaces))"
     let height: String = "\(self.height.toDecimal(decimalPlaces))"
@@ -65,9 +65,9 @@ extension CGSize {
     "Width: \(width.padLeading(maxDigits: 3, decimalPlaces: 2)) x Height: \(height.padLeading(maxDigits: 3, decimalPlaces: 2))"
   }
 
-  public enum StringStyle {
-    case short
-    case initials
-    case full
-  }
+}
+public enum DisplayStringStyle {
+  case short
+  case initials
+  case full
 }

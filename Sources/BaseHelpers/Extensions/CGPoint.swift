@@ -59,7 +59,7 @@ public func *(lhs: CGPoint, rhs: CGFloat) -> CGPoint {
   )
 }
 
-// MARK: - Multiplication
+// MARK: - Plus Equals
 infix operator +=: AssignmentPrecedence
 
 public func +=(lhs: inout CGPoint, rhs: CGPoint) {
@@ -68,6 +68,20 @@ public func +=(lhs: inout CGPoint, rhs: CGPoint) {
 
 public func +=(lhs: inout CGPoint, rhs: CGSize) {
   lhs = lhs + rhs
+}
+
+// MARK: - Greater than
+infix operator >: ComparisonPrecedence
+
+public func >(lhs: CGPoint, rhs: CGPoint) -> Bool {
+  lhs.x > rhs.x || lhs.y > rhs.y
+}
+
+// MARK: - Less than
+infix operator <: ComparisonPrecedence
+
+public func <(lhs: CGPoint, rhs: CGPoint) -> Bool {
+  lhs.x < rhs.x || lhs.y < rhs.y
 }
 
 
@@ -137,7 +151,7 @@ public extension CGPoint {
     return "\(self.x.toDecimal(decimalPlaces)) x \(self.y.toDecimal(decimalPlaces))"
   }
   
-  func displayString(decimalPlaces: Int = 2, style: StringStyle = .short) -> String {
+  func displayString(decimalPlaces: Int = 2, style: DisplayStringStyle = .short) -> String {
     
     let width: String = "\(self.x.toDecimal(decimalPlaces))"
     let height: String = "\(self.y.toDecimal(decimalPlaces))"
@@ -152,7 +166,7 @@ public extension CGPoint {
     }
   }
   
-  enum StringStyle {
+  enum DisplayStringStyle {
     case short
     case full
   }
