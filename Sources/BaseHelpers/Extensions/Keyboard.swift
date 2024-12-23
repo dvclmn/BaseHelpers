@@ -74,34 +74,74 @@ public extension KeyPress.Phases {
 
 public extension EventModifiers {
   
-  var name: String {
-    switch self {
-      case .all: "All"
-      case .command: "Command"
-      case .option: "Option"
-      case .shift: "Shift"
-      case .control: "Control"
-      case .capsLock: "Caps Lock"
-      case .numericPad: "Numeric Pad"
-      default: "Unknown"
-    }
-  }
+//  var name: String {
+//    switch self {
+//      case .all: "All"
+//      case .command: "Command"
+//      case .option: "Option"
+//      case .shift: "Shift"
+//      case .control: "Control"
+//      case .capsLock: "Caps Lock"
+//      case .numericPad: "Numeric Pad"
+//      default: "Unknown"
+//    }
+//  }
+//
+//  var symbolLiteral: Character {
+//    switch self {
+//      case .shift: "􀆝"
+//      case .option: "􀆕"
+//      case .command: "􀆔"
+//      case .control: "􀆍"
+//      case .capsLock: "􀆡"
+//      default: "?"
+//    }
+//  }
+  
+//  var nameAndSymbol: String {
+//    "\(self.name) (\(self.symbolLiteral))"
+//  }
 
-  var symbolLiteral: Character {
-    switch self {
-      case .shift: "􀆝"
-      case .option: "􀆕"
-      case .command: "􀆔"
-      case .control: "􀆍"
-      case .capsLock: "􀆡"
-      default: "?"
-    }
+
+  struct ModifierSymbol {
+    let name: String
+    let symbol: Character
+  }
+  
+  private var modifierSymbols: [(EventModifiers, ModifierSymbol)] {
+    [
+      (.command, .init(name: "Command", symbol: "􀆔")),
+      (.option, .init(name: "Option", symbol: "􀆕")),
+      (.shift, .init(name: "Shift", symbol: "􀆝")),
+      (.control, .init(name: "Control", symbol: "􀆍")),
+      (.capsLock, .init(name: "Caps Lock", symbol: "􀆡")),
+      (.numericPad, .init(name: "Numeric Pad", symbol: "⌨️"))
+    ]
+  }
+  
+  var activeModifiers: [ModifierSymbol] {
+    modifierSymbols
+      .filter { self.contains($0.0) }
+      .map(\.1)
+  }
+  
+  var names: String {
+    activeModifiers.map(\.name).joined(separator: " + ")
+  }
+  
+  var symbols: String {
+    activeModifiers.map(\.symbol).map(String.init).joined()
   }
   
   var nameAndSymbol: String {
-    "\(self.name) (\(self.symbolLiteral))"
+    let active = activeModifiers
+    if active.isEmpty {
+      return "None"
+    }
+    return active
+      .map { "\($0.name) (\($0.symbol))" }
+      .joined(separator: " + ")
   }
-
 }
 
 
