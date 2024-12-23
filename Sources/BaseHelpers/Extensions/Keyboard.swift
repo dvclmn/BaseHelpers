@@ -7,9 +7,9 @@
 
 import SwiftUI
 
-extension KeyEquivalent {
+public extension KeyEquivalent {
 
-  public var name: String {
+  var name: String {
     switch self {
       case .clear: "Clear"
       case .delete: "Delete"
@@ -31,7 +31,7 @@ extension KeyEquivalent {
     }
   }
 
-  public var symbolLiteral: Character {
+  var symbolLiteral: Character {
     switch self {
       case .clear: "􀆄"
       case .delete: "􁂈"
@@ -52,11 +52,35 @@ extension KeyEquivalent {
       default: "?"
     }
   }
-
-  public var nameAndSymbol: String {
-    "\(self.name) (\(self.symbolLiteral))"
+  
+  var symbolCapitalised: String {
+    String(symbolLiteral).capitalized
   }
 
+  var nameAndSymbol: String {
+    switch self {
+      case .clear, .delete, .deleteForward, .upArrow, .downArrow, .leftArrow, .rightArrow, .escape, .home, .end, .pageUp, .pageDown, .`return`, .space, .tab:
+        "\(self.name) (\(self.symbolLiteral))"
+        
+      default:
+        "\(self.name.capitalized)"
+    }
+  }
+
+}
+
+public extension KeyPress {
+  var displayString: String {
+    return """
+    
+    Key Press:
+    ----------
+    \(self.key.symbolCapitalised)\(self.modifiers.symbols)
+    Phase: \(phase.name)
+    
+    
+    """
+  }
 }
 
 
@@ -110,12 +134,12 @@ public extension EventModifiers {
   
   private var modifierSymbols: [(EventModifiers, ModifierSymbol)] {
     [
-      (.command, .init(name: "Command", symbol: "􀆔")),
-      (.option, .init(name: "Option", symbol: "􀆕")),
-      (.shift, .init(name: "Shift", symbol: "􀆝")),
       (.control, .init(name: "Control", symbol: "􀆍")),
+      (.shift, .init(name: "Shift", symbol: "􀆝")),
+      (.option, .init(name: "Option", symbol: "􀆕")),
+      (.command, .init(name: "Command", symbol: "􀆔")),
       (.capsLock, .init(name: "Caps Lock", symbol: "􀆡")),
-      (.numericPad, .init(name: "Numeric Pad", symbol: "⌨️"))
+      (.numericPad, .init(name: "Numeric Pad", symbol: "􀅱")),
     ]
   }
   
@@ -138,10 +162,22 @@ public extension EventModifiers {
     if active.isEmpty {
       return "None"
     }
-    return active
-      .map { "\($0.name) (\($0.symbol))" }
-      .joined(separator: " + ")
+    
+    let names = active.map(\.name).joined(separator: " + ")
+    let symbols = active.map(\.symbol).map(String.init).joined(separator: " + ")
+    
+    return "\(names) (\(symbols))"
   }
+  
+//  var nameAndSymbol: String {
+//    let active = activeModifiers
+//    if active.isEmpty {
+//      return "None"
+//    }
+//    return active
+//      .map { "\($0.name) (\($0.symbol))" }
+//      .joined(separator: " + ")
+//  }
 }
 
 
