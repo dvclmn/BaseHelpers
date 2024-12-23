@@ -12,7 +12,6 @@ import SwiftUI
 ///
 /// ```
 /// import SwiftUI
-/// import Shortcuts
 ///
 /// @main
 /// struct ExampleApp: App {
@@ -34,8 +33,6 @@ public enum ModifierKey: Hashable, Sendable {
 
 #if os(macOS)
 
-
-
 public extension NSEvent.ModifierFlags {
   func toModifierKey() -> ModifierKey? {
     switch self {
@@ -49,18 +46,13 @@ public extension NSEvent.ModifierFlags {
 }
 
 
-public struct ModifierFlagsKey: EnvironmentKey {
-  public static let defaultValue = Modifiers()
+public extension EnvironmentValues {
+  @Entry var modifierKeys: Modifiers = .init()
 }
 
-public extension EnvironmentValues {
-  var modifierKeys: Modifiers {
-    get { self[ModifierFlagsKey.self] }
-    set { self[ModifierFlagsKey.self] = newValue }
-  }
-}
 
 public struct ModifierKeysModifier: ViewModifier {
+  
   @State private var modifierKeys = Modifiers()
   
   private let allModifiers: [NSEvent.ModifierFlags] = [.shift, .control, .option, .command]
@@ -68,9 +60,6 @@ public struct ModifierKeysModifier: ViewModifier {
   public func body(content: Content) -> some View {
     content
       .onAppear {
-        
-//        print("Checking signal noise for `ModifierKeysModifier`")
-        
         NSEvent.addLocalMonitorForEvents(matching: [.flagsChanged]) { event in
           modifierKeys = Set(allModifiers.compactMap { flag in
             event.modifierFlags.contains(flag) ? flag.toModifierKey() : nil
