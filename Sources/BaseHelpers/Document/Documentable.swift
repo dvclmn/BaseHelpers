@@ -19,29 +19,9 @@ public extension EnvironmentValues {
 public final class DocumentMonitor {
   
   public var count: Int = 0
-  
-//  public init() {
-//    updateCount()
-//  }
-  
+
   public init() {
     updateCount()
-    
-//    NotificationCenter.default.addObserver(
-//      forName: NSDocument.,
-//      object: nil,
-//      queue: .main
-//    ) { [weak self] _ in
-//      self?.updateCount()
-//    }
-//    
-//    NotificationCenter.default.addObserver(
-//      forName: NSDocument.willCloseNotification, // or .didCloseNotification
-//      object: nil,
-//      queue: .main
-//    ) { [weak self] _ in
-//      self?.updateCount()
-//    }
   }
   
   public var multipleOpen: Bool {

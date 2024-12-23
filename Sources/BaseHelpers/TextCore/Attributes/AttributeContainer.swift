@@ -24,6 +24,10 @@ public extension AttributeContainer {
     return quickContainer(with: .black, background: .green)
   }
   
+  static var invisible: AttributeContainer {
+    return quickContainer(with: .clear, background: .clear)
+  }
+  
   static var blackOnWhite: AttributeContainer {
     return quickContainer()
   }

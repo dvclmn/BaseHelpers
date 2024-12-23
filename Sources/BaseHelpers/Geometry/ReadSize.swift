@@ -29,7 +29,7 @@ public struct WindowSizeModifier: ViewModifier {
         GeometryReader { geometry in
           Color.clear
             .task(id: geometry.size) {
-              print("Window size: \(geometry.size)")
+//              print("Window size: \(geometry.size)")
               size = geometry.size
             }
         }

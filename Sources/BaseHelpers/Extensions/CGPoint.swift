@@ -91,6 +91,30 @@ public func <(lhs: CGPoint, rhs: CGPoint) -> Bool {
 
 public extension CGPoint {
   
+  func distance(to point: CGPoint) -> CGFloat {
+    sqrt(pow(x - point.x, 2) + pow(y - point.y, 2))
+  }
+  
+  // Useful for determining drag direction
+//  func direction(to point: CGPoint) -> SwiftUI.Direction {
+//    let deltaX = point.x - x
+//    let deltaY = point.y - y
+//    let angle = atan2(deltaY, deltaX)
+//    
+//    // Convert angle to degrees and normalize to 0-360
+//    let degrees = (angle * 180 / .pi + 360).truncatingRemainder(dividingBy: 360)
+//    
+//    switch degrees {
+//      case 0..<45, 315..<360: return .right
+//      case 45..<135: return .down
+//      case 135..<225: return .left
+//      case 225..<315: return .up
+//      default: return .right
+//    }
+//  }
+  
+  
+  
   
   
   func removingZoom(_ zoom: CGFloat) -> CGPoint {
