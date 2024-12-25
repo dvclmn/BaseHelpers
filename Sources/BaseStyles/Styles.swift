@@ -47,6 +47,8 @@ public struct Styles {
   
   public static let titleBarHeight:                       Double = 26
   
+  public static let hBarDefaultHeight: Double = 38
+  
   public static let overScroll:                           Double = 200
   
   /// Padding

@@ -31,11 +31,12 @@ public extension Double {
 public extension CGFloat {
   var toDecimal: String { toDecimal() }
   
-  func toDecimal(_ places: Int = 2) -> String {
-    floatToDecimal(value: self, places: places)
-  }
-  
   var toInt: String {
     floatToDecimal(value: self, places: 0)
   }
+  
+  func toDecimal(_ places: Int = 2) -> String {
+    floatToDecimal(value: self, places: places)
+  }
+
 }

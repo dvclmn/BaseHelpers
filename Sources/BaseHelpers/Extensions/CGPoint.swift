@@ -70,6 +70,18 @@ public func +=(lhs: inout CGPoint, rhs: CGSize) {
   lhs = lhs + rhs
 }
 
+// MARK: - Minus Equals
+infix operator -=: AssignmentPrecedence
+
+public func -=(lhs: inout CGPoint, rhs: CGPoint) {
+  lhs = lhs - rhs
+}
+
+public func -=(lhs: inout CGPoint, rhs: CGSize) {
+  lhs = lhs - rhs
+}
+
+
 // MARK: - Greater than
 infix operator >: ComparisonPrecedence
 

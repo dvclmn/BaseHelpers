@@ -11,8 +11,6 @@ import SwiftUI
 /// A type-safe wrapper for system pointer styles that gracefully degrades on older macOS versions.
 /// Provides a comprehensive set of pointer styles for different interactive contexts.
 public enum CustomPointerType {
-  /// The pointer style for resizing a column, or vertical division, in either direction.
-  case columnResize
   
   /// The pointer style that uses the default platform appearance.
   case `default`
@@ -36,8 +34,27 @@ public enum CustomPointerType {
   /// such as selecting a portion of an image or multiple lines of text.
   case rectSelection
   
+  /// The pointer style for resizing a column, or vertical division, in either direction.
+  case columnResize
+  
   /// The pointer style for resizing a row, or horizontal division, in either direction.
   case rowResize
+  
+  case bottomResize
+  
+  case bottomLeadingResize
+  
+  case bottomTrailingResize
+  
+  case leadingResize
+  
+  case topResize
+  
+  case topLeadingResize
+  
+  case topTrailingResize
+  
+  case trailingResize
   
   /// The pointer style appropriate for selecting or inserting text in a vertical layout.
   case verticalText
@@ -67,8 +84,6 @@ private extension CustomPointerType {
   @available(macOS 15, *)
   var toPointerStyle: PointerStyle {
     switch self {
-      case .columnResize:
-          .columnResize
       case .default:
           .default
       case .grabActive:
@@ -81,8 +96,37 @@ private extension CustomPointerType {
           .link
       case .rectSelection:
           .rectSelection
+        
+      case .columnResize:
+          .columnResize
+        
       case .rowResize:
           .rowResize
+        
+      case .bottomResize:
+          .frameResize(position: .bottom)
+        
+      case .bottomLeadingResize:
+          .frameResize(position: .bottomLeading)
+        
+      case .bottomTrailingResize:
+          .frameResize(position: .bottomTrailing)
+        
+      case .leadingResize:
+          .frameResize(position: .leading)
+        
+      case .topResize:
+          .frameResize(position: .top)
+        
+      case .topLeadingResize:
+          .frameResize(position: .topLeading)
+        
+      case .topTrailingResize:
+          .frameResize(position: .topTrailing)
+        
+      case .trailingResize:
+          .frameResize(position: .trailing)
+        
       case .verticalText:
           .verticalText
       case .zoomIn:

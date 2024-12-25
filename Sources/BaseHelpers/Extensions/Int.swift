@@ -25,6 +25,12 @@ public extension Int {
     }
     return index < endIndex
   }
+  
+  
+    var numberOfDigits: Int {
+      return String(abs(self)).count
+    }
+  
 }
 
 public extension Int64 {
