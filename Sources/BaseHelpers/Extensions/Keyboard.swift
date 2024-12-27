@@ -139,7 +139,7 @@ public extension EventModifiers {
       (.option, .init(name: "Option", symbol: "􀆕")),
       (.command, .init(name: "Command", symbol: "􀆔")),
       (.capsLock, .init(name: "Caps Lock", symbol: "􀆡")),
-      (.numericPad, .init(name: "Numeric Pad", symbol: "􀅱")),
+//      (.numericPad, .init(name: "Numeric Pad", symbol: "􀅱")),
     ]
   }
   

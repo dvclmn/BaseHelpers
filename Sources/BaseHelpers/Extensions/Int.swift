@@ -7,17 +7,17 @@
 
 import Foundation
 
-public extension Int {
+extension Int {
   /// A Boolean value indicating whether the integer is even.
-  var isEven: Bool {
+  public var isEven: Bool {
     self % 2 == 0
   }
 
-  var string: String {
-    return String(self)
+  public var string: String {
+    String(self)
   }
-  
-  func isWithin(_ collection: some Collection) -> Bool {
+
+  public func isWithin(_ collection: some Collection) -> Bool {
     let startIndex = collection.startIndex
     let endIndex = collection.endIndex
     guard let index = collection.index(startIndex, offsetBy: self, limitedBy: endIndex) else {
@@ -26,15 +26,25 @@ public extension Int {
     return index < endIndex
   }
   
-  
-    var numberOfDigits: Int {
-      return String(abs(self)).count
+  public func isWithin(_ range: ClosedRange<Int>, isInclusive: Bool = true) -> Bool {
+    if isInclusive {
+      return self >= range.lowerBound && self <= (range.upperBound - 1)
+    } else {
+      return self > range.lowerBound && self < range.upperBound
     }
+  }
   
+  
+
+
+  public var numberOfDigits: Int {
+    String(abs(self)).count
+  }
+
 }
 
-public extension Int64 {
-  func getString() -> String {
-    return String(self)
+extension Int64 {
+  public func getString() -> String {
+    String(self)
   }
 }

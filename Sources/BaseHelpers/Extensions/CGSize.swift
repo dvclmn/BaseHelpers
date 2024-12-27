@@ -17,6 +17,21 @@ public func * (lhs: CGSize, rhs: CGFloat) -> CGSize {
   )
 }
 
+// MARK: - Greater than
+infix operator >: ComparisonPrecedence
+
+public func >(lhs: CGSize, rhs: CGFloat) -> Bool {
+  lhs.width > rhs || lhs.height > rhs
+}
+
+// MARK: - Less than
+infix operator <: ComparisonPrecedence
+
+public func <(lhs: CGSize, rhs: CGFloat) -> Bool {
+  lhs.width < rhs || lhs.height < rhs
+}
+
+
 extension CGSize {
   /// Returns true if both width and height are greater than zero
   public var isPositive: Bool {

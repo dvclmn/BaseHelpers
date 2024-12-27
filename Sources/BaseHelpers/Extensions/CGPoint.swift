@@ -103,6 +103,15 @@ public func <(lhs: CGPoint, rhs: CGPoint) -> Bool {
 
 public extension CGPoint {
   
+  var normalised: CGPoint {
+    let length = sqrt(x*x + y*y)
+    guard length > 0 else { return .zero }
+    return CGPoint(
+      x: x / length,
+      y: y / length
+    )
+  }
+  
   func distance(to point: CGPoint) -> CGFloat {
     sqrt(pow(x - point.x, 2) + pow(y - point.y, 2))
   }

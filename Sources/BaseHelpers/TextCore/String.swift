@@ -11,12 +11,17 @@ import Foundation
 public extension String {
   
   var longestLineLength: Int {
+    print("Let's get longest line length.")
     let lines = self.split(
       separator: "\n",
       maxSplits: Int.max,
       omittingEmptySubsequences: false
     )
+    print("Line count: \(lines.count)")
     let longestLine = lines.map { $0.count }.max() ?? 1
+    
+    print("Longest line: \(longestLine)")
+    
     return longestLine
   }
   
