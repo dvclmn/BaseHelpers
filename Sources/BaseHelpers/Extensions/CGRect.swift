@@ -32,7 +32,7 @@ public extension CGRect {
         return "Width \(width)  Height \(height)"
     }
   }
-
+  
   // Corner points
   var topLeft: CGPoint {
     CGPoint(x: minX, y: minY)

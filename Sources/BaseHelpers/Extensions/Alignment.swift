@@ -24,6 +24,21 @@ public extension Alignment {
         "Unknown"
     }
   }
+  
+  var opposite: Alignment {
+    switch self {
+      case .topLeading: .bottomTrailing
+      case .top: .bottom
+      case .topTrailing: .bottomLeading
+      case .trailing: .leading
+      case .bottomTrailing: .topLeading
+      case .bottom: .top
+      case .bottomLeading: .topTrailing
+      case .leading: .trailing
+      case .center: .center
+      default: .center
+    }
+  }
 }
 
 public extension HorizontalAlignment {

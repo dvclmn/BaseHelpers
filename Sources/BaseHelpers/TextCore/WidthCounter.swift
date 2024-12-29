@@ -22,7 +22,6 @@ public extension TextCore {
     style: WidthCounterStyle
   ) -> AttributedString {
     
-//    let style = self.config.metrics.widthCounter
     var result = AttributedString()
     
     switch style {

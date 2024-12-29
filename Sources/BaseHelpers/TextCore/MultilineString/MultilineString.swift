@@ -21,8 +21,7 @@ public struct MultilineString {
   }
   
   public init(_ string: String) {
-    let lines = string.split(separator: "\n", omittingEmptySubsequences: false)
-    self.init(lines.map { Array($0) })
+    self.init(string.lines.map { Array($0) })
   }
 
   
