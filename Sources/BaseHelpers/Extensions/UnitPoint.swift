@@ -47,4 +47,28 @@ public extension UnitPoint {
         "Unknown"
     }
   }
+  
+  static var topRow: [UnitPoint] {
+    [
+      .topLeading,
+      .top,
+      .topTrailing,
+    ]
+  }
+  
+  static var middleRow: [UnitPoint] {
+    [
+      .leading,
+      .center,
+      .trailing,
+    ]
+  }
+  
+  static var bottomRow: [UnitPoint] {
+    [
+      .bottomLeading,
+      .bottom,
+      .bottomTrailing,
+    ]
+  }
 }

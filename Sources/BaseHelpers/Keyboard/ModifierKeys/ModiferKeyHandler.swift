@@ -9,35 +9,35 @@ import Foundation
 import SwiftUI
 
 
-#if os(macOS)
-
-public protocol ModifierKeyCollection {
-  func holding(_ modifiers: NSEvent.ModifierFlags...) -> Bool
-  func holding(_ modifiers: [NSEvent.ModifierFlags]) -> Bool
-}
-
-extension NSEvent.ModifierFlags: @retroactive Hashable {
-  public func hash(into hasher: inout Hasher) {
-    hasher.combine(rawValue)
-  }
-}
-
-
-extension Set: ModifierKeyCollection where Element == NSEvent.ModifierFlags {
-  public func holding(_ modifiers: NSEvent.ModifierFlags...) -> Bool {
-    holding(modifiers)
-  }
-  
-  public func holding(_ modifiers: [NSEvent.ModifierFlags]) -> Bool {
-    modifiers.allSatisfy { self.contains($0) }
-  }
-}
-
-extension Set where Element == NSEvent.ModifierFlags {
-  public func holding(_ modifier: NSEvent.ModifierFlags) -> Bool {
-    contains(modifier)
-  }
-}
+//#if os(macOS)
+//
+//public protocol ModifierKeyCollection {
+//  func holding(_ modifiers: NSEvent.ModifierFlags...) -> Bool
+//  func holding(_ modifiers: [NSEvent.ModifierFlags]) -> Bool
+//}
+//
+//extension NSEvent.ModifierFlags: @retroactive Hashable {
+//  public func hash(into hasher: inout Hasher) {
+//    hasher.combine(rawValue)
+//  }
+//}
+//
+//
+//extension Set: ModifierKeyCollection where Element == NSEvent.ModifierFlags {
+//  public func holding(_ modifiers: NSEvent.ModifierFlags...) -> Bool {
+//    holding(modifiers)
+//  }
+//  
+//  public func holding(_ modifiers: [NSEvent.ModifierFlags]) -> Bool {
+//    modifiers.allSatisfy { self.contains($0) }
+//  }
+//}
+//
+//extension Set where Element == NSEvent.ModifierFlags {
+//  public func holding(_ modifier: NSEvent.ModifierFlags) -> Bool {
+//    contains(modifier)
+//  }
+//}
 
 
 //public extension KeyboardShortcut {
@@ -75,4 +75,4 @@ extension Set where Element == NSEvent.ModifierFlags {
 //}
 
 
-#endif
+//#endif

@@ -5,27 +5,27 @@
 //  Created by Dave Coleman on 8/9/2024.
 //
 
-#if canImport(AppKit)
-import AppKit
+//#if canImport(AppKit)
+//import AppKit
 
 
-protocol ModifierRepresentable {
-  associatedtype ModifierType: OptionSet where ModifierType.Element == Self
-  
-  var relevantModifiers: [Self] { get }
-  func modifierInfo() -> ModifierInfo
-  func toModifierString(ofType type: ModifierSymbolType) -> [String]
-}
-
-struct ModifierInfo {
-  let symbolName: String
-  let symbolLiteral: String
-}
-
-enum ModifierSymbolType {
-  case name
-  case literal
-}
+//protocol ModifierRepresentable {
+//  associatedtype ModifierType: OptionSet where ModifierType.Element == Self
+//  
+//  var relevantModifiers: [Self] { get }
+//  func modifierInfo() -> ModifierInfo
+//  func toModifierString(ofType type: ModifierSymbolType) -> [String]
+//}
+//
+//struct ModifierInfo {
+//  let symbolName: String
+//  let symbolLiteral: String
+//}
+//
+//enum ModifierSymbolType {
+//  case name
+//  case literal
+//}
 
 
 
@@ -69,59 +69,59 @@ enum ModifierSymbolType {
 //}
 
 
-public extension NSEvent.ModifierFlags {
-  
-  struct ModifierInfo {
-    let symbolName: String
-    let symbolLiteral: String
-  }
-  
-  enum ModifierSymbolType {
-    case name
-    case literal
-  }
-  
-  private var relevantModifiers: [NSEvent.ModifierFlags] {
-    return []
-  }
-  
-  private var modifierInfo: ModifierInfo {
-    switch self {
-      case .shift:
-        return ModifierInfo(symbolName: "shift", symbolLiteral: "􀆝")
-        
-      case .option:
-        return ModifierInfo(symbolName: "option", symbolLiteral: "􀆕")
-        
-      case .command:
-        return ModifierInfo(symbolName: "command", symbolLiteral: "􀆔")
-        
-      case .capsLock:
-        return ModifierInfo(symbolName: "capslock", symbolLiteral: "􀆡")
-        
-      case .control:
-        return ModifierInfo(symbolName: "control", symbolLiteral: "􀆍")
-        
-      default:
-        return ModifierInfo(symbolName: "", symbolLiteral: "")
-    }
-  }
-  
-  func toModifierString(ofType type: ModifierSymbolType = .name) -> [String] {
-    
-    var modifierStrings = [String]()
-    
-    for modifier in relevantModifiers where self.contains(modifier) {
-      switch type {
-        case .name:
-          modifierStrings.append(modifier.modifierInfo.symbolName)
-        case .literal:
-          modifierStrings.append(modifier.modifierInfo.symbolLiteral)
-      }
-    }
-    
-    return modifierStrings
-  }
-  
-}
-#endif
+//public extension NSEvent.ModifierFlags {
+//  
+//  struct ModifierInfo {
+//    let symbolName: String
+//    let symbolLiteral: String
+//  }
+//  
+//  enum ModifierSymbolType {
+//    case name
+//    case literal
+//  }
+//  
+//  private var relevantModifiers: [NSEvent.ModifierFlags] {
+//    return []
+//  }
+//  
+//  private var modifierInfo: ModifierInfo {
+//    switch self {
+//      case .shift:
+//        return ModifierInfo(symbolName: "shift", symbolLiteral: "􀆝")
+//        
+//      case .option:
+//        return ModifierInfo(symbolName: "option", symbolLiteral: "􀆕")
+//        
+//      case .command:
+//        return ModifierInfo(symbolName: "command", symbolLiteral: "􀆔")
+//        
+//      case .capsLock:
+//        return ModifierInfo(symbolName: "capslock", symbolLiteral: "􀆡")
+//        
+//      case .control:
+//        return ModifierInfo(symbolName: "control", symbolLiteral: "􀆍")
+//        
+//      default:
+//        return ModifierInfo(symbolName: "", symbolLiteral: "")
+//    }
+//  }
+//  
+//  func toModifierString(ofType type: ModifierSymbolType = .name) -> [String] {
+//    
+//    var modifierStrings = [String]()
+//    
+//    for modifier in relevantModifiers where self.contains(modifier) {
+//      switch type {
+//        case .name:
+//          modifierStrings.append(modifier.modifierInfo.symbolName)
+//        case .literal:
+//          modifierStrings.append(modifier.modifierInfo.symbolLiteral)
+//      }
+//    }
+//    
+//    return modifierStrings
+//  }
+//  
+//}
+//#endif

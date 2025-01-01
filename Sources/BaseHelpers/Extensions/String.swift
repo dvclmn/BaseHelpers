@@ -33,7 +33,8 @@ public extension String {
 //    print("Line count: \(lines.count)")
     let longestLine = lines.map { $0.count }.max() ?? 1
     
-//    print("Longest line: \(longestLine)")
+    
+//    print("Longest line length: \(longestLine)")
     
     return longestLine
   }

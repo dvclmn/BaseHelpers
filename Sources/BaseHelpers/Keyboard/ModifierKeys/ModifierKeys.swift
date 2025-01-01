@@ -27,11 +27,49 @@ import SwiftUI
 
 public typealias Modifiers = Set<ModifierKey>
 
-public enum ModifierKey: Hashable, Sendable {
-  case shift, control, option, command
+public enum ModifierKey: String, CaseIterable, Identifiable, Hashable, Sendable {
+  case command
+  case shift
+  case option
+  case control
+  
+  public var id: String { self.rawValue }
+  public var name: String { self.rawValue.capitalized }
+  
+  public var symbol: String {
+    switch self {
+      case .shift: "􀆝"
+      case .control: "􀆍"
+      case .option: "􀆕"
+      case .command: "􀆔"
+    }
+  }
+}
+
+public extension Modifiers {
+  var names: String? {
+    if !self.isEmpty {
+      return self.map(\.name).joined()
+    } else {
+      return nil
+    }
+  }
+  
+  var symbols: String? {
+    if !self.isEmpty {
+      return self.map(\.symbol).joined()
+    } else {
+      return nil
+    }
+  }
 }
 
 #if os(macOS)
+
+
+public extension EnvironmentValues {
+  @Entry var modifierKeys: Modifiers = .init()
+}
 
 public extension NSEvent.ModifierFlags {
   func toModifierKey() -> ModifierKey? {
@@ -43,11 +81,6 @@ public extension NSEvent.ModifierFlags {
       default: return nil
     }
   }
-}
-
-
-public extension EnvironmentValues {
-  @Entry var modifierKeys: Modifiers = .init()
 }
 
 

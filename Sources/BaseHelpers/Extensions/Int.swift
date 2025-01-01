@@ -16,6 +16,10 @@ public extension Int {
   var string: String {
     String(self)
   }
+  
+  var cgFloat: CGFloat {
+    CGFloat(self)
+  }
 
   func isWithin(_ collection: some Collection) -> Bool {
     let startIndex = collection.startIndex

@@ -116,6 +116,8 @@ public extension CGPoint {
     sqrt(pow(x - point.x, 2) + pow(y - point.y, 2))
   }
   
+  
+
   // Useful for determining drag direction
 //  func direction(to point: CGPoint) -> SwiftUI.Direction {
 //    let deltaX = point.x - x
@@ -174,7 +176,7 @@ public extension CGPoint {
   
   func delta(
     from lastPosition: CGPoint,
-    with sensitivity: CGFloat
+    sensitivity: CGFloat = 1.0
   ) -> CGPoint {
     let result = CGPoint(
       x: (self.x - lastPosition.x) * sensitivity,
@@ -229,7 +231,9 @@ public extension CGPoint {
   }
   
   var isNan: Bool {
-    x.isNaN && y.isNaN
+    let result: Bool = x.isNaN || y.isNaN
+    print("Point `\(self)` is Not a Number? (NaN): \(result)")
+    return result
   }
   
   
