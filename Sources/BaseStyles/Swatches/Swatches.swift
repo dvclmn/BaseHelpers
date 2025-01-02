@@ -94,6 +94,8 @@ public enum Swatch: String, Codable, CaseIterable, Identifiable, Sendable, Hasha
     }
   }
   
+  public static let accentColours: [Swatch] = [.teal, .purple, .orange, .brown, .olive]
+  
   public var colour: Color {
     switch self {
         

@@ -15,7 +15,6 @@ public struct TwoFingerPanModifier: ViewModifier {
 
   @State private var monitor: Any?
   
-  
   let sensitivity: CGFloat
   let isPanning: (Bool) -> Void
 
