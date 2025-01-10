@@ -7,7 +7,7 @@
 
 import Foundation
 import OSLog
-//import BaseUtilities
+//import BaseHelpers
 
 
 public protocol APIResponse: Decodable, Sendable {}
@@ -59,7 +59,8 @@ public struct APIHandler: Sendable {
   
   public static func createRequest(
     url: URL?,
-    headers: [String : String]
+    type: APIRequestType = .get,
+    headers: [String : String] = [:]
   ) throws -> URLRequest? {
     
     os_log("Let's make a URLRequest — no body needed, just url and headers")
@@ -69,7 +70,7 @@ public struct APIHandler: Sendable {
       return nil
     }
     var request = URLRequest(url: url)
-    request.httpMethod = "GET"
+    request.httpMethod = type.value
     
     for (key, value) in headers {
       request.setValue(value, forHTTPHeaderField: key)
@@ -115,8 +116,8 @@ public struct APIHandler: Sendable {
         "Going to fetch and return Decodable data, using supplied request.
         Request method: \(request.httpMethod?.debugDescription ?? "Can't get HTTP method")
         Request URL: \(request.url?.description ?? "Can't get URL")
-        Request Body: \(request.httpBody?.debugDescription ?? "Can't get body")
-        Request Headers: \(request.allHTTPHeaderFields?.description ?? "nil headers")
+        Request Body: \(request.httpBody?.debugDescription ?? "nil Body")
+        Request Headers: \(request.allHTTPHeaderFields?.description ?? "nil Headers")
         """
     )
     do {
@@ -227,7 +228,7 @@ public enum APIRequestType: String, Sendable, Codable {
   case get
   case post
   
-  var value: String {
+  public var value: String {
     switch self {
       case .get:
         "GET"

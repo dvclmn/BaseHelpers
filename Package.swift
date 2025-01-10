@@ -38,6 +38,7 @@ let package = Package(
   ],
   dependencies: [
     .package(url: "https://github.com/gohanlon/swift-memberwise-init-macro.git", from: "0.5.0"),
+    .package(url: "https://github.com/evgenyneu/keychain-swift.git", from: "24.0.0"),
   ],
   
   targets: [
@@ -53,7 +54,8 @@ let package = Package(
     /// Networking
     .target(name: "APIHandler", dependencies: [
       "BaseHelpers",
-      .product(name: "MemberwiseInit", package: "swift-memberwise-init-macro")
+      .product(name: "MemberwiseInit", package: "swift-memberwise-init-macro"),
+      .product(name: "KeychainSwift", package: "keychain-swift"),
     ]),
 
     

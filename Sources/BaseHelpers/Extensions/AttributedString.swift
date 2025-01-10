@@ -120,6 +120,15 @@ public extension AttributedString {
     }
   }
   
+  
+  var lines: [String] {
+    let string = String(self.characters)
+    return string.split(separator: "\n", omittingEmptySubsequences: false)
+      .map { String($0) }
+//    let string = String(self.characters)
+//    return string.components(separatedBy: "\n")
+  }
+  
   //  func getAllRangesIncremental(matching pattern: Regex<Substring>) -> [Range<AttributedString.Index>] {
   //    let string = String(self.characters)
   //    var ranges: [Range<AttributedString.Index>] = []

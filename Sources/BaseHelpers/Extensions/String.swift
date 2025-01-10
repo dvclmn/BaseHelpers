@@ -28,6 +28,10 @@ public extension String {
     return result
   }
   
+  var url: URL? {
+    return URL(string: self)
+  }
+  
   var longestLineLength: Int {
 //    print("Let's get longest line length.")
 //    print("Line count: \(lines.count)")

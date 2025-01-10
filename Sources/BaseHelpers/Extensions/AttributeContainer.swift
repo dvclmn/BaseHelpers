@@ -24,6 +24,10 @@ public extension AttributeContainer {
     return quickContainer(with: .black, background: .green)
   }
   
+  static var neonOrangeSoft: AttributeContainer {
+    return quickContainer(with: .black, background: .orange.opacity(0.7))
+  }
+  
   static var invisible: AttributeContainer {
     return quickContainer(with: .clear, background: .clear)
   }

@@ -32,6 +32,7 @@ public enum APIError: Error, LocalizedError {
   case cannotConnectToHost
   case parsingError
   case decodingError(Error)
+  case bodyEncodeError
   
   case otherError(Error)
   
