@@ -78,6 +78,15 @@ public struct APIHandler: Sendable {
     return request
   }
   
+  public static func createRequest(
+    url: URL?,
+    body: String,
+    headers: [String : String]
+  ) throws -> URLRequest? {
+    let bodyData = body.data(using: .utf8)
+    return try createRequest(url: url, body: bodyData, headers: headers)
+  }
+  
   public static func createRequest<T: Encodable>(
     url: URL?,
     body: T,
@@ -144,7 +153,7 @@ public struct APIHandler: Sendable {
           os_log("Bad Request: \(String(data: data, encoding: .utf8) ?? "")")
           throw APIError.badRequest(data)
         case 401:
-          throw APIError.unauthorized
+          throw APIError.unauthorized(httpResponse.description)
         case 403:
           throw APIError.forbidden
         case 404:

@@ -16,38 +16,77 @@ import Foundation
 ///
 public enum APIError: Error, LocalizedError {
   
+  case badURL
+  case parsingError
+  case bodyEncodeError
   case invalidResponse
-  case unauthorized
+  case decodingError(Error)
+  case badRequest(Data)
+  case unauthorized(String? = nil)
   case forbidden
   case notFound
   case serverError(Int)
   case noInternetConnection
   case networkConnectionLost
   case dnsLookupFailed
-  case timeout
-  case unknownStatusCode(Int)
-  case badURL
-  case badRequest(Data)
   case cannotFindHost
   case cannotConnectToHost
-  case parsingError
-  case decodingError(Error)
-  case bodyEncodeError
-  
+  case timeout
   case otherError(Error)
+  case unknownStatusCode(Int)
   
   public var errorDescription: String? {
     switch self {
-        //        case .connectionError(let type):
-        //            return "Connection error with \(type)"
+      case .invalidResponse:
+        return "Invalid response from server"
+      case .decodingError(let error):
+        return "Failed to decode response: \(error.localizedDescription)"
+      case .badRequest(let data):
+        return "Bad request: \(String(data: data, encoding: .utf8) ?? "No details")"
+      case .unauthorized(let message):
+        return "Unauthorized: \(message ?? "Invalid or expired token")"
+      case .forbidden:
+        return "Access forbidden"
+      case .notFound:
+        return "Resource not found"
+      case .serverError(let code):
+        return "Server error (\(code))"
+      case .noInternetConnection:
+        return "No internet connection"
+      case .networkConnectionLost:
+        return "Network connection lost"
+      case .dnsLookupFailed:
+        return "DNS lookup failed"
+      case .cannotFindHost:
+        return "Cannot find host"
+      case .cannotConnectToHost:
+        return "Cannot connect to host"
+      case .timeout:
+        return "Request timed out"
+      case .unknownStatusCode(let code):
+        return "Unknown status code: \(code)"
+      case .otherError(let error):
+        return "Other error: \(error.localizedDescription)"
+      case .badURL:
+        return "Bad URL"
       case .parsingError:
-        return "Failed to parse data"
-      case .otherError(let message):
-        return message.localizedDescription
-      default:
-        return "Default error message"
+        return "Parsing Error"
+      case .bodyEncodeError:
+        return "Body Encode Error"
     }
   }
+//  public var errorDescription: String? {
+//    switch self {
+//        //        case .connectionError(let type):
+//        //            return "Connection error with \(type)"
+//      case .parsingError:
+//        return "Failed to parse data"
+//      case .otherError(let message):
+//        return message.localizedDescription
+//      default:
+//        return "Default error message"
+//    }
+//  }
   
   public var recoverySuggestion: String? {
     switch self {
