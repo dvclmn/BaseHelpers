@@ -12,38 +12,40 @@ import Foundation
 import SwiftUI
 
 public struct SpinningView: ViewModifier {
-    
-    @State private var isRotating = 0.0
-    
-    var isOn: Bool
-    let speed: TimeInterval
-    
-    public func body(content: Content) -> some View {
-        
-        let animation = Animation.linear(duration: speed).repeatForever(autoreverses: false)
 
-        content
-            .foregroundStyle(.secondary)
-            .rotationEffect(.degrees(isRotating))
-            .animation(animation, value: isRotating)
-            .frame(width: 26)
-            .onAppear {
-                if isOn {
-                    isRotating = 360.0
-                }
-            }
-    }
+  @State private var isRotating = 0.0
+
+  var isOn: Bool
+  let speed: TimeInterval
+  
+  let totalSpinCount: Int = 5
+
+  public func body(content: Content) -> some View {
+
+    let animation = Animation.linear(duration: speed).repeatCount(totalSpinCount, autoreverses: false)
+
+    content
+      .foregroundStyle(.secondary)
+      .rotationEffect(.degrees(isRotating))
+      .animation(animation, value: isRotating)
+      .frame(width: 26)
+      .onAppear {
+        if isOn {
+          isRotating = 360.0
+        }
+      }
+  }
 }
-public extension View {
-    func spinning(
-        isOn: Bool = true,
-        speed: TimeInterval = 2
-    ) -> some View {
-        self.modifier(
-            SpinningView(
-                isOn: isOn,
-                speed: speed
-            )
-        )
-    }
+extension View {
+  public func spinning(
+    isOn: Bool = true,
+    speed: TimeInterval = 2
+  ) -> some View {
+    self.modifier(
+      SpinningView(
+        isOn: isOn,
+        speed: speed
+      )
+    )
+  }
 }

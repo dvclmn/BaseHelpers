@@ -63,8 +63,6 @@ public struct APIHandler: Sendable {
     headers: [String : String] = [:]
   ) throws -> URLRequest {
     
-    os_log("Let's make a URLRequest — no body needed, just url and headers")
-    
     guard let url = url else {
       print("Invalid URL")
       throw APIError.badURL
