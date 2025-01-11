@@ -38,7 +38,9 @@ public enum Icons: String, CaseIterable, Identifiable, Codable, Equatable {
     case portrait           = "rectangle.portrait"
     case plus               = "plus"
     case plusSquare         = "plus.app"
-    case share              = "square.and.arrow.up" 
+  
+  /// Also suitable for `export`
+    case share              = "square.and.arrow.up"
     case info               = "info.circle"
     case inspector          = "rectangle.rightthird.inset.filled"
     case popup              = "text.bubble"
@@ -101,6 +103,7 @@ public enum Icons: String, CaseIterable, Identifiable, Codable, Equatable {
     case logOut             = "rectangle.portrait.and.arrow.right"
     case developer          = "keyboard"
     case token              = "hockey.puck"
+    
     case sliders            = "switch.2"
     case minus              = "minus"
     case qrCode             = "qrcode"

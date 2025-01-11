@@ -102,16 +102,10 @@ public struct OpenAITestConnection: ProviderTestable {
 //    print("Let's make a request to check connection to OpenAI")
     
     do {
-      guard let request = try APIHandler.createRequest(
+      let request = try APIHandler.createRequest(
         url: AIProvider.openAI.testEndpoint,
         headers: ["Authorization" : "Bearer \(key)"]
-      ) else {
-        print("Problem with request for AI")
-        //        throw AIConnectionError.invalidRequest
-        
-        return false
-        
-      }
+      )
       
       do {
         if let _: OpenAIConfirmationResponse = try await APIHandler.fetch(request: request) {
@@ -152,7 +146,7 @@ public struct AnthropicTestConnection: ProviderTestable {
 //    print("The body: \(body)")
     
     do {
-      guard let request = try APIHandler.createRequest(
+      let request = try APIHandler.createRequest(
         url: Anthropic.endpoint,
         body: body,
         headers: [
@@ -160,10 +154,7 @@ public struct AnthropicTestConnection: ProviderTestable {
           Anthropic.contentTypeHeaderKey : Anthropic.contentTypeHeaderValue,
           Anthropic.versionHeaderKey : Anthropic.versionHeaderValue
         ]
-      ) else {
-        print("Problem with request for anthropic")
-        return false
-      }
+      )
       
 //      print("The request for Anthropic: \(request)")
       

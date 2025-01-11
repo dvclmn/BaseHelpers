@@ -61,13 +61,13 @@ public struct APIHandler: Sendable {
     url: URL?,
     type: APIRequestType = .get,
     headers: [String : String] = [:]
-  ) throws -> URLRequest? {
+  ) throws -> URLRequest {
     
     os_log("Let's make a URLRequest — no body needed, just url and headers")
     
     guard let url = url else {
       print("Invalid URL")
-      return nil
+      throw APIError.badURL
     }
     var request = URLRequest(url: url)
     request.httpMethod = type.value
@@ -82,23 +82,38 @@ public struct APIHandler: Sendable {
     url: URL?,
     body: String,
     headers: [String : String]
-  ) throws -> URLRequest? {
-    let bodyData = body.data(using: .utf8)
-    return try createRequest(url: url, body: bodyData, headers: headers)
+  ) throws -> URLRequest {
+
+    guard let url = url else {
+      print("Invalid URL")
+      throw APIError.badURL
+    }
+    
+    var request = URLRequest(url: url)
+    request.httpMethod = "POST"
+    request.httpBody = body.data(using: .utf8)
+    
+    os_log("Request Body: \(request.httpBody?.debugDescription ?? "")")
+    
+    for (key, value) in headers {
+      request.setValue(value, forHTTPHeaderField: key)
+    }
+    return request
   }
   
   public static func createRequest<T: Encodable>(
     url: URL?,
     body: T,
     headers: [String : String]
-  ) throws -> URLRequest? {
+  ) throws -> URLRequest {
     
     os_log("Let's make a URLRequest, with a body")
     
     guard let url = url else {
       print("Invalid URL")
-      return nil
+      throw APIError.badURL
     }
+    
     var request = URLRequest(url: url)
     request.httpMethod = "POST"
     
@@ -106,10 +121,7 @@ public struct APIHandler: Sendable {
     let data = try encoder.encode(body)
     request.httpBody = data
     
-    os_log("""
-        Request Body: \(request.httpBody?.debugDescription ?? "")
-        """
-    )
+    os_log("Request Body: \(request.httpBody?.debugDescription ?? "")")
     
     for (key, value) in headers {
       request.setValue(value, forHTTPHeaderField: key)
