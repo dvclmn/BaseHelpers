@@ -16,11 +16,37 @@ import SwiftUI
     let maxWidth: CGFloat
     let minHeight: CGFloat
     let maxHeight: CGFloat
-//    let presentatingSizing: PresentationSizing
+    //    let presentatingSizing: PresentationSizing
 
     public func body(content: Content) -> some View {
+
+
+      if #available(macOS 15, iOS 18, *) {
+
+        content
+          .presentationSizing(.fitted)
+          .modifier(
+            FrameModifier(
+              minWidth: minWidth, maxWidth: maxWidth, minHeight: minHeight, maxHeight: maxHeight))
+
+      } else {
+        content
+          .modifier(
+            FrameModifier(
+              minWidth: minWidth, maxWidth: maxWidth, minHeight: minHeight, maxHeight: maxHeight))
+      }
+    }
+
+  }
+
+  public struct FrameModifier: ViewModifier {
+
+    let minWidth: CGFloat
+    let maxWidth: CGFloat
+    let minHeight: CGFloat
+    let maxHeight: CGFloat
+    public func body(content: Content) -> some View {
       content
-//        .presentationSizing(.fitted)
         .frame(
           minWidth: minWidth,
           idealWidth: (minWidth + maxWidth) / 2,
@@ -31,8 +57,9 @@ import SwiftUI
         )
     }
   }
+
   extension View {
-    
+
     /// Example use:
     /// ```
     /// // Specifying width
@@ -66,7 +93,7 @@ import SwiftUI
         )
       )
     }
-    
+
     /// Sets up a frame with a specific aspect ratio and height
     /// - Parameters:
     ///   - aspectRatio: The desired aspect ratio (width/height). For example, 2/3 represents a portrait orientation.
@@ -89,7 +116,7 @@ import SwiftUI
         )
       )
     }
-    
+
     public func sheetFrame(
       minWidth: CGFloat = 340,
       maxWidth: CGFloat = 680,
