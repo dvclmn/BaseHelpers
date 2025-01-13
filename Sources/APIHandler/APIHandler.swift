@@ -57,8 +57,6 @@ public struct APIHandler: Sendable {
     }
   }
   
-  
-  
   // MARK: - Generic API fetch
   /// Makes a network request — Does NOT decode the response
   public static func fetch<T: Decodable>(request: URLRequest) async throws -> T {
