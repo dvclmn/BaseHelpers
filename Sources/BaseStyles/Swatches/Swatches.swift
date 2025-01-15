@@ -230,6 +230,10 @@ public enum Swatch: String, Codable, CaseIterable, Identifiable, Sendable, Hasha
     return result.randomElement() ?? Swatch.chalkBlue
   }
   
+  public static func getColourFromHex(_ hexString: String) -> Color {
+    return Color(hexString)
+  }
+  
   
 } // END swatch extension
 

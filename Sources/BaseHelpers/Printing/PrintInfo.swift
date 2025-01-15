@@ -11,8 +11,7 @@ public enum PrintInfo {
   case userDefaultsURL
 }
 
-
-public struct PrintUserDefaults: ViewModifier {
+public struct PrintInfoModifier: ViewModifier {
   
   let info: PrintInfo
   
@@ -33,13 +32,7 @@ public struct PrintUserDefaults: ViewModifier {
   }
 }
 public extension View {
-  func printInfo(
-    _ info: PrintInfo
-  ) -> some View {
-    self.modifier(
-      PrintUserDefaults(
-        info: info
-      )
-    )
+  func printInfo(_ info: PrintInfo) -> some View {
+    self.modifier(PrintInfoModifier(info: info))
   }
 }

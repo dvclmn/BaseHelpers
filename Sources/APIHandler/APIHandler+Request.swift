@@ -21,10 +21,12 @@ extension APIHandler {
       throw APIError.badURL
     }
 
-    // Add query parameters if any
-    components?.queryItems = queryParameters.map {
-      URLQueryItem(name: $0.key, value: $0.value)
+    if !queryParameters.isEmpty {
+      components?.queryItems = queryParameters.map {
+        URLQueryItem(name: $0.key, value: $0.value)
+      }      
     }
+    // Add query parameters if any
 
     guard let finalURL = components?.url else {
       throw APIError.badURL
