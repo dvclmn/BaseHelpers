@@ -43,15 +43,15 @@ extension APIHandler {
       request: request,
       isDebugMode: isDebugMode
     )
-
-    print(
-      """
-
-      # Fetched Response
-        
-        
-
-      """)
+//
+//    print(
+//      """
+//
+//      # Fetched Response
+//        
+//        
+//
+//      """)
 
     return response
   }
@@ -220,98 +220,5 @@ extension APIHandler {
     }
     return dataAsString
   }
-
-  //  static func handleSuccessfulResponse<T: Decodable>(
-  //    data: Data,
-  //    isDebugMode: Bool
-  //  ) throws -> T {
-  //    print(
-  //      "Looks like the fetch request worked. This function will now send the raw data to be processed."
-  //    )
-  //
-  //    if isDebugMode {
-  //
-  //      do {
-  //        let jsonObject = try JSONSerialization.jsonObject(with: data, options: [])
-  //        let prettyData = try JSONSerialization.data(
-  //          withJSONObject: jsonObject, options: [.prettyPrinted, .sortedKeys])
-  //        let prettyString = String(data: prettyData, encoding: .utf8)
-  //        print("Raw response data:\n\(prettyString ?? "Couldn't pretty print JSON")")
-  //
-  //      } catch {
-  //        // Fallback to raw string if JSON parsing fails
-  //        if let responseString = String(data: data, encoding: .utf8) {
-  //          print("Raw response data (not valid JSON):\n\(responseString)")
-  //        }
-  //        throw
-  //      }
-  //
-  //      return try decodeResponse(data)
-  //
-  //    } else {
-  //
-  //      return try decodeResponse(data)
-  //    }
-  //
-  //  }
-  //
-  //
-  //  static func decodeResponse<T: Decodable>(_ data: Data) throws -> T {
-  //
-  //    do {
-  //      let decoder = JSONDecoder()
-  //      return try decoder.decode(T.self, from: data)
-  //
-  //    } catch let decodingError as DecodingError {
-  //      switch decodingError {
-  //        case .dataCorrupted(let context):
-  //          print(
-  //            """
-  //            DTO: \(T.self)
-  //            Data corrupted error:
-  //            Debug description: \(context.debugDescription)
-  //            Coding path: \(context.codingPath)
-  //            Underlying error: \(String(describing: context.underlyingError))
-  //            Raw data: \(String(data: data, encoding: .utf8) ?? "Unable to convert data to string")
-  //            """)
-  //
-  //        case .keyNotFound(let key, let context):
-  //          print(
-  //            """
-  //            DTO: \(T.self)
-  //            Key not found error:
-  //            Missing key: \(key.stringValue)
-  //            Debug description: \(context.debugDescription)
-  //            Coding path: \(context.codingPath)
-  //            """)
-  //
-  //        case .typeMismatch(let type, let context):
-  //          print(
-  //            """
-  //            DTO: \(T.self)
-  //            Type mismatch error:
-  //            Expected type: \(type)
-  //            Debug description: \(context.debugDescription)
-  //            Coding path: \(context.codingPath)
-  //            """)
-  //
-  //        case .valueNotFound(let type, let context):
-  //          print(
-  //            """
-  //            DTO: \(T.self)
-  //            Value not found error:
-  //            Expected type: \(type)
-  //            Debug description: \(context.debugDescription)
-  //            Coding path: \(context.codingPath)
-  //            """)
-  //
-  //        @unknown default:
-  //          print("Unknown decoding error: \(decodingError)")
-  //      }
-  //    } catch {
-  //      print("Unexpected error during decoding: \(error)")
-  //      throw APIError.decodingError(error)
-  //    }
-  //  }
 
 }
