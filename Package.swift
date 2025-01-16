@@ -43,7 +43,7 @@ let package = Package(
   
   targets: [
     /// Styles
-    .target(name: "BaseStyles", resources: [.copy("GrainOverlay/Assets.xcassets")]),
+    .target(name: "BaseStyles", resources: [.copy("Assets.xcassets")]),
     .target(name: "Grainient", dependencies: ["BaseStyles"]),
 
     /// Helpers
