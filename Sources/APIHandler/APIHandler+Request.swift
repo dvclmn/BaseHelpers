@@ -16,17 +16,22 @@ extension APIHandler {
     headers: [String: String],
     queryParameters: [String: String] = [:]
   ) throws -> URLRequest {
+    
+    print("Putting together Base URLRequest")
+    print("URL: \(url?.absoluteString ?? "nil")")
+    
     // Start with the base URL
     guard var components = url.map({ URLComponents(url: $0, resolvingAgainstBaseURL: true) }) else {
       throw APIError.badURL
     }
+    
+    print("URL Components: \(components?.debugDescription ?? "nil")")
 
     if !queryParameters.isEmpty {
       components?.queryItems = queryParameters.map {
         URLQueryItem(name: $0.key, value: $0.value)
-      }      
+      }
     }
-    // Add query parameters if any
 
     guard let finalURL = components?.url else {
       throw APIError.badURL

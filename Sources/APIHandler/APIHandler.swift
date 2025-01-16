@@ -19,32 +19,32 @@ public protocol StreamedResponse: Decodable, Sendable {
   var usage: StreamedResponseUsage? { get }
 }
 
-public extension StreamedResponse {
+extension StreamedResponse {
   /// Sets to `nil` as default
-  var responseData: StreamedResponseMessage? { nil }
-  var usage: StreamedResponseUsage? { nil }
+  public var responseData: StreamedResponseMessage? { nil }
+  public var usage: StreamedResponseUsage? { nil }
 }
 
 public protocol StreamedResponseMessage: Decodable, Sendable {
   var text: String? { get }
   var usage: StreamedResponseUsage? { get }
 }
-public extension StreamedResponseMessage {
-  var text: String? { nil }
-  var usage: StreamedResponseUsage? { nil }
+extension StreamedResponseMessage {
+  public var text: String? { nil }
+  public var usage: StreamedResponseUsage? { nil }
 }
 
 public protocol StreamedResponseUsage: Decodable, Sendable {
   var input_tokens: Int? { get }
   var output_tokens: Int? { get }
 }
-public extension StreamedResponseMessage {
-  var input_tokens: Int? { nil }
+extension StreamedResponseMessage {
+  public var input_tokens: Int? { nil }
 }
 
 public struct APIHandler: Sendable {
-  
-  
+
+
   /// This requires the following set-up:
   ///
   /// 1. Add `Config.xcconfig` file to project
@@ -63,8 +63,8 @@ public struct APIHandler: Sendable {
   /// 6. The above `key` is what you provide to the below `key` parameter
   ///
   public static func getStringFromInfoDict(_ key: String) throws -> String {
-    
-    
+
+
     guard let result = Bundle.main.object(forInfoDictionaryKey: key) as? String else {
       throw ConfigError.missingKey(key)
     }
@@ -73,7 +73,7 @@ public struct APIHandler: Sendable {
     }
     return result
   }
-  
+
   public static func encodeBody<T: Encodable>(_ body: T) -> Data? {
     do {
       let encoder = JSONEncoder()
@@ -84,34 +84,38 @@ public struct APIHandler: Sendable {
       return nil
     }
   }
-  
+
   // MARK: - Generic API fetch
   /// Makes a network request — Does NOT decode the response
-  public static func fetch<T: Decodable>(request: URLRequest) async throws -> T {
-    os_log("""
-        
-        "Going to fetch and return Decodable data of type \(T.Type.self), using supplied request.
-        Request method: \(request.httpMethod?.debugDescription ?? "Can't get HTTP method")
-        Request URL: \(request.url?.absoluteString ?? "Can't get URL")
-        Request Body: \(request.httpBody?.debugDescription ?? "nil Body")
-        Request Headers: \(request.allHTTPHeaderFields?.description ?? "nil Headers")
-        """
+  public static func fetch<T: Decodable>(
+    request: URLRequest,
+    /// This produces more verbose print statements
+    isDebugMode: Bool = false
+  ) async throws -> T {
+    os_log(
+      """
+
+      "Going to fetch and return Decodable data of type \(T.Type.self), using supplied request.
+      Request method: \(request.httpMethod?.debugDescription ?? "Can't get HTTP method")
+      Request URL: \(request.url?.absoluteString ?? "Can't get URL")
+      Request Body: \(request.httpBody?.debugDescription ?? "nil Body")
+      Request Headers: \(request.allHTTPHeaderFields?.description ?? "nil Headers")
+      """
     )
     do {
-      
-      
+
       let (data, response) = try await URLSession.shared.data(for: request)
-      
-      
-      
-      // Ensure the response is valid
+
+      /// Ensure the response is valid
       guard let httpResponse = response as? HTTPURLResponse else {
-        os_log("Hmm, couldn't recognise the response as a typical `HTTPURLResponse`. Here it is anyway: \(response.debugDescription)")
+        os_log(
+          "Hmm, couldn't recognise the response as a typical `HTTPURLResponse`. Here it is anyway: \(response.debugDescription)"
+        )
         throw APIError.invalidResponse
       }
-      
+
       if let contentType = httpResponse.value(forHTTPHeaderField: "Content-Type") {
-        if !contentType.contains("application/json") {
+        guard contentType.contains("application/json") else {
           os_log("Unexpected content type: \(contentType)")
           if let responseString = String(data: data, encoding: .utf8) {
             os_log("Response body: \(responseString)")
@@ -119,56 +123,78 @@ public struct APIHandler: Sendable {
           throw APIError.invalidContentType(contentType)
         }
       }
-      
+
       switch httpResponse.statusCode {
-        case 200...299:
-          os_log("Looks like the fetch request worked. This function will now send the raw data to be processed.")
+        case 200 ... 299:
+          os_log(
+            "Looks like the fetch request worked. This function will now send the raw data to be processed."
+          )
           do {
-            // Print the raw response data for debugging
-            if let responseString = String(data: data, encoding: .utf8) {
-              os_log("Raw response data: \(responseString)")
+            // Pretty print the raw response data for debugging
+            if isDebugMode {
+              do {
+                let jsonObject = try JSONSerialization.jsonObject(with: data, options: [])
+                let prettyData = try JSONSerialization.data(
+                  withJSONObject: jsonObject, options: [.prettyPrinted, .sortedKeys])
+                let prettyString = String(data: prettyData, encoding: .utf8)
+                os_log("Raw response data:\n\(prettyString ?? "Couldn't pretty print JSON")")
+
+              } catch {
+                // Fallback to raw string if JSON parsing fails
+                if let responseString = String(data: data, encoding: .utf8) {
+                  os_log("Raw response data (not valid JSON):\n\(responseString)")
+                }
+              }
             }
-            
+
             let decoder = JSONDecoder()
-            decoder.keyDecodingStrategy = .convertFromSnakeCase // If needed
-            
+            decoder.keyDecodingStrategy = .convertFromSnakeCase  // If needed
+
             do {
               return try decoder.decode(T.self, from: data)
             } catch let decodingError as DecodingError {
               switch decodingError {
                 case .dataCorrupted(let context):
-                  os_log("""
+                  os_log(
+                    """
+                    DTO: \(T.self)
                     Data corrupted error:
                     Debug description: \(context.debugDescription)
                     Coding path: \(context.codingPath)
                     Underlying error: \(String(describing: context.underlyingError))
                     Raw data: \(String(data: data, encoding: .utf8) ?? "Unable to convert data to string")
                     """)
-                  
+
                 case .keyNotFound(let key, let context):
-                  os_log("""
+                  os_log(
+                    """
+                    DTO: \(T.self)
                     Key not found error:
                     Missing key: \(key.stringValue)
                     Debug description: \(context.debugDescription)
                     Coding path: \(context.codingPath)
                     """)
-                  
+
                 case .typeMismatch(let type, let context):
-                  os_log("""
+                  os_log(
+                    """
+                    DTO: \(T.self)
                     Type mismatch error:
                     Expected type: \(type)
                     Debug description: \(context.debugDescription)
                     Coding path: \(context.codingPath)
                     """)
-                  
+
                 case .valueNotFound(let type, let context):
-                  os_log("""
+                  os_log(
+                    """
+                    DTO: \(T.self)
                     Value not found error:
                     Expected type: \(type)
                     Debug description: \(context.debugDescription)
                     Coding path: \(context.codingPath)
                     """)
-                  
+
                 @unknown default:
                   os_log("Unknown decoding error: \(decodingError)")
               }
@@ -178,17 +204,17 @@ public struct APIHandler: Sendable {
             os_log("Unexpected error during decoding: \(error)")
             throw APIError.decodingError(error)
           }
-          
-//
-//          os_log("Looks like the fetch request worked. This function will now send the raw data to be processed.")
-//          do {
-//            let decoder = JSONDecoder()
-//            return try decoder.decode(T.self, from: data)
-//          } catch {
-//            os_log("Decoding error: \(error)")
-//            throw APIError.decodingError(error)
-//          }
-//          
+
+        //
+        //          os_log("Looks like the fetch request worked. This function will now send the raw data to be processed.")
+        //          do {
+        //            let decoder = JSONDecoder()
+        //            return try decoder.decode(T.self, from: data)
+        //          } catch {
+        //            os_log("Decoding error: \(error)")
+        //            throw APIError.decodingError(error)
+        //          }
+        //
         case 400:
           os_log("Bad Request: \(String(data: data, encoding: .utf8) ?? "")")
           throw APIError.badRequest(data)
@@ -198,7 +224,7 @@ public struct APIHandler: Sendable {
           throw APIError.forbidden
         case 404:
           throw APIError.notFound
-        case 500...599:
+        case 500 ... 599:
           throw APIError.serverError(httpResponse.statusCode)
         default:
           os_log("Unknown status code: \(httpResponse.statusCode)")
@@ -228,55 +254,57 @@ public struct APIHandler: Sendable {
       os_log("Unexpected error: \(error)")
       throw APIError.otherError(error)
     }
-  } // END API fetch
-  
+  }  // END API fetch
+
 }
 
 
-public extension URLRequest {
-  func printPrettyString() -> String {
+extension URLRequest {
+  public func printPrettyString() -> String {
     var requestComponents = [String: Any]()
-    
+
     if let url = self.url {
       requestComponents["URL"] = url.absoluteString
     }
-    
+
     if let method = self.httpMethod {
       requestComponents["Method"] = method
     }
-    
+
     if let headers = self.allHTTPHeaderFields {
       requestComponents["Headers"] = headers
     }
-    
+
     if let body = self.httpBody, let bodyString = String(data: body, encoding: .utf8) {
       // Attempt to serialize JSON body to a readable JSON String
       if let jsonObject = try? JSONSerialization.jsonObject(with: body, options: []),
-         let prettyPrintedData = try? JSONSerialization.data(withJSONObject: jsonObject, options: [.prettyPrinted]),
-         let prettyPrintedString = String(data: prettyPrintedData, encoding: .utf8) {
+        let prettyPrintedData = try? JSONSerialization.data(
+          withJSONObject: jsonObject, options: [.prettyPrinted]),
+        let prettyPrintedString = String(data: prettyPrintedData, encoding: .utf8)
+      {
         requestComponents["Body"] = prettyPrintedString
       } else {
         // If body is not JSON or not decodable, print as a string
         requestComponents["Body"] = bodyString
       }
     }
-    
-    if let jsonData = try? JSONSerialization.data(withJSONObject: requestComponents, options: [.prettyPrinted]),
-       let jsonString = String(data: jsonData, encoding: .utf8) {
-      return jsonString
-    } else {
+
+    guard
+      let jsonData = try? JSONSerialization.data(
+        withJSONObject: requestComponents, options: [.prettyPrinted]),
+      let jsonString = String(data: jsonData, encoding: .utf8)
+    else {
       return "Didn't work"
     }
+    return jsonString
   }
 }
-
-
 
 
 public enum APIRequestType: String, Sendable, Codable {
   case get
   case post
-  
+
   public var value: String {
     switch self {
       case .get:
