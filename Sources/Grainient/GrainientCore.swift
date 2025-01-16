@@ -180,6 +180,7 @@ public struct GrainientSettings {
   public var stops: [Gradient.Stop]
   public var colours: [Swatch]
   
+  
   // MARK: - Generate a Random Seed
   public static func generateGradientSeed() -> Int {
     let randomSeed = Int.random(in: 10000...99999)
