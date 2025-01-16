@@ -34,13 +34,14 @@ public enum APIError: Error, LocalizedError {
   case timeout
   case otherError(Error)
   case unknownStatusCode(Int)
+  case invalidContentType(String)
   
   public var errorDescription: String? {
     switch self {
       case .invalidResponse:
         return "Invalid response from server"
       case .decodingError(let error):
-        return "Failed to decode response: \(error.localizedDescription)"
+        return "Failed to decode response: \(error)"
       case .badRequest(let data):
         return "Bad request: \(String(data: data, encoding: .utf8) ?? "No details")"
       case .unauthorized(let message):
@@ -66,13 +67,15 @@ public enum APIError: Error, LocalizedError {
       case .unknownStatusCode(let code):
         return "Unknown status code: \(code)"
       case .otherError(let error):
-        return "Other error: \(error.localizedDescription)"
+        return "Other error: \(error)"
       case .badURL:
         return "Bad URL"
       case .parsingError:
         return "Parsing Error"
       case .bodyEncodeError:
         return "Body Encode Error"
+      case .invalidContentType(let data):
+        return "Invalid content type: \(data)"
     }
   }
 //  public var errorDescription: String? {
@@ -82,7 +85,7 @@ public enum APIError: Error, LocalizedError {
 //      case .parsingError:
 //        return "Failed to parse data"
 //      case .otherError(let message):
-//        return message.localizedDescription
+//        return message
 //      default:
 //        return "Default error message"
 //    }
