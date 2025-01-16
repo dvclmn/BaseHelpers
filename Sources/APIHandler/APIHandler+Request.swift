@@ -33,57 +33,50 @@ extension APIHandler {
 
     return request
   }
-
-  // GET request (or other methods without body)
+  
+  /// POST with `Encodable` body
   public static func createRequest(
     url: URL?,
-    type: APIRequestType = .get,
+    body: (any Encodable)? = nil,
     headers: [String: String] = [:]
   ) throws -> URLRequest {
-    try baseRequest(
+    
+    let type: APIRequestType = body == nil ? .get : .post
+    
+    var request = try baseRequest(
       url: url,
       type: type,
       headers: headers
     )
-  }
-
-  /// POST with `String` body
-  public static func createRequest(
-    url: URL?,
-    body: String,
-    headers: [String: String]
-  ) throws -> URLRequest {
-    var request = try baseRequest(
-      url: url,
-      type: .post,
-      headers: headers
-    )
-    /// Printing body *before* it is encoded
-    print("Request Body: \(body)")
-
-    request.httpBody = body.data(using: .utf8)
-
+    
+    if let body {
+      /// Printing body *before* it is encoded
+      print("Request Body:\n\(body)")
+      
+      if let bodyString = body as? String {
+        request.httpBody = bodyString.data(using: .utf8)
+      } else {
+        let encoder = JSONEncoder()
+        request.httpBody = try encoder.encode(body)
+      }
+    }
+    
     return request
   }
 
-  /// POST with `Encodable` body
-  public static func createRequest<T: Encodable>(
-    url: URL?,
-    body: T,
-    headers: [String: String]
-  ) throws -> URLRequest {
-    var request = try baseRequest(
-      url: url,
-      type: .post,
-      headers: headers
-    )
-    /// Printing body *before* it is encoded
-    print("Request Body: \(body)")
+  // GET request (or other methods without body)
+//  public static func createRequest(
+//    url: URL?,
+//    type: APIRequestType = .get,
+//    headers: [String: String] = [:]
+//  ) throws -> URLRequest {
+//    try baseRequest(
+//      url: url,
+//      type: type,
+//      headers: headers
+//    )
+//  }
 
-    let encoder = JSONEncoder()
-    request.httpBody = try encoder.encode(body)
 
-    return request
-  }
 
 }

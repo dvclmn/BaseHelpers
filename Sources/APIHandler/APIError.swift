@@ -35,6 +35,7 @@ public enum APIError: Error, LocalizedError {
   case otherError(Error)
   case unknownStatusCode(Int)
   case invalidContentType(String)
+//  case urlError(URLError)
   
   public var errorDescription: String? {
     switch self {
@@ -76,6 +77,7 @@ public enum APIError: Error, LocalizedError {
         return "Body Encode Error"
       case .invalidContentType(let data):
         return "Invalid content type: \(data)"
+
     }
   }
 //  public var errorDescription: String? {
@@ -103,5 +105,7 @@ public enum APIError: Error, LocalizedError {
         return "Default recovery message"
     }
   }
+  
+  
 }
 
