@@ -47,6 +47,7 @@ public enum APIError: Error, LocalizedError {
         return "Failed to decode response: \(error)"
       case .badRequest(let data):
         return "Bad request: \(String(data: data, encoding: .utf8) ?? "No details")"
+        
       case .unauthorized(let message):
         return "Unauthorized: \(message ?? "Invalid or expired token")"
       case .forbidden:
@@ -79,6 +80,11 @@ public enum APIError: Error, LocalizedError {
         return "Body Encode Error"
       case .invalidContentType(let data):
         return "Invalid content type: \(data)"
+        
+      case .couldNotGetContentTypeHeader:
+        return "Could not get content type header"
+      case .couldNotCastAsHTTPURLResponse:
+        return "Could not cast URL response to HTTPURLResponse"
 
     }
   }

@@ -57,145 +57,115 @@ extension APIHandler {
   }
 
   // MARK: - Generic API fetch
-  /// Makes a network request — Does NOT decode the response
+
   public static func fetch<T: Decodable>(
     request: URLRequest,
     /// This produces more verbose print statements
     isDebugMode: Bool = false
   ) async throws -> T {
 
-//    do {
 
-      let (data, response) = try await URLSession.shared.data(for: request)
+    let (data, response) = try await URLSession.shared.data(for: request)
 
-      /// Ensure the response is valid
-      guard let httpResponse = response as? HTTPURLResponse else {
-        throw APIError.invalidResponse(response.debugDescription)
-      }
+    let httpResponse = try validateHTTPResponse(response)
+    try checkContentTypeIsJSON(data: data, response: response)
+    try validateStatusCode(httpResponse, data: data)
 
-      /// Ensure the response is valid JSON data
-      try checkContentTypeIsJSON(data: data, response: response)
-      
-    
-    switch httpResponse.statusCode {
-      case 200 ... 299:
-        
-        print(
-          "Looks like the fetch request worked. This function will now send the raw data to be processed."
-        )
-        do {
-          // Pretty print the raw response data for debugging
-          if isDebugMode {
-            do {
-              let jsonObject = try JSONSerialization.jsonObject(with: data, options: [])
-              let prettyData = try JSONSerialization.data(
-                withJSONObject: jsonObject, options: [.prettyPrinted, .sortedKeys])
-              let prettyString = String(data: prettyData, encoding: .utf8)
-              print("Raw response data:\n\(prettyString ?? "Couldn't pretty print JSON")")
-              
-            } catch {
-              // Fallback to raw string if JSON parsing fails
-              if let responseString = String(data: data, encoding: .utf8) {
-                print("Raw response data (not valid JSON):\n\(responseString)")
-              }
-            }
-          }
-          
-          let decoder = JSONDecoder()
-          decoder.keyDecodingStrategy = .convertFromSnakeCase  // If needed
-          
-          do {
-            return try decoder.decode(T.self, from: data)
-          } catch let decodingError as DecodingError {
-            switch decodingError {
-              case .dataCorrupted(let context):
-                print(
-                    """
-                    DTO: \(T.self)
-                    Data corrupted error:
-                    Debug description: \(context.debugDescription)
-                    Coding path: \(context.codingPath)
-                    Underlying error: \(String(describing: context.underlyingError))
-                    Raw data: \(String(data: data, encoding: .utf8) ?? "Unable to convert data to string")
-                    """)
-                
-              case .keyNotFound(let key, let context):
-                print(
-                    """
-                    DTO: \(T.self)
-                    Key not found error:
-                    Missing key: \(key.stringValue)
-                    Debug description: \(context.debugDescription)
-                    Coding path: \(context.codingPath)
-                    """)
-                
-              case .typeMismatch(let type, let context):
-                print(
-                    """
-                    DTO: \(T.self)
-                    Type mismatch error:
-                    Expected type: \(type)
-                    Debug description: \(context.debugDescription)
-                    Coding path: \(context.codingPath)
-                    """)
-                
-              case .valueNotFound(let type, let context):
-                print(
-                    """
-                    DTO: \(T.self)
-                    Value not found error:
-                    Expected type: \(type)
-                    Debug description: \(context.debugDescription)
-                    Coding path: \(context.codingPath)
-                    """)
-                
-              @unknown default:
-                print("Unknown decoding error: \(decodingError)")
-            }
-            throw APIError.decodingError(decodingError)
-          }
-        } catch {
-          print("Unexpected error during decoding: \(error)")
-          throw APIError.decodingError(error)
-        }
-        
-        //
-        //          print("Looks like the fetch request worked. This function will now send the raw data to be processed.")
-        //          do {
-        //            let decoder = JSONDecoder()
-        //            return try decoder.decode(T.self, from: data)
-        //          } catch {
-        //            print("Decoding error: \(error)")
-        //            throw APIError.decodingError(error)
-        //          }
-        //
-        
-        
-        //          return try handleSuccessfulResponse(data: data, isDebugMode: isDebugMode)
-        
-      case 400:
-        print("Bad Request: \(String(data: data, encoding: .utf8) ?? "")")
-        throw APIError.badRequest(data)
-      case 401:
-        throw APIError.unauthorized(httpResponse.description)
-      case 403:
-        throw APIError.forbidden
-      case 404:
-        throw APIError.notFound
-      case 500 ... 599:
-        throw APIError.serverError(httpResponse.statusCode)
-      default:
-        print("Unknown status code: \(httpResponse.statusCode)")
-        throw APIError.unknownStatusCode(httpResponse.statusCode)
-    }
+    return try decodeResponse(data: data, type: T.self, isDebugMode: isDebugMode)
 
-//    } catch let apiError as APIError {
-//      throw apiError
-//    } catch {
-//      throw APIError.otherError(error)
-//    }
   }  // END API fetch
 
+  
+  private static func decodeResponse<T: Decodable>(
+    data: Data,
+    type: T.Type,
+    isDebugMode: Bool
+  ) throws -> T {
+    if isDebugMode {
+      printDebugResponse(data)
+    }
+    
+    let decoder = JSONDecoder()
+    decoder.keyDecodingStrategy = .convertFromSnakeCase
+    
+    do {
+      return try decoder.decode(T.self, from: data)
+    } catch let decodingError as DecodingError {
+      handleDecodingError(decodingError, type: T.self, data: data)
+      throw APIError.decodingError(decodingError)
+    } catch {
+      print("Unexpected error during decoding: \(error)")
+      throw APIError.decodingError(error)
+    }
+  }
+  
+  
+  
+  private static func printDebugResponse(_ data: Data) {
+    do {
+      let jsonObject = try JSONSerialization.jsonObject(with: data, options: [])
+      let prettyData = try JSONSerialization.data(
+        withJSONObject: jsonObject,
+        options: [.prettyPrinted, .sortedKeys]
+      )
+      let prettyString = String(data: prettyData, encoding: .utf8)
+      print("Raw response data:\n\(prettyString ?? "Couldn't pretty print JSON")")
+    } catch {
+      if let responseString = String(data: data, encoding: .utf8) {
+        print("Raw response data (not valid JSON):\n\(responseString)")
+      }
+    }
+  }
+
+  private static func handleDecodingError(
+    _ error: DecodingError,
+    type: Any.Type,
+    data: Data
+  ) {
+    switch error {
+      case .dataCorrupted(let context):
+        print("""
+        DTO: \(type)
+        Data corrupted error:
+        Debug description: \(context.debugDescription)
+        Coding path: \(context.codingPath)
+        Underlying error: \(String(describing: context.underlyingError))
+        Raw data: \(String(data: data, encoding: .utf8) ?? "Unable to convert data to string")
+        """)
+        
+      case .keyNotFound(let key, let context):
+        print("""
+        DTO: \(type)
+        Key not found error:
+        Missing key: \(key.stringValue)
+        Debug description: \(context.debugDescription)
+        Coding path: \(context.codingPath)
+        """)
+        
+      case .typeMismatch(let type, let context):
+        print("""
+        DTO: \(type)
+        Type mismatch error:
+        Expected type: \(type)
+        Debug description: \(context.debugDescription)
+        Coding path: \(context.codingPath)
+        """)
+        
+      case .valueNotFound(let type, let context):
+        print("""
+        DTO: \(type)
+        Value not found error:
+        Expected type: \(type)
+        Debug description: \(context.debugDescription)
+        Coding path: \(context.codingPath)
+        """)
+        
+      @unknown default:
+        print("Unknown decoding error: \(error)")
+    }
+  }
+  
+  
 
   static func checkContentTypeIsJSON(
     data: Data,
@@ -205,7 +175,7 @@ extension APIHandler {
     guard let httpResponse = response as? HTTPURLResponse else {
       throw APIError.couldNotCastAsHTTPURLResponse
     }
-    
+
     guard let contentType = httpResponse.value(forHTTPHeaderField: "Content-Type") else {
       throw APIError.couldNotGetContentTypeHeader
     }
@@ -213,6 +183,34 @@ extension APIHandler {
     guard contentType.contains("application/json") else {
       print(printNonJSONData(data: data))
       throw APIError.invalidContentType(contentType)
+    }
+  }
+  
+  
+  
+  private static func validateHTTPResponse(_ response: URLResponse) throws -> HTTPURLResponse {
+    guard let httpResponse = response as? HTTPURLResponse else {
+      throw APIError.invalidResponse(response.debugDescription)
+    }
+    return httpResponse
+  }
+  
+  private static func validateStatusCode(_ response: HTTPURLResponse, data: Data) throws {
+    switch response.statusCode {
+      case 200...299:
+        return
+      case 400:
+        throw APIError.badRequest(data)
+      case 401:
+        throw APIError.unauthorized(response.description)
+      case 403:
+        throw APIError.forbidden
+      case 404:
+        throw APIError.notFound
+      case 500...599:
+        throw APIError.serverError(response.statusCode)
+      default:
+        throw APIError.unknownStatusCode(response.statusCode)
     }
   }
 
