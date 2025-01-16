@@ -9,32 +9,6 @@ import Foundation
 
 extension APIHandler {
 
-  // Base request creator that other methods will use
-  private static func baseRequest(
-    url: URL?,
-    type: APIRequestType,
-    headers: [String: String]
-  ) throws -> URLRequest {
-
-    print("Putting together Base URLRequest")
-    print("URL: \(url?.absoluteString ?? "nil")")
-
-    guard let url else {
-      throw APIError.badURL
-    }
-
-    var request = URLRequest(url: url)
-    request.httpMethod = type.value
-
-    // Add headers
-    headers.forEach { key, value in
-      request.setValue(value, forHTTPHeaderField: key)
-    }
-
-    return request
-  }
-  
-  /// POST with `Encodable` body
   public static func createRequest(
     url: URL?,
     body: (any Encodable)? = nil,
@@ -42,12 +16,18 @@ extension APIHandler {
   ) throws -> URLRequest {
     
     let type: APIRequestType = body == nil ? .get : .post
+
+    guard let url else {
+      throw APIError.badURL
+    }
     
-    var request = try baseRequest(
-      url: url,
-      type: type,
-      headers: headers
-    )
+    var request = URLRequest(url: url)
+    request.httpMethod = type.value
+    
+    /// Add headers
+    headers.forEach { key, value in
+      request.setValue(value, forHTTPHeaderField: key)
+    }
     
     if let body {
       /// Printing body *before* it is encoded
@@ -63,20 +43,6 @@ extension APIHandler {
     
     return request
   }
-
-  // GET request (or other methods without body)
-//  public static func createRequest(
-//    url: URL?,
-//    type: APIRequestType = .get,
-//    headers: [String: String] = [:]
-//  ) throws -> URLRequest {
-//    try baseRequest(
-//      url: url,
-//      type: type,
-//      headers: headers
-//    )
-//  }
-
 
 
 }
