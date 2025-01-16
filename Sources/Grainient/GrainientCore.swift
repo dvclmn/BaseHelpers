@@ -272,45 +272,45 @@ public enum GrainientVersion: Codable, Sendable {
     switch self {
       case .v1:
         return [
-          .pewter,
-          .lightGrey,
+          .greenPewter,
+          .greyLight,
           .grey,
-          .chalkBlue,
-          .lavendar,
-          .hazyPurple,
+          .blueChalk,
+          .purpleLavendar,
+          .purpleHazy,
           .olive,
           .slate
         ]
       case .v2:
         return [
-          .pewter,
-          .lightGrey,
+          .greenPewter,
+          .greyLight,
           .grey,
           .plum,
-          .eggplant,
+          .purpleEggplant,
           .peach,
-          .chalkBlue,
-          .lavendar,
-          .hazyPurple,
+          .blueChalk,
+          .purpleLavendar,
+          .purpleHazy,
           .olive,
           .slate
         ]
       case .v3:
         return [
-          .pewter,
-          .sandy,
-          .lightGrey,
+          .greenPewter,
+          .yellowMuted,
+          .greyLight,
           .grey,
-          .chalkBlue,
+          .blueChalk,
           .plum,
-          .navy,
-          .hazel,
-          .earth,
-          .aqua,
-          .eggplant,
+          .blueNavy,
+          .brownHazel,
+          .brownEarth,
+          .greenAqua,
+          .purpleEggplant,
           .peach,
-          .lavendar,
-          .hazyPurple,
+          .purpleLavendar,
+          .purpleHazy,
           .olive,
           .slate
         ]

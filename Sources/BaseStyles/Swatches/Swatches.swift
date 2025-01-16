@@ -11,63 +11,68 @@ import SwiftUI
 // MARK: - Swatches
 public enum Swatch: String, Codable, CaseIterable, Identifiable, Sendable, Hashable {
 
-  /// Whites/greys
-  case offWhite
-  case lightGrey
+  case asciiBlack
+  case asciiBlue
+  case asciiBrown
+  case asciiGreen
+  case asciiGrey
+  case asciiMaroon
+  case asciiPurple
+  case asciiRed
+  case asciiTeal
+  case asciiTealDull
+  case asciiWarmWhite
+  case asciiWhite
+  case asciiYellow
+  case blueChalk
+  case blueDark
+  case blueElectric
+  case blueNavy
+  case brownEarth
+  case brownHazel
+  case greenAqua
+  case greenPewter
+  case grey05
+  case grey10
+  case grey15
+  case grey25
+  case grey30
   case grey
-
-  case pewter
-  case sandy
-  case chalkBlue
-  case electricBlue
-  case navy
-  case hazel
-  case earth
-  case lavendar
-  case hazyPurple
-  case eggplant
-  case peach
-  case peachVibrant
-  case brightRed
-  case lemon
-  case aqua
+  case greyLight
+  case offWhite
   case olive
-  case scarlet
-  case darkRed
+  case peach
+  case peachMuted
+  case peachVibrant
   case plum
-
-  /// Greys
-  case midGrey
+  case plum05
+  case plum10
+  case plum15
+  case plum20
+  case plum25
+  case plum30
+  case purpleEggplant
+  case purpleHazy
+  case purpleLavendar
+  case redBright
+  case redMuted
   case slate
-  case darkGrey
-
-  /// Near-black
-  case darkPlum
-  case darkBlack
-
-  /// System colours
-  case red
-  case orange
-  case yellow
-  case green
-  case mint
-  case teal
-  case cyan
-  case blue
-  case indigo
-  case purple
-  case pink
-  case brown
-  case white
-  case gray
-  case black
+  case slate05
+  case slate10
+  case slate15
+  case slate20
+  case slate25
+  case slate30
+  case yellowLemon
+  case yellowMuted
 
   public var id: String {
     self.rawValue
   }
-
-  public var color: Color {
-    Color(rawValue, bundle: .module)
+  
+  public var colour: Color {
+    
+    Color("swatch/\(rawValue)", bundle: .module)
   }
 
 }
@@ -122,7 +127,7 @@ public enum Swatch: String, Codable, CaseIterable, Identifiable, Sendable, Hasha
 //      case .pewter:
 //        Color(.displayP3, red: 0.6, green: 0.678, blue: 0.66, opacity: 1)
 //
-//      case .sandy:
+//      case .yellowMuted:
 //        Color(.displayP3, red: 0.86, green: 0.681, blue: 0.522, opacity: 1)
 //
 //      case .lightGrey:
@@ -137,7 +142,7 @@ public enum Swatch: String, Codable, CaseIterable, Identifiable, Sendable, Hasha
 //      case .electricBlue:
 //        Color(.displayP3, red: 0.138, green: 0.24, blue: 0.792, opacity: 1)
 //
-//      case .navy:
+//      case .blueNavy:
 //        Color(.displayP3, red: 0.078, green: 0.19, blue: 0.466, opacity: 1)
 //
 //      case .hazel:
@@ -146,10 +151,10 @@ public enum Swatch: String, Codable, CaseIterable, Identifiable, Sendable, Hasha
 //      case .earth:
 //        Color(.displayP3, red: 0.238, green: 0.216, blue: 0.19, opacity: 1)
 //
-//      case .lavendar:
+//      case .purpleLavendar:
 //        Color(.displayP3, red: 0.596, green: 0.495, blue: 0.969, opacity: 1)
 //
-//      case .hazyPurple:
+//      case .purpleHazy:
 //        Color(.displayP3, red: 0.41, green: 0.373, blue: 0.619, opacity: 1)
 //
 //      case .lemon:
@@ -185,7 +190,7 @@ public enum Swatch: String, Codable, CaseIterable, Identifiable, Sendable, Hasha
 //      case .plum:
 //        Color(.displayP3, red: 0.093, green: 0.087, blue: 0.101, opacity: 1)
 //
-//      case .eggplant:
+//      case .purpleEggplant:
 //        Color(.displayP3, red: 0.815, green: 0.733, blue: 0.959, opacity: 1)
 //
 //      case .peach:
@@ -249,15 +254,15 @@ public enum Swatch: String, Codable, CaseIterable, Identifiable, Sendable, Hasha
 //      case .imageBackgrounds:
 //        [
 //          .pewter,
-//          .sandy,
+//          .yellowMuted,
 //          .lightGrey,
 //          //                .grey,
 //          .chalkBlue,
 //          //                .aqua,
-//          //                .eggplant,
+//          //                .purpleEggplant,
 //            .peach,
-//          .lavendar,
-//          //                .hazyPurple,
+//          .purpleLavendar,
+//          //                .purpleHazy,
 //          .olive
 //        ]
 //    }
