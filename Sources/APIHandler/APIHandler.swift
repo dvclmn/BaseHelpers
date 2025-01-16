@@ -92,16 +92,9 @@ public struct APIHandler: Sendable {
     /// This produces more verbose print statements
     isDebugMode: Bool = false
   ) async throws -> T {
-    os_log(
-      """
-
-      "Going to fetch and return Decodable data of type \(T.Type.self), using supplied request.
-      Request method: \(request.httpMethod?.debugDescription ?? "Can't get HTTP method")
-      Request URL: \(request.url?.absoluteString ?? "Can't get URL")
-      Request Body: \(request.httpBody?.debugDescription ?? "nil Body")
-      Request Headers: \(request.allHTTPHeaderFields?.description ?? "nil Headers")
-      """
-    )
+    
+    os_log("Going to fetch and return Decodable data of type \(T.Type.self), using supplied request.")
+    
     do {
 
       let (data, response) = try await URLSession.shared.data(for: request)
