@@ -19,7 +19,7 @@ public enum APIError: Error, LocalizedError {
   case badURL
   case parsingError
   case bodyEncodeError
-  case invalidResponse
+  case invalidResponse(String)
   case decodingError(Error)
   case badRequest(Data)
   case unauthorized(String? = nil)
@@ -35,12 +35,14 @@ public enum APIError: Error, LocalizedError {
   case otherError(Error)
   case unknownStatusCode(Int)
   case invalidContentType(String)
+  case couldNotGetContentTypeHeader
+  case couldNotCastAsHTTPURLResponse
 //  case urlError(URLError)
   
   public var errorDescription: String? {
     switch self {
-      case .invalidResponse:
-        return "Invalid response from server"
+      case .invalidResponse(let description):
+        return "Invalid response from server: \(description)"
       case .decodingError(let error):
         return "Failed to decode response: \(error)"
       case .badRequest(let data):
