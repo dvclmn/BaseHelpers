@@ -8,42 +8,61 @@
 import Foundation
 import OSLog
 
-protocol APIProvider {
-  associatedtype Method = AuthMethod
-  var authMethod: Method { get }
+public protocol APIProvider {
+//  associatedtype Method = AuthMethod
+//  var authMethod: Method { get }
 }
 
 /// Statically pre-generated API Keys
-protocol KeyAuth {
+public protocol KeyAuth {
 
   static var apiKeyKey: String { get }
 
   /// Is the API Key required to be added to the URL as a parameter,
   /// e.g. `https://example.com/api/v2?key=12345`
   /// or the Request headers, as `Authorization : Bearer 12345`
-  associatedtype Location = AuthLocation
-  var authLocation: Location { get }
-  
+  ///
+  /// Note: This is made a `static` property, as it should be determined
+  /// at compile time, not changed at runtime etc.
+  static var authLocation: APIKeyAuthLocation { get }
 }
 
-/// Dynamically generated Bearer Tokens
-protocol TokenAuth {
-  /// These are only keys to unlock corresponding sensitive values.
-  /// Not the values themselves.
-  static var clientIDKey: String { get }
-  static var clientSecretKey: String { get }
+public struct Credentials {
+  public let clientID: String
+  public let clientSecret: String
 }
 
 
-enum AuthLocation {
+public enum APIKeyAuthLocation {
   case header // E.g. SteamGrid
   case queryParameter // E.g. Steam
 }
 
-enum AuthMethod {
-  case token
-  case apiKeyHeader
-  case apiKeyQueryParameter
+//public enum AuthMethod {
+//  case token(TokenAuth)
+//  case apiKey(KeyAuth)
+//}
+
+// First, let's define different auth flows
+public enum AuthFlow {
+  /// Client credentials flow (e.g., IGDB)
+  case clientCredentials(clientID: String, clientSecret: String)
+  /// Authorization code flow (e.g., GOG)
+  case authorizationCode(
+    clientID: String,
+    clientSecret: String,
+    code: String,
+    redirectURI: String
+  )
+  
+  public var grantType: String {
+    switch self {
+      case .clientCredentials:
+        return "client_credentials"
+      case .authorizationCode:
+        return "authorization_code"
+    }
+  }
 }
 
 
