@@ -8,19 +8,42 @@
 import Foundation
 import OSLog
 
-protocol KeyAuth {
-  associatedtype Location = APIKeyAuthLocation
-  var authLocation: Location { get }
+protocol APIProvider {
+  associatedtype Method = AuthMethod
+  var authMethod: Method { get }
 }
 
-protocol TokenAuth {
+/// Statically pre-generated API Keys
+protocol KeyAuth {
+
+  static var apiKeyKey: String { get }
+
+  /// Is the API Key required to be added to the URL as a parameter,
+  /// e.g. `https://example.com/api/v2?key=12345`
+  /// or the Request headers, as `Authorization : Bearer 12345`
+  associatedtype Location = AuthLocation
+  var authLocation: Location { get }
   
 }
 
+/// Dynamically generated Bearer Tokens
+protocol TokenAuth {
+  /// These are only keys to unlock corresponding sensitive values.
+  /// Not the values themselves.
+  static var clientIDKey: String { get }
+  static var clientSecretKey: String { get }
+}
 
-enum APIKeyAuthLocation {
-  case header // SteamGrid
-  case query // Steam
+
+enum AuthLocation {
+  case header // E.g. SteamGrid
+  case queryParameter // E.g. Steam
+}
+
+enum AuthMethod {
+  case token
+  case apiKeyHeader
+  case apiKeyQueryParameter
 }
 
 
