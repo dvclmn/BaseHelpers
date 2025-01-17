@@ -15,8 +15,8 @@ public protocol TokenAuth {
   associatedtype DTO: TokenDTO
   typealias Token = AuthToken<DTO>
   
-  var providerName: String { get }
-  var keychainInstance: KeychainSwift { get }
+  static var providerName: String { get }
+  var keychain: KeychainSwift { get }
   
   /// These are only keys to unlock corresponding sensitive values.
   /// Not the values themselves.
@@ -34,7 +34,7 @@ public protocol TokenAuth {
   
   /// The authentication flow type for this service
   /// `static`, as should not change for a service, once set
-  static var authFlow: AuthFlow { get }
+  static var authFlow: TokenAuthFlow { get }
   
 //  static var tokenRequestDTO: TokenDTO.Type { get }
 }
@@ -87,7 +87,7 @@ extension TokenAuth {
     switch Self.authFlow {
         
         /// E.g. for IGDB
-      case .clientCredentials(_, _):
+      case .clientCredentials(_):
         return [
           URLQueryItem(name: "client_id", value: credentials.clientID),
           URLQueryItem(name: "client_secret", value: credentials.clientSecret),
@@ -95,7 +95,7 @@ extension TokenAuth {
         ]
         
         /// E.g. for GOG
-      case let .authorizationCode(_, _, code, redirectURI):
+      case let .authorizationCode(_, code, redirectURI):
         return [
           URLQueryItem(name: "client_id", value: credentials.clientID),
           URLQueryItem(name: "client_secret", value: credentials.clientSecret),
@@ -107,7 +107,7 @@ extension TokenAuth {
   }
   
   public func retrieveTokenFromKeychain() throws -> Token {
-    guard let tokenData = keychainInstance.getData(Self.tokenKey) else {
+    guard let tokenData = keychain.getData(Self.tokenKey) else {
       throw TokenError.noTokenInKeychain
     }
     
@@ -120,7 +120,7 @@ extension TokenAuth {
   }
   
   private func fetchNewToken() async throws -> Token {
-    print("Fetching new \(providerName) token")
+    print("Fetching new \(Self.providerName) token")
     
     let url = try createAuthURL()
     let request = try APIHandler.createRequest(
@@ -135,7 +135,7 @@ extension TokenAuth {
     
     try await saveToken(token)
     
-    print("Successfully obtained and saved \(providerName) token")
+    print("Successfully obtained and saved \(Self.providerName) token")
     return token
     //    do {
     //
@@ -157,7 +157,7 @@ extension TokenAuth {
   
   private func saveToken(_ token: Token) async throws {
     let tokenData = try token.asData()
-    guard keychainInstance.set(tokenData, forKey: Self.tokenKey) else {
+    guard keychain.set(tokenData, forKey: Self.tokenKey) else {
       throw TokenError.keychainSaveFailed
     }
   }
@@ -190,7 +190,7 @@ extension TokenAuth {
   }
   
   var keychainDoesContainToken: Bool {
-    keychainInstance.getData(Self.tokenKey) != nil
+    keychain.getData(Self.tokenKey) != nil
   }
   
 }

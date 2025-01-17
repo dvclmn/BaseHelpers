@@ -44,26 +44,7 @@ public enum APIKeyAuthLocation {
 //}
 
 // First, let's define different auth flows
-public enum AuthFlow {
-  /// Client credentials flow (e.g., IGDB)
-  case clientCredentials(clientID: String, clientSecret: String)
-  /// Authorization code flow (e.g., GOG)
-  case authorizationCode(
-    clientID: String,
-    clientSecret: String,
-    code: String,
-    redirectURI: String
-  )
-  
-  public var grantType: String {
-    switch self {
-      case .clientCredentials:
-        return "client_credentials"
-      case .authorizationCode:
-        return "authorization_code"
-    }
-  }
-}
+
 
 
 public struct APIHandler: Sendable {
