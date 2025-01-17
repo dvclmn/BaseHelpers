@@ -42,6 +42,7 @@ public enum Swatch: String, Codable, CaseIterable, Identifiable, Sendable, Hasha
   case offWhite
   case olive
   case peach
+  case peachLight
   case peachMuted
   case peachVibrant
   case plum
@@ -75,7 +76,28 @@ public enum Swatch: String, Codable, CaseIterable, Identifiable, Sendable, Hasha
     Color("swatch/\(rawValue)", bundle: .module)
   }
 
+  public func colour(_ brightnessAdjustment: BrightnessAdjustment, amount: CGFloat) -> some View {
+    let newColour = colour.brightness(brightnessAdjustment.adjustment(with: amount))
+    return newColour
+  }
+  
 }
+
+public enum BrightnessAdjustment {
+  case darker
+  case brighter
+  
+  public func adjustment(with value: CGFloat) -> CGFloat {
+    switch self {
+      case .darker:
+        let result: CGFloat = value * -1
+        return min(0, max(1, result))
+      case .brighter:
+        return min(0, max(1, value))
+    }
+  }
+}
+
 //  /// ASCII colours
 ////  case darkBlue
 ////  case brightTeal

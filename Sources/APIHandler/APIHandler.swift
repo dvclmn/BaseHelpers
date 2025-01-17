@@ -8,71 +8,23 @@
 import Foundation
 import OSLog
 
-public protocol APIResponse: Decodable, Sendable {}
-
-public protocol APIRequestBody: Encodable, Sendable {}
-
-public protocol APIUsage: Decodable, Sendable {}
-
-public protocol StreamedResponse: Decodable, Sendable {
-  var responseData: StreamedResponseMessage? { get }
-  var usage: StreamedResponseUsage? { get }
+protocol KeyAuth {
+  associatedtype Location = APIKeyAuthLocation
+  var authLocation: Location { get }
 }
 
-extension StreamedResponse {
-  /// Sets to `nil` as default
-  public var responseData: StreamedResponseMessage? { nil }
-  public var usage: StreamedResponseUsage? { nil }
+protocol TokenAuth {
+  
 }
 
-public protocol StreamedResponseMessage: Decodable, Sendable {
-  var text: String? { get }
-  var usage: StreamedResponseUsage? { get }
-}
-extension StreamedResponseMessage {
-  public var text: String? { nil }
-  public var usage: StreamedResponseUsage? { nil }
+
+enum APIKeyAuthLocation {
+  case header // SteamGrid
+  case query // Steam
 }
 
-public protocol StreamedResponseUsage: Decodable, Sendable {
-  var input_tokens: Int? { get }
-  var output_tokens: Int? { get }
-}
-extension StreamedResponseMessage {
-  public var input_tokens: Int? { nil }
-}
 
 public struct APIHandler: Sendable {
-
-
-  /// This requires the following set-up:
-  ///
-  /// 1. Add `Config.xcconfig` file to project
-  /// 2. Add sensitive data e.g. `STEAM_SECRET = 4620doa8408...`
-  ///   IMPORTANT: For this to work, do *not* surround the value in `"`
-  ///   Just leave it bare, as it is above
-  ///
-  /// 3. Ensure this config file is not added to source control (ignored)
-  /// 4. Add the config file to the project via Project Settings > Info > Configurations,
-  ///   in the Debug dropdown. Just to the project, not the target(s).
-  /// 5. Finally, add each reference to sensitive data to the `Info.plist`, like so:
-  /// ```
-  /// <key>SteamSecret</key>
-  /// <string>$(STEAM_SECRET)</string>
-  /// ```
-  /// 6. The above `key` is what you provide to the below `key` parameter
-  ///
-  public static func getStringFromInfoDict(_ key: String) throws -> String {
-
-
-    guard let result = Bundle.main.object(forInfoDictionaryKey: key) as? String else {
-      throw ConfigError.missingKey(key)
-    }
-    guard !result.isEmpty else {
-      throw ConfigError.invalidValue(key)
-    }
-    return result
-  }
 
   public static func encodeBody<T: Encodable>(_ body: T) -> Data? {
     do {
@@ -86,7 +38,6 @@ public struct APIHandler: Sendable {
   }
 
 }
-
 
 extension URLRequest {
   public func printPrettyString() -> String {

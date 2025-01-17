@@ -148,7 +148,7 @@ public struct AnthropicMessageDelta: StreamedResponse {
 
 
 /// Non-streamed
-public struct AnthropicResponse: APIResponse {
+public struct AnthropicResponse: Decodable, Sendable {
   public let type: String // Defaults to "message"
   public let role: String // Will be "assistant"
   public let content: [Message]
@@ -163,7 +163,7 @@ public struct AnthropicResponse: APIResponse {
   }
   
   /// `usage`
-  public struct Usage: APIUsage {
+  public struct Usage: Decodable, Sendable {
     public let input_tokens: Int
     public let output_tokens: Int
   }
