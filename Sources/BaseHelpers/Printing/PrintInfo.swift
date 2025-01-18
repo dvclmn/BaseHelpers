@@ -9,6 +9,7 @@ import SwiftUI
 
 public enum PrintInfo {
   case userDefaultsURL
+  case applicationSupport
 }
 
 public struct PrintInfoModifier: ViewModifier {
@@ -19,12 +20,15 @@ public struct PrintInfoModifier: ViewModifier {
     content
       .onAppear {
         
-        print("Checking signal noise for `PrintUserDefaults`")
-        
         switch info {
           case .userDefaultsURL:
             if let path = FileManager.default.urls(for: .libraryDirectory, in: .userDomainMask).first?.appendingPathComponent("Preferences").appendingPathComponent("com.yourcompany.yourapp.plist").path {
               print("UserDefaults file path: \(path)")
+            }
+            
+          case .applicationSupport:
+            if let path = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first?.path {
+              print("Application Support file path: \(path)")
             }
         }
         

@@ -33,8 +33,10 @@ public protocol TokenAuth {
   static var tokenBaseURL: String { get }
   
   /// The authentication flow type for this service
-  /// `static`, as should not change for a service, once set
-  static var authFlow: TokenAuthFlow { get }
+  /// ~~`static`, as should not change for a service, once set~~
+  /// Back to instance property, so a `loginCode` (which is dynamic)
+  /// can be obtained, for flows that require it
+  var authFlow: TokenAuthFlow { get }
   
 //  static var tokenRequestDTO: TokenDTO.Type { get }
 }
@@ -69,12 +71,8 @@ extension TokenAuth {
   }
   
   public func createAuthURL() throws -> URL {
-    guard let credentials = Self.getClientCredentials() else {
-      throw TokenError.missingCredentials
-    }
-    
     var components = URLComponents(string: Self.tokenBaseURL)
-    components?.queryItems = queryItems(for: credentials)
+    components?.queryItems = queryItems()
     
     guard let url = components?.url else {
       throw TokenError.invalidAuthURL
@@ -83,23 +81,23 @@ extension TokenAuth {
     return url
   }
   
-  func queryItems(for credentials: Credentials) -> [URLQueryItem] {
-    switch Self.authFlow {
+  func queryItems() -> [URLQueryItem] {
+    switch authFlow {
         
         /// E.g. for IGDB
-      case .clientCredentials(_):
+      case let .clientCredentials(credentials):
         return [
           URLQueryItem(name: "client_id", value: credentials.clientID),
           URLQueryItem(name: "client_secret", value: credentials.clientSecret),
-          URLQueryItem(name: "grant_type", value: "client_credentials")
+          URLQueryItem(name: "grant_type", value: authFlow.grantType)
         ]
         
         /// E.g. for GOG
-      case let .authorizationCode(_, code, redirectURI):
+      case let .authorizationCode(credentials, code, redirectURI):
         return [
           URLQueryItem(name: "client_id", value: credentials.clientID),
           URLQueryItem(name: "client_secret", value: credentials.clientSecret),
-          URLQueryItem(name: "grant_type", value: "authorization_code"),
+          URLQueryItem(name: "grant_type", value: authFlow.grantType),
           URLQueryItem(name: "code", value: code),
           URLQueryItem(name: "redirect_uri", value: redirectURI)
         ]
@@ -167,7 +165,7 @@ extension TokenAuth {
   /// - Parameter strategy: The strategy to use when handling token validation
   /// - Returns: A valid token
   /// - Throws: TokenError depending on the strategy and current token state
-  func getValidToken(strategy: TokenValidationStrategy) async throws -> Token {
+  public func getValidToken(strategy: TokenValidationStrategy) async throws -> Token {
     
     do {
       switch strategy {
@@ -226,7 +224,7 @@ public enum TokenError: LocalizedError {
     }
   }
 }
-enum TokenValidationStrategy {
+public enum TokenValidationStrategy {
   /// Only check if token exists and is valid
   case validateOnly
   /// Attempt to refresh an expired token

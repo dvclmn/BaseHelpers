@@ -18,6 +18,8 @@ public enum TokenAuthFlow {
     redirectURI: String
   )
   
+  /// This is defined here, rather than above in the associated part,
+  /// as it doesn't need to provide a value provided, it should be static
   public var grantType: String {
     switch self {
       case .clientCredentials:
