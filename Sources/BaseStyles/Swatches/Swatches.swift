@@ -32,6 +32,7 @@ public enum Swatch: String, Codable, CaseIterable, Identifiable, Sendable, Hasha
   case brownHazel
   case greenAqua
   case greenPewter
+  case greenSpearmint
   case grey05
   case grey10
   case grey15
