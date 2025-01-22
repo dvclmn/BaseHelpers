@@ -64,7 +64,6 @@ extension APIHandler {
     isDebugMode: Bool = false
   ) async throws -> T {
 
-
     let (data, response) = try await URLSession.shared.data(for: request)
 
     let httpResponse = try validateHTTPResponse(response)
@@ -86,7 +85,7 @@ extension APIHandler {
     }
     
     let decoder = JSONDecoder()
-    decoder.keyDecodingStrategy = .convertFromSnakeCase
+//    decoder.keyDecodingStrategy = .convertFromSnakeCase
     
     do {
       return try decoder.decode(T.self, from: data)

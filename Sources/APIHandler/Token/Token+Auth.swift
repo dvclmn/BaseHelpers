@@ -121,15 +121,14 @@ extension TokenAuth {
     print("Fetching new \(Self.providerName) token")
     
     let url = try createAuthURL()
-    let request = try APIHandler.createRequest(
-      url: url
-      //      type: requestType
+    
+    let response = try await APIHandler.requestAndFetch(
+      url: url,
+      dto: DTO.self,
+      isDebugMode: true
     )
     
-    print("Requesting token from: \(request.url?.absoluteString ?? "unknown")")
-    
-    let dto: DTO = try await APIHandler.fetch(request: request)
-    let token = Token(from: dto)
+    let token = Token(from: response)
     
     try await saveToken(token)
     
