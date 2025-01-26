@@ -43,16 +43,6 @@ extension APIHandler {
       request: request,
       isDebugMode: isDebugMode
     )
-//
-//    print(
-//      """
-//
-//      # Fetched Response
-//        
-//        
-//
-//      """)
-
     return response
   }
 
@@ -81,21 +71,10 @@ extension APIHandler {
     isDebugMode: Bool
   ) throws -> T {
     if isDebugMode {
-      
-      
-//        if let jsonString = String(data: data, encoding: .utf8) {
-//          print("Decoding JSON: \(jsonString)")
-//        } else {
-//          print("Failed to convert data to string.")
-//        }
-//
-
-      
       printDebugResponse(data)
     }
     
     let decoder = JSONDecoder()
-//    decoder.keyDecodingStrategy = .convertFromSnakeCase
     
     do {
       return try decoder.decode(T.self, from: data)

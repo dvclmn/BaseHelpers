@@ -107,7 +107,12 @@ extension TokenAuth {
     print("Found \(Self.providerName) token Data in Keychain, now attempting to decode.")
     let token = try Token.fromData(tokenData)
     print("Successfully decoded \(Self.providerName) token: \(token)")
-    guard token.isValid else {
+    
+    /// Add more detailed validation logging
+    if token.isValid {
+      print("Token is still valid. Expiration date: \(token.expiryDate)")
+    } else {
+      print("Token has expired. Expiration date: \(token.expiryDate), Current date: \(Date())")
       throw TokenError.tokenHasExpired
     }
     return token
