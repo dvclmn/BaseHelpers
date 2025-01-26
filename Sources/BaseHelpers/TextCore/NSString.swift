@@ -5,6 +5,7 @@
 //  Created by Dave Coleman on 17/12/2024.
 //
 
+#if os(macOS)
 import AppKit
 
 public extension NSString {
@@ -14,5 +15,7 @@ public extension NSString {
     return NSRange(location: utf16Start, length: utf16End - utf16Start)
   }
 }
+#endif
+
 
 

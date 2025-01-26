@@ -81,6 +81,16 @@ extension APIHandler {
     isDebugMode: Bool
   ) throws -> T {
     if isDebugMode {
+      
+      
+//        if let jsonString = String(data: data, encoding: .utf8) {
+//          print("Decoding JSON: \(jsonString)")
+//        } else {
+//          print("Failed to convert data to string.")
+//        }
+//
+
+      
       printDebugResponse(data)
     }
     

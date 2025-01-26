@@ -4,6 +4,7 @@
 //
 //  Created by Dave Coleman on 6/12/2024.
 //
+#if canImport(AppKit)
 
 import SwiftUI
 
@@ -84,7 +85,7 @@ public extension View {
   }
 }
 
-
+#endif
 
 
 // You might also want to add a global monitor version for when the window isn't focused

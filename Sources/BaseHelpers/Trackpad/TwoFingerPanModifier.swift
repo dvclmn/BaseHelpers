@@ -5,6 +5,8 @@
 //  Created by Dave Coleman on 6/12/2024.
 //
 
+#if canImport(AppKit)
+
 import SwiftUI
 
 public struct TwoFingerPanModifier: ViewModifier {
@@ -96,3 +98,4 @@ extension View {
     )
   }
 }
+#endif

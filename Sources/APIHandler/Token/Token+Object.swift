@@ -54,3 +54,9 @@ public struct AuthToken<T: TokenDTO>: Codable {
   }
   
 }
+
+extension AuthToken: CustomStringConvertible {
+  public var description: String {
+    "AuthToken(token: \(token), expiryDate: \(expiryDate))"
+  }
+}

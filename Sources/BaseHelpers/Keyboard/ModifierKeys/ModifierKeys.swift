@@ -32,10 +32,10 @@ public enum ModifierKey: String, CaseIterable, Identifiable, Hashable, Sendable 
   case shift
   case option
   case control
-  
+
   public var id: String { self.rawValue }
   public var name: String { self.rawValue.capitalized }
-  
+
   public var symbol: String {
     switch self {
       case .shift: "􀆝"
@@ -46,75 +46,80 @@ public enum ModifierKey: String, CaseIterable, Identifiable, Hashable, Sendable 
   }
 }
 
-public extension Modifiers {
-  var names: String? {
-    if !self.isEmpty {
-      return self.map(\.name).joined()
-    } else {
+extension Modifiers {
+  public var names: String? {
+    guard !self.isEmpty else {
       return nil
     }
+    return self.map(\.name).joined()
   }
-  
-  var symbols: String? {
-    if !self.isEmpty {
-      return self.map(\.symbol).joined()
-    } else {
+
+  public var symbols: String? {
+    guard !self.isEmpty else {
       return nil
     }
+    return self.map(\.symbol).joined()
   }
 }
 
-#if os(macOS)
+//#if os(macOS)
 
 
-public extension EnvironmentValues {
-  @Entry var modifierKeys: Modifiers = .init()
+extension EnvironmentValues {
+  @Entry public var modifierKeys: Modifiers = .init()
 }
 
-public extension NSEvent.ModifierFlags {
-  func toModifierKey() -> ModifierKey? {
-    switch self {
-      case .shift: return .shift
-      case .control: return .control
-      case .option: return .option
-      case .command: return .command
-      default: return nil
-    }
-  }
-}
-
-
-public struct ModifierKeysModifier: ViewModifier {
-  
-  @State private var modifierKeys = Modifiers()
-  
-  private let allModifiers: [NSEvent.ModifierFlags] = [.shift, .control, .option, .command]
-  
-  public func body(content: Content) -> some View {
-    content
-      .onAppear {
-        NSEvent.addLocalMonitorForEvents(matching: [.flagsChanged]) { event in
-          modifierKeys = Set(allModifiers.compactMap { flag in
-            event.modifierFlags.contains(flag) ? flag.toModifierKey() : nil
-          })
-          return event
-        }
+#if canImport(AppKit)
+  extension NSEvent.ModifierFlags {
+    public func toModifierKey() -> ModifierKey? {
+      switch self {
+        case .shift: return .shift
+        case .control: return .control
+        case .option: return .option
+        case .command: return .command
+        default: return nil
       }
-      .environment(\.modifierKeys, modifierKeys)
+    }
   }
-}
-
 #endif
 
-public extension View {
-#if canImport(AppKit)
-  func readModifierKeys() -> some View {
-    self.modifier(ModifierKeysModifier())
-  }
-#elseif canImport(UIKit)
-  func readModifierKeys() -> some View {
-    self
-  }
+public struct ModifierKeysModifier: ViewModifier {
+
+  @State private var modifierKeys = Modifiers()
+  #if canImport(AppKit)
+    private let allModifiers: [NSEvent.ModifierFlags] = [.shift, .control, .option, .command]
   #endif
+  public func body(content: Content) -> some View {
+
+    #if canImport(AppKit)
+      content
+        .onAppear {
+          NSEvent.addLocalMonitorForEvents(matching: [.flagsChanged]) { event in
+            modifierKeys = Set(
+              allModifiers.compactMap { flag in
+                event.modifierFlags.contains(flag) ? flag.toModifierKey() : nil
+              })
+            return event
+          }
+        }
+        .environment(\.modifierKeys, modifierKeys)
+    #else
+      content
+    #endif
+
+  }
 }
 
+//#endif
+
+extension View {
+  #if canImport(AppKit)
+    func readModifierKeys() -> some View {
+      self.modifier(ModifierKeysModifier())
+    }
+  #elseif canImport(UIKit)
+    func readModifierKeys() -> some View {
+      self
+    }
+  #endif
+}

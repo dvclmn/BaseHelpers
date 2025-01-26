@@ -5,8 +5,10 @@
 //  Created by Dave Coleman on 18/11/2024.
 //
 
+#if canImport(AppKit)
 import SwiftUI
 import AppKit
+
 
 public protocol AppKitTouchesViewDelegate: AnyObject {
   /// Provides `.touching` touches only.
@@ -113,7 +115,7 @@ public struct TouchesView: NSViewRepresentable {
     }
   }
 }
-
+#endif
 
 //
 //struct ExampleTrackpadView: View {
