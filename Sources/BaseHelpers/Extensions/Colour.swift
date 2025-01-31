@@ -8,6 +8,42 @@
 import Foundation
 import SwiftUI
 
+
+extension Color {
+  public func blend(with other: Color, percentage: Double) -> Color {
+    Color(nsColor: NSColor(self).blend(with: NSColor(other), percentage: percentage))
+  }
+}
+
+extension NSColor {
+  public func blend(with other: NSColor, percentage: Double) -> NSColor {
+    let percentage = max(min(percentage, 1), 0)
+    switch percentage {
+      case 0: return self
+      case 1: return other
+      default:
+        guard
+          let selfRGB = self.usingColorSpace(.sRGB),
+          let otherRGB = other.usingColorSpace(.sRGB)
+        else { return self }
+        
+        var (r1, g1, b1, a1): (CGFloat, CGFloat, CGFloat, CGFloat) = (0, 0, 0, 0)
+        var (r2, g2, b2, a2): (CGFloat, CGFloat, CGFloat, CGFloat) = (0, 0, 0, 0)
+        
+        selfRGB.getRed(&r1, green: &g1, blue: &b1, alpha: &a1)
+        otherRGB.getRed(&r2, green: &g2, blue: &b2, alpha: &a2)
+        
+        return NSColor(
+          red: r1 + (r2 - r1) * percentage,
+          green: g1 + (g2 - g1) * percentage,
+          blue: b1 + (b2 - b1) * percentage,
+          alpha: a1 + (a2 - a1) * percentage
+        )
+    }
+  }
+}
+
+
 /// This extension allows you to create a `Color` instance from a hex string in SwiftUI. It supports the following formats:
 
 /// 1. 3-digit hex (RGB)
