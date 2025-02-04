@@ -28,6 +28,10 @@ public extension AttributeContainer {
     return quickContainer(with: .black, background: .orange.opacity(0.7))
   }
   
+  static var neonOrange: AttributeContainer {
+    return quickContainer(with: .white, background: .orange.opacity(0.5))
+  }
+  
   static var invisible: AttributeContainer {
     return quickContainer(with: .clear, background: .clear)
   }

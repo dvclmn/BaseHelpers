@@ -33,6 +33,7 @@ public enum Icons: String, CaseIterable, Identifiable, Codable, Equatable {
     case source             = "square.and.arrow.down"
     case sourceAlt          = "water.waves.and.arrow.trianglehead.down"
     case person             = "person"
+    case menu               = "line.3.horizontal.decrease"
     case question           = "questionmark.circle"
     case grid               = "rectangle.grid.3x2"
     case pin                = "pin"
