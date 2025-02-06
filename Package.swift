@@ -49,7 +49,6 @@ let package = Package(
     /// Helpers
     .target(name: "BaseHelpers"),
     .target(name: "Shaders"),
-//    .target(name: "Shortcuts", dependencies: ["BaseHelpers"]),
     
     /// Networking
     .target(name: "APIHandler", dependencies: [
