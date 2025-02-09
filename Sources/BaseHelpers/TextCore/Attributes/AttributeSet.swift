@@ -6,7 +6,7 @@
 //
 
 
-import Foundation
+import AppKit
 //import NSUI
 
 public typealias Attributes = [NSAttributedString.Key: Any]
@@ -23,6 +23,20 @@ public struct AttributeSet: @preconcurrency ExpressibleByDictionaryLiteral {
   
   public init(_ attributes: Attributes) {
     self.attributes = attributes
+  }
+  
+  public init(
+    font: NSFont,
+    foreground: NSColor = .labelColor,
+    background: NSColor = .clear,
+    additionalAttributes: Attributes = [:]
+  ) {
+    let baseAttributes: Attributes = [
+      .font: font,
+      .foregroundColor: foreground,
+      .backgroundColor: background
+    ]
+    self.attributes = baseAttributes.merging(additionalAttributes) { (_, new) in new }
   }
   
   public subscript(_ key: Attributes.Key) -> Any? {

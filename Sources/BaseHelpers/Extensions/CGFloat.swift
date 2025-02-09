@@ -7,20 +7,26 @@
 
 import Foundation
 
-public extension CGFloat {
-  
-  var isPositive: Bool {
+extension CGFloat {
+
+  public var isPositive: Bool {
     self > 0
   }
-  
-  func padLeading(maxDigits: Int, decimalPlaces: Int? = nil, with padChar: Character = " ") -> String {
-    Double(self).padLeading(maxDigits: maxDigits, decimalPlaces: decimalPlaces,  with: padChar)
+
+  public func padLeading(
+    maxDigits: Int, decimalPlaces: Int? = nil, with padChar: Character = " "
+  ) -> String {
+    Double(self).padLeading(maxDigits: maxDigits, decimalPlaces: decimalPlaces, with: padChar)
   }
-  
-  func normalised(against value: CGFloat, isClamped: Bool = true) -> CGFloat {
+
+  public func normalised(against value: CGFloat, isClamped: Bool = true) -> CGFloat {
     let normalised = self / value
-    
+
     return normalised
   }
-  
+
+  public var toFinite: CGFloat {
+    self.constrained(.zero, .infinity)
+  }
+
 }

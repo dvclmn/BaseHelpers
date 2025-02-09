@@ -60,6 +60,7 @@ public extension Edge {
       case .leading, .trailing: .horizontal
     }
   }
+
   var alignment: Alignment {
     switch self {
       case .top: .top
@@ -87,6 +88,4 @@ public extension Edge {
       case .trailing: .leading
     }
   }
-
-  
 }

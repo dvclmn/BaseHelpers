@@ -49,3 +49,25 @@ extension Axis {
     }
   }
 }
+
+extension Axis {
+  
+  public func getMinMax(_ axis: Axis.MinMax) -> Axis {
+    switch axis {
+      case .minWidth, .maxWidth:
+        return .horizontal
+        
+      case .minHeight, .maxHeight:
+        return .vertical
+    }
+  }
+  
+  public enum MinMax {
+    case minWidth
+    case maxWidth
+    case minHeight
+    case maxHeight
+  }
+
+  
+}
