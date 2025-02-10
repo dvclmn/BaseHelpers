@@ -11,9 +11,7 @@ import AppKit
 
 public typealias Attributes = [NSAttributedString.Key: Any]
 
-
-@MainActor
-public struct AttributeSet: @preconcurrency ExpressibleByDictionaryLiteral {
+public struct AttributeSet: ExpressibleByDictionaryLiteral {
   
   public var attributes: Attributes
   
@@ -64,7 +62,7 @@ public struct AttributeSet: @preconcurrency ExpressibleByDictionaryLiteral {
 //  ]
 //}
 
-extension AttributeSet: @preconcurrency Sequence {
+extension AttributeSet: Sequence {
   
   public func makeIterator() -> Dictionary<NSAttributedString.Key, Any>.Iterator {
     return attributes.makeIterator()
