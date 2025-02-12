@@ -7,8 +7,6 @@
 
 import SwiftUI
 
-
-
 public struct PathDebugger<T: Shape> {
   public let shape: T
   public let config: PathDebugConfig
