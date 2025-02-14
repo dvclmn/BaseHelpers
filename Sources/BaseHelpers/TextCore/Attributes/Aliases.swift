@@ -21,7 +21,6 @@ public typealias AttributedRange = Range<AttributedString.Index>
 ///
 /// `public typealias ThreePartRegex = Regex<(Substring, Substring, Substring, Substring)>`
 
-
 public typealias TwoPartRange = (AttributedRange, AttributedRange)
 public typealias TwoPartRegex = Regex<(Substring, Substring, Substring)>
 

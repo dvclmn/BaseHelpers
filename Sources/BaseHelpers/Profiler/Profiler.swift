@@ -7,8 +7,6 @@
 
 import Foundation
 
-
-
 struct ProfileInfo: Sendable, Identifiable {
   let id: UUID
   let name: String

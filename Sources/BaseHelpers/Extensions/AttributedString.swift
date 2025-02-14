@@ -7,9 +7,7 @@
 
 import SwiftUI
 
-public extension AttributedString {
-  
-  ///
+extension AttributedString {
   ///
   /// ```
   /// var output = attrString
@@ -24,129 +22,86 @@ public extension AttributedString {
   ///
   /// return output
   /// ```
-  ///
-  
-  //  func quickHighlight(_ string: inout AttributedString) {
-  //    let highlightContainer: AttributeContainer = .highlighter
-  //
-  //    string.setAttributes(highlightContainer)
-  //
-  //  }
-  
-  
-  mutating func quickHighlight() {
-    
+
+  public mutating func quickHighlight() {
+
     print(self.string)
-    
+
     let highlightContainer: AttributeContainer = .highlighter
     self.setAttributes(highlightContainer)
   }
-  
-  
-  func getAllRanges(matching pattern: Regex<Substring>) -> [AttributedRange] {
+
+  public func getAllRanges(matching pattern: Regex<Substring>) -> [AttributedRange] {
     let string = String(self.characters)
     let matches = string.matches(of: pattern)
-    
+
     var ranges: [Range<AttributedString.Index>] = []
-    
+
     for match in matches {
       if let range = self.range(of: match.output) {
         ranges.append(range)
       }
     }
-    
     return ranges
   }
-  
-  func getRange(for pattern: ThreePartRegex) -> ThreePartRange? {
-    
-    //    var range: Range<AttributedString.Index>
-    
-    //    var output = ThreePartRegex.AttributedRange()
-    
+
+  public func getRange(for pattern: ThreePartRegex) -> ThreePartRange? {
+
     let string = String(self.characters)
-    
+
     let matches = string.matches(of: pattern)
-    
+
     for match in matches {
       guard let range01 = self.range(of: match.output.1),
-            let range02 = self.range(of: match.output.2),
-            let range03 = self.range(of: match.output.3)
+        let range02 = self.range(of: match.output.2),
+        let range03 = self.range(of: match.output.3)
       else {
-        
+
         break
       }
-      
+
       return (range01, range02, range03)
-      
     }
     return nil
   }
-  
-  func getRange(matching pattern: Regex<Substring>) -> AttributedRange? {
-    
+
+  public func getRange(matching pattern: Regex<Substring>) -> AttributedRange? {
     let string = String(self.characters)
-    
     let matches = string.matches(of: pattern)
-    
     for match in matches {
-      
       guard let range = self.range(of: match.output) else { break }
-      
       return range
-      
+
     }
     return nil
   }
-  
-  func debugRanges(matching pattern: Regex<Substring>) {
+
+  public func debugRanges(matching pattern: Regex<Substring>) {
     let string = String(self.characters)
     let matches = string.matches(of: pattern)
-    
+
     print("Total matches found: \(matches.count)")
-    
+
     for (index, match) in matches.enumerated() {
       let matchString = String(match.output)
       print("Match \(index + 1): '\(matchString)'")
-      
+
       if let range = self.range(of: matchString) {
         print("  Found at range: \(range)")
         print("  Content at range: '\(self[range])'")
       } else {
         print("  Range not found in AttributedString")
       }
-      
+
       print("---")
     }
   }
-  
-  
-  var lines: [String] {
+
+  public var lines: [String] {
     let string = String(self.characters)
     return string.split(separator: "\n", omittingEmptySubsequences: false)
       .map { String($0) }
-//    let string = String(self.characters)
-//    return string.components(separatedBy: "\n")
   }
-  
-  //  func getAllRangesIncremental(matching pattern: Regex<Substring>) -> [Range<AttributedString.Index>] {
-  //    let string = String(self.characters)
-  //    var ranges: [Range<AttributedString.Index>] = []
-  //    var searchRange = string.startIndex..<string.endIndex
-  //
-  //    while let match = string.range(of: pattern, range: searchRange) {
-  //      if let attrRange = self.range(of: string[match]) {
-  //        ranges.append(attrRange)
-  //      }
-  //      searchRange = match.upperBound..<string.endIndex
-  //    }
-  //
-  //    return ranges
-  //  }
-  
-  //  func setStyle(in range: AttributedRange, attrString: inout Self) {
-  //
-  //  }
 }
 
 
@@ -226,7 +181,7 @@ public extension AttributedString {
 //}
 
 
-public extension AttributedString {
+extension AttributedString {
   //  var addLineBreak: AttributedString {
   //
   //    var current: AttributedString = self
@@ -235,52 +190,52 @@ public extension AttributedString {
   //
   //    return current
   //  }
-  
-  var string: String {
+
+  public var string: String {
     String(self.characters)
   }
-  
-  mutating func appendString(_ newString: String, addsLineBreak: Bool) {
-    
+
+  public mutating func appendString(_ newString: String, addsLineBreak: Bool) {
+
     self.characters.append(contentsOf: newString)
     if addsLineBreak {
       self.characters.append("\n")
     }
   }
-  
-  mutating func appendString(_ newCharacter: Character, addsLineBreak: Bool) {
-    
+
+  public mutating func appendString(_ newCharacter: Character, addsLineBreak: Bool) {
+
     self.characters.append(newCharacter)
     if addsLineBreak {
       self.characters.append("\n")
     }
-    
+
   }
-  
-  mutating func addLineBreak() {
-    
+
+  public mutating func addLineBreak() {
+
     self.appendString("\n", addsLineBreak: false)
     //    self.characters.append("\n")
   }
-  
+
 }
 
 
 public struct MultiLineAttributedString {
   private var lines: [AttributedString]
-  
+
   public init(_ lines: [AttributedString] = []) {
     self.lines = lines
   }
-  
+
   public mutating func appendLine(_ line: AttributedString) {
     lines.append(line)
   }
-  
+
   public mutating func appendLine(_ line: String) {
     lines.append(AttributedString(line))
   }
-  
+
   public mutating func append(_ other: MultiLineAttributedString) {
     if lines.isEmpty {
       lines = other.lines
@@ -294,15 +249,15 @@ public struct MultiLineAttributedString {
       }
     }
   }
-  
+
   public func repeated(_ count: Int) -> MultiLineAttributedString {
     var result = MultiLineAttributedString()
-    for _ in 0..<count {
+    for _ in 0 ..< count {
       result.append(self)
     }
     return result
   }
-  
+
   public var attributedString: AttributedString {
     lines.reduce(into: AttributedString()) { result, line in
       if !result.characters.isEmpty {
@@ -311,7 +266,7 @@ public struct MultiLineAttributedString {
       result += line
     }
   }
-  
+
   // New method to append to an existing AttributedString
   public func appendTo(_ attrString: inout AttributedString, addsLineBreak: Bool = true) {
     for (index, line) in lines.enumerated() {
@@ -324,12 +279,12 @@ public struct MultiLineAttributedString {
       attrString += AttributedString("\n")
     }
   }
-  
+
   public var description: String {
     lines.map { $0.description }.joined(separator: "\n")
   }
-  
-  
+
+
 }
 
 //public extension MultiLineAttributedString {
