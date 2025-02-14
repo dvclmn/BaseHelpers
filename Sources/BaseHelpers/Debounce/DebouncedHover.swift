@@ -11,12 +11,12 @@ public struct DebouncedHoverViewModifier: ViewModifier {
   @State private var isHovering = false
   let seconds: TimeInterval
   let onHoverChange: (Bool) -> Void
-  
+
   public init(seconds: TimeInterval, onHoverChange: @escaping (Bool) -> Void) {
     self.seconds = seconds
     self.onHoverChange = onHoverChange
   }
-  
+
   public func body(content: Content) -> some View {
     content
       .onHover { hovering in
@@ -35,8 +35,10 @@ public struct DebouncedHoverViewModifier: ViewModifier {
   }
 }
 
-public extension View {
-  func debouncedHover(seconds: TimeInterval = 0.2, perform action: @escaping (Bool) -> Void) -> some View {
+extension View {
+  public func debouncedHover(
+    seconds: TimeInterval = 0.2, perform action: @escaping (Bool) -> Void
+  ) -> some View {
     modifier(DebouncedHoverViewModifier(seconds: seconds, onHoverChange: action))
   }
 }

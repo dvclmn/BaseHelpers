@@ -14,7 +14,6 @@ func floatToDecimal<T: BinaryFloatingPoint>(value: T, places: Int) -> String {
   return String(formatted)
 }
 
-
 public extension Double {
   
   var toDecimal: String { toDecimal() }
