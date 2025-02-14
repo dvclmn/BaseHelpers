@@ -102,86 +102,8 @@ extension AttributedString {
     return string.split(separator: "\n", omittingEmptySubsequences: false)
       .map { String($0) }
   }
-}
+  
 
-
-//
-//extension AttributedString {
-//  func getAllRangesParallel(matching pattern: Regex<Substring>) -> [Range<AttributedString.Index>] {
-//    let string = String(self.characters)
-//    let chunkSize = max(1000, string.count / ProcessInfo.processInfo.activeProcessorCount)
-//
-//    let ranges = string.chunks(ofCount: chunkSize).parallelMap { chunk in
-//      string.ranges(of: pattern, range: chunk.startIndex..<chunk.endIndex)
-//    }.flatMap { $0 }
-//
-//    return ranges.compactMap { self.range(of: string[$0]) }
-//  }
-//}
-//
-//extension Sequence {
-//  func parallelMap<T>(_ transform: @escaping (Element) -> T) -> [T] {
-//    let result = Array<T?>(repeating: nil, count: self.underestimatedCount)
-//    DispatchQueue.concurrentPerform(iterations: result.count) { idx in
-//      result[idx] = transform(self[self.index(self.startIndex, offsetBy: idx)])
-//    }
-//    return result.compactMap { $0 }
-//  }
-//  }
-
-//
-//extension AttributedString {
-//
-//  func getAllRanges(matching pattern: Regex<Substring>) -> [AttributedRange] {
-//
-//    let string = String(self.characters)
-//    let matches = string.matches(of: pattern)
-//
-//    var ranges: [AttributedRange] = []
-//
-//    var searchStartIndex = self.startIndex
-//
-//    for match in matches {
-//      let matchString = String(match.output)
-//
-//      while true {
-//        guard let matchStartIndex = self.index(of: matchString, from: searchStartIndex) else {
-//          break // No more matches found
-//        }
-//
-//        let matchEndIndex = self.index(matchStartIndex, offsetByCharacters: matchString.count)
-//
-//        ranges.append(matchStartIndex..<matchEndIndex)
-//
-//        // Move the search start index just past this match
-//        searchStartIndex = self.index(afterCharacter: matchStartIndex)
-//
-//        // If we've reached the end of the string, break
-//        if searchStartIndex >= self.endIndex {
-//          break
-//        }
-//      }
-//    }
-//
-//    return ranges
-//  }
-//
-//  private func index(of substring: String, from startIndex: AttributedString.Index) -> AttributedString.Index? {
-//    var currentIndex = startIndex
-//    while currentIndex < self.endIndex {
-//      let endIndex = self.index(currentIndex, offsetByCharacters: substring.count)
-//      let subAttString = self[currentIndex..<endIndex]
-//      if String(subAttString.characters) == substring {
-//        return currentIndex
-//      }
-//      currentIndex = self.index(afterCharacter: currentIndex)
-//    }
-//    return nil
-//  }
-//}
-
-
-extension AttributedString {
   //  var addLineBreak: AttributedString {
   //
   //    var current: AttributedString = self
