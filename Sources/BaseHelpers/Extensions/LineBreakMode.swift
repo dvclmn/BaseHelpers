@@ -1,8 +1,8 @@
 //
-//  NSLineBreakMode.swift
+//  LineBreakMode.swift
 //  Collection
 //
-//  Created by Dave Coleman on 9/10/2024.
+//  Created by Dave Coleman on 14/2/2025.
 //
 
 #if canImport(AppKit)
@@ -10,7 +10,7 @@
 import AppKit
 
 public extension NSLineBreakMode {
-
+  
   var displayName: String {
     switch self {
       case .byTruncatingTail: return "Tail Truncation"

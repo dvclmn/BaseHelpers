@@ -38,13 +38,6 @@ public struct CharacterPattern: PatternComponent {
   }
 }
 
-//extension ForEach {
-//  init(@PatternBuilder _ builder: () -> [PatternComponent]) {
-//    self.components = builder()
-//  }
-//}
-
-
 public extension String {
   static func pattern(totalCount: Int, @PatternBuilder _ builder: () -> [PatternComponent]) -> String {
     var result = ""

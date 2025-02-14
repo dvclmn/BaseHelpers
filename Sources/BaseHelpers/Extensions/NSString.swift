@@ -2,7 +2,7 @@
 //  NSString.swift
 //  Collection
 //
-//  Created by Dave Coleman on 17/12/2024.
+//  Created by Dave Coleman on 14/2/2025.
 //
 
 #if os(macOS)
@@ -16,6 +16,3 @@ public extension NSString {
   }
 }
 #endif
-
-
-

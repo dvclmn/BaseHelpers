@@ -5,7 +5,6 @@
 //  Created by Dave Coleman on 14/9/2024.
 //
 
-
 public enum WordWrapStrategy: Sendable {
   case hyphenate
   case wrap

@@ -7,7 +7,6 @@
 
 
 import AppKit
-//import NSUI
 
 public typealias Attributes = [NSAttributedString.Key: Any]
 
@@ -43,27 +42,7 @@ public struct AttributeSet: ExpressibleByDictionaryLiteral {
   }
 }
 
-//public extension AttributeSet {
-//  
-//  static let white: AttributeSet = [
-//    .foregroundColor: NSUIColor.label,
-//    .backgroundColor: NSUIColor.clear
-//  ]
-//  
-//  static let highlighter: AttributeSet = [
-//    .foregroundColor: NSUIColor.yellow,
-//    .backgroundColor: NSUIColor.orange.withAlphaComponent(0.6)
-//  ]
-//  
-//  static let codeBlock: AttributeSet = [
-//    .foregroundColor: NSUIColor.white,
-//    .backgroundColor: NSUIColor.darkGray,
-//    .font: NSUIFont.monospacedSystemFont(ofSize: 12, weight: .regular)
-//  ]
-//}
-
-extension AttributeSet: Sequence {
-  
+extension AttributeSet: Sequence {  
   public func makeIterator() -> Dictionary<NSAttributedString.Key, Any>.Iterator {
     return attributes.makeIterator()
   }

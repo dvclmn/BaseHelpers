@@ -82,7 +82,6 @@ public struct TwoFingerPanModifier: ViewModifier {
   }
 }
 
-
 extension View {
   public func panTrackpadGesture(
     _ panAmount: Binding<CGPoint>,

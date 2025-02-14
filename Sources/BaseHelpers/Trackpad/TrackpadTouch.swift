@@ -9,7 +9,6 @@
 import SwiftUI
 import AppKit
 
-
 public protocol AppKitTouchesViewDelegate: AnyObject {
   /// Provides `.touching` touches only.
   func touchesView(_ view: AppKitTouchesView, didUpdateTouchingTouches touches: Set<NSTouch>)
