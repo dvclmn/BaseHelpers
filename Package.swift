@@ -25,20 +25,8 @@ let package = Package(
         "Shaders",
       ]
     ),
-    
-    /// Networking
-    .library(
-      name: "Networking",
-      targets: [
-        "APIHandler",
-      ]
-    ),
-    
   ],
-  dependencies: [
-    .package(url: "https://github.com/gohanlon/swift-memberwise-init-macro.git", from: "0.5.0"),
-    .package(url: "https://github.com/evgenyneu/keychain-swift.git", from: "24.0.0"),
-  ],
+  dependencies: [],
   
   targets: [
     /// Styles
@@ -48,13 +36,6 @@ let package = Package(
     /// Helpers
     .target(name: "BaseHelpers"),
     .target(name: "Shaders"),
-    
-    /// Networking
-    .target(name: "APIHandler", dependencies: [
-      "BaseHelpers",
-      .product(name: "MemberwiseInit", package: "swift-memberwise-init-macro"),
-      .product(name: "KeychainSwift", package: "keychain-swift"),
-    ]),
     
   ]
 )
