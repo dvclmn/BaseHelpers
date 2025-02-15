@@ -9,7 +9,6 @@ import Foundation
 
 // MARK: - Icons
 public enum Icons: String, CaseIterable, Identifiable, Codable, Equatable {
-    
     case stats              = "chart.dots.scatter"
     case statsAlt           = "chart.pie"
     case refresh            = "arrow.triangle.2.circlepath"
@@ -127,8 +126,6 @@ public enum Icons: String, CaseIterable, Identifiable, Codable, Equatable {
     case hornBlast          = "horn.blast"
     case palette            = "paintpalette"
     case plane              = "paperplane"
-    
-
     
     // Tags
     case tag            = "tag"

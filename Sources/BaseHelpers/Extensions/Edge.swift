@@ -7,14 +7,14 @@
 
 import SwiftUI
 
-public extension Edge {
-  
-  static let zero: Double = 0.00
-  static let quarter: Double = 0.25
-  static let halfway: Double = 0.5
-  static let full: Double = 1.0
-  
-  var off: UnitPoint {
+extension Edge {
+
+  public static let zero: Double = 0.00
+  public static let quarter: Double = 0.25
+  public static let halfway: Double = 0.5
+  public static let full: Double = 1.0
+
+  public var off: UnitPoint {
     switch self {
       case .top:
         UnitPoint(x: Edge.halfway, y: Edge.zero)
@@ -26,12 +26,12 @@ public extension Edge {
         UnitPoint(x: Edge.full, y: Edge.halfway)
     }
   }
-  
-  var on: UnitPoint {
-    UnitPoint.halfway
+
+  public var on: UnitPoint {
+    UnitPoint(x: Edge.halfway, y: Edge.halfway)
   }
-  
-  var onQuarter: UnitPoint {
+
+  public var onQuarter: UnitPoint {
     switch self {
       case .top:
         UnitPoint(x: Edge.halfway, y: Edge.quarter)
@@ -43,9 +43,9 @@ public extension Edge {
         UnitPoint(x: Edge.quarter, y: Edge.halfway)
     }
   }
-  
-  
-  var name: String {
+
+
+  public var name: String {
     switch self {
       case .top: "Top"
       case .leading: "Leading"
@@ -53,24 +53,24 @@ public extension Edge {
       case .trailing: "Trailing"
     }
   }
-  
-  var axis: Axis {
+
+  public var axis: Axis {
     switch self {
       case .top, .bottom: .vertical
       case .leading, .trailing: .horizontal
     }
   }
 
-  var alignment: Alignment {
+  public var alignment: Alignment {
     switch self {
       case .top: .top
       case .bottom: .bottom
       case .leading: .leading
       case .trailing: .trailing
-        
+
     }
   }
-  var edgeSet: Edge.Set {
+  public var edgeSet: Edge.Set {
     switch self {
       case .top: .top
       case .leading: .leading
@@ -79,8 +79,8 @@ public extension Edge {
     }
   }
 
-  
-  var alignmentOpposite: Alignment {
+
+  public var alignmentOpposite: Alignment {
     switch self {
       case .top: .bottom
       case .bottom: .top

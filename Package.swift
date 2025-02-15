@@ -23,7 +23,6 @@ let package = Package(
       targets: [
         "BaseHelpers",
         "Shaders",
-//        "Shortcuts",
       ]
     ),
     
@@ -56,7 +55,6 @@ let package = Package(
       .product(name: "MemberwiseInit", package: "swift-memberwise-init-macro"),
       .product(name: "KeychainSwift", package: "keychain-swift"),
     ]),
-
     
   ]
 )

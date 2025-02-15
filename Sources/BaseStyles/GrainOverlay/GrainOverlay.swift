@@ -11,7 +11,7 @@ import SwiftUI
 // MARK: - Grain overlay
 public struct GrainOverlay: ViewModifier {
   var opacity: Double
-  
+
   public func body(content: Content) -> some View {
     content
       .overlay(
@@ -23,11 +23,11 @@ public struct GrainOverlay: ViewModifier {
           .allowsHitTesting(false)
           .ignoresSafeArea()
       )
-    
+
   }
 }
-public extension View {
-  func grainOverlay(
+extension View {
+  public func grainOverlay(
     opacity: Double = 0.4
   ) -> some View {
     self.modifier(
