@@ -13,38 +13,37 @@ public enum TrimMethod {
 }
 
 public struct MultilineString {
-  
+
   private var grid: [[Character]]
 
   public init(_ grid: [[Character]]) {
     self.grid = grid
   }
-  
+
   public init(_ string: String) {
     self.init(string.lines.map { Array($0) })
   }
 
-  
+
 }
 
-public extension MultilineString {
-  
-  
-  var string: String {
+extension MultilineString {
+
+
+  public var string: String {
     grid.map { String($0) }.joined(separator: "\n")
   }
-  
-  
-  
-  var height: Int {
-    return grid.count
+
+
+  public var height: Int {
+    grid.count
   }
-  
-  var width: Int {
-    return grid.map { $0.count }.max() ?? 0
+
+  public var width: Int {
+    grid.map { $0.count }.max() ?? 0
   }
-  
-  subscript(row: Int) -> [Character] {
+
+  public subscript(row: Int) -> [Character] {
     get {
       guard row < grid.count else { return [] }
       return grid[row]
@@ -57,9 +56,9 @@ public extension MultilineString {
       }
     }
   }
-  
-  var isEmpty: Bool {
-    return grid.isEmpty || grid.allSatisfy { $0.isEmpty }
+
+  public var isEmpty: Bool {
+    grid.isEmpty || grid.allSatisfy { $0.isEmpty }
   }
 
 }
@@ -68,7 +67,7 @@ extension MultilineString: ExpressibleByArrayLiteral {
   public init(arrayLiteral elements: [Character]...) {
     self.grid = elements
   }
-  
+
 }
 
 extension MultilineString: CustomStringConvertible {
@@ -78,23 +77,22 @@ extension MultilineString: CustomStringConvertible {
 }
 
 extension MultilineString: Sequence {
-  
+
   public func makeIterator() -> IndexingIterator<[[Character]]> {
-    return grid.makeIterator()
+    grid.makeIterator()
   }
-  
+
   public func map<T>(_ transform: ([Character]) -> T) -> [T] {
-    return grid.map(transform)
+    grid.map(transform)
   }
-  
+
   public func enumerated() -> EnumeratedSequence<[[Character]]> {
-    return grid.enumerated()
+    grid.enumerated()
   }
-  
-  
-  
+
+
   mutating func append(_ row: [Character]) {
     grid.append(row)
   }
-  
+
 }
