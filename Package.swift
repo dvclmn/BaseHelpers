@@ -10,33 +10,15 @@ let package = Package(
     .macOS("14.0")
   ],
   products: [
-    
-    /// Styles
-    .library(name: "BaseStyles", targets: [
-      "BaseStyles",
-      "Grainient"
-    ]),
-
-    /// Helpers
     .library(
       name: "BaseHelpers",
-      targets: [
-        "BaseHelpers",
-        "Shaders",
-      ]
+      targets: ["BaseHelpers"]
     ),
   ],
   dependencies: [],
   
   targets: [
-    /// Styles
-    .target(name: "BaseStyles", resources: [.copy("Assets.xcassets")]),
-    .target(name: "Grainient", dependencies: ["BaseStyles"]),
-
-    /// Helpers
     .target(name: "BaseHelpers"),
-    .target(name: "Shaders"),
-    
   ]
 )
 
