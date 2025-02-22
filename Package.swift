@@ -4,7 +4,7 @@ import PackageDescription
 import CompilerPluginSupport
 
 let package = Package(
-  name: "Collection",
+  name: "BaseHelpers",
   platforms: [
     .iOS("17.0"),
     .macOS("14.0")
