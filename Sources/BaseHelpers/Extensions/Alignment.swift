@@ -7,9 +7,9 @@
 
 import SwiftUI
 
-public extension Alignment {
+extension Alignment {
 
-  var displayName: String {
+  public var displayName: String {
     switch self {
       case .topLeading: "Top Leading"
       case .top: "Top"
@@ -20,12 +20,11 @@ public extension Alignment {
       case .bottomLeading: "Bottom Leading"
       case .leading: "Leading"
       case .center: "Center"
-      default:
-        "Unknown"
+      default: "Unknown"
     }
   }
-  
-  var opposite: Alignment {
+
+  public var opposite: Alignment {
     switch self {
       case .topLeading: .bottomTrailing
       case .top: .bottom
@@ -41,15 +40,14 @@ public extension Alignment {
   }
 }
 
-public extension HorizontalAlignment {
-  var displayName: String {
+extension HorizontalAlignment {
+  public var displayName: String {
     switch self {
       case .leading: "Leading"
       case .center: "Center"
       case .trailing: "Trailing"
       case .listRowSeparatorLeading: "List Row Separator Leading"
       case .listRowSeparatorTrailing: "List Row Separator Trailing"
-
       default: "Unknown"
     }
   }

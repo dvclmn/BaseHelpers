@@ -5,29 +5,26 @@
 //  Created by Dave Coleman on 31/8/2024.
 //
 
-public extension Array where Element: Equatable {
-  func indexOf(_ item: Element?) -> Int? {
-    
-    if let item = item {
-      return self.firstIndex(of: item)
-    } else {
-      return nil
-    }
-  }
+extension Array where Element: Equatable {
   
-  func nextIndex(after item: Element?) -> Int? {
+  public func indexOf(_ item: Element?) -> Int? {
+    guard let item = item else { return nil }
+    return self.firstIndex(of: item)
+  }
+
+  public func nextIndex(after item: Element?) -> Int? {
     guard let currentIndex = self.indexOf(item) else { return nil }
     let nextIndex = currentIndex + 1
     return nextIndex < self.count ? nextIndex : nil
   }
-  
-  func previousIndex(before item: Element?) -> Int? {
+
+  public func previousIndex(before item: Element?) -> Int? {
     guard let currentIndex = self.indexOf(item) else { return nil }
     let previousIndex = currentIndex - 1
     return previousIndex >= 0 ? previousIndex : nil
   }
-  
-  func secondToLast() -> Element? {
+
+  public func secondToLast() -> Element? {
     if self.count < 2 {
       return nil
     }
@@ -35,4 +32,3 @@ public extension Array where Element: Equatable {
     return self[index]
   }
 }
-
