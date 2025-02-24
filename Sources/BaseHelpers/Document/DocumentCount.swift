@@ -6,32 +6,30 @@
 //
 
 #if canImport(AppKit)
-import SwiftUI
+  import SwiftUI
 
-public protocol Documentable: Sendable, Codable, Equatable, Hashable {}
+  public protocol Documentable: Sendable, Codable, Equatable, Hashable {}
 
-public extension EnvironmentValues {
-  @Entry var documentCount: DocumentMonitor = .init()
-}
+    extension EnvironmentValues {
+      @Entry public var documentCount: DocumentMonitor = .init()
+    }
 
 
-@Observable
-public final class DocumentMonitor {
-  
-  public var count: Int = 0
+  @Observable
+  public final class DocumentMonitor: Sendable {
 
-  public init() {
-    updateCount()
+    public var count: Int = 0
+
+    nonisolated public init() {
+      updateCount()
+    }
+
+    public var multipleOpen: Bool {
+      count > 1
+    }
+    
+    private func updateCount() {
+      self.count = NSDocumentController.shared.documents.count
+    }
   }
-  
-  public var multipleOpen: Bool {
-    count > 1
-  }
-  private func updateCount() {
-//    Task { @MainActor in
-    self.count = NSDocumentController.shared.documents.count
-//    }
-  }
-}
 #endif
-

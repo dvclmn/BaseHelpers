@@ -9,19 +9,22 @@ import Foundation
 import SwiftUI
 
 @MainActor
-public final class Debouncer<T: Equatable> {
+public final class Debouncer<T: Equatable & Sendable> {
   
   /// The current (debounced) value.
   ///
   /// When updated to a new, different value, this property not only triggers the
   /// `valueChanged` callback (if set) but also yields the new value on `asyncStream`.
+  /// 
   public private(set) var value: T {
     didSet {
       guard oldValue != value else { return }
-      // Notify observers via the callback.
-      valueChanged?(value)
-      // Yield to the asynchronous stream.
-      streamContinuation?.yield(value)
+      /// Copy the current value to a local constant
+      let safeValue = value
+      /// Notify observers via the callback.
+      valueChanged?(safeValue)
+      /// Yield to the asynchronous stream.
+      streamContinuation?.yield(safeValue)
     }
   }
   
