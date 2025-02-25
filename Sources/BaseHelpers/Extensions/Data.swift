@@ -20,15 +20,20 @@ extension Data {
   }
 
   public var debugString: String {
-    do {
-      let jsonObject = try JSONSerialization.jsonObject(with: self, options: [])
-      let prettyData = try JSONSerialization.data(
-        withJSONObject: jsonObject,
-        options: [.prettyPrinted, .sortedKeys]
-      )
-      return String(data: prettyData, encoding: .utf8) ?? "Couldn't pretty print JSON"
-    } catch {
-      return String(data: self, encoding: .utf8) ?? "Could not decode data as UTF-8 string"
+    if let jsonString = String(data: self, encoding: .utf8) {
+      /// Attempt to pretty-print if it's JSON
+      if let jsonObject = try? JSONSerialization.jsonObject(with: self, options: []),
+        let prettyData = try? JSONSerialization.data(
+          withJSONObject: jsonObject,
+          options: [.prettyPrinted, .sortedKeys]
+        ),
+        let prettyString = String(data: prettyData, encoding: .utf8)
+      {
+        return prettyString
+      }
+      /// Fallback to raw string if not JSON
+      return jsonString
     }
+    return "Unable to decode data as UTF-8 string."
   }
 }
