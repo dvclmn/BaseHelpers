@@ -11,6 +11,26 @@ public extension TestStrings {
   
   struct Markdown {
     
+    public static let smallCodeBlock: String = """
+    
+    ```
+    
+    let highlightr = Highlightr()
+    highlightr?.setTheme(to: "xcode-dark-butts")
+    
+    ```
+    
+    And then these words here. If you would like to `contribute to the development` of Highlightr, please follow the guidelines outlined in the CONTRIBUTING.md file in the GitHub repository.
+    
+    ```swift
+    
+    # Python program to find the sum of natural using recursive function ram to find the sum of natural using recursive function ram to find the sum of natural using recursive function ram to find the sum of natural using recursive function
+    
+    def recur_sum(n):
+    if n <= 1:
+    ```
+    """
+    
     public static let codeBlocks: String = """
     
     Some Swift code:

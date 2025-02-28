@@ -12,12 +12,12 @@ extension Axis {
   /// - Parameter size: The CGSize to extract the dimension from
   /// - Returns: The appropriate dimension (width for vertical, height for horizontal)
 #warning("DragToSelect wants this to be horizontal == width, vertical == height. Other domains may have different requirements, which needs to be addressed")
-  public func dimension(from size: CGSize) -> CGFloat {
+  public func dimension(from size: CGSize, isPerpendicular: Bool = false) -> CGFloat {
     switch self {
       case .horizontal:
-        return size.width
+        return isPerpendicular ? size.height : size.width
       case .vertical:
-        return size.height
+        return isPerpendicular ? size.width : size.height
     }
   }
 
