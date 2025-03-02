@@ -5,8 +5,12 @@
 //  Created by Dave Coleman on 2/9/2024.
 //
 
+#if canImport(UIKit)
+import UIKit
+#elseif canImport(AppKit)
 import AppKit
-//import Rearrange
+#endif
+
 
 //@MemberwiseInit(.public)
 public struct Markdown {
@@ -118,3 +122,4 @@ extension Markdown.Ranges: CustomStringConvertible {
 //    return result
 //  }
 //}
+

@@ -5,25 +5,22 @@
 //  Created by Dave Coleman on 26/2/2025.
 //
 
-#if os(macOS)
-import AppKit
-
-
+import NSUI
 
 extension Markdown.Syntax {
   
-  public var defaultColor: NSColor {
+  public var defaultColor: NSUIColor {
     switch self {
-      case .quoteBlock: .labelColor
-      case .list: .labelColor
+      case .quoteBlock: .label
+      case .list: .label
       case .codeBlock: .systemBrown
-      case .heading: .textColor
+      case .heading: .label
       case .inlineCode: .systemBrown
       case .italic: .systemIndigo
       case .bold: .systemMint
-      case .link: .labelColor
-      case .image: .labelColor
-      case .body: .labelColor
+      case .link: .label
+      case .image: .label
+      case .body: .label
       case .boldItalic: .systemGray
       case .strikethrough: .systemGray
       case .highlight: .systemOrange
@@ -57,4 +54,3 @@ extension Markdown.Syntax {
 
 }
 
-#endif

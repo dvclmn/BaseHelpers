@@ -7,16 +7,16 @@
 
 import Foundation
 import SwiftUI
-
+import NSUI
 
 extension Color {
   public func blend(with other: Color, percentage: Double) -> Color {
-    Color(nsColor: NSColor(self).blend(with: NSColor(other), percentage: percentage))
+    Color(nsColor: NSUIColor(self).blend(with: NSUIColor(other), percentage: percentage))
   }
 }
 
-extension NSColor {
-  public func blend(with other: NSColor, percentage: Double) -> NSColor {
+extension NSUIColor {
+  public func blend(with other: NSUIColor, percentage: Double) -> NSUIColor {
     let percentage = max(min(percentage, 1), 0)
     switch percentage {
       case 0: return self
@@ -73,17 +73,17 @@ extension NSColor {
 ///     }
 /// }
 
-#if canImport(AppKit)
-
-import AppKit
+//#if canImport(AppKit)
+//
+//import AppKit
 
 public extension Color {
-  var nsColour: NSColor {
-    NSColor(self)
+  var nsColour: NSUIColor {
+    NSUIColor(self)
   }
 }
 
-#endif
+//#endif
 
 public extension Color {
   

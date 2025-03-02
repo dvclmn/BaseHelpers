@@ -5,9 +5,7 @@
 //  Created by Dave Coleman on 26/2/2025.
 //
 
-#if os(macOS)
-import AppKit
-
+import NSUI
 
 public typealias FontPresetGroup = [FontStyleType: FontConfig]
 
@@ -21,8 +19,8 @@ public enum FontStyleType: CaseIterable {
   public func preset(withSize size: CGFloat) -> FontConfig {
     switch self {
       case .bold: FontConfig.system(size: size, weight: .bold)
-      case .italic: FontConfig.system(size: size, traits: .italic)
-      case .boldItalic: FontConfig.system(size: size, weight: .bold, traits: .italic)
+      case .italic: FontConfig.system(size: size, traits: .traitItalic)
+      case .boldItalic: FontConfig.system(size: size, weight: .bold, traits: .traitItalic)
       case .body: FontConfig.system(size: size)
       case .monospaced: FontConfig.system(size: size, design: .monospaced)
     }
@@ -37,4 +35,3 @@ public enum FontStyleType: CaseIterable {
   }
 }
 
-#endif

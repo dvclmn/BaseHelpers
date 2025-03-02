@@ -5,12 +5,7 @@
 //  Created by Dave Coleman on 26/2/2025.
 //
 
-#if os(iOS)
-import UIKit
-#elseif os(macOS)
-import AppKit
-#endif
-
+import NSUI
 
 extension MarkdownTheme.Fonts {
   public subscript(type: Markdown.Syntax) -> FontConfig {
@@ -26,7 +21,7 @@ extension MarkdownTheme.Fonts {
     return copy
   }
   
-  public func with(_ type: Markdown.Syntax, weight: NSFont.Weight) -> Self {
+  public func with(_ type: Markdown.Syntax, weight: NSUIFont.Weight) -> Self {
     var copy = self
     var fontConfig = copy[type]
     fontConfig.setWeight(weight)

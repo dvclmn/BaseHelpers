@@ -181,74 +181,74 @@ extension Markdown {
     }
 
 
-    public var shortcuts: [KBShortcut] {
-      switch self {
-        case .heading(let level):
-          return [
-            KBShortcut(
-              .character(Character("\(level)")),
-              modifiers: [.command]
-            )
-          ]
-
-        case .bold:
-          return [
-            KBShortcut(
-              .character("b"),
-              modifiers: [.command],
-              label: KBShortcut.Label(title: self.name, icon: "bold")
-            )
-          ]
-        case .italic:
-          return [
-            KBShortcut(
-              .character("i"),
-              modifiers: [.command],
-              label: KBShortcut.Label(title: self.name, icon: "italic")
-            )
-          ]
-        case .boldItalic:
-          return [
-            KBShortcut(
-              .character("b"),
-              modifiers: [.command, .shift]
-            )
-          ]
-        case .inlineCode:
-          return [
-            KBShortcut(
-              .character("`"),
-              label: KBShortcut.Label(
-                title: self.name, icon: "chevron.left.forwardslash.chevron.right")
-            )
-          ]
-        case .highlight:
-          return [
-            KBShortcut(
-              .character("h"),
-              modifiers: [.command]
-            )
-          ]
-        case .strikethrough:
-          return [
-            KBShortcut(
-              .character("s"),
-              modifiers: [.command]
-            )
-          ]
-
-        default:
-          return []
-      }
-    }
-
-
-    public static func findMatchingSyntax(for shortcut: KBShortcut) -> Markdown.Syntax? {
-      for syntax in Markdown.Syntax.allCases where syntax.shortcuts.contains(shortcut) {
-        return syntax
-      }
-      return nil
-    }
+//    public var shortcuts: [KBShortcut] {
+//      switch self {
+//        case .heading(let level):
+//          return [
+//            KBShortcut(
+//              .character(Character("\(level)")),
+//              modifiers: [.command]
+//            )
+//          ]
+//
+//        case .bold:
+//          return [
+//            KBShortcut(
+//              .character("b"),
+//              modifiers: [.command],
+//              label: KBShortcut.Label(title: self.name, icon: "bold")
+//            )
+//          ]
+//        case .italic:
+//          return [
+//            KBShortcut(
+//              .character("i"),
+//              modifiers: [.command],
+//              label: KBShortcut.Label(title: self.name, icon: "italic")
+//            )
+//          ]
+//        case .boldItalic:
+//          return [
+//            KBShortcut(
+//              .character("b"),
+//              modifiers: [.command, .shift]
+//            )
+//          ]
+//        case .inlineCode:
+//          return [
+//            KBShortcut(
+//              .character("`"),
+//              label: KBShortcut.Label(
+//                title: self.name, icon: "chevron.left.forwardslash.chevron.right")
+//            )
+//          ]
+//        case .highlight:
+//          return [
+//            KBShortcut(
+//              .character("h"),
+//              modifiers: [.command]
+//            )
+//          ]
+//        case .strikethrough:
+//          return [
+//            KBShortcut(
+//              .character("s"),
+//              modifiers: [.command]
+//            )
+//          ]
+//
+//        default:
+//          return []
+//      }
+//    }
+//
+//
+//    public static func findMatchingSyntax(for shortcut: KBShortcut) -> Markdown.Syntax? {
+//      for syntax in Markdown.Syntax.allCases where syntax.shortcuts.contains(shortcut) {
+//        return syntax
+//      }
+//      return nil
+//    }
 
 
   }

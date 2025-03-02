@@ -5,11 +5,7 @@
 //  Created by Dave Coleman on 26/2/2025.
 //
 
-#if os(iOS)
-import UIKit
-#elseif os(macOS)
-import AppKit
-#endif
+import NSUI
 
 /// Goal: Incremental(?) configuration. Basically being able to override
 /// a default with a single new declaration any time.
@@ -35,7 +31,7 @@ import AppKit
 ///
 /// ```
 
-public typealias MarkdownColorMap = [Markdown.Syntax: NSColor]
+public typealias MarkdownColorMap = [Markdown.Syntax: NSUIColor]
 public typealias MarkdownFontMap = [Markdown.Syntax: FontConfig]
 
 public struct MarkdownTheme {
@@ -70,14 +66,14 @@ extension MarkdownTheme {
   }
 
   /// Set color for a markdown type
-  public func set(_ type: Markdown.Syntax, _ color: NSColor) -> Self {
+  public func set(_ type: Markdown.Syntax, _ color: NSUIColor) -> Self {
     var copy = self
     copy.colors = colors.with(type, color: color)
     return copy
   }
 
   /// Set weight for a markdown type
-  public func set(_ type: Markdown.Syntax, _ weight: NSFont.Weight) -> Self {
+  public func set(_ type: Markdown.Syntax, _ weight: NSUIFont.Weight) -> Self {
     var copy = self
     copy.fonts = fonts.with(type, weight: weight)
     return copy
@@ -114,9 +110,9 @@ extension MarkdownTheme {
 
   // MARK: - Editor Styles
   public struct EditorStyles {
-    public var backgroundColor: BackgroundStyle = .color(.controlBackgroundColor)
-    public var tintColor: NSColor = .controlAccentColor
-    public var cursorColor: NSColor = .controlAccentColor
+    public var backgroundColor: BackgroundStyle = .color(.gray)
+    public var tintColor: NSUIColor = .gray
+    public var cursorColor: NSUIColor = .gray
 
     public static let defaults: EditorStyles = .init()
   }
@@ -141,12 +137,12 @@ extension MarkdownTheme {
 }
 
 extension MarkdownTheme.Colors {
-  public subscript(type: Markdown.Syntax) -> NSColor {
-    get { colours[type] ?? .labelColor }
+  public subscript(type: Markdown.Syntax) -> NSUIColor {
+    get { colours[type] ?? .label }
     set { colours[type] = newValue }
   }
 
-  public func with(_ type: Markdown.Syntax, color: NSColor) -> Self {
+  public func with(_ type: Markdown.Syntax, color: NSUIColor) -> Self {
     var copy = self
     copy[type] = color
     return copy
@@ -156,10 +152,10 @@ extension MarkdownTheme.Colors {
 // MARK: - EditorStyles
 extension MarkdownTheme.EditorStyles {
   public enum BackgroundStyle {
-    case color(NSColor)
+    case color(NSUIColor)
     case noBackground
 
-    public var asUniversalColor: NSColor {
+    public var asUniversalColor: NSUIColor {
       switch self {
         case .color(let color):
           return color

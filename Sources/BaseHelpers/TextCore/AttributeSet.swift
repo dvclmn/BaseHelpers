@@ -5,8 +5,7 @@
 //  Created by Dave Coleman on 30/8/2024.
 //
 
-
-import AppKit
+import NSUI
 
 public typealias Attributes = [NSAttributedString.Key: Any]
 
@@ -23,9 +22,9 @@ public struct AttributeSet: ExpressibleByDictionaryLiteral {
   }
   
   public init(
-    font: NSFont,
-    foreground: NSColor = .labelColor,
-    background: NSColor = .clear,
+    font: NSUIFont,
+    foreground: NSUIColor = .label,
+    background: NSUIColor = .clear,
     additionalAttributes: Attributes = [:]
   ) {
     let baseAttributes: Attributes = [
@@ -47,3 +46,4 @@ extension AttributeSet: Sequence {
     return attributes.makeIterator()
   }
 }
+

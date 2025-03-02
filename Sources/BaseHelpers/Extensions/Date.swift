@@ -26,22 +26,18 @@ extension Date: @retroactive RawRepresentable {
 extension Date {
   // MARK: - Ago Methods
 
-  /// Returns a date `seconds` seconds ago from now.
   public func secondsAgo(_ seconds: TimeInterval) -> Date {
     return Date().addingTimeInterval(-seconds)
   }
 
-  /// Returns a date `minutes` minutes ago from now.
   public func minutesAgo(_ minutes: TimeInterval) -> Date {
     return Date().addingTimeInterval(-minutes * 60)
   }
 
-  /// Returns a date `hours` hours ago from now.
   public func hoursAgo(_ hours: TimeInterval) -> Date {
     return Date().addingTimeInterval(-hours * 3600)
   }
 
-  /// Returns a date `days` days ago from now.
   public func daysAgo(_ days: TimeInterval) -> Date {
     return Date().addingTimeInterval(-days * 86400)
   }

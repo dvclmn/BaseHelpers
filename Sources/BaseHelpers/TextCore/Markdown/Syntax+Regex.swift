@@ -5,7 +5,11 @@
 //  Created by Dave Coleman on 20/8/2024.
 //
 
+#if canImport(UIKit)
+import UIKit
+#elseif canImport(AppKit)
 import AppKit
+#endif
 
 extension Markdown.Syntax {
   
@@ -76,3 +80,4 @@ extension Markdown.Syntax {
     }
   }
 }
+

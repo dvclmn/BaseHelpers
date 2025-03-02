@@ -5,7 +5,9 @@
 //  Created by Dave Coleman on 11/10/2024.
 //
 
+#if canImport(AppKit)
 import AppKit
+
 
 public extension NSTextStorage {
   
@@ -36,3 +38,4 @@ public extension NSTextStorage {
 //    return range.clamped(to: documentLength)
 //  }
 }
+#endif
