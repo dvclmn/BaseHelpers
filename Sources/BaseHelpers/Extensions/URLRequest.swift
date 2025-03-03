@@ -7,6 +7,44 @@
 
 import Foundation
 
+extension URLRequest {
+  public var debugString: String {
+    var components = [String]()
+
+    /// Add URL
+    if let url = self.url?.absoluteString {
+      components.append(url)
+    }
+
+    /// Add headers or a message if none are present
+    if let headers = allHTTPHeaderFields, !headers.isEmpty {
+      headers.forEach { key, value in
+        components.append("  --header \"\(key): \(value)\"")
+      }
+    } else {
+      components.append("  (no headers)")
+    }
+
+    // Add body if present
+    if let httpBody = httpBody, let jsonString = String(data: httpBody, encoding: .utf8) {
+      // Format JSON string for better readability
+      if let data = jsonString.data(using: .utf8),
+        let jsonObject = try? JSONSerialization.jsonObject(with: data, options: []),
+        let prettyData = try? JSONSerialization.data(withJSONObject: jsonObject, options: [.prettyPrinted]),
+        let prettyString = String(data: prettyData, encoding: .utf8)
+      {
+        components.append(prettyString)
+      } else {
+        components.append(jsonString)
+      }
+    } else {
+      components.append("(no body)")
+    }
+
+    return components.joined(separator: "\n")
+  }
+}
+
 //extension URLRequest {
 //  public func prettyPrinted() -> String {
 //
