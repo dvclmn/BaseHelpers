@@ -21,19 +21,23 @@ public extension AttributeContainer {
   }
   
   static var highlighter: AttributeContainer {
-    return quickContainer(with: .black, background: .green)
+    return quickContainer(foreground: .black, background: .green)
   }
   
   static var neonOrangeSoft: AttributeContainer {
-    return quickContainer(with: .black, background: .orange.opacity(0.7))
+    return quickContainer(foreground: .black, background: .orange.opacity(0.7))
   }
   
   static var neonOrange: AttributeContainer {
-    return quickContainer(with: .white, background: .orange.opacity(0.5))
+    return quickContainer(foreground: .white, background: .orange.opacity(0.5))
+  }
+  
+  static var faded: AttributeContainer {
+    return quickContainer(foreground: .white.opacity(0.4), background: .clear)
   }
   
   static var invisible: AttributeContainer {
-    return quickContainer(with: .clear, background: .clear)
+    return quickContainer(foreground: .clear, background: .clear)
   }
   
   static var blackOnWhite: AttributeContainer {
@@ -41,11 +45,11 @@ public extension AttributeContainer {
   }
   
   static var whiteOnBlack: AttributeContainer {
-    return quickContainer(with: .white, background: .black)
+    return quickContainer(foreground: .white, background: .black)
   }
   
   static func quickContainer(
-    with foreground: Color = .black,
+    foreground: Color = .black,
     background: Color = .white
   ) -> AttributeContainer {
     

@@ -13,6 +13,10 @@ public final class AsyncDebouncer {
   public init(interval: Duration = .seconds(0.2)) {
     self.interval = interval
   }
+  
+  public init(interval: Int) {
+    self.interval = Duration.seconds(interval)
+  }
 
   /// Execute a debounced async task that returns a value
   public func execute<T: Sendable>(

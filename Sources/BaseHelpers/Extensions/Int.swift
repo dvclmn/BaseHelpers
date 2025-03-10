@@ -7,21 +7,31 @@
 
 import Foundation
 
-public extension Int {
+extension Int {
+  
+  private static let numberFormatter: NumberFormatter = {
+    let formatter = NumberFormatter()
+    formatter.numberStyle = .decimal
+    return formatter
+  }()
+  
+  public var formattedString: String {
+    return Int.numberFormatter.string(from: NSNumber(value: self)) ?? String(self)
+  }
   /// A Boolean value indicating whether the integer is even.
-  var isEven: Bool {
+  public var isEven: Bool {
     self % 2 == 0
   }
 
-  var string: String {
+  public var string: String {
     String(self)
   }
-  
-  var cgFloat: CGFloat {
+
+  public var cgFloat: CGFloat {
     CGFloat(self)
   }
 
-  func isWithin(_ collection: some Collection) -> Bool {
+  public func isWithin(_ collection: some Collection) -> Bool {
     let startIndex = collection.startIndex
     let endIndex = collection.endIndex
     guard let index = collection.index(startIndex, offsetBy: self, limitedBy: endIndex) else {
@@ -30,46 +40,44 @@ public extension Int {
     return index < endIndex
   }
 
-  func isWithin(_ range: ClosedRange<Int>, isInclusive: Bool = true) -> Bool {
+  public func isWithin(_ range: ClosedRange<Int>, isInclusive: Bool = true) -> Bool {
     guard isInclusive else {
       return self > range.lowerBound && self < range.upperBound
     }
     return self >= range.lowerBound && self <= (range.upperBound - 1)
   }
 
-
-  var columnType: NumberMagnitude {
+  public var columnType: NumberMagnitude {
     let absoluteValue = abs(self)
 
     switch absoluteValue {
-      case 0 ..< 10:
+      case 0..<10:
         return .ones
-      case 10 ..< 100:
+      case 10..<100:
         return .tens
-      case 100 ..< 1000:
+      case 100..<1000:
         return .hundreds
-      case 1000 ..< 10000:
+      case 1000..<10000:
         return .thousands
-      case 10000 ..< 100000:
+      case 10000..<100000:
         return .tenThousands
-      case 100000 ..< 1_000_000:
+      case 100000..<1_000_000:
         return .hundredThousands
-      case 1_000_000 ..< 1_000_000_000:
+      case 1_000_000..<1_000_000_000:
         return .millions
       default:
         return .billions
     }
   }
 
-
-  var numberOfDigits: Int {
+  public var numberOfDigits: Int {
     String(abs(self)).count
   }
 
 }
 
-public extension Int64 {
-  func getString() -> String {
+extension Int64 {
+  public func getString() -> String {
     String(self)
   }
 }
