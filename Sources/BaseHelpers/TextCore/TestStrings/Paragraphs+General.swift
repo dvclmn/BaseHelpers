@@ -195,7 +195,7 @@ extension TestStrings {
     
     This is just a snippet from part of the SwiftDown implementation internals.
     ```swift
-    mutating private func configureStyles(_ theme: MarkdownTheme) {
+    mutating private func configsureStyles(_ theme: MarkdownTheme) {
       
       for mdType in MarkdownNode.MarkdownType.allCases {
         

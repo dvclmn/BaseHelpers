@@ -35,6 +35,8 @@ public typealias MarkdownColorMap = [Markdown.Syntax: NSUIColor]
 public typealias MarkdownFontMap = [Markdown.Syntax: FontConfig]
 
 public struct MarkdownTheme {
+  public var name: String?
+  public var fontSize: CGFloat
   public var colors: Colors
   public var fonts: Fonts
   public var editor: EditorStyles
@@ -42,10 +44,14 @@ public struct MarkdownTheme {
   public static let defaultTheme: MarkdownTheme = .init()
 
   public init(
+    themeName: String? = nil,
+    fontSize: CGFloat = 14,
     colors: Colors = .defaults,
     fonts: Fonts = .defaults,
     editor: EditorStyles = .defaults
   ) {
+    self.name = themeName
+    self.fontSize = fontSize
     self.colors = colors
     self.fonts = fonts
     self.editor = editor
@@ -179,14 +185,14 @@ extension Dictionary where Key == Markdown.Syntax {
   }
 }
 
-extension Dictionary where Key == FontStyleType {
-
-  static var defaultFonts: MarkdownFontMap {
-    var map: MarkdownFontMap = [:]
-
-    for type in Markdown.Syntax.allCases {
-      map[type] = type.defaultFont()
-    }
-    return map
-  }
-}
+//extension Dictionary where Key == FontStyleType {
+//
+//  static var defaultFonts: MarkdownFontMap {
+//    var map: MarkdownFontMap = [:]
+//
+//    for type in Markdown.Syntax.allCases {
+//      map[type] = type.defaultFont()
+//    }
+//    return map
+//  }
+//}

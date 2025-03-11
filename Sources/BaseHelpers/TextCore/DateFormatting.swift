@@ -23,6 +23,7 @@ extension Date {
   public enum Format {
     case date  // Monday, May 29 2025
     case dateAndTime  // Monday, May 29 2025 at 12:36pm
+    case timeDetailed  // May 29 at 12:36:40 pm
     case relative  // Yesterday, May 28 2025
   }
 
@@ -34,6 +35,10 @@ extension Date {
       case .dateAndTime:
         return formatDateAndTime()
 
+      case .timeDetailed:
+        return formatTimeDetailed()
+
+        
       case .relative:
         return formatRelativeDate()
     }
@@ -51,7 +56,17 @@ extension Date {
   /// Formats the date and time: "EEEE, MMMM d yyyy 'at' h:mma"
   private func formatTime() -> String {
     let dateFormatter = DateFormatter()
-    dateFormatter.dateFormat = "'at' h:mma"
+    dateFormatter.dateFormat = "'at' h:mm a"
+    /// Convert to lowercase 'am/pm'
+    return dateFormatter.string(from: self)
+      .replacingOccurrences(of: "AM", with: "am")
+      .replacingOccurrences(of: "PM", with: "pm")
+  }
+  
+  /// Formats the date and time: "EEEE, MMMM d yyyy 'at' h:mma"
+  private func formatTimeDetailed() -> String {
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = "MMMM d 'at' h:mm:ss a"
     /// Convert to lowercase 'am/pm'
     return dateFormatter.string(from: self)
       .replacingOccurrences(of: "AM", with: "am")
@@ -75,7 +90,7 @@ extension Date {
     if calendar.isDateInToday(self) {
       return "Today, \(formatTime())"
     } else if calendar.isDateInYesterday(self) {
-      return "Yesterday, \(formatStandardDate())"
+      return "Yesterday, \(formatTime())"
     } else if let days = components.day, days > 1 && days <= 7 {
       return "\(days) days ago"
     } else {
