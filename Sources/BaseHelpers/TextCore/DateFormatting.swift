@@ -9,52 +9,86 @@ import Foundation
 import SwiftUI
 
 extension Date {
+
+  /// Example usage:
+  ///
+  /// ```
+  /// let date = Calendar.current.date(byAdding: .day, value: -3, to: Date())!
+  /// print(date.format(.relative))  // Output: "3 days ago"
+  ///
+  /// let olderDate = Calendar.current.date(byAdding: .day, value: -10, to: Date())!
+  /// print(olderDate.format(.relative))  // Output: "Tuesday, May 19 2025"
+  ///
+  /// ```
   public enum Format {
-    case date           // Monday, May 29 2025
-    case dateAndTime    // Monday, May 29 2025 at 12:36pm
-    case relative       // Yesterday, May 28 2025
+    case date  // Monday, May 29 2025
+    case dateAndTime  // Monday, May 29 2025 at 12:36pm
+    case relative  // Yesterday, May 28 2025
   }
-  
+
   public func format(_ style: Format) -> String {
-    let dateFormatter = DateFormatter()
-    
     switch style {
       case .date:
-        dateFormatter.dateFormat = "EEEE, MMMM d yyyy"
-        return dateFormatter.string(from: self)
-        
+        return formatStandardDate()
+
       case .dateAndTime:
-        dateFormatter.dateFormat = "EEEE, MMMM d yyyy 'at' h:mma"
-        /// Convert to lowercase 'am/pm'
-        return dateFormatter.string(from: self).replacingOccurrences(of: "AM", with: "am").replacingOccurrences(of: "PM", with: "pm")
-        
+        return formatDateAndTime()
+
       case .relative:
-        /// Handle relative dates like "Today", "Yesterday"
-        let calendar = Calendar.current
-        
-        if calendar.isDateInToday(self) {
-          dateFormatter.dateFormat = "'Today', MMMM d yyyy"
-          return dateFormatter.string(from: self)
-        } else if calendar.isDateInYesterday(self) {
-          dateFormatter.dateFormat = "'Yesterday', MMMM d yyyy"
-          return dateFormatter.string(from: self)
-        } else if calendar.isDateInTomorrow(self) {
-          dateFormatter.dateFormat = "'Tomorrow', MMMM d yyyy"
-          return dateFormatter.string(from: self)
-        } else {
-          dateFormatter.dateFormat = "EEEE, MMMM d yyyy"
-          return dateFormatter.string(from: self)
-        }
+        return formatRelativeDate()
+    }
+  }
+
+  // MARK: - Helper Functions
+
+  /// Formats the date in a standard way: "EEEE, MMMM d yyyy"
+  private func formatStandardDate() -> String {
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = "EEEE, MMMM d yyyy"
+    return dateFormatter.string(from: self)
+  }
+
+  /// Formats the date and time: "EEEE, MMMM d yyyy 'at' h:mma"
+  private func formatTime() -> String {
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = "'at' h:mma"
+    /// Convert to lowercase 'am/pm'
+    return dateFormatter.string(from: self)
+      .replacingOccurrences(of: "AM", with: "am")
+      .replacingOccurrences(of: "PM", with: "pm")
+  }
+  
+  /// Formats the date and time: "EEEE, MMMM d yyyy 'at' h:mma"
+  private func formatDateAndTime() -> String {
+    let date = formatStandardDate()
+    let time = formatTime()
+    
+    return "\(date) \(time)"
+  }
+
+  /// Formats the date in a relative way: "Today", "Yesterday", "2 days ago", or falls back to standard format
+  private func formatRelativeDate() -> String {
+    let calendar = Calendar.current
+    let now = Date()
+    let components = calendar.dateComponents([.day], from: self, to: now)
+
+    if calendar.isDateInToday(self) {
+      return "Today, \(formatTime())"
+    } else if calendar.isDateInYesterday(self) {
+      return "Yesterday, \(formatStandardDate())"
+    } else if let days = components.day, days > 1 && days <= 7 {
+      return "\(days) days ago"
+    } else {
+      return formatStandardDate()
     }
   }
 }
-
 #warning("The below could be revisited one day, when I have the energy. Got way too complicated and messy.")
 //public struct FormatOptions {
 //  var length: DateLength
 //  var components: [DateComponents]
 //  var seperator: Character
-//  
+//
 //  public init(
 //    length: DateLength = .medium,
 //    components: [DateComponents] = [.time, .dayOfWeek],
@@ -64,18 +98,18 @@ extension Date {
 //    self.components = components
 //    self.seperator = seperator
 //  }
-//  
+//
 //  public enum DateComponents {
 //    case time
 //    case dayOfWeek
 //    case year
 //  }
-//  
+//
 //  public enum DateLength {
 //    case short
 //    case medium
 //    case long
-//    
+//
 //    var dayOfWeek: String {
 //      switch self {
 //        case .short:
@@ -86,7 +120,7 @@ extension Date {
 //          "EEEE"
 //      }
 //    }
-//    
+//
 //    var day: String {
 //      switch self {
 //        case .short:
@@ -97,7 +131,7 @@ extension Date {
 //          "dd"
 //      }
 //    }
-//    
+//
 //    var month: String {
 //      switch self {
 //        case .short:
@@ -108,8 +142,8 @@ extension Date {
 //          "MMMM"
 //      }
 //    }
-//    
-//    
+//
+//
 //    var year: String {
 //      switch self {
 //        case .short, .medium, .long:
@@ -117,13 +151,13 @@ extension Date {
 //      }
 //    }
 //  }
-//  
+//
 //}
 //
 //
 //
 //public extension Date {
-//  
+//
 //  // Date Format Cheatsheet:
 //  //
 //  // Day of Week:
@@ -155,7 +189,7 @@ extension Date {
 //  // "E, MMM d, yy"                 -> "Thu, Jul 6, 23"
 //  // "yyyy-MM-dd'T'HH:mm:ss"        -> "2023-07-06T13:34:56"
 //  // "h:mm a 'on' MMMM d, yyyy"     -> "1:34 PM on July 6, 2023"
-//  
+//
 //
 //  /// Wednesday, 12 October, 2024
 //  /// Wed, 12 October, 2024
@@ -165,64 +199,64 @@ extension Date {
 //  /// 12:54pm
 //  ///
 //
-//  
-//  
-//  
-//  
+//
+//
+//
+//
 //  func quickFormat(_ options: FormatOptions) -> AttributedString {
 //
 //    let timeFormatter = DateFormatter()
 //    let dateFormatter = DateFormatter()
-//    
+//
 //    let time = options.components.contains(.time) ? "h:mma" : ""
 //    let seperator = options.components.contains(.time) ? " \(options.seperator) " : ""
 //    let dayOfWeek = options.components.contains(.dayOfWeek) ? "\(options.length.dayOfWeek), " : ""
 //    let day = "\(options.length.day) "
 //    let month = "\(options.length.month) "
 //    let year = options.components.contains(.year) ? options.length.year : ""
-//    
+//
 //    timeFormatter.dateFormat = time
 //    dateFormatter.dateFormat = dayOfWeek + day + month + year
-//    
+//
 //    let timeResult = timeFormatter.string(from: self).replacingOccurrences(of: "AM", with: "am").replacingOccurrences(of: "PM", with: "pm")
 //    let dateResult = dateFormatter.string(from: self)
-//    
+//
 //    var attributedString = AttributedString(timeResult + seperator + dateResult)
 //    attributedString.foregroundColor = .secondary.opacity(0.7)
-//    
+//
 //    if let timeRange = attributedString.range(of: timeResult) {
 //      attributedString[timeRange].foregroundColor = .primary.opacity(0.7)
 //    }
-//    
+//
 //    return attributedString
 //  }
-//  
+//
 //  /// Returns the date formatted as "Thu, July 11, 2024"
 //  var mediumDateFormat: String {
 //    let formatter = DateFormatter()
 //    formatter.dateFormat = "E, MMMM d, yyyy"
 //    return formatter.string(from: self)
 //  }
-//  
+//
 //  /// Returns the date and time formatted as "Thu, July 11, 2024 at 1:34pm"
 //  var mediumDateTimeFormat: String {
 //    let formatter = DateFormatter()
 //    formatter.dateFormat = "E, MMMM d, yyyy 'at' h:mma"
 //    return formatter.string(from: self).replacingOccurrences(of: "AM", with: "am").replacingOccurrences(of: "PM", with: "pm")
 //  }
-//  
+//
 //  /// Returns the date and time formatted as "Updated: Just now" or "Updated: X minutes/hours ago" or "Today, 1:34pm", etc.
 //  var friendlyDateAndTime: String {
 ////  var friendlyDateAndTime: AttributedString {
 //    let now = Date()
 //    let calendar = Calendar.current
 //    let components = calendar.dateComponents([.day, .hour, .minute, .second], from: self, to: now)
-//    
+//
 //    let formatter = DateFormatter()
 //    formatter.locale = Locale.current
-//    
+//
 //    var friendlyPart = ""
-//    
+//
 //    if let seconds = components.second, let minutes = components.minute, let hours = components.hour, let days = components.day {
 //      if seconds < 30 {
 //        friendlyPart = "Just now, "
@@ -250,41 +284,41 @@ extension Date {
 //    } else {
 //      formatter.dateFormat = "EEEE, d MMMM yyyy"
 //    }
-//    
+//
 //    let datePart = formatter.string(from: self).replacingOccurrences(of: "AM", with: "am").replacingOccurrences(of: "PM", with: "pm")
-//    
+//
 //    var attributedString = AttributedString(friendlyPart)
 //    attributedString += AttributedString(datePart)
-//    
+//
 //    if !friendlyPart.isEmpty {
 //      attributedString.foregroundColor = .secondary.opacity(0.7)
-//      
+//
 //      if let dateRange = attributedString.range(of: datePart) {
 //        attributedString[dateRange].foregroundColor = .primary.opacity(0.7)
 //      }
 //    } else {
 //      attributedString.foregroundColor = .primary.opacity(0.7)
 //    }
-//    
+//
 //    return String(attributedString.characters)
 //  }
-//  
-//  
+//
+//
 //  /// Returns the date and time formatted as "1:34pm"
 //  var mediumTimeFormat: String {
-//    
+//
 //    let today = Date.now
 //    var todayString: String = ""
-//    
+//
 //    if today == self {
 //      todayString = "Today at "
 //    }
-//    
+//
 //    let formatter = DateFormatter()
 //    formatter.dateFormat = "\(todayString)h:mma"
 //    return formatter.string(from: self).replacingOccurrences(of: "AM", with: "am").replacingOccurrences(of: "PM", with: "pm")
 //  }
-//  
+//
 //  /// Returns the date formatted as "October 11 2024"
 //  var shortDateFormat: String {
 //    let formatter = DateFormatter()
