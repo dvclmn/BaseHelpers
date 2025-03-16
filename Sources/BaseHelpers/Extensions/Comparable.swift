@@ -8,6 +8,7 @@
 import Foundation
 
 extension Comparable {
+
   public func constrained(_ atLeast: Self, _ atMost: Self) -> Self {
     return min(max(self, atLeast), atMost)
   }
@@ -20,6 +21,8 @@ extension Comparable {
 }
 
 extension Comparable where Self: FloatingPoint {
+  
+  
 
   public func clampedAndFinite(to range: ClosedRange<Self>) -> Self? {
     let validRange = min(range.lowerBound, range.upperBound)...max(range.lowerBound, range.upperBound)

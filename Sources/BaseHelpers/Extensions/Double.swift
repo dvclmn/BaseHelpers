@@ -8,12 +8,7 @@
 import Foundation
 
 extension Double {
-  
-  public var panelOpacity: Double {
-    let opacity = min(0.75, max(0.1, self))
-    return opacity
-  }
-  
+
   /// Adds leading padding to align numbers based on their integer part
   /// - Parameters:
   ///   - maxDigits: Maximum number of digits to pad to

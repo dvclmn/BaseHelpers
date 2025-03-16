@@ -10,6 +10,43 @@
 
 import Foundation
 
+public enum CountStrategy {
+  case showCount(shouldDisplayForSingle: Bool = false)
+  case hideCount
+
+}
+
+
+public func pluralise(
+  _ count: Int,
+  _ word: String,
+  countStrategy: CountStrategy
+) -> String {
+  
+  switch countStrategy {
+    case .showCount(let shouldDisplayForSingle):
+      if count == 1 {
+        return shouldDisplayForSingle ? "\(count.string) \(word)" : word
+      } else {
+        return "\(count.string) \(word)" + "s"
+      }
+    case .hideCount:
+      return word + "s"
+  }
+  
+//  let wordResult: String = includeCount ? "\(count.string) " + word : word
+//  
+//  if count == 1 {
+//    
+//    return wordResult
+//    
+//  } else {
+//    
+//    return wordResult + "s"
+//  }
+}
+
+@available(*, deprecated, message: "Use pluralise(count:word:countStrategy) instead")
 public func pluralise(
   _ count: Int,
   _ word: String,

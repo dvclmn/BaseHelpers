@@ -27,6 +27,14 @@ public extension NSMutableAttributedString {
 
 
 extension AttributedString {
+  
+  public func index(at offset: Int) -> AttributedString.Index? {
+    guard offset >= 0 && offset <= characters.count else {
+      return nil
+    }
+    return index(startIndex, offsetByCharacters: offset)
+  }
+  
   ///
   /// ```
   /// var output = attrString

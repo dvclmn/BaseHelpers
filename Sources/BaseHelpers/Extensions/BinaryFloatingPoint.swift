@@ -21,5 +21,9 @@ extension BinaryFloatingPoint {
     /// Approximate previous Fibonacci number using the inverse of the golden ratio
     return (self + prevFib) / 2 /// Midpoint between current and previous
   }
-
+  
+  public var constrainedOpacity: Self {
+    return min(1.0, max(0.0, self))
+  }
+  
 }
