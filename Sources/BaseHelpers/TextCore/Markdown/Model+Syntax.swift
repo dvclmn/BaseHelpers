@@ -305,7 +305,7 @@ extension Markdown.Syntax {
       .italic,
       .boldItalic,
       .inlineCode,
-      .codeBlock,
+//      .codeBlock,
     ]
   }
 }
