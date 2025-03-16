@@ -18,35 +18,57 @@ public enum FontDescriptor {
 }
 
 public struct FontConfig {
-  public var size: CGFloat
-  public var descriptor: FontDescriptor
-  public var traits: NSUIFontDescriptor.SymbolicTraits
+  public let size: CGFloat
+  public let descriptor: FontDescriptor
+  public let traits: NSUIFontDescriptor.SymbolicTraits
 
   public init(
-    descriptor: FontDescriptor,
     size: CGFloat,
+    descriptor: FontDescriptor,
     traits: NSUIFontDescriptor.SymbolicTraits = []
   ) {
-    self.descriptor = descriptor
     self.size = size
+    self.descriptor = descriptor
     self.traits = traits
   }
 
-  public mutating func setSize(_ newSize: CGFloat) {
-    size = newSize
+  /// Use functions that return new instances instead of mutating
+  public func withSize(_ newSize: CGFloat) -> FontConfig {
+    return FontConfig(size: newSize, descriptor: descriptor, traits: traits)
   }
+  
+//  public mutating func setSize(_ newSize: CGFloat) {
+//    size = newSize
+//  }
 
-  public mutating func setWeight(_ newWeight: NSUIFont.Weight) {
-    /// Preserve the current descriptor type and other properties
+  public func withWeight(_ newWeight: NSUIFont.Weight) -> FontConfig {
     switch descriptor {
       case .system(_, let design):
-        descriptor = .system(weight: newWeight, design: design)
-
-      case .named(let name):
-        /// Need to find a better solution for this
-        print("Warning: Cannot set weight for named font '\(name)'. Weight changes only apply to system fonts.")
+        return FontConfig(
+          size: size,
+          descriptor: .system(weight: newWeight, design: design),
+          traits: traits
+        )
+      case .named:
+        // Return self for named fonts since we can't change the weight
+        return self
     }
   }
+  
+  public func withTraits(_ newTraits: NSUIFontDescriptor.SymbolicTraits) -> FontConfig {
+    return FontConfig(size: size, descriptor: descriptor, traits: newTraits)
+  }
+//  public mutating func setWeight(_ newWeight: NSUIFont.Weight) {
+//    /// Preserve the current descriptor type and other properties
+//    switch descriptor {
+//      case .system(_, let design):
+//        descriptor = .system(weight: newWeight, design: design)
+//
+//      case .named(let name):
+//        /// Need to find a better solution for this
+//        print("Warning: Cannot set weight for named font '\(name)'. Weight changes only apply to system fonts.")
+//    }
+//  }
 
   public static func system(
     size: CGFloat,
@@ -55,8 +77,8 @@ public struct FontConfig {
     traits: NSUIFontDescriptor.SymbolicTraits = []
   ) -> Self {
     Self(
-      descriptor: .system(weight: weight, design: design),
       size: size,
+      descriptor: .system(weight: weight, design: design),
       traits: traits
     )
   }
@@ -67,8 +89,8 @@ public struct FontConfig {
     traits: NSUIFontDescriptor.SymbolicTraits = []
   ) -> Self {
     Self(
-      descriptor: .named(name),
       size: size,
+      descriptor: .named(name),
       traits: traits
     )
   }
@@ -77,8 +99,8 @@ public struct FontConfig {
     withSize size: CGFloat
   ) -> Self {
     Self(
-      descriptor: .default,
       size: size,
+      descriptor: .default,
       traits: []
     )
   }

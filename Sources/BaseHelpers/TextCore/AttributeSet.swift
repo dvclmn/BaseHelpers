@@ -13,6 +13,7 @@ public struct AttributeSet: ExpressibleByDictionaryLiteral {
   
   public var attributes: Attributes
   
+  
   public init(dictionaryLiteral elements: (Attributes.Key, Attributes.Value)...) {
     self.attributes = Dictionary(uniqueKeysWithValues: elements)
   }
@@ -39,6 +40,19 @@ public struct AttributeSet: ExpressibleByDictionaryLiteral {
     get { attributes[key] }
     set { attributes[key] = newValue }
   }
+  
+  public func merging(with other: AttributeSet) -> AttributeSet {
+    AttributeSet(attributes.merging(other.attributes) { (_, new) in new })
+  }
+  
+  /// Add method to convert to AttributeContainer for SwiftUI
+//  public func toAttributeContainer() -> AttributeContainer {
+//    var container = AttributeContainer()
+//    for (key, value) in attributes {
+//      container[key] = value
+//    }
+//    return container
+//  }
 }
 
 extension AttributeSet: Sequence {  
