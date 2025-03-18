@@ -1,0 +1,64 @@
+name: Generate and Deploy Documentation
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:  # Allows manual triggering
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow only one concurrent deployment
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  build-and-deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: macos-latest  # DocC works best on macOS runners
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        
+      - name: Set up Swift
+        uses: swift-actions/setup-swift@v1
+        with:
+          swift-version: '5.10'
+          
+      - name: Build Documentation
+        run: |
+          # Create a temporary build directory
+          mkdir -p .build/documentation
+          
+          # Build the documentation using the DocC plugin
+          swift package --allow-writing-to-directory .build/documentation \
+            generate-documentation --target BaseHelpers \
+            --disable-indexing \
+            --transform-for-static-hosting \
+            --hosting-base-path BaseHelpers \
+            --output-path .build/documentation
+          
+          # Create a docs directory for GitHub Pages
+          mkdir -p ./docs-build
+          cp -r .build/documentation/* ./docs-build/
+          
+          # Create a .nojekyll file to prevent GitHub Pages from processing with Jekyll
+          touch ./docs-build/.nojekyll
+          
+      - name: Setup Pages
+        uses: actions/configure-pages@v3
+        
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v2
+        with:
+          path: './docs-build'
+          
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2

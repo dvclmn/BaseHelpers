@@ -104,14 +104,27 @@ extension MarkdownTheme {
 
   // MARK: - Colours
   public struct Colors {
-    private var colours: MarkdownColorMap = .defaultColours
+    public var foreground: MarkdownColorMap
+    public var background: MarkdownColorMap
     public static let defaults: Colors = .init()
+    
+    public init(
+      foreground: MarkdownColorMap = .defaultColours,
+      background: MarkdownColorMap = [:]
+    ) {
+      self.foreground = foreground
+      self.background = background
+    }
   }
 
   // MARK: - Fonts
   public struct Fonts {
-    public var fonts: MarkdownFontMap = [:]
+    public var fonts: MarkdownFontMap
     public static let defaults: Fonts = .init()
+    
+    public init(fonts: MarkdownFontMap = [:]) {
+      self.fonts = fonts
+    }
   }
 
   // MARK: - Editor Styles
@@ -130,27 +143,55 @@ extension MarkdownTheme {
     var attributes: [NSAttributedString.Key: Any] = [:]
 
     /// Apply color
-    attributes[.foregroundColor] = colors[type]
+    attributes[.foregroundColor] = colors[forType: type]
 
     if let fontConfig = fonts.fonts[type] {
       attributes[.font] = fontConfig.resolvedFont()
-      attributes[.foregroundColor] = colors[type]
+      attributes[.foregroundColor] = colors[forType: type]
+      attributes[.backgroundColor] = colors[forType: type, forComponent: .background]
     }
 
     return attributes
   }
+}
 
+public enum TextComponent {
+  case foreground
+  case background
 }
 
 extension MarkdownTheme.Colors {
-  public subscript(type: Markdown.Syntax) -> NSUIColor {
-    get { colours[type] ?? .label }
-    set { colours[type] = newValue }
+  public subscript(forType type: Markdown.Syntax, forComponent component: TextComponent = .foreground) -> NSUIColor {
+    get {
+      
+      switch component {
+        case .foreground:
+          foreground[type] ?? .label
+          
+        case .background:
+          background[type] ?? .clear
+      }
+    }
+    set {
+      switch component {
+        case .foreground:
+//          let copy = foreground[type]
+          foreground[type] = newValue
+          
+        case .background:
+          background[type] = newValue
+      }
+      
+    }
   }
 
-  public func with(_ type: Markdown.Syntax, color: NSUIColor) -> Self {
+  public func with(
+    _ type: Markdown.Syntax,
+    color: NSUIColor,
+    forComponent component: TextComponent = .foreground
+  ) -> Self {
     var copy = self
-    copy[type] = color
+    copy[forType: type, forComponent: component] = color
     return copy
   }
 }
@@ -175,7 +216,7 @@ extension MarkdownTheme.EditorStyles {
 // MARK: - Extensions
 extension Dictionary where Key == Markdown.Syntax {
 
-  static var defaultColours: MarkdownColorMap {
+  public static var defaultColours: MarkdownColorMap {
     var map: MarkdownColorMap = [:]
 
     for type in Markdown.Syntax.allCases {

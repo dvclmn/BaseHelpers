@@ -101,7 +101,8 @@ extension AttributeContainer {
     var container = AttributeContainer()
     
     /// Add foreground color
-    container.foregroundColor = theme.colors[type]
+    container.foregroundColor = theme.colors[forType: type]
+    container.backgroundColor = theme.colors[forType: type, forComponent: .background]
     
     /// Add font if available
     if let fontConfig = theme.fonts.fonts[type] {

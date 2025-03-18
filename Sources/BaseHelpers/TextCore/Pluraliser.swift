@@ -16,11 +16,23 @@ public enum CountStrategy {
 
 }
 
+public func pluralise(
+  verb: String,
+  count: Int,
+  noun: String,
+  showEllipsis: Bool = false
+) -> String {
+  
+  let result = verb + " " + pluralise(count, noun, countStrategy: .showCount())
+  
+  return showEllipsis ? result + "..." : result
+}
+
 
 public func pluralise(
   _ count: Int,
   _ word: String,
-  countStrategy: CountStrategy
+  countStrategy: CountStrategy = .hideCount
 ) -> String {
   
   switch countStrategy {
