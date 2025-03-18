@@ -62,7 +62,7 @@ public func pluralise(
 public func pluralise(
   _ count: Int,
   _ word: String,
-  includeCount: Bool = false
+  includeCount: Bool
 ) -> String {
   
   let wordResult: String = includeCount ? "\(count.string) " + word : word

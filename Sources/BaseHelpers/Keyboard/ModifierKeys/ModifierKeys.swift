@@ -69,7 +69,7 @@ private struct ModifiersKey: EnvironmentKey {
 }
 
 extension EnvironmentValues {
-  var modifierKeys: Modifiers {
+  public var modifierKeys: Modifiers {
     get { self[ModifiersKey.self] }
     set { self[ModifiersKey.self] = newValue }
   }
