@@ -1,4 +1,4 @@
-// swift-tools-version: 5.10
+// swift-tools-version: 6.0
 
 import PackageDescription
 import CompilerPluginSupport
@@ -25,8 +25,8 @@ let package = Package(
     .target(name: "BaseHelpers", dependencies: [
       .product(name: "NSUI", package: "nsui"),
     ]),
-  ]
-//  swiftLanguageModes: [.v5]
+  ],
+  swiftLanguageModes: [.v5]
 )
 
 let swiftSettings: [SwiftSetting] = [
