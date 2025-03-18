@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-@available(macOS 15.0, *)
+@available(macOS 15.0, iOS 18.0, *)
 extension ScrollGeometry {
   public var displayString: String {
     """

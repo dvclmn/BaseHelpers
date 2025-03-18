@@ -64,10 +64,20 @@ extension Modifiers {
 
 //#if os(macOS)
 
+private struct ModifiersKey: EnvironmentKey {
+  static let defaultValue = Modifiers()
+}
 
 extension EnvironmentValues {
-  @Entry public var modifierKeys: Modifiers = .init()
+  var modifierKeys: Modifiers {
+    get { self[ModifiersKey.self] }
+    set { self[ModifiersKey.self] = newValue }
+  }
 }
+
+//extension EnvironmentValues {
+//  @Entry public var modifierKeys: Modifiers = .init()
+//}
 
 #if canImport(AppKit)
   extension NSEvent.ModifierFlags {
