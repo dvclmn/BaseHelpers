@@ -25,7 +25,8 @@ let package = Package(
     .target(name: "BaseHelpers", dependencies: [
       .product(name: "NSUI", package: "nsui"),
     ]),
-  ]
+  ],
+  swiftLanguageModes: [.v5]
 )
 
 let swiftSettings: [SwiftSetting] = [
