@@ -21,7 +21,7 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: macos-latest  # DocC works best on macOS runners
+    runs-on: macos-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -50,6 +50,21 @@ jobs:
           
           # Create a .nojekyll file to prevent GitHub Pages from processing with Jekyll
           touch ./docs-build/.nojekyll
+          
+      - name: Add Redirect to Documentation
+        run: |
+          cat <<EOF > ./docs-build/index.html
+          <!DOCTYPE html>
+          <meta charset="utf-8">
+          <meta http-equiv="refresh" content="1; url=https://dvclmn.github.io/BaseHelpers/documentation/basehelpers">
+          <script>
+            window.location.href = "https://dvclmn.github.io/BaseHelpers/documentation/BaseHelpers";
+          </script>
+          <title>Redirecting...</title>
+          If you are not redirected automatically, follow
+          <a href="https://dvclmn.github.io/BaseHelpers/documentation/BaseHelpers">this link</a>.
+          EOF
+
           
       - name: Setup Pages
         uses: actions/configure-pages@v3
