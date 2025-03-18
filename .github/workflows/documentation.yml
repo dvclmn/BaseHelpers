@@ -20,6 +20,9 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: macos-15
+    env:
+      DOCS_URL: https://dvclmn.github.io/BaseHelpers/documentation/basehelpers
+    
     
     steps:
       - name: Checkout
@@ -58,13 +61,13 @@ jobs:
           cat <<EOF > ./docs-build/index.html
           <!DOCTYPE html>
           <meta charset="utf-8">
-          <meta http-equiv="refresh" content="1; url=https://dvclmn.github.io/BaseHelpers/documentation/basehelpers">
+          <meta http-equiv="refresh" content="1; url=${DOCS_URL}">
           <script>
-            window.location.href = "https://dvclmn.github.io/BaseHelpers/documentation/BaseHelpers";
+            window.location.href = "${DOCS_URL}";
           </script>
           <title>Redirecting...</title>
           If you are not redirected automatically, follow
-          <a href="https://dvclmn.github.io/BaseHelpers/documentation/BaseHelpers">this link</a>.
+          <a href="${DOCS_URL}">this link</a>.
           EOF
 
       - name: Upload artifact
