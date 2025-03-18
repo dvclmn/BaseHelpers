@@ -10,10 +10,6 @@ import Foundation
 extension Double {
 
   /// Adds leading padding to align numbers based on their integer part
-  /// - Parameters:
-  ///   - maxDigits: Maximum number of digits to pad to
-  ///   - padChar: Character to use for padding (default: space)
-  /// - Returns: String with appropriate padding
   public func padLeading(
     maxDigits: Int = 3,
     decimalPlaces: Int? = nil,

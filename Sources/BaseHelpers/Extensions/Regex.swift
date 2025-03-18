@@ -8,8 +8,8 @@
 
 import Foundation
 
-extension NSRegularExpression.Options: @retroactive CustomStringConvertible {
-  public var description: String {
+extension NSRegularExpression.Options {
+  public var displayString: String {
     var options: [String] = []
     
     if contains(.caseInsensitive) { options.append("caseInsensitive") }
@@ -24,8 +24,8 @@ extension NSRegularExpression.Options: @retroactive CustomStringConvertible {
   }
 }
 
-extension NSRegularExpression.MatchingOptions: @retroactive CustomStringConvertible {
-  public var description: String {
+extension NSRegularExpression.MatchingOptions {
+  public var displayString: String {
     var options: [String] = []
     
     if contains(.reportProgress) { options.append("reportProgress") }

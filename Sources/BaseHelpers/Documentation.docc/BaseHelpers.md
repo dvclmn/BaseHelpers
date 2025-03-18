@@ -22,6 +22,6 @@ SlothCreator provides models and utilities for creating, tracking, and caring fo
 
 ### Sloth Creation
 
-- ``DragWindowView``
+- ``DragWindowModifier``
 - ``isPreview``
 - ``TextCore``

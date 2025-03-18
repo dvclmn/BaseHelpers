@@ -21,9 +21,6 @@ extension Axis {
     }
   }
 
-  /// Returns either the width or height of a CGSize based on the perpendicular axis.
-  /// - Parameter size: The CGSize to extract the dimension from
-  /// - Returns: The perpendicular dimension (width for horizontal, height for vertical)
 //  public func perpendicularDimension(from size: CGSize) -> CGFloat {
 //    switch self {
 //      case .horizontal:

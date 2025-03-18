@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 import NSUI
 
-#if canImport(AppKit)
+//#if canImport(AppKit)
 extension Color {
   public func blend(with other: Color, percentage: Double) -> Color {
 //    Color(nsColor: NSColor(self).blend(with: NSColor(other), percentage: percentage))
@@ -44,7 +44,7 @@ extension NSUIColor {
     }
   }
 }
-#endif
+//#endif
 
 /// This extension allows you to create a `Color` instance from a hex string in SwiftUI. It supports the following formats:
 
