@@ -93,6 +93,7 @@ public struct ModifierKeysModifier: ViewModifier {
     #if canImport(AppKit)
       content
         .onAppear {
+          print("Setting up modifier keys.")
           NSEvent.addLocalMonitorForEvents(matching: [.flagsChanged]) { event in
             modifierKeys = Set(
               allModifiers.compactMap { flag in
@@ -102,6 +103,9 @@ public struct ModifierKeysModifier: ViewModifier {
           }
         }
         .environment(\.modifierKeys, modifierKeys)
+//        .task(id: modifierKeys) {
+//          print("Modifier key(s) changed: \(modifierKeys)")
+//        }
     #else
       content
     #endif

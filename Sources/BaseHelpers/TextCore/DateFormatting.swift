@@ -8,6 +8,25 @@
 import Foundation
 import SwiftUI
 
+/// https://stackoverflow.com/a/78346505
+/// ```
+/// let preferredFormat = Date.FormatStyle()
+///   .weekday(.abbreviated)
+///   .month(.twoDigits)
+///   .day(.twoDigits)
+///   .year()
+///   .hour()
+///   .minute()
+///   .second(.twoDigits)
+///   .secondFraction(.fractional(3))
+///   .timeZone(.iso8601(.short))
+///   .locale(.init(identifier: "US"))
+///
+/// print(date.formatted(preferredFormat))
+/// // "Thu, 04/18/2024, 11:49:44.133 +0200"
+/// ```
+
+/// https://www.unicode.org/reports/tr35/tr35-31/tr35-dates.html#Date_Format_Patterns
 extension Date {
 
   /// Example usage:
@@ -21,10 +40,10 @@ extension Date {
   ///
   /// ```
   public enum Format {
-    case date  // Monday, May 29 2025
-    case dateAndTime  // Monday, May 29 2025 at 12:36pm
-    case timeDetailed  // May 29 at 12:36:40 pm
-    case relative  // Yesterday, May 28 2025
+    case date
+    case dateAndTime
+    case timeDetailed
+    case relative
   }
 
   public func format(_ style: Format) -> String {
@@ -65,12 +84,18 @@ extension Date {
   
   /// Formats the date and time: "EEEE, MMMM d yyyy 'at' h:mma"
   private func formatTimeDetailed() -> String {
-    let dateFormatter = DateFormatter()
-    dateFormatter.dateFormat = "MMMM d 'at' h:mm:ss a"
-    /// Convert to lowercase 'am/pm'
-    return dateFormatter.string(from: self)
-      .replacingOccurrences(of: "AM", with: "am")
-      .replacingOccurrences(of: "PM", with: "pm")
+    
+    let preferredFormat = Date.FormatStyle()
+      .weekday(.abbreviated)
+      .month(.twoDigits)
+      .day(.twoDigits)
+      .year()
+      .hour()
+      .minute()
+      .second(.twoDigits)
+      .secondFraction(.milliseconds(4))
+
+    return self.formatted(preferredFormat)
   }
   
   /// Formats the date and time: "EEEE, MMMM d yyyy 'at' h:mma"
