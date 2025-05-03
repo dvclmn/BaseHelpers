@@ -93,7 +93,7 @@ extension Date {
       .hour()
       .minute()
       .second(.twoDigits)
-      .secondFraction(.milliseconds(4))
+      .secondFraction(.fractional(4))
 
     return self.formatted(preferredFormat)
   }
