@@ -7,34 +7,33 @@
 
 import SwiftUI
 
+
 struct PathDebugExampleView: View {
-  
   var body: some View {
-    
-    VStack {
+    VStack(spacing: 40) {
+      Text("ShapeDebugger")
+        .foregroundStyle(.white)
       
-      ShapeDebug {
-        
+      ShapeDebugger {
         RoundedRectangle(cornerRadius: 20)
-        //        DialogueArrowShape(
-        //          cornerRadius: 70,
-        //          arrowHeight: 80,
-        //          arrowWidth: 180,
-        //          arrowPosition: 0.5,
-        //          arrowCurveAmount: 0.5
-        //        )
       }
-      .frame(width: 300, height: 500)
+      .frame(width: 300, height: 200)
+      
+      Text("CanvasPathDebugger")
+        .foregroundStyle(.white)
+      
+      CanvasPathDebugger(
+        pathBuilder: { size in
+          var path = Path()
+          path.addRoundedRect(in: CGRect(origin: .zero, size: size), cornerSize: CGSize(width: 20, height: 20))
+          return path
+        },
+        config: .init()
+      )
+//      .frame(width: 300, height: 200)
     }
     .padding(40)
     .frame(width: 580, height: 700)
     .background(.black.opacity(0.6))
-    
   }
-  
 }
-#if DEBUG
-#Preview {
-  PathDebugExampleView()
-}
-#endif

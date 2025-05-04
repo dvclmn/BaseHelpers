@@ -11,24 +11,25 @@ public struct PathDebugger<T: Shape> {
   public let shape: T
   public let config: PathDebugConfig
 
-  
-
-    print("PathDebugger: Path analysis complete")
-
-    return DebugPaths(
-      original: originalPath,
-      nodes: nodePath,
-      controlPoints: controlPointPath,
-      connections: connectionPath
-
-    )
-//  }
-
-  
+  public func debugPaths(in rect: CGRect) -> DebugPaths {
+    let originalPath = shape.path(in: rect)
+    let paths: DebugPaths = PathAnalyser.analyse(originalPath, config: config)
+    return paths
+  }
 }
+//
+//public struct CanvasPathDebugger {
+//  public let pathBuilder: (CGSize) -> Path
+//  public let config: PathDebugConfig
+//
+//  public func debugPaths(for size: CGSize) -> DebugPaths {
+//    let path = pathBuilder(size)
+//    let paths: DebugPaths = PathAnalyser.analyse(path, config: config)
+//    return paths
+//  }
+//}
 
-
-public struct ShapeDebug<S: Shape>: View {
+public struct ShapeDebugger<S: Shape>: View {
 
   public let debugger: PathDebugger<S>
   public let fill: Color

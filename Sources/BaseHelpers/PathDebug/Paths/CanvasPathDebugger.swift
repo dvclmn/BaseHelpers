@@ -25,13 +25,15 @@ public struct CanvasPathDebugger: View {
   public var body: some View {
     Canvas { context, size in
       let path = pathBuilder(size)
-      let debug = PathAnalyzer.analyze(path, config: config)
+//      let debug = PathAnalyzer.analyze(path, config: config)
+      
+      let debugPaths = PathAnalyser.analyse(pathBuilder(size), config: config)
       
       context.fill(path, with: .color(fill))
-      context.stroke(debug.original, with: .color(config.stroke.colour), lineWidth: config.stroke.width)
-      context.stroke(debug.connections, with: .color(config.controlPoint.guideColour), lineWidth: config.stroke.width)
-      context.stroke(debug.nodes, with: .color(config.node.colour), lineWidth: config.stroke.width)
-      context.stroke(debug.controlPoints, with: .color(config.controlPoint.colour), lineWidth: config.stroke.width)
+      context.stroke(debugPaths.original, with: .color(config.stroke.colour), lineWidth: config.stroke.width)
+      context.stroke(debugPaths.connections, with: .color(config.controlPoint.guideColour), lineWidth: config.stroke.width)
+      context.stroke(debugPaths.nodes, with: .color(config.node.colour), lineWidth: config.stroke.width)
+      context.stroke(debugPaths.controlPoints, with: .color(config.controlPoint.colour), lineWidth: config.stroke.width)
     }
   }
 }
