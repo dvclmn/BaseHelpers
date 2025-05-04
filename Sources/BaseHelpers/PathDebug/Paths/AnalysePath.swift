@@ -20,7 +20,7 @@ public struct PathAnalyser {
     var connectionPath = Path()
     var lastNodePoint: CGPoint?
 
-    print("PathDebugger: Starting path analysis")
+//    print("PathDebugger: Starting path analysis")
 
     path.forEach { element in
       switch element {
