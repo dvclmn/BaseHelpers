@@ -10,6 +10,76 @@ import SwiftUI
 import SwiftUI
 
 public struct CatmullRom {
+  public static func catmullRomPoints(
+    for points: [CGPoint],
+    tension: CGFloat = 0.0,
+    closed: Bool = false
+  ) -> [CGPoint] {
+    
+    guard !points.isEmpty else { return Path() }
+    
+    var path = Path()
+    
+    /// Handle special cases with insufficient points
+    if points.count == 1 {
+      /// For a single point, just move to it
+      path.move(to: points[0])
+      return path
+    } else if points.count < 4 && !closed {
+      /// For 2-3 points without closing, use simple lines
+      path.move(to: points[0])
+      for i in 1..<points.count {
+        path.addLine(to: points[i])
+      }
+      return path
+    }
+    
+    /// Create a working array that might include wrapped points for closed paths
+    var workingPoints = points
+    if closed && points.count >= 3 {
+      /// For closed paths, wrap around points to ensure smooth closure
+      workingPoints.append(points[0])
+      workingPoints.insert(points[points.count - 1], at: 0)
+    }
+    
+    path.move(to: workingPoints[closed ? 1 : 0])
+    
+    /// Calculate the actual tension factor
+    let alpha = (1.0 - tension) / 6.0
+    
+    /// Calculate spline for each segment
+    let endIndex = closed ? workingPoints.count - 2 : workingPoints.count - 1
+    for i in (closed ? 1 : 0)..<endIndex {
+      let p0 = workingPoints[max(0, i - 1)]
+      let p1 = workingPoints[i]
+      let p2 = workingPoints[min(workingPoints.count - 1, i + 1)]
+      let p3 = workingPoints[min(workingPoints.count - 1, i + 2)]
+      
+      /// Calculate control points based on Catmull-Rom formula with tension
+      let controlPoint1 = CGPoint(
+        x: p1.x + alpha * (p2.x - p0.x),
+        y: p1.y + alpha * (p2.y - p0.y)
+      )
+      
+      let controlPoint2 = CGPoint(
+        x: p2.x - alpha * (p3.x - p1.x),
+        y: p2.y - alpha * (p3.y - p1.y)
+      )
+      
+      path.addCurve(to: p2, control1: controlPoint1, control2: controlPoint2)
+    }
+    
+    /// Close the path if needed
+    if closed {
+      path.closeSubpath()
+    }
+    
+    return path
+    
+  }
+  
+  
+  
   /// Tension parameter - controls how "tight" the curve is
   /// - 0.0: Creates Catmull-Rom splines (curves pass through points)
   /// - 1.0: Creates a cardinal spline
