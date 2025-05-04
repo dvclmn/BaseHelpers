@@ -42,12 +42,8 @@ struct PathDebugExampleView: View {
         }
         context.stroke(circlePath, with: .color(.gray), lineWidth: 2)
 
-        CanvasPathDebugger.render(
-          into: context,
-          size: size,
-          path: circlePath,
-          config: .init()
-        )
+        context.debugPath(path: circlePath)
+
       }
 
     }

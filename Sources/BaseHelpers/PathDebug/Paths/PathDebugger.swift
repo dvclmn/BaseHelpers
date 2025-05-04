@@ -18,19 +18,18 @@ public struct PathDebugger<T: Shape> {
   }
 }
 
-enum CanvasPathDebugger {
-  static func render(
-    into context: GraphicsContext,
-    size: CGSize,
+extension GraphicsContext {
+  public func debugPath(
+//    size: CGSize,
     path: Path,
     config: PathDebugConfig = .init()
   ) {
     let debugPaths = PathAnalyser.analyse(path, config: config)
     
-    context.stroke(debugPaths.original, with: .color(config.stroke.colour), lineWidth: config.stroke.width)
-    context.stroke(debugPaths.connections, with: .color(config.controlPoint.guideColour), lineWidth: config.stroke.width)
-    context.stroke(debugPaths.nodes, with: .color(config.node.colour), lineWidth: config.stroke.width)
-    context.stroke(debugPaths.controlPoints, with: .color(config.controlPoint.colour), lineWidth: config.stroke.width)
+    self.stroke(debugPaths.original, with: .color(config.stroke.colour), lineWidth: config.stroke.width)
+    self.stroke(debugPaths.connections, with: .color(config.controlPoint.guideColour), lineWidth: config.stroke.width)
+    self.stroke(debugPaths.nodes, with: .color(config.node.colour), lineWidth: config.stroke.width)
+    self.stroke(debugPaths.controlPoints, with: .color(config.controlPoint.colour), lineWidth: config.stroke.width)
   }
 }
 
