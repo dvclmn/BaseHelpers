@@ -17,17 +17,22 @@ public struct PathDebugger<T: Shape> {
     return paths
   }
 }
-//
-//public struct CanvasPathDebugger {
-//  public let pathBuilder: (CGSize) -> Path
-//  public let config: PathDebugConfig
-//
-//  public func debugPaths(for size: CGSize) -> DebugPaths {
-//    let path = pathBuilder(size)
-//    let paths: DebugPaths = PathAnalyser.analyse(path, config: config)
-//    return paths
-//  }
-//}
+
+enum CanvasPathDebugger {
+  static func render(
+    into context: GraphicsContext,
+    size: CGSize,
+    path: Path,
+    config: PathDebugConfig = .init()
+  ) {
+    let debugPaths = PathAnalyser.analyse(path, config: config)
+    
+    context.stroke(debugPaths.original, with: .color(config.stroke.colour), lineWidth: config.stroke.width)
+    context.stroke(debugPaths.connections, with: .color(config.controlPoint.guideColour), lineWidth: config.stroke.width)
+    context.stroke(debugPaths.nodes, with: .color(config.node.colour), lineWidth: config.stroke.width)
+    context.stroke(debugPaths.controlPoints, with: .color(config.controlPoint.colour), lineWidth: config.stroke.width)
+  }
+}
 
 public struct ShapeDebugger<S: Shape>: View {
 
