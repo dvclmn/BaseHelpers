@@ -9,45 +9,49 @@ import AppKit
 import SwiftUI
 
 public struct MouseLockModifier: ViewModifier {
-  @State private var monitor: Any?
+//  @State private var monitor: Any?
   @Binding var isLocked: Bool
+  let newPosition: CGPoint?
 
-//  let onDelta: (CGFloat, CGFloat) -> Void
-  
   public init(
     isLocked: Binding<Bool>,
-//    onDelta: @escaping (CGFloat, CGFloat) -> Void,
+    newPosition: CGPoint?
   ) {
     self._isLocked = isLocked
-//    self.onDelta = onDelta
+    self.newPosition = newPosition
   }
 
   public func body(content: Content) -> some View {
     content
       .task(id: isLocked) {
-        if isLocked {
-//          NSCursor.unhide()
-          NSCursor.hide()
-          CGAssociateMouseAndMouseCursorPosition(0)  // Arrest pointer (0 = false)
-        } else {
-          NSCursor.unhide()
-          CGAssociateMouseAndMouseCursorPosition(1)  // Release pointer (1 = true)
+        Task { @MainActor in
+          if isLocked {
+            print("Mouse set to Locked 🔐")
+            NSCursor.hide()
+            CGAssociateMouseAndMouseCursorPosition(0)  // Arrest pointer (0 = false)
+          } else {
+            print("Mouse set to Unlocked 🔓")
+            NSCursor.unhide()
+            if let newPosition {
+              CGWarpMouseCursorPosition(newPosition)
+            }
+            CGAssociateMouseAndMouseCursorPosition(1)  // Release pointer (1 = true)
+          }
         }
       }
       
   }
 }
-
-extension MouseLockModifier {
-  func handleLock(_ isLocked: Bool) -> Int32 {
-    isLocked ? 0 : 1
-  }
-}
-
 extension View {
   public func mouseLock(
-    _ isLocked: Binding<Bool>
+    _ isLocked: Binding<Bool>,
+    newPosition: CGPoint? = nil
   ) -> some View {
-    self.modifier(MouseLockModifier(isLocked: isLocked))
+    self.modifier(
+      MouseLockModifier(
+        isLocked: isLocked,
+        newPosition: newPosition
+      )
+    )
   }
 }
