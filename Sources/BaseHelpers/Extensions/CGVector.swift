@@ -19,4 +19,22 @@ extension CGVector {
       dy: (to.y - from.y) / dt
     )
   }
+  
+  /// Velocity vs. Speed
+  ///
+  /// Velocity is a vector (has direction and magnitude, e.g., `dx` and `dy` in 2D space).
+  /// Speed is the scalar magnitude of velocity (how fast, regardless of direction).
+  ///
+  /// The below takes the Euclidean norm (or "length") of the velocity vector,
+  /// which is mathematically defined as: `speed = √(dx² + dy²)`
+  ///
+  /// Example usage:
+  /// ```
+  /// let velocity = CGVector(dx: 3.0, dy: 4.0)
+  /// print(velocity.speed) // 5.0 (classic 3-4-5 triangle)
+  ///
+  /// ```
+  public var speed: CGFloat {
+    return sqrt(dx * dx + dy * dy)
+  }
 }
