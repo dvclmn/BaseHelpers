@@ -9,14 +9,14 @@ import AppKit
 import SwiftUI
 
 public struct MouseLockModifier: ViewModifier {
-  @Binding var isLocked: Bool
+  let isLocked: Bool
   let newPosition: CGPoint?
 
   public init(
-    isLocked: Binding<Bool>,
+    isLocked: Bool,
     newPosition: CGPoint?
   ) {
-    self._isLocked = isLocked
+    self.isLocked = isLocked
     self.newPosition = newPosition
   }
 
@@ -42,7 +42,7 @@ public struct MouseLockModifier: ViewModifier {
 }
 extension View {
   public func mouseLock(
-    _ isLocked: Binding<Bool>,
+    _ isLocked: Bool,
     newPosition: CGPoint? = nil
   ) -> some View {
     self.modifier(

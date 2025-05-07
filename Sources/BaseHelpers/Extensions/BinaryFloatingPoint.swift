@@ -6,7 +6,7 @@
 //
 
 extension BinaryFloatingPoint {
-  public var string: String {
+  public var displayString: String {
     String("\(self)")
   }
 

@@ -8,6 +8,26 @@
 import Foundation
 
 extension CGVector {
+  
+  public var displayString: String {
+    self.displayString(style: .full)
+  }
+  
+  public func displayString(decimalPlaces: Int = 2, style: DisplayStringStyle = .short) -> String {
+    
+    let dxString = "\(self.dx.toDecimal(decimalPlaces))"
+    let dyString = "\(self.dy.toDecimal(decimalPlaces))"
+    
+    switch style {
+      case .short:
+        return "\(dxString) x \(dyString)"
+        
+      case .full, .initials:
+        return "dx: \(dxString)  dy: \(dyString)"
+        
+    }
+  }
+  
   public static func between(
     _ from: CGPoint,
     _ to: CGPoint,

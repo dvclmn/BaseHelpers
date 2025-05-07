@@ -213,7 +213,7 @@ extension CGPoint {
     return UnitPoint(x: x / size.width, y: y / size.height)
   }
   
-  public var string: String {
+  public var displayString: String {
     self.displayString(style: .full)
   }
 
