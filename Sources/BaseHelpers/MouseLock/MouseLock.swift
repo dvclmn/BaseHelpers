@@ -9,7 +9,6 @@ import AppKit
 import SwiftUI
 
 public struct MouseLockModifier: ViewModifier {
-//  @State private var monitor: Any?
   @Binding var isLocked: Bool
   let newPosition: CGPoint?
 
@@ -27,19 +26,18 @@ public struct MouseLockModifier: ViewModifier {
         Task { @MainActor in
           if isLocked {
             print("Mouse set to Locked 🔐")
-            NSCursor.hide()
+//            NSCursor.hide()
             CGAssociateMouseAndMouseCursorPosition(0)  // Arrest pointer (0 = false)
           } else {
             print("Mouse set to Unlocked 🔓")
-            NSCursor.unhide()
-            if let newPosition {
-              CGWarpMouseCursorPosition(newPosition)
-            }
+//            NSCursor.unhide()
+//            if let newPosition {
+//              CGWarpMouseCursorPosition(newPosition)
+//            }
             CGAssociateMouseAndMouseCursorPosition(1)  // Release pointer (1 = true)
           }
         }
       }
-      
   }
 }
 extension View {

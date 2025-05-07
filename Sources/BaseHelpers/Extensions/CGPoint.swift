@@ -7,103 +7,102 @@
 
 import SwiftUI
 
-// MARK: - Subtraction
-infix operator - : AdditionPrecedence
-
-public func - (lhs: CGPoint, rhs: CGPoint) -> CGPoint {
-  return CGPoint(
-    x: lhs.x - rhs.x,
-    y: lhs.y - rhs.y
-  )
-}
-
-public func - (lhs: CGPoint, rhs: CGSize) -> CGPoint {
-  return CGPoint(
-    x: lhs.x - rhs.width,
-    y: lhs.y - rhs.height
-  )
-}
-
-// MARK: - Addition
-infix operator + : AdditionPrecedence
-
-public func + (lhs: CGPoint, rhs: CGPoint) -> CGPoint {
-  return CGPoint(
-    x: lhs.x + rhs.x,
-    y: lhs.y + rhs.y
-  )
-}
-
-public func + (lhs: CGPoint, rhs: CGSize) -> CGPoint {
-  return CGPoint(
-    x: lhs.x + rhs.width,
-    y: lhs.y + rhs.height
-  )
-}
-
-// MARK: - Multiplication
-infix operator * : MultiplicationPrecedence
-
-public func * (lhs: CGPoint, rhs: CGPoint) -> CGPoint {
-  return CGPoint(
-    x: lhs.x * rhs.x,
-    y: lhs.y * rhs.y
-  )
-}
-
-public func * (lhs: CGPoint, rhs: CGFloat) -> CGPoint {
-  return CGPoint(
-    x: lhs.x * rhs,
-    y: lhs.y * rhs
-  )
-}
-
-// MARK: - Plus Equals
-infix operator += : AssignmentPrecedence
-
-public func += (lhs: inout CGPoint, rhs: CGPoint) {
-  lhs = lhs + rhs
-}
-
-public func += (lhs: inout CGPoint, rhs: CGSize) {
-  lhs = lhs + rhs
-}
-
-// MARK: - Minus Equals
-infix operator -= : AssignmentPrecedence
-
-public func -= (lhs: inout CGPoint, rhs: CGPoint) {
-  lhs = lhs - rhs
-}
-
-public func -= (lhs: inout CGPoint, rhs: CGSize) {
-  lhs = lhs - rhs
-}
-
-
-// MARK: - Greater than
-infix operator > : ComparisonPrecedence
-
-public func > (lhs: CGPoint, rhs: CGPoint) -> Bool {
-  lhs.x > rhs.x || lhs.y > rhs.y
-}
-
-// MARK: - Less than
-infix operator < : ComparisonPrecedence
-
-public func < (lhs: CGPoint, rhs: CGPoint) -> Bool {
-  lhs.x < rhs.x || lhs.y < rhs.y
-}
-
 
 //public func -(lhs: CGPoint, rhs: CGSize) -> CGPoint {
 //  return CGPoint(x: lhs.x - rhs.width, y: lhs.y - rhs.height)
 //}
 
+enum CoordinateMappingMode {
+  /// Fill destination rect exactly, even if aspect ratio is distorted
+  case stretch
+  
+  /// Contain: scale uniformly to fit within destination (aspect ratio preserved)
+  case fit
+  
+  /// Cover: scale uniformly to cover entire destination (aspect ratio preserved, may clip)
+  case fill
+  
+}
+
 extension CGPoint {
+  
+  func mapPoint(
+    from source: CGRect = CGRect(x: 0, y: 0, width: 1, height: 1),
+    to destination: CGRect,
+    mode: CoordinateMappingMode = .stretch
+  ) -> CGPoint {
+    switch mode {
+      case .stretch:
+        return stretchMap(from: source, to: destination)
+      case .fit:
+        return aspectFitMap(from: source, to: destination)
+      case .fill:
+        return aspectFillMap(from: source, to: destination)
+    }
+  }
+  
+  private func stretchMap(from source: CGRect, to destination: CGRect) -> CGPoint {
+    let scaleX = destination.width / source.width
+    let scaleY = destination.height / source.height
+    
+    let translatedX = (self.x - source.minX) * scaleX + destination.minX
+    let translatedY = (self.y - source.minY) * scaleY + destination.minY
+    
+    return CGPoint(x: translatedX, y: translatedY)
+  }
+  
+  private func aspectFitMap(from source: CGRect, to destination: CGRect) -> CGPoint {
+    let sourceAspect = source.width / source.height
+    let destAspect = destination.width / destination.height
+    
+    var scale: CGFloat
+    var offsetX: CGFloat = 0
+    var offsetY: CGFloat = 0
+    
+    if sourceAspect > destAspect {
+      scale = destination.width / source.width
+      let usedHeight = source.height * scale
+      offsetY = (destination.height - usedHeight) / 2
+    } else {
+      scale = destination.height / source.height
+      let usedWidth = source.width * scale
+      offsetX = (destination.width - usedWidth) / 2
+    }
+    
+    let x = (self.x - source.minX) * scale + destination.minX + offsetX
+    let y = (self.y - source.minY) * scale + destination.minY + offsetY
+    return CGPoint(x: x, y: y)
+  }
+  
+  private func aspectFillMap(from source: CGRect, to destination: CGRect) -> CGPoint {
+    let sourceAspect = source.width / source.height
+    let destAspect = destination.width / destination.height
+    
+    var scale: CGFloat
+    var offsetX: CGFloat = 0
+    var offsetY: CGFloat = 0
+    
+    if sourceAspect < destAspect {
+      scale = destination.width / source.width
+      let usedHeight = source.height * scale
+      offsetY = (destination.height - usedHeight) / 2
+    } else {
+      scale = destination.height / source.height
+      let usedWidth = source.width * scale
+      offsetX = (destination.width - usedWidth) / 2
+    }
+    
+    let x = (self.x - source.minX) * scale + destination.minX + offsetX
+    let y = (self.y - source.minY) * scale + destination.minY + offsetY
+    return CGPoint(x: x, y: y)
+  }
+  
+  
+  public var length: CGFloat {
+    sqrt(x * x + y * y)
+  }
 
   public var normalised: CGPoint {
-    let length = sqrt(x * x + y * y)
     guard length > 0 else { return .zero }
     return CGPoint(
       x: x / length,
@@ -206,6 +205,10 @@ extension CGPoint {
 
     return UnitPoint(x: x / size.width, y: y / size.height)
   }
+  
+  public var string: String {
+    self.displayString(style: .full)
+  }
 
   public func displayString(decimalPlaces: Int = 2) -> String {
     return "\(self.x.toDecimal(decimalPlaces)) x \(self.y.toDecimal(decimalPlaces))"
@@ -279,6 +282,10 @@ extension CGPoint {
   // Shift by another point
   public func shift(by point: CGPoint) -> CGPoint {
     return CGPoint(x: self.x + point.x, y: self.y + point.y)
+  }
+  
+  public static func midPoint(p1: CGPoint, p2: CGPoint) -> CGPoint {
+    return pointAlong(from: p1, to: p2, t: 0.5)
   }
 
   /// Find a point along the line between two points
@@ -358,3 +365,94 @@ extension CGPoint {
     return CGPoint.pointAlong(from: self, to: end, distance: distance)
   }
 }
+
+
+
+// MARK: - Subtraction
+infix operator - : AdditionPrecedence
+
+public func - (lhs: CGPoint, rhs: CGPoint) -> CGPoint {
+  return CGPoint(
+    x: lhs.x - rhs.x,
+    y: lhs.y - rhs.y
+  )
+}
+
+public func - (lhs: CGPoint, rhs: CGSize) -> CGPoint {
+  return CGPoint(
+    x: lhs.x - rhs.width,
+    y: lhs.y - rhs.height
+  )
+}
+
+// MARK: - Addition
+infix operator + : AdditionPrecedence
+
+public func + (lhs: CGPoint, rhs: CGPoint) -> CGPoint {
+  return CGPoint(
+    x: lhs.x + rhs.x,
+    y: lhs.y + rhs.y
+  )
+}
+
+public func + (lhs: CGPoint, rhs: CGSize) -> CGPoint {
+  return CGPoint(
+    x: lhs.x + rhs.width,
+    y: lhs.y + rhs.height
+  )
+}
+
+// MARK: - Multiplication
+infix operator * : MultiplicationPrecedence
+
+public func * (lhs: CGPoint, rhs: CGPoint) -> CGPoint {
+  return CGPoint(
+    x: lhs.x * rhs.x,
+    y: lhs.y * rhs.y
+  )
+}
+
+public func * (lhs: CGPoint, rhs: CGFloat) -> CGPoint {
+  return CGPoint(
+    x: lhs.x * rhs,
+    y: lhs.y * rhs
+  )
+}
+
+// MARK: - Plus Equals
+infix operator += : AssignmentPrecedence
+
+public func += (lhs: inout CGPoint, rhs: CGPoint) {
+  lhs = lhs + rhs
+}
+
+public func += (lhs: inout CGPoint, rhs: CGSize) {
+  lhs = lhs + rhs
+}
+
+// MARK: - Minus Equals
+infix operator -= : AssignmentPrecedence
+
+public func -= (lhs: inout CGPoint, rhs: CGPoint) {
+  lhs = lhs - rhs
+}
+
+public func -= (lhs: inout CGPoint, rhs: CGSize) {
+  lhs = lhs - rhs
+}
+
+
+// MARK: - Greater than
+infix operator > : ComparisonPrecedence
+
+public func > (lhs: CGPoint, rhs: CGPoint) -> Bool {
+  lhs.x > rhs.x || lhs.y > rhs.y
+}
+
+// MARK: - Less than
+infix operator < : ComparisonPrecedence
+
+public func < (lhs: CGPoint, rhs: CGPoint) -> Bool {
+  lhs.x < rhs.x || lhs.y < rhs.y
+}
+

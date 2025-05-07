@@ -48,6 +48,10 @@ extension CGSize {
     width >= 0 && height >= 0
   }
 
+  public var midpoint: CGPoint {
+    centrePoint
+  }
+  
   public var centrePoint: CGPoint {
     CGPoint(x: width / 2, y: height / 2)
   }
