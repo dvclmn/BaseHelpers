@@ -7,32 +7,14 @@
 
 import Foundation
 
-// MARK: - Multiplication
-infix operator * : MultiplicationPrecedence
-
-public func * (lhs: CGSize, rhs: CGFloat) -> CGSize {
-  CGSize(
-    width: lhs.width * rhs,
-    height: lhs.height * rhs
-  )
-}
-
-// MARK: - Greater than
-infix operator >: ComparisonPrecedence
-
-public func >(lhs: CGSize, rhs: CGFloat) -> Bool {
-  lhs.width > rhs || lhs.height > rhs
-}
-
-// MARK: - Less than
-infix operator <: ComparisonPrecedence
-
-public func <(lhs: CGSize, rhs: CGFloat) -> Bool {
-  lhs.width < rhs || lhs.height < rhs
-}
 
 
 extension CGSize {
+  
+  public var toCGRect: CGRect {
+    CGRect(origin: .zero, size: self)
+  }
+  
   /// Returns true if both width and height are greater than zero
   public var isPositive: Bool {
     width > 0 && height > 0
@@ -90,4 +72,28 @@ public enum DisplayStringStyle {
   case short
   case initials
   case full
+}
+
+// MARK: - Multiplication
+infix operator * : MultiplicationPrecedence
+
+public func * (lhs: CGSize, rhs: CGFloat) -> CGSize {
+  CGSize(
+    width: lhs.width * rhs,
+    height: lhs.height * rhs
+  )
+}
+
+// MARK: - Greater than
+infix operator >: ComparisonPrecedence
+
+public func >(lhs: CGSize, rhs: CGFloat) -> Bool {
+  lhs.width > rhs || lhs.height > rhs
+}
+
+// MARK: - Less than
+infix operator <: ComparisonPrecedence
+
+public func <(lhs: CGSize, rhs: CGFloat) -> Bool {
+  lhs.width < rhs || lhs.height < rhs
 }

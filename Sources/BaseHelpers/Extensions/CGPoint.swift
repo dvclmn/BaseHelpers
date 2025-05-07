@@ -12,7 +12,7 @@ import SwiftUI
 //  return CGPoint(x: lhs.x - rhs.width, y: lhs.y - rhs.height)
 //}
 
-enum CoordinateMappingMode {
+public enum CoordinateMappingMode {
   /// Fill destination rect exactly, even if aspect ratio is distorted
   case stretch
   
@@ -26,8 +26,9 @@ enum CoordinateMappingMode {
 
 extension CGPoint {
   
-  func mapPoint(
-    from source: CGRect = CGRect(x: 0, y: 0, width: 1, height: 1),
+  
+  public func mapPoint(
+    from source: CGRect,
     to destination: CGRect,
     mode: CoordinateMappingMode = .stretch
   ) -> CGPoint {
@@ -52,49 +53,46 @@ extension CGPoint {
   }
   
   private func aspectFitMap(from source: CGRect, to destination: CGRect) -> CGPoint {
-    let sourceAspect = source.width / source.height
-    let destAspect = destination.width / destination.height
-    
-    var scale: CGFloat
-    var offsetX: CGFloat = 0
-    var offsetY: CGFloat = 0
-    
-    if sourceAspect > destAspect {
-      scale = destination.width / source.width
-      let usedHeight = source.height * scale
-      offsetY = (destination.height - usedHeight) / 2
-    } else {
-      scale = destination.height / source.height
-      let usedWidth = source.width * scale
-      offsetX = (destination.width - usedWidth) / 2
-    }
-    
-    let x = (self.x - source.minX) * scale + destination.minX + offsetX
-    let y = (self.y - source.minY) * scale + destination.minY + offsetY
-    return CGPoint(x: x, y: y)
+    let fittedRect = aspectMappedRect(from: source, to: destination, fill: false)
+    return stretchMap(from: source, to: fittedRect)
   }
   
   private func aspectFillMap(from source: CGRect, to destination: CGRect) -> CGPoint {
+    let filledRect = aspectMappedRect(from: source, to: destination, fill: true)
+    return stretchMap(from: source, to: filledRect)
+  }
+  
+  private func aspectMappedRect(
+    from source: CGRect,
+    to destination: CGRect,
+    fill: Bool
+  ) -> CGRect {
     let sourceAspect = source.width / source.height
     let destAspect = destination.width / destination.height
     
     var scale: CGFloat
-    var offsetX: CGFloat = 0
-    var offsetY: CGFloat = 0
+    var size: CGSize
+    var origin: CGPoint
     
-    if sourceAspect < destAspect {
+    if (fill && sourceAspect < destAspect) || (!fill && sourceAspect > destAspect) {
+      // Width-constrained
       scale = destination.width / source.width
-      let usedHeight = source.height * scale
-      offsetY = (destination.height - usedHeight) / 2
+      size = CGSize(width: destination.width, height: source.height * scale)
+      origin = CGPoint(
+        x: destination.minX,
+        y: destination.minY + (destination.height - size.height) / 2
+      )
     } else {
+      // Height-constrained
       scale = destination.height / source.height
-      let usedWidth = source.width * scale
-      offsetX = (destination.width - usedWidth) / 2
+      size = CGSize(width: source.width * scale, height: destination.height)
+      origin = CGPoint(
+        x: destination.minX + (destination.width - size.width) / 2,
+        y: destination.minY
+      )
     }
     
-    let x = (self.x - source.minX) * scale + destination.minX + offsetX
-    let y = (self.y - source.minY) * scale + destination.minY + offsetY
-    return CGPoint(x: x, y: y)
+    return CGRect(origin: origin, size: size)
   }
   
   
@@ -114,15 +112,24 @@ extension CGPoint {
     sqrt(pow(x - point.x, 2) + pow(y - point.y, 2))
   }
   
+  /// Hint: use extension `toCGRect` on `CGSize` for convenient
+  /// conversion, if origin is `zero`.
+  public func mapped(to destination: CGRect) -> CGPoint {
+    CGPoint(
+      x: destination.origin.x + (x * destination.width),
+      y: destination.origin.y + (y * destination.height)
+    )
+  }
+  
   /// Where `self` is a normalised point
   ///
   /// Example usage:
   /// ```
   /// let touchPos = convertNormalizedToConcrete(
-  ///   normalizedPoint: touch.position,
   ///   in: trackPadSize
   /// )
   /// ```
+  @available(*, deprecated, renamed: "mapped(to:)", message: "Naming and use is a bit unclear.")
   public func convertNormalisedToConcrete(
     in size: CGSize,
     origin: CGPoint = .zero
