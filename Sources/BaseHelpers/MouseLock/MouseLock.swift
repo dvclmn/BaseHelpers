@@ -10,31 +10,28 @@ import SwiftUI
 
 public struct MouseLockModifier: ViewModifier {
   let isLocked: Bool
+  let shouldHide: Bool
   let newPosition: CGPoint?
-
-  public init(
-    isLocked: Bool,
-    newPosition: CGPoint?
-  ) {
-    self.isLocked = isLocked
-    self.newPosition = newPosition
-  }
 
   public func body(content: Content) -> some View {
     content
       .task(id: isLocked) {
         Task { @MainActor in
           if isLocked {
-            print("Mouse set to Locked 🔐")
-//            NSCursor.hide()
-            CGAssociateMouseAndMouseCursorPosition(0)  // Arrest pointer (0 = false)
+//            print("Mouse set to Locked 🔐")
+            NSCursor.hide()
+
+            /// Arrest pointer (0 = false)
+            CGAssociateMouseAndMouseCursorPosition(0)
           } else {
-            print("Mouse set to Unlocked 🔓")
-//            NSCursor.unhide()
-//            if let newPosition {
-//              CGWarpMouseCursorPosition(newPosition)
-//            }
-            CGAssociateMouseAndMouseCursorPosition(1)  // Release pointer (1 = true)
+//            print("Mouse set to Unlocked 🔓")
+            /// Release pointer (1 = true)
+            CGAssociateMouseAndMouseCursorPosition(1)
+            if let newPosition {
+              CGWarpMouseCursorPosition(newPosition)
+            }
+            NSCursor.unhide()
+            NSCursor.arrow.set()
           }
         }
       }
@@ -43,11 +40,13 @@ public struct MouseLockModifier: ViewModifier {
 extension View {
   public func mouseLock(
     _ isLocked: Bool,
+    shouldHide: Bool = true,
     newPosition: CGPoint? = nil
   ) -> some View {
     self.modifier(
       MouseLockModifier(
         isLocked: isLocked,
+        shouldHide: shouldHide,
         newPosition: newPosition
       )
     )
