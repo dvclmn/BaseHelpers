@@ -6,9 +6,6 @@
 //
 
 extension BinaryFloatingPoint {
-  public var displayString: String {
-    String("\(self)")
-  }
 
   public var bump: Self {
     let nextFib = self * 1.618

@@ -32,8 +32,8 @@ extension CGVector {
     _ from: CGPoint,
     _ to: CGPoint,
     dt: TimeInterval
-  ) -> CGVector? {
-    guard dt > 0 else { return nil }
+  ) -> CGVector {
+    guard dt > 0 else { return .zero }
     return CGVector(
       dx: (to.x - from.x) / dt,
       dy: (to.y - from.y) / dt
