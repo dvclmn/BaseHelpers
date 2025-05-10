@@ -17,13 +17,10 @@ extension Comparable {
     let validRange = min(range.lowerBound, range.upperBound)...max(range.lowerBound, range.upperBound)
     return min(max(self, validRange.lowerBound), validRange.upperBound)
   }
-
 }
 
 extension Comparable where Self: FloatingPoint {
   
-  
-
   public func clampedAndFinite(to range: ClosedRange<Self>) -> Self? {
     let validRange = min(range.lowerBound, range.upperBound)...max(range.lowerBound, range.upperBound)
     guard validRange.lowerBound.isFinite && validRange.upperBound.isFinite else { return nil }
