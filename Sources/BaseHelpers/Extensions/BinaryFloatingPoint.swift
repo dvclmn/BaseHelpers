@@ -9,6 +9,7 @@ import Foundation
 
 extension BinaryFloatingPoint {
   
+
   public var bump: Self {
     let nextFib = self * 1.618
     /// Approximate next Fibonacci number
@@ -21,6 +22,7 @@ extension BinaryFloatingPoint {
     return (self + prevFib) / 2/// Midpoint between current and previous
   }
   
+
   public var constrainedOpacity: Self {
     return min(1.0, max(0.0, self))
   }
@@ -75,7 +77,10 @@ extension CGFloat {
 }
 
 extension Double {
-  
+  private var angleInDegrees: Double {
+    /// Convert radians to degrees
+    return self * 180 / .pi
+  }
 }
 
 struct PadFloat {

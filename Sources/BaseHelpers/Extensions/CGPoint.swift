@@ -22,7 +22,10 @@ public enum CoordinateMappingMode {
 
 extension CGPoint {
   
+  public static let quickPreset01 = CGPoint(x: 100, y: 50)
+  public static let quickPreset02 = CGPoint(x: 80, y: 120)
   
+
   public var length: CGFloat {
     sqrt(x * x + y * y)
   }
@@ -35,6 +38,7 @@ extension CGPoint {
     )
   }
   
+
   /// Below is equivalent to a previous version, which used
   /// `sqrt(pow(x - point.x, 2) + pow(y - point.y, 2))`
   public func distance(to p2: CGPoint) -> CGFloat {
@@ -42,6 +46,20 @@ extension CGPoint {
     return hypot(p2.x - p1.x, p2.y - p1.y)
   }
 
+  public func distance(to p2: CGPoint?) -> CGFloat? {
+    guard let p2 else { return nil }
+    let p1: CGPoint = self
+    return hypot(p2.x - p1.x, p2.y - p1.y)
+  }
+
+  public static func angleBetween(
+    _ p1: CGPoint,
+    _ p2: CGPoint
+  ) -> CGFloat {
+    atan2(p2.y - p1.y, p2.x - p1.x)
+  }
+  
+  
   /// Hint: use extension `toCGRect` on `CGSize` for convenient
   /// conversion, if origin is `zero`.
   public func mapped(to destination: CGRect) -> CGPoint {
@@ -49,7 +67,6 @@ extension CGPoint {
       x: destination.origin.x + (x * destination.width),
       y: destination.origin.y + (y * destination.height)
     )
-//    print("Mapped to — is this working ok? We are mapping point \(self.displayString) to destination rect \(destination.displayString). The result is: \(result.displayString)")
     return result
   }
 
