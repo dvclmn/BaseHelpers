@@ -73,11 +73,14 @@ extension BinaryFloatingPoint {
 }
 
 extension CGFloat {
-  
+  public var toDegrees: CGFloat {
+    /// Convert radians to degrees
+    return self * 180 / .pi
+  }
 }
 
 extension Double {
-  private var angleInDegrees: Double {
+  public var toDegrees: Double {
     /// Convert radians to degrees
     return self * 180 / .pi
   }

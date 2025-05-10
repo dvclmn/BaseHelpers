@@ -5,6 +5,8 @@
 //  Created by Dave Coleman on 2/3/2025.
 //
 
+import Foundation
+
 @MainActor
 public final class AsyncDebouncer {
   private var task: Task<Void, Never>? = nil
@@ -12,6 +14,10 @@ public final class AsyncDebouncer {
 
   public init(interval: Duration = .seconds(0.2)) {
     self.interval = interval
+  }
+  
+  public init(interval: CGFloat) {
+    self.interval = Duration.seconds(interval)
   }
   
   public init(interval: Int) {
