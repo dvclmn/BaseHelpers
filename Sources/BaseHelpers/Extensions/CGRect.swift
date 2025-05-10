@@ -15,6 +15,10 @@ extension CGRect {
   public var toCGSize: CGSize {
     CGSize(width: width, height: height)
   }
+  
+  public var displayString: String {
+    self.displayString()
+  }
 
   public func displayString(
     decimalPlaces: Int = 2,

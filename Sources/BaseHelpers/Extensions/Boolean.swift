@@ -13,6 +13,7 @@ public enum BooleanDisplayFormat {
   case enabledDisabled
   case checkmark
   case eye
+  case activeInactive
   case custom(trueText: String, falseText: String)
   
   public func format(_ value: Bool) -> String {
@@ -31,6 +32,9 @@ public enum BooleanDisplayFormat {
         
       case .eye:
         return value ? "􀋭" : "􀋯"
+        
+      case .activeInactive:
+        return value ? "Active" : "Inactive"
         
       case .custom(let trueText, let falseText):
         return value ? trueText : falseText

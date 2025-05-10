@@ -115,10 +115,12 @@ extension CGPoint {
   /// Hint: use extension `toCGRect` on `CGSize` for convenient
   /// conversion, if origin is `zero`.
   public func mapped(to destination: CGRect) -> CGPoint {
-    CGPoint(
+    let result = CGPoint(
       x: destination.origin.x + (x * destination.width),
       y: destination.origin.y + (y * destination.height)
     )
+    print("Mapped to — is this working ok? We are mapping point \(self.displayString) to destination rect \(destination.displayString). The result is: \(result.displayString)")
+    return result
   }
   
   /// Where `self` is a normalised point
