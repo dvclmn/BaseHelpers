@@ -43,7 +43,9 @@ extension CGSize {
     self.width.isZero || self.height.isZero
   }
 
-  
+  public var displayString: String {
+    displayString()
+  }
 
   public func displayString(decimalPlaces: Int = 2, style: DisplayStringStyle = .short) -> String {
 

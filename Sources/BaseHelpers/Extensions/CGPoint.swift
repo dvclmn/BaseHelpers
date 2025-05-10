@@ -119,7 +119,7 @@ extension CGPoint {
       x: destination.origin.x + (x * destination.width),
       y: destination.origin.y + (y * destination.height)
     )
-    print("Mapped to — is this working ok? We are mapping point \(self.displayString) to destination rect \(destination.displayString). The result is: \(result.displayString)")
+//    print("Mapped to — is this working ok? We are mapping point \(self.displayString) to destination rect \(destination.displayString). The result is: \(result.displayString)")
     return result
   }
   
