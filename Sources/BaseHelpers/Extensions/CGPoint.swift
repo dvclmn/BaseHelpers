@@ -8,10 +8,6 @@
 import SwiftUI
 
 
-//public func -(lhs: CGPoint, rhs: CGSize) -> CGPoint {
-//  return CGPoint(x: lhs.x - rhs.width, y: lhs.y - rhs.height)
-//}
-
 public enum CoordinateMappingMode {
   /// Fill destination rect exactly, even if aspect ratio is distorted
   case stretch
@@ -27,6 +23,36 @@ public enum CoordinateMappingMode {
 extension CGPoint {
   
   
+  public var length: CGFloat {
+    sqrt(x * x + y * y)
+  }
+
+  public var normalised: CGPoint {
+    guard length > 0 else { return .zero }
+    return CGPoint(
+      x: x / length,
+      y: y / length
+    )
+  }
+  
+  /// Below is equivalent to a previous version, which used
+  /// `sqrt(pow(x - point.x, 2) + pow(y - point.y, 2))`
+  public func distance(to p2: CGPoint) -> CGFloat {
+    let p1: CGPoint = self
+    return hypot(p2.x - p1.x, p2.y - p1.y)
+  }
+
+  /// Hint: use extension `toCGRect` on `CGSize` for convenient
+  /// conversion, if origin is `zero`.
+  public func mapped(to destination: CGRect) -> CGPoint {
+    let result = CGPoint(
+      x: destination.origin.x + (x * destination.width),
+      y: destination.origin.y + (y * destination.height)
+    )
+//    print("Mapped to — is this working ok? We are mapping point \(self.displayString) to destination rect \(destination.displayString). The result is: \(result.displayString)")
+    return result
+  }
+
   public func mapPoint(
     from source: CGRect,
     to destination: CGRect,
@@ -96,70 +122,6 @@ extension CGPoint {
   }
   
   
-  public var length: CGFloat {
-    sqrt(x * x + y * y)
-  }
-
-  public var normalised: CGPoint {
-    guard length > 0 else { return .zero }
-    return CGPoint(
-      x: x / length,
-      y: y / length
-    )
-  }
-
-  public func distance(to point: CGPoint) -> CGFloat {
-    sqrt(pow(x - point.x, 2) + pow(y - point.y, 2))
-  }
-  
-  /// Hint: use extension `toCGRect` on `CGSize` for convenient
-  /// conversion, if origin is `zero`.
-  public func mapped(to destination: CGRect) -> CGPoint {
-    let result = CGPoint(
-      x: destination.origin.x + (x * destination.width),
-      y: destination.origin.y + (y * destination.height)
-    )
-//    print("Mapped to — is this working ok? We are mapping point \(self.displayString) to destination rect \(destination.displayString). The result is: \(result.displayString)")
-    return result
-  }
-  
-  /// Where `self` is a normalised point
-  ///
-  /// Example usage:
-  /// ```
-  /// let touchPos = convertNormalizedToConcrete(
-  ///   in: trackPadSize
-  /// )
-  /// ```
-  @available(*, deprecated, renamed: "mapped(to:)", message: "Naming and use is a bit unclear.")
-  public func convertNormalisedToConcrete(
-    in size: CGSize,
-    origin: CGPoint = .zero
-  ) -> CGPoint {
-    return CGPoint(
-      x: origin.x + (self.x * size.width),
-      y: origin.y + (self.y * size.height)
-    )
-  }
-
-  // Useful for determining drag direction
-  //  func direction(to point: CGPoint) -> SwiftUI.Direction {
-  //    let deltaX = point.x - x
-  //    let deltaY = point.y - y
-  //    let angle = atan2(deltaY, deltaX)
-  //
-  //    // Convert angle to degrees and normalize to 0-360
-  //    let degrees = (angle * 180 / .pi + 360).truncatingRemainder(dividingBy: 360)
-  //
-  //    switch degrees {
-  //      case 0..<45, 315..<360: return .right
-  //      case 45..<135: return .down
-  //      case 135..<225: return .left
-  //      case 225..<315: return .up
-  //      default: return .right
-  //    }
-  //  }
-
 
   public func removingZoom(_ zoom: CGFloat) -> CGPoint {
     CGPoint(x: self.x / zoom, y: self.y / zoom)
@@ -293,7 +255,10 @@ extension CGPoint {
     return CGPoint(x: self.x + point.x, y: self.y + point.y)
   }
   
-  public static func midPoint(p1: CGPoint, p2: CGPoint) -> CGPoint {
+  public static func midPoint(
+    from p1: CGPoint,
+    to p2: CGPoint
+  ) -> CGPoint {
     return pointAlong(from: p1, to: p2, t: 0.5)
   }
 
@@ -373,6 +338,27 @@ extension CGPoint {
   public func pointAlong(to end: CGPoint, distance: CGFloat) -> CGPoint {
     return CGPoint.pointAlong(from: self, to: end, distance: distance)
   }
+  
+  
+  /// Where `self` is a normalised point
+  ///
+  /// Example usage:
+  /// ```
+  /// let touchPos = convertNormalizedToConcrete(
+  ///   in: trackPadSize
+  /// )
+  /// ```
+  @available(*, deprecated, renamed: "mapped(to:)", message: "Naming and use is a bit unclear.")
+  public func convertNormalisedToConcrete(
+    in size: CGSize,
+    origin: CGPoint = .zero
+  ) -> CGPoint {
+    return CGPoint(
+      x: origin.x + (self.x * size.width),
+      y: origin.y + (self.y * size.height)
+    )
+  }
+
 }
 
 
