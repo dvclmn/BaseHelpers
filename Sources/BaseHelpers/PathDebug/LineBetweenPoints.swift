@@ -48,7 +48,7 @@ public struct AngleLineModifier: ViewModifier {
       }
       .task(id: config) {
         await debouncer.execute { @MainActor in
-          let value = CGPoint.angleBetween(config.p1, config.p2).toDegrees.displayString
+          let value = CGPoint.angleInRadians(from: config.p1, to: config.p2).toDegrees.displayString
           angleString = value
         }
       }

@@ -29,6 +29,13 @@ extension EnvironmentValues {
   @Entry public var modifierKeys: Modifiers = .init()
 }
 
+extension Set where Element == ModifierKey {
+  
+  public func containsOnly(_ key: ModifierKey) -> Bool {
+    return self.contains(where: { $0 == key})
+  }
+}
+
 
 public typealias Modifiers = Set<ModifierKey>
 

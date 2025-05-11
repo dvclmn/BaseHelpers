@@ -51,13 +51,24 @@ extension CGPoint {
     let p1: CGPoint = self
     return hypot(p2.x - p1.x, p2.y - p1.y)
   }
-
-  public static func angleBetween(
-    _ p1: CGPoint,
-    _ p2: CGPoint
+  
+  public static func angleInRadians(
+    from p1: CGPoint,
+    to p2: CGPoint
   ) -> CGFloat {
     atan2(p2.y - p1.y, p2.x - p1.x)
   }
+  
+  public static func angle(from p1: CGPoint, to p2: CGPoint) -> Angle {
+    Angle(radians: angleInRadians(from: p1, to: p2))
+  }
+
+//  public static func angleBetween(
+//    _ p1: CGPoint,
+//    _ p2: CGPoint
+//  ) -> CGFloat {
+//    atan2(p2.y - p1.y, p2.x - p1.x)
+//  }
   
   
   /// Hint: use extension `toCGRect` on `CGSize` for convenient
