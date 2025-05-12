@@ -11,6 +11,32 @@ extension CGRect {
   public var path: Path {
     Path(self)
   }
+  
+  public func centred(in containerSize: CGSize) -> CGRect {
+    let origin = CGPoint(
+      x: (containerSize.width - self.width) / 2,
+      y: (containerSize.height - self.height) / 2
+    )
+    return CGRect(origin: origin, size: self.size)
+  }
+  
+  public var midPoint: CGPoint {
+    CGPoint(x: midX, y: midY)
+  }
+  
+//  public func centred(in viewSize: CGSize) -> CGRect {
+//    let something = size.midpoint
+//    let halfX = self.width / 2
+//    let halfY = self.height / 2
+//    
+//    let originalOrigin: CGPoint = self.origin
+//    
+//    return CGRect(
+//      origin: .zero,
+//      size: self.size
+//    )
+//    
+//  }
 
   public var toCGSize: CGSize {
     CGSize(width: width, height: height)

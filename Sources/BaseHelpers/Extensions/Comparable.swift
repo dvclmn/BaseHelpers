@@ -22,9 +22,15 @@ extension Comparable {
 extension Comparable where Self: FloatingPoint {
   
   public func clampedAndFinite(to range: ClosedRange<Self>) -> Self? {
-    let validRange = min(range.lowerBound, range.upperBound)...max(range.lowerBound, range.upperBound)
+    
+    let minValue = min(range.lowerBound, range.upperBound)
+    let maxValue = max(range.lowerBound, range.upperBound)
+    
+    let validRange = minValue...maxValue
+    
     guard validRange.lowerBound.isFinite && validRange.upperBound.isFinite else { return nil }
-    return min(max(self, validRange.lowerBound), validRange.upperBound)
+    let result = min(max(self, validRange.lowerBound), validRange.upperBound)
+    return result
   }
 
   public func normalised(from originalRange: (min: Self, max: Self)) -> Self {
