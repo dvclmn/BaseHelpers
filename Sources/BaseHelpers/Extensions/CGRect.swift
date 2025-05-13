@@ -12,13 +12,27 @@ extension CGRect {
     Path(self)
   }
   
-  public func centred(in containerSize: CGSize) -> CGRect {
+  /// This can be made better, but got this because SwiftUI's `.position()`
+  /// modifier places the *centre* of the view at the origin. If the origin is
+  /// meant to be the top leading corner, then this can help compensate for that.
+  public func positionIn(
+    viewSize: CGSize,
+//    anchorPoint: UnitPoint = .topLeading,
+  ) -> CGRect {
     let origin = CGPoint(
-      x: (containerSize.width - self.width) / 2,
-      y: (containerSize.height - self.height) / 2
+      x: (viewSize.width - self.width) / 2,
+      y: (viewSize.height - self.height) / 2
     )
     return CGRect(origin: origin, size: self.size)
   }
+  
+//  public func centred(in containerSize: CGSize) -> CGRect {
+//    let origin = CGPoint(
+//      x: (containerSize.width - self.width) / 2,
+//      y: (containerSize.height - self.height) / 2
+//    )
+//    return CGRect(origin: origin, size: self.size)
+//  }
   
   public var midPoint: CGPoint {
     CGPoint(x: midX, y: midY)
