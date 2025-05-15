@@ -7,27 +7,15 @@
 
 import Foundation
 
+//public struct ValueCurve {
+//  public let transform: (Double) -> Double
+//  public func callAsFunction(_ input: Double) -> Double {
+//    transform(input)
+//  }
+//}
+
 public struct ValueCurve {
-  public let transform: (Double) -> Double
-  public func apply(_ input: Double) -> Double {
-    transform(input)
-  }
-}
-
-public struct CurveParameters {
-  public var baseRatio: Double?
-  public var steps: Int?
-
-  public init(
-    baseRatio: Double? = nil,
-    steps: Int? = nil
-  ) {
-    self.baseRatio = baseRatio
-    self.steps = steps
-  }
-  // You could also add optional fields for other use-cases, like:
-  // var exponent: Double?
-  // var amplitude: Double?
+  public let apply: (Double) -> Double
 }
 
 public enum ValueCurveType: String, CaseIterable, Identifiable {
@@ -57,7 +45,7 @@ public enum ValueCurveType: String, CaseIterable, Identifiable {
   /// `$0` is shorthand for the first (and in this case, only) argument passed
   /// into the closure in `ValueCurve`. So, passing a closure of type
   /// `(Double) -> Double` to `ValueCurve.init(apply:)`
-  func asCurve() -> ValueCurve {
+  public func asCurve() -> ValueCurve {
     switch self {
       case .linear:
         return ValueCurve { $0 }
