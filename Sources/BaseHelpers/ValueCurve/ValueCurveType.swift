@@ -25,7 +25,7 @@ public enum ValueCurveType: String, CaseIterable, Identifiable {
   case exponential
   case logarithmic
   case sine
-  //  case modularScale
+  case modularScale
   //  case custom
 
   public var id: String { self.rawValue }
@@ -39,28 +39,84 @@ public enum ValueCurveType: String, CaseIterable, Identifiable {
       case .exponential: "Exponential"
       case .logarithmic: "Logarithmic"
       case .sine: "Sine"
-  
+      case .modularScale: "Modular Scale"
+
     }
   }
+
+  public func calculateValue(
+    at position: Double,
+    min: Double,
+    max: Double,
+    // For modular scale only, should revise
+    baseRatio: Double? = nil,
+    steps: Int? = nil
+  ) -> Double {
+    //    let min = settings.minValue
+    //    let max = settings.maxValue
+    
+    let range = max - min
+
+    switch self {
+      case .linear:
+        return min + range * position
+
+      case .quadratic:
+        return min + range * pow(position, 2)
+
+      case .cubic:
+        return min + range * pow(position, 3)
+
+      case .exponential:
+        return min + range * pow(position, 2)
+
+      case .logarithmic:
+        // Adjusted to ensure it starts at minValue when position = 0
+        if position == 0 {
+          return min
+        }
+        let logValue = log(position + 1) / log(2)
+        return min + range * (logValue / log(2))
+
+
+      case .sine:
+        // Sine curve from 0 to π/2 gives a nice easing
+        return min + range * sin(position * .pi / 2)
+
+      case .modularScale:
+        
+        guard let baseRatio, let steps else {
+          print("Need to supply both baseRatio and steps for modular scale")
+          return .zero
+        }
+        // Modular scale uses a ratio multiplied by itself for each step
+        if position == 0 {
+          return min
+        }
+        let stepsResult = position * Double(steps - 1)
+        return min * pow(baseRatio, stepsResult)
+    }
+  }
+
   /// `$0` is shorthand for the first (and in this case, only) argument passed
   /// into the closure in `ValueCurve`. So, passing a closure of type
   /// `(Double) -> Double` to `ValueCurve.init(apply:)`
-  public func asCurve() -> ValueCurve {
-    switch self {
-      case .linear:
-        return ValueCurve { $0 }
-      case .exponential:
-        return ValueCurve { pow($0, 2) }
-      case .logarithmic:
-        return ValueCurve { $0 == 0 ? 0 : log($0 + 1) / log(2) }
-      case .quadratic:
-        return ValueCurve { pow($0, 2) }
-      case .cubic:
-        return ValueCurve { pow($0, 3) }
-      case .sine:
-        return ValueCurve { sin($0 * .pi / 2) }
-    }
-  }
+  //  public func asCurve() -> ValueCurve {
+  //    switch self {
+  //      case .linear:
+  //        return ValueCurve { $0 }
+  //      case .exponential:
+  //        return ValueCurve { pow($0, 2) }
+  //      case .logarithmic:
+  //        return ValueCurve { $0 == 0 ? 0 : log($0 + 1) / log(2) }
+  //      case .quadratic:
+  //        return ValueCurve { pow($0, 2) }
+  //      case .cubic:
+  //        return ValueCurve { pow($0, 3) }
+  //      case .sine:
+  //        return ValueCurve { sin($0 * .pi / 2) }
+  //    }
+  //  }
   //  public func asCurve(using params: CurveParameters = .init()) -> ValueCurve {
   //    switch self {
   //      case .linear:
