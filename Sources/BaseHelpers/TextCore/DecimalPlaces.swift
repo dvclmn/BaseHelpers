@@ -16,15 +16,18 @@ func floatToDecimal<T: BinaryFloatingPoint>(value: T, places: Int) -> String {
 extension Double {
 
   public var displayString: String {
-    return self.toDecimal(2)
+    return self.displayString()
   }
 
-  public var toDecimal: String { toDecimal() }
+//  public var toDecimal: String { toDecimal() }
 
-  public func toDecimal(_ places: Int = 2) -> String {
+//  private func toDecimal(_ places: Int = 2) -> String {
+//    floatToDecimal(value: self, places: places)
+//  }
+
+  public func displayString(_ places: Int = 2) -> String {
     floatToDecimal(value: self, places: places)
   }
-
   public var toInt: String {
     floatToDecimal(value: self, places: 0)
   }
@@ -33,16 +36,16 @@ extension Double {
 extension CGFloat {
   
   public var displayString: String {
-    return self.toDecimal(2)
+    return self.displayString()
   }
 
-  public var toDecimal: String { toDecimal() }
+//  public var toDecimal: String { toDecimal() }
 
   public var toInt: String {
     floatToDecimal(value: self, places: 0)
   }
 
-  public func toDecimal(_ places: Int = 2) -> String {
+  public func displayString(_ places: Int = 2) -> String {
     floatToDecimal(value: self, places: places)
   }
 }

@@ -15,8 +15,8 @@ extension CGVector {
   
   public func displayString(decimalPlaces: Int = 2, style: DisplayStringStyle = .short) -> String {
     
-    let dxString = "\(self.dx.toDecimal(decimalPlaces))"
-    let dyString = "\(self.dy.toDecimal(decimalPlaces))"
+    let dxString = "\(self.dx.displayString(decimalPlaces))"
+    let dyString = "\(self.dy.displayString(decimalPlaces))"
     
     switch style {
       case .short:

@@ -49,8 +49,8 @@ extension CGSize {
 
   public func displayString(decimalPlaces: Int = 2, style: DisplayStringStyle = .short) -> String {
 
-    let width: String = "\(self.width.toDecimal(decimalPlaces))"
-    let height: String = "\(self.height.toDecimal(decimalPlaces))"
+    let width: String = "\(self.width.displayString(decimalPlaces))"
+    let height: String = "\(self.height.displayString(decimalPlaces))"
 
     switch style {
       case .short:

@@ -210,13 +210,13 @@ extension CGPoint {
   }
 
   public func displayString(decimalPlaces: Int = 2) -> String {
-    return "\(self.x.toDecimal(decimalPlaces)) x \(self.y.toDecimal(decimalPlaces))"
+    return "\(self.x.displayString(decimalPlaces)) x \(self.y.displayString(decimalPlaces))"
   }
 
   public func displayString(decimalPlaces: Int = 2, style: DisplayStringStyle = .short) -> String {
 
-    let width: String = "\(self.x.toDecimal(decimalPlaces))"
-    let height: String = "\(self.y.toDecimal(decimalPlaces))"
+    let width: String = "\(self.x.displayString(decimalPlaces))"
+    let height: String = "\(self.y.displayString(decimalPlaces))"
 
     switch style {
       case .short:
