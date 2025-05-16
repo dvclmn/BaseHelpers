@@ -12,6 +12,7 @@ import SwiftUI
 ///
 /// ```
 /// import SwiftUI
+/// import BaseHelpers // <- Import this
 ///
 /// @main
 /// struct ExampleApp: App {

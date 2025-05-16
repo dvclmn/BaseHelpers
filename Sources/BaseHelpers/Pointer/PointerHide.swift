@@ -1,14 +1,15 @@
 //
-//  MouseLock.swift
+//  PointerLock.swift
 //  BaseHelpers
 //
 //  Created by Dave Coleman on 3/5/2025.
 //
 
+#if canImport(AppKit)
 import AppKit
 import SwiftUI
 
-public struct MouseHideModifier: ViewModifier {
+public struct PointerHideModifier: ViewModifier {
 
   let isHidden: Bool
 
@@ -35,9 +36,10 @@ public struct MouseHideModifier: ViewModifier {
   }
 }
 extension View {
-  public func mouseHide(isHidden: Bool = true) -> some View {
+  public func pointerHide(isHidden: Bool = true) -> some View {
     self.modifier(
-      MouseHideModifier(isHidden: isHidden)
+      PointerHideModifier(isHidden: isHidden)
     )
   }
 }
+#endif

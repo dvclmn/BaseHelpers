@@ -7,13 +7,6 @@
 
 import Foundation
 
-//public struct ValueCurve {
-//  public let transform: (Double) -> Double
-//  public func callAsFunction(_ input: Double) -> Double {
-//    transform(input)
-//  }
-//}
-
 public struct ValueCurve {
   public let apply: (Double) -> Double
 }
@@ -26,10 +19,8 @@ public enum ValueCurveType: String, CaseIterable, Identifiable {
   case logarithmic
   case sine
   case modularScale
-  //  case custom
 
   public var id: String { self.rawValue }
-
 
   public var name: String {
     switch self {

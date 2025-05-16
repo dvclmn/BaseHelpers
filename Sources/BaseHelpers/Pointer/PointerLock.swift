@@ -1,14 +1,15 @@
 //
-//  MouseLock.swift
+//  PointerLock.swift
 //  BaseHelpers
 //
 //  Created by Dave Coleman on 3/5/2025.
 //
 
+#if canImport(AppKit)
 import AppKit
 import SwiftUI
 
-public struct MouseLockModifier: ViewModifier {
+public struct PointerLockModifier: ViewModifier {
 
   let isLocked: Bool
 //  let shouldHide: Bool
@@ -30,17 +31,17 @@ public struct MouseLockModifier: ViewModifier {
           }
         }
       }
-//      .mouseHide(isHidden: shouldHide)
+//      .pointerHide(isHidden: shouldHide)
   }
 }
 extension View {
-  public func mouseLock(
+  public func pointerLock(
     _ isLocked: Bool,
 //    shouldHide: Bool = true,
     newPosition: CGPoint? = nil
   ) -> some View {
     self.modifier(
-      MouseLockModifier(
+      PointerLockModifier(
         isLocked: isLocked,
 //        shouldHide: shouldHide,
         newPosition: newPosition
@@ -48,3 +49,4 @@ extension View {
     )
   }
 }
+#endif
