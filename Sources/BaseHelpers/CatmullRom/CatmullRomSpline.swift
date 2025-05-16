@@ -28,7 +28,7 @@ public struct CatmullRomSpline {
   
   /// Evaluates the spline at the given parameter value
   /// - Parameters:
-  ///   - t: The parameter value (normalized between 0 and 1)
+  ///   - t: The parameter value (normalised between 0 and 1)
   ///   - segmentIndex: The index of the segment to evaluate (default is 0)
   /// - Returns: The interpolated point on the spline
   public func evaluate(at t: CGFloat, segmentIndex: Int = 0) -> CGPoint? {
