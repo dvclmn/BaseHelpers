@@ -9,6 +9,12 @@ import Foundation
 
 extension BinaryFloatingPoint {
   
+  /// E.g. converting `0.8` to `0.2`
+  public var inversePercentage: Self {
+    /// Ensure falloff is between 0.0 and 1.0
+    let bounded = min(max(self, 0.0), 1.0)
+    return 1.0 - bounded
+  }
 
   public var bump: Self {
     let nextFib = self * 1.618

@@ -43,26 +43,35 @@ extension UnitPoint {
   public static let diagonalInverseQuarter = UnitPoint(x: 0.25, y: 0.75)
   public static let diagonalInverseThreeQuarters = UnitPoint(x: 0.75, y: 0.25)
 
+  public var opposing: UnitPoint {
+    switch self {
+      case .topLeading: .bottomTrailing
+      case .top: .bottom
+      case .topTrailing: .bottomLeading
+      case .trailing: .leading
+      case .bottomTrailing: .topLeading
+      case .bottom: .top
+      case .bottomLeading: .topTrailing
+      case .leading: .trailing
+      case .center: .center
+      default: .center
+    }
+  }
 
   public var toAlignment: Alignment {
 
     switch self {
 
-      case .topLeading: return .topLeading
-      case .top: return .top
-      case .topTrailing: return .topTrailing
-
-      case .trailing: return .trailing
-
-      case .bottomTrailing: return .bottomTrailing
-      case .bottom: return .bottom
-      case .bottomLeading: return .bottomLeading
-
-      case .leading: return .leading
-
-      case .center: return .center
-
-      default: return .center
+      case .topLeading: .topLeading
+      case .top: .top
+      case .topTrailing: .topTrailing
+      case .trailing: .trailing
+      case .bottomTrailing: .bottomTrailing
+      case .bottom: .bottom
+      case .bottomLeading: .bottomLeading
+      case .leading: .leading
+      case .center: .center
+      default: .center
     }
   }
 
