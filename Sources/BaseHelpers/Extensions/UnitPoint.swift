@@ -9,6 +9,28 @@ import Foundation
 import SwiftUI
 
 extension UnitPoint {
+  
+  public var displayString: String {
+    self.displayString(style: .full)
+  }
+
+  public func displayString(decimalPlaces: Int = 2, style: DisplayStringStyle = .short) -> String {
+    
+    let width: String = "\(self.x.displayString(decimalPlaces))"
+    let height: String = "\(self.y.displayString(decimalPlaces))"
+    
+    switch style {
+      case .short:
+        return "\(width) x \(height)"
+        
+      case .full, .initials:
+        return "X \(width)  Y \(height)"
+        
+    }
+  }
+
+  
+  
   // Corner intermediates (positioned between corners and edge centers)
   public static let topLeadingMid = UnitPoint(x: 0.25, y: 0.25)
   public static let topTrailingMid = UnitPoint(x: 0.75, y: 0.25)

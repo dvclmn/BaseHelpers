@@ -7,7 +7,6 @@
 
 import SwiftUI
 
-
 public enum CoordinateMappingMode {
   /// Fill destination rect exactly, even if aspect ratio is distorted
   case stretch
@@ -222,16 +221,13 @@ extension CGPoint {
       case .short:
         return "\(width) x \(height)"
 
-      case .full:
+      case .full, .initials:
         return "X \(width)  Y \(height)"
 
     }
   }
 
-  public enum DisplayStringStyle {
-    case short
-    case full
-  }
+
 
   public var isEmpty: Bool {
     x.isZero && y.isZero

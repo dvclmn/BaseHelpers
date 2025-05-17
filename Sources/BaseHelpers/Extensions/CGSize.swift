@@ -70,11 +70,6 @@ extension CGSize {
   }
 
 }
-public enum DisplayStringStyle {
-  case short
-  case initials
-  case full
-}
 
 // MARK: - Multiplication
 infix operator * : MultiplicationPrecedence
