@@ -10,20 +10,81 @@ import SwiftUI
 public enum CoordinateMappingMode {
   /// Fill destination rect exactly, even if aspect ratio is distorted
   case stretch
-  
+
   /// Contain: scale uniformly to fit within destination (aspect ratio preserved)
   case fit
-  
+
   /// Cover: scale uniformly to cover entire destination (aspect ratio preserved, may clip)
   case fill
-  
+
 }
 
 extension CGPoint {
-  
+
   public static let quickPreset01 = CGPoint(x: 100, y: 50)
   public static let quickPreset02 = CGPoint(x: 80, y: 120)
-  
+
+  // MARK: - Stretch out an Axis
+  public struct StretchOptions: OptionSet, Sendable {
+    public let rawValue: Int
+    static let normalised = StretchOptions(rawValue: 1 << 0)
+    public static let clamped = StretchOptions(rawValue: 1 << 0)
+
+    public init(rawValue: Int) {
+      self.rawValue = rawValue
+    }
+  }
+
+  /// Map cursorX to a stretched range
+  ///
+  /// The utility of this may not be obvious at first glance, so here's a simple example.
+  /// For my `.hover3DEffect()` modifier, I wanted the range of movement
+  /// (along the x axis) for the 'glint' effect, to be *wider* than the pointer's actual
+  /// range, across the surface of the view. This maps an axis of a CGPoint to be wider
+  /// (or narrower) than the original.
+  public func stretchedPosition(
+    _ axis: Axis,
+    in size: CGSize,
+    stretchFactor: CGFloat,
+    options: StretchOptions = []
+  ) -> CGFloat {
+
+    let rawLocation: CGFloat =
+      switch axis {
+        case .horizontal: self.x
+        case .vertical: self.y
+      }
+
+    let viewLength: CGFloat =
+      switch axis {
+        case .horizontal: size.width
+        case .vertical: size.height
+      }
+
+    let normalisedValue = options.contains(.normalised) ? rawLocation / viewLength : rawLocation
+    let centered = normalisedValue - 0.5
+    let stretched = centered * stretchFactor
+    let result = stretched + 0.5
+    //
+    //    let normalisedLength: CGFloat =
+    //      switch axis {
+    //        case .horizontal:
+    //          self.x / size.width
+    //        case .vertical:
+    //          self.y / size.height
+    //      }
+
+    /// Stretch around center (0.5)
+    //    let centered = normalisedLength - 0.5
+    //    let stretched = centered * stretchFactor
+    //    let result = stretched + 0.5
+
+    if options.contains(.clamped) {
+      return result.clamped(to: 0...1)
+    }
+
+    return result
+  }
 
   public var length: CGFloat {
     sqrt(x * x + y * y)
@@ -36,7 +97,7 @@ extension CGPoint {
       y: y / length
     )
   }
-  
+
 
   /// Below is equivalent to a previous version, which used
   /// `sqrt(pow(x - point.x, 2) + pow(y - point.y, 2))`
@@ -50,26 +111,26 @@ extension CGPoint {
     let p1: CGPoint = self
     return hypot(p2.x - p1.x, p2.y - p1.y)
   }
-  
+
   public static func angleInRadians(
     from p1: CGPoint,
     to p2: CGPoint
   ) -> CGFloat {
     atan2(p2.y - p1.y, p2.x - p1.x)
   }
-  
+
   public static func angle(from p1: CGPoint, to p2: CGPoint) -> Angle {
     Angle(radians: angleInRadians(from: p1, to: p2))
   }
 
-//  public static func angleBetween(
-//    _ p1: CGPoint,
-//    _ p2: CGPoint
-//  ) -> CGFloat {
-//    atan2(p2.y - p1.y, p2.x - p1.x)
-//  }
-  
-  
+  //  public static func angleBetween(
+  //    _ p1: CGPoint,
+  //    _ p2: CGPoint
+  //  ) -> CGFloat {
+  //    atan2(p2.y - p1.y, p2.x - p1.x)
+  //  }
+
+
   /// Hint: use extension `toCGRect` on `CGSize` for convenient
   /// conversion, if origin is `zero`.
   public func mapped(to destination: CGRect) -> CGPoint {
@@ -94,27 +155,27 @@ extension CGPoint {
         return aspectFillMap(from: source, to: destination)
     }
   }
-  
+
   private func stretchMap(from source: CGRect, to destination: CGRect) -> CGPoint {
     let scaleX = destination.width / source.width
     let scaleY = destination.height / source.height
-    
+
     let translatedX = (self.x - source.minX) * scaleX + destination.minX
     let translatedY = (self.y - source.minY) * scaleY + destination.minY
-    
+
     return CGPoint(x: translatedX, y: translatedY)
   }
-  
+
   private func aspectFitMap(from source: CGRect, to destination: CGRect) -> CGPoint {
     let fittedRect = aspectMappedRect(from: source, to: destination, fill: false)
     return stretchMap(from: source, to: fittedRect)
   }
-  
+
   private func aspectFillMap(from source: CGRect, to destination: CGRect) -> CGPoint {
     let filledRect = aspectMappedRect(from: source, to: destination, fill: true)
     return stretchMap(from: source, to: filledRect)
   }
-  
+
   private func aspectMappedRect(
     from source: CGRect,
     to destination: CGRect,
@@ -122,11 +183,11 @@ extension CGPoint {
   ) -> CGRect {
     let sourceAspect = source.width / source.height
     let destAspect = destination.width / destination.height
-    
+
     var scale: CGFloat
     var size: CGSize
     var origin: CGPoint
-    
+
     if (fill && sourceAspect < destAspect) || (!fill && sourceAspect > destAspect) {
       // Width-constrained
       scale = destination.width / source.width
@@ -144,11 +205,10 @@ extension CGPoint {
         y: destination.minY
       )
     }
-    
+
     return CGRect(origin: origin, size: size)
   }
-  
-  
+
 
   public func removingZoom(_ zoom: CGFloat) -> CGPoint {
     CGPoint(x: self.x / zoom, y: self.y / zoom)
@@ -203,7 +263,7 @@ extension CGPoint {
 
     return UnitPoint(x: x / size.width, y: y / size.height)
   }
-  
+
   public var displayString: String {
     self.displayString(style: .full)
   }
@@ -226,7 +286,6 @@ extension CGPoint {
 
     }
   }
-
 
 
   public var isEmpty: Bool {
@@ -278,7 +337,7 @@ extension CGPoint {
   public func shift(by point: CGPoint) -> CGPoint {
     return CGPoint(x: self.x + point.x, y: self.y + point.y)
   }
-  
+
   public static func midPoint(
     from p1: CGPoint,
     to p2: CGPoint
@@ -362,8 +421,8 @@ extension CGPoint {
   public func pointAlong(to end: CGPoint, distance: CGFloat) -> CGPoint {
     return CGPoint.pointAlong(from: self, to: end, distance: distance)
   }
-  
-  
+
+
   /// Where `self` is a normalised point
   ///
   /// Example usage:
@@ -384,7 +443,6 @@ extension CGPoint {
   }
 
 }
-
 
 
 // MARK: - Subtraction
@@ -474,4 +532,3 @@ infix operator < : ComparisonPrecedence
 public func < (lhs: CGPoint, rhs: CGPoint) -> Bool {
   lhs.x < rhs.x || lhs.y < rhs.y
 }
-
