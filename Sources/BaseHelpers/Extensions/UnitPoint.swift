@@ -8,29 +8,52 @@
 import Foundation
 import SwiftUI
 
+extension UnitPoint: @retroactive Identifiable {
+  public var id: String { self.name }
+}
+
 extension UnitPoint {
-  
+
+  public func toCGPoint(in size: CGSize) -> CGPoint {
+    let result = CGPoint(
+      x: self.x * size.width,
+      y: self.y * size.height
+    )
+    return result
+
+  }
+
+  public static func location(
+    for point: CGPoint,
+    in size: CGSize
+  ) -> UnitPoint {
+    let result = UnitPoint(
+      x: point.x / size.width,
+      y: point.y / size.height
+    )
+    return result
+  }
+
   public var displayString: String {
     self.displayString(style: .full)
   }
 
   public func displayString(decimalPlaces: Int = 2, style: DisplayStringStyle = .short) -> String {
-    
+
     let width: String = "\(self.x.displayString(decimalPlaces))"
     let height: String = "\(self.y.displayString(decimalPlaces))"
-    
+
     switch style {
       case .short:
         return "\(width) x \(height)"
-        
+
       case .full, .initials:
         return "X \(width)  Y \(height)"
-        
+
     }
   }
 
-  
-  
+
   // Corner intermediates (positioned between corners and edge centers)
   public static let topLeadingMid = UnitPoint(x: 0.25, y: 0.25)
   public static let topTrailingMid = UnitPoint(x: 0.75, y: 0.25)
@@ -79,6 +102,8 @@ extension UnitPoint {
       default: .center
     }
   }
+  
+  
 
   public var toAlignment: Alignment {
 

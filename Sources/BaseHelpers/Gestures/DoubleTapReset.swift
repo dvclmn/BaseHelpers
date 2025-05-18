@@ -28,7 +28,7 @@ public struct DoubleTapModifier: ViewModifier {
   }
 }
 extension View {
-  public func doubleTapReset(
+  public func doubleTap(
     _ value: Binding<Double>,
     defaultValue: Double?
   ) -> some View {
