@@ -27,7 +27,7 @@ extension Int {
     String(self)
   }
 
-  public var cgFloat: CGFloat {
+  public var asCGFloat: CGFloat {
     CGFloat(self)
   }
 

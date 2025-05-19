@@ -9,6 +9,23 @@ import SwiftUI
 
 extension Alignment {
 
+  public var toUnitPoint: UnitPoint {
+
+    switch self {
+      case .topLeading: .topLeading
+      case .top: .top
+      case .topTrailing: .topTrailing
+      case .trailing: .trailing
+      case .bottomTrailing: .bottomTrailing
+      case .bottom: .bottom
+      case .bottomLeading: .bottomLeading
+      case .leading: .leading
+      case .center: .center
+      default: .center
+    }
+  }
+
+
   public var displayName: String {
     switch self {
       case .topLeading: "Top Leading"
@@ -24,7 +41,7 @@ extension Alignment {
     }
   }
 
-  public var opposite: Alignment {
+  public var opposing: Alignment {
     switch self {
       case .topLeading: .bottomTrailing
       case .top: .bottom

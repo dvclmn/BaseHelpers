@@ -16,7 +16,6 @@ public enum CoordinateMappingMode {
 
   /// Cover: scale uniformly to cover entire destination (aspect ratio preserved, may clip)
   case fill
-
 }
 
 extension CGPoint {
@@ -62,23 +61,18 @@ extension CGPoint {
       }
 
     let normalisedValue = options.contains(.normalised) ? rawLocation / viewLength : rawLocation
-    let centered = normalisedValue - 0.5
-    let stretched = centered * stretchFactor
-    let result = stretched + 0.5
-    //
-    //    let normalisedLength: CGFloat =
-    //      switch axis {
-    //        case .horizontal:
-    //          self.x / size.width
-    //        case .vertical:
-    //          self.y / size.height
-    //      }
-
-    /// Stretch around center (0.5)
-    //    let centered = normalisedLength - 0.5
-    //    let stretched = centered * stretchFactor
-    //    let result = stretched + 0.5
-
+    
+    let centered: CGFloat
+    let result: CGFloat
+    
+    if options.contains(.normalised) {
+      centered = normalisedValue - 0.5
+      result = centered * stretchFactor + 0.5
+    } else {
+      centered = rawLocation - (viewLength / 2)
+      result = centered * stretchFactor + (viewLength / 2)
+    }
+    
     if options.contains(.clamped) {
       return result.clamped(to: 0...1)
     }
