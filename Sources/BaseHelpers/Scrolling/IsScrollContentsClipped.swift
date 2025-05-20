@@ -14,7 +14,7 @@ public enum HorizontalMask {
   case none
 
   public init(scrollState: HorizontalScrollState) {
-    
+
     /// If nothing is clipped, then we don't need to mask anything
     guard scrollState.isClipped else {
       self = .none
@@ -22,21 +22,14 @@ public enum HorizontalMask {
     }
     if scrollState.isAtStart {
       self = .endOnly
+      
     } else if scrollState.isAtEnd {
       self = .startOnly
+      
     } else {
       self = .startAndEnd
     }
   }
-  
-//  public var startPoint: (UnitPoint, UnitPoint) {
-//    switch self {
-//      case .startOnly:
-//      case .startAndEnd:
-//      case .endOnly:
-//      case .none:
-//    }
-//  }
 }
 
 public struct HorizontalScrollState: Equatable {
