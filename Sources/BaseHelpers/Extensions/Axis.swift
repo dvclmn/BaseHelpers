@@ -18,27 +18,7 @@ public enum DimensionToAxisConvention {
   case widthIsHorizontal
   case heightIsHorizontal
 
-  //  public var keyPathCGSize: KeyPath<CGSize, CGFloat> {
-  //    switch self {
-  //      case .widthIsHorizontal:
-  //        return \.width
-  //      case .heightIsHorizontal:
-  //        return \.height
-  //    }
-  //  }
-  //
-  //  public var keyPathCGPoint: KeyPath<CGPoint, CGFloat> {
-  //    switch self {
-  //      case .widthIsHorizontal:
-  //        return \.x
-  //      case .heightIsHorizontal:
-  //        return \.y
-  //    }
-  //  }
-
-
-  // MARK: - EdgeInsets
-
+  // MARK: - EdgeInsets Helpers
   public func horizontalLengthStart(_ edgeInsets: EdgeInsets) -> CGFloat {
     switch self {
       case .widthIsHorizontal:
@@ -73,9 +53,8 @@ public enum DimensionToAxisConvention {
     }
   }
 
-  // MARK: Final EdgeInsets
+  // MARK: Final EdgeInsets methods
   public func horizontalLength(edgeInsets: EdgeInsets) -> CGFloat {
-
     horizontalLengthStart(edgeInsets)
       + horizontalLengthEnd(edgeInsets)
   }
@@ -85,6 +64,7 @@ public enum DimensionToAxisConvention {
   }
 
 
+  // MARK: - CGSize
   public func horizontalLength(size: CGSize) -> CGFloat {
     switch self {
       case .widthIsHorizontal:
@@ -103,6 +83,7 @@ public enum DimensionToAxisConvention {
     }
   }
 
+  // MARK: - CGPoint
   public func horizontalLength(point: CGPoint) -> CGFloat {
     switch self {
       case .widthIsHorizontal:
@@ -120,7 +101,8 @@ public enum DimensionToAxisConvention {
         return point.x
     }
   }
-  
+
+  // MARK: - UnitPoint
   public func horizontalLength(unitPoint: UnitPoint) -> CGFloat {
     switch self {
       case .widthIsHorizontal:
@@ -129,7 +111,7 @@ public enum DimensionToAxisConvention {
         return unitPoint.y
     }
   }
-  
+
   public func verticalLength(unitPoint: UnitPoint) -> CGFloat {
     switch self {
       case .widthIsHorizontal:
@@ -143,18 +125,17 @@ public enum DimensionToAxisConvention {
 extension Axis {
 
   public var toAxisSet: Axis.Set {
-    
     switch self {
       case .horizontal:
         return [.horizontal]
       case .vertical:
         return [.vertical]
     }
-    
-//    let rawValue = self.rawValue
-//    return Axis.Set(rawValue: rawValue)
+
+    //    let rawValue = self.rawValue
+    //    return Axis.Set(rawValue: rawValue)
   }
-  
+
   public var name: String {
     switch self {
       case .horizontal:
@@ -200,7 +181,7 @@ extension Axis {
         return convention.verticalLength(point: point)
     }
   }
-  
+
   public func length(
     unitPoint: UnitPoint,
     convention: DimensionToAxisConvention = .widthIsHorizontal
