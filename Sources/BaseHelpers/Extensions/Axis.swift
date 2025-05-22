@@ -7,25 +7,88 @@
 
 import SwiftUI
 
-
+//extension Axis.Set {
+//  public var toAxis: Axis {
+//
+//  }
+//}
 
 extension Axis {
 
+  /// Explicit mapping
+  /// ```
+  /// Axis.horizontal.length(
+  ///   from: size,
+  ///   mapping: .widthIsHorizontal
+  /// )
+  /// ```
+  ///
+  /// Convention-based (most ergonomic)
+  /// ```
+  /// Axis.horizontal.length(from: size, convention: .standard)
+  /// Axis.horizontal.length(from: size, convention: .inverted)
+  /// ```
+  ///
+  /// Default behavior (backwards compatible)
+  /// ```
+  /// Axis.horizontal.length(from: size)
+  /// ```
   public enum DimensionToAxisMapping {
     case widthIsHorizontal
     case heightIsHorizontal
-    
+
     public func horizontalLength(_ size: CGSize) -> CGFloat {
       switch self {
         case .widthIsHorizontal:
           return size.width
-          
         case .heightIsHorizontal:
           return size.height
       }
     }
+
+    public func verticalLength(_ size: CGSize) -> CGFloat {
+      switch self {
+        case .widthIsHorizontal:
+          return size.height
+        case .heightIsHorizontal:
+          return size.width
+      }
+    }
+
+    public func horizontalLength(_ edgeInsets: EdgeInsets) -> CGFloat {
+      switch self {
+        case .widthIsHorizontal:
+          return edgeInsets.leading + edgeInsets.trailing
+        case .heightIsHorizontal:
+          return edgeInsets.top + edgeInsets.bottom
+      }
+    }
+    
+    public func verticalLength(_ edgeInsets: EdgeInsets) -> CGFloat {
+      switch self {
+        case .widthIsHorizontal:
+          return edgeInsets.top + edgeInsets.bottom
+        case .heightIsHorizontal:
+          return edgeInsets.leading + edgeInsets.trailing
+      }
+    }
+
+    // Convenience initializer from Axis with explicit convention
+//    public init(axis: Axis, convention: AxisConvention) {
+//      switch (axis, convention) {
+//        case (.horizontal, .standard), (.vertical, .inverted):
+//          self = .widthIsHorizontal
+//        case (.horizontal, .inverted), (.vertical, .standard):
+//          self = .heightIsHorizontal
+//      }
+//    }
+
+//    public enum AxisConvention {
+//      case standard  // horizontal maps to width, vertical maps to height
+//      case inverted  // horizontal maps to height, vertical maps to width
+//    }
   }
-  
+
   public var name: String {
     switch self {
       case .horizontal:
@@ -35,30 +98,49 @@ extension Axis {
     }
   }
 
-  
+
   public func length(
     from size: CGSize,
     mapping: DimensionToAxisMapping = .widthIsHorizontal
-//    isPerpendicular: Bool = false
   ) -> CGFloat {
-    
-    
-    switch self {
-      case .horizontal:
-        return isPerpendicular ? size.height : size.width
-      case .vertical:
-        return isPerpendicular ? size.width : size.height
+    switch (self, mapping) {
+      case (.horizontal, .widthIsHorizontal), (.vertical, .heightIsHorizontal):
+        return mapping.horizontalLength(size)
+      case (.horizontal, .heightIsHorizontal), (.vertical, .widthIsHorizontal):
+        return mapping.verticalLength(size)
     }
   }
-
-//  public func perpendicularDimension(from size: CGSize) -> CGFloat {
-//    switch self {
-//      case .horizontal:
-//        return size.width
-//      case .vertical:
-//        return size.height
+  
+//  public func length(
+//    from edgeInsets: EdgeInsets,
+//    mapping: DimensionToAxisMapping = .widthIsHorizontal
+//  ) -> CGFloat {
+//    switch (self, mapping) {
+//      case (.horizontal, .widthIsHorizontal), (.vertical, .heightIsHorizontal):
+//        return mapping.horizontalLength(size)
+//      case (.horizontal, .heightIsHorizontal), (.vertical, .widthIsHorizontal):
+//        return mapping.verticalLength(size)
 //    }
 //  }
+
+  // Even more ergonomic: direct convention-based method
+//  public func length(
+//    from size: CGSize,
+//    convention: DimensionToAxisMapping.AxisConvention = .standard
+//  ) -> CGFloat {
+//    let mapping = DimensionToAxisMapping(axis: self, convention: convention)
+//    return length(from: size, mapping: mapping)
+//  }
+
+
+  //  public func perpendicularDimension(from size: CGSize) -> CGFloat {
+  //    switch self {
+  //      case .horizontal:
+  //        return size.width
+  //      case .vertical:
+  //        return size.height
+  //    }
+  //  }
 
   public func dimension(from rect: CGRect) -> CGFloat {
     switch self {
@@ -80,12 +162,12 @@ extension Axis {
     switch axis {
       case .minWidth, .maxWidth:
         return .horizontal
-        
+
       case .minHeight, .maxHeight:
         return .vertical
     }
   }
-  
+
   public enum MinMax {
     case minWidth
     case maxWidth
@@ -93,5 +175,5 @@ extension Axis {
     case maxHeight
   }
 
-  
+
 }
