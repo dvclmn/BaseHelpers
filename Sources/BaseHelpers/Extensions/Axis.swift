@@ -7,14 +7,14 @@
 
 import SwiftUI
 
-/// Explicit mapping
+/// Explicit convention
 /// ```
 /// Axis.horizontal.length(
 ///   from: size,
-///   mapping: .widthIsHorizontal
+///   convention: .widthIsHorizontal
 /// )
 /// ```
-public enum DimensionToAxisMapping {
+public enum DimensionToAxisConvention {
   case widthIsHorizontal
   case heightIsHorizontal
 
@@ -120,11 +120,41 @@ public enum DimensionToAxisMapping {
         return point.x
     }
   }
+  
+  public func horizontalLength(unitPoint: UnitPoint) -> CGFloat {
+    switch self {
+      case .widthIsHorizontal:
+        return unitPoint.x
+      case .heightIsHorizontal:
+        return unitPoint.y
+    }
+  }
+  
+  public func verticalLength(unitPoint: UnitPoint) -> CGFloat {
+    switch self {
+      case .widthIsHorizontal:
+        return unitPoint.y
+      case .heightIsHorizontal:
+        return unitPoint.x
+    }
+  }
 }
 
 extension Axis {
 
-
+  public var toAxisSet: Axis.Set {
+    
+    switch self {
+      case .horizontal:
+        return [.horizontal]
+      case .vertical:
+        return [.vertical]
+    }
+    
+//    let rawValue = self.rawValue
+//    return Axis.Set(rawValue: rawValue)
+  }
+  
   public var name: String {
     switch self {
       case .horizontal:
@@ -137,37 +167,49 @@ extension Axis {
 
   public func length(
     size: CGSize,
-    mapping: DimensionToAxisMapping = .widthIsHorizontal
+    convention: DimensionToAxisConvention = .widthIsHorizontal
   ) -> CGFloat {
-    switch (self, mapping) {
+    switch (self, convention) {
       case (.horizontal, .widthIsHorizontal), (.vertical, .heightIsHorizontal):
-        return mapping.horizontalLength(size: size)
+        return convention.horizontalLength(size: size)
       case (.horizontal, .heightIsHorizontal), (.vertical, .widthIsHorizontal):
-        return mapping.verticalLength(size: size)
+        return convention.verticalLength(size: size)
     }
   }
 
   public func length(
     edgeInsets: EdgeInsets,
-    mapping: DimensionToAxisMapping = .widthIsHorizontal
+    convention: DimensionToAxisConvention = .widthIsHorizontal
   ) -> CGFloat {
-    switch (self, mapping) {
+    switch (self, convention) {
       case (.horizontal, .widthIsHorizontal), (.vertical, .heightIsHorizontal):
-        return mapping.horizontalLength(edgeInsets: edgeInsets)
+        return convention.horizontalLength(edgeInsets: edgeInsets)
       case (.horizontal, .heightIsHorizontal), (.vertical, .widthIsHorizontal):
-        return mapping.verticalLength(edgeInsets: edgeInsets)
+        return convention.verticalLength(edgeInsets: edgeInsets)
     }
   }
 
   public func length(
     point: CGPoint,
-    mapping: DimensionToAxisMapping = .widthIsHorizontal
+    convention: DimensionToAxisConvention = .widthIsHorizontal
   ) -> CGFloat {
-    switch (self, mapping) {
+    switch (self, convention) {
       case (.horizontal, .widthIsHorizontal), (.vertical, .heightIsHorizontal):
-        return mapping.horizontalLength(point: point)
+        return convention.horizontalLength(point: point)
       case (.horizontal, .heightIsHorizontal), (.vertical, .widthIsHorizontal):
-        return mapping.verticalLength(point: point)
+        return convention.verticalLength(point: point)
+    }
+  }
+  
+  public func length(
+    unitPoint: UnitPoint,
+    convention: DimensionToAxisConvention = .widthIsHorizontal
+  ) -> CGFloat {
+    switch (self, convention) {
+      case (.horizontal, .widthIsHorizontal), (.vertical, .heightIsHorizontal):
+        return convention.horizontalLength(unitPoint: unitPoint)
+      case (.horizontal, .heightIsHorizontal), (.vertical, .widthIsHorizontal):
+        return convention.verticalLength(unitPoint: unitPoint)
     }
   }
 

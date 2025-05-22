@@ -8,11 +8,28 @@
 import Foundation
 import SwiftUI
 
+
 extension UnitPoint: @retroactive Identifiable {
   public var id: String { self.name }
 }
 
 extension UnitPoint {
+  
+//  public func startPoint(
+//    for axis: Axis,
+//    mapping: DimensionToAxisConvention
+//  ) -> Self {
+//
+//  }
+//  public func endPoint(
+//    for axis: Axis,
+//    mapping: DimensionToAxisConvention
+//  ) -> Self {
+//    switch mapping {
+//      case .widthIsHorizontal: Self.trailing
+//      case .heightIsHorizontal: Self.bottom
+//    }
+//  }
 
   public func toCGPoint(in size: CGSize) -> CGPoint {
     let result = CGPoint(
