@@ -7,39 +7,6 @@
 
 import SwiftUI
 
-//extension Axis.Set {
-//  public var toAxis: Axis {
-//
-//  }
-//}
-//public protocol MappableToAxis {
-//  func keyPath(_ mapping: DimensionToAxisMapping) -> KeyPath<Self, CGFloat>
-//}
-//extension EdgeInsets: MappableToAxis {
-//  public func keyPath(_ mapping: DimensionToAxisMapping) -> KeyPath<Self, CGFloat> {
-//    switch mapping {
-//      case .widthIsHorizontal:
-//        return \.leading
-//      case .heightIsHorizontal:
-//        return \.top
-//    }
-//  }
-//}
-
-//extension EdgeInsets {
-//  func startLength(_ mapping: DimensionToAxisMapping) -> CGFloat {
-//    switch self {
-//      case .widthIsHorizontal:
-//        return edgeInsets.leading + edgeInsets.trailing
-//      case .heightIsHorizontal:
-//        return edgeInsets.top + edgeInsets.bottom
-//    }
-//  }
-//  //  var startLengthForAxis(_ mapping: DimensionToAxisMapping) -> CGFloat {
-//  //
-//  //  }
-//}
-
 /// Explicit mapping
 /// ```
 /// Axis.horizontal.length(
@@ -51,74 +18,74 @@ public enum DimensionToAxisMapping {
   case widthIsHorizontal
   case heightIsHorizontal
 
-  public var keyPathCGSize: KeyPath<CGSize, CGFloat> {
-    switch self {
-      case .widthIsHorizontal:
-        return \.width
-      case .heightIsHorizontal:
-        return \.height
-    }
-  }
-  //  public var keyPathEdgeInsetsStart: KeyPath<EdgeInsets, CGFloat> {
+  //  public var keyPathCGSize: KeyPath<CGSize, CGFloat> {
   //    switch self {
   //      case .widthIsHorizontal:
-  //        return \.leading
+  //        return \.width
   //      case .heightIsHorizontal:
-  //        return \.top
+  //        return \.height
   //    }
   //  }
-  //  public var keyPathEdgeInsetsEnd: KeyPath<EdgeInsets, CGFloat> {
+  //
+  //  public var keyPathCGPoint: KeyPath<CGPoint, CGFloat> {
   //    switch self {
   //      case .widthIsHorizontal:
-  //        return \.trailing
+  //        return \.x
   //      case .heightIsHorizontal:
-  //        return \.bottom
-  //    }
-  //  }
-  public var keyPathCGPoint: KeyPath<CGPoint, CGFloat> {
-    switch self {
-      case .widthIsHorizontal:
-        return \.x
-      case .heightIsHorizontal:
-        return \.y
-    }
-  }
-
-  //  public func length(_ edgeInsets: EdgeInsets) -> CGFloat {
-  //    switch self {
-  //      case .widthIsHorizontal:
-  //        return edgeInsets.top + edgeInsets.bottom
-  //      case .heightIsHorizontal:
-  //        return edgeInsets.leading + edgeInsets.trailing
+  //        return \.y
   //    }
   //  }
 
-  func horizontalLength(
-    for edgeInsets: EdgeInsets,
-    _ mapping: DimensionToAxisMapping
-  ) -> CGFloat {
+
+  // MARK: - EdgeInsets
+
+  public func horizontalLengthStart(_ edgeInsets: EdgeInsets) -> CGFloat {
     switch self {
       case .widthIsHorizontal:
-        return edgeInsets.leading + edgeInsets.trailing
+        return edgeInsets.top
       case .heightIsHorizontal:
-        return edgeInsets.top + edgeInsets.bottom
+        return edgeInsets.leading
+    }
+  }
+  public func horizontalLengthEnd(_ edgeInsets: EdgeInsets) -> CGFloat {
+    switch self {
+      case .widthIsHorizontal:
+        return edgeInsets.bottom
+      case .heightIsHorizontal:
+        return edgeInsets.trailing
     }
   }
 
-  func verticalLength(
-    for edgeInsets: EdgeInsets,
-    _ mapping: DimensionToAxisMapping
-  ) -> CGFloat {
+  public func verticalLengthStart(_ edgeInsets: EdgeInsets) -> CGFloat {
     switch self {
       case .widthIsHorizontal:
-        return edgeInsets.leading + edgeInsets.trailing
+        return edgeInsets.leading
       case .heightIsHorizontal:
-        return edgeInsets.top + edgeInsets.bottom
+        return edgeInsets.top
+    }
+  }
+  public func verticalLengthEnd(_ edgeInsets: EdgeInsets) -> CGFloat {
+    switch self {
+      case .widthIsHorizontal:
+        return edgeInsets.trailing
+      case .heightIsHorizontal:
+        return edgeInsets.bottom
     }
   }
 
+  // MARK: Final EdgeInsets
+  public func horizontalLength(edgeInsets: EdgeInsets) -> CGFloat {
 
-  public func horizontalLength(_ size: CGSize) -> CGFloat {
+    horizontalLengthStart(edgeInsets)
+      + horizontalLengthEnd(edgeInsets)
+  }
+  public func verticalLength(edgeInsets: EdgeInsets) -> CGFloat {
+    verticalLengthStart(edgeInsets)
+      + verticalLengthEnd(edgeInsets)
+  }
+
+
+  public func horizontalLength(size: CGSize) -> CGFloat {
     switch self {
       case .widthIsHorizontal:
         return size.width
@@ -127,7 +94,7 @@ public enum DimensionToAxisMapping {
     }
   }
 
-  public func verticalLength(_ size: CGSize) -> CGFloat {
+  public func verticalLength(size: CGSize) -> CGFloat {
     switch self {
       case .widthIsHorizontal:
         return size.height
@@ -135,40 +102,24 @@ public enum DimensionToAxisMapping {
         return size.width
     }
   }
-  //
-  //    public func horizontalLength(_ edgeInsets: EdgeInsets) -> CGFloat {
-  //      switch self {
-  //        case .widthIsHorizontal:
-  //          return edgeInsets.leading + edgeInsets.trailing
-  //        case .heightIsHorizontal:
-  //          return edgeInsets.top + edgeInsets.bottom
-  //      }
-  //    }
-  //
-  //    public func verticalLength(_ edgeInsets: EdgeInsets) -> CGFloat {
-  //      switch self {
-  //        case .widthIsHorizontal:
-  //          return edgeInsets.top + edgeInsets.bottom
-  //        case .heightIsHorizontal:
-  //          return edgeInsets.leading + edgeInsets.trailing
-  //      }
-  //    }
-  //
 
-  // Convenience initializer from Axis with explicit convention
-  //    public init(axis: Axis, convention: AxisConvention) {
-  //      switch (axis, convention) {
-  //        case (.horizontal, .standard), (.vertical, .inverted):
-  //          self = .widthIsHorizontal
-  //        case (.horizontal, .inverted), (.vertical, .standard):
-  //          self = .heightIsHorizontal
-  //      }
-  //    }
+  public func horizontalLength(point: CGPoint) -> CGFloat {
+    switch self {
+      case .widthIsHorizontal:
+        return point.x
+      case .heightIsHorizontal:
+        return point.y
+    }
+  }
 
-  //    public enum AxisConvention {
-  //      case standard  // horizontal maps to width, vertical maps to height
-  //      case inverted  // horizontal maps to height, vertical maps to width
-  //    }
+  public func verticalLength(point: CGPoint) -> CGFloat {
+    switch self {
+      case .widthIsHorizontal:
+        return point.y
+      case .heightIsHorizontal:
+        return point.x
+    }
+  }
 }
 
 extension Axis {
@@ -185,59 +136,40 @@ extension Axis {
 
 
   public func length(
-    from size: CGSize,
+    size: CGSize,
     mapping: DimensionToAxisMapping = .widthIsHorizontal
   ) -> CGFloat {
     switch (self, mapping) {
       case (.horizontal, .widthIsHorizontal), (.vertical, .heightIsHorizontal):
-        return mapping.horizontalLength(size)
+        return mapping.horizontalLength(size: size)
       case (.horizontal, .heightIsHorizontal), (.vertical, .widthIsHorizontal):
-        return mapping.verticalLength(size)
+        return mapping.verticalLength(size: size)
     }
   }
 
   public func length(
-    from edgeInsets: EdgeInsets,
+    edgeInsets: EdgeInsets,
     mapping: DimensionToAxisMapping = .widthIsHorizontal
   ) -> CGFloat {
     switch (self, mapping) {
       case (.horizontal, .widthIsHorizontal), (.vertical, .heightIsHorizontal):
-        return mapping.horizontalLength(edgeInsets)
+        return mapping.horizontalLength(edgeInsets: edgeInsets)
       case (.horizontal, .heightIsHorizontal), (.vertical, .widthIsHorizontal):
-        return mapping.verticalLength(edgeInsets)
+        return mapping.verticalLength(edgeInsets: edgeInsets)
     }
   }
 
-  //  public func length(
-  //    from edgeInsets: EdgeInsets,
-  //    mapping: DimensionToAxisMapping = .widthIsHorizontal
-  //  ) -> CGFloat {
-  //    switch (self, mapping) {
-  //      case (.horizontal, .widthIsHorizontal), (.vertical, .heightIsHorizontal):
-  //        return mapping.horizontalLength(size)
-  //      case (.horizontal, .heightIsHorizontal), (.vertical, .widthIsHorizontal):
-  //        return mapping.verticalLength(size)
-  //    }
-  //  }
-
-  // Even more ergonomic: direct convention-based method
-  //  public func length(
-  //    from size: CGSize,
-  //    convention: DimensionToAxisMapping.AxisConvention = .standard
-  //  ) -> CGFloat {
-  //    let mapping = DimensionToAxisMapping(axis: self, convention: convention)
-  //    return length(from: size, mapping: mapping)
-  //  }
-
-
-  //  public func perpendicularDimension(from size: CGSize) -> CGFloat {
-  //    switch self {
-  //      case .horizontal:
-  //        return size.width
-  //      case .vertical:
-  //        return size.height
-  //    }
-  //  }
+  public func length(
+    point: CGPoint,
+    mapping: DimensionToAxisMapping = .widthIsHorizontal
+  ) -> CGFloat {
+    switch (self, mapping) {
+      case (.horizontal, .widthIsHorizontal), (.vertical, .heightIsHorizontal):
+        return mapping.horizontalLength(point: point)
+      case (.horizontal, .heightIsHorizontal), (.vertical, .widthIsHorizontal):
+        return mapping.verticalLength(point: point)
+    }
+  }
 
   public func dimension(from rect: CGRect) -> CGFloat {
     switch self {
