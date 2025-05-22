@@ -5,11 +5,15 @@
 //  Created by Dave Coleman on 12/11/2024.
 //
 
-import Foundation
+import SwiftUI
 
 
 
 extension CGSize {
+  
+  public func lengthForAxis(_ axis: Axis) -> CGFloat {
+    axis == .horizontal ? width : height
+  }
   
   public var toCGRect: CGRect {
     CGRect(origin: .zero, size: self)

@@ -7,12 +7,42 @@
 
 import SwiftUI
 
+
+
 extension Axis {
-  /// Returns either the width or height of a CGSize based on the axis.
-  /// - Parameter size: The CGSize to extract the dimension from
-  /// - Returns: The appropriate dimension (width for vertical, height for horizontal)
-#warning("DragToSelect wants this to be horizontal == width, vertical == height. Other domains may have different requirements, which needs to be addressed")
-  public func dimension(from size: CGSize, isPerpendicular: Bool = false) -> CGFloat {
+
+  public enum DimensionToAxisMapping {
+    case widthIsHorizontal
+    case heightIsHorizontal
+    
+    public func horizontalLength(_ size: CGSize) -> CGFloat {
+      switch self {
+        case .widthIsHorizontal:
+          return size.width
+          
+        case .heightIsHorizontal:
+          return size.height
+      }
+    }
+  }
+  
+  public var name: String {
+    switch self {
+      case .horizontal:
+        "X"
+      case .vertical:
+        "Y"
+    }
+  }
+
+  
+  public func length(
+    from size: CGSize,
+    mapping: DimensionToAxisMapping = .widthIsHorizontal
+//    isPerpendicular: Bool = false
+  ) -> CGFloat {
+    
+    
     switch self {
       case .horizontal:
         return isPerpendicular ? size.height : size.width
@@ -45,10 +75,7 @@ extension Axis {
       case .vertical: return rect.midY
     }
   }
-}
 
-extension Axis {
-  
   public func getMinMax(_ axis: Axis.MinMax) -> Axis {
     switch axis {
       case .minWidth, .maxWidth:
