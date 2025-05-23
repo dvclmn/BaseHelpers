@@ -25,7 +25,7 @@ let package = Package(
   targets: [
     .target(name: "BaseHelpers", dependencies: [
       .product(name: "NSUI", package: "nsui"),
-      .product(name: "Ifrit", package: "Ifrit"),
+      .product(name: "IfritStatic", package: "Ifrit"),
     ]),
   ],
   swiftLanguageModes: [.v5]

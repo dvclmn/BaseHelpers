@@ -8,20 +8,22 @@
 import Foundation
 import Ifrit
 
-
 public protocol FuzzyResultsHandler: Sendable {
   associatedtype Item: FuzzySearchable
-  
+
   var fuse: Fuse { get }
-  var searchQuery: String { get }
+  var searchQuery: String { get set }
   var debouncer: AsyncDebouncer { get }
   var collection: [Item] { get }
-  
+
+  //  var itemTitle: AttributedString { get }
+
+  //    func results() async -> [Item]
   func results() async -> [FuzzyMatch<Item>]
 }
 extension FuzzyResultsHandler {
-  
-  var allItems: [FuzzyMatch<Item>] {
+
+  public var allItems: [FuzzyMatch<Item>] {
     collection.map { item in
       return FuzzyMatch(
         item: item,
@@ -30,47 +32,30 @@ extension FuzzyResultsHandler {
       )
     }
   }
-  
-  func results() async -> [FuzzyMatch<Item>] {
-    
+
+
+  //  public func results() async -> [Item] {
+  public func results() async -> [FuzzyMatch<Item>] {
+
     guard !searchQuery.isEmpty else {
       return allItems
+      //      return collection
     }
-    
+
     return await debouncer.execute {
       let matches = collection.compactMap { item in
         item.fuzzyMatch(using: fuse, query: searchQuery)
       }
-      return matches.sorted { $0.score < $1.score }
+      let sorted = matches.sorted { $0.score < $1.score }
+      //      let finalResult: [Item] = sorted.map(\.item)
+      return sorted
     } ?? []
-    
-    
-    
-    
-//    return await debouncer.execute { @MainActor in
-//      print("Debounced results called")
-//      
-//      let matches = collection.compactMap { item in
-//        item.fuzzyMatch(using: fuse, query: searchQuery)
-//      }
-//      
-//      return matches.sorted(by: { $0.score < $1.score })
-//    }
-//    await debouncer.execute { @MainActor in
-//      print("Debounced results called")
-//      
-//      // Some kind of provided transformation/mapping here...
-//      
-//      let sortedMatches = matches.sorted { $0.score < $1.score }
-//      // etc...
-//    }
-//    return []
   }
-  
-  
+
+
 }
 
-public protocol FuzzySearchable: Sendable {
+public protocol FuzzySearchable: Sendable, Identifiable {
   var stringRepresentation: String { get }
   /// Called with the fuse instance and the query, returns a FuzzyMatch if this item matched.
   func fuzzyMatch(using fuse: Fuse, query: String) -> FuzzyMatch<Self>?
@@ -78,9 +63,106 @@ public protocol FuzzySearchable: Sendable {
 
 public typealias FuzzyRanges = [CountableClosedRange<Int>]
 
-public struct FuzzyMatch<Item: FuzzySearchable> : Sendable{
-  let item: Item
-  let score: Double
-  let ranges: FuzzyRanges
-}
+public struct FuzzyMatch<Item: FuzzySearchable>: Sendable {
+  public let item: Item
+  public let score: Double
+  public let ranges: FuzzyRanges
 
+
+  public init(
+    item: Item,
+    score: Double,
+    ranges: FuzzyRanges
+  ) {
+    self.item = item
+    self.score = score
+    self.ranges = ranges
+  }
+
+  public var itemTitle: AttributedString {
+    //    private func item(
+    //      _ text: String,
+    //      fuzzyMatch: FuzzyMatch<TinyTool>
+    //    ) -> AttributedString {
+
+    let theme = MarkdownTheme.defaultTheme
+    let markdownRanges = getCachedMarkdownRanges(
+      for: item.stringRepresentation,
+      theme: theme,
+      forSyntax: Markdown.Syntax.testCases
+    )
+    var attributedString = markdownRanges.text
+
+    /// Try running a fuzzy search on this text.
+    //    guard !docHandler.documentSearch.isEmpty, let fuzzyResult = fuse.searchSync(docHandler.documentSearch, in: text) else {
+    //      return attributedString
+    //    }
+
+    /// Loop through each matching range from Fuse.
+    for range in self.ranges {
+      /// Convert the CountableClosedRange<Int> into a Range<AttributedString.Index>.
+      if let start = attributedString.index(at: range.lowerBound),
+        let end = attributedString.index(at: range.upperBound + 1)
+      {
+        let attributedRange = start..<end
+
+        /// Apply the desired styling (here using .neonOrange as defined).
+        attributedString[attributedRange].mergeAttributes(.searchMatch)
+        //        attributedString[attributedRange].setAttributes(.searchMatch)
+      }
+    }
+
+    return attributedString
+  }
+
+  #warning("Nothing is being cached at the moment, I think")
+  func getCachedMarkdownRanges(
+    for text: String,
+    theme: MarkdownTheme,
+    forSyntax syntax: [Markdown.Syntax]
+  ) -> MarkdownRanges {
+
+    /// Update last access time
+    //    lastAccessTimes[text] = Date()
+
+    /// Trim cache if needed
+    //    trimCacheIfNeeded()
+    //
+    //    if let cached = markdownCache[text] {
+    //      /// Create a new AttributedString but use cached ranges
+    //      var attrString = AttributedString(text)
+    //      for (syntax, ranges) in cached {
+    //        for range in ranges {
+    //          attrString[range].setAttributes(AttributeContainer.fromTheme(theme, for: syntax))
+    //        }
+    //      }
+    //      return MarkdownRanges(ranges: cached, text: attrString)
+    //    } else {
+    /// Parse and cache new content
+    var attrString = AttributedString(text)
+    var rangeDict: StyledRanges = [:]
+
+    for type in syntax {
+      guard let regex = type.regexLiteral else { continue }
+      let string = text
+      let matches = string.matches(of: regex)
+
+      var ranges: [Range<AttributedString.Index>] = []
+      for match in matches {
+        guard let fullRange = attrString.range(of: match.output.0) else { continue }
+        attrString[fullRange].setAttributes(AttributeContainer.fromTheme(theme, for: type))
+        ranges.append(fullRange)
+      }
+
+      if !ranges.isEmpty {
+        rangeDict[type] = ranges
+      }
+    }
+
+    /// Cache the results
+    //      markdownCache[text] = rangeDict
+    return MarkdownRanges(ranges: rangeDict, text: attrString)
+    //    }
+  }
+  //  }
+}
