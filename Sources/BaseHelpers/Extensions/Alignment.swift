@@ -8,6 +8,15 @@
 import SwiftUI
 
 extension Alignment {
+  
+  public var toTextAlignment: TextAlignment {
+    switch self {
+      case .topLeading, .bottomLeading, .leading: .leading
+      case .topTrailing, .bottomTrailing, .trailing: .trailing
+      case .center: .center
+      default: .leading
+    }
+  }
 
   public var toUnitPoint: UnitPoint {
 

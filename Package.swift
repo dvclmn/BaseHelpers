@@ -19,11 +19,13 @@ let package = Package(
   dependencies: [
     .package(url: "https://github.com/apple/swift-docc-plugin", from: "1.0.0"),
     .package(url: "https://github.com/mattmassicotte/nsui", from: "1.3.0"),
+    .package(url: "https://github.com/ukushu/Ifrit", from: "3.0.0"),
   ],
   
   targets: [
     .target(name: "BaseHelpers", dependencies: [
       .product(name: "NSUI", package: "nsui"),
+      .product(name: "Ifrit", package: "Ifrit"),
     ]),
   ],
   swiftLanguageModes: [.v5]

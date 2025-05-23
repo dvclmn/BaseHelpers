@@ -22,34 +22,34 @@ public enum DimensionToAxisConvention {
   public func horizontalLengthStart(_ edgeInsets: EdgeInsets) -> CGFloat {
     switch self {
       case .widthIsHorizontal:
-        return edgeInsets.top
-      case .heightIsHorizontal:
         return edgeInsets.leading
+      case .heightIsHorizontal:
+        return edgeInsets.top
     }
   }
   public func horizontalLengthEnd(_ edgeInsets: EdgeInsets) -> CGFloat {
     switch self {
       case .widthIsHorizontal:
-        return edgeInsets.bottom
-      case .heightIsHorizontal:
         return edgeInsets.trailing
+      case .heightIsHorizontal:
+        return edgeInsets.bottom
     }
   }
 
   public func verticalLengthStart(_ edgeInsets: EdgeInsets) -> CGFloat {
     switch self {
       case .widthIsHorizontal:
-        return edgeInsets.leading
-      case .heightIsHorizontal:
         return edgeInsets.top
+      case .heightIsHorizontal:
+        return edgeInsets.leading
     }
   }
   public func verticalLengthEnd(_ edgeInsets: EdgeInsets) -> CGFloat {
     switch self {
       case .widthIsHorizontal:
-        return edgeInsets.trailing
-      case .heightIsHorizontal:
         return edgeInsets.bottom
+      case .heightIsHorizontal:
+        return edgeInsets.trailing
     }
   }
 
