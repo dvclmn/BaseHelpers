@@ -15,12 +15,9 @@ public protocol FuzzyResultsHandler: Sendable {
   var searchQuery: String { get set }
   var debouncer: AsyncDebouncer { get }
   var collection: [Item] { get }
-
-  //  var itemTitle: AttributedString { get }
-
-  //    func results() async -> [Item]
   func results() async -> [FuzzyMatch<Item>]
 }
+
 extension FuzzyResultsHandler {
 
   public var allItems: [FuzzyMatch<Item>] {
@@ -33,13 +30,9 @@ extension FuzzyResultsHandler {
     }
   }
 
-
-  //  public func results() async -> [Item] {
   public func results() async -> [FuzzyMatch<Item>] {
-
     guard !searchQuery.isEmpty else {
       return allItems
-      //      return collection
     }
 
     return await debouncer.execute {
@@ -47,7 +40,6 @@ extension FuzzyResultsHandler {
         item.fuzzyMatch(using: fuse, query: searchQuery)
       }
       let sorted = matches.sorted { $0.score < $1.score }
-      //      let finalResult: [Item] = sorted.map(\.item)
       return sorted
     } ?? []
   }
