@@ -12,25 +12,29 @@ public typealias ViewLengthOutput = (CGFloat) -> Void
 
 /// `CGSize`, for width and height of view
 public struct ViewSizeModifier: ViewModifier {
+  private let debouncer = AsyncDebouncer()
+  
   let sizeOutput: ViewSizeOutput
   public func body(content: Content) -> some View {
     content
       .onGeometryChange(for: CGSize.self) { proxy in
         return proxy.size
       } action: { newValue in
-        sizeOutput(newValue)
+        Task {
+          await debouncer.execute { @MainActor in
+            sizeOutput(newValue)
+          }
+        }
       }
   }
 }
-extension View {
-  public func viewSize(sizeOutput: @escaping ViewSizeOutput) -> some View {
-    self.modifier(ViewSizeModifier(sizeOutput: sizeOutput))
-  }
-}
+
 
 /// `CGFloat`, for just width, or just height
 public struct ViewLengthModifier: ViewModifier {
 
+  private let debouncer = AsyncDebouncer()
+  
   let axis: Axis
   let lengthOutput: ViewLengthOutput
   public func body(content: Content) -> some View {
@@ -44,7 +48,11 @@ public struct ViewLengthModifier: ViewModifier {
             return proxy.size.height
         }
       } action: { newValue in
-        lengthOutput(newValue)
+        Task {
+          await debouncer.execute { @MainActor in
+            lengthOutput(newValue)
+          }
+        }
       }
   }
 }
@@ -54,5 +62,9 @@ extension View {
     lengthOutput: @escaping ViewLengthOutput
   ) -> some View {
     self.modifier(ViewLengthModifier(axis: axis, lengthOutput: lengthOutput))
+  }
+
+  public func viewSize(sizeOutput: @escaping ViewSizeOutput) -> some View {
+    self.modifier(ViewSizeModifier(sizeOutput: sizeOutput))
   }
 }
