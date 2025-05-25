@@ -72,78 +72,133 @@ public struct FuzzyMatch<Item: FuzzySearchable>: Sendable {
     self.ranges = ranges
   }
 
-  public func itemTitle(with theme: MarkdownTheme = .defaultTheme) -> AttributedString {
+  public func itemTitle(
+    with container: AttributeContainer = .highlighter
+  ) -> AttributedString {
 
     //    let theme = MarkdownTheme.defaultTheme
-    let markdownRanges = getCachedMarkdownRanges(
-      for: item.stringRepresentation,
-      theme: theme,
-      forSyntax: Markdown.Syntax.testCases
-    )
-    var attributedString = markdownRanges.text
+//    let markdownRanges = getCachedMarkdownRanges(
+//      for: item.stringRepresentation,
+//      theme: theme,
+//      forSyntax: Markdown.Syntax.testCases
+//    )
+    
+    
+//    public typealias StyledRanges = [Markdown.Syntax: [Range<AttributedString.Index>]]
+//    
+//    public struct MarkdownRanges {
+//      public var ranges: StyledRanges
+//      public var text: AttributedString
+//      public init(
+//        ranges: StyledRanges,
+//        text: AttributedString
+//      ) {
+//        self.ranges = ranges
+//        self.text = text
+//      }
+//    }
+    
+    
+    var attrString = AttributedString(item.stringRepresentation)
+    
+//    var rangeDict: StyledRanges = [:]
+    
+//    for type in syntax {
+//      guard let regex = type.regexLiteral else { continue }
+//      let string = text
+    
+    
+    
+    
+    
+//      let matches = string.matches(of: regex)
+//      
+//      var ranges: [Range<AttributedString.Index>] = []
+//      for match in matches {
+//        guard let fullRange = attrString.range(of: match.output.0) else { continue }
+//        attrString[fullRange].setAttributes(AttributeContainer.fromTheme(theme, for: type))
+//        ranges.append(fullRange)
+//      }
+//      
+//      if !ranges.isEmpty {
+//        rangeDict[type] = ranges
+//      }
+    
+    
+    
+    
+    
+//    }
+    
+    /// Cache the results
+    //      markdownCache[text] = rangeDict
+//    return MarkdownRanges(ranges: rangeDict, text: attrString)
+
+    
+//    var attributedString = markdownRanges.text
 
     /// Loop through each matching range from Fuse.
     for range in self.ranges {
       /// Convert the `CountableClosedRange<Int>` into a `Range<AttributedString.Index>`
-      if let start = attributedString.index(at: range.lowerBound),
-        let end = attributedString.index(at: range.upperBound + 1)
+      if let start = attrString.index(at: range.lowerBound),
+        let end = attrString.index(at: range.upperBound + 1)
       {
         let attributedRange = start..<end
 
         /// Apply the desired styling (here using .neonOrange as defined).
-        attributedString[attributedRange].mergeAttributes(.searchMatch)
+        attrString[attributedRange].mergeAttributes(.searchMatch)
       }
     }
 
-    return attributedString
+    return attrString
   }
 
-  #warning("Nothing is being cached at the moment, I think")
-  func getCachedMarkdownRanges(
-    for text: String,
-    theme: MarkdownTheme,
-    forSyntax syntax: [Markdown.Syntax]
-  ) -> MarkdownRanges {
-
-    /// Update last access time
-    //    lastAccessTimes[text] = Date()
-
-    /// Trim cache if needed
-    //    trimCacheIfNeeded()
-    //
-    //    if let cached = markdownCache[text] {
-    //      /// Create a new AttributedString but use cached ranges
-    //      var attrString = AttributedString(text)
-    //      for (syntax, ranges) in cached {
-    //        for range in ranges {
-    //          attrString[range].setAttributes(AttributeContainer.fromTheme(theme, for: syntax))
-    //        }
-    //      }
-    //      return MarkdownRanges(ranges: cached, text: attrString)
-    //    } else {
-    /// Parse and cache new content
-    var attrString = AttributedString(text)
-    var rangeDict: StyledRanges = [:]
-
-    for type in syntax {
-      guard let regex = type.regexLiteral else { continue }
-      let string = text
-      let matches = string.matches(of: regex)
-
-      var ranges: [Range<AttributedString.Index>] = []
-      for match in matches {
-        guard let fullRange = attrString.range(of: match.output.0) else { continue }
-        attrString[fullRange].setAttributes(AttributeContainer.fromTheme(theme, for: type))
-        ranges.append(fullRange)
-      }
-
-      if !ranges.isEmpty {
-        rangeDict[type] = ranges
-      }
-    }
-
-    /// Cache the results
-    //      markdownCache[text] = rangeDict
-    return MarkdownRanges(ranges: rangeDict, text: attrString)
-  }
+//  #warning("Nothing is being cached at the moment, I think")
+//  func getCachedMarkdownRanges(
+//    for text: String,
+//    theme: MarkdownTheme,
+//    forSyntax syntax: [Markdown.Syntax]
+//  ) -> MarkdownRanges {
+//
+//    /// Update last access time
+//    //    lastAccessTimes[text] = Date()
+//
+//    /// Trim cache if needed
+//    //    trimCacheIfNeeded()
+//    //
+//    //    if let cached = markdownCache[text] {
+//    //      /// Create a new AttributedString but use cached ranges
+//    //      var attrString = AttributedString(text)
+//    //      for (syntax, ranges) in cached {
+//    //        for range in ranges {
+//    //          attrString[range].setAttributes(AttributeContainer.fromTheme(theme, for: syntax))
+//    //        }
+//    //      }
+//    //      return MarkdownRanges(ranges: cached, text: attrString)
+//    //    } else {
+//    /// Parse and cache new content
+//    var attrString = AttributedString(text)
+//    var rangeDict: StyledRanges = [:]
+//
+//    for type in syntax {
+//      guard let regex = type.regexLiteral else { continue }
+//      let string = text
+//      let matches = string.matches(of: regex)
+//
+//      var ranges: [Range<AttributedString.Index>] = []
+//      for match in matches {
+//        guard let fullRange = attrString.range(of: match.output.0) else { continue }
+//        attrString[fullRange].setAttributes(AttributeContainer.fromTheme(theme, for: type))
+//        ranges.append(fullRange)
+//      }
+//
+//      if !ranges.isEmpty {
+//        rangeDict[type] = ranges
+//      }
+//    }
+//
+//    /// Cache the results
+//    //      markdownCache[text] = rangeDict
+//    return MarkdownRanges(ranges: rangeDict, text: attrString)
+//  }
 }
