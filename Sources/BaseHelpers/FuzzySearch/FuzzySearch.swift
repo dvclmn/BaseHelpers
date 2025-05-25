@@ -56,6 +56,7 @@ public protocol FuzzySearchable: Sendable, Identifiable {
 public typealias FuzzyRanges = [CountableClosedRange<Int>]
 
 public struct FuzzyMatch<Item: FuzzySearchable>: Sendable {
+  
   public let item: Item
   public let score: Double
   public let ranges: FuzzyRanges
@@ -72,10 +73,6 @@ public struct FuzzyMatch<Item: FuzzySearchable>: Sendable {
   }
 
   public var itemTitle: AttributedString {
-    //    private func item(
-    //      _ text: String,
-    //      fuzzyMatch: FuzzyMatch<TinyTool>
-    //    ) -> AttributedString {
 
     let theme = MarkdownTheme.defaultTheme
     let markdownRanges = getCachedMarkdownRanges(
@@ -85,14 +82,9 @@ public struct FuzzyMatch<Item: FuzzySearchable>: Sendable {
     )
     var attributedString = markdownRanges.text
 
-    /// Try running a fuzzy search on this text.
-    //    guard !docHandler.documentSearch.isEmpty, let fuzzyResult = fuse.searchSync(docHandler.documentSearch, in: text) else {
-    //      return attributedString
-    //    }
-
     /// Loop through each matching range from Fuse.
     for range in self.ranges {
-      /// Convert the CountableClosedRange<Int> into a Range<AttributedString.Index>.
+      /// Convert the `CountableClosedRange<Int>` into a `Range<AttributedString.Index>`
       if let start = attributedString.index(at: range.lowerBound),
         let end = attributedString.index(at: range.upperBound + 1)
       {
@@ -100,7 +92,6 @@ public struct FuzzyMatch<Item: FuzzySearchable>: Sendable {
 
         /// Apply the desired styling (here using .neonOrange as defined).
         attributedString[attributedRange].mergeAttributes(.searchMatch)
-        //        attributedString[attributedRange].setAttributes(.searchMatch)
       }
     }
 
@@ -154,7 +145,5 @@ public struct FuzzyMatch<Item: FuzzySearchable>: Sendable {
     /// Cache the results
     //      markdownCache[text] = rangeDict
     return MarkdownRanges(ranges: rangeDict, text: attrString)
-    //    }
   }
-  //  }
 }
