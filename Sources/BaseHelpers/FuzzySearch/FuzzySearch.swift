@@ -56,7 +56,7 @@ public protocol FuzzySearchable: Sendable, Identifiable {
 public typealias FuzzyRanges = [CountableClosedRange<Int>]
 
 public struct FuzzyMatch<Item: FuzzySearchable>: Sendable {
-  
+
   public let item: Item
   public let score: Double
   public let ranges: FuzzyRanges
@@ -72,9 +72,9 @@ public struct FuzzyMatch<Item: FuzzySearchable>: Sendable {
     self.ranges = ranges
   }
 
-  public var itemTitle: AttributedString {
+  public func itemTitle(with theme: MarkdownTheme = .defaultTheme) -> AttributedString {
 
-    let theme = MarkdownTheme.defaultTheme
+    //    let theme = MarkdownTheme.defaultTheme
     let markdownRanges = getCachedMarkdownRanges(
       for: item.stringRepresentation,
       theme: theme,
