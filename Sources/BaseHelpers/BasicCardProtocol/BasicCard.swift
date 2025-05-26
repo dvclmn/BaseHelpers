@@ -7,7 +7,7 @@
 
 import Foundation
 
-public protocol BasicCard: Identifiable {
+public protocol BasicCard: Identifiable, CaseIterable {
   var id: String { get }
   var label: QuickLabel { get }
 //  var name: String { get }
