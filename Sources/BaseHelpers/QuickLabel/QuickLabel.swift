@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import BaseStyles
 
 public struct QuickLabel: Equatable, Sendable, Codable {
   public let text: String
@@ -60,11 +61,11 @@ extension QuickLabel {
     case destructive
     case warning
     
-    var colour: Color {
+    var colour: Swatch {
       switch self {
-        case .success: .green
-        case .destructive: .red
-        case .warning: .yellow
+        case .success: .asciiGreen
+        case .destructive: .asciiRed
+        case .warning: .asciiYellow
       }
     }
   }
