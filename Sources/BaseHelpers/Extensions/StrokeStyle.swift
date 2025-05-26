@@ -14,4 +14,7 @@ public extension StrokeStyle {
   static var simple02: StrokeStyle {
     .init(lineWidth: 2)
   }
+  static var simple04: StrokeStyle {
+    .init(lineWidth: 4)
+  }
 }

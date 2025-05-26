@@ -8,6 +8,7 @@
 import Foundation
 import Ifrit
 
+@MainActor
 public protocol FuzzyResultsHandler: Sendable {
   associatedtype Item: FuzzySearchable
 
@@ -35,7 +36,7 @@ extension FuzzyResultsHandler {
       return allItems
     }
 
-    return await debouncer.execute {
+    return await debouncer.execute { @MainActor in
       let matches = collection.compactMap { item in
         item.fuzzyMatch(using: fuse, query: searchQuery)
       }
@@ -55,8 +56,10 @@ public protocol FuzzySearchable: Sendable, Identifiable {
 
 public typealias FuzzyRanges = [CountableClosedRange<Int>]
 
-public struct FuzzyMatch<Item: FuzzySearchable>: Sendable {
-
+public struct FuzzyMatch<Item: FuzzySearchable>: Sendable, Identifiable {
+  public var id: Item.ID {
+    item.id
+  }
   public let item: Item
   public let score: Double
   public let ranges: FuzzyRanges
