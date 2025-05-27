@@ -27,6 +27,8 @@ extension LabeledEnum {
   }
   public var name: String {
     return self.rawValue.capitalized
+    
+//    return self.label.text
   }
   //  public var icon: String? {
   //    return label.icon?.string

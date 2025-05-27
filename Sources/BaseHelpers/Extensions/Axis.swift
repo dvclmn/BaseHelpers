@@ -194,13 +194,23 @@ extension Axis {
     }
   }
 
-  public func dimension(from rect: CGRect) -> CGFloat {
-    switch self {
-      case .horizontal:
+  public func dimension(
+    from rect: CGRect,
+    convention: DimensionToAxisConvention = .widthIsHorizontal
+  ) -> CGFloat {
+    
+    switch (self, convention) {
+      case (.horizontal, .widthIsHorizontal), (.vertical, .widthIsHorizontal):
         return rect.width
-      case .vertical:
+      case (.horizontal, .heightIsHorizontal), (.vertical, .heightIsHorizontal):
         return rect.height
     }
+//    switch self {
+//      case .horizontal:
+//        return rect.width
+//      case .vertical:
+//        return rect.height
+//    }
   }
 
   public func midPoint(from rect: CGRect) -> CGFloat {

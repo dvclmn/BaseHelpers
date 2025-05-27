@@ -5,8 +5,7 @@
 //  Created by Dave Coleman on 26/5/2025.
 //
 
-import Foundation
-import BaseStyles
+import SwiftUI
 
 public struct QuickLabel: Equatable, Sendable, Codable {
   public let text: String
@@ -61,11 +60,11 @@ extension QuickLabel {
     case destructive
     case warning
     
-    var colour: Swatch {
+    var colour: Color {
       switch self {
-        case .success: .asciiGreen
-        case .destructive: .asciiRed
-        case .warning: .asciiYellow
+        case .success: .green
+        case .destructive: .red
+        case .warning: .yellow
       }
     }
   }

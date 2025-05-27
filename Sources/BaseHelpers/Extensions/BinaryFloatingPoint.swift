@@ -76,6 +76,13 @@ extension BinaryFloatingPoint {
     
   }
   
+  /// Calculates height from width using the given aspect ratio
+  /// - Parameter aspectRatio: The aspect ratio (width / height)
+  /// - Returns: The calculated height value
+  public func height(for aspectRatio: Self) -> Self {
+    return self / aspectRatio
+  }
+  
 }
 
 extension CGFloat {

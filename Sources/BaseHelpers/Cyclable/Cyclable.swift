@@ -33,6 +33,21 @@ extension Cyclable {
   }
 }
 
+
+/// Example usage:
+/// ```
+/// let filter = ToolFilter<TinyTool>.fromPreferences(preferences)
+/// let all = CyclableCollection<TinyTool>()
+/// let activeTools = filter.filtered(all)
+/// ```
+//extension ItemFilter where T == TinyTool {
+//  static func fromPreferences(_ prefs: Preferences) -> Self {
+//    ItemFilter { tool in
+//      prefs.pinnedTools[tool.id] ?? false
+//    }
+//  }
+//}
+
 // I don't yet know how to take advantage of the below (suggestions from GPT 4.1)
 //public struct CyclableCollection<T: Cyclable>: RandomAccessCollection {
 //  let base = T.allCases

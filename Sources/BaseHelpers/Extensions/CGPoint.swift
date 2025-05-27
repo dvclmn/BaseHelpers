@@ -61,10 +61,10 @@ extension CGPoint {
       }
 
     let normalisedValue = options.contains(.normalised) ? rawLocation / viewLength : rawLocation
-    
+
     let centered: CGFloat
     let result: CGFloat
-    
+
     if options.contains(.normalised) {
       centered = normalisedValue - 0.5
       result = centered * stretchFactor + 0.5
@@ -72,7 +72,7 @@ extension CGPoint {
       centered = rawLocation - (viewLength / 2)
       result = centered * stretchFactor + (viewLength / 2)
     }
-    
+
     if options.contains(.clamped) {
       return result.clamped(to: 0...1)
     }
@@ -434,6 +434,23 @@ extension CGPoint {
       x: origin.x + (self.x * size.width),
       y: origin.y + (self.y * size.height)
     )
+  }
+
+}
+
+extension Array where Element == CGPoint {
+  
+  public var createLinePath: Path {
+    Path { path in
+      guard let first = self.first else { return }
+
+      path.move(to: first)
+
+      self.dropFirst()
+        .forEach { point in
+          path.addLine(to: point)
+        }
+    }
   }
 
 }
