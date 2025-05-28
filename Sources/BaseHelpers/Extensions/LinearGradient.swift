@@ -9,8 +9,8 @@ import SwiftUI
 
 extension LinearGradient {
   public static func lightFalloff(
-    _ colour: Color = .white,
-    direction: Alignment = .topLeading,
+    _ colour: Color = .white.opacity(0.1),
+    direction: Alignment = .top,
     fallofAmount: CGFloat = 0.9
   ) -> LinearGradient {
     
