@@ -29,7 +29,10 @@ public struct CatmullRomSpline {
     type: CatmullRomType = .centripetal,
     tension: CGFloat = 0.5
   ) {
-    guard points.count >= 4 else { return nil }
+    guard points.count >= 4 else {
+      print("Error: CatmullRomSpline requires at least 4 control points")
+      return nil
+    }
     self.points = points
     self.type = type
     self.tension = max(0, min(1, tension))
@@ -41,8 +44,10 @@ public struct CatmullRomSpline {
   ///   - segmentIndex: The index of the segment to evaluate (default is 0)
   /// - Returns: The interpolated point on the spline
   public func evaluate(at t: CGFloat, segmentIndex: Int = 0) -> CGPoint? {
-    // Ensure the segment index is valid
-    guard segmentIndex >= 0 && segmentIndex + 3 < points.count else {
+    /// Ensure the segment index is valid
+    
+    guard isValidSegmentIndex(segmentIndex, pointCount: points.count) else {
+      print("Invalid segment index \(segmentIndex)")
       return nil
     }
     
@@ -166,9 +171,24 @@ public struct CatmullRomSpline {
   ///   - t: Parameter value (0-1)
   ///   - segmentIndex: Which segment to interpolate within
   /// - Returns: Interpolated scalar value
-  public func interpolateScalar(values: [CGFloat], at t: CGFloat, segmentIndex: Int = 0) -> CGFloat? {
-    guard values.count == points.count,
-          segmentIndex >= 0 && segmentIndex + 3 < values.count else {
+  public func interpolateScalar(
+    values: [CGFloat],
+    at t: CGFloat,
+    segmentIndex: Int = 0
+  ) -> CGFloat? {
+    guard values.count == points.count else {
+      print("Error: Number of scalar values `\(values.count)` must match number of points `\(points.count)`.")
+      return nil
+    }
+    
+    
+    guard isValidSegmentIndex(
+      segmentIndex,
+      pointCount: values.count
+    )
+//    guard segmentIndex >= 0 && segmentIndex + 3 < values.count
+    else {
+      print("Error: Invalid segment index `\(segmentIndex)`.")
       return nil
     }
     
@@ -181,10 +201,18 @@ public struct CatmullRomSpline {
       case .uniform:
         return catmullRomScalarUniform(v0, v1, v2, v3, t)
       case .centripetal, .chordal:
-        // For scalar interpolation with parameterized splines, we can use the uniform formula
-        // since we don't have spatial relationships between scalar values
+        /// For scalar interpolation with parameterized splines, we can use the uniform formula
+        /// since we don't have spatial relationships between scalar values
         return catmullRomScalarUniform(v0, v1, v2, v3, t)
     }
+  }
+  
+  private func isValidSegmentIndex(
+    _ index: Int,
+    pointCount: Int
+  ) -> Bool {
+    return index >= 0 && index + 3 < pointCount
+//    precondition(, "Invalid segment index \(index)")
   }
   
   /// Uniform Catmull-Rom interpolation for scalar values
