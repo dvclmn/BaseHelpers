@@ -24,7 +24,11 @@ public struct CatmullRomSpline {
   ///   - type: The parameterization type (default is centripetal for drawing apps)
   ///   - tension: Controls curve tightness for uniform type only (between 0 and 1, default 0.5)
   /// - Returns: A new CatmullRomSpline instance or nil if fewer than 4 points provided
-  public init?(points: [CGPoint], type: CatmullRomType = .centripetal, tension: CGFloat = 0.5) {
+  public init?(
+    points: [CGPoint],
+    type: CatmullRomType = .centripetal,
+    tension: CGFloat = 0.5
+  ) {
     guard points.count >= 4 else { return nil }
     self.points = points
     self.type = type
@@ -156,6 +160,46 @@ public struct CatmullRomSpline {
     )
   }
   
+  /// Interpolates scalar values using the same parameterization as the spline
+  /// - Parameters:
+  ///   - values: Array of scalar values corresponding to the control points
+  ///   - t: Parameter value (0-1)
+  ///   - segmentIndex: Which segment to interpolate within
+  /// - Returns: Interpolated scalar value
+  public func interpolateScalar(values: [CGFloat], at t: CGFloat, segmentIndex: Int = 0) -> CGFloat? {
+    guard values.count == points.count,
+          segmentIndex >= 0 && segmentIndex + 3 < values.count else {
+      return nil
+    }
+    
+    let v0 = values[segmentIndex]
+    let v1 = values[segmentIndex + 1]
+    let v2 = values[segmentIndex + 2]
+    let v3 = values[segmentIndex + 3]
+    
+    switch type {
+      case .uniform:
+        return catmullRomScalarUniform(v0, v1, v2, v3, t)
+      case .centripetal, .chordal:
+        // For scalar interpolation with parameterized splines, we can use the uniform formula
+        // since we don't have spatial relationships between scalar values
+        return catmullRomScalarUniform(v0, v1, v2, v3, t)
+    }
+  }
+  
+  /// Uniform Catmull-Rom interpolation for scalar values
+  private func catmullRomScalarUniform(_ v0: CGFloat, _ v1: CGFloat, _ v2: CGFloat, _ v3: CGFloat, _ t: CGFloat) -> CGFloat {
+    let t2 = t * t
+    let t3 = t2 * t
+    
+    return 0.5 * (
+      2 * v1 +
+      (v2 - v0) * t +
+      (2 * v0 - 5 * v1 + 4 * v2 - v3) * t2 +
+      (3 * v1 - v0 - 3 * v2 + v3) * t3
+    )
+  }
+  
   // MARK: - Public Properties
   
   /// The number of control points in this spline
@@ -185,18 +229,11 @@ public struct CatmullRomSpline {
 extension CatmullRomSpline {
   /// Create a spline optimized for drawing applications (uses centripetal parameterization)
   public static func forDrawing(points: [CGPoint]) -> CatmullRomSpline? {
-    return CatmullRomSpline(
-      points: points,
-      type: .centripetal
-    )
+    return CatmullRomSpline(points: points, type: .centripetal)
   }
   
   /// Create a fast spline for when performance is critical (uses uniform parameterization)
   public static func forPerformance(points: [CGPoint], tension: CGFloat = 0.5) -> CatmullRomSpline? {
-    return CatmullRomSpline(
-      points: points,
-      type: .uniform,
-      tension: tension
-    )
+    return CatmullRomSpline(points: points, type: .uniform, tension: tension)
   }
 }

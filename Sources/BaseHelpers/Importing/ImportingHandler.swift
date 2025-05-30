@@ -50,12 +50,12 @@ public enum ImportError: Error, CustomStringConvertible {
 
 public struct ImportHandler {
   
-  public static func urlForPreviewResource(
-    named resourceName: String,
-    ext: String = "txt"
-  ) -> URL? {
-    return Bundle.main.url(forResource: resourceName, withExtension: ext)
-  }
+//  public static func urlForPreviewResource(
+//    named resourceName: String,
+//    ext: String = "txt"
+//  ) -> URL? {
+//    return Bundle.main.url(forResource: resourceName, withExtension: ext)
+//  }
 
   /// Load a string from a file at a specific URL.
   public static func loadString(from fileURL: URL, encoding: String.Encoding = .utf8) throws -> String {
@@ -79,7 +79,10 @@ public struct ImportHandler {
   }
 
   /// Load and decode JSON from a file URL.
-  public static func loadJSON<T: Decodable>(from url: URL, decoder: JSONDecoder = .init()) throws -> T {
+  public static func loadJSON<T: Decodable>(
+    from url: URL,
+    decoder: JSONDecoder = .init()
+  ) throws -> T {
     let data = try Data(contentsOf: url)
     do {
       return try decoder.decode(T.self, from: data)
@@ -100,6 +103,7 @@ public struct ImportHandler {
     }
     return try loadJSON(from: url, decoder: decoder)
   }
+  
 
   //  /// Load raw string from a resource in a given bundle.
   //  public static func loadString(
