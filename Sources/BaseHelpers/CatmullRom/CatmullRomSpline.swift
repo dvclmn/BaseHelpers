@@ -10,7 +10,8 @@ import Foundation
 /// A representation of a Catmull-Rom spline with various construction options
 public struct CatmullRomSpline {
   /// The control points that define the spline
-  private let points: [CGPoint]
+//  private let points: [CGPoint]
+  private let segment: CatmullRomSegment
   
   /// The tension parameter for uniform splines (default is 0.5)
   private let tension: CGFloat
@@ -18,22 +19,25 @@ public struct CatmullRomSpline {
   /// The parameterization type to use
   private let type: CatmullRomType
   
-  /// Creates a Catmull-Rom spline from an array of points
-  /// - Parameters:
-  ///   - points: An array of at least 4 points
-  ///   - type: The parameterization type (default is centripetal for drawing apps)
-  ///   - tension: Controls curve tightness for uniform type only (between 0 and 1, default 0.5)
-  /// - Returns: A new CatmullRomSpline instance or nil if fewer than 4 points provided
   public init?(
     points: [CGPoint],
     type: CatmullRomType = .centripetal,
     tension: CGFloat = 0.5
   ) {
-    guard points.count >= 4 else {
-      print("Error: CatmullRomSpline requires at least 4 control points")
+    guard let segment = CatmullRomSegment(points: points) else {
       return nil
     }
-    self.points = points
+    self.segment = segment
+    self.type = type
+    self.tension = max(0, min(1, tension))
+  }
+  
+  public init?(
+    segment: CatmullRomSegment,
+    type: CatmullRomType = .centripetal,
+    tension: CGFloat = 0.5
+  ) {
+    self.segment = segment
     self.type = type
     self.tension = max(0, min(1, tension))
   }
@@ -43,11 +47,14 @@ public struct CatmullRomSpline {
   ///   - t: The parameter value (normalized between 0 and 1)
   ///   - segmentIndex: The index of the segment to evaluate (default is 0)
   /// - Returns: The interpolated point on the spline
-  public func evaluate(at t: CGFloat, segmentIndex: Int = 0) -> CGPoint? {
+  public func evaluate(
+    at t: CGFloat,
+    segmentIndex: Int = 0
+  ) -> CGPoint? {
     /// Ensure the segment index is valid
     
     guard isValidSegmentIndex(segmentIndex, pointCount: points.count) else {
-      print("Invalid segment index \(segmentIndex)")
+      print("Error evaluating, invalid segment index \(segmentIndex), with point count \(points.count).")
       return nil
     }
     
@@ -181,14 +188,11 @@ public struct CatmullRomSpline {
       return nil
     }
     
-    
     guard isValidSegmentIndex(
       segmentIndex,
       pointCount: values.count
-    )
-//    guard segmentIndex >= 0 && segmentIndex + 3 < values.count
-    else {
-      print("Error: Invalid segment index `\(segmentIndex)`.")
+    ) else {
+      print("Error: Invalid segment index `\(segmentIndex)` with point count `\(values.count)`.")
       return nil
     }
     
@@ -245,9 +249,58 @@ public struct CatmullRomSpline {
     return type
   }
   
+  /// Get a specific segment by index
+  /// - Parameter index: The segment index (0-based)
+  /// - Returns: A CatmullRomSegment or nil if index is invalid
+  public func segment(_ index: Int) -> CatmullRomSegment? {
+    guard index >= 0 && index < segmentCount else { return nil }
+    return CatmullRomSegment(spline: self, index: index)
+  }
+  
+  /// Get all segments in this spline
+  public var segments: [CatmullRomSegment] {
+    return (0..<segmentCount).compactMap { segment($0) }
+  }
+  
+  /// Find the segment that contains a specific control point
+  /// - Parameter pointIndex: Index of the control point
+  /// - Returns: Array of segments that use this control point (usually 1-4 segments)
+  public func segmentsContaining(pointIndex: Int) -> [CatmullRomSegment] {
+    guard pointIndex >= 0 && pointIndex < count else { return [] }
+    
+    var containingSegments: [CatmullRomSegment] = []
+    
+    // A control point can be part of up to 4 segments
+    for segmentIndex in max(0, pointIndex - 3)...min(segmentCount - 1, pointIndex) {
+      if let segment = segment(segmentIndex) {
+        containingSegments.append(segment)
+      }
+    }
+    
+    return containingSegments
+  }
+  
+  // MARK: - Internal methods for CatmullRomSegment
+  
+  internal func evaluateSegment(_ controlPoints: (CGPoint, CGPoint, CGPoint, CGPoint), at t: CGFloat) -> CGPoint {
+    switch type {
+      case .uniform:
+        return catmullRomUniform(controlPoints.0, controlPoints.1, controlPoints.2, controlPoints.3, t)
+      case .centripetal, .chordal:
+        return catmullRomParameterized(controlPoints.0, controlPoints.1, controlPoints.2, controlPoints.3, t, type: type)
+    }
+  }
+  
+  internal func interpolateScalarSegment(_ values: (CGFloat, CGFloat, CGFloat, CGFloat), at t: CGFloat) -> CGFloat {
+    return catmullRomScalarUniform(values.0, values.1, values.2, values.3, t)
+  }
+  
   /// Access to the underlying control points
-  public subscript(index: Int) -> CGPoint? {
-    guard index >= 0 && index < points.count else { return nil }
+  public subscript(index index: Int) -> CGPoint? {
+    guard index >= 0 && index < points.count else {
+      print("Couldn't get valid point")
+      return nil
+    }
     return points[index]
   }
 }
@@ -257,11 +310,40 @@ public struct CatmullRomSpline {
 extension CatmullRomSpline {
   /// Create a spline optimized for drawing applications (uses centripetal parameterization)
   public static func forDrawing(points: [CGPoint]) -> CatmullRomSpline? {
-    return CatmullRomSpline(points: points, type: .centripetal)
+    return CatmullRomSpline(
+      points: points,
+      type: .centripetal
+    )
   }
   
   /// Create a fast spline for when performance is critical (uses uniform parameterization)
   public static func forPerformance(points: [CGPoint], tension: CGFloat = 0.5) -> CatmullRomSpline? {
-    return CatmullRomSpline(points: points, type: .uniform, tension: tension)
+    return CatmullRomSpline(
+      points: points,
+      type: .uniform,
+      tension: tension
+    )
+  }
+  
+  /// Generate points along the entire spline using the segment-based API
+  /// - Parameter pointsPerSegment: Number of points to generate per segment
+  /// - Returns: Array of points along the spline
+  public func generatePointsUsingSegments(pointsPerSegment: Int = 20) -> [CGPoint] {
+    var result: [CGPoint] = []
+    
+    for segment in segments {
+      for step in 0..<pointsPerSegment {
+        let t = CGFloat(step) / CGFloat(pointsPerSegment - 1)
+        result.append(segment.evaluate(at: t))
+      }
+    }
+    
+    return result
+  }
+  
+  /// Create a spline and immediately access its first segment (common pattern)
+  public static func firstSegment(of points: [CGPoint], type: CatmullRomType = .centripetal) -> CatmullRomSegment? {
+    guard let spline = CatmullRomSpline(points: points, type: type) else { return nil }
+    return spline.segment(0)
   }
 }
