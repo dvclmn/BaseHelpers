@@ -72,7 +72,11 @@ public struct CatmullRomSegment {
   }
   
   public static func catmullRomScalarUniform(
-    _ v0: CGFloat, _ v1: CGFloat, _ v2: CGFloat, _ v3: CGFloat, _ t: CGFloat
+    _ v0: CGFloat,
+    _ v1: CGFloat,
+    _ v2: CGFloat,
+    _ v3: CGFloat,
+    _ t: CGFloat
   ) -> CGFloat {
     let t2 = t * t
     let t3 = t2 * t
@@ -84,6 +88,7 @@ public struct CatmullRomSegment {
       (3 * v1 - v0 - 3 * v2 + v3) * t3
     )
   }
+
 }
 
 extension Array where Element == CGPoint {
