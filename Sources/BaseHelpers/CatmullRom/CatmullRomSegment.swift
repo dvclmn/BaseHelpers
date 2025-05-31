@@ -59,15 +59,20 @@ public struct CatmullRomSegment {
 //  }
   
   
-  public func interpolateScalar(values: [CGFloat], at t: CGFloat) -> CGFloat? {
-    guard values.count == 4 else { return nil }
+  public func interpolateScalar(
+    values: [CGFloat],
+    at t: CGFloat
+  ) -> CGFloat? {
+    guard values.count == 4 else {
+      print("Error: recevived \(values.count) values, expected 4, as we are working with 4-point Catmull-Rom splines only.")
+      return nil
+    }
     
     let v0 = values[0]
     let v1 = values[1]
     let v2 = values[2]
     let v3 = values[3]
     
-    // Use uniform Catmull-Rom for scalar values — that's perfectly valid
     return CatmullRomSegment.catmullRomScalarUniform(v0, v1, v2, v3, t)
   }
   
@@ -96,64 +101,3 @@ extension Array where Element == CGPoint {
     return count == 4
   }
 }
-
-///// Represents a specific segment within a Catmull-Rom spline
-//public struct CatmullRomSegment {
-//  /// The spline this segment belongs to
-//  private let spline: CatmullRomSpline
-//
-//  /// The index of this segment (0-based)
-//  public let index: Int
-//
-//  /// The four control points that define this segment
-//  public let controlPoints: (p0: CGPoint, p1: CGPoint, p2: CGPoint, p3: CGPoint)
-//
-//  internal init(spline: CatmullRomSpline, index: Int) {
-//    self.spline = spline
-//    self.index = index
-//
-//    // Extract the four control points for this segment
-//    self.controlPoints = (
-//      p0: spline[index: index]!,
-//      p1: spline[index: index + 1]!,
-//      p2: spline[index: index + 2]!,
-//      p3: spline[index: index + 3]!
-//    )
-//  }
-//
-//  /// Evaluate this segment at parameter t (0-1)
-//  /// - Parameter t: Parameter value between 0 and 1
-//  /// - Returns: The interpolated point on this segment
-//  public func evaluate(at t: CGFloat) -> CGPoint {
-//    return spline.evaluateSegment(controlPoints, at: t)
-//  }
-//
-//  /// Interpolate scalar values along this segment
-//  /// - Parameters:
-//  ///   - values: Array of scalar values (must match spline point count)
-//  ///   - t: Parameter value between 0 and 1
-//  /// - Returns: Interpolated scalar value
-//  public func interpolateScalar(values: [CGFloat], at t: CGFloat) -> CGFloat? {
-//    guard values.count == spline.count else { return nil }
-//
-//    let segmentValues = (
-//      v0: values[index],
-//      v1: values[index + 1],
-//      v2: values[index + 2],
-//      v3: values[index + 3]
-//    )
-//
-//    return spline.interpolateScalarSegment(segmentValues, at: t)
-//  }
-//
-//  /// The start point of this segment (p1)
-//  public var startPoint: CGPoint { controlPoints.p1 }
-//
-//  /// The end point of this segment (p2)
-//  public var endPoint: CGPoint { controlPoints.p2 }
-//
-//  /// A description of this segment for debugging
-//  public var description: String {
-//    "Segment \(index): \(startPoint) → \(endPoint)"
-//  }
-//}
