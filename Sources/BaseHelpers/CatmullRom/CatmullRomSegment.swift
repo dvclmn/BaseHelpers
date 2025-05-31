@@ -7,6 +7,11 @@
 
 import Foundation
 
+/// Important: A full spline (`CatmullRomSpline`) can be any number of points,
+/// and represents the users **full stroke**, from beginning to end.
+///
+/// A segment (`CatmullRomSegment`) is  sequence of (in my case) 4 points,
+/// where `p1` and `p2` are interpolated, using the data of `p0` and `p3`
 public struct CatmullRomSegment {
   public let p0: CGPoint
   public let p1: CGPoint
@@ -21,8 +26,9 @@ public struct CatmullRomSegment {
     self.p3 = p3
   }
 
-  // MARK: - Initialise from an array
+  // MARK: - Initialise from an array of points
   public init?(points: [CGPoint]) {
+    
     guard points.hasFourPoints else {
       print("Error: CatmullRomSpline requires at least 4 control points")
       return nil
@@ -34,6 +40,10 @@ public struct CatmullRomSegment {
       p3: points[3]
     )
   }
+  
+//  public func point(at t: CGFloat, type: CatmullRomType, tension: CGFloat = 0.5) -> CGPoint {
+    // Evaluate curve at t ∈ [0, 1]
+//  }
 }
 
 extension Array where Element == CGPoint {

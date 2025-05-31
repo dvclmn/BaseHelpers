@@ -8,16 +8,31 @@
 import Foundation
 
 /// A representation of a Catmull-Rom spline with various construction options
+/// A single user stroke, from beginning to end, can be represented by a single spline.
 public struct CatmullRomSpline {
   /// The control points that define the spline
 //  private let points: [CGPoint]
-  private let segment: CatmullRomSegment
-  
-  /// The tension parameter for uniform splines (default is 0.5)
-  private let tension: CGFloat
+//  private let segment: CatmullRomSegment
+  public let controlPoints: [CGPoint]
   
   /// The parameterization type to use
   private let type: CatmullRomType
+
+  /// The tension parameter for uniform splines (default is 0.5)
+  private let tension: CGFloat
+  
+  public var segments: [CatmullRomSegment] {
+    guard controlPoints.hasFourPoints else { return [] }
+//    return CatmullRomSegment(points: controlPoints)
+    return (0..<controlPoints.count - 3).map {
+      CatmullRomSegment(
+        p0: controlPoints[$0],
+        p1: controlPoints[$0 + 1],
+        p2: controlPoints[$0 + 2],
+        p3: controlPoints[$0 + 3]
+      )
+    }
+  }
   
   public init?(
     points: [CGPoint],
@@ -235,74 +250,74 @@ public struct CatmullRomSpline {
   // MARK: - Public Properties
   
   /// The number of control points in this spline
-  public var count: Int {
-    return points.count
-  }
+//  public var count: Int {
+//    return points.count
+//  }
   
   /// The number of segments in this spline
-  public var segmentCount: Int {
-    return max(0, points.count - 3)
-  }
+//  public var segmentCount: Int {
+//    return max(0, points.count - 3)
+//  }
   
   /// The parameterization type being used
-  public var parameterizationType: CatmullRomType {
-    return type
-  }
+//  public var parameterizationType: CatmullRomType {
+//    return type
+//  }
   
   /// Get a specific segment by index
   /// - Parameter index: The segment index (0-based)
   /// - Returns: A CatmullRomSegment or nil if index is invalid
-  public func segment(_ index: Int) -> CatmullRomSegment? {
-    guard index >= 0 && index < segmentCount else { return nil }
-    return CatmullRomSegment(spline: self, index: index)
-  }
+//  public func segment(_ index: Int) -> CatmullRomSegment? {
+//    guard index >= 0 && index < segmentCount else { return nil }
+//    return CatmullRomSegment(spline: self, index: index)
+//  }
   
   /// Get all segments in this spline
-  public var segments: [CatmullRomSegment] {
-    return (0..<segmentCount).compactMap { segment($0) }
-  }
+//  public var segments: [CatmullRomSegment] {
+//    return (0..<segmentCount).compactMap { segment($0) }
+//  }
   
   /// Find the segment that contains a specific control point
   /// - Parameter pointIndex: Index of the control point
   /// - Returns: Array of segments that use this control point (usually 1-4 segments)
-  public func segmentsContaining(pointIndex: Int) -> [CatmullRomSegment] {
-    guard pointIndex >= 0 && pointIndex < count else { return [] }
-    
-    var containingSegments: [CatmullRomSegment] = []
-    
-    // A control point can be part of up to 4 segments
-    for segmentIndex in max(0, pointIndex - 3)...min(segmentCount - 1, pointIndex) {
-      if let segment = segment(segmentIndex) {
-        containingSegments.append(segment)
-      }
-    }
-    
-    return containingSegments
-  }
+//  public func segmentsContaining(pointIndex: Int) -> [CatmullRomSegment] {
+//    guard pointIndex >= 0 && pointIndex < count else { return [] }
+//    
+//    var containingSegments: [CatmullRomSegment] = []
+//    
+//    // A control point can be part of up to 4 segments
+//    for segmentIndex in max(0, pointIndex - 3)...min(segmentCount - 1, pointIndex) {
+//      if let segment = segment(segmentIndex) {
+//        containingSegments.append(segment)
+//      }
+//    }
+//    
+//    return containingSegments
+//  }
   
   // MARK: - Internal methods for CatmullRomSegment
   
-  internal func evaluateSegment(_ controlPoints: (CGPoint, CGPoint, CGPoint, CGPoint), at t: CGFloat) -> CGPoint {
-    switch type {
-      case .uniform:
-        return catmullRomUniform(controlPoints.0, controlPoints.1, controlPoints.2, controlPoints.3, t)
-      case .centripetal, .chordal:
-        return catmullRomParameterized(controlPoints.0, controlPoints.1, controlPoints.2, controlPoints.3, t, type: type)
-    }
-  }
-  
-  internal func interpolateScalarSegment(_ values: (CGFloat, CGFloat, CGFloat, CGFloat), at t: CGFloat) -> CGFloat {
-    return catmullRomScalarUniform(values.0, values.1, values.2, values.3, t)
-  }
-  
-  /// Access to the underlying control points
-  public subscript(index index: Int) -> CGPoint? {
-    guard index >= 0 && index < points.count else {
-      print("Couldn't get valid point")
-      return nil
-    }
-    return points[index]
-  }
+//  internal func evaluateSegment(_ controlPoints: (CGPoint, CGPoint, CGPoint, CGPoint), at t: CGFloat) -> CGPoint {
+//    switch type {
+//      case .uniform:
+//        return catmullRomUniform(controlPoints.0, controlPoints.1, controlPoints.2, controlPoints.3, t)
+//      case .centripetal, .chordal:
+//        return catmullRomParameterized(controlPoints.0, controlPoints.1, controlPoints.2, controlPoints.3, t, type: type)
+//    }
+//  }
+//  
+//  internal func interpolateScalarSegment(_ values: (CGFloat, CGFloat, CGFloat, CGFloat), at t: CGFloat) -> CGFloat {
+//    return catmullRomScalarUniform(values.0, values.1, values.2, values.3, t)
+//  }
+//  
+//  /// Access to the underlying control points
+//  public subscript(index index: Int) -> CGPoint? {
+//    guard index >= 0 && index < points.count else {
+//      print("Couldn't get valid point")
+//      return nil
+//    }
+//    return points[index]
+//  }
 }
 
 // MARK: - Convenience Extensions
@@ -328,22 +343,22 @@ extension CatmullRomSpline {
   /// Generate points along the entire spline using the segment-based API
   /// - Parameter pointsPerSegment: Number of points to generate per segment
   /// - Returns: Array of points along the spline
-  public func generatePointsUsingSegments(pointsPerSegment: Int = 20) -> [CGPoint] {
-    var result: [CGPoint] = []
-    
-    for segment in segments {
-      for step in 0..<pointsPerSegment {
-        let t = CGFloat(step) / CGFloat(pointsPerSegment - 1)
-        result.append(segment.evaluate(at: t))
-      }
-    }
-    
-    return result
-  }
-  
-  /// Create a spline and immediately access its first segment (common pattern)
-  public static func firstSegment(of points: [CGPoint], type: CatmullRomType = .centripetal) -> CatmullRomSegment? {
-    guard let spline = CatmullRomSpline(points: points, type: type) else { return nil }
-    return spline.segment(0)
-  }
+//  public func generatePointsUsingSegments(pointsPerSegment: Int = 20) -> [CGPoint] {
+//    var result: [CGPoint] = []
+//    
+//    for segment in segments {
+//      for step in 0..<pointsPerSegment {
+//        let t = CGFloat(step) / CGFloat(pointsPerSegment - 1)
+//        result.append(segment.evaluate(at: t))
+//      }
+//    }
+//    
+//    return result
+//  }
+//  
+//  /// Create a spline and immediately access its first segment (common pattern)
+//  public static func firstSegment(of points: [CGPoint], type: CatmullRomType = .centripetal) -> CatmullRomSegment? {
+//    guard let spline = CatmullRomSpline(points: points, type: type) else { return nil }
+//    return spline.segment(0)
+//  }
 }
