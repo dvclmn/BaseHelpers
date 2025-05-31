@@ -41,9 +41,49 @@ public struct CatmullRomSegment {
     )
   }
   
+  public func interpolate(
+    at t: CGFloat,
+    type: CatmullRomType = .centripetal,
+    tension: CGFloat = 0.5
+  ) -> CGPoint {
+    switch type {
+      case .uniform:
+        return CatmullRomSpline.catmullRomUniform(p0, p1, p2, p3, t, tension: tension)
+      case .chordal, .centripetal:
+        return CatmullRomSpline.catmullRomParameterized(p0, p1, p2, p3, t, type: type)
+    }
+  }
+  
 //  public func point(at t: CGFloat, type: CatmullRomType, tension: CGFloat = 0.5) -> CGPoint {
     // Evaluate curve at t ∈ [0, 1]
 //  }
+  
+  
+  public func interpolateScalar(values: [CGFloat], at t: CGFloat) -> CGFloat? {
+    guard values.count == 4 else { return nil }
+    
+    let v0 = values[0]
+    let v1 = values[1]
+    let v2 = values[2]
+    let v3 = values[3]
+    
+    // Use uniform Catmull-Rom for scalar values — that's perfectly valid
+    return CatmullRomSegment.catmullRomScalarUniform(v0, v1, v2, v3, t)
+  }
+  
+  public static func catmullRomScalarUniform(
+    _ v0: CGFloat, _ v1: CGFloat, _ v2: CGFloat, _ v3: CGFloat, _ t: CGFloat
+  ) -> CGFloat {
+    let t2 = t * t
+    let t3 = t2 * t
+    
+    return 0.5 * (
+      2 * v1 +
+      (v2 - v0) * t +
+      (2 * v0 - 5 * v1 + 4 * v2 - v3) * t2 +
+      (3 * v1 - v0 - 3 * v2 + v3) * t3
+    )
+  }
 }
 
 extension Array where Element == CGPoint {
