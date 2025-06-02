@@ -18,6 +18,24 @@ extension CGSize {
   public var toCGRect: CGRect {
     CGRect(origin: .zero, size: self)
   }
+
+  public func toCGRect(centredIn viewSize: CGSize) -> CGRect? {
+    
+    guard viewSize > self else {
+      print("Attempting to place a view within a smaller parent view is not yet supported.")
+      return nil
+    }
+    
+    let x = (viewSize.width - width) / 2
+    let y = (viewSize.height - height) / 2
+    return CGRect(x: x, y: y, width: width, height: height)
+  }
+  
+//  func centeredRect(in viewSize: CGSize) -> CGRect {
+//    let x = (viewSize.width - width) / 2
+//    let y = (viewSize.height - height) / 2
+//    return CGRect(x: x, y: y, width: width, height: height)
+//  }
   
   /// Returns true if both width and height are greater than zero
   public var isPositive: Bool {
@@ -91,6 +109,11 @@ infix operator >: ComparisonPrecedence
 public func >(lhs: CGSize, rhs: CGFloat) -> Bool {
   lhs.width > rhs || lhs.height > rhs
 }
+
+public func >(lhs: CGSize, rhs: CGSize) -> Bool {
+  lhs.width > rhs.width || lhs.height > rhs.height
+}
+
 
 // MARK: - Less than
 infix operator <: ComparisonPrecedence

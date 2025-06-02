@@ -12,17 +12,31 @@ public typealias ViewLengthOutput = (CGFloat) -> Void
 
 /// `CGSize`, for width and height of view
 public struct ViewSizeModifier: ViewModifier {
-  private let debouncer = AsyncDebouncer()
+  private let debouncer: AsyncDebouncer?
   
-  let sizeOutput: ViewSizeOutput
+  let valueOutput: ViewSizeOutput
+  
+  public init(
+    shouldDebounce: Bool,
+    debounceInterval: Double,
+    valueOutput: @escaping ViewSizeOutput
+  ) {
+    self.debouncer = shouldDebounce ? AsyncDebouncer(interval: debounceInterval) : nil
+    self.valueOutput = valueOutput
+  }
+  
   public func body(content: Content) -> some View {
     content
       .onGeometryChange(for: CGSize.self) { proxy in
         return proxy.size
       } action: { newValue in
         Task {
-          await debouncer.execute { @MainActor in
-            sizeOutput(newValue)
+          if let debouncer {
+            await debouncer.execute { @MainActor in
+              valueOutput(newValue)
+            }
+          } else {
+            valueOutput(newValue)
           }
         }
       }
@@ -33,10 +47,21 @@ public struct ViewSizeModifier: ViewModifier {
 /// `CGFloat`, for just width, or just height
 public struct ViewLengthModifier: ViewModifier {
 
-  private let debouncer = AsyncDebouncer()
+  private let debouncer: AsyncDebouncer?
   
   let axis: Axis
-  let lengthOutput: ViewLengthOutput
+  let valueOutput: ViewLengthOutput
+  
+  public init(
+    axis: Axis,
+    shouldDebounce: Bool,
+    valueOutput: @escaping ViewLengthOutput
+  ) {
+    self.debouncer = shouldDebounce ? AsyncDebouncer() : nil
+    self.axis = axis
+    self.valueOutput = valueOutput
+  }
+  
   public func body(content: Content) -> some View {
     content
       .onGeometryChange(for: CGFloat.self) { proxy in
@@ -49,9 +74,18 @@ public struct ViewLengthModifier: ViewModifier {
         }
       } action: { newValue in
         Task {
-          await debouncer.execute { @MainActor in
-            lengthOutput(newValue)
+          
+          if let debouncer {
+            await debouncer.execute { @MainActor in
+              valueOutput(newValue)
+            }
+          } else {
+            valueOutput(newValue)
           }
+          
+//          await debouncer.execute { @MainActor in
+//            valueOutput(newValue)
+//          }
         }
       }
   }
@@ -59,12 +93,29 @@ public struct ViewLengthModifier: ViewModifier {
 extension View {
   public func viewLength(
     _ axis: Axis = .horizontal,
-    lengthOutput: @escaping ViewLengthOutput
+    shouldDebounce: Bool = true,
+    valueOutput: @escaping ViewLengthOutput
   ) -> some View {
-    self.modifier(ViewLengthModifier(axis: axis, lengthOutput: lengthOutput))
+    self.modifier(
+      ViewLengthModifier(
+        axis: axis,
+        shouldDebounce: shouldDebounce,
+        valueOutput: valueOutput
+      )
+    )
   }
 
-  public func viewSize(sizeOutput: @escaping ViewSizeOutput) -> some View {
-    self.modifier(ViewSizeModifier(sizeOutput: sizeOutput))
+  public func viewSize(
+    shouldDebounce: Bool = true,
+    debounceInterval: Double = 0.1,
+    valueOutput: @escaping ViewSizeOutput,
+  ) -> some View {
+    self.modifier(
+      ViewSizeModifier(
+        shouldDebounce: shouldDebounce,
+        debounceInterval: debounceInterval,
+        valueOutput: valueOutput
+      )
+    )
   }
 }

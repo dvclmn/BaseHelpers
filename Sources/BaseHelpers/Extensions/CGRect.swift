@@ -48,7 +48,7 @@ extension CGRect {
   /// This can be made better, but got this because SwiftUI's `.position()`
   /// modifier places the *centre* of the view at the origin. If the origin is
   /// meant to be the top leading corner, then this can help compensate for that.
-    public func positionedIn(
+    public func centeredIn(
       viewSize: CGSize,
   //    anchorPoint: UnitPoint = .topLeading,
     ) -> CGRect {
@@ -72,6 +72,8 @@ extension CGRect {
 
       return CGRect(x: newOrigin.x, y: newOrigin.y, width: rectWidth, height: rectHeight)
     }
+
+  
   
     public func centred(in containerSize: CGSize) -> CGRect {
       let origin = CGPoint(
@@ -187,4 +189,12 @@ extension CGRect {
       height: newMaxY - newMinY
     )
   }
+  
+  /// Useful for a CGRect that needs to be centered within a View
+  init(size: CGSize, centeredIn containerSize: CGSize) {
+    let x = (containerSize.width - size.width) / 2
+    let y = (containerSize.height - size.height) / 2
+    self.init(x: x, y: y, width: size.width, height: size.height)
+  }
+  
 }

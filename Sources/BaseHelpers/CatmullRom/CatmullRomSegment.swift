@@ -53,12 +53,7 @@ public struct CatmullRomSegment {
         return CatmullRomSpline.catmullRomParameterized(p0, p1, p2, p3, t, type: type)
     }
   }
-  
-//  public func point(at t: CGFloat, type: CatmullRomType, tension: CGFloat = 0.5) -> CGPoint {
-    // Evaluate curve at t ∈ [0, 1]
-//  }
-  
-  
+
   public func interpolateScalar(
     values: [CGFloat],
     at t: CGFloat
