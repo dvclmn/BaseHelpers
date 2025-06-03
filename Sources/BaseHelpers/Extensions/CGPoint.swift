@@ -129,8 +129,8 @@ extension CGPoint {
   /// conversion, if origin is `zero`.
   public func mapped(to destination: CGRect) -> CGPoint {
     let result = CGPoint(
-      x: destination.origin.x + (x * destination.width),
-      y: destination.origin.y + (y * destination.height)
+      x: destination.origin.x + (self.x * destination.width),
+      y: destination.origin.y + (self.y * destination.height)
     )
     return result
   }

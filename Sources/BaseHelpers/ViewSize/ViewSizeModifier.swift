@@ -87,7 +87,8 @@ public struct ViewLengthModifier: ViewModifier {
 //            valueOutput(newValue)
 //          }
         }
-      }
+      } // END geom change modifier
+      
   }
 }
 extension View {

@@ -81,12 +81,15 @@ public struct ImportHandler {
   /// Load and decode JSON from a file URL.
   public static func loadJSON<T: Decodable>(
     from url: URL,
+    type: T.Type,
     decoder: JSONDecoder = .init()
   ) throws -> T {
     let data = try Data(contentsOf: url)
     do {
-      return try decoder.decode(T.self, from: data)
+      print("Attempting to decode JSON from URL \(url)")
+      return try decoder.decode(type, from: data)
     } catch {
+      print("Failed to decode JSON from URL \(url) with error \(error)")
       throw ImportError.decodingFailed(error)
     }
   }
@@ -94,14 +97,20 @@ public struct ImportHandler {
   /// Load and decode JSON from bundle
   public static func loadJSON<T: Decodable>(
     named name: String,
+    type: T.Type,
     withExtension ext: String = "json",
     bundle: Bundle = .main,
     decoder: JSONDecoder = .init()
   ) throws -> T {
     guard let url = bundle.url(forResource: name, withExtension: ext) else {
+      print("Resource named \(name).\(ext) not found in bundle \(bundle)")
       throw ImportError.resourceNotFound("\(name).\(ext)")
     }
-    return try loadJSON(from: url, decoder: decoder)
+    return try loadJSON(
+      from: url,
+      type: type,
+      decoder: decoder
+    )
   }
   
 
