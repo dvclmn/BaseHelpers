@@ -90,6 +90,18 @@ extension CGFloat {
     /// Convert radians to degrees
     return self * 180 / .pi
   }
+  
+  /// Returns the shortest angular distance between two angles
+  public static func angleDelta(_ angle1: CGFloat, _ angle2: CGFloat) -> CGFloat {
+    var delta = angle1 - angle2
+    
+    // Normalize to [-π, π] range
+    while delta > .pi { delta -= 2 * .pi }
+    while delta < -.pi { delta += 2 * .pi }
+    
+    return abs(delta)
+  }
+  
 }
 
 extension Double {

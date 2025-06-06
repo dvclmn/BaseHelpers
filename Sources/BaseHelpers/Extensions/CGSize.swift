@@ -74,7 +74,10 @@ extension CGSize {
     }
   }
   
-  private func centeredRect(in containerSize: CGSize, with size: CGSize) -> CGRect {
+  private func centeredRect(
+    in containerSize: CGSize,
+    with size: CGSize
+  ) -> CGRect {
     let x = (containerSize.width - size.width) / 2
     let y = (containerSize.height - size.height) / 2
     return CGRect(x: x, y: y, width: size.width, height: size.height)

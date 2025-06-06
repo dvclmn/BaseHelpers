@@ -80,9 +80,6 @@ extension CGPoint {
     return result
   }
 
-  public var length: CGFloat {
-    sqrt(x * x + y * y)
-  }
 
   public var normalised: CGPoint {
     guard length > 0 else { return .zero }
@@ -92,9 +89,15 @@ extension CGPoint {
     )
   }
 
+  public var length: CGFloat {
+    hypot(x, y)
+    //    sqrt(x * x + y * y)
+  }
 
   /// Below is equivalent to a previous version, which used
   /// `sqrt(pow(x - point.x, 2) + pow(y - point.y, 2))`
+  ///
+  /// This calculates Euclidean distance (straight-line distance)
   public func distance(to p2: CGPoint) -> CGFloat {
     let p1: CGPoint = self
     return hypot(p2.x - p1.x, p2.y - p1.y)
@@ -117,14 +120,6 @@ extension CGPoint {
     Angle(radians: angleInRadians(from: p1, to: p2))
   }
 
-  //  public static func angleBetween(
-  //    _ p1: CGPoint,
-  //    _ p2: CGPoint
-  //  ) -> CGFloat {
-  //    atan2(p2.y - p1.y, p2.x - p1.x)
-  //  }
-
-
   /// Hint: use extension `toCGRect` on `CGSize` for convenient
   /// conversion, if origin is `zero`.
   public func mapped(to destination: CGRect) -> CGPoint {
@@ -138,7 +133,7 @@ extension CGPoint {
   public func mapPoint(
     from source: CGRect,
     to destination: CGRect,
-    mode: CoordinateMappingMode = .stretch
+    mode: CoordinateMappingMode = .fit
   ) -> CGPoint {
     switch mode {
       case .stretch:
@@ -206,25 +201,6 @@ extension CGPoint {
 
   public func removingZoom(_ zoom: CGFloat) -> CGPoint {
     CGPoint(x: self.x / zoom, y: self.y / zoom)
-  }
-
-  public func subtracting(_ point: CGPoint) -> CGPoint {
-    return CGPoint(x: self.x - point.x, y: self.y - point.y)
-  }
-
-  public func subtracting(_ size: CGSize) -> CGPoint {
-    return CGPoint(x: self.x - size.width, y: self.y - size.height)
-  }
-
-  public func adding(_ point: CGPoint) -> CGPoint {
-    return CGPoint(
-      x: self.x + point.x,
-      y: self.y + point.y
-    )
-  }
-
-  public func multiplying(by value: CGFloat) -> CGPoint {
-    return CGPoint(x: self.x * value, y: self.y * value)
   }
 
   public var toCGSize: CGSize {
@@ -390,7 +366,11 @@ extension CGPoint {
   ///   - end: The ending point of the line.
   ///   - distance: The absolute distance from the `start` point.
   /// - Returns: A point along the line defined by `start` and `end` at the specified distance.
-  public static func pointAlong(from start: CGPoint, to end: CGPoint, distance: CGFloat) -> CGPoint {
+  public static func pointAlong(
+    from start: CGPoint,
+    to end: CGPoint,
+    distance: CGFloat
+  ) -> CGPoint {
     let dx = end.x - start.x
     let dy = end.y - start.y
     let totalDistance = sqrt(dx * dx + dy * dy)
@@ -465,6 +445,9 @@ public func - (lhs: CGPoint, rhs: CGPoint) -> CGPoint {
     y: lhs.y - rhs.y
   )
 }
+//public func subtracting(_ point: CGPoint) -> CGPoint {
+//  return CGPoint(x: self.x - point.x, y: self.y - point.y)
+//}
 
 public func - (lhs: CGPoint, rhs: CGSize) -> CGPoint {
   return CGPoint(
@@ -472,6 +455,10 @@ public func - (lhs: CGPoint, rhs: CGSize) -> CGPoint {
     y: lhs.y - rhs.height
   )
 }
+//public func subtracting(_ size: CGSize) -> CGPoint {
+//  return CGPoint(x: self.x - size.width, y: self.y - size.height)
+//}
+
 
 // MARK: - Addition
 infix operator + : AdditionPrecedence
@@ -482,6 +469,12 @@ public func + (lhs: CGPoint, rhs: CGPoint) -> CGPoint {
     y: lhs.y + rhs.y
   )
 }
+//public func adding(_ point: CGPoint) -> CGPoint {
+//  return CGPoint(
+//    x: self.x + point.x,
+//    y: self.y + point.y
+//  )
+//}
 
 public func + (lhs: CGPoint, rhs: CGSize) -> CGPoint {
   return CGPoint(
@@ -499,6 +492,9 @@ public func * (lhs: CGPoint, rhs: CGPoint) -> CGPoint {
     y: lhs.y * rhs.y
   )
 }
+//public func multiplying(by value: CGFloat) -> CGPoint {
+//  return CGPoint(x: self.x * value, y: self.y * value)
+//}
 
 public func * (lhs: CGPoint, rhs: CGFloat) -> CGPoint {
   return CGPoint(

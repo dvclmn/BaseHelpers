@@ -83,9 +83,13 @@ extension CGRect {
       return CGRect(origin: origin, size: self.size)
     }
 
-  public var midPoint: CGPoint {
-    CGPoint(x: midX, y: midY)
-  }
+//  public func midPoint(isFlippedForSwiftUI: Bool = true) -> CGPoint {
+//    let midX: CGFloat = self.midX
+//    let midY: CGFloat = self.midY
+//    
+//    return CGPoint(x: midX, y: isFlippedForSwiftUI ? (midY * -1) : midY)
+//
+//  }
 
   //  public func centred(in viewSize: CGSize) -> CGRect {
   //    let something = size.midpoint
@@ -114,18 +118,17 @@ extension CGRect {
     style: DisplayStringStyle = .short
   ) -> String {
 
+    let originX: String = "\(self.origin.x.displayString(decimalPlaces))"
+    let originY: String = "\(self.origin.y.displayString(decimalPlaces))"
     let width: String = "\(self.width.displayString(decimalPlaces))"
     let height: String = "\(self.height.displayString(decimalPlaces))"
 
     switch style {
-      case .short:
-        return "\(width) x \(height)"
-
-      case .initials:
-        return "W \(width)  H \(height)"
+      case .short, .initials:
+        return "X \(originX), Y \(originY), W \(width), H \(height)"
 
       case .full:
-        return "Width \(width)  Height \(height)"
+        return "X \(originX), Y \(originY), Width \(width), Height \(height)"
     }
   }
 

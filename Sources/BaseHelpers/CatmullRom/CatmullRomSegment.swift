@@ -13,6 +13,7 @@ import Foundation
 /// A segment (`CatmullRomSegment`) is  sequence of (in my case) 4 points,
 /// where `p1` and `p2` are interpolated, using the data of `p0` and `p3`
 public struct CatmullRomSegment {
+  
   public let p0: CGPoint
   public let p1: CGPoint
   public let p2: CGPoint
