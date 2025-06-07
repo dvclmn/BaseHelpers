@@ -103,11 +103,11 @@ extension CGPoint {
     return hypot(p2.x - p1.x, p2.y - p1.y)
   }
 
-  public func distance(to p2: CGPoint?) -> CGFloat? {
-    guard let p2 else { return nil }
-    let p1: CGPoint = self
-    return hypot(p2.x - p1.x, p2.y - p1.y)
-  }
+//  public func distance(to p2: CGPoint?) -> CGFloat? {
+//    guard let p2 else { return nil }
+//    let p1: CGPoint = self
+//    return hypot(p2.x - p1.x, p2.y - p1.y)
+//  }
 
   public static func angleInRadians(
     from p1: CGPoint,

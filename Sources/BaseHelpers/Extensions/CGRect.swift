@@ -8,6 +8,9 @@
 import SwiftUI
 
 extension CGRect {
+  
+  public static let example01 = CGRect(x: 0, y: 0, width: 100, height: 100)
+  
   public var path: Path {
     Path(self)
   }

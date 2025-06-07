@@ -12,7 +12,8 @@ public typealias ViewLengthOutput = (CGFloat) -> Void
 
 /// `CGSize`, for width and height of view
 public struct ViewSizeModifier: ViewModifier {
-  private let debouncer: AsyncDebouncer?
+  @State private var debouncer: AsyncDebouncer?
+//  private let debouncer: AsyncDebouncer?
   
   let valueOutput: ViewSizeOutput
   
@@ -21,7 +22,7 @@ public struct ViewSizeModifier: ViewModifier {
     debounceInterval: Double,
     valueOutput: @escaping ViewSizeOutput
   ) {
-    self.debouncer = shouldDebounce ? AsyncDebouncer(interval: debounceInterval) : nil
+    self._debouncer = State(initialValue: shouldDebounce ? AsyncDebouncer(interval: debounceInterval) : nil)
     self.valueOutput = valueOutput
   }
   
