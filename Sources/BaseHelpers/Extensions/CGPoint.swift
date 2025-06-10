@@ -103,11 +103,11 @@ extension CGPoint {
     return hypot(p2.x - p1.x, p2.y - p1.y)
   }
 
-//  public func distance(to p2: CGPoint?) -> CGFloat? {
-//    guard let p2 else { return nil }
-//    let p1: CGPoint = self
-//    return hypot(p2.x - p1.x, p2.y - p1.y)
-//  }
+  //  public func distance(to p2: CGPoint?) -> CGFloat? {
+  //    guard let p2 else { return nil }
+  //    let p1: CGPoint = self
+  //    return hypot(p2.x - p1.x, p2.y - p1.y)
+  //  }
 
   public static func angleInRadians(
     from p1: CGPoint,
@@ -129,14 +129,14 @@ extension CGPoint {
     )
     return result
   }
-  
+
   public func remapped(from oldRect: CGRect, to newRect: CGRect) -> CGPoint {
     let normalisedX = (self.x - oldRect.minX) / oldRect.width
     let normalisedY = (self.y - oldRect.minY) / oldRect.height
-    
+
     let newX = newRect.minX + (normalisedX * newRect.width)
     let newY = newRect.minY + (normalisedY * newRect.height)
-    
+
     return CGPoint(x: newX, y: newY)
   }
 
@@ -426,22 +426,113 @@ extension CGPoint {
     )
   }
 
+
+  // Generate a spiral as an array of points, starting from this point as center
+  public func generateSpiral(
+    turns: CGFloat = 1.5,
+    maxRadius: CGFloat = 50,
+    pointCount: Int = 60
+  ) -> [CGPoint] {
+    var points: [CGPoint] = []
+
+    let angleStep = (turns * 2 * .pi) / CGFloat(pointCount - 1)
+
+    for i in 0..<pointCount {
+      let t = CGFloat(i) / CGFloat(pointCount - 1)  // 0 to 1
+      let angle = angleStep * CGFloat(i)
+
+      // Spiral grows outward as we progress
+      let radius = maxRadius * t
+
+      let x = self.x + radius * cos(angle)
+      let y = self.y + radius * sin(angle)
+
+      points.append(CGPoint(x: x, y: y))
+    }
+
+    return points
+  }
+
+  // Alternative: Golden ratio spiral (more mathematically pure)
+  public func generateGoldenSpiral(
+    turns: CGFloat = 1.5,
+    scale: CGFloat = 20,
+    pointCount: Int = 60
+  ) -> [CGPoint] {
+    var points: [CGPoint] = []
+    let phi: CGFloat = (1 + sqrt(5)) / 2  // Golden ratio
+
+    for i in 0..<pointCount {
+      let t = CGFloat(i) / CGFloat(pointCount - 1) * turns
+      let angle = t * 2 * .pi
+
+      // Golden spiral radius grows exponentially
+      let radius = scale * pow(phi, t * 0.5)
+
+      let x = self.x + radius * cos(angle)
+      let y = self.y + radius * sin(angle)
+
+      points.append(CGPoint(x: x, y: y))
+    }
+
+    return points
+  }
+
+}
+
+public enum PathType {
+  case line
+  case smooth
 }
 
 extension Array where Element == CGPoint {
-  
-  public var createLinePath: Path {
-    Path { path in
-      guard let first = self.first else { return }
 
-      path.move(to: first)
-
-      self.dropFirst()
-        .forEach { point in
-          path.addLine(to: point)
+  public func toPath(type: PathType = .line) -> Path {
+    switch type {
+      case .line:
+        return Path { path in
+          guard let firstPoint = self.first else { return }
+          path.move(to: firstPoint)
+          path.addLines(Array(self.dropFirst()))
         }
+
+      case .smooth:
+        return toSmoothPath()
     }
   }
+
+  /// Alternative: Smooth curved path using quadratic curves
+  func toSmoothPath() -> Path {
+    return Path { path in
+      guard self.count > 1 else { return }
+
+      path.move(to: self[0])
+
+      if self.count == 2 {
+        path.addLine(to: self[1])
+        return
+      }
+
+      // Create smooth curves between points
+      for i in 1..<self.count {
+        let current = self[i]
+
+        if i == self.count - 1 {
+          // Last point - just draw line
+          path.addLine(to: current)
+        } else {
+          // Use next point to create control point for smooth curve
+          let next = self[i + 1]
+          let controlPoint = CGPoint(
+            x: (current.x + next.x) / 2,
+            y: (current.y + next.y) / 2
+          )
+          path.addQuadCurve(to: controlPoint, control: current)
+        }
+      }
+    }
+  }
+
 
 }
 
