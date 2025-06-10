@@ -129,6 +129,16 @@ extension CGPoint {
     )
     return result
   }
+  
+  public func remapped(from oldRect: CGRect, to newRect: CGRect) -> CGPoint {
+    let normalisedX = (self.x - oldRect.minX) / oldRect.width
+    let normalisedY = (self.y - oldRect.minY) / oldRect.height
+    
+    let newX = newRect.minX + (normalisedX * newRect.width)
+    let newY = newRect.minY + (normalisedY * newRect.height)
+    
+    return CGPoint(x: newX, y: newY)
+  }
 
   public func mapPoint(
     from source: CGRect,

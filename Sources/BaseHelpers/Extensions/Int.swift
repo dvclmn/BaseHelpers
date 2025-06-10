@@ -23,7 +23,7 @@ extension Int {
     self % 2 == 0
   }
 
-  public var string: String {
+  public var displayString: String {
     String(self)
   }
 

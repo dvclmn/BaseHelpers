@@ -8,6 +8,10 @@
 import Foundation
 
 extension BinaryFloatingPoint {
+
+  public func removingZoom(_ zoom: Self) -> Self {
+    return self / zoom
+  }
   
   /// E.g. converting `0.8` to `0.2`
   public var inversePercentage: Self {
