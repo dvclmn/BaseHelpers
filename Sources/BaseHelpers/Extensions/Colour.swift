@@ -9,8 +9,16 @@ import Foundation
 import SwiftUI
 import NSUI
 
+extension Color {
+  public var toShapeStyle: AnyShapeStyle {
+    AnyShapeStyle(self)
+  }
+}
+
+
 #if canImport(AppKit)
 extension Color {
+  
   public func blend(with other: Color, percentage: Double) -> Color {
 //    Color(nsColor: NSColor(self).blend(with: NSColor(other), percentage: percentage))
     Color(nsColor: NSUIColor(self).blend(with: NSUIColor(other), percentage: percentage))

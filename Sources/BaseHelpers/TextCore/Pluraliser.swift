@@ -20,10 +20,11 @@ public func pluralise(
   verb: String,
   count: Int,
   noun: String,
+  countStrategy: CountStrategy = .hideCount,
   showEllipsis: Bool = false
 ) -> String {
   
-  let result = verb + " " + pluralise(count, noun, countStrategy: .showCount())
+  let result = verb + " " + pluralise(count, noun, countStrategy: countStrategy)
   
   return showEllipsis ? result + "..." : result
 }
