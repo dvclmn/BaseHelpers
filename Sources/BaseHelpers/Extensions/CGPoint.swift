@@ -19,6 +19,13 @@ public enum CoordinateMappingMode {
 }
 
 extension CGPoint {
+  
+  public func isWithin(_ rect: CGRect) -> Bool {
+    
+    let isXWithin: Bool = self.x >= rect.leftEdge
+    let isYWithin: Bool = self.y 
+    
+  }
 
   public static let quickPreset01 = CGPoint(x: 100, y: 50)
   public static let quickPreset02 = CGPoint(x: 80, y: 120)
