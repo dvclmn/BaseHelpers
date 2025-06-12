@@ -74,6 +74,34 @@ extension CGSize {
     }
   }
   
+  public static let trackpad = CGSize(
+    width: 700,
+    height: 438
+  )
+  
+//  public func centeredIn(viewSize: CGSize) -> CGSize {
+//    
+//    let viewMid = viewSize.midpoint
+//    let selfMid = self.midpoint
+//
+//    let newOrigin = CGPoint(
+//      x: viewMid.x - selfMid.x,
+//      y: viewMid.y - selfMid.y
+//    )
+//    
+//    return CGRect(
+//      x: newOrigin.x,
+//      y: newOrigin.y,
+//      width: self.width,
+//      height: self.height
+//    )
+//  }
+//  
+//  public func reallyCentredIn(viewSize: CGSize) -> CGPoint {
+//    self.centeredIn(viewSize: viewSize).center
+//  }
+
+  
   private func centeredRect(
     in containerSize: CGSize,
     with size: CGSize
@@ -145,7 +173,12 @@ extension CGSize {
   }
   
   public var centrePoint: CGPoint {
-    CGPoint(x: width / 2, y: height / 2)
+    let result = CGPoint(
+      x: self.width / 2,
+      y: self.height / 2
+    )
+    precondition(!result.isNan || result.isFinite, "Don't want to thing the thing")
+    return result
   }
 
 
@@ -185,11 +218,16 @@ extension CGSize {
 infix operator * : MultiplicationPrecedence
 
 public func * (lhs: CGSize, rhs: CGFloat) -> CGSize {
-  CGSize(
+  let result = CGSize(
     width: lhs.width * rhs,
     height: lhs.height * rhs
   )
+  precondition(result.width > 0 && result.height > 0, "Cannot have a size with width or height less than or equal to zero")
+  return result
+  
 }
+
+
 
 // MARK: - Greater than
 infix operator >: ComparisonPrecedence

@@ -282,7 +282,7 @@ extension CGPoint {
 
   public var isNan: Bool {
     let result: Bool = x.isNaN || y.isNaN
-    print("Point `\(self)` is Not a Number? (NaN): \(result)")
+//    print("Point `\(self)` is Not a Number? (NaN): \(result)")
     return result
   }
 
@@ -556,6 +556,13 @@ public func - (lhs: CGPoint, rhs: CGSize) -> CGPoint {
     y: lhs.y - rhs.height
   )
 }
+
+public func - (lhs: CGPoint, rhs: CGFloat) -> CGPoint {
+  return CGPoint(
+    x: lhs.x - rhs,
+    y: lhs.y - rhs
+  )
+}
 //public func subtracting(_ size: CGSize) -> CGPoint {
 //  return CGPoint(x: self.x - size.width, y: self.y - size.height)
 //}
@@ -584,6 +591,13 @@ public func + (lhs: CGPoint, rhs: CGSize) -> CGPoint {
   )
 }
 
+public func + (lhs: CGSize, rhs: CGPoint) -> CGSize {
+  return CGSize(
+    width: lhs.width + rhs.x,
+    height: lhs.height + rhs.y
+  )
+}
+
 // MARK: - Multiplication
 infix operator * : MultiplicationPrecedence
 
@@ -601,6 +615,29 @@ public func * (lhs: CGPoint, rhs: CGFloat) -> CGPoint {
   return CGPoint(
     x: lhs.x * rhs,
     y: lhs.y * rhs
+  )
+}
+public func * (lhs: CGPoint, rhs: CGSize) -> CGPoint {
+  return CGPoint(
+    x: lhs.x * rhs.width,
+    y: lhs.y * rhs.height
+  )
+}
+
+
+
+//public func / (lhs: CGPoint, rhs: CGSize) -> CGPoint {
+//  CGPoint(
+//    x: rhs.width != 0 ? lhs.x / rhs.width : 0,
+//    y: rhs.height != 0 ? lhs.y / rhs.height : 0
+//  )
+//}
+
+public func / (lhs: CGPoint, rhs: CGSize) -> CGPoint {
+  precondition(rhs.width != 0 && rhs.height != 0, "Cannot divide by zero size")
+  return CGPoint(
+    x: lhs.x / rhs.width,
+    y: lhs.y / rhs.height
   )
 }
 

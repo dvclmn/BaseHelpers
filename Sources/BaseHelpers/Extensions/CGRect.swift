@@ -8,20 +8,14 @@
 import SwiftUI
 
 extension CGRect {
-  
-  public static let trackpad = CGRect(
-    x: 0,
-    y: 0,
-    width: 700,
-    height: 438
-  )
+
   public static let example01 = CGRect(
     x: 0,
     y: 0,
     width: 100,
     height: 100
   )
-  
+
   public var path: Path {
     Path(self)
   }
@@ -31,79 +25,90 @@ extension CGRect {
   ///
   /// This is useful when you want to align a specific point of your view
   /// (like the topLeading corner) with the given origin in `.position()`.
-//  public func positionedIn(
-//    viewSize: CGSize,
-//    anchorPoint: UnitPoint = .center
-//  ) -> CGRect {
-//    // Convert UnitPoint (0...1, 0...1) into actual CGPoint in viewSize
-//    let anchorInView = CGPoint(
-//      x: viewSize.width * anchorPoint.x,
-//      y: viewSize.height * anchorPoint.y
-//    )
-//
-//    // Convert UnitPoint into anchor in the rect itself
-//    let anchorInSelf = CGPoint(
-//      x: self.width * anchorPoint.x,
-//      y: self.height * anchorPoint.y
-//    )
-//
-//    // The origin needed to place `self` so its anchor aligns with `anchorInView`
-//    let newOrigin = CGPoint(
-//      x: anchorInView.x - anchorInSelf.x,
-//      y: anchorInView.y - anchorInSelf.y
-//    )
-//    
-////    print("This CGRect's original origin point: \(self.origin.displayString)")
-////    print("And new origin point?: \(newOrigin.displayString)")
-//
-//    return CGRect(origin: newOrigin, size: self.size)
-//  }
+  //  public func positionedIn(
+  //    viewSize: CGSize,
+  //    anchorPoint: UnitPoint = .center
+  //  ) -> CGRect {
+  //    // Convert UnitPoint (0...1, 0...1) into actual CGPoint in viewSize
+  //    let anchorInView = CGPoint(
+  //      x: viewSize.width * anchorPoint.x,
+  //      y: viewSize.height * anchorPoint.y
+  //    )
+  //
+  //    // Convert UnitPoint into anchor in the rect itself
+  //    let anchorInSelf = CGPoint(
+  //      x: self.width * anchorPoint.x,
+  //      y: self.height * anchorPoint.y
+  //    )
+  //
+  //    // The origin needed to place `self` so its anchor aligns with `anchorInView`
+  //    let newOrigin = CGPoint(
+  //      x: anchorInView.x - anchorInSelf.x,
+  //      y: anchorInView.y - anchorInSelf.y
+  //    )
+  //
+  ////    print("This CGRect's original origin point: \(self.origin.displayString)")
+  ////    print("And new origin point?: \(newOrigin.displayString)")
+  //
+  //    return CGRect(origin: newOrigin, size: self.size)
+  //  }
 
   /// This can be made better, but got this because SwiftUI's `.position()`
   /// modifier places the *centre* of the view at the origin. If the origin is
   /// meant to be the top leading corner, then this can help compensate for that.
-    public func centeredIn(
-      viewSize: CGSize,
-  //    anchorPoint: UnitPoint = .topLeading,
-    ) -> CGRect {
-      
-      /// We get the width and height (e.g. of a canvas, within a view)
-      let rectWidth: CGFloat = self.width
-      let rectHeight: CGFloat = self.height
-      
-      /// Halve it — this should be the rect's midpoint right?
-      let rectWidthHalf = rectWidth / 2
-      let rectHeightHalf = rectHeight / 2
-      
-      /// We get the width and height of the containing view and halve *that*
-      let viewWidthHalf: CGFloat = viewSize.width / 2
-      let viewHeightHalf: CGFloat = viewSize.height / 2
-      
-      let newOrigin = CGPoint(
-        x: viewWidthHalf - rectWidthHalf,
-        y: viewHeightHalf - rectHeightHalf
-      )
+  public func centeredIn(
+    viewSize: CGSize,
+    //    anchorPoint: UnitPoint = .topLeading,
+  ) -> CGRect {
 
-      return CGRect(x: newOrigin.x, y: newOrigin.y, width: rectWidth, height: rectHeight)
-    }
+    let viewMid = viewSize.midpoint
+    let selfMid = self.size.midpoint
 
-  
-  
-    public func centred(in containerSize: CGSize) -> CGRect {
-      let origin = CGPoint(
-        x: (containerSize.width - self.width) / 2,
-        y: (containerSize.height - self.height) / 2
-      )
-      return CGRect(origin: origin, size: self.size)
-    }
 
-//  public func midPoint(isFlippedForSwiftUI: Bool = true) -> CGPoint {
-//    let midX: CGFloat = self.midX
-//    let midY: CGFloat = self.midY
-//    
-//    return CGPoint(x: midX, y: isFlippedForSwiftUI ? (midY * -1) : midY)
-//
-//  }
+    /// We get the width and height (e.g. of a canvas, within a view)
+    //      let rectWidth: CGFloat = self.width
+    //      let rectHeight: CGFloat = self.height
+
+    /// Halve it — this should be the rect's midpoint right?
+    //      let rectWidthHalf = rectWidth / 2
+    //      let rectHeightHalf = rectHeight / 2
+
+    /// We get the width and height of the containing view and halve *that*
+    //      let viewWidthHalf: CGFloat = viewSize.width / 2
+    //      let viewHeightHalf: CGFloat = viewSize.height / 2
+
+    let newOrigin = CGPoint(
+      x: viewMid.x - selfMid.x,
+      y: viewMid.y - selfMid.y
+    )
+
+    return CGRect(
+      x: newOrigin.x,
+      y: newOrigin.y,
+      width: self.width,
+      height: self.height
+    )
+  }
+
+  public func reallyCentredIn(viewSize: CGSize) -> CGPoint {
+    self.centeredIn(viewSize: viewSize).center
+  }
+
+  public func centred(in containerSize: CGSize) -> CGRect {
+    let origin = CGPoint(
+      x: (containerSize.width - self.width) / 2,
+      y: (containerSize.height - self.height) / 2
+    )
+    return CGRect(origin: origin, size: self.size)
+  }
+
+  //  public func midPoint(isFlippedForSwiftUI: Bool = true) -> CGPoint {
+  //    let midX: CGFloat = self.midX
+  //    let midY: CGFloat = self.midY
+  //
+  //    return CGPoint(x: midX, y: isFlippedForSwiftUI ? (midY * -1) : midY)
+  //
+  //  }
 
   //  public func centred(in viewSize: CGSize) -> CGRect {
   //    let something = size.midpoint
@@ -206,12 +211,12 @@ extension CGRect {
       height: newMaxY - newMinY
     )
   }
-  
+
   /// Useful for a CGRect that needs to be centered within a View
   init(size: CGSize, centeredIn containerSize: CGSize) {
     let x = (containerSize.width - size.width) / 2
     let y = (containerSize.height - size.height) / 2
     self.init(x: x, y: y, width: size.width, height: size.height)
   }
-  
+
 }
