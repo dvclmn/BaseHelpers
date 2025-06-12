@@ -9,9 +9,7 @@
 import Foundation
 
 extension CGFloat: ValueSingle {
-//public struct FloatDisplayString: ValueSingle {
   public typealias FloatType = CGFloat
-//  private let float: CGFloat
   public var value: FloatType { self }
 
   public func displayString(

@@ -128,28 +128,28 @@ extension CGRect {
     CGSize(width: width, height: height)
   }
 
-  public var displayString: String {
-    self.displayString()
-  }
-
-  public func displayString(
-    decimalPlaces: Int = 2,
-    style: DisplayStringStyle = .short
-  ) -> String {
-
-    let originX: String = "\(self.origin.x.displayString(decimalPlaces))"
-    let originY: String = "\(self.origin.y.displayString(decimalPlaces))"
-    let width: String = "\(self.width.displayString(decimalPlaces))"
-    let height: String = "\(self.height.displayString(decimalPlaces))"
-
-    switch style {
-      case .short, .initials:
-        return "X \(originX), Y \(originY), W \(width), H \(height)"
-
-      case .full:
-        return "X \(originX), Y \(originY), Width \(width), Height \(height)"
-    }
-  }
+//  public var displayString: String {
+//    self.displayString()
+//  }
+//
+//  public func displayString(
+//    decimalPlaces: Int = 2,
+//    style: DisplayStringStyle = .short
+//  ) -> String {
+//
+//    let originX: String = "\(self.origin.x.displayString(decimalPlaces))"
+//    let originY: String = "\(self.origin.y.displayString(decimalPlaces))"
+//    let width: String = "\(self.width.displayString(decimalPlaces))"
+//    let height: String = "\(self.height.displayString(decimalPlaces))"
+//
+//    switch style {
+//      case .short, .initials:
+//        return "X \(originX), Y \(originY), W \(width), H \(height)"
+//
+//      case .full:
+//        return "X \(originX), Y \(originY), Width \(width), Height \(height)"
+//    }
+//  }
 
   // Corner points
   public var topLeft: CGPoint {

@@ -18,17 +18,15 @@ import Foundation
 /// etc
 
 // Base unit types
-public protocol UnitType {
-  var stringRepresentation: String { get }
-  var shortForm: String { get }
-}
+//public protocol UnitType {
+//  var stringRepresentation: String { get }
+//  var shortForm: String { get }
+//}
 
 // Specific unit categories
-public protocol CoordinateUnit: UnitType {
-  
-}
-public protocol DimensionUnit: UnitType {}
-public protocol DeltaUnit: UnitType {}
+//public protocol CoordinateUnit: UnitType {}
+//public protocol DimensionUnit: UnitType {}
+//public protocol DeltaUnit: UnitType {}
 
 /// This can be either
 /// a) A final, singular Float value, like CGFloat/Double
@@ -54,13 +52,13 @@ public protocol ValueSingle: DisplayValue {
 public protocol ValuePair: DisplayValue {
   associatedtype FirstValue: DisplayValue
   associatedtype SecondValue: DisplayValue
-  associatedtype FirstUnit: UnitType
-  associatedtype SecondUnit: UnitType
+//  associatedtype FirstUnit: UnitType
+//  associatedtype SecondUnit: UnitType
   
   var firstValue: FirstValue { get }
   var secondValue: SecondValue { get }
-  var firstUnit: FirstUnit { get }
-  var secondUnit: SecondUnit { get }
+//  var firstUnit: FirstUnit { get }
+//  var secondUnit: SecondUnit { get }
 }
 
 
