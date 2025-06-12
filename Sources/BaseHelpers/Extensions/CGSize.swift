@@ -190,7 +190,10 @@ extension CGSize {
     displayString()
   }
 
-  public func displayString(decimalPlaces: Int = 2, style: DisplayStringStyle = .short) -> String {
+  public func displayString(
+    decimalPlaces: Int = 2,
+    style: DisplayStringStyle = .short
+  ) -> String {
 
     let width: String = "\(self.width.displayString(decimalPlaces))"
     let height: String = "\(self.height.displayString(decimalPlaces))"
