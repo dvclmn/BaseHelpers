@@ -17,6 +17,17 @@ import Foundation
 /// - CGVector
 /// etc
 
+// Base unit types
+public protocol UnitType {
+  var stringRepresentation: String { get }
+  var shortForm: String { get }
+}
+
+// Specific unit categories
+public protocol CoordinateUnit: UnitType {}
+public protocol DimensionUnit: UnitType {}
+public protocol DeltaUnit: UnitType {}
+
 /// This can be either
 /// a) A final, singular Float value, like CGFloat/Double
 /// b) Or a yet-to-decompose ValuePair
@@ -27,9 +38,10 @@ public protocol DisplayValue {
 }
 
 public protocol ValueSingle: DisplayValue {
-  associatedtype Value: BinaryFloatingPoint
-  var value: Value { get }
+  associatedtype FloatType: BinaryFloatingPoint
+  var singleValue: FloatType { get }
 }
+
 
 /// This is meant to express that Value 01 and 02
 /// may not neccesarily be full resolved yet, to a Float
@@ -38,17 +50,17 @@ public protocol ValueSingle: DisplayValue {
 /// origin and size can *further* be resolved, down to
 /// x/y and width/height.
 public protocol ValuePair: DisplayValue {
-  associatedtype Value: DisplayValue
-  var value01: Value { get }
-  var value02: Value { get }
+  associatedtype FirstValue: DisplayValue
+  associatedtype SecondValue: DisplayValue
+  associatedtype FirstUnit: UnitType
+  associatedtype SecondUnit: UnitType
+  
+  var firstValue: FirstValue { get }
+  var secondValue: SecondValue { get }
+  var firstUnit: FirstUnit { get }
+  var secondUnit: SecondUnit { get }
 }
 
-public struct PointDisplayString: ValuePair {
-  public typealias Value = CGPoint
-  public var value01: Value
-  public var value02: Value
-  
-}
 
 
 //public struct DisplayString<Value: DisplayValue> {
@@ -71,8 +83,9 @@ public struct PointDisplayString: ValuePair {
 //  
 //}
 //
-//public enum DisplayStringStyle {
-//  case short
-//  case standard
-//  case long
-//}
+
+public enum DisplayStringStyle {
+  case short
+  case standard
+  case long
+}
