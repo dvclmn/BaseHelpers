@@ -7,6 +7,8 @@
 
 import Foundation
 
+//private func singleValueString()
+
 extension CGPoint: ValuePair {
   public typealias FirstValue = CGFloat
   public typealias SecondValue = CGFloat
@@ -15,12 +17,37 @@ extension CGPoint: ValuePair {
   public var secondValue: SecondValue { self.y }
 
   public func displayString(
-    decimalPlaces: Int = 2,
-    style: DisplayStringStyle = .short
+    integerWidth: Int?,
+    decimalPlaces: Int,
+    paddingCharacter: Character?,
+    style: DisplayStringStyle
+      //      decimalPlaces: Int = 2,
+      //      style: DisplayStringStyle = .short
   ) -> String {
 
-    let width: String = "\(self.x.displayString(decimalPlaces))"
-    let height: String = "\(self.y.displayString(decimalPlaces))"
+    // MARK: - First value
+    /// Integer column
+    
+    let firstValueString: String
+    if let integerWidth {
+      
+      
+
+      let firstValueIntegerPadding = DigitPadding(
+        Int(firstValue),
+        targetWidth: integerWidth,
+        paddingCharacter: paddingStrategy
+      )
+      
+    } else {
+      firstValueString = "\(firstValue)"
+    }
+    
+    
+    
+    
+    let firstString: String = "\(self.x.displayString(decimalPlaces))"
+    let secondString: String = "\(self.y.displayString(decimalPlaces))"
 
     switch style {
       case .short:
@@ -31,4 +58,22 @@ extension CGPoint: ValuePair {
 
     }
   }
+  //  public func displayString(
+  //    decimalPlaces: Int = 2,
+  //    style: DisplayStringStyle = .short
+  //  ) -> String {
+  //
+  //    let width: String = "\(self.x.displayString(decimalPlaces))"
+  //    let height: String = "\(self.y.displayString(decimalPlaces))"
+  //
+  //    switch style {
+  //      case .short:
+  //        return "\(width) x \(height)"
+  //
+  //      case .standard, .long:
+  //        return "X \(width)  Y \(height)"
+  //
+  //    }
+  //  }
 }
+

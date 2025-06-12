@@ -7,7 +7,10 @@
 
 import Foundation
 
-func floatToDecimal<T: BinaryFloatingPoint>(value: T, places: Int) -> String {
+func floatToString<T: BinaryFloatingPoint>(
+  value: T,
+  places: Int
+) -> String {
   let doubleValue = Double(value)
   let formatted = doubleValue.formatted(.number.precision(.fractionLength(places)))
   return String(formatted)
@@ -19,17 +22,11 @@ extension Double {
     return self.displayString()
   }
 
-//  public var toDecimal: String { toDecimal() }
-
-//  private func toDecimal(_ places: Int = 2) -> String {
-//    floatToDecimal(value: self, places: places)
-//  }
-
   public func displayString(_ places: Int = 2) -> String {
-    floatToDecimal(value: self, places: places)
+    floatToString(value: self, places: places)
   }
   public var toInt: String {
-    floatToDecimal(value: self, places: 0)
+    floatToString(value: self, places: 0)
   }
 }
 
@@ -39,13 +36,12 @@ extension CGFloat {
     return self.displayString()
   }
 
-//  public var toDecimal: String { toDecimal() }
+  public func displayString(_ places: Int = 2) -> String {
+    floatToString(value: self, places: places)
+  }
 
   public var toInt: String {
-    floatToDecimal(value: self, places: 0)
+    floatToString(value: self, places: 0)
   }
 
-  public func displayString(_ places: Int = 2) -> String {
-    floatToDecimal(value: self, places: places)
-  }
 }
