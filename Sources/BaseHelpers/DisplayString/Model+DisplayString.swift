@@ -7,6 +7,14 @@
 
 import Foundation
 
+public enum DisplayStringStyle {
+  case short
+  case standard
+  case long
+}
+
+
+
 
 /// Aiming to support:
 ///
@@ -30,46 +38,39 @@ import Foundation
 /// This can be either
 /// a) A final, singular Float value, like CGFloat/Double
 /// b) Or a yet-to-decompose ValuePair
-public protocol DisplayValue {
-
-  func displayString(
-    integerWidth: Int?, // nil == unlimited
-    decimalPlaces: Int,
-    paddingStrategy: PaddingStragey,
-    style: DisplayStringStyle
-  ) -> String
-
-}
-
-public protocol ValueSingle: DisplayValue {
-  associatedtype FloatType: BinaryFloatingPoint
-  var value: FloatType { get }
-}
-
-
-public enum DecimalPlace {
-  case integer(targetWidth: Int)
-  case decimal(places: Int)
-}
-
-/// This is meant to express that Value 01 and 02
-/// may not neccesarily be full resolved yet, to a Float
-/// An example being `CGrect`; whilst it does have
-/// 2 values (when expressed a origin and size), both
-/// origin and size can *further* be resolved, down to
-/// x/y and width/height.
-public protocol ValuePair: DisplayValue {
-  associatedtype FirstValue: DisplayValue
-  associatedtype SecondValue: DisplayValue
-  
-  var firstValue: FirstValue { get }
-  var secondValue: SecondValue { get }
-}
-
-public enum DisplayStringStyle {
-  case short
-  case standard
-  case long
-}
-
+//public protocol DisplayValue {
+//
+//  func displayString(
+//    integerWidth: Int?, // nil == unlimited
+//    decimalPlaces: Int,
+//    paddingCharacter: Character?, // nil == no padding
+//    style: DisplayStringStyle
+//  ) -> String
+//
+//}
+//
+//public protocol ValueSingle: DisplayValue {
+//  associatedtype FloatType: BinaryFloatingPoint
+//  var value: FloatType { get }
+//}
+//
+//
+//public enum DecimalPlace {
+//  case integer(targetWidth: Int)
+//  case decimal(places: Int)
+//}
+//
+///// This is meant to express that Value 01 and 02
+///// may not neccesarily be full resolved yet, to a Float
+///// An example being `CGrect`; whilst it does have
+///// 2 values (when expressed a origin and size), both
+///// origin and size can *further* be resolved, down to
+///// x/y and width/height.
+//public protocol ValuePair: DisplayValue {
+//  associatedtype FirstValue: DisplayValue
+//  associatedtype SecondValue: DisplayValue
+//  
+//  var firstValue: FirstValue { get }
+//  var secondValue: SecondValue { get }
+//}
 
