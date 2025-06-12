@@ -244,29 +244,7 @@ extension CGPoint {
     return UnitPoint(x: x / size.width, y: y / size.height)
   }
 
-  public var displayString: String {
-    self.displayString(style: .full)
-  }
-
-  public func displayString(decimalPlaces: Int = 2) -> String {
-    return "\(self.x.displayString(decimalPlaces)) x \(self.y.displayString(decimalPlaces))"
-  }
-
-  public func displayString(decimalPlaces: Int = 2, style: DisplayStringStyle = .short) -> String {
-
-    let width: String = "\(self.x.displayString(decimalPlaces))"
-    let height: String = "\(self.y.displayString(decimalPlaces))"
-
-    switch style {
-      case .short:
-        return "\(width) x \(height)"
-
-      case .full, .initials:
-        return "X \(width)  Y \(height)"
-
-    }
-  }
-
+ 
 
   public var isEmpty: Bool {
     x.isZero && y.isZero

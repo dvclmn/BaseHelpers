@@ -39,7 +39,7 @@ public protocol DisplayValue {
 
 public protocol ValueSingle: DisplayValue {
   associatedtype FloatType: BinaryFloatingPoint
-  var singleValue: FloatType { get }
+  var value: FloatType { get }
 }
 
 
