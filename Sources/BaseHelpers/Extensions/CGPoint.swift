@@ -20,11 +20,12 @@ public enum CoordinateMappingMode {
 
 extension CGPoint {
   
+  /// Assumes top-left anchor for origin
   public func isWithin(_ rect: CGRect) -> Bool {
+    let isXWithin: Bool = self.x >= rect.leadingEdge && self.x <= rect.trailingEdge
+    let isYWithin: Bool = self.y >= rect.topEdge && self.y <= rect.bottomEdge
     
-    let isXWithin: Bool = self.x >= rect.leftEdge
-    let isYWithin: Bool = self.y 
-    
+    return isXWithin && isYWithin
   }
 
   public static let quickPreset01 = CGPoint(x: 100, y: 50)

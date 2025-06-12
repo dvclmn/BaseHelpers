@@ -128,28 +128,28 @@ extension CGRect {
     CGSize(width: width, height: height)
   }
 
-//  public var displayString: String {
-//    self.displayString()
-//  }
-//
-//  public func displayString(
-//    decimalPlaces: Int = 2,
-//    style: DisplayStringStyle = .short
-//  ) -> String {
-//
-//    let originX: String = "\(self.origin.x.displayString(decimalPlaces))"
-//    let originY: String = "\(self.origin.y.displayString(decimalPlaces))"
-//    let width: String = "\(self.width.displayString(decimalPlaces))"
-//    let height: String = "\(self.height.displayString(decimalPlaces))"
-//
-//    switch style {
-//      case .short, .initials:
-//        return "X \(originX), Y \(originY), W \(width), H \(height)"
-//
-//      case .full:
-//        return "X \(originX), Y \(originY), Width \(width), Height \(height)"
-//    }
-//  }
+  //  public var displayString: String {
+  //    self.displayString()
+  //  }
+  //
+  //  public func displayString(
+  //    decimalPlaces: Int = 2,
+  //    style: DisplayStringStyle = .short
+  //  ) -> String {
+  //
+  //    let originX: String = "\(self.origin.x.displayString(decimalPlaces))"
+  //    let originY: String = "\(self.origin.y.displayString(decimalPlaces))"
+  //    let width: String = "\(self.width.displayString(decimalPlaces))"
+  //    let height: String = "\(self.height.displayString(decimalPlaces))"
+  //
+  //    switch style {
+  //      case .short, .initials:
+  //        return "X \(originX), Y \(originY), W \(width), H \(height)"
+  //
+  //      case .full:
+  //        return "X \(originX), Y \(originY), Width \(width), Height \(height)"
+  //    }
+  //  }
 
   // Corner points
   public var topLeft: CGPoint {
@@ -172,41 +172,27 @@ extension CGRect {
     CGPoint(x: midX, y: midY)
   }
 
-  
-  /// `CGRect` represents a rectangle in a 2D coordinate system.
-  ///
-  /// `minX` The smallest x-coordinate of the rectangle (the left edge)
-  /// `minY` The smallest y-coordinate of the rectangle (the top edge)
-  /// `maxX` The largest x-coordinate of the rectangle (the right edge)
-  /// `maxY` The largest y-coordinate of the rectangle (the bottom edge)
-  /// `width` The width of the rectangle (calculated as `maxX - minX`)
-  /// `height`The height of the rectangle (calculated as `maxY - minY`)
-    
-  
-  /// The `origin` property represents the starting point (or the top-left corner)
-  /// of the rectangle in a 2D coordinate system.
 
-  /// | `origin`       | A CGPoint that specifies the (x, y) coordinates of the rectangle's top-left corner. |
-  /// | `minX`         | Equals `origin.x`, representing the left edge of the rectangle. |
-  /// | `minY`         | Equals `origin.y`, representing the top edge of the rectangle. |
-  /// | `maxX`         | Calculated as `origin.x + width`, representing the right edge of the rectangle. |
-  /// | `maxY`         | Calculated as `origin.y + height`, representing the bottom edge of the rectangle. |
-  /// | `width`        | The width of the rectangle, defined as `maxX - minX`. |
-  /// | `height`       | The height of the rectangle, defined as `maxY - minY`. |
+  /// `CGRect` represents a rectangle in a 2D coordinate system.
+  /// The `origin` property represents the starting point (or the top-left corner).
+  ///
+  /// `origin`A CGPoint that specifies the (x, y) coordinates of the rectangle's top-left corner.
+  /// `minX` Equals `origin.x`, representing the left edge of the rectangle.
+  /// `minY` Equals `origin.y`, representing the top edge of the rectangle.
+  /// `maxX` Calculated as `origin.x + width`, representing the right edge of the rectangle.
+  /// `maxY` Calculated as `origin.y + height`, representing the bottom edge of the rectangle.
+  /// `width` The width of the rectangle, defined as `maxX - minX`.
+  /// `height`The height of the rectangle, defined as `maxY - minY`.
   ///
   /// ### Summary
   /// -  The `origin` defines the position of the rectangle in the coordinate system.
   /// -  `minX` and `minY` are directly derived from the `origin`.
-  /// -  The dimensions (`width` and `height`) are used in conjunction with the `origin` to determine the rectangle's boundaries (`maxX` and `maxY`).
-  ///
-  /// This relationship allows you to easily calculate the rectangle's position and size based on its `origin`.
-  
+  /// -  The dimensions (`width` and `height`) are used in conjunction with the
+  /// `origin` to determine the rectangle's boundaries (`maxX` and `maxY`).
 
-  
-  
   // Edges
-  public var leftEdge: CGFloat { minX }
-  public var rightEdge: CGFloat { maxX }
+  public var leadingEdge: CGFloat { minX }
+  public var trailingEdge: CGFloat { maxX }
   public var topEdge: CGFloat { minY }
   public var bottomEdge: CGFloat { maxY }
 

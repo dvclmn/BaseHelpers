@@ -34,10 +34,10 @@ import NSUI
 public typealias MarkdownColorMap = [Markdown.Syntax: NSUIColor]
 public typealias MarkdownFontMap = [Markdown.Syntax: FontConfig]
 
-public struct MarkdownTheme {
+public struct MarkdownTheme: Sendable{
   public var name: String?
   public var fontSize: CGFloat
-  public var colors: Colors
+  public var colors: Colours
   public var fonts: Fonts
   public var editor: EditorStyles
 
@@ -46,7 +46,7 @@ public struct MarkdownTheme {
   public init(
     themeName: String? = nil,
     fontSize: CGFloat = 14,
-    colors: Colors = .defaults,
+    colors: Colours = .defaults,
     fonts: Fonts = .defaults,
     editor: EditorStyles = .defaults
   ) {
@@ -103,10 +103,10 @@ extension MarkdownTheme {
 extension MarkdownTheme {
 
   // MARK: - Colours
-  public struct Colors {
+  public struct Colours: Sendable {
     public var foreground: MarkdownColorMap
     public var background: MarkdownColorMap
-    public static let defaults: Colors = .init()
+    public static let defaults: Colours = .init()
     
     public init(
       foreground: MarkdownColorMap = .defaultColours,
@@ -118,7 +118,7 @@ extension MarkdownTheme {
   }
 
   // MARK: - Fonts
-  public struct Fonts {
+  public struct Fonts: Sendable {
     public var fonts: MarkdownFontMap
     public static let defaults: Fonts = .init()
     
@@ -160,7 +160,7 @@ public enum TextComponent {
   case background
 }
 
-extension MarkdownTheme.Colors {
+extension MarkdownTheme.Colours {
   public subscript(forType type: Markdown.Syntax, forComponent component: TextComponent = .foreground) -> NSUIColor {
     get {
       

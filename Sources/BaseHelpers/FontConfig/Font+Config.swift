@@ -7,17 +7,17 @@
 
 import NSUI
 
-public enum FontDescriptor {
+public enum FontDescriptor: Sendable {
   case system(weight: NSUIFont.Weight, design: NSUIFontDescriptor.SystemDesign)
   case named(String)
 
-  static var `default` = FontDescriptor.system(
+  static let `default` = FontDescriptor.system(
     weight: .regular,
     design: .default
   )
 }
 
-public struct FontConfig {
+public struct FontConfig: Sendable {
   public let size: CGFloat
   public let descriptor: FontDescriptor
   public let traits: NSUIFontDescriptor.SymbolicTraits
