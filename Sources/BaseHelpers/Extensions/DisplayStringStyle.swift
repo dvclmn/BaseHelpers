@@ -7,8 +7,3 @@
 
 import Foundation
 
-public enum DisplayStringStyle {
-  case short
-  case initials
-  case full
-}
