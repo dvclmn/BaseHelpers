@@ -24,7 +24,9 @@ public protocol UnitType {
 }
 
 // Specific unit categories
-public protocol CoordinateUnit: UnitType {}
+public protocol CoordinateUnit: UnitType {
+  
+}
 public protocol DimensionUnit: UnitType {}
 public protocol DeltaUnit: UnitType {}
 

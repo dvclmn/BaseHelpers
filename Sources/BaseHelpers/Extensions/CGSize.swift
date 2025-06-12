@@ -186,34 +186,7 @@ extension CGSize {
     self.width.isZero || self.height.isZero
   }
 
-  public var displayString: String {
-    displayString()
-  }
-
-  public func displayString(
-    decimalPlaces: Int = 2,
-    style: DisplayStringStyle = .short
-  ) -> String {
-
-    let width: String = "\(self.width.displayString(decimalPlaces))"
-    let height: String = "\(self.height.displayString(decimalPlaces))"
-
-    switch style {
-      case .short:
-        return "\(width) x \(height)"
-
-      case .initials:
-        return "W \(width)  H \(height)"
-
-      case .full:
-        return "Width \(width)  Height \(height)"
-    }
-  }
-
-  @available(*, deprecated, message: "This function is deprecated. Use `displayString` instead")
-  public var asString: String {
-    "Width: \(width.padLeading(maxDigits: 3, decimalPlaces: 2)) x Height: \(height.padLeading(maxDigits: 3, decimalPlaces: 2))"
-  }
+  
 
 }
 
