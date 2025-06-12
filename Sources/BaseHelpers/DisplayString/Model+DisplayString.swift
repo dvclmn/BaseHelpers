@@ -34,7 +34,11 @@ import Foundation
 public protocol DisplayValue {
   /// How to write this, if it can be either one of a single, or double?
   /// What's the min requirement?
-  func displayString(decimalPlaces: Int, style: DisplayStringStyle) -> String
+  func displayString(
+    decimalPlaces: Int,
+    style: DisplayStringStyle
+  ) -> String
+  
 }
 
 public protocol ValueSingle: DisplayValue {
