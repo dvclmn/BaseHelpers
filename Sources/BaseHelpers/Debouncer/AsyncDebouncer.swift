@@ -7,6 +7,8 @@
 
 import Foundation
 
+/// Important note: Don't use the one debouncer instance, for
+/// two distinct tasks, or one may cancel the other. Use seperate instances.
 @MainActor
 public final class AsyncDebouncer {
   private var task: Task<Void, Never>? = nil
@@ -23,6 +25,7 @@ public final class AsyncDebouncer {
   public init(interval: Int) {
     self.interval = Duration.seconds(interval)
   }
+
 
   /// Execute a debounced async task that returns a value
   public func execute<T: Sendable>(
