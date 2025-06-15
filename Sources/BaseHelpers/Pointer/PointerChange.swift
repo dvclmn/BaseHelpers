@@ -9,32 +9,78 @@
 import AppKit
 import SwiftUI
 
+import SwiftUI
 
-  
+@Observable
+final class PointerHandler {
+  var pointerStyle: NSCursor = .current
+  //  var isWatchingHover: Bool = false
+  var isHovering: Bool = false
+
+  init(
+    pointerStyle: NSCursor
+  ) {
+    self.pointerStyle = pointerStyle
+  }
+}
 
 
+public struct PointerHoverChangeModifier: ViewModifier {
 
-public struct PointerChangeModifier: ViewModifier {
-  @State private var isHovering: Bool = false
-//  let isLocked: Bool
-//  let shouldHide: Bool
-//  let newPosition: CGPoint?
+  @State private var pointerHandler: PointerHandler
+  //  @State private var isHovering: Bool = false
 
-  let pointerStyle: NSCursor
-  
+  //  let pointerStyle: NSCursor
+
+  public init(
+    pointerStyle: NSCursor
+  ) {
+    self._pointerHandler = State(initialValue: PointerHandler(pointerStyle: pointerStyle))
+    self.pointerHandler = pointerHandler
+  }
+
   public func body(content: Content) -> some View {
     content
       .onHover { hover in
-        self.isHovering = hover
+        //        if pointerHandler.isWatchingHover {
+        pointerHandler.isHovering = hover
+        //        }
+
         DispatchQueue.main.async {
-          if self.isHovering {
-            /// Looks like ugly hack, but otherwise cursor gets reset to standard arrow.
+          if pointerHandler.isHovering {
             // See https://stackoverflow.com/a/62984079/7964697 for details.
             NSApp.windows.forEach { $0.disableCursorRects() }
-            
-            // swiftlint:disable:next force_unwrapping
+            pointerHandler.pointerStyle.push()
+
+          } else {
+            NSCursor.pop()
+            NSApp.windows.forEach { $0.enableCursorRects() }
+          }
+        }
+      }
+  }
+}
+extension View {
+  public func pointerChangeOnHover(to style: NSCursor) -> some View {
+    self.modifier(
+      PointerHoverChangeModifier(pointerStyle: style)
+    )
+  }
+}
+
+public struct PointerChangeModifier: ViewModifier {
+
+  let pointerStyle: NSCursor?
+
+  public func body(content: Content) -> some View {
+    content
+      .task(id: pointerStyle) {
+        DispatchQueue.main.async {
+          if let pointerStyle {
+            // See https://stackoverflow.com/a/62984079/7964697 for details.
+            NSApp.windows.forEach { $0.disableCursorRects() }
             pointerStyle.push()
-//            NSCursor(image: NSImage(named: "ZoomPlus")!, hotSpot: NSPoint(x: 9, y: 9)).push() // Cannot be nil.
+
           } else {
             NSCursor.pop()
             NSApp.windows.forEach { $0.enableCursorRects() }
@@ -42,27 +88,10 @@ public struct PointerChangeModifier: ViewModifier {
         }
       }
 
-//      .task(id: isLocked) {
-//        Task { @MainActor in
-//          
-//          NSCursor.closedHand.
-////          if isLocked {
-////            /// Arrest pointer (0 = false)
-//////            CGAssociateMouseAndMouseCursorPosition(0)
-////          } else {
-////            /// Release pointer (1 = true)
-////            CGAssociateMouseAndMouseCursorPosition(1)
-////            if let newPosition {
-////              CGWarpMouseCursorPosition(newPosition)
-////            }
-////          }
-//        }
-//      }
-//      .pointerHide(isHidden: shouldHide)
   }
 }
 extension View {
-  public func pointerChange(to style: NSCursor) -> some View {
+  public func pointerChangeOnHover(to style: NSCursor?) -> some View {
     self.modifier(
       PointerChangeModifier(pointerStyle: style)
     )

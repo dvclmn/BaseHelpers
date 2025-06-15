@@ -24,5 +24,15 @@ extension LinearGradient {
     )
   }
   
-  
+  public static func rainbow(
+    start: UnitPoint = .leading,
+    end: UnitPoint = .trailing
+  ) -> LinearGradient {
+    LinearGradient(
+      colors: .rainbow,
+      startPoint: start,
+      endPoint: end
+    )
+  }
+
 }

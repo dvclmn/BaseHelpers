@@ -15,6 +15,11 @@ extension Color {
   }
 }
 
+extension Array where Element == Color {
+  public static let rainbow: [Color] = [
+    .red, .orange, .yellow, .green, .blue, .indigo, .purple, .pink, .red
+  ]
+}
 
 #if canImport(AppKit)
 extension Color {
