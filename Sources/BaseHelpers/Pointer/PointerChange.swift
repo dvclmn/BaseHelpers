@@ -23,21 +23,26 @@ public struct PointerHoverChangeModifier: ViewModifier {
   }
 
   public func body(content: Content) -> some View {
-    content
-      .onHover { hover in
-        isHovering = hover
-        DispatchQueue.main.async {
-          if isHovering {
-            // See https://stackoverflow.com/a/62984079/7964697 for details.
-            NSApp.windows.forEach { $0.disableCursorRects() }
-            pointerStyle.push()
-
-          } else {
-            NSCursor.pop()
-            NSApp.windows.forEach { $0.enableCursorRects() }
+    if #available(macOS 15, iOS 18, *) {
+      content
+        .onHover { hover in
+          isHovering = hover
+          DispatchQueue.main.async {
+            if isHovering {
+              // See https://stackoverflow.com/a/62984079/7964697 for details.
+              NSApp.windows.forEach { $0.disableCursorRects() }
+              pointerStyle.push()
+              
+            } else {
+              NSCursor.pop()
+              NSApp.windows.forEach { $0.enableCursorRects() }
+            }
           }
         }
-      }
+    } else {
+      content
+      
+    }
   }
 }
 extension View {

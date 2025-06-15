@@ -49,9 +49,9 @@ public enum DisplayStringStyle {
 //
 //}
 //
-//public protocol ValueSingle: DisplayValue {
+//public protocol ValueSingle {
 //  associatedtype FloatType: BinaryFloatingPoint
-//  var value: FloatType { get }
+////  var value: FloatType { get }
 //}
 //
 //
@@ -66,11 +66,24 @@ public enum DisplayStringStyle {
 ///// 2 values (when expressed a origin and size), both
 ///// origin and size can *further* be resolved, down to
 ///// x/y and width/height.
-//public protocol ValuePair: DisplayValue {
-//  associatedtype FirstValue: DisplayValue
-//  associatedtype SecondValue: DisplayValue
+//public protocol ValuePair {
+//  associatedtype FirstValue: BinaryFloatingPoint
+//  associatedtype SecondValue: BinaryFloatingPoint
 //  
 //  var firstValue: FirstValue { get }
 //  var secondValue: SecondValue { get }
+//}
+
+//public protocol ValueSingle {
+//  associatedtype FloatType: BinaryFloatingPoint
+//  //  var value: FloatType { get }
+//}
+//
+//public struct ValuePair<First: BinaryFloatingPoint, Second: BinaryFloatingPoint> {
+////  associatedtype FirstValue: BinaryFloatingPoint
+////  associatedtype SecondValue: BinaryFloatingPoint
+//  let firstValue: First
+//  let secondValue: Second
+//  
 //}
 
