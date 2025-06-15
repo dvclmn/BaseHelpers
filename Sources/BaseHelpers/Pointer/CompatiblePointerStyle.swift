@@ -26,6 +26,8 @@ public enum CompatibleFrameResizeDirection: Int8, CaseIterable, Sendable {
 
   /// Indicates that the frame can be resized outwards to be larger.
   case outward
+  
+  case all
 }
 
 public enum CompatiblePointerStyle: Sendable {
@@ -65,10 +67,9 @@ extension CompatibleFrameResizeDirection {
   @available(macOS 15, *)
   var toResizeDirection: FrameResizeDirection.Set {
     switch self {
-      case .inward:
-          .inward
-      case .outward:
-          .outward
+      case .inward: .inward
+      case .outward: .outward
+      case .all: .all
     }
   }
 }
