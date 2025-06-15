@@ -71,7 +71,7 @@ extension BinaryFloatingPoint {
   }
   
   public var toFinite: Double {
-    Double(self.constrained(.zero, .infinity))
+    Double(self.clamped(.zero, .infinity))
   }
   
   
