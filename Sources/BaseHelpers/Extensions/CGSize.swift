@@ -101,6 +101,14 @@ extension CGSize {
 //    self.centeredIn(viewSize: viewSize).center
 //  }
 
+  public func value(for axis: Axis) -> CGFloat {
+    switch axis {
+      case .horizontal:
+        return width
+      case .vertical:
+        return height
+    }
+  }
   
   private func centeredRect(
     in containerSize: CGSize,
