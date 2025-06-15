@@ -8,7 +8,7 @@
 #if canImport(AppKit)
 import SwiftUI
 
-public enum CompatibleFrameResizePosition : Int8, CaseIterable {
+public enum CompatibleFrameResizePosition: Int8, CaseIterable, Sendable {
   case top
   case leading
   case bottom
@@ -19,12 +19,11 @@ public enum CompatibleFrameResizePosition : Int8, CaseIterable {
   case bottomTrailing
 }
 
+public enum CompatibleFrameResizeDirection: Int8, CaseIterable, Sendable {
 
-public enum CompatibleFrameResizeDirection: Int8, CaseIterable {
-  
   /// Indicates that the frame can be resized inwards to be smaller.
   case inward
-  
+
   /// Indicates that the frame can be resized outwards to be larger.
   case outward
 }
@@ -40,93 +39,63 @@ public enum CompatiblePointerStyle: Sendable {
   case zoomIn
   case zoomOut
   case columnResize
-//  case columnResize // columnResize(directions: HorizontalDirection.Set)
-  
+  //  case columnResize // columnResize(directions: HorizontalDirection.Set)
   case rowResize
-//  case rowResize // (directions: VerticalDirection.Set) -> PointerStyle
-  case frameResize //(position: FrameResizePosition, directions: FrameResizeDirection.Set = .all) -> PointerStyle
-  case image(Image, hotSpot: UnitPoint) // (_ image: Image, hotSpot: UnitPoint) -> PointerStyle
- 
-// MARK: - ViewModifier
-private struct CustomPointerModifier: ViewModifier {
-  let type: CompatiblePointerType
-  
-  func body(content: Content) -> some View {
-    if #available(macOS 15, *) {
-      content.pointerStyle(type.toPointerStyle)
-    } else {
-      content
+  //  case rowResize // (directions: VerticalDirection.Set) -> PointerStyle
+  case frameResize(position: CompatibleFrameResizePosition, directions: CompatibleFrameResizeDirection = .outward)  //(position: FrameResizePosition, directions: FrameResizeDirection.Set = .all) -> PointerStyle
+  case image(Image, hotSpot: UnitPoint)  // (_ image: Image, hotSpot: UnitPoint) -> PointerStyle
+}
+
+extension CompatibleFrameResizePosition {
+  @available(macOS 15, *)
+  var toResizePosition: FrameResizePosition {
+    switch self {
+      case .top: .top
+      case .leading: .leading
+      case .bottom: .bottom
+      case .trailing: .trailing
+      case .topLeading: .topLeading
+      case .topTrailing: .topTrailing
+      case .bottomLeading: .bottomLeading
+      case .bottomTrailing: .bottomTrailing
+    }
+  }
+}
+extension CompatibleFrameResizeDirection {
+  @available(macOS 15, *)
+  var toResizeDirection: FrameResizeDirection.Set {
+    switch self {
+      case .inward:
+          .inward
+      case .outward:
+          .outward
     }
   }
 }
 
 // MARK: - Private Extension for Conversion
-private extension CompatiblePointerType {
+extension CompatiblePointerStyle {
   @available(macOS 15, *)
   var toPointerStyle: PointerStyle {
     switch self {
-      case .default:
-          .default
-      case .grabActive:
-          .grabActive
-      case .grabIdle:
-          .grabIdle
-      case .horizontalText:
-          .horizontalText
-      case .link:
-          .link
-      case .rectSelection:
-          .rectSelection
-        
-      case .columnResize:
-          .columnResize
-        
-      case .rowResize:
-          .rowResize
-        
-      case .bottomResize:
-          .frameResize(position: .bottom)
-        
-      case .bottomLeadingResize:
-          .frameResize(position: .bottomLeading)
-        
-      case .bottomTrailingResize:
-          .frameResize(position: .bottomTrailing)
-        
-      case .leadingResize:
-          .frameResize(position: .leading)
-        
-      case .topResize:
-          .frameResize(position: .top)
-        
-      case .topLeadingResize:
-          .frameResize(position: .topLeading)
-        
-      case .topTrailingResize:
-          .frameResize(position: .topTrailing)
-        
-      case .trailingResize:
-          .frameResize(position: .trailing)
-        
-      case .verticalText:
-          .verticalText
-        
-      case .zoomIn:
-          .zoomIn
-        
-      case .zoomOut:
-          .zoomOut
+      case .default: .default
+      case .horizontalText: .horizontalText
+      case .verticalText: .rectSelection
+      case .rectSelection: .rectSelection
+      case .grabIdle: .grabIdle
+      case .grabActive: .grabActive
+      case .link: .link
+      case .zoomIn: .zoomIn
+      case .zoomOut: .zoomOut
+      case .columnResize: .columnResize
+      case .rowResize: .rowResize
+      case .frameResize(let position, let direction): .frameResize(
+        position: position.toResizePosition,
+        directions: direction.toResizeDirection
+      )
+      case .image(let image, let hotSpot): .image(image, hotSpot: hotSpot)
     }
   }
 }
 
-// MARK: - View Extension
-public extension View {
-  /// Applies a custom pointer style to a view that gracefully degrades on older macOS versions.
-  /// - Parameter type: The desired pointer style type.
-  /// - Returns: A view with the specified pointer style applied (macOS 15+) or unchanged (earlier versions).
-  func customPointer(_ type: CompatiblePointerType) -> some View {
-    modifier(CustomPointerModifier(type: type))
-  }
-}
 #endif
