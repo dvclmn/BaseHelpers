@@ -5,28 +5,9 @@
 //  Created by Dave Coleman on 5/5/2025.
 //
 
-extension Array where Element: Hashable {
+import Foundation
 
-  
-  public func nextIndex(after index: Int, wrapping: Bool = true) -> Int? {
-    let nextIdx = index + 1
-    if wrapping {
-      return nextIdx % count
-    } else {
-      return nextIdx < count ? nextIdx : nil
-    }
-  }
-  
-  public func previousIndex(before index: Int, wrapping: Bool = true) -> Int? {
-    let prevIdx = index - 1
-    if wrapping {
-      return (prevIdx + count) % count
-    } else {
-      return prevIdx >= 0 ? prevIdx : nil
-    }
-  }
-  
-  
+extension Array where Element: Hashable {
   /// Notes on conversion from Array to Set:
   ///
   /// Duplicate handling is the big one. Arrays can contain duplicates, but Sets cannot. When you convert [1, 2, 2, 3] to a Set, you silently lose information - the resulting Set will only contain {1, 2, 3}. This might be intentional for deduplication, but could be surprising if someone expects all elements to be preserved.
