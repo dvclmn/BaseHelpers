@@ -31,6 +31,11 @@ extension BinaryFloatingPoint {
     return self / zoom
   }
   
+  public func toPercentString(within range: ClosedRange<Self>) -> String {
+    let normalised: Double = Double(self.normalised(from: range))
+    return String(normalised.formatted(.percent.precision(.fractionLength(0))))
+  }
+  
   /// E.g. converting `0.8` to `0.2`
   public var inversePercentage: Self {
     /// Ensure falloff is between 0.0 and 1.0
