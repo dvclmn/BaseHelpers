@@ -12,7 +12,6 @@ import SwiftUI
 public struct PointerLockModifier: ViewModifier {
 
   let isLocked: Bool
-//  let shouldHide: Bool
   let newPosition: CGPoint?
 
   public func body(content: Content) -> some View {

@@ -8,6 +8,10 @@
 import Foundation
 import SwiftUI
 
+//extension Date.FormatStyle.TimeStyle {
+//  public static let milliseconds: Self =
+//}
+
 /// https://stackoverflow.com/a/78346505
 /// ```
 /// let preferredFormat = Date.FormatStyle()
@@ -27,103 +31,103 @@ import SwiftUI
 /// ```
 
 /// https://www.unicode.org/reports/tr35/tr35-31/tr35-dates.html#Date_Format_Patterns
-extension Date {
-
-  /// Example usage:
-  ///
-  /// ```
-  /// let date = Calendar.current.date(byAdding: .day, value: -3, to: Date())!
-  /// print(date.format(.relative))  // Output: "3 days ago"
-  ///
-  /// let olderDate = Calendar.current.date(byAdding: .day, value: -10, to: Date())!
-  /// print(olderDate.format(.relative))  // Output: "Tuesday, May 19 2025"
-  ///
-  /// ```
-  public enum Format {
-    case date
-    case dateAndTime
-    case timeDetailed
-    case relative
-  }
-
-  public func format(_ style: Format) -> String {
-    switch style {
-      case .date:
-        return formatStandardDate()
-
-      case .dateAndTime:
-        return formatDateAndTime()
-
-      case .timeDetailed:
-        return formatTimeDetailed()
-
-        
-      case .relative:
-        return formatRelativeDate()
-    }
-  }
-
-  // MARK: - Helper Functions
-
-  /// Formats the date in a standard way: "EEEE, MMMM d yyyy"
-  private func formatStandardDate() -> String {
-    let dateFormatter = DateFormatter()
-    dateFormatter.dateFormat = "EEEE, MMMM d yyyy"
-    return dateFormatter.string(from: self)
-  }
-
-  /// Formats the date and time: "EEEE, MMMM d yyyy 'at' h:mma"
-  private func formatTime() -> String {
-    let dateFormatter = DateFormatter()
-    dateFormatter.dateFormat = "'at' h:mm a"
-    /// Convert to lowercase 'am/pm'
-    return dateFormatter.string(from: self)
-      .replacingOccurrences(of: "AM", with: "am")
-      .replacingOccurrences(of: "PM", with: "pm")
-  }
-  
-  /// Formats the date and time: "EEEE, MMMM d yyyy 'at' h:mma"
-  private func formatTimeDetailed() -> String {
-    
-    let preferredFormat = Date.FormatStyle()
-      .weekday(.abbreviated)
-      .month(.twoDigits)
-      .day(.twoDigits)
-      .year()
-      .hour()
-      .minute()
-      .second(.twoDigits)
-      .secondFraction(.fractional(4))
-
-    return self.formatted(preferredFormat)
-  }
-  
-  /// Formats the date and time: "EEEE, MMMM d yyyy 'at' h:mma"
-  private func formatDateAndTime() -> String {
-    let date = formatStandardDate()
-    let time = formatTime()
-    
-    return "\(date) \(time)"
-  }
-
-  /// Formats the date in a relative way: "Today", "Yesterday", "2 days ago", or falls back to standard format
-  private func formatRelativeDate() -> String {
-    let calendar = Calendar.current
-    let now = Date()
-    let components = calendar.dateComponents([.day], from: self, to: now)
-
-    if calendar.isDateInToday(self) {
-      return "Today, \(formatTime())"
-    } else if calendar.isDateInYesterday(self) {
-      return "Yesterday, \(formatTime())"
-    } else if let days = components.day, days > 1 && days <= 7 {
-      return "\(days) days ago"
-    } else {
-      return formatStandardDate()
-    }
-  }
-}
-#warning("The below could be revisited one day, when I have the energy. Got way too complicated and messy.")
+//extension Date {
+//
+//  /// Example usage:
+//  ///
+//  /// ```
+//  /// let date = Calendar.current.date(byAdding: .day, value: -3, to: Date())!
+//  /// print(date.format(.relative))  // Output: "3 days ago"
+//  ///
+//  /// let olderDate = Calendar.current.date(byAdding: .day, value: -10, to: Date())!
+//  /// print(olderDate.format(.relative))  // Output: "Tuesday, May 19 2025"
+//  ///
+//  /// ```
+//  public enum Format {
+//    case date
+//    case dateAndTime
+//    case timeDetailed
+//    case relative
+//  }
+//
+//  public func format(_ style: Format) -> String {
+//    switch style {
+//      case .date:
+//        return formatStandardDate()
+//
+//      case .dateAndTime:
+//        return formatDateAndTime()
+//
+//      case .timeDetailed:
+//        return formatTimeDetailed()
+//
+//        
+//      case .relative:
+//        return formatRelativeDate()
+//    }
+//  }
+//
+//  // MARK: - Helper Functions
+//
+//  /// Formats the date in a standard way: "EEEE, MMMM d yyyy"
+//  private func formatStandardDate() -> String {
+//    let dateFormatter = DateFormatter()
+//    dateFormatter.dateFormat = "EEEE, MMMM d yyyy"
+//    return dateFormatter.string(from: self)
+//  }
+//
+//  /// Formats the date and time: "EEEE, MMMM d yyyy 'at' h:mma"
+//  private func formatTime() -> String {
+//    let dateFormatter = DateFormatter()
+//    dateFormatter.dateFormat = "'at' h:mm a"
+//    /// Convert to lowercase 'am/pm'
+//    return dateFormatter.string(from: self)
+//      .replacingOccurrences(of: "AM", with: "am")
+//      .replacingOccurrences(of: "PM", with: "pm")
+//  }
+//  
+//  /// Formats the date and time: "EEEE, MMMM d yyyy 'at' h:mma"
+//  private func formatTimeDetailed() -> String {
+//    
+//    let preferredFormat = Date.FormatStyle()
+//      .weekday(.abbreviated)
+//      .month(.twoDigits)
+//      .day(.twoDigits)
+//      .year()
+//      .hour()
+//      .minute()
+//      .second(.twoDigits)
+//      .secondFraction(.fractional(4))
+//
+//    return self.formatted(preferredFormat)
+//  }
+//  
+//  /// Formats the date and time: "EEEE, MMMM d yyyy 'at' h:mma"
+//  private func formatDateAndTime() -> String {
+//    let date = formatStandardDate()
+//    let time = formatTime()
+//    
+//    return "\(date) \(time)"
+//  }
+//
+//  /// Formats the date in a relative way: "Today", "Yesterday", "2 days ago", or falls back to standard format
+//  private func formatRelativeDate() -> String {
+//    let calendar = Calendar.current
+//    let now = Date()
+//    let components = calendar.dateComponents([.day], from: self, to: now)
+//
+//    if calendar.isDateInToday(self) {
+//      return "Today, \(formatTime())"
+//    } else if calendar.isDateInYesterday(self) {
+//      return "Yesterday, \(formatTime())"
+//    } else if let days = components.day, days > 1 && days <= 7 {
+//      return "\(days) days ago"
+//    } else {
+//      return formatStandardDate()
+//    }
+//  }
+//}
+//#warning("The below could be revisited one day, when I have the energy. Got way too complicated and messy.")
 //public struct FormatOptions {
 //  var length: DateLength
 //  var components: [DateComponents]
