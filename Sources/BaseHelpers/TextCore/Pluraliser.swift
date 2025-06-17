@@ -39,9 +39,9 @@ public func pluralise(
   switch countStrategy {
     case .showCount(let shouldDisplayForSingle):
       if count == 1 {
-        return shouldDisplayForSingle ? "\(count.displayString) \(word)" : word
+        return shouldDisplayForSingle ? "\(count.toString) \(word)" : word
       } else {
-        return "\(count.displayString) \(word)" + "s"
+        return "\(count.toString) \(word)" + "s"
       }
     case .hideCount:
       return word + "s"
@@ -66,7 +66,7 @@ public func pluralise(
   includeCount: Bool
 ) -> String {
   
-  let wordResult: String = includeCount ? "\(count.displayString) " + word : word
+  let wordResult: String = includeCount ? "\(count.toString) " + word : word
   
   if count == 1 {
     

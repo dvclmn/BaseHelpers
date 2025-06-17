@@ -9,6 +9,8 @@ import Foundation
 
 extension Int {
   
+  
+  
   private static let numberFormatter: NumberFormatter = {
     let formatter = NumberFormatter()
     formatter.numberStyle = .decimal
@@ -23,9 +25,13 @@ extension Int {
     self % 2 == 0
   }
 
-  public var displayString: String {
+  public var toString: String {
     String(self)
   }
+//  
+//  public var displayString: String {
+//    String(self)
+//  }
 
   public var asCGFloat: CGFloat {
     CGFloat(self)
