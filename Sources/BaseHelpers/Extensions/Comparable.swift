@@ -16,6 +16,10 @@ extension Comparable {
     return clamped(range.lowerBound, range.upperBound)
   }
   
+//  func clamped(to range: ClosedRange<Self>) -> Self {
+//    min(max(self, range.lowerBound), range.upperBound)
+//  }
+  
   public func clamped(_ lowerBound: Self, _ upperBound: Self) -> Self {
     precondition(lowerBound <= upperBound, "Invalid range: lowerBound must be less than or equal to upperBound.")
     return min(max(self, lowerBound), upperBound)
