@@ -30,31 +30,44 @@ extension BinaryFloatingPoint {
   public func removingZoom(_ zoom: Self) -> Self {
     return self / zoom
   }
-
-  /// Adjusts a base value (like line width) based on zoom level with controlled scaling
+  
+  /// Adjusts a value to respond partially to zoom level.
   /// - Parameters:
-  ///   - zoom: Current zoom level (1.0 = no zoom, 2.0 = 2x zoom, etc.)
-  ///   - range: Allowed range for the result (min...max)
-  ///   - scaleFactor: How much the zoom affects the value (0.0 = no scaling, 1.0 = full scaling)
-  /// - Returns: Adjusted value clamped to the specified range
+  ///   - zoom: The current zoom factor (1.0 is default, >1.0 is zoomed in).
+  ///   - responsiveness: 0 = fixed size, 1 = fully zoom-scaled, 0.5 = halfway.
+  ///   - clampedTo: Optional range to constrain the final adjusted value.
+  public func adjustedForZoom(
+    _ zoom: Self,
+    sensitivity: Self = 0.5,
+//    range: ClosedRange<Self>? = nil
+  ) -> Self {
+    let clampedSensitivity = Double(sensitivity.clamped(to: 0...1))
+    let adjusted = self * Self(pow(Double(zoom), clampedSensitivity - 1))
+//    if let range = range {
+//      return adjusted.clamped(to: range)
+//    } else {
+//      return adjusted
+//    }
+    return adjusted
+  }
+  
+  /// Clamps the value to the given range.
+//  func clamped(to range: ClosedRange<Self>) -> Self {
+//    return min(max(self, range.lowerBound), range.upperBound)
+//  }
+  
+
+//  /// Adjusts a value to respond partially to zoom level.
+//  /// - Parameters:
+//  ///   - zoom: The current zoom factor (1.0 is default, >1.0 is zoomed in).
+//  ///   - responsiveness: 0 = fixed size, 1 = fully zoom-scaled, 0.5 = halfway.
 //  public func adjustedForZoom(
 //    _ zoom: Self,
-//    range: ClosedRange<Self>,
-//    scaleFactor: Self = 0.3
+//    sensitivity: Self = 0.5
 //  ) -> Self {
-//    /// Calculate the scaled zoom effect
-//    let zoomEffect = 1.0 + (zoom - 1.0) * scaleFactor
-//
-//    /// Apply the effect to the base value
-//    let adjustedValue = self * zoomEffect
-//
-//    /// Clamp to the specified range
-//    return adjustedValue.clamped(to: range)
-//  }
-//
-//  /// Clamps a value to the specified range
-//  public func clamped(to range: ClosedRange<Self>) -> Self {
-//    return Swift.min(Swift.max(self, range.lowerBound), range.upperBound)
+//    let clampedResponse = min(max(sensitivity, 0), 1)
+//    let adjusted: Self = self * Self(pow(Double(zoom), Double(clampedResponse) - 1))
+//    return adjusted
 //  }
 
 

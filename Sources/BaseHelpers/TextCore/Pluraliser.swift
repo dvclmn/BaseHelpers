@@ -24,15 +24,15 @@ public func pluralise(
   showEllipsis: Bool = false
 ) -> String {
   
-  let result = verb + " " + pluralise(count, noun, countStrategy: countStrategy)
+  let result = verb + " " + pluralise(noun, count: count, countStrategy: countStrategy)
   
   return showEllipsis ? result + "..." : result
 }
 
 
 public func pluralise(
-  _ count: Int,
   _ word: String,
+  count: Int,
   countStrategy: CountStrategy = .hideCount
 ) -> String {
   
@@ -59,22 +59,22 @@ public func pluralise(
 //  }
 }
 
-@available(*, deprecated, message: "Use pluralise(count:word:countStrategy) instead")
-public func pluralise(
-  _ count: Int,
-  _ word: String,
-  includeCount: Bool
-) -> String {
-  
-  let wordResult: String = includeCount ? "\(count.toString) " + word : word
-  
-  if count == 1 {
-    
-    return wordResult
-    
-  } else {
-    
-    return wordResult + "s"
-  }
-}
+//@available(*, deprecated, message: "Use pluralise(count:word:countStrategy) instead")
+//public func pluralise(
+//  _ count: Int,
+//  _ word: String,
+//  includeCount: Bool
+//) -> String {
+//  
+//  let wordResult: String = includeCount ? "\(count.toString) " + word : word
+//  
+//  if count == 1 {
+//    
+//    return wordResult
+//    
+//  } else {
+//    
+//    return wordResult + "s"
+//  }
+//}
 

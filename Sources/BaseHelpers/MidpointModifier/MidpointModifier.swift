@@ -25,7 +25,7 @@ public struct MidpointModifier: ViewModifier {
         Circle()
           .fill(colour.opacity(0.4))
           .frame(width: 10, height: 10)
-          .position(viewSize.centrePoint)
+          .position(viewSize.midpoint)
       }
   }
 }

@@ -177,10 +177,6 @@ extension CGSize {
   }
 
   public var midpoint: CGPoint {
-    centrePoint
-  }
-  
-  public var centrePoint: CGPoint {
     let result = CGPoint(
       x: self.width / 2,
       y: self.height / 2
@@ -188,6 +184,15 @@ extension CGSize {
     precondition(!result.isNan || result.isFinite, "Don't want to thing the thing")
     return result
   }
+  
+//  public var centrePoint: CGPoint {
+//    let result = CGPoint(
+//      x: self.width / 2,
+//      y: self.height / 2
+//    )
+//    precondition(!result.isNan || result.isFinite, "Don't want to thing the thing")
+//    return result
+//  }
 
 
   public var widthOrHeightIsZero: Bool {
@@ -197,6 +202,20 @@ extension CGSize {
   
 
 }
+
+
+// MARK: - Subtraction
+infix operator - : AdditionPrecedence
+
+public func - (lhs: CGSize, rhs: CGSize) -> CGSize {
+  return CGSize(
+    width: lhs.width - rhs.width,
+    height: lhs.height - rhs.height
+  )
+}
+
+
+
 
 // MARK: - Multiplication
 infix operator * : MultiplicationPrecedence
@@ -211,6 +230,21 @@ public func * (lhs: CGSize, rhs: CGFloat) -> CGSize {
   
 }
 
+public func / (lhs: CGSize, rhs: CGSize) -> CGSize {
+  precondition(rhs.width != 0 && rhs.height != 0, "Cannot divide by zero size")
+  return CGSize(
+    width: lhs.width / rhs.width,
+    height: lhs.height / rhs.height
+  )
+}
+
+public func / (lhs: CGSize, rhs: CGFloat) -> CGSize {
+  precondition(rhs != 0 && rhs != 0, "Cannot divide by zero size")
+  return CGSize(
+    width: lhs.width / rhs,
+    height: lhs.height / rhs
+  )
+}
 
 
 // MARK: - Greater than
