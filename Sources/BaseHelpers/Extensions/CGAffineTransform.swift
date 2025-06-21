@@ -9,23 +9,60 @@ import CoreGraphics
 
 extension CGAffineTransform {
 
-  // MARK: - Basic Rotations
+  public var hasTranslation: Bool {
+    return tx != 0 || ty != 0
+  }
 
-  public static func rotation(degrees: CGFloat) -> CGAffineTransform {
+  public var hasScale: Bool {
+    let scaleX = sqrt(a * a + c * c)
+    let scaleY = sqrt(b * b + d * d)
+    return abs(scaleX - 1.0) > 0.001 || abs(scaleY - 1.0) > 0.001
+  }
+
+  public var hasRotation: Bool {
+    // Check if the transform has rotation by seeing if it's not axis-aligned
+    return abs(b) > 0.001 || abs(c) > 0.001
+  }
+
+  public var rotationAngle: CGFloat {
+    return atan2(b, a)
+  }
+
+  public var scaleX: CGFloat {
+    return sqrt(a * a + c * c)
+  }
+
+  public var scaleY: CGFloat {
+    return sqrt(b * b + d * d)
+  }
+  
+  
+
+
+  //  var isRotated: Bool {
+  //    return rotation
+  //  }
+  //
+  //  var rotation: Double {
+  //    return atan2(Double(self.b), Double(self.a))
+  //  }
+
+  // MARK: - Basic Rotations
+  public static func rotate(degrees: CGFloat) -> CGAffineTransform {
     let radians = degrees * (.pi / 180)
     return CGAffineTransform(rotationAngle: radians)
   }
 
   public static var rotate45: CGAffineTransform {
-    .rotation(degrees: 45)
+    .rotate(degrees: 45)
   }
 
   public static var rotate90: CGAffineTransform {
-    .rotation(degrees: 90)
+    .rotate(degrees: 90)
   }
 
   public static var rotate180: CGAffineTransform {
-    .rotation(degrees: 180)
+    .rotate(degrees: 180)
   }
 
   // MARK: - Scaling
