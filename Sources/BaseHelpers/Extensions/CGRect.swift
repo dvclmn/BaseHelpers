@@ -229,6 +229,28 @@ extension CGRect {
       height: newMaxY - newMinY
     )
   }
+  
+  
+  public static func normalised(from start: CGPoint, to current: CGPoint) -> CGRect {
+    let origin = CGPoint(
+      x: min(start.x, current.x),
+      y: min(start.y, current.y)
+    )
+    let size = CGSize(
+      width: abs(current.x - start.x),
+      height: abs(current.y - start.y)
+    )
+    return CGRect(origin: origin, size: size)
+  }
+  
+  public static func fromPoints(_ a: CGPoint, _ b: CGPoint) -> CGRect {
+    CGRect(
+      x: min(a.x, b.x),
+      y: min(a.y, b.y),
+      width: abs(a.x - b.x),
+      height: abs(a.y - b.y)
+    )
+  }
 
   /// Useful for a CGRect that needs to be centered within a View
   init(size: CGSize, centeredIn containerSize: CGSize) {

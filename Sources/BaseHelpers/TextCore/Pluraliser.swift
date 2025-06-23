@@ -44,7 +44,7 @@ public func pluralise(
         return "\(count.toString) \(word)" + "s"
       }
     case .hideCount:
-      return word + "s"
+      return count == 1 ? word : word + "s"
   }
   
 //  let wordResult: String = includeCount ? "\(count.string) " + word : word

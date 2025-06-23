@@ -26,6 +26,16 @@ extension BinaryFloatingPoint {
     self.displayString(0)
     //    floatToString(value: self, places: 0)
   }
+  
+  public init(
+    _ value: Self,
+    removingZoom zoom: Self,
+    with sensitivity: Self = 0.5
+  ) {
+    let clampedSensitivity = Double(sensitivity.clamped(to: 0...1))
+    let adjusted = value * Self(pow(Double(zoom), clampedSensitivity - 1))
+    self.init(adjusted)
+  }
 
   public func removingZoom(_ zoom: Self) -> Self {
     return self / zoom
@@ -36,20 +46,30 @@ extension BinaryFloatingPoint {
   ///   - zoom: The current zoom factor (1.0 is default, >1.0 is zoomed in).
   ///   - responsiveness: 0 = fixed size, 1 = fully zoom-scaled, 0.5 = halfway.
   ///   - clampedTo: Optional range to constrain the final adjusted value.
-  public func adjustedForZoom(
-    _ zoom: Self,
-    sensitivity: Self = 0.5,
-//    range: ClosedRange<Self>? = nil
-  ) -> Self {
-    let clampedSensitivity = Double(sensitivity.clamped(to: 0...1))
-    let adjusted = self * Self(pow(Double(zoom), clampedSensitivity - 1))
-//    if let range = range {
-//      return adjusted.clamped(to: range)
-//    } else {
-//      return adjusted
-//    }
-    return adjusted
-  }
+//  public func adjustedForZoom(
+//    _ zoom: Self,
+//    sensitivity: Self = 0.5,
+//  ) -> Self {
+//    let clampedSensitivity = Double(sensitivity.clamped(to: 0...1))
+//    let adjusted = self * Self(pow(Double(zoom), clampedSensitivity - 1))
+//    return adjusted
+//  }
+  
+//  public static func adjustedForZoom(
+//    value: Self,
+//    zoom: Self,
+//    sensitivity: Self = 0.5,
+//    //    range: ClosedRange<Self>? = nil
+//  ) -> Self {
+//    let clampedSensitivity = Double(sensitivity.clamped(to: 0...1))
+//    let adjusted = value * Self(pow(Double(zoom), clampedSensitivity - 1))
+//    //    if let range = range {
+//    //      return adjusted.clamped(to: range)
+//    //    } else {
+//    //      return adjusted
+//    //    }
+//    return adjusted
+//  }
   
   /// Clamps the value to the given range.
 //  func clamped(to range: ClosedRange<Self>) -> Self {

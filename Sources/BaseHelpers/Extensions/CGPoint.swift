@@ -577,6 +577,13 @@ public func + (lhs: CGPoint, rhs: CGSize) -> CGPoint {
   )
 }
 
+public func + (lhs: CGSize, rhs: CGPoint) -> CGPoint {
+  return CGPoint(
+    x: lhs.width + rhs.x,
+    y: lhs.height + rhs.y
+  )
+}
+
 public func + (lhs: CGSize, rhs: CGPoint) -> CGSize {
   return CGSize(
     width: lhs.width + rhs.x,
