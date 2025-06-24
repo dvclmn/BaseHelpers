@@ -20,6 +20,10 @@ public enum CoordinateMappingMode {
 
 extension CGPoint {
   
+  public init(fromSize size: CGSize) {
+    self.init(x: size.width, y: size.height)
+  }
+  
   /// Assumes top-left anchor for origin
   public func isWithin(_ rect: CGRect) -> Bool {
     let isXWithin: Bool = self.x >= rect.leadingEdge && self.x <= rect.trailingEdge

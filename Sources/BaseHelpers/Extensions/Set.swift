@@ -9,7 +9,7 @@ import Foundation
 
 
 public extension Set {
-  var array: [Element] {
+  var toArray: [Element] {
     Array(self)
   }
 }
