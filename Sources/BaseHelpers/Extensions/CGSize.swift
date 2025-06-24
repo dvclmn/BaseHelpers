@@ -221,14 +221,24 @@ public func - (lhs: CGSize, rhs: CGSize) -> CGSize {
 infix operator * : MultiplicationPrecedence
 
 public func * (lhs: CGSize, rhs: CGFloat) -> CGSize {
-  let result = CGSize(
-    width: lhs.width * rhs,
-    height: lhs.height * rhs
-  )
-  precondition(result.width > 0 && result.height > 0, "Cannot have a size with width or height less than or equal to zero")
-  return result
-  
+  return CGSize(width: lhs.width * rhs, height: lhs.height * rhs)
 }
+
+public func positiveScale(_ size: CGSize, by factor: CGFloat) -> CGSize {
+  let result = size * factor
+  precondition(result.width > 0 && result.height > 0, "Scaling resulted in non-positive size")
+  return result
+}
+
+//public func * (lhs: CGSize, rhs: CGFloat) -> CGSize {
+//  let result = CGSize(
+//    width: lhs.width * rhs,
+//    height: lhs.height * rhs
+//  )
+//  precondition(result.width > 0 && result.height > 0, "Cannot have a size with width or height less than or equal to zero")
+//  return result
+//  
+//}
 
 public func / (lhs: CGSize, rhs: CGSize) -> CGSize {
   precondition(rhs.width != 0 && rhs.height != 0, "Cannot divide by zero size")

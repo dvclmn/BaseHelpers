@@ -9,7 +9,17 @@ import Foundation
 
 extension Int {
   
-  
+  public var toOpacity: Double {
+    let newValue: Double
+    if self == 0 {
+      newValue = 1  // aka 100%
+    } else {
+      /// E.g. converts input of `4` to `0.4`, as opacity here is
+      /// expressed as `0-1`
+      newValue = (Double(self) / 10)
+    }
+    return newValue
+  }
   
   private static let numberFormatter: NumberFormatter = {
     let formatter = NumberFormatter()
