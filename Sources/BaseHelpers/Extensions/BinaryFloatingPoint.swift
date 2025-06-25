@@ -169,32 +169,24 @@ extension BinaryFloatingPoint {
   public func height(for aspectRatio: Self) -> Self {
     return self / aspectRatio
   }
-
-}
-
-extension CGFloat {
-  public var toDegrees: CGFloat {
-    /// Convert radians to degrees
-    return self * 180 / .pi
+  
+  public var degreesToRadians: Self {
+    self * .pi / 180
   }
-
+  
+  public var radiansToDegrees: Self {
+    self * 180 / .pi
+  }
+  
   /// Returns the shortest angular distance between two angles
-  public static func angleDelta(_ angle1: CGFloat, _ angle2: CGFloat) -> CGFloat {
+  public static func angleDelta(_ angle1: Self, _ angle2: Self) -> Self {
     var delta = angle1 - angle2
-
+    
     // Normalize to [-π, π] range
     while delta > .pi { delta -= 2 * .pi }
     while delta < -.pi { delta += 2 * .pi }
-
+    
     return abs(delta)
-  }
-
-}
-
-extension Double {
-  public var toDegrees: Double {
-    /// Convert radians to degrees
-    return self * 180 / .pi
   }
 }
 

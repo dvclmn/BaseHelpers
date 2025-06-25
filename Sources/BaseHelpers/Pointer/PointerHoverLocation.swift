@@ -10,7 +10,6 @@ import SwiftUI
 public struct CanvasHoverModifier: ViewModifier {
   @Environment(\.panOffset) private var panOffset
   @Environment(\.zoomLevel) private var zoomLevel
-  //  @Environment(AppHandler.self) private var store
 
   let isEnabled: Bool
   let mappingSize: CGSize?
@@ -50,6 +49,18 @@ public struct CanvasHoverModifier: ViewModifier {
               break
           }
         }  // END hover
+        .border(Color.green.opacity(0.3))
+        .debugFrame("thing", .green)
+      //        .debugFrame("Start hover area", Color.blue)
+      //        .overlay {
+      //          /// Visual any mapping
+      //          Rectangle()
+      //            .fill(.clear)
+      //            .frame(width: proxy.size.width, height: proxy.size.height)
+      //            .border(Color.blue.opacity(0.8))
+      //          Text("Current/Start Hover area")
+      //            .foregroundStyle(.blue)
+      //        }
     }
 
   }
