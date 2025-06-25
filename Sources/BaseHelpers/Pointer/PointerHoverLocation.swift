@@ -49,9 +49,7 @@ public struct CanvasHoverModifier: ViewModifier {
               break
           }
         }  // END hover
-        .border(Color.green.opacity(0.3))
-        .debugFrame("thing", .green)
-      //        .debugFrame("Start hover area", Color.blue)
+//        .debugFrame("Start hover area", Color.blue)
       //        .overlay {
       //          /// Visual any mapping
       //          Rectangle()

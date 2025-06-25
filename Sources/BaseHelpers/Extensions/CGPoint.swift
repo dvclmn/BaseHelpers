@@ -637,6 +637,13 @@ public func / (lhs: CGPoint, rhs: CGSize) -> CGPoint {
     y: lhs.y / rhs.height
   )
 }
+public func / (lhs: CGPoint, rhs: CGFloat) -> CGPoint {
+  precondition(rhs != 0 && rhs != 0, "Cannot divide by zero size")
+  return CGPoint(
+    x: lhs.x / rhs,
+    y: lhs.y / rhs
+  )
+}
 
 // MARK: - Plus Equals
 infix operator += : AssignmentPrecedence

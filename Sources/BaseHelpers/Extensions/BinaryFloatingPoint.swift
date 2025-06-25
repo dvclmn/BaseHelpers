@@ -114,6 +114,10 @@ extension BinaryFloatingPoint {
     /// Approximate previous Fibonacci number using the inverse of the golden ratio
     return (self + prevFib) / 2/// Midpoint between current and previous
   }
+  
+  public var halved: Self {
+    self / 2
+  }
 
 
   public var constrainedOpacity: Self {
