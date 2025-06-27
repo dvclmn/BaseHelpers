@@ -26,30 +26,13 @@ public struct CanvasHoverModifier: ViewModifier {
 
           switch hoverPhase {
             case .active(let location):
-
-              let hoveredLocation: CGPoint
-              if let mappingSize {
-                let remapper = PointRemapper(
-                  currentSize: proxy.size,
-                  targetSize: mappingSize
-                )
-                let mapped = remapper.remappedToTarget(
-                  location,
-                  zoom: zoomLevel,
-                  pan: panOffset
-                )
-                hoveredLocation = mapped
-
-              } else {
-                hoveredLocation = location
-              }
-              hoverlocation(hoveredLocation)
-
+              handleStrokeHover(location, in: proxy.size)
+              
             case .ended:
               break
           }
         }  // END hover
-//        .debugFrame("Start hover area", Color.blue)
+      //        .debugFrame("Start hover area", Color.blue)
       //        .overlay {
       //          /// Visual any mapping
       //          Rectangle()
@@ -60,6 +43,29 @@ public struct CanvasHoverModifier: ViewModifier {
       //            .foregroundStyle(.blue)
       //        }
     }
+
+  }
+}
+
+extension CanvasHoverModifier {
+  private func handleStrokeHover(_ location: CGPoint, in size: CGSize) {
+    let hoveredLocation: CGPoint
+    if let mappingSize {
+      let remapper = PointRemapper(
+        currentSize: size,
+        targetSize: mappingSize
+      )
+      let mapped = remapper.remappedToTarget(
+        location,
+        zoom: zoomLevel,
+        pan: panOffset
+      )
+      hoveredLocation = mapped
+      
+    } else {
+      hoveredLocation = location
+    }
+    hoverlocation(hoveredLocation)
 
   }
 }

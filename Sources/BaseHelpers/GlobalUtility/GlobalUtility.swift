@@ -14,6 +14,12 @@ public func updateIfChanged<T: Equatable>(_ value: T, into target: inout T) -> B
   return true
 }
 
+public func updateOptionalIfChanged<T: Equatable>(_ value: T, into target: inout T?) -> Bool {
+  guard target != value else { return false }
+  target = value
+  return true
+}
+
 @discardableResult
 public func updateIfChanged<Root, Value: Equatable>(
   _ newValue: Value,
@@ -24,6 +30,18 @@ public func updateIfChanged<Root, Value: Equatable>(
   object[keyPath: keyPath] = newValue
   return true
 }
+
+@discardableResult
+public func updateIfChangedWithOptionalRoot<Root, Value: Equatable>(
+  _ newValue: Value,
+  on object: inout Root?,
+  keyPath: WritableKeyPath<Root, Value>
+) -> Bool {
+  guard object?[keyPath: keyPath] != newValue else { return false }
+  object?[keyPath: keyPath] = newValue
+  return true
+}
+
 
 /// ```
 /// runIfChanged(newZoom, comparedTo: store.canvasState.zoom) {

@@ -9,7 +9,7 @@ import SwiftUI
 
 public extension Binding where Value == CGFloat {
   /// Convert `CGFloat` Binding to `Double` Binding
-  var asBoundDouble: Binding<Double> {
+  var toBindingDouble: Binding<Double> {
     Binding<Double>(
       get: { Double(wrappedValue) },
       set: { wrappedValue = CGFloat($0) }
@@ -19,7 +19,7 @@ public extension Binding where Value == CGFloat {
 
 public extension Binding where Value == Double {
   /// Convert `Double` Binding to `CGFloat` Binding
-  var asBoundCGFloat: Binding<CGFloat> {
+  var toBindingFloat: Binding<CGFloat> {
     Binding<CGFloat>(
       get: { CGFloat(wrappedValue) },
       set: { wrappedValue = Double($0) }
@@ -29,7 +29,7 @@ public extension Binding where Value == Double {
 
 public extension Binding where Value == Int {
   /// Convert `Int` Binding to `Double` Binding
-  var asBoundDouble: Binding<Double> {
+  var toBindingDouble: Binding<Double> {
     Binding<Double>(
       get: { Double(wrappedValue) },
       set: { wrappedValue = Int($0) }

@@ -120,6 +120,11 @@ extension CGPoint {
   //    let p1: CGPoint = self
   //    return hypot(p2.x - p1.x, p2.y - p1.y)
   //  }
+  
+  /// Returns true if both x and y coordinates are in the range [0.0, 1.0]
+  public var isNormalised: Bool {
+    return x >= 0.0 && x <= 1.0 && y >= 0.0 && y <= 1.0
+  }
 
   public static func angleInRadians(
     from p1: CGPoint,

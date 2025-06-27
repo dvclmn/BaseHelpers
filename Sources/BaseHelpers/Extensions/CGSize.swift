@@ -201,7 +201,15 @@ extension CGSize {
   
   
 
-  
+  /// Returns a new size reduced evenly on all four sides by the specified inset value
+  /// - Parameter inset: The amount to inset from all edges (width and height are each reduced by 2x this value)
+  /// - Returns: A new CGSize with the inset applied
+  public func inset(by inset: CGFloat) -> CGSize {
+    return CGSize(
+      width: max(0, width - (inset * 2)),
+      height: max(0, height - (inset * 2))
+    )
+  }
 
 }
 
