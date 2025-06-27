@@ -7,31 +7,36 @@
 
 import Foundation
 
-// MARK: - Protocols for generalization
-protocol Timestamped {
+public protocol Timestamped {
   var timestamp: TimeInterval { get }
 }
 
-protocol Positioned {
+public protocol Positioned {
   var position: CGPoint { get }
 }
 
-typealias TimestampedPosition = Timestamped & Positioned
+public typealias TimestampedPosition = Timestamped & Positioned
 
-// MARK: - Velocity calculation with improvements
-struct VelocityCalculator {
+
+public struct VelocityCalculator {
   
-  // Default weights: exponential decay favoring recent samples
-  // Index 0 = most recent pair, higher indices = older pairs
-  static let defaultWeights: [Double] = [0.4, 0.3, 0.2, 0.1]
+  /// Default weights: exponential decay favoring recent samples
+  /// Index 0 = most recent pair, higher indices = older pairs
+  ///
+  /// I previously had: `[0.05, 0.1, 0.15, 0.25, 0.35, 0.1]`
+  /// According to Claude:
+  /// > Your original shows an interesting pattern - it peaks in the middle then drops.
+  /// > Might be better for smoothing out very recent noise while still favoring recent data
+  /// > My suggestion uses pure recency bias; best for responsive, real-time tracking
+  public static let defaultWeights: [Double] = [0.4, 0.3, 0.2, 0.1]
   
   private let maxVelocity: Double
   private let minTimeDelta: TimeInterval
   private let maxHistoryDepth: Int
   private let minPointsForWeighted: Int
   
-  init(
-    maxVelocity: Double = 1000.0,
+  public init(
+    maxVelocity: Double = 400.0,
     minTimeDelta: TimeInterval = 0.001,
     maxHistoryDepth: Int = 10,
     minPointsForWeighted: Int = 3
@@ -42,7 +47,7 @@ struct VelocityCalculator {
     self.minPointsForWeighted = minPointsForWeighted
   }
   
-  func computeWeightedVelocity<T: TimestampedPosition>(
+  public func computeWeightedVelocity<T: TimestampedPosition>(
     from history: [T],
     weights: [Double] = defaultWeights
   ) -> CGVector {
@@ -101,7 +106,7 @@ struct VelocityCalculator {
       dy: weightedDy / totalWeight
     )
     
-    return clampVelocity(finalVelocity)
+    return finalVelocity.clampVelocity(maxVelocity: maxVelocity)
   }
   
   // MARK: - Helper methods
@@ -119,16 +124,16 @@ struct VelocityCalculator {
     )
   }
   
-  private func clampVelocity(_ velocity: CGVector) -> CGVector {
-    let magnitude = sqrt(velocity.dx * velocity.dx + velocity.dy * velocity.dy)
-    guard magnitude > maxVelocity else { return velocity }
-    
-    let scale = maxVelocity / magnitude
-    return CGVector(
-      dx: velocity.dx * scale,
-      dy: velocity.dy * scale
-    )
-  }
+//  private func clampVelocity(_ velocity: CGVector) -> CGVector {
+//    let magnitude = sqrt(velocity.dx * velocity.dx + velocity.dy * velocity.dy)
+//    guard magnitude > maxVelocity else { return velocity }
+//    
+//    let scale = maxVelocity / magnitude
+//    return CGVector(
+//      dx: velocity.dx * scale,
+//      dy: velocity.dy * scale
+//    )
+//  }
 }
 
 // MARK: - Alternative weight generation utilities
@@ -138,7 +143,7 @@ extension VelocityCalculator {
   /// Generate exponential decay weights
   /// - Parameter count: Number of weights to generate
   /// - Parameter decayFactor: How quickly weights decrease (0.5 = half each step)
-  static func exponentialWeights(count: Int, decayFactor: Double = 0.7) -> [Double] {
+  public static func exponentialWeights(count: Int, decayFactor: Double = 0.7) -> [Double] {
     guard count > 0 else { return [] }
     
     var weights = (0..<count).map { i in
@@ -155,7 +160,7 @@ extension VelocityCalculator {
   }
   
   /// Generate linear decay weights (most recent gets highest weight)
-  static func linearWeights(count: Int) -> [Double] {
+  public static func linearWeights(count: Int) -> [Double] {
     guard count > 0 else { return [] }
     
     let weights = (0..<count).map { i in

@@ -10,72 +10,72 @@ import Foundation
 extension CGVector {
 
   /// Implements fundamental kinematic calculation (velocity = displacement/time)
-  public static func computeSimpleVelocity(
-    from pointA: any TimestampedPosition,
-    to pointB: any TimestampedPosition,
-    minTimeDelta: TimeInterval = 0.001,
-  ) -> CGVector {
-    let dt = pointB.timestamp - pointA.timestamp
-    guard dt >= minTimeDelta else { return .zero }
-
-    return CGVector(
-      dx: (pointB.position.x - pointA.position.x) / dt,
-      dy: (pointB.position.y - pointA.position.y) / dt
-    )
-  }
+//  public static func computeSimpleVelocity(
+//    from pointA: any TimestampedPosition,
+//    to pointB: any TimestampedPosition,
+//    minTimeDelta: TimeInterval = 0.001,
+//  ) -> CGVector {
+//    let dt = pointB.timestamp - pointA.timestamp
+//    guard dt >= minTimeDelta else { return .zero }
+//
+//    return CGVector(
+//      dx: (pointB.position.x - pointA.position.x) / dt,
+//      dy: (pointB.position.y - pointA.position.y) / dt
+//    )
+//  }
   
   
-  public static func computeWeightedVelocity(
-    from history: [T],
-    weights: [Double]
-  ) -> CGVector {
-//  public static func computeWeightedVelocity(for touchId: Int) -> CGVector {
-    
-    guard let history = touchHistories[touchId],
-          /// Need at least 2 points to calculate a meaningful velocity
-          history.count >= 2
-    else {
-      return .zero
-    }
-    
-    /// For very short history, use simple calculation
-    if history.count == 2 {
-      return CGVector.computeSimpleVelocity(from: history[0], to: history[1])
-    }
-    
-    /// Weighted average of velocities between consecutive points
-    var weightedDx: Double = 0
-    var weightedDy: Double = 0
-    var totalWeight: Double = 0
-    
-    /// Calculate velocity between each consecutive pair
-    for i in 1..<history.count {
-      let velocity = CGVector.computeSimpleVelocity(
-        from: history[i - 1],
-        to: history[i]
-      )
-      //      let velocity = computeSimpleVelocity(from: history[i - 1], to: history[i])
-      
-      /// Use weight based on how recent this velocity sample is
-      /// More recent samples (higher index) get higher weight
-      let weightIndex = min(i - 1, velocityWeights.count - 1)
-      let weight = velocityWeights[weightIndex]
-      
-      weightedDx += velocity.dx * weight
-      weightedDy += velocity.dy * weight
-      totalWeight += weight
-    }
-    
-    guard totalWeight > 0 else { return .zero }
-    
-    let finalVelocity = CGVector(
-      dx: weightedDx / totalWeight,
-      dy: weightedDy / totalWeight
-    )
-    
-    /// Clamp to reasonable bounds to prevent outliers
-    return clampVelocity(finalVelocity)
-  }
+//  public static func computeWeightedVelocity(
+//    from history: [T],
+//    weights: [Double]
+//  ) -> CGVector {
+////  public static func computeWeightedVelocity(for touchId: Int) -> CGVector {
+//    
+//    guard let history = touchHistories[touchId],
+//          /// Need at least 2 points to calculate a meaningful velocity
+//          history.count >= 2
+//    else {
+//      return .zero
+//    }
+//    
+//    /// For very short history, use simple calculation
+//    if history.count == 2 {
+//      return CGVector.computeSimpleVelocity(from: history[0], to: history[1])
+//    }
+//    
+//    /// Weighted average of velocities between consecutive points
+//    var weightedDx: Double = 0
+//    var weightedDy: Double = 0
+//    var totalWeight: Double = 0
+//    
+//    /// Calculate velocity between each consecutive pair
+//    for i in 1..<history.count {
+//      let velocity = CGVector.computeSimpleVelocity(
+//        from: history[i - 1],
+//        to: history[i]
+//      )
+//      //      let velocity = computeSimpleVelocity(from: history[i - 1], to: history[i])
+//      
+//      /// Use weight based on how recent this velocity sample is
+//      /// More recent samples (higher index) get higher weight
+//      let weightIndex = min(i - 1, velocityWeights.count - 1)
+//      let weight = velocityWeights[weightIndex]
+//      
+//      weightedDx += velocity.dx * weight
+//      weightedDy += velocity.dy * weight
+//      totalWeight += weight
+//    }
+//    
+//    guard totalWeight > 0 else { return .zero }
+//    
+//    let finalVelocity = CGVector(
+//      dx: weightedDx / totalWeight,
+//      dy: weightedDy / totalWeight
+//    )
+//    
+//    /// Clamp to reasonable bounds to prevent outliers
+//    return clampVelocity(finalVelocity)
+//  }
 
 
   /// Performs vector magnitude limiting while preserving direction
