@@ -23,26 +23,18 @@ let package = Package(
   ],
   
   targets: [
-    .target(name: "BaseHelpers", dependencies: [
-      .product(name: "NSUI", package: "nsui"),
-      .product(name: "IfritStatic", package: "Ifrit"),
-    ]),
+    .target(
+      name: "BaseHelpers",
+      dependencies: [
+        .product(name: "NSUI", package: "nsui"),
+        .product(name: "IfritStatic", package: "Ifrit"),
+      ],
+      swiftSettings: [.enableUpcomingFeature("BareSlashRegexLiterals")],
+    ),
   ],
-  swiftLanguageModes: [.v5]
+//  swiftLanguageModes: [.v5]
 )
 
-let swiftSettings: [SwiftSetting] = [
-  .enableExperimentalFeature("StrictConcurrency"),
-  .enableUpcomingFeature("DisableOutwardActorInference"),
-  .enableUpcomingFeature("InferSendableFromCaptures"),
-  .enableUpcomingFeature("BareSlashRegexLiterals")
-]
-
-for target in package.targets {
-  var settings = target.swiftSettings ?? []
-  settings.append(contentsOf: swiftSettings)
-  target.swiftSettings = settings
-}
 //#if swift(>=5.6)
 //package.dependencies += [
 //  .package(url: "https://github.com/apple/swift-docc-plugin", from: "1.0.0")

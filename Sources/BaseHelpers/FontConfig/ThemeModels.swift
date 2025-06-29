@@ -128,7 +128,7 @@ extension MarkdownTheme {
   }
 
   // MARK: - Editor Styles
-  public struct EditorStyles {
+  public struct EditorStyles: Sendable {
     public var backgroundColor: BackgroundStyle = .color(.gray)
     public var tintColor: NSUIColor = .gray
     public var cursorColor: NSUIColor = .gray
@@ -198,7 +198,7 @@ extension MarkdownTheme.Colours {
 
 // MARK: - EditorStyles
 extension MarkdownTheme.EditorStyles {
-  public enum BackgroundStyle {
+  public enum BackgroundStyle: Sendable {
     case color(NSUIColor)
     case noBackground
 

@@ -133,4 +133,10 @@ extension CGVector {
   public var speed: CGFloat {
     return sqrt(dx * dx + dy * dy)
   }
+  
+  public func normalisedSpeed(
+    maxSpeed: CGFloat = 1000.0
+  ) -> CGFloat {
+    return min(speed / maxSpeed, 1.0)
+  }
 }

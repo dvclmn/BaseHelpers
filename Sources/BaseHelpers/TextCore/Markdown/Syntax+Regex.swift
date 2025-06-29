@@ -15,7 +15,6 @@ extension Markdown.Syntax {
   
   public var regexLiteral: MarkdownRegex? {
     switch self {
-        
       case .quoteBlock: return /(?<leading>^>)(?<content>[^>\n]+)(?<trailing>)/
       case .list: return /(?<leading>\[)(?<content>[^\]]+)(?<trailing>\]\([^\)]+\))/
       case .codeBlock: return /(?<leading>```[a-zA-Z]*)\n(?<content>.*?)(?<trailing>```)/

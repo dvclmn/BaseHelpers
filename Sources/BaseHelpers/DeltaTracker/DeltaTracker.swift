@@ -5,7 +5,7 @@
 //  Created by Dave Coleman on 24/6/2025.
 //
 
-import SwiftUICore
+import SwiftUI
 
 /// Tracks deltas between gesture values.
 public struct DeltaTracker<Value: VectorArithmetic> {
