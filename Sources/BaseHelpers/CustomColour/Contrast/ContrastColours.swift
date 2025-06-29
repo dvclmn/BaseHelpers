@@ -7,53 +7,6 @@
 
 import Foundation
 
-public struct LuminanceAwareAdjustment: Sendable {
-  public var light: HSVAdjustment
-  public var dark: HSVAdjustment
-  
-  /// What luminance value is considered dark vs light
-  public var luminanceTheshold: Double
-  
-  /// Provide *two* adjustments; one for use with Light contexts, one for Dark
-  public init(
-    light: HSVAdjustment,
-    dark: HSVAdjustment,
-    luminanceTheshold: Double = 0.5
-  ) {
-    self.light = light
-    self.dark = dark
-    self.luminanceTheshold = luminanceTheshold
-  }
-  
-  /// Provide a *single* adjustment, which auto-inverts for Dark colours
-  public init(
-    symmetric adjustment: HSVAdjustment,
-    luminanceTheshold: Double = 0.5
-  ) {
-    
-    self.light = adjustment
-    self.dark = HSVAdjustment(
-      hue: -adjustment.hue,
-      saturation: -adjustment.saturation,
-      brightness: -adjustment.brightness,
-    )
-    self.luminanceTheshold = luminanceTheshold
-  }
-  
-  public func adjustment(forLuminance luminance: Double) -> HSVAdjustment {
-    luminance > self.luminanceTheshold ? light : dark
-  }
-  
-  public static func contrastPreset(_ preset: ContrastPreset) -> Self {
-    return LuminanceAwareAdjustment(
-      light: preset.forLightColours,
-      dark: preset.forDarkColours
-    )
-  }
-}
-
-// MARK: - Contrasting Border colour
-
 extension RGBColour {
 
   public func contrastColour(
@@ -61,16 +14,32 @@ extension RGBColour {
     brightness: Double,
     hue: Double
   ) -> RGBColour {
-    let adjustment = LuminanceAwareAdjustment(symmetric: .init(h: hue, s: sat, b: brightness))
-    let hsv = HSVColour(fromRGB: self)
-    let adjustmentToApply = adjustment.adjustment(forLuminance: self.luminance)
-    return RGBColour(fromHSV: hsv.applying(adjustment: adjustmentToApply))
+    
+    let hsvAdjustment = HSVAdjustment(h: hue, s: sat, b: brightness)
+    let lumaAwareAdjustment = LuminanceAwareAdjustment(
+      symmetric: hsvAdjustment
+    )
+    return self.contrastColour(using: lumaAwareAdjustment)
+//    let hsvColour = HSVColour(fromRGB: self)
+//    let adjustmentToApply = lumaAwareAdjustment.adjustment(forLuminance: luminance)
+//    let newHSV: HSVColour = hsvColour.applying(adjustment: adjustmentToApply)
+//    return RGBColour(fromHSV: newHSV)
   }
 
   public func contrastColour(using adjustment: LuminanceAwareAdjustment) -> RGBColour {
-    let hsv = HSVColour(fromRGB: self)
-    let adjustmentToApply = adjustment.adjustment(forLuminance: self.luminance)
-    return RGBColour(fromHSV: hsv.applying(adjustment: adjustmentToApply))
+//    let hsv = HSVColour(fromRGB: self)
+//    let adjustmentToApply = adjustment.adjustment(forLuminance: self.luminance)
+//    return RGBColour(fromHSV: hsv.applying(adjustment: adjustmentToApply))
+    
+//    let hsvAdjustment = HSVAdjustment(h: hue, s: sat, b: brightness)
+//    let lumaAwareAdjustment = LuminanceAwareAdjustment(
+//      symmetric: hsvAdjustment
+//    )
+    let hsvColour = HSVColour(fromRGB: self)
+    let adjustmentToApply = adjustment.adjustment(forLuminance: luminance)
+    let newHSV: HSVColour = hsvColour.applying(adjustment: adjustmentToApply)
+    return RGBColour(fromHSV: newHSV)
+    
   }
 
   public func contrastColour(
@@ -85,80 +54,7 @@ extension RGBColour {
   ) -> RGBColour {
     contrastColour(using: .init(light: light, dark: dark))
   }
-
-  /// Creates a contrasting border color based on the luminance of the current color
-  /// - Parameters:
-  ///   - saturationAdjustment: How much to adjust saturation (default: 0.2)
-  ///   - brightnessAdjustment: How much to adjust brightness (default: 0.3)
-  ///   - hueShift: How much to shift hue in degrees (default: 15°, can be negative)
-  /// - Returns: A new RGBColour suitable for use as a contrasting border
-  //  public func contrastingBorderColour(
-  //    saturationAdjustment: Double = 0.2,
-  //    /// Lower = less contrast against existing colour
-  //    brightnessAdjustment: Double = 0.3,
-  //    hueShift: Double = 15.0,
-  //    luminanceTheshold: Double = 0.5
-  //  ) -> RGBColour {
-  //
-  //    // Convert to HSB for easier manipulation
-  //    let hsv = HSVColour(fromLinearRGB: self)
-  //    let isBright = self.luminance > luminanceTheshold
-  //
-  //    // Calculate adjustments based on brightness
-  //    let saturationDelta = isBright ? saturationAdjustment : -saturationAdjustment
-  //    let brightnessDelta = isBright ? -brightnessAdjustment : brightnessAdjustment
-  //    let hueShiftNormalized = (hueShift / 360.0) * (isBright ? 1 : -1)
-  //
-  //    // Apply adjustments with clamping
-  //    let newSaturation = max(0, min(1, hsv.saturation + saturationDelta))
-  //    let newBrightness = max(0, min(1, hsv.brightness + brightnessDelta))
-  //
-  //    // Handle hue wrapping (0-1 range)
-  //    var newHue = hsv.hue + hueShiftNormalized
-  //    if newHue < 0 { newHue += 1 }
-  //    if newHue > 1 { newHue -= 1 }
-  //
-  //    let adjustedHSB = HSVColour(
-  //      hue: newHue,
-  //      saturation: newSaturation,
-  //      brightness: newBrightness,
-  //      alpha: hsv.alpha
-  //    )
-  //
-  //    return RGBColour(fromHSV: adjustedHSB)
-  //  }
-  //
-  //
-  //  /// Creates a contrasting border color with separate parameters for light and dark colors
-  //  public func contrastingBorderColour(
-  //    lightColorAdjustments: (saturation: Double, brightness: Double, hue: Double) = (0.2, -0.3, 15),
-  //    darkColorAdjustments: (saturation: Double, brightness: Double, hue: Double) = (-0.15, 0.4, -10)
-  //  ) -> RGBColour {
-  //
-  //    let hsv = HSVColour(fromLinearRGB: self)
-  //    let isBright = luminance > 0.5
-  //
-  //    let adjustments = isBright ? lightColorAdjustments : darkColorAdjustments
-  //
-  //    let newSaturation = max(0, min(1, hsv.saturation + adjustments.saturation))
-  //    let newBrightness = max(0, min(1, hsv.brightness + adjustments.brightness))
-  //
-  //    var newHue = hsv.hue + (adjustments.hue / 360.0)
-  //    if newHue < 0 { newHue += 1 }
-  //    if newHue > 1 { newHue -= 1 }
-  //
-  //    let adjustedHSB = HSVColour(
-  //      hue: newHue,
-  //      saturation: newSaturation,
-  //      brightness: newBrightness,
-  //      alpha: hsv.alpha
-  //    )
-  //
-  //    return RGBColour(fromHSV: adjustedHSB)
-  //  }
 }
-
-
 
 public enum ContrastPreset {
   case subtle

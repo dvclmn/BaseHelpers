@@ -14,12 +14,13 @@ public struct HSVColour: Equatable, Sendable, ColourModel {
   public var brightness: Double
   public var alpha: Double
 
-  public func nativeColour(includesAlpha: Bool = true) -> Color {
+  public var nativeColour: Color {
     Color(
       hue: hue,
       saturation: saturation,
       brightness: brightness,
-      opacity: includesAlpha ? alpha : 1.0
+      opacity: alpha
+//      opacity: 1.0
     )
   }
   
@@ -47,6 +48,7 @@ public struct HSVColour: Equatable, Sendable, ColourModel {
     let rgba = RGBColour(resolved: resolved)
     self.init(fromRGB: rgba)
   }
+
 }
 
 extension HSVColour {

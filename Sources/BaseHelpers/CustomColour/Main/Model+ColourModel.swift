@@ -10,10 +10,18 @@ import SwiftUI
 public protocol ColourModel {
   var colourSpace: Color.RGBColorSpace { get }
   var componentRange: ClosedRange<Double> { get }
-  func nativeColour(includesAlpha: Bool) -> Color
+  var nativeColour: Color { get }
+  var alpha: Double { get set }
+  mutating func opacity(_ opacity: Double)
+  
   init(resolved: Color.Resolved)
 }
 extension ColourModel {
+  
+  public mutating func opacity(_ opacity: Double) {
+    self.alpha = opacity
+  }
+  
   public var componentRange: ClosedRange<Double> { 0...1 }
   
   /// Note: I found that using RBGLinear did *not* look right

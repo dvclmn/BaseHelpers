@@ -9,7 +9,7 @@ import Foundation
 
 extension BinaryFloatingPoint {
   
-  public func clamped(to range: Range<Int>) -> Self {
+  public func clamped(toIntRange range: Range<Int>) -> Self {
     return clamped(Self(range.lowerBound), Self(range.upperBound))
   }
 

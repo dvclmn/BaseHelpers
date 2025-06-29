@@ -38,11 +38,11 @@ public enum HSVComponent: String, ColourComponent {
     switch self {
       case .hue: Array<Color>.rainbow
       case .saturation:
-        [.gray, colour.nativeColour(includesAlpha: false)]
+        [.gray, colour.nativeColour]
       case .brightness:
         [.black, .white]
       case .alpha:
-        [.clear, colour.nativeColour(includesAlpha: false)]
+        [.clear, colour.nativeColour]
     }
   }
 

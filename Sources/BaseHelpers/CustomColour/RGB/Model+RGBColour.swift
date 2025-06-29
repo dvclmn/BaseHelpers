@@ -73,6 +73,19 @@ public struct RGBColour: Identifiable, Equatable, Hashable, Sendable, Codable, C
 }
 
 extension RGBColour {
+  
+  public var nativeColour: Color {
+    Color(
+      colourSpace,
+      red: red,
+      green: green,
+      blue: blue,
+      opacity: alpha
+//      opacity: 1.0
+//      opacity: includesAlpha ? alpha : 1.0
+    )
+  }
+  
   func linearised(_ channel: Double) -> Double {
     return channel <= 0.04045
     ? channel / 12.92
@@ -96,24 +109,16 @@ extension RGBColour {
     return RGBColour(red: red, green: green, blue: blue, alpha: alpha)
   }
   
-  public mutating func opacity(_ opacity: Double) {
-    self.alpha = opacity
-  }
+//  public mutating func opacity(_ opacity: Double) {
+//    self.alpha = opacity
+//  }
   
   public func toHSV() -> HSVColour {
     let result = HSVColour(fromRGB: self)
     return result
   }
 
-  public func nativeColour(includesAlpha: Bool = true) -> Color {
-    Color(
-      colourSpace,
-      red: red,
-      green: green,
-      blue: blue,
-      opacity: includesAlpha ? alpha : 1.0
-    )
-  }
+  
   
   public init(fromHSV hsv: HSVColour) {
     
@@ -126,7 +131,8 @@ extension RGBColour {
     let x = c * (1 - abs((h * 6).truncatingRemainder(dividingBy: 2) - 1))
     let m = v - c
     
-    let hSegment = Int((h * 6).clamped(to: 0..<6))
+    let hSegment = Int((h * 6).clamped(toIntRange: 0..<6))
+    
     let (r1, g1, b1): (Double, Double, Double)
     
     switch hSegment {
