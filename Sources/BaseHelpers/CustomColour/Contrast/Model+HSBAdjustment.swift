@@ -1,5 +1,5 @@
 //
-//  Model+HSBAdjustment.swift
+//  Model+HSVAdjustment.swift
 //  BaseHelpers
 //
 //  Created by Dave Coleman on 29/6/2025.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct HSBAdjustment: Sendable {
+public struct HSVAdjustment: Sendable {
   public var hue: Double  // Degrees
   public var saturation: Double
   public var brightness: Double

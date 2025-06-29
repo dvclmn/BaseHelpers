@@ -16,9 +16,9 @@ import SwiftUI
 /// - Saturation is a percentage of color intensity (0-100%)
 /// - Value/Brightness is a percentage of lightness (0-100%)
 
-public enum HSBComponent: String, ColourComponent {
+public enum HSVComponent: String, ColourComponent {
 
-  public typealias Model = HSBColour
+  public typealias Model = HSVColour
 
   case hue
   case saturation
@@ -34,17 +34,17 @@ public enum HSBComponent: String, ColourComponent {
     }
   }
   public var handlerKeyPathForeground: KeyPath<ColourHandlerProtocol, Model> {
-    \.foregroundHSB
+    \.foregroundHSV
   }
   public var handlerKeyPathBackground: KeyPath<ColourHandlerProtocol, Model> {
-    \.backgroundHSB
+    \.backgroundHSV
   }
   
 //  public func handlerKeyPathForeground<T: ColourHandlerProtocol>() -> KeyPath<T, Model> {
-//    \.foregroundHSB
+//    \.foregroundHSV
 //  }
 //  public func handlerKeyPathBackground<T: ColourHandlerProtocol>() -> KeyPath<T, Model> {
-//    \.backgroundHSB
+//    \.backgroundHSV
 //  }
   
   public func gradientColours(_ colour: Model) -> [Color] {
@@ -59,7 +59,7 @@ public enum HSBComponent: String, ColourComponent {
     }
   }
 
-  public func trackGradient(colour: HSBColour) -> LinearGradient {
+  public func trackGradient(colour: HSVColour) -> LinearGradient {
     return LinearGradient(
       colors: self.gradientColours(colour),
       startPoint: .leading,

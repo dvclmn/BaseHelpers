@@ -100,8 +100,8 @@ extension RGBColour {
     self.alpha = opacity
   }
   
-  public func toHSV() -> HSBColour {
-    let result = HSBColour(fromRGB: self)
+  public func toHSV() -> HSVColour {
+    let result = HSVColour(fromRGB: self)
     return result
   }
 
@@ -115,7 +115,7 @@ extension RGBColour {
     )
   }
   
-  public init(fromHSV hsv: HSBColour) {
+  public init(fromHSV hsv: HSVColour) {
     
     let h = Self.normalisedHue(hsv.hue)
     let s = hsv.saturation

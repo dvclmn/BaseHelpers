@@ -9,7 +9,7 @@ import SwiftUI
 
 
 /// Important note: At one point, I tried pivoting from using an
-/// enum (e.g. `HSBComponent`), to seperate per-component
+/// enum (e.g. `HSVComponent`), to seperate per-component
 /// structs (e.g. `RedComponent`, `HueComponent`).
 ///
 /// I ended up back with enums, and was happier for it.

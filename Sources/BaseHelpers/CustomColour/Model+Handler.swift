@@ -14,8 +14,8 @@ public protocol ColourHandlerProtocol {
   var foregroundRGB: RGBColour { get set }
   var backgroundRGB: RGBColour { get set }
   
-  var foregroundHSB: HSBColour { get }
-  var backgroundHSB: HSBColour { get }
+  var foregroundHSV: HSVColour { get }
+  var backgroundHSV: HSVColour { get }
   
   var foreground: Color { get }
   var background: Color { get }
@@ -23,10 +23,10 @@ public protocol ColourHandlerProtocol {
 
 extension ColourHandlerProtocol {
   
-  public var foregroundHSB: HSBColour {
-    HSBColour(fromRGB: foregroundRGB)
+  public var foregroundHSV: HSVColour {
+    HSVColour(fromRGB: foregroundRGB)
   }
-  public var backgroundHSB: HSBColour {
-    HSBColour(fromRGB: backgroundRGB)
+  public var backgroundHSV: HSVColour {
+    HSVColour(fromRGB: backgroundRGB)
   }
 }

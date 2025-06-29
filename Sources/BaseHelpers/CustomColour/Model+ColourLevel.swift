@@ -20,10 +20,10 @@ public enum ColourLevel: String, Sendable, Cyclable {
       case .background: \.backgroundRGB
     }
   }
-  public func keyPathHSB<T: ColourHandlerProtocol>() -> KeyPath<T, HSBColour> {
+  public func keyPathHSV<T: ColourHandlerProtocol>() -> KeyPath<T, HSVColour> {
     switch self {
-      case .foreground: \.foregroundHSB
-      case .background: \.backgroundHSB
+      case .foreground: \.foregroundHSV
+      case .background: \.backgroundHSV
     }
   }
   public func keyPathSwiftUI<T: ColourHandlerProtocol>() -> KeyPath<T, Color> {

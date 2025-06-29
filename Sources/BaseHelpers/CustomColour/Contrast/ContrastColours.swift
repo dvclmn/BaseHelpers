@@ -8,16 +8,16 @@
 import Foundation
 
 public struct LuminanceAwareAdjustment: Sendable {
-  public var light: HSBAdjustment
-  public var dark: HSBAdjustment
+  public var light: HSVAdjustment
+  public var dark: HSVAdjustment
   
   /// What luminance value is considered dark vs light
   public var luminanceTheshold: Double
   
   /// Provide *two* adjustments; one for use with Light contexts, one for Dark
   public init(
-    light: HSBAdjustment,
-    dark: HSBAdjustment,
+    light: HSVAdjustment,
+    dark: HSVAdjustment,
     luminanceTheshold: Double = 0.5
   ) {
     self.light = light
@@ -27,12 +27,12 @@ public struct LuminanceAwareAdjustment: Sendable {
   
   /// Provide a *single* adjustment, which auto-inverts for Dark colours
   public init(
-    symmetric adjustment: HSBAdjustment,
+    symmetric adjustment: HSVAdjustment,
     luminanceTheshold: Double = 0.5
   ) {
     
     self.light = adjustment
-    self.dark = HSBAdjustment(
+    self.dark = HSVAdjustment(
       hue: -adjustment.hue,
       saturation: -adjustment.saturation,
       brightness: -adjustment.brightness,
@@ -40,7 +40,7 @@ public struct LuminanceAwareAdjustment: Sendable {
     self.luminanceTheshold = luminanceTheshold
   }
   
-  public func adjustment(forLuminance luminance: Double) -> HSBAdjustment {
+  public func adjustment(forLuminance luminance: Double) -> HSVAdjustment {
     luminance > self.luminanceTheshold ? light : dark
   }
   
@@ -62,26 +62,26 @@ extension RGBColour {
     hue: Double
   ) -> RGBColour {
     let adjustment = LuminanceAwareAdjustment(symmetric: .init(h: hue, s: sat, b: brightness))
-    let hsb = HSBColour(fromRGB: self)
+    let hsb = HSVColour(fromRGB: self)
     let adjustmentToApply = adjustment.adjustment(forLuminance: self.luminance)
     return RGBColour(fromHSV: hsb.applying(adjustment: adjustmentToApply))
   }
 
   public func contrastColour(using adjustment: LuminanceAwareAdjustment) -> RGBColour {
-    let hsb = HSBColour(fromRGB: self)
+    let hsb = HSVColour(fromRGB: self)
     let adjustmentToApply = adjustment.adjustment(forLuminance: self.luminance)
     return RGBColour(fromHSV: hsb.applying(adjustment: adjustmentToApply))
   }
 
   public func contrastColour(
-    symmetricAdjustment: HSBAdjustment
+    symmetricAdjustment: HSVAdjustment
   ) -> RGBColour {
     contrastColour(using: .init(symmetric: symmetricAdjustment))
   }
 
   public func contrastColour(
-    light: HSBAdjustment,
-    dark: HSBAdjustment
+    light: HSVAdjustment,
+    dark: HSVAdjustment
   ) -> RGBColour {
     contrastColour(using: .init(light: light, dark: dark))
   }
@@ -101,7 +101,7 @@ extension RGBColour {
   //  ) -> RGBColour {
   //
   //    // Convert to HSB for easier manipulation
-  //    let hsb = HSBColour(fromLinearRGB: self)
+  //    let hsb = HSVColour(fromLinearRGB: self)
   //    let isBright = self.luminance > luminanceTheshold
   //
   //    // Calculate adjustments based on brightness
@@ -118,7 +118,7 @@ extension RGBColour {
   //    if newHue < 0 { newHue += 1 }
   //    if newHue > 1 { newHue -= 1 }
   //
-  //    let adjustedHSB = HSBColour(
+  //    let adjustedHSB = HSVColour(
   //      hue: newHue,
   //      saturation: newSaturation,
   //      brightness: newBrightness,
@@ -135,7 +135,7 @@ extension RGBColour {
   //    darkColorAdjustments: (saturation: Double, brightness: Double, hue: Double) = (-0.15, 0.4, -10)
   //  ) -> RGBColour {
   //
-  //    let hsb = HSBColour(fromLinearRGB: self)
+  //    let hsb = HSVColour(fromLinearRGB: self)
   //    let isBright = luminance > 0.5
   //
   //    let adjustments = isBright ? lightColorAdjustments : darkColorAdjustments
@@ -147,7 +147,7 @@ extension RGBColour {
   //    if newHue < 0 { newHue += 1 }
   //    if newHue > 1 { newHue -= 1 }
   //
-  //    let adjustedHSB = HSBColour(
+  //    let adjustedHSB = HSVColour(
   //      hue: newHue,
   //      saturation: newSaturation,
   //      brightness: newBrightness,
@@ -166,7 +166,7 @@ public enum ContrastPreset {
   case standard
   case highContrast
 
-  public var forDarkColours: HSBAdjustment {
+  public var forDarkColours: HSVAdjustment {
     switch self {
       case .subtle:
         .init(
@@ -194,7 +194,7 @@ public enum ContrastPreset {
         )
     }
   }
-  public var forLightColours: HSBAdjustment {
+  public var forLightColours: HSVAdjustment {
 
     switch self {
       case .subtle:

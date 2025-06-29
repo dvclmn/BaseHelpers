@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-public struct HSBColour: Equatable, Sendable, ColourModel {
+public struct HSVColour: Equatable, Sendable, ColourModel {
   
   public var hue: Double
   public var saturation: Double
@@ -59,9 +59,9 @@ public struct HSBColour: Equatable, Sendable, ColourModel {
   }
 }
 
-extension HSBColour {
+extension HSVColour {
   
-  func applying(adjustment: HSBAdjustment) -> HSBColour {
+  func applying(adjustment: HSVAdjustment) -> HSVColour {
     var newHue = hue + (adjustment.hue / 360.0)
     if newHue < 0 { newHue += 1 }
     if newHue > 1 { newHue -= 1 }
@@ -69,7 +69,7 @@ extension HSBColour {
     let newSaturation = (saturation + adjustment.saturation).clamped(to: 0...1)
     let newBrightness = (brightness + adjustment.brightness).clamped(to: 0...1)
     
-    return HSBColour(
+    return HSVColour(
       hue: newHue,
       saturation: newSaturation,
       brightness: newBrightness,
@@ -78,7 +78,7 @@ extension HSBColour {
   }
   
   public func toRGBA() -> RGBColour {
-    let result = RGBColour(fromHSB: self)
+    let result = RGBColour(fromHSV: self)
     return result
   }
 
