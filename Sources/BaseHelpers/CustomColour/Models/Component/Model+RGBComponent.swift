@@ -35,10 +35,10 @@ public enum RGBComponent: String, ColourComponent {
 //    \.foregroundRGB
 //  }
   
-  public var handlerKeyPathForeground: KeyPath<ColourHandler, Model> {
+  public var handlerKeyPathForeground: KeyPath<ColourHandlerProtocol, Model> {
     \.foregroundRGB
   }
-  public var handlerKeyPathBackground: KeyPath<ColourHandler, Model> {
+  public var handlerKeyPathBackground: KeyPath<ColourHandlerProtocol, Model> {
     \.backgroundRGB
   }
 

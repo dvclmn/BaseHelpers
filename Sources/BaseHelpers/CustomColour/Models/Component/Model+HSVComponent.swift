@@ -33,12 +33,19 @@ public enum HSBComponent: String, ColourComponent {
       case .alpha: \.alpha
     }
   }
-  public var handlerKeyPathForeground: KeyPath<ColourHandler, Model> {
+  public var handlerKeyPathForeground: KeyPath<ColourHandlerProtocol, Model> {
     \.foregroundHSB
   }
-  public var handlerKeyPathBackground: KeyPath<ColourHandler, Model> {
+  public var handlerKeyPathBackground: KeyPath<ColourHandlerProtocol, Model> {
     \.backgroundHSB
   }
+  
+//  public func handlerKeyPathForeground<T: ColourHandlerProtocol>() -> KeyPath<T, Model> {
+//    \.foregroundHSB
+//  }
+//  public func handlerKeyPathBackground<T: ColourHandlerProtocol>() -> KeyPath<T, Model> {
+//    \.backgroundHSB
+//  }
   
   public func gradientColours(_ colour: Model) -> [Color] {
     switch self {

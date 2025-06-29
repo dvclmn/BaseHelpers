@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+
 /// Important note: At one point, I tried pivoting from using an
 /// enum (e.g. `HSBComponent`), to seperate per-component
 /// structs (e.g. `RedComponent`, `HueComponent`).
@@ -15,6 +16,7 @@ import SwiftUI
 public protocol ColourComponent: Identifiable, Sendable, CaseIterable, RawRepresentable where RawValue == String {
   
   associatedtype Model: ColourModel
+//  associatedtype Handler: ColourHandlerProtocol
   var id: String { get }
   var name: String { get }
   var keyPath: WritableKeyPath<Model, Double> { get }
@@ -28,20 +30,6 @@ public protocol ColourComponent: Identifiable, Sendable, CaseIterable, RawRepres
 
 }
 
-public protocol ColourHandlerProtocol {
-  var activeColourLevel: ColourLevel { get set }
-//  public var focusedColourLevel: ColourLevel? = nil
-//  public var hoveredColourLevel: ColourLevel? = nil
-  var foregroundRGB: RGBColour { get set }
-  var backgroundRGB: RGBColour { get set }
-  
-  var foregroundHSB: HSBColour { get }
-  var backgroundHSB: HSBColour { get }
-  
-  var foreground: Color { get }
-  var background: Color { get }
-}
-
 extension ColourComponent {
 
   public var id: String { self.name }
@@ -50,7 +38,6 @@ extension ColourComponent {
   public func getValue(from model: Model) -> Double {
     return model[keyPath: keyPath]
   }
-  
   
 }
 

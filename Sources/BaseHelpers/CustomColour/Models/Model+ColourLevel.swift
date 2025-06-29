@@ -7,8 +7,10 @@
 
 import SwiftUI
 
-public enum ColourLevel: String {
+public enum ColourLevel: String, Sendable, Cyclable {
  
+  public static let defaultCase: ColourLevel = .foreground
+  
   case foreground
   case background
   

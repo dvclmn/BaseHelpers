@@ -7,7 +7,6 @@
 
 import SwiftUI
 
-
 public protocol ColourModel {
   var colourSpace: Color.RGBColorSpace { get }
   var componentRange: ClosedRange<Double> { get }
@@ -29,7 +28,8 @@ public enum ColourModelType: String {
 }
 
 public protocol ColourBindable {
-  var colourHandler: ColourHandler { get set }
+  associatedtype Handler: ColourHandlerProtocol
+  var colourHandler: Handler { get set }
   func binding(
     for component: any ColourComponent,
     env: EnvironmentValues
