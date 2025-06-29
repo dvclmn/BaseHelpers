@@ -105,7 +105,7 @@ extension RGBColour {
     return result
   }
 
-  public func swiftUIColour(includesAlpha: Bool = true) -> Color {
+  public func nativeColour(includesAlpha: Bool = true) -> Color {
     Color(
       colourSpace,
       red: red,
@@ -120,6 +120,7 @@ extension RGBColour {
     let h = Self.normalisedHue(hsv.hue)
     let s = hsv.saturation
     let v = hsv.brightness
+    let a = hsv.alpha
     
     let c = v * s
     let x = c * (1 - abs((h * 6).truncatingRemainder(dividingBy: 2) - 1))
@@ -142,7 +143,7 @@ extension RGBColour {
       red: (r1 + m).clamped(to: 0...1),
       green: (g1 + m).clamped(to: 0...1),
       blue: (b1 + m).clamped(to: 0...1),
-      alpha: hsv.alpha
+      alpha: a
     )
   }
   

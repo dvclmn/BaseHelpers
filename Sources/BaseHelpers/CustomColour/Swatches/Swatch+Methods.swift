@@ -228,11 +228,11 @@ extension Swatch {
     }
   }
 
-//  public var colourShadeLabel: String {
+  //  public var colourShadeLabel: String {
 
-    //    guard let numberString = swatch.colourShadeNumber?.toString else { return "" }
-    //    return swatch.isVibrant ? numberString + "V" : numberString
-//  }
+  //    guard let numberString = swatch.colourShadeNumber?.toString else { return "" }
+  //    return swatch.isVibrant ? numberString + "V" : numberString
+  //  }
 
   public var groupName: String {
     let groupString: String = rawValue.prefix(while: { $0.isLetter }).lowercased()
@@ -242,7 +242,7 @@ extension Swatch {
       default:
         return self.type.name
     }
-//    fiefibef
+    //    fiefibef
   }
 
   public static func grouped(includesAscii: Bool = false) -> [String: [Self]] {

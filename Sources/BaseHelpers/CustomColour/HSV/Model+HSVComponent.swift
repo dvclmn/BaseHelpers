@@ -33,29 +33,16 @@ public enum HSVComponent: String, ColourComponent {
       case .alpha: \.alpha
     }
   }
-//  public var handlerKeyPathForeground: KeyPath<ColourHandlerProtocol, Model> {
-//    \.foregroundHSV
-//  }
-//  public var handlerKeyPathBackground: KeyPath<ColourHandlerProtocol, Model> {
-//    \.backgroundHSV
-//  }
-  
-//  public func handlerKeyPathForeground<T: ColourHandlerProtocol>() -> KeyPath<T, Model> {
-//    \.foregroundHSV
-//  }
-//  public func handlerKeyPathBackground<T: ColourHandlerProtocol>() -> KeyPath<T, Model> {
-//    \.backgroundHSV
-//  }
-  
+
   public func gradientColours(_ colour: Model) -> [Color] {
     switch self {
       case .hue: Array<Color>.rainbow
       case .saturation:
-        [.gray, colour.swiftUIColour(includesAlpha: false)]
+        [.gray, colour.nativeColour(includesAlpha: false)]
       case .brightness:
         [.black, .white]
       case .alpha:
-        [.clear, colour.swiftUIColour(includesAlpha: false)]
+        [.clear, colour.nativeColour(includesAlpha: false)]
     }
   }
 

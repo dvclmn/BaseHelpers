@@ -62,15 +62,15 @@ extension RGBColour {
     hue: Double
   ) -> RGBColour {
     let adjustment = LuminanceAwareAdjustment(symmetric: .init(h: hue, s: sat, b: brightness))
-    let hsb = HSVColour(fromRGB: self)
+    let hsv = HSVColour(fromRGB: self)
     let adjustmentToApply = adjustment.adjustment(forLuminance: self.luminance)
-    return RGBColour(fromHSV: hsb.applying(adjustment: adjustmentToApply))
+    return RGBColour(fromHSV: hsv.applying(adjustment: adjustmentToApply))
   }
 
   public func contrastColour(using adjustment: LuminanceAwareAdjustment) -> RGBColour {
-    let hsb = HSVColour(fromRGB: self)
+    let hsv = HSVColour(fromRGB: self)
     let adjustmentToApply = adjustment.adjustment(forLuminance: self.luminance)
-    return RGBColour(fromHSV: hsb.applying(adjustment: adjustmentToApply))
+    return RGBColour(fromHSV: hsv.applying(adjustment: adjustmentToApply))
   }
 
   public func contrastColour(
@@ -101,7 +101,7 @@ extension RGBColour {
   //  ) -> RGBColour {
   //
   //    // Convert to HSB for easier manipulation
-  //    let hsb = HSVColour(fromLinearRGB: self)
+  //    let hsv = HSVColour(fromLinearRGB: self)
   //    let isBright = self.luminance > luminanceTheshold
   //
   //    // Calculate adjustments based on brightness
@@ -110,11 +110,11 @@ extension RGBColour {
   //    let hueShiftNormalized = (hueShift / 360.0) * (isBright ? 1 : -1)
   //
   //    // Apply adjustments with clamping
-  //    let newSaturation = max(0, min(1, hsb.saturation + saturationDelta))
-  //    let newBrightness = max(0, min(1, hsb.brightness + brightnessDelta))
+  //    let newSaturation = max(0, min(1, hsv.saturation + saturationDelta))
+  //    let newBrightness = max(0, min(1, hsv.brightness + brightnessDelta))
   //
   //    // Handle hue wrapping (0-1 range)
-  //    var newHue = hsb.hue + hueShiftNormalized
+  //    var newHue = hsv.hue + hueShiftNormalized
   //    if newHue < 0 { newHue += 1 }
   //    if newHue > 1 { newHue -= 1 }
   //
@@ -122,7 +122,7 @@ extension RGBColour {
   //      hue: newHue,
   //      saturation: newSaturation,
   //      brightness: newBrightness,
-  //      alpha: hsb.alpha
+  //      alpha: hsv.alpha
   //    )
   //
   //    return RGBColour(fromHSV: adjustedHSB)
@@ -135,15 +135,15 @@ extension RGBColour {
   //    darkColorAdjustments: (saturation: Double, brightness: Double, hue: Double) = (-0.15, 0.4, -10)
   //  ) -> RGBColour {
   //
-  //    let hsb = HSVColour(fromLinearRGB: self)
+  //    let hsv = HSVColour(fromLinearRGB: self)
   //    let isBright = luminance > 0.5
   //
   //    let adjustments = isBright ? lightColorAdjustments : darkColorAdjustments
   //
-  //    let newSaturation = max(0, min(1, hsb.saturation + adjustments.saturation))
-  //    let newBrightness = max(0, min(1, hsb.brightness + adjustments.brightness))
+  //    let newSaturation = max(0, min(1, hsv.saturation + adjustments.saturation))
+  //    let newBrightness = max(0, min(1, hsv.brightness + adjustments.brightness))
   //
-  //    var newHue = hsb.hue + (adjustments.hue / 360.0)
+  //    var newHue = hsv.hue + (adjustments.hue / 360.0)
   //    if newHue < 0 { newHue += 1 }
   //    if newHue > 1 { newHue -= 1 }
   //
@@ -151,7 +151,7 @@ extension RGBColour {
   //      hue: newHue,
   //      saturation: newSaturation,
   //      brightness: newBrightness,
-  //      alpha: hsb.alpha
+  //      alpha: hsv.alpha
   //    )
   //
   //    return RGBColour(fromHSV: adjustedHSB)

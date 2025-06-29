@@ -10,7 +10,7 @@ import SwiftUI
 public protocol ColourModel {
   var colourSpace: Color.RGBColorSpace { get }
   var componentRange: ClosedRange<Double> { get }
-  func swiftUIColour(includesAlpha: Bool) -> Color
+  func nativeColour(includesAlpha: Bool) -> Color
   init(resolved: Color.Resolved)
 }
 extension ColourModel {
@@ -24,7 +24,7 @@ extension ColourModel {
 
 public enum ColourModelType: String {
   case linearRGB
-  case hsb
+  case hsv
 }
 
 //public protocol ColourBindable {

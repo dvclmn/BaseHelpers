@@ -13,18 +13,8 @@ public struct HSVColour: Equatable, Sendable, ColourModel {
   public var saturation: Double
   public var brightness: Double
   public var alpha: Double
-  
-  
-//  public var swiftUIColour: Color {
-//    Color(
-//      hue: hue,
-//      saturation: saturation,
-//      brightness: brightness,
-//      opacity: alpha
-//    )
-//  }
-  
-  public func swiftUIColour(includesAlpha: Bool = true) -> Color {
+
+  public func nativeColour(includesAlpha: Bool = true) -> Color {
     Color(
       hue: hue,
       saturation: saturation,
@@ -116,42 +106,4 @@ extension HSVColour {
       alpha: a
     )
   }
-  
-  
-//  init(fromRGB rgba: RGBColour) {
-//    let r = rgba.red
-//    let g = rgba.green
-//    let b = rgba.blue
-//    let a = rgba.alpha
-//    
-//    let maxVal = max(r, g, b)
-//    let minVal = min(r, g, b)
-//    let delta = maxVal - minVal
-//    
-//    var h: Double = 0
-//    var s: Double = 0
-//    let v = maxVal
-//    
-//    if delta != 0 {
-//      s = delta / maxVal
-//      
-//      if maxVal == r {
-//        h = ((g - b) / delta).truncatingRemainder(dividingBy: 6)
-//      } else if maxVal == g {
-//        h = ((b - r) / delta) + 2
-//      } else {
-//        h = ((r - g) / delta) + 4
-//      }
-//      
-//      h /= 6
-//      if h < 0 { h += 1 }
-//    }
-//    
-//    self.init(
-//      hue: h,
-//      saturation: s,
-//      brightness: v,
-//      alpha: a
-//    )
-//  }
 }
