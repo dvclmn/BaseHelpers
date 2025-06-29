@@ -82,7 +82,7 @@ extension HSBColour {
     return result
   }
 
-  init(fromRGB rgba: RGBColour) {
+  public init(fromRGB rgba: RGBColour) {
     let r = rgba.red
     let g = rgba.green
     let b = rgba.blue
@@ -93,12 +93,10 @@ extension HSBColour {
     let delta = maxVal - minVal
     
     var h: Double = 0
-    var s: Double = 0
-    let v = maxVal
+    let s: Double = (maxVal == 0) ? 0 : (delta / maxVal)
+    let v: Double = maxVal
     
     if delta != 0 {
-      s = delta / maxVal
-      
       if maxVal == r {
         h = ((g - b) / delta).truncatingRemainder(dividingBy: 6)
       } else if maxVal == g {
@@ -113,9 +111,47 @@ extension HSBColour {
     
     self.init(
       hue: h,
-      saturation: s,
-      brightness: v,
+      saturation: s.clamped(to: 0...1),
+      brightness: v.clamped(to: 0...1),
       alpha: a
     )
   }
+  
+  
+//  init(fromRGB rgba: RGBColour) {
+//    let r = rgba.red
+//    let g = rgba.green
+//    let b = rgba.blue
+//    let a = rgba.alpha
+//    
+//    let maxVal = max(r, g, b)
+//    let minVal = min(r, g, b)
+//    let delta = maxVal - minVal
+//    
+//    var h: Double = 0
+//    var s: Double = 0
+//    let v = maxVal
+//    
+//    if delta != 0 {
+//      s = delta / maxVal
+//      
+//      if maxVal == r {
+//        h = ((g - b) / delta).truncatingRemainder(dividingBy: 6)
+//      } else if maxVal == g {
+//        h = ((b - r) / delta) + 2
+//      } else {
+//        h = ((r - g) / delta) + 4
+//      }
+//      
+//      h /= 6
+//      if h < 0 { h += 1 }
+//    }
+//    
+//    self.init(
+//      hue: h,
+//      saturation: s,
+//      brightness: v,
+//      alpha: a
+//    )
+//  }
 }

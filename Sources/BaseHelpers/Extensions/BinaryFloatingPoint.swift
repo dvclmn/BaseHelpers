@@ -8,6 +8,10 @@
 import Foundation
 
 extension BinaryFloatingPoint {
+  
+  public func clamped(to range: Range<Int>) -> Self {
+    return clamped(Self(range.lowerBound), Self(range.upperBound))
+  }
 
   public func displayString(
     _ decimalPlaces: Int = 2,

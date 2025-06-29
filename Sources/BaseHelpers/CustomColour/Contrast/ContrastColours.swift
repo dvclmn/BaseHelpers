@@ -10,6 +10,8 @@ import Foundation
 public struct LuminanceAwareAdjustment: Sendable {
   public var light: HSBAdjustment
   public var dark: HSBAdjustment
+  
+  /// What luminance value is considered dark vs light
   public var luminanceTheshold: Double
   
   /// Provide *two* adjustments; one for use with Light contexts, one for Dark

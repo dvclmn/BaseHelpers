@@ -73,12 +73,24 @@ public struct RGBColour: Identifiable, Equatable, Hashable, Sendable, Codable, C
 }
 
 extension RGBColour {
+  func linearised(_ channel: Double) -> Double {
+    return channel <= 0.04045
+    ? channel / 12.92
+    : pow((channel + 0.055) / 1.055, 2.4)
+  }
+  
+  public var luminance: Double {
+    let r = linearised(red)
+    let g = linearised(green)
+    let b = linearised(blue)
+    return (0.2126 * r + 0.7152 * g + 0.0722 * b).clamped(to: 0...1)
+  }
   
   /// Calculates relative luminance using the standard formula
-  public var luminance: Double {
-    let result = 0.299 * red + 0.587 * green + 0.114 * blue
-    return result.clamped(to: 0...1)
-  }
+//  public var luminance: Double {
+//    let result = 0.299 * red + 0.587 * green + 0.114 * blue
+//    return result.clamped(to: 0...1)
+//  }
   
   /// Create a color with specified brightness (0.0 to 1.0)
   public static func gray(_ brightness: Double, alpha: Double = 1.0) -> RGBColour {
@@ -110,7 +122,8 @@ extension RGBColour {
   }
   
   public init(fromHSV hsv: HSBColour) {
-    let h = hsv.hue
+    
+    let h = Self.normalisedHue(hsv.hue)
     let s = hsv.saturation
     let v = hsv.brightness
     
@@ -118,30 +131,77 @@ extension RGBColour {
     let x = c * (1 - abs((h * 6).truncatingRemainder(dividingBy: 2) - 1))
     let m = v - c
     
+    let hSegment = Int((h * 6).clamped(to: 0..<6))
     let (r1, g1, b1): (Double, Double, Double)
     
-    switch h * 6 {
-      case 0..<1:
-        (r1, g1, b1) = (c, x, 0)
-      case 1..<2:
-        (r1, g1, b1) = (x, c, 0)
-      case 2..<3:
-        (r1, g1, b1) = (0, c, x)
-      case 3..<4:
-        (r1, g1, b1) = (0, x, c)
-      case 4..<5:
-        (r1, g1, b1) = (x, 0, c)
-      case 5..<6:
-        (r1, g1, b1) = (c, 0, x)
-      default:
-        (r1, g1, b1) = (0, 0, 0)  // hue out of range — you might want to clamp instead
+    switch hSegment {
+      case 0: (r1, g1, b1) = (c, x, 0)
+      case 1: (r1, g1, b1) = (x, c, 0)
+      case 2: (r1, g1, b1) = (0, c, x)
+      case 3: (r1, g1, b1) = (0, x, c)
+      case 4: (r1, g1, b1) = (x, 0, c)
+      case 5: (r1, g1, b1) = (c, 0, x)
+      default: (r1, g1, b1) = (0, 0, 0)
     }
     
     self.init(
-      red: r1 + m,
-      green: g1 + m,
-      blue: b1 + m,
+      red: (r1 + m).clamped(to: 0...1),
+      green: (g1 + m).clamped(to: 0...1),
+      blue: (b1 + m).clamped(to: 0...1),
       alpha: hsv.alpha
     )
+    
+    
+//    let h = Self.normalisedHue(hsv.hue)
+////    let h = hsv.hue
+//    let s = hsv.saturation
+//    let v = hsv.brightness
+//    
+//    let c = v * s
+//    let x = c * (1 - abs((h * 6).truncatingRemainder(dividingBy: 2) - 1))
+//    let m = v - c
+//    
+//    let (r1, g1, b1): (Double, Double, Double)
+//    
+//    let hSegment = Int((h * 6).clamped(to: 0..<6))
+//    
+//    switch hSegment {
+//      case 0: (r1, g1, b1) = (c, x, 0)
+//      case 1: (r1, g1, b1) = (x, c, 0)
+//      case 2: (r1, g1, b1) = (0, c, x)
+//      case 3: (r1, g1, b1) = (0, x, c)
+//      case 4: (r1, g1, b1) = (x, 0, c)
+//      case 5: (r1, g1, b1) = (c, 0, x)
+//      default: (r1, g1, b1) = (0, 0, 0)
+//    }
+    
+//    switch h * 6 {
+//      case 0..<1:
+//        (r1, g1, b1) = (c, x, 0)
+//      case 1..<2:
+//        (r1, g1, b1) = (x, c, 0)
+//      case 2..<3:
+//        (r1, g1, b1) = (0, c, x)
+//      case 3..<4:
+//        (r1, g1, b1) = (0, x, c)
+//      case 4..<5:
+//        (r1, g1, b1) = (x, 0, c)
+//      case 5..<6:
+//        (r1, g1, b1) = (c, 0, x)
+//      default:
+//        (r1, g1, b1) = (0, 0, 0)  // hue out of range — you might want to clamp instead
+//    }
+    
+//    self.init(
+//      red: r1 + m,
+//      green: g1 + m,
+//      blue: b1 + m,
+//      alpha: hsv.alpha
+//    )
+  }
+  
+  static func normalisedHue(_ h: Double) -> Double {
+    let wrapped = h.truncatingRemainder(dividingBy: 1)
+    return wrapped < 0 ? wrapped + 1 : wrapped
   }
 }
