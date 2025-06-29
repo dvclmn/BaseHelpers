@@ -5,6 +5,8 @@
 //  Created by Dave Coleman on 7/6/2025.
 //
 
+import Foundation
+
 extension RGBColour {
   /// Primary colors
   public static let red = RGBColour(red: 1, green: 0, blue: 0)

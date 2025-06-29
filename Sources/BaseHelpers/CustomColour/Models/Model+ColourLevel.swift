@@ -7,25 +7,24 @@
 
 import SwiftUI
 
-public enum ColourLevel: String, Cyclable {
-  public static let defaultCase: ColourLevel = .foreground
-  
+public enum ColourLevel: String {
+ 
   case foreground
   case background
   
-  public var keyPathRGB: WritableKeyPath<ColourHandler, RGBColour> {
+  public func keyPathRGB<T: ColourHandlerProtocol>() -> WritableKeyPath<T, RGBColour> {
     switch self {
       case .foreground: \.foregroundRGB
       case .background: \.backgroundRGB
     }
   }
-  public var keyPathHSB: KeyPath<ColourHandler, HSBColour> {
+  public func keyPathHSB<T: ColourHandlerProtocol>() -> KeyPath<T, HSBColour> {
     switch self {
       case .foreground: \.foregroundHSB
       case .background: \.backgroundHSB
     }
   }
-  public var keyPathSwiftUI: KeyPath<ColourHandler, Color> {
+  public func keyPathSwiftUI<T: ColourHandlerProtocol>() -> KeyPath<T, Color> {
     switch self {
       case .foreground: \.foreground
       case .background: \.background

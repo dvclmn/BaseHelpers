@@ -18,14 +18,28 @@ public protocol ColourComponent: Identifiable, Sendable, CaseIterable, RawRepres
   var id: String { get }
   var name: String { get }
   var keyPath: WritableKeyPath<Model, Double> { get }
-  var handlerKeyPathForeground: KeyPath<ColourHandler, Model> { get }
-  var handlerKeyPathBackground: KeyPath<ColourHandler, Model> { get }
+  var handlerKeyPathForeground: KeyPath<ColourHandlerProtocol, Model> { get }
+  var handlerKeyPathBackground: KeyPath<ColourHandlerProtocol, Model> { get }
 
   func getValue(from model: Model) -> Double
   func trackGradient(
     colour: Model
   ) -> LinearGradient
 
+}
+
+public protocol ColourHandlerProtocol {
+  var activeColourLevel: ColourLevel { get set }
+//  public var focusedColourLevel: ColourLevel? = nil
+//  public var hoveredColourLevel: ColourLevel? = nil
+  var foregroundRGB: RGBColour { get set }
+  var backgroundRGB: RGBColour { get set }
+  
+  var foregroundHSB: HSBColour { get }
+  var backgroundHSB: HSBColour { get }
+  
+  var foreground: Color { get }
+  var background: Color { get }
 }
 
 extension ColourComponent {
