@@ -6,46 +6,6 @@
 //
 
 import SwiftUI
-import BaseStyles
-
-//public enum RGBSwatch: String {
-//  /// ASCII
-//  case asciiBlack
-//  case asciiBlue
-//  case asciiBrown
-//  case asciiGreen
-//  case asciiGrey
-//  case asciiMaroon
-//  case asciiPurple
-//  case asciiRed
-//  case asciiTeal
-//  case asciiTealDull
-//  case asciiWarmWhite
-//  case asciiWhite
-//  case asciiYellow
-//
-//  /// Black
-//  case blackTrue
-//  
-//  /// Blue
-//  case blue10
-//  case blue20
-//  case blue30
-//  case blue40
-//  case blue50
-//  case blue60
-//  
-//  /// Brown
-//  case brown30
-//  case brown40
-//  case brown50
-//  case brown60
-//  
-//  public var colour: Color {
-//    Color("swatch/\(rawValue)", bundle: .module)
-//  }
-//}
-
 
 extension RGBColour {
   /// Primary colors
