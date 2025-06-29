@@ -78,7 +78,7 @@ extension HSBColour {
   }
   
   public func toRGBA() -> RGBColour {
-    let result = RGBColour(fromHSV: self)
+    let result = RGBColour(fromHSB: self)
     return result
   }
 
