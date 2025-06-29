@@ -61,7 +61,7 @@ public struct HSBColour: Equatable, Sendable, ColourModel {
 
 extension HSBColour {
   
-  func applying(adjustment: HSBAdjustmentStrength) -> HSBColour {
+  func applying(adjustment: HSBAdjustment) -> HSBColour {
     var newHue = hue + (adjustment.hue / 360.0)
     if newHue < 0 { newHue += 1 }
     if newHue > 1 { newHue -= 1 }

@@ -7,6 +7,49 @@
 
 import Foundation
 
+public struct LuminanceAwareAdjustment: Sendable {
+  public var light: HSBAdjustment
+  public var dark: HSBAdjustment
+  public var luminanceTheshold: Double
+  
+  /// Provide *two* adjustments; one for use with Light contexts, one for Dark
+  public init(
+    light: HSBAdjustment,
+    dark: HSBAdjustment,
+    luminanceTheshold: Double = 0.5
+  ) {
+    self.light = light
+    self.dark = dark
+    self.luminanceTheshold = luminanceTheshold
+  }
+  
+  /// Provide a *single* adjustment, which auto-inverts for Dark colours
+  public init(
+    symmetric adjustment: HSBAdjustment,
+    luminanceTheshold: Double = 0.5
+  ) {
+    
+    self.light = adjustment
+    self.dark = HSBAdjustment(
+      hue: -adjustment.hue,
+      saturation: -adjustment.saturation,
+      brightness: -adjustment.brightness,
+    )
+    self.luminanceTheshold = luminanceTheshold
+  }
+  
+  public func adjustment(forLuminance luminance: Double) -> HSBAdjustment {
+    luminance > self.luminanceTheshold ? light : dark
+  }
+  
+  public static func contrastPreset(_ preset: ContrastPreset) -> Self {
+    return LuminanceAwareAdjustment(
+      light: preset.forLightColours,
+      dark: preset.forDarkColours
+    )
+  }
+}
+
 // MARK: - Contrasting Border colour
 
 extension RGBColour {
@@ -15,7 +58,6 @@ extension RGBColour {
     sat: Double,
     brightness: Double,
     hue: Double
-      //    using adjustment: LuminanceAwareAdjustment
   ) -> RGBColour {
     let adjustment = LuminanceAwareAdjustment(symmetric: .init(h: hue, s: sat, b: brightness))
     let hsb = HSBColour(fromRGB: self)
@@ -30,14 +72,14 @@ extension RGBColour {
   }
 
   public func contrastColour(
-    symmetricAdjustment: HSBAdjustmentStrength
+    symmetricAdjustment: HSBAdjustment
   ) -> RGBColour {
     contrastColour(using: .init(symmetric: symmetricAdjustment))
   }
 
   public func contrastColour(
-    light: HSBAdjustmentStrength,
-    dark: HSBAdjustmentStrength
+    light: HSBAdjustment,
+    dark: HSBAdjustment
   ) -> RGBColour {
     contrastColour(using: .init(light: light, dark: dark))
   }
@@ -114,70 +156,7 @@ extension RGBColour {
   //  }
 }
 
-public struct HSBAdjustmentStrength: Sendable {
-  public var hue: Double  // Degrees
-  public var saturation: Double
-  public var brightness: Double
 
-  public var luminanceTheshold: Double
-
-  public init(
-    hue: Double,
-    saturation: Double,
-    brightness: Double,
-    luminanceTheshold: Double = 0.5
-  ) {
-    self.hue = hue
-    self.saturation = saturation
-    self.brightness = brightness
-    self.luminanceTheshold = luminanceTheshold
-  }
-  public init(
-    h hue: Double,
-    s saturation: Double,
-    b brightness: Double,
-    luminanceTheshold: Double = 0.5
-  ) {
-    self.hue = hue
-    self.saturation = saturation
-    self.brightness = brightness
-    self.luminanceTheshold = luminanceTheshold
-  }
-}
-extension HSBAdjustmentStrength {
-  /// Presets
-  //  public static let subtleLight = HSBAdjustmentStrength(
-  //    h: 10,
-  //    s: 0.1,
-  //    b: -0.2
-  //  )
-  //  public static let standardLight = HSBAdjustmentStrength(
-  //    h: 15,
-  //    s: 0.25,
-  //    b: -0.35
-  //  )
-  //  public static let highContrastLight = HSBAdjustmentStrength(
-  //    h: 17,
-  //    s: 0.4,
-  //    b: -0.7
-  //  )
-  //
-  //  public static let subtleDark = HSBAdjustmentStrength(
-  //    h: -6,
-  //    s: -0.03,
-  //    b: 0.08
-  //  )
-  //  public static let standardDark = HSBAdjustmentStrength(
-  //    h: -10,
-  //    s: 0.03,
-  //    b: 0.2
-  //  )
-  //  public static let highContrastDark = HSBAdjustmentStrength(
-  //    h: -12,
-  //    s: 0.05,
-  //    b: 0.38
-  //  )
-}
 
 public enum ContrastPreset {
   case subtle
@@ -185,7 +164,7 @@ public enum ContrastPreset {
   case standard
   case highContrast
 
-  public var forDarkColours: HSBAdjustmentStrength {
+  public var forDarkColours: HSBAdjustment {
     switch self {
       case .subtle:
         .init(
@@ -213,7 +192,7 @@ public enum ContrastPreset {
         )
     }
   }
-  public var forLightColours: HSBAdjustmentStrength {
+  public var forLightColours: HSBAdjustment {
 
     switch self {
       case .subtle:
@@ -245,46 +224,6 @@ public enum ContrastPreset {
   }
 }
 
-public struct LuminanceAwareAdjustment: Sendable {
-  public var light: HSBAdjustmentStrength
-  public var dark: HSBAdjustmentStrength
-  public var luminanceTheshold: Double
-
-  public init(
-    light: HSBAdjustmentStrength,
-    dark: HSBAdjustmentStrength,
-    luminanceTheshold: Double = 0.5
-  ) {
-    self.light = light
-    self.dark = dark
-    self.luminanceTheshold = luminanceTheshold
-  }
-
-  /// Symmetric adjustment – auto-inverts for dark colours
-  public init(symmetric adjustment: HSBAdjustmentStrength) {
-
-    let luminance = adjustment.luminanceTheshold
-    self.light = adjustment
-    self.dark = HSBAdjustmentStrength(
-      hue: -adjustment.hue,
-      saturation: -adjustment.saturation,
-      brightness: -adjustment.brightness,
-      luminanceTheshold: luminance
-    )
-    self.luminanceTheshold = luminance
-  }
-
-  public func adjustment(forLuminance luminance: Double) -> HSBAdjustmentStrength {
-    luminance > self.luminanceTheshold ? light : dark
-  }
-
-  public static func contrastPreset(_ preset: ContrastPreset) -> Self {
-    return LuminanceAwareAdjustment(
-      light: preset.forLightColours,
-      dark: preset.forDarkColours
-    )
-  }
-}
 //extension LuminanceAwareAdjustment {
 //  public static let subtle = LuminanceAwareAdjustment(
 //    light: .subtleLight,
