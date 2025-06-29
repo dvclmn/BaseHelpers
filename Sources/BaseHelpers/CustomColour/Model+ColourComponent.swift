@@ -20,8 +20,8 @@ public protocol ColourComponent: Identifiable, Sendable, CaseIterable, RawRepres
   var id: String { get }
   var name: String { get }
   var keyPath: WritableKeyPath<Model, Double> { get }
-  var handlerKeyPathForeground: KeyPath<ColourHandlerProtocol, Model> { get }
-  var handlerKeyPathBackground: KeyPath<ColourHandlerProtocol, Model> { get }
+//  var handlerKeyPathForeground: KeyPath<ColourHandlerProtocol, Model> { get }
+//  var handlerKeyPathBackground: KeyPath<ColourHandlerProtocol, Model> { get }
 
   func getValue(from model: Model) -> Double
   func trackGradient(

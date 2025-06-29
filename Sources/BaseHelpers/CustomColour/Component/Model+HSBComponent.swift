@@ -33,12 +33,12 @@ public enum HSVComponent: String, ColourComponent {
       case .alpha: \.alpha
     }
   }
-  public var handlerKeyPathForeground: KeyPath<ColourHandlerProtocol, Model> {
-    \.foregroundHSV
-  }
-  public var handlerKeyPathBackground: KeyPath<ColourHandlerProtocol, Model> {
-    \.backgroundHSV
-  }
+//  public var handlerKeyPathForeground: KeyPath<ColourHandlerProtocol, Model> {
+//    \.foregroundHSV
+//  }
+//  public var handlerKeyPathBackground: KeyPath<ColourHandlerProtocol, Model> {
+//    \.backgroundHSV
+//  }
   
 //  public func handlerKeyPathForeground<T: ColourHandlerProtocol>() -> KeyPath<T, Model> {
 //    \.foregroundHSV

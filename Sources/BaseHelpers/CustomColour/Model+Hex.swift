@@ -40,7 +40,7 @@ extension RGBColour {
       alpha = 1.0
     }
     
-    // Convert from sRGB to linear RGB
+    /// Convert from sRGB to linear RGB
     self.init(
       red: Self.sRGBToLinear(red),
       green: Self.sRGBToLinear(green),

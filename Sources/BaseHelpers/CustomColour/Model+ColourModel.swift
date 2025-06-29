@@ -27,11 +27,11 @@ public enum ColourModelType: String {
   case hsb
 }
 
-public protocol ColourBindable {
-  associatedtype Handler: ColourHandlerProtocol
-  var colourHandler: Handler { get set }
-  func binding(
-    for component: any ColourComponent,
-    env: EnvironmentValues
-  ) -> Binding<Double>
-}
+//public protocol ColourBindable {
+//  associatedtype Handler: ColourHandlerProtocol
+//  var colourHandler: Handler { get set }
+//  func binding(
+//    for component: any ColourComponent,
+//    env: EnvironmentValues
+//  ) -> Binding<Double>
+//}

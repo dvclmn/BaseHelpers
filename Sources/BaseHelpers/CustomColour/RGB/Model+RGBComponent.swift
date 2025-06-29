@@ -35,12 +35,12 @@ public enum RGBComponent: String, ColourComponent {
 //    \.foregroundRGB
 //  }
   
-  public var handlerKeyPathForeground: KeyPath<ColourHandlerProtocol, Model> {
-    \.foregroundRGB
-  }
-  public var handlerKeyPathBackground: KeyPath<ColourHandlerProtocol, Model> {
-    \.backgroundRGB
-  }
+//  public var handlerKeyPathForeground: KeyPath<ColourHandlerProtocol, Model> {
+//    \.foregroundRGB
+//  }
+//  public var handlerKeyPathBackground: KeyPath<ColourHandlerProtocol, Model> {
+//    \.backgroundRGB
+//  }
 
   public func trackGradient(colour: RGBColour) -> LinearGradient {
     func makeColour(
