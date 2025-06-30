@@ -20,39 +20,28 @@ extension RGBColour {
       symmetric: hsvAdjustment
     )
     return self.contrastColour(using: lumaAwareAdjustment)
-//    let hsvColour = HSVColour(fromRGB: self)
-//    let adjustmentToApply = lumaAwareAdjustment.adjustment(forLuminance: luminance)
-//    let newHSV: HSVColour = hsvColour.applying(adjustment: adjustmentToApply)
-//    return RGBColour(fromHSV: newHSV)
   }
 
   public func contrastColour(using adjustment: LuminanceAwareAdjustment) -> RGBColour {
-//    let hsv = HSVColour(fromRGB: self)
-//    let adjustmentToApply = adjustment.adjustment(forLuminance: self.luminance)
-//    return RGBColour(fromHSV: hsv.applying(adjustment: adjustmentToApply))
-    
-//    let hsvAdjustment = HSVAdjustment(h: hue, s: sat, b: brightness)
-//    let lumaAwareAdjustment = LuminanceAwareAdjustment(
-//      symmetric: hsvAdjustment
-//    )
     let hsvColour = HSVColour(fromRGB: self)
     let adjustmentToApply = adjustment.adjustment(forLuminance: luminance)
     let newHSV: HSVColour = hsvColour.applying(adjustment: adjustmentToApply)
-    return RGBColour(fromHSV: newHSV)
-    
+    return RGBColour(fromHSV: newHSV)    
   }
 
   public func contrastColour(
     symmetricAdjustment: HSVAdjustment
   ) -> RGBColour {
-    contrastColour(using: .init(symmetric: symmetricAdjustment))
+    let adjustment = LuminanceAwareAdjustment(symmetric: symmetricAdjustment)
+    return self.contrastColour(using: adjustment)
   }
 
   public func contrastColour(
     light: HSVAdjustment,
     dark: HSVAdjustment
   ) -> RGBColour {
-    contrastColour(using: .init(light: light, dark: dark))
+    let adjustment = LuminanceAwareAdjustment(light: light, dark: dark)
+    return self.contrastColour(using: adjustment)
   }
 }
 
@@ -121,18 +110,3 @@ public enum ContrastPreset {
     }
   }
 }
-
-//extension LuminanceAwareAdjustment {
-//  public static let subtle = LuminanceAwareAdjustment(
-//    light: .subtleLight,
-//    dark: .subtleDark
-//  )
-//  public static let standard = LuminanceAwareAdjustment(
-//    light: .standardLight,
-//    dark: .standardDark
-//  )
-//  public static let highContrast = LuminanceAwareAdjustment(
-//    light: .highContrastLight,
-//    dark: .highContrastDark
-//  )
-//}

@@ -11,16 +11,16 @@ import SwiftUI
 /// enum (e.g. `HSVComponent`), to seperate per-component
 /// structs (e.g. `RedComponent`, `HueComponent`).
 ///
-/// I ended up back with enums, and am happier for it.
+/// I ended up back with enums, and much better off for it.
 public protocol ColourComponent: Identifiable, Sendable, CaseIterable, RawRepresentable where RawValue == String {
-  
+
   associatedtype Model: ColourModel
   var id: String { get }
   var name: String { get }
   var keyPath: WritableKeyPath<Model, Double> { get }
 
   func getValue(from model: Model) -> Double
-  func trackGradient(
+  func sliderTrackGradient(
     colour: Model
   ) -> LinearGradient
 }
@@ -33,4 +33,3 @@ extension ColourComponent {
     return model[keyPath: keyPath]
   }
 }
-

@@ -46,7 +46,7 @@ public enum HSVComponent: String, ColourComponent {
     }
   }
 
-  public func trackGradient(colour: HSVColour) -> LinearGradient {
+  public func sliderTrackGradient(colour: HSVColour) -> LinearGradient {
     return LinearGradient(
       colors: self.gradientColours(colour),
       startPoint: .leading,

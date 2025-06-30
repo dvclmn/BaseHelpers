@@ -104,15 +104,6 @@ extension RGBColour {
     return RGBColour(red: brightness, green: brightness, blue: brightness, alpha: alpha)
   }
   
-  /// Create a semi-transparent version of this color
-  public func withAlpha(_ alpha: Double) -> RGBColour {
-    return RGBColour(red: red, green: green, blue: blue, alpha: alpha)
-  }
-  
-//  public mutating func opacity(_ opacity: Double) {
-//    self.alpha = opacity
-//  }
-  
   public func toHSV() -> HSVColour {
     let result = HSVColour(fromRGB: self)
     return result
