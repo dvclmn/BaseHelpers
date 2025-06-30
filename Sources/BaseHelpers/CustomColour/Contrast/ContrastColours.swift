@@ -18,12 +18,12 @@ extension RGBColour {
   }
 
   // MARK: - Convenient Overloads
-  
+
   public func contrastColour(withPreset preset: ContrastPreset, isMonochrome: Bool = false) -> RGBColour {
     let lumaAwareAdjustment = LuminanceAwareAdjustment.contrastPreset(preset, isMonochrome: isMonochrome)
     return self.contrastColour(using: lumaAwareAdjustment)
   }
-  
+
   public func contrastColour(
     sat: Double,
     brightness: Double,
@@ -52,15 +52,14 @@ extension RGBColour {
   }
 }
 
-
 public enum ContrastPreset: String, CaseIterable, Identifiable {
   case subtle
   case moderate
   case standard
   case highContrast
-  
+
   public var id: String { rawValue }
-  
+
   public var name: String {
     switch self {
       case .subtle: "Subtle"
@@ -69,73 +68,76 @@ public enum ContrastPreset: String, CaseIterable, Identifiable {
       case .highContrast: "High Contrast"
     }
   }
-  
-  public func level(isMonochrome: Bool) -> ContrastLevel {
+
+  private var contrastValue: Double {
     switch self {
-      case .subtle: ContrastLevel(amount: 0.2, isMonochrome: isMonochrome)
-      case .moderate: ContrastLevel(amount: 0.4, isMonochrome: isMonochrome)
-      case .standard: ContrastLevel(amount: 0.7, isMonochrome: isMonochrome)
-      case .highContrast: ContrastLevel(amount: 1.0, isMonochrome: isMonochrome)
+      case .subtle: 0.2
+      case .moderate: 0.4
+      case .standard: 0.7
+      case .highContrast: 1.0
     }
   }
-  
 
-//  public var forDarkColours: HSVAdjustment {
-//    switch self {
-//      case .subtle:
-//        .init(
-//          h: -8,
-//          s: -0.01,
-//          b: 0.1
-//        )
-//      case .moderate:
-//        .init(
-//          h: -10,
-//          s: 0.02,
-//          b: 0.25
-//        )
-//      case .standard:
-//        .init(
-//          h: -14,
-//          s: 0.05,
-//          b: 0.45
-//        )
-//      case .highContrast:
-//        .init(
-//          h: -17,
-//          s: 0.08,
-//          b: 0.7
-//        )
-//    }
-//  }
-//  public var forLightColours: HSVAdjustment {
-//
-//    switch self {
-//      case .subtle:
-//        .init(
-//          h: -8,
-//          s: 0.03,
-//          b: -0.18
-//        )
-//      case .moderate:
-//        .init(
-//          h: -10,
-//          s: 0.1,
-//          b: -0.35
-//        )
-//      case .standard:
-//        .init(
-//          h: -12,
-//          s: 0.15,
-//          b: -0.58
-//        )
-//      case .highContrast:
-//        .init(
-//          h: -14,
-//          s: 0.2,
-//          b: -0.7
-//        )
-//
-//    }
-//  }
+  public func level(isMonochrome: Bool) -> ContrastLevel {
+    return ContrastLevel(amount: self.contrastValue, isMonochrome: isMonochrome)
+  }
+
+  //  public var forDarkColours: HSVAdjustment {
+  //    switch self {
+  //      case .subtle:
+  //        .init(
+  //          h: -8,
+  //          s: -0.01,
+  //          b: 0.1
+  //        )
+  //      case .moderate:
+  //        .init(
+  //          h: -10,
+  //          s: 0.02,
+  //          b: 0.25
+  //        )
+  //      case .standard:
+  //        .init(
+  //          h: -14,
+  //          s: 0.05,
+  //          b: 0.45
+  //        )
+  //      case .highContrast:
+  //        .init(
+  //          h: -17,
+  //          s: 0.08,
+  //          b: 0.7
+  //        )
+  //    }
+  //  }
+  //  public var forLightColours: HSVAdjustment {
+  //
+  //    switch self {
+  //      case .subtle:
+  //        .init(
+  //          h: -8,
+  //          s: 0.03,
+  //          b: -0.18
+  //        )
+  //      case .moderate:
+  //        .init(
+  //          h: -10,
+  //          s: 0.1,
+  //          b: -0.35
+  //        )
+  //      case .standard:
+  //        .init(
+  //          h: -12,
+  //          s: 0.15,
+  //          b: -0.58
+  //        )
+  //      case .highContrast:
+  //        .init(
+  //          h: -14,
+  //          s: 0.2,
+  //          b: -0.7
+  //        )
+  //
+  //    }
+  //  }
 }

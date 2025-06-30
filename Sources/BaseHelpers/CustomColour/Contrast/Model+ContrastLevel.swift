@@ -18,14 +18,7 @@ public struct ContrastLevel: Sendable {
     self.amount = amount.clamped(to: 0...1)
     self.isMonochrome = isMonochrome
   }
-  
-  // MARK: - Static presets (for convenience)
-  
-//  public static let subtle = ContrastLevel(amount: 0.2), isMonochrome: <#T##Bool#>
-//  public static let moderate = ContrastLevel(amount: 0.4, isMonochrome: <#T##Bool#>)
-//  public static let standard = ContrastLevel(amount: 0.7, isMonochrome: <#T##Bool#>)
-//  public static let high = ContrastLevel(amount: 1.0, isMonochrome: <#T##Bool#>)
-  
+
   // MARK: - Internal constants
   
   private struct HSVComponents {
@@ -38,17 +31,18 @@ public struct ContrastLevel: Sendable {
     func interpolated(
       to: HSVComponents,
       amount: Double,
-      isMonochrome: Bool
+//      isMonochrome: Bool
     ) -> HSVComponents {
       
 //      let lightSat: Double = 0.2
 //      let darkSat: Double = 0.2
-      let monochromeSat: Double = 0.2
-      let newSaturation: Double = isMonochrome ? monochromeSat : (saturation + (to.saturation - saturation) * amount)
+//      let monochromeSat: Double = 0.1
+//      let monochromeBrightness: Double = 0.5
+//      let newSaturation: Double = isMonochrome ? monochromeSat : (saturation + (to.saturation - saturation) * amount)
       
       return HSVComponents(
         hueDegrees: hueDegrees + (to.hueDegrees - hueDegrees) * amount,
-        saturation: newSaturation,
+        saturation: saturation + (to.saturation - saturation) * amount,
         brightness: brightness + (to.brightness - brightness) * amount
       )
     }
@@ -79,14 +73,14 @@ public struct ContrastLevel: Sendable {
   public var forDarkColours: HSVAdjustment {
     HSVComponents
       .zero
-      .interpolated(to: Self.maxDark, amount: amount, isMonochrome: self.isMonochrome)
+      .interpolated(to: Self.maxDark, amount: amount)
       .asAdjustment(using: { .relativeDegrees($0) })
   }
   
   public var forLightColours: HSVAdjustment {
     HSVComponents
       .zero
-      .interpolated(to: Self.maxLight, amount: amount, isMonochrome: self.isMonochrome)
+      .interpolated(to: Self.maxLight, amount: amount)
       .asAdjustment(using: { .relativeDegrees($0) })
   }
 }

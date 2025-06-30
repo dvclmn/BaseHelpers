@@ -7,31 +7,55 @@
 
 import Foundation
 
-public enum HueAdjustmentStrategy: Sendable {
-
-  /// Add degrees to current hue (e.g. +180 flips hue)
-  case relativeDegrees(Double)
-
-  /// Set to a specific absolute hue in degrees [0, 360)
-  case fixedDegrees(Double)
-
-  /// Rotate hue by 180 degrees from current value
-  case rotate180
-
-  var reversed: HueAdjustmentStrategy {
-    switch self {
-      case .relativeDegrees(let degrees):
-        return .relativeDegrees(-degrees)
-
-      case .fixedDegrees(let fixed):
-        assertionFailure("Cannot automatically reverse fixed hue degrees")
-        /// Not clearly reversible — leave as-is, or up to user.
-        return .fixedDegrees(fixed)
-
-      case .rotate180:
-        return .rotate180
-    }
+public struct HSVAdjustment: Sendable {
+  
+  public var hue: Double
+  //  public var hueStrategy: HueAdjustmentStrategy
+  public var saturation: Double
+  public var brightness: Double
+  
+  public static let zero = HSVAdjustment(h: 0, s: 0, b: 0)
+  
+  public init(
+    hue: Double,
+//    hueStrategy: HueAdjustmentStrategy,
+    saturation: Double,
+    brightness: Double,
+  ) {
+    self.hue = hue
+    self.saturation = saturation
+    self.brightness = brightness
   }
+  
+  
+  
+}
+
+//public enum HueAdjustmentStrategy: Sendable {
+//
+//  /// Add degrees to current hue (e.g. +180 flips hue)
+//  case relativeDegrees(Double)
+//
+//  /// Set to a specific absolute hue in degrees [0, 360)
+//  case fixedDegrees(Double)
+//
+//  /// Rotate hue by 180 degrees from current value
+//  case rotate180
+//
+//  var reversed: HueAdjustmentStrategy {
+//    switch self {
+//      case .relativeDegrees(let degrees):
+//        return .relativeDegrees(-degrees)
+//
+//      case .fixedDegrees(let fixed):
+//        assertionFailure("Cannot automatically reverse fixed hue degrees")
+//        /// Not clearly reversible — leave as-is, or up to user.
+//        return .fixedDegrees(fixed)
+//
+//      case .rotate180:
+//        return .rotate180
+//    }
+//  }
 
 //  public func value(forHue hue: Double) -> HSVAdjustment {
 //    let adjustedHue: Double = {
@@ -50,34 +74,9 @@ public enum HueAdjustmentStrategy: Sendable {
 //    return adjustedHue
 //  }
   
-}
+//}
 
-public struct HSVAdjustment: Sendable {
-  public var hueStrategy: HueAdjustmentStrategy
-  public var saturation: Double
-  public var brightness: Double
-
-  public static let zero = HSVAdjustment(h: 0, s: 0, b: 0)
-
-  public init(
-    hueStrategy: HueAdjustmentStrategy,
-    saturation: Double,
-    brightness: Double,
-  ) {
-    self.hueStrategy = hueStrategy
-    self.saturation = saturation
-    self.brightness = brightness
-  }
-
-  public init(
-    hue: Double,
-    saturation: Double,
-    brightness: Double,
-  ) {
-    self.hueStrategy = .relativeDegrees(hue)
-    self.saturation = saturation
-    self.brightness = brightness
-  }
+extension HSVAdjustment {
   public init(
     h hue: Double,
     s saturation: Double,
@@ -85,4 +84,14 @@ public struct HSVAdjustment: Sendable {
   ) {
     self.init(hue: hue, saturation: saturation, brightness: brightness)
   }
+  
+//  public init(
+//    hue: Double,
+//    saturation: Double,
+//    brightness: Double,
+//  ) {
+//    self.hueStrategy = .relativeDegrees(hue)
+//    self.saturation = saturation
+//    self.brightness = brightness
+//  }
 }
