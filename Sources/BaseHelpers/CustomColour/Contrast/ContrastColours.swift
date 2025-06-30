@@ -9,24 +9,25 @@ import Foundation
 
 extension RGBColour {
 
+  // MARK: - Main Contrast method
+  public func contrastColour(using adjustment: LuminanceAwareAdjustment) -> RGBColour {
+    let hsvColour = HSVColour(fromRGB: self)
+    let adjustmentToApply = adjustment.adjustment(forLuminance: luminance)
+    let newHSV: HSVColour = hsvColour.applying(adjustment: adjustmentToApply)
+    return RGBColour(fromHSV: newHSV)
+  }
+
+  // MARK: - Convenient Overloads
   public func contrastColour(
     sat: Double,
     brightness: Double,
     hue: Double
   ) -> RGBColour {
-    
     let hsvAdjustment = HSVAdjustment(h: hue, s: sat, b: brightness)
     let lumaAwareAdjustment = LuminanceAwareAdjustment(
       symmetric: hsvAdjustment
     )
     return self.contrastColour(using: lumaAwareAdjustment)
-  }
-
-  public func contrastColour(using adjustment: LuminanceAwareAdjustment) -> RGBColour {
-    let hsvColour = HSVColour(from: self)
-    let adjustmentToApply = adjustment.adjustment(forLuminance: luminance)
-    let newHSV: HSVColour = hsvColour.applying(adjustment: adjustmentToApply)
-    return RGBColour(from: newHSV)
   }
 
   public func contrastColour(

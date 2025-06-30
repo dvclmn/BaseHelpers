@@ -52,21 +52,8 @@ public struct HSVColour: Equatable, Sendable, ColourModel {
 
 extension HSVColour {
 
-
-//  public func converting<T: ColourModel>(to type: T.Type) -> T {
-//    return T.from(self)
-//  }
-//
-//  public static func from<T: ColourModel>(_ other: T) -> HSVColour {
-//    // Create RGB from the other color, then convert to HSV
-//    let rgb = RGBColour(resolved: other.resolvedColor)
-//    return HSVColour.from(rgb)
-//    //    return HSVColour(fromRGB: rgb)
-//  }
-
   public static func gray(_ brightness: Double, alpha: Double = 1.0) -> HSVColour {
     return HSVColour(hue: 0, saturation: 0, brightness: brightness, alpha: alpha)
-    //    return RGBColour(red: brightness, green: brightness, blue: brightness, alpha: alpha)
   }
 
   func applying(adjustment: HSVAdjustment) -> HSVColour {

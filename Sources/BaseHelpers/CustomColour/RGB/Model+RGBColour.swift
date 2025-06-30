@@ -26,7 +26,7 @@ public struct RGBColour: Identifiable, Equatable, Hashable, Sendable, Codable, C
 
   public var nativeColour: Color {
     Color(
-      colourSpace.nativeColorSpace,
+      colourSpace,
       red: red,
       green: green,
       blue: blue,
@@ -62,10 +62,6 @@ public struct RGBColour: Identifiable, Equatable, Hashable, Sendable, Codable, C
     )
   }
 
-  //  public init(from hsv: HSVColour) {
-  //    self = Self.from(hsv)
-  //  }
-
 }
 
 extension RGBColour {
@@ -78,28 +74,6 @@ extension RGBColour {
   ) {
     self.init(red: r, green: g, blue: b, alpha: a)
   }
-
-  //  public func converting<T: ColourModel>(to type: T.Type) -> T {
-  //    return T.from(self)
-  //  }
-  //
-  //  public static func from<T: ColourModel>(_ other: T) -> RGBColour {
-  //    return RGBColour(resolved: other.resolvedColor)
-  //  }
-
-  //  public func converting
-
-  //  public var nativeColour: Color {
-  //    Color(
-  //      colourSpace,
-  //      red: red,
-  //      green: green,
-  //      blue: blue,
-  //      opacity: alpha
-  ////      opacity: 1.0
-  ////      opacity: includesAlpha ? alpha : 1.0
-  //    )
-  //  }
 
   func linearised(_ channel: Double) -> Double {
     return channel <= 0.04045
