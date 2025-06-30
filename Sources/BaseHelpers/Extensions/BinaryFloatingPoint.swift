@@ -9,6 +9,14 @@ import Foundation
 
 extension BinaryFloatingPoint {
   
+  public var toDouble: Double {
+    return Double(self)
+  }
+  
+  public var toFloat: Float {
+    return Float(self)
+  }
+  
   public func clamped(toIntRange range: Range<Int>) -> Self {
     return clamped(Self(range.lowerBound), Self(range.upperBound))
   }
@@ -44,6 +52,8 @@ extension BinaryFloatingPoint {
   public func removingZoom(_ zoom: Self) -> Self {
     return self / zoom
   }
+  
+  
   
   /// Adjusts a value to respond partially to zoom level.
   /// - Parameters:

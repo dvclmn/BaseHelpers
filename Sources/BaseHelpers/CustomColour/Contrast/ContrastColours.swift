@@ -23,10 +23,10 @@ extension RGBColour {
   }
 
   public func contrastColour(using adjustment: LuminanceAwareAdjustment) -> RGBColour {
-    let hsvColour = HSVColour(fromRGB: self)
+    let hsvColour = HSVColour(from: self)
     let adjustmentToApply = adjustment.adjustment(forLuminance: luminance)
     let newHSV: HSVColour = hsvColour.applying(adjustment: adjustmentToApply)
-    return RGBColour(fromHSV: newHSV)    
+    return RGBColour(from: newHSV)
   }
 
   public func contrastColour(

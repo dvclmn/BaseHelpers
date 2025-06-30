@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-/// Notes on differences in modelling RGB vs HSB
+/// Notes on differences in modelling RGB vs HSV
 ///
 /// For HSV, these aren't "channels" in the same sense as
 /// RGB components. They represent different types of color attributes:
