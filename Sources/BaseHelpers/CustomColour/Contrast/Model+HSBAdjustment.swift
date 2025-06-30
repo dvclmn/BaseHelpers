@@ -41,7 +41,6 @@ public enum HSVLuminanceType {
 public struct HSVAdjustment: Sendable {
 
   public var hue: Double
-  //  public var hueStrategy: HueAdjustmentStrategy
   public var saturation: Double
   public var brightness: Double
 
@@ -49,7 +48,6 @@ public struct HSVAdjustment: Sendable {
 
   public init(
     hue: Double,
-    //    hueStrategy: HueAdjustmentStrategy,
     saturation: Double,
     brightness: Double,
   ) {

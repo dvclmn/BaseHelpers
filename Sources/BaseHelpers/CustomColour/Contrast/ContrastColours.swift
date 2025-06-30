@@ -26,33 +26,6 @@ extension RGBColour {
     let lumaAwareAdjustment = LuminanceAwareAdjustment.contrastPreset(preset, isMonochrome: isMonochrome)
     return self.contrastColour(using: lumaAwareAdjustment)
   }
-
-//  public func contrastColour(
-//    sat: Double,
-//    brightness: Double,
-//    hue: Double
-//  ) -> RGBColour {
-//    let hsvAdjustment = HSVAdjustment(hue: hue, saturation: sat, brightness: brightness)
-//    let lumaAwareAdjustment = LuminanceAwareAdjustment(
-//      symmetric: hsvAdjustment
-//    )
-//    return self.contrastColour(using: lumaAwareAdjustment)
-//  }
-//
-//  public func contrastColour(
-//    symmetricAdjustment: HSVAdjustment
-//  ) -> RGBColour {
-//    let adjustment = LuminanceAwareAdjustment(symmetric: symmetricAdjustment)
-//    return self.contrastColour(using: adjustment)
-//  }
-//
-//  public func contrastColour(
-//    light: HSVAdjustment,
-//    dark: HSVAdjustment
-//  ) -> RGBColour {
-//    let adjustment = LuminanceAwareAdjustment(light: light, dark: dark)
-//    return self.contrastColour(using: adjustment)
-//  }
 }
 
 public enum ContrastPreset: String, CaseIterable, Identifiable {
@@ -87,77 +60,4 @@ public enum ContrastPreset: String, CaseIterable, Identifiable {
       case .dark: HSVAdjustment.forDarkColours(contrastAmount: self.contrastValue)
     }
   }
-  
-//  public func adjustment(
-//    amount: Double,
-//    isMonochrome: Bool
-//  ) -> HSVAdjustment {
-//    
-//  }
-  
-//  public func level(isMonochrome: Bool) -> ContrastLevel {
-//    return ContrastLevel(
-//      amount: self.contrastValue,
-//      isMonochrome: isMonochrome
-//    )
-//  }
-
-  //  public var forDarkColours: HSVAdjustment {
-  //    switch self {
-  //      case .subtle:
-  //        .init(
-  //          h: -8,
-  //          s: -0.01,
-  //          b: 0.1
-  //        )
-  //      case .moderate:
-  //        .init(
-  //          h: -10,
-  //          s: 0.02,
-  //          b: 0.25
-  //        )
-  //      case .standard:
-  //        .init(
-  //          h: -14,
-  //          s: 0.05,
-  //          b: 0.45
-  //        )
-  //      case .highContrast:
-  //        .init(
-  //          h: -17,
-  //          s: 0.08,
-  //          b: 0.7
-  //        )
-  //    }
-  //  }
-  //  public var forLightColours: HSVAdjustment {
-  //
-  //    switch self {
-  //      case .subtle:
-  //        .init(
-  //          h: -8,
-  //          s: 0.03,
-  //          b: -0.18
-  //        )
-  //      case .moderate:
-  //        .init(
-  //          h: -10,
-  //          s: 0.1,
-  //          b: -0.35
-  //        )
-  //      case .standard:
-  //        .init(
-  //          h: -12,
-  //          s: 0.15,
-  //          b: -0.58
-  //        )
-  //      case .highContrast:
-  //        .init(
-  //          h: -14,
-  //          s: 0.2,
-  //          b: -0.7
-  //        )
-  //
-  //    }
-  //  }
 }
