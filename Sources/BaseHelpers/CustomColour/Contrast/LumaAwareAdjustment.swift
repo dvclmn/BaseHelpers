@@ -58,10 +58,27 @@ public struct LuminanceAwareAdjustment: Sendable {
     luminance > self.luminanceTheshold ? light : dark
   }
 
-  public static func contrastPreset(_ preset: ContrastPreset) -> Self {
-    return LuminanceAwareAdjustment(
-      light: preset.level.forLightColours,
-      dark: preset.level.forDarkColours
-    )
+  public static func contrastPreset(
+    _ preset: ContrastPreset,
+    isMonochrome: Bool = false
+  ) -> Self {
+    let result: LuminanceAwareAdjustment
+    if isMonochrome {
+      let lightSat: Double = 0.2
+      let darkSat: Double = 0.2
+      
+      let light = preset.level.forLightColours
+      let adjustedLight =
+      result = LuminanceAwareAdjustment(
+        light: preset.level.forLightColours,
+        dark: preset.level.forDarkColours
+      )
+    } else {
+      result = LuminanceAwareAdjustment(
+        light: preset.level.forLightColours,
+        dark: preset.level.forDarkColours
+      )
+    }
+    return result
   }
 }

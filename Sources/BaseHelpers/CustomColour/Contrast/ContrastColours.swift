@@ -89,14 +89,15 @@ public enum ContrastPreset: String, CaseIterable, Identifiable {
     }
   }
   
-  public var level: ContrastLevel {
+  public func level(isMonochrome: Bool) -> ContrastLevel {
     switch self {
-      case .subtle: .subtle
-      case .moderate: .moderate
-      case .standard: .standard
-      case .highContrast: .high
+      case .subtle: ContrastLevel(amount: 0.2, isMonochrome: isMonochrome)
+      case .moderate: ContrastLevel(amount: 0.4, isMonochrome: isMonochrome)
+      case .standard: ContrastLevel(amount: 0.7, isMonochrome: isMonochrome)
+      case .highContrast: ContrastLevel(amount: 1.0, isMonochrome: isMonochrome)
     }
   }
+  
 
 //  public var forDarkColours: HSVAdjustment {
 //    switch self {

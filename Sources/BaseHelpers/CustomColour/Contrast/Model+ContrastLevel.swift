@@ -9,17 +9,22 @@ import Foundation
 
 public struct ContrastLevel: Sendable {
   public var amount: Double
+  private let isMonochrome: Bool
   
-  public init(amount: Double) {
+  public init(
+    amount: Double,
+    isMonochrome: Bool = false
+  ) {
     self.amount = amount.clamped(to: 0...1)
+    self.isMonochrome = isMonochrome
   }
   
   // MARK: - Static presets (for convenience)
   
-  public static let subtle = ContrastLevel(amount: 0.2)
-  public static let moderate = ContrastLevel(amount: 0.4)
-  public static let standard = ContrastLevel(amount: 0.7)
-  public static let high = ContrastLevel(amount: 1.0)
+//  public static let subtle = ContrastLevel(amount: 0.2), isMonochrome: <#T##Bool#>
+//  public static let moderate = ContrastLevel(amount: 0.4, isMonochrome: <#T##Bool#>)
+//  public static let standard = ContrastLevel(amount: 0.7, isMonochrome: <#T##Bool#>)
+//  public static let high = ContrastLevel(amount: 1.0, isMonochrome: <#T##Bool#>)
   
   // MARK: - Internal constants
   
@@ -31,6 +36,7 @@ public struct ContrastLevel: Sendable {
     static let zero = HSVComponents(hueDegrees: 0, saturation: 0, brightness: 0)
     
     func interpolated(to: HSVComponents, amount: Double) -> HSVComponents {
+      let saturation: Double
       .init(
         hueDegrees: hueDegrees + (to.hueDegrees - hueDegrees) * amount,
         saturation: saturation + (to.saturation - saturation) * amount,
@@ -48,7 +54,7 @@ public struct ContrastLevel: Sendable {
   }
   
   private static let maxDark = HSVComponents(
-    hueDegrees: -17,
+    hueDegrees: -22,
     saturation: 0.08,
     brightness: 0.7
   )
