@@ -60,8 +60,8 @@ public struct LuminanceAwareAdjustment: Sendable {
 
   public static func contrastPreset(_ preset: ContrastPreset) -> Self {
     return LuminanceAwareAdjustment(
-      light: preset.forLightColours,
-      dark: preset.forDarkColours
+      light: preset.level.forLightColours,
+      dark: preset.level.forDarkColours
     )
   }
 }

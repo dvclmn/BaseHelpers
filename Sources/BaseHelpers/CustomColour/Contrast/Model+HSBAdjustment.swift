@@ -25,7 +25,7 @@ public enum HueAdjustmentStrategy: Sendable {
 
       case .fixedDegrees(let fixed):
         assertionFailure("Cannot automatically reverse fixed hue degrees")
-        // Not clearly reversible — leave as-is, or up to user.
+        /// Not clearly reversible — leave as-is, or up to user.
         return .fixedDegrees(fixed)
 
       case .rotate180:
@@ -58,22 +58,6 @@ public struct HSVAdjustment: Sendable {
   public var brightness: Double
 
   public static let zero = HSVAdjustment(h: 0, s: 0, b: 0)
-
-//  public func interpolated(
-//    to: HSVAdjustment,
-//    amount: Double
-//  ) -> HSVAdjustment {
-//    return HSVAdjustment(
-//      h: self.hueStrategy.value(forHue: <#T##Double#>),
-//      s: <#T##Double#>,
-//      b: <#T##Double#>
-//    )
-////    HSVAdjustment(
-////      h: h + (to.h - h) * amount,
-////      s: s + (to.s - s) * amount,
-////      b: b + (to.b - b) * amount
-////    )
-//  }
 
   public init(
     hueStrategy: HueAdjustmentStrategy,
