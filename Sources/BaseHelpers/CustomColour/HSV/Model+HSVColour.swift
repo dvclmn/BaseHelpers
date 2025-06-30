@@ -57,17 +57,42 @@ extension HSVColour {
   }
 
   func applying(adjustment: HSVAdjustment) -> HSVColour {
+    let adjustedHue: Double = {
+      switch adjustment.hueStrategy {
+        case .relativeDegrees(let delta):
+          return (hue + delta / 360.0).hueWrapped()
 
-    let newHue = (hue + adjustment.hue / 360.0).hueWrapped()
+        case .fixedDegrees(let absolute):
+          return (absolute / 360.0).hueWrapped()
+
+        case .rotate180:
+          return (hue + 0.5).hueWrapped()
+      }
+    }()
 
     let newSaturation = (saturation + adjustment.saturation).clamped(to: 0...1)
     let newBrightness = (brightness + adjustment.brightness).clamped(to: 0...1)
 
     return HSVColour(
-      hue: newHue,
+      hue: adjustedHue,
       saturation: newSaturation,
       brightness: newBrightness,
       alpha: alpha
     )
   }
+
+  //  func applying(adjustment: HSVAdjustment) -> HSVColour {
+  //
+  //    let newHue = (hue + adjustment.hue / 360.0).hueWrapped()
+  //
+  //    let newSaturation = (saturation + adjustment.saturation).clamped(to: 0...1)
+  //    let newBrightness = (brightness + adjustment.brightness).clamped(to: 0...1)
+  //
+  //    return HSVColour(
+  //      hue: newHue,
+  //      saturation: newSaturation,
+  //      brightness: newBrightness,
+  //      alpha: alpha
+  //    )
+  //  }
 }

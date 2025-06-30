@@ -8,20 +8,54 @@
 import Foundation
 
 public enum HueAdjustmentStrategy: Sendable {
-  /// Adjust by degrees
+
+  /// Add degrees to current hue (e.g. +180 flips hue)
   case relativeDegrees(Double)
-  
-  /// for hard contrast
+
+  /// Set to a specific absolute hue in degrees [0, 360)
+  case fixedDegrees(Double)
+
+  /// Rotate hue by 180 degrees from current value
   case rotate180
+
+  var reversed: HueAdjustmentStrategy {
+    switch self {
+      case .relativeDegrees(let degrees):
+        return .relativeDegrees(-degrees)
+        
+      case .fixedDegrees(let fixed):
+        assertionFailure("Cannot automatically reverse fixed hue degrees")
+        // Not clearly reversible — leave as-is, or up to user.
+        return .fixedDegrees(fixed)
+        
+      case .rotate180:
+        return .rotate180
+    }
+  }
   
-  /// set to an explicit hue
-  case fixedHue(Double)
 }
 
 public struct HSVAdjustment: Sendable {
   public var hueStrategy: HueAdjustmentStrategy
   public var saturation: Double
   public var brightness: Double
+
+  
+  
+//  public var hue: Double {
+//
+//    switch hueStrategy {
+//      case .relativeDegrees(let delta):
+//        return (hue + delta / 360.0).hueWrapped()
+//
+//      case .fixedDegrees(let absolute):
+//        return (absolute / 360.0).hueWrapped()
+//
+//      case .rotate180:
+//        return (hue + 0.5).hueWrapped()
+//    }
+//
+//  }
 
   public init(
     hueStrategy: HueAdjustmentStrategy,
@@ -32,7 +66,7 @@ public struct HSVAdjustment: Sendable {
     self.saturation = saturation
     self.brightness = brightness
   }
-  
+
   public init(
     hue: Double,
     saturation: Double,

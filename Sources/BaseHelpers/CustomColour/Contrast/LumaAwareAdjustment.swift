@@ -30,15 +30,29 @@ public struct LuminanceAwareAdjustment: Sendable {
     symmetric adjustment: HSVAdjustment,
     luminanceTheshold: Double = 0.5
   ) {
-
     self.light = adjustment
+    
     self.dark = HSVAdjustment(
-      hue: -adjustment.hue,
+      hueStrategy: adjustment.hueStrategy.reversed,
       saturation: -adjustment.saturation,
-      brightness: -adjustment.brightness,
+      brightness: -adjustment.brightness
     )
+    
     self.luminanceTheshold = luminanceTheshold
   }
+  //  public init(
+//    symmetric adjustment: HSVAdjustment,
+//    luminanceTheshold: Double = 0.5
+//  ) {
+//
+//    self.light = adjustment
+//    self.dark = HSVAdjustment(
+//      hue: -adjustment,
+//      saturation: -adjustment.saturation,
+//      brightness: -adjustment.brightness,
+//    )
+//    self.luminanceTheshold = luminanceTheshold
+//  }
 
   public func adjustment(forLuminance luminance: Double) -> HSVAdjustment {
     luminance > self.luminanceTheshold ? light : dark
