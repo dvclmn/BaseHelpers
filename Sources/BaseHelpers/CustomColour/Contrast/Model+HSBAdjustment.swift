@@ -7,43 +7,67 @@
 
 import Foundation
 
+public enum ContrastPurpose {
+  case legibility
+  case complimentary
+}
+
 public enum LuminanceLevel {
   case dark
-  case mid
+  //  case mid
   case light
 
   public init(from luminance: Double) {
-    if luminance > 0.7 {
+    if luminance > 0.4 {
       self = .light
-    } else if luminance > 0.3 {
-      self = .mid
+      //    } else if luminance > 0.3 {
+      //      self = .mid
     } else {
       self = .dark
     }
   }
 
-  var baseContrastPreset: HSVAdjustment {
+  func baseContrastPreset(purpose: ContrastPurpose) -> HSVAdjustment {
     switch self {
       case .dark:
-        HSVAdjustment(
-          hue: -19,
-          saturation: -0.09,
-          brightness: 0.7
-        )
+        switch purpose {
+          case .legibility:
+            HSVAdjustment(
+              hue: -19,
+              saturation: -0.09,
+              brightness: 0.7
+            )
+          case .complimentary:
+            HSVAdjustment(
+              hue: -19,
+              saturation: -0.09,
+              brightness: 0.7
+            )
 
-      case .mid:
-        HSVAdjustment(
-          hue: -19,
-          saturation: -0.08,
-          brightness: 0.7
-        )
+        }
+
+      //      case .mid:
+      //        HSVAdjustment(
+      //          hue: -16,
+      //          saturation: -0.01,
+      //          brightness: 0.1
+      //        )
 
       case .light:
-        HSVAdjustment(
-          hue: -14,
-          saturation: 0.3,
-          brightness: -0.65
-        )
+        switch purpose {
+          case .legibility:
+            HSVAdjustment(
+              hue: -12,
+              saturation: 0.25,
+              brightness: -0.7
+            )
+          case .complimentary:
+            HSVAdjustment(
+              hue: -12,
+              saturation: 0.25,
+              brightness: -0.7
+            )
+        }
     }
   }
 }
@@ -72,24 +96,26 @@ extension HSVAdjustment {
 
   public static func adjustment(
     forLumaLevel level: LuminanceLevel,
-    contrastAmount: Double
+    contrastAmount: Double,
+    purpose: ContrastPurpose
   ) -> HSVAdjustment {
-    self.zero.interpolated(forLevel: level, amount: contrastAmount)
+    self.zero.interpolated(forLevel: level, amount: contrastAmount, purpose: purpose)
   }
-  
-//  public static func forLightColours(contrastAmount: Double) -> HSVAdjustment {
-//    return HSVAdjustment.zero.interpolated(forType: .light, amount: contrastAmount)
-//  }
-//
-//  public static func forDarkColours(contrastAmount: Double) -> HSVAdjustment {
-//    return HSVAdjustment.zero.interpolated(forType: .dark, amount: contrastAmount)
-//  }
+
+  //  public static func forLightColours(contrastAmount: Double) -> HSVAdjustment {
+  //    return HSVAdjustment.zero.interpolated(forType: .light, amount: contrastAmount)
+  //  }
+  //
+  //  public static func forDarkColours(contrastAmount: Double) -> HSVAdjustment {
+  //    return HSVAdjustment.zero.interpolated(forType: .dark, amount: contrastAmount)
+  //  }
 
   func interpolated(
     forLevel level: LuminanceLevel,
     amount: Double,
+    purpose: ContrastPurpose
   ) -> HSVAdjustment {
-    let baseContrast = level.baseContrastPreset
+    let baseContrast = level.baseContrastPreset(purpose: purpose)
 
     return HSVAdjustment(
       hue: doAThing(factor: amount, newAdjustment: baseContrast, for: .hue),

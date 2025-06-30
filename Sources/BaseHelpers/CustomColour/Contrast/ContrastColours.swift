@@ -19,13 +19,15 @@ extension RGBColour {
 
   public func contrastColour(
     withPreset preset: ContrastPreset,
+    purpose: ContrastPurpose,
     isMonochrome: Bool = false
   ) -> RGBColour {
     
     let hsvColour = HSVColour(fromRGB: self)
     
 
-    let adjustmentToApply = preset.adjustment(for: self.luminanceLevel)
+//    let adjustmentToApply = HSVAdjustment.adjustment(forLumaLevel: self.luminanceLevel, contrastAmount: preset.)
+    let adjustmentToApply = preset.adjustment(for: self.luminanceLevel, purpose: purpose)
     
 //    let adjustmentToApply = adjustment.adjustment(forLuminance: self.luminance)
     let newHSV: HSVColour = hsvColour.applying(adjustment: adjustmentToApply)
@@ -75,8 +77,15 @@ public enum ContrastPreset: String, CaseIterable, Identifiable {
     }
   }
 
-  public func adjustment(for level: LuminanceLevel) -> HSVAdjustment {
-    HSVAdjustment.adjustment(forLumaLevel: level, contrastAmount: self.contrastValue)
+  public func adjustment(
+    for level: LuminanceLevel,
+    purpose: ContrastPurpose
+  ) -> HSVAdjustment {
+    HSVAdjustment.adjustment(
+      forLumaLevel: level,
+      contrastAmount: self.contrastValue,
+      purpose: purpose
+    )
     
 //    switch level {
 //      case .dark:
