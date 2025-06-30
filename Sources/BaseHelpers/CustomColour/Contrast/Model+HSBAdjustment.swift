@@ -7,6 +7,29 @@
 
 import Foundation
 
+enum HSVLuminanceType {
+  case dark
+  case light
+
+  var baseContrastPreset: HSVAdjustment {
+    switch self {
+      case .dark:
+        HSVAdjustment(
+          hue: -22,
+          saturation: 0.08,
+          brightness: 0.7
+        )
+
+      case .light:
+        HSVAdjustment(
+          hue: -14,
+          saturation: 0.2,
+          brightness: -0.7
+        )
+    }
+  }
+}
+
 public struct HSVAdjustment: Sendable {
 
   public var hue: Double
@@ -29,71 +52,39 @@ public struct HSVAdjustment: Sendable {
 
 }
 
-
-enum HSVLuminanceType {
-  case dark
-  case light
-  
-  var baseContrastPreset: HSVAdjustment {
-    switch self {
-      case .dark:
-        HSVAdjustment(
-          hue: -22,
-          saturation: 0.08,
-          brightness: 0.7
-        )
-        
-      case .light:
-        HSVAdjustment(
-          hue: -14,
-          saturation: 0.2,
-          brightness: -0.7
-        )
-    }
-  }
-}
-
-
 extension HSVAdjustment {
 
+  public static func forLightColours(contrastAmount: Double) -> HSVAdjustment {
+    return HSVAdjustment.zero.interpolated(forType: .light, amount: contrastAmount)
+  }
   
-//  public var forDarkColours: HSVAdjustment {
-//    HSVAdjustment
-//      .zero
-//      .interpolated(to: Self.maxDark, amount: amount)
-//      .asAdjustment(using: { .relativeDegrees($0) })
-//  }
-//
-//  public var forLightColours: HSVAdjustment {
-//    HSVAdjustment
-//      .zero
-//      .interpolated(to: Self.maxLight, amount: amount)
-//      .asAdjustment(using: { .relativeDegrees($0) })
-//  }
+  public static func forDarkColours(contrastAmount: Double) -> HSVAdjustment {
+    return HSVAdjustment.zero.interpolated(forType: .dark, amount: contrastAmount)
+  }
 
   func interpolated(
     forType type: HSVLuminanceType,
-//    to: HSVAdjustment,
     amount: Double,
   ) -> HSVAdjustment {
     let baseContrast = type.baseContrastPreset
-    
+
     return HSVAdjustment(
       hue: doAThing(factor: amount, newAdjustment: baseContrast, for: .hue),
       saturation: doAThing(factor: amount, newAdjustment: baseContrast, for: .saturation),
       brightness: doAThing(factor: amount, newAdjustment: baseContrast, for: .brightness)
-//      hue: self.hue.doAThing(factor: amount, newValue: baseContrast.hue),
-//      saturation: self.saturation.doAThing(factor: amount, newValue: baseContrast.saturation),
-//      hue: self.hue.doAThing(factor: amount, newValue: baseContrast.hue),
-//      saturation: saturation + (baseContrast.saturation - saturation) * amount,
-//      brightness: brightness + (baseContrast.brightness - brightness) * amount
+
+      //      hue: self.hue.doAThing(factor: amount, newValue: baseContrast.hue),
+      //      saturation: self.saturation.doAThing(factor: amount, newValue: baseContrast.saturation),
+      //      hue: self.hue.doAThing(factor: amount, newValue: baseContrast.hue),
+      //      saturation: saturation + (baseContrast.saturation - saturation) * amount,
+      //      brightness: brightness + (baseContrast.brightness - brightness) * amount
     )
   }
 
-//  private func thing(_ amount: Double) {
-//    
-//  }
-  
+  //  private func thing(_ amount: Double) {
+  //
+  //  }
+
   func doAThing(
     factor: Double,
     newAdjustment: HSVAdjustment,
