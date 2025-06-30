@@ -23,7 +23,8 @@ extension HSVColour {
 
     let d: CGFloat = maxV - minV
 
-    s = maxV == 0 ? 0 : d / minV
+    s = maxV == 0 ? 0 : d / maxV
+//    s = maxV == 0 ? 0 : d / minV
 
     if maxV == minV {
       h = 0

@@ -9,6 +9,11 @@ import Foundation
 
 extension BinaryFloatingPoint {
   
+  public func hueWrapped() -> Self {
+    let value = self.truncatingRemainder(dividingBy: 1.0)
+    return value < 0 ? value + 1.0 : value
+  }
+  
   public var toDouble: Double {
     return Double(self)
   }

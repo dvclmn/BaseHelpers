@@ -10,10 +10,10 @@ import Foundation
 public struct LuminanceAwareAdjustment: Sendable {
   public var light: HSVAdjustment
   public var dark: HSVAdjustment
-  
+
   /// What luminance value is considered dark vs light
   public let luminanceTheshold: Double
-  
+
   /// Provide *two* adjustments; one for use with Light contexts, one for Dark
   public init(
     light: HSVAdjustment,
@@ -24,13 +24,13 @@ public struct LuminanceAwareAdjustment: Sendable {
     self.dark = dark
     self.luminanceTheshold = luminanceTheshold
   }
-  
+
   /// Provide a *single* adjustment, which auto-inverts for Dark colours
   public init(
     symmetric adjustment: HSVAdjustment,
     luminanceTheshold: Double = 0.5
   ) {
-    
+
     self.light = adjustment
     self.dark = HSVAdjustment(
       hue: -adjustment.hue,
@@ -39,11 +39,11 @@ public struct LuminanceAwareAdjustment: Sendable {
     )
     self.luminanceTheshold = luminanceTheshold
   }
-  
+
   public func adjustment(forLuminance luminance: Double) -> HSVAdjustment {
     luminance > self.luminanceTheshold ? light : dark
   }
-  
+
   public static func contrastPreset(_ preset: ContrastPreset) -> Self {
     return LuminanceAwareAdjustment(
       light: preset.forLightColours,

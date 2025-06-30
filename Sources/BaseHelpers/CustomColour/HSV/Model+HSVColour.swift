@@ -57,9 +57,8 @@ extension HSVColour {
   }
 
   func applying(adjustment: HSVAdjustment) -> HSVColour {
-    var newHue = hue + (adjustment.hue / 360.0)
-    if newHue < 0 { newHue += 1 }
-    if newHue > 1 { newHue -= 1 }
+
+    let newHue = (hue + adjustment.hue / 360.0).hueWrapped()
 
     let newSaturation = (saturation + adjustment.saturation).clamped(to: 0...1)
     let newBrightness = (brightness + adjustment.brightness).clamped(to: 0...1)
