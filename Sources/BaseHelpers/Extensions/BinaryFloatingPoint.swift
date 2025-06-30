@@ -184,28 +184,28 @@ extension BinaryFloatingPoint {
     self.clamped(.zero, .infinity)
   }
 
-  public func padLeading(
-    maxDigits: Int = 3,
-    decimalPlaces: Int? = nil,
-    with padChar: Character = " "
-  ) -> String {
-
-    guard let double = self as? Double else {
-      return PadFloat.padLeading(
-        value: CGFloat(self),
-        maxDigits: maxDigits,
-        decimalPlaces: decimalPlaces,
-        with: padChar
-      )
-    }
-    return PadFloat.padLeading(
-      value: double,
-      maxDigits: maxDigits,
-      decimalPlaces: decimalPlaces,
-      with: padChar
-    )
-
-  }
+//  public func padLeading(
+//    maxDigits: Int = 3,
+//    decimalPlaces: Int? = nil,
+//    with padChar: Character = " "
+//  ) -> String {
+//
+//    guard let double = self as? Double else {
+//      return PadFloat.padLeading(
+//        value: CGFloat(self),
+//        maxDigits: maxDigits,
+//        decimalPlaces: decimalPlaces,
+//        with: padChar
+//      )
+//    }
+//    return PadFloat.padLeading(
+//      value: double,
+//      maxDigits: maxDigits,
+//      decimalPlaces: decimalPlaces,
+//      with: padChar
+//    )
+//
+//  }
 
   /// Calculates height from width using the given aspect ratio
   /// - Parameter aspectRatio: The aspect ratio (width / height)
@@ -234,45 +234,45 @@ extension BinaryFloatingPoint {
   }
 }
 
-struct PadFloat {
-
-  /// Adds leading padding to align numbers based on their integer part
-  static func padLeading(
-    value: Double,
-    maxDigits: Int = 3,
-    decimalPlaces: Int? = nil,
-    with padChar: Character = " "
-  ) -> String {
-
-    let maxDigitsIncludingNegativeSign = maxDigits + 1
-
-    /// First handle decimal places if specified
-    let numberToFormat = value
-    let formattedNumber: String
-
-    if let places = decimalPlaces {
-      formattedNumber = numberToFormat.formatted(.number.precision(.fractionLength(places)))
-    } else {
-      formattedNumber = String(numberToFormat)
-    }
-
-    let isNegative = numberToFormat < 0
-
-    /// Split into components, handling the negative sign
-    let absNumberStr = isNegative ? String(formattedNumber.dropFirst()) : formattedNumber
-    let components = absNumberStr.split(separator: ".", maxSplits: 1)
-    let integerPart = String(components[0])
-    let decimalPart = components.count > 1 ? "." + components[1] : ""
-
-    /// Calculate padding needed, accounting for negative sign
-    let effectiveLength = integerPart.count + (isNegative ? 1 : 0)
-    let padding = String(repeating: padChar, count: max(0, maxDigitsIncludingNegativeSign - effectiveLength))
-
-    /// Reconstruct the string with proper padding and sign
-    guard isNegative else {
-      return padding + integerPart + decimalPart
-    }
-    return padding + "-" + integerPart + decimalPart
-  }
-
-}
+//struct PadFloat {
+//
+//  /// Adds leading padding to align numbers based on their integer part
+//  static func padLeading(
+//    value: Double,
+//    maxDigits: Int = 3,
+//    decimalPlaces: Int? = nil,
+//    with padChar: Character = " "
+//  ) -> String {
+//
+//    let maxDigitsIncludingNegativeSign = maxDigits + 1
+//
+//    /// First handle decimal places if specified
+//    let numberToFormat = value
+//    let formattedNumber: String
+//
+//    if let places = decimalPlaces {
+//      formattedNumber = numberToFormat.formatted(.number.precision(.fractionLength(places)))
+//    } else {
+//      formattedNumber = String(numberToFormat)
+//    }
+//
+//    let isNegative = numberToFormat < 0
+//
+//    /// Split into components, handling the negative sign
+//    let absNumberStr = isNegative ? String(formattedNumber.dropFirst()) : formattedNumber
+//    let components = absNumberStr.split(separator: ".", maxSplits: 1)
+//    let integerPart = String(components[0])
+//    let decimalPart = components.count > 1 ? "." + components[1] : ""
+//
+//    /// Calculate padding needed, accounting for negative sign
+//    let effectiveLength = integerPart.count + (isNegative ? 1 : 0)
+//    let padding = String(repeating: padChar, count: max(0, maxDigitsIncludingNegativeSign - effectiveLength))
+//
+//    /// Reconstruct the string with proper padding and sign
+//    guard isNegative else {
+//      return padding + integerPart + decimalPart
+//    }
+//    return padding + "-" + integerPart + decimalPart
+//  }
+//
+//}

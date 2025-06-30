@@ -49,7 +49,7 @@ extension Comparable where Self: BinaryFloatingPoint {
   
   /// Normalises `self` as a percentage (0 to 100) within the given source range.
   /// - Returns: A linear percentage (not clamped).
-  /// - Precondition: The range must be valid (i.e., lowerBound < upperBound).
+  /// - Precondition: The range must be valid (i.e.,`lowerBound < upperBound`).
   public func normalised(from range: ClosedRange<Self>) -> Self {
     precondition(range.lowerBound < range.upperBound, "Invalid range: lowerBound must be less than upperBound.")
     return (self - range.lowerBound) / (range.upperBound - range.lowerBound) * 100

@@ -52,6 +52,26 @@ extension RGBColour {
   }
 }
 
+public struct ContrastLevel {
+  /// Scalar from 0 (no change) to 1 (maximum contrast)
+  public var amount: Double
+  
+  public init(amount: Double) {
+    self.amount = amount.clamped(to: 0...1)
+  }
+  
+  private static let maxDarkAdjustment = HSVAdjustment(h: -17, s: 0.08, b: 0.7)
+  private static let maxLightAdjustment = HSVAdjustment(h: -14, s: 0.2, b: -0.7)
+  
+//  public var forDarkColours: HSVAdjustment {
+//    .zero.interpolated(to: Self.maxDarkAdjustment, amount: amount)
+//  }
+  
+//  public var forLightColours: HSVAdjustment {
+//    .zero.interpolated(to: Self.maxLightAdjustment, amount: amount)
+//  }
+}
+
 public enum ContrastPreset: String, CaseIterable, Identifiable {
   case subtle
   case moderate
@@ -59,63 +79,81 @@ public enum ContrastPreset: String, CaseIterable, Identifiable {
   case highContrast
   
   public var id: String { rawValue }
-
-  public var forDarkColours: HSVAdjustment {
+  
+  public var name: String {
     switch self {
-      case .subtle:
-        .init(
-          h: -8,
-          s: -0.01,
-          b: 0.1
-        )
-      case .moderate:
-        .init(
-          h: -10,
-          s: 0.02,
-          b: 0.25
-        )
-      case .standard:
-        .init(
-          h: -14,
-          s: 0.05,
-          b: 0.45
-        )
-      case .highContrast:
-        .init(
-          h: -17,
-          s: 0.08,
-          b: 0.7
-        )
+      case .subtle: "Subtle"
+      case .moderate: "Moderate"
+      case .standard: "Standard"
+      case .highContrast: "High Contrast"
     }
   }
-  public var forLightColours: HSVAdjustment {
-
+  
+  public var level: ContrastLevel {
     switch self {
-      case .subtle:
-        .init(
-          h: -8,
-          s: 0.03,
-          b: -0.18
-        )
-      case .moderate:
-        .init(
-          h: -10,
-          s: 0.1,
-          b: -0.35
-        )
-      case .standard:
-        .init(
-          h: -12,
-          s: 0.15,
-          b: -0.58
-        )
-      case .highContrast:
-        .init(
-          h: -14,
-          s: 0.2,
-          b: -0.7
-        )
-
+      case .subtle: .init(amount: 0.2)
+      case .moderate: .init(amount: 0.4)
+      case .standard: .init(amount: 0.7)
+      case .highContrast: .init(amount: 1.0)
     }
   }
+
+//  public var forDarkColours: HSVAdjustment {
+//    switch self {
+//      case .subtle:
+//        .init(
+//          h: -8,
+//          s: -0.01,
+//          b: 0.1
+//        )
+//      case .moderate:
+//        .init(
+//          h: -10,
+//          s: 0.02,
+//          b: 0.25
+//        )
+//      case .standard:
+//        .init(
+//          h: -14,
+//          s: 0.05,
+//          b: 0.45
+//        )
+//      case .highContrast:
+//        .init(
+//          h: -17,
+//          s: 0.08,
+//          b: 0.7
+//        )
+//    }
+//  }
+//  public var forLightColours: HSVAdjustment {
+//
+//    switch self {
+//      case .subtle:
+//        .init(
+//          h: -8,
+//          s: 0.03,
+//          b: -0.18
+//        )
+//      case .moderate:
+//        .init(
+//          h: -10,
+//          s: 0.1,
+//          b: -0.35
+//        )
+//      case .standard:
+//        .init(
+//          h: -12,
+//          s: 0.15,
+//          b: -0.58
+//        )
+//      case .highContrast:
+//        .init(
+//          h: -14,
+//          s: 0.2,
+//          b: -0.7
+//        )
+//
+//    }
+//  }
 }

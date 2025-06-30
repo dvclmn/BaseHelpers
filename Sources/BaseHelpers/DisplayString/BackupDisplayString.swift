@@ -59,10 +59,10 @@ extension CGSize {
     }
   }
   
-  @available(*, deprecated, message: "This function is deprecated. Use `displayString` instead")
-  public var asString: String {
-    "Width: \(width.padLeading(maxDigits: 3, decimalPlaces: 2)) x Height: \(height.padLeading(maxDigits: 3, decimalPlaces: 2))"
-  }
+//  @available(*, deprecated, message: "This function is deprecated. Use `displayString` instead")
+//  public var asString: String {
+//    "Width: \(width.padLeading(maxDigits: 3, decimalPlaces: 2)) x Height: \(height.padLeading(maxDigits: 3, decimalPlaces: 2))"
+//  }
 
 }
 

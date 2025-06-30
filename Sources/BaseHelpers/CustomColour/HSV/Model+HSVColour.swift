@@ -56,15 +56,18 @@ extension HSVColour {
     return HSVColour(hue: 0, saturation: 0, brightness: brightness, alpha: alpha)
   }
 
-  public func componentBarWidth(
-    _ component: HSVComponent,
-    in fullWidth: CGFloat
-  ) -> CGFloat {
-    let value = self[keyPath: component.keyPath]
-    let result = value.normalised(against: fullWidth, isClamped: true)
-    return result * 100
-  }
-  
+  //  public func componentBarWidth(
+  //    _ component: HSVComponent,
+  //    in range: ClosedRange<Double>
+  ////    in fullWidth: CGFloat
+  //  ) -> CGFloat {
+  //    let value = self[keyPath: component.keyPath]
+  //    let result = value.normalised(from: range)
+  ////    let result = value.normalised(against: fullWidth, isClamped: true)
+  //    return result
+  ////    return result * 100
+  //  }
+
   func applying(adjustment: HSVAdjustment) -> HSVColour {
     let adjustedHue: Double = {
       switch adjustment.hueStrategy {
