@@ -7,14 +7,16 @@
 
 import Foundation
 
-extension RGBColour {
+extension HSVColour {
   
-//  public init(fromHSV hsv: HSVColour) {
-//    
-//  }
-  public func hsv(from rgb: RGBColour) -> HSVColour {
+  //  public init(fromHSV hsv: HSVColour) {
+  //
+  //  }
+  //  public func converting<T: ColourModel>(to type: T) -> T {
+  public init(fromRGB rgb: RGBColour) {
+    //  public static func hsv(from rgb: RGBColour) -> HSVColour {
     
-    var hsb = HSVColour(hue: 0, saturation: 0, brightness: 0, alpha: 0)
+//    var hsb = HSVColour(hue: 0, saturation: 0, brightness: 0, alpha: 0)
     //    var hsb: HSVColour = (hue: 0.0, saturation: 0.0, brightness: 0.0, alpha: 0.0)
     
     let rd: CGFloat = rgb.red
@@ -45,20 +47,27 @@ extension RGBColour {
       h /= 6;
     }
     
-    hsb.hue = h
-    hsb.saturation = s
-    hsb.brightness = b
-    hsb.alpha = rgb.alpha
-    return hsb
+//    hsb.hue = h
+//    hsb.saturation = s
+//    hsb.brightness = b
+//    hsb.alpha = rgb.alpha
+    //    return hsb
+    self.init(
+      hue: h,
+      saturation: s,
+      brightness: b,
+      alpha: rgb.alpha
+    )
   }
   
 }
 
-extension HSVColour {
+extension RGBColour {
   
-  public func rgb(from hsv: HSVColour) -> RGBColour {
+  public init(fromHSV hsv: HSVColour) {
+//  public static func rgb(from hsv: HSVColour) -> RGBColour {
     /// Converts HSV to a RGB color
-    var rgb = RGBColour(red: 0, green: 0, blue: 0, alpha: 0)
+//    var rgb = RGBColour(red: 0, green: 0, blue: 0, alpha: 0)
     //    var rgb: RGBColour = (red: 0.0, green: 0.0, blue: 0.0, alpha: 0.0)
     var r: CGFloat
     var g: CGFloat
@@ -113,11 +122,17 @@ extension HSVColour {
         b = p
     }
     
-    rgb.red = r
-    rgb.green = g
-    rgb.blue = b
-    rgb.alpha = hsv.alpha
-    return rgb
+    self.init(
+      red: r,
+      green: g,
+      blue: b,
+      alpha: hsv.alpha
+    )
+//    rgb.red = r
+//    rgb.green = g
+//    rgb.blue = b
+//    rgb.alpha = hsv.alpha
+//    return rgb
   }
   
   

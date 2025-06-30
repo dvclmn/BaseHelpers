@@ -24,23 +24,6 @@ public struct RGBColour: Identifiable, Equatable, Hashable, Sendable, Codable, C
     )
   }
 
-    public init(
-      r: Double,
-      g: Double,
-      b: Double,
-      a: Double = 1.0,
-  
-    ) {
-      self.init(red: r, green: g, blue: b, alpha: a)
-    }
-
-//  public init(
-//    gray: Double,
-//    alpha: Double = 1.0,
-//  ) {
-//    self.init(red: gray, green: gray, blue: gray, alpha: alpha)
-//  }
-
   public var nativeColour: Color {
     Color(
       colourSpace.nativeColorSpace,
@@ -48,11 +31,9 @@ public struct RGBColour: Identifiable, Equatable, Hashable, Sendable, Codable, C
       green: green,
       blue: blue,
       opacity: alpha
-      //      opacity: 1.0
-      //      opacity: includesAlpha ? alpha : 1.0
     )
   }
-  
+
   public init(
     resolved: Color.Resolved,
   ) {
@@ -61,7 +42,6 @@ public struct RGBColour: Identifiable, Equatable, Hashable, Sendable, Codable, C
       alpha: resolved.opacity.toDouble)
   }
 
-  
   public init(
     red: Double,
     green: Double,
@@ -81,22 +61,31 @@ public struct RGBColour: Identifiable, Equatable, Hashable, Sendable, Codable, C
       environment: environment
     )
   }
-  
-//  public init(from hsv: HSVColour) {
-//    self = Self.from(hsv)
-//  }
+
+  //  public init(from hsv: HSVColour) {
+  //    self = Self.from(hsv)
+  //  }
 
 }
 
 extension RGBColour {
-  
-//  public func converting<T: ColourModel>(to type: T.Type) -> T {
-//    return T.from(self)
-//  }
-//  
-//  public static func from<T: ColourModel>(_ other: T) -> RGBColour {
-//    return RGBColour(resolved: other.resolvedColor)
-//  }
+
+  public init(
+    r: Double,
+    g: Double,
+    b: Double,
+    a: Double = 1.0,
+  ) {
+    self.init(red: r, green: g, blue: b, alpha: a)
+  }
+
+  //  public func converting<T: ColourModel>(to type: T.Type) -> T {
+  //    return T.from(self)
+  //  }
+  //
+  //  public static func from<T: ColourModel>(_ other: T) -> RGBColour {
+  //    return RGBColour(resolved: other.resolvedColor)
+  //  }
 
   //  public func converting
 
@@ -135,46 +124,46 @@ extension RGBColour {
     )
   }
 
-//  public func toHSV() -> HSVColour {
-//    let result = HSVColour(fromRGB: self)
-//    return result
-//  }
+  //  public func toHSV() -> HSVColour {
+  //    let result = HSVColour(fromRGB: self)
+  //    return result
+  //  }
 
-//  public init(fromHSV hsv: HSVColour) {
-//
-//    let h = Self.normalisedHue(hsv.hue)
-//    let s = hsv.saturation
-//    let v = hsv.brightness
-//    let a = hsv.alpha
-//
-//    let c = v * s
-//    let x = c * (1 - abs((h * 6).truncatingRemainder(dividingBy: 2) - 1))
-//    let m = v - c
-//
-//    let hSegment = Int((h * 6).clamped(toIntRange: 0..<6))
-//
-//    let (r1, g1, b1): (Double, Double, Double)
-//
-//    switch hSegment {
-//      case 0: (r1, g1, b1) = (c, x, 0)
-//      case 1: (r1, g1, b1) = (x, c, 0)
-//      case 2: (r1, g1, b1) = (0, c, x)
-//      case 3: (r1, g1, b1) = (0, x, c)
-//      case 4: (r1, g1, b1) = (x, 0, c)
-//      case 5: (r1, g1, b1) = (c, 0, x)
-//      default: (r1, g1, b1) = (0, 0, 0)
-//    }
-//
-//    self.init(
-//      red: (r1 + m).clamped(to: 0...1),
-//      green: (g1 + m).clamped(to: 0...1),
-//      blue: (b1 + m).clamped(to: 0...1),
-//      alpha: a
-//    )
-//  }
-//
-//  static func normalisedHue(_ h: Double) -> Double {
-//    let wrapped = h.truncatingRemainder(dividingBy: 1)
-//    return wrapped < 0 ? wrapped + 1 : wrapped
-//  }
+  //  public init(fromHSV hsv: HSVColour) {
+  //
+  //    let h = Self.normalisedHue(hsv.hue)
+  //    let s = hsv.saturation
+  //    let v = hsv.brightness
+  //    let a = hsv.alpha
+  //
+  //    let c = v * s
+  //    let x = c * (1 - abs((h * 6).truncatingRemainder(dividingBy: 2) - 1))
+  //    let m = v - c
+  //
+  //    let hSegment = Int((h * 6).clamped(toIntRange: 0..<6))
+  //
+  //    let (r1, g1, b1): (Double, Double, Double)
+  //
+  //    switch hSegment {
+  //      case 0: (r1, g1, b1) = (c, x, 0)
+  //      case 1: (r1, g1, b1) = (x, c, 0)
+  //      case 2: (r1, g1, b1) = (0, c, x)
+  //      case 3: (r1, g1, b1) = (0, x, c)
+  //      case 4: (r1, g1, b1) = (x, 0, c)
+  //      case 5: (r1, g1, b1) = (c, 0, x)
+  //      default: (r1, g1, b1) = (0, 0, 0)
+  //    }
+  //
+  //    self.init(
+  //      red: (r1 + m).clamped(to: 0...1),
+  //      green: (g1 + m).clamped(to: 0...1),
+  //      blue: (b1 + m).clamped(to: 0...1),
+  //      alpha: a
+  //    )
+  //  }
+  //
+  //  static func normalisedHue(_ h: Double) -> Double {
+  //    let wrapped = h.truncatingRemainder(dividingBy: 1)
+  //    return wrapped < 0 ? wrapped + 1 : wrapped
+  //  }
 }

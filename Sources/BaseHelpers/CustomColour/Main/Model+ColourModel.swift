@@ -12,13 +12,13 @@ public protocol ColourModel {
   var componentRange: ClosedRange<Double> { get }
   var nativeColour: Color { get }
   var alpha: Double { get set }
-  var resolvedColor: Color.Resolved { get }
+//  var resolvedColor: Color.Resolved { get }
   mutating func opacity(_ opacity: Double)
   static func gray(_ brightness: Double, alpha: Double) -> Self
   
-  func converting<T: ColourModel>(to type: T.Type) -> T
+//  func converting<T: ColourModel>(to type: T.Type) -> T
 //  static func from<T: ColourModel>(_ other: T) -> Self
-  init<T: ColourModel>(from other: T)
+//  init<T: ColourModel>(from other: T)
   
   var colourSpace: ColourSpace { get }
   
