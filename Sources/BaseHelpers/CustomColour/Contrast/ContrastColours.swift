@@ -19,37 +19,40 @@ extension RGBColour {
 
   // MARK: - Convenient Overloads
 
-  public func contrastColour(withPreset preset: ContrastPreset, isMonochrome: Bool = false) -> RGBColour {
+  public func contrastColour(
+    withPreset preset: ContrastPreset,
+    isMonochrome: Bool = false
+  ) -> RGBColour {
     let lumaAwareAdjustment = LuminanceAwareAdjustment.contrastPreset(preset, isMonochrome: isMonochrome)
     return self.contrastColour(using: lumaAwareAdjustment)
   }
 
-  public func contrastColour(
-    sat: Double,
-    brightness: Double,
-    hue: Double
-  ) -> RGBColour {
-    let hsvAdjustment = HSVAdjustment(h: hue, s: sat, b: brightness)
-    let lumaAwareAdjustment = LuminanceAwareAdjustment(
-      symmetric: hsvAdjustment
-    )
-    return self.contrastColour(using: lumaAwareAdjustment)
-  }
-
-  public func contrastColour(
-    symmetricAdjustment: HSVAdjustment
-  ) -> RGBColour {
-    let adjustment = LuminanceAwareAdjustment(symmetric: symmetricAdjustment)
-    return self.contrastColour(using: adjustment)
-  }
-
-  public func contrastColour(
-    light: HSVAdjustment,
-    dark: HSVAdjustment
-  ) -> RGBColour {
-    let adjustment = LuminanceAwareAdjustment(light: light, dark: dark)
-    return self.contrastColour(using: adjustment)
-  }
+//  public func contrastColour(
+//    sat: Double,
+//    brightness: Double,
+//    hue: Double
+//  ) -> RGBColour {
+//    let hsvAdjustment = HSVAdjustment(hue: hue, saturation: sat, brightness: brightness)
+//    let lumaAwareAdjustment = LuminanceAwareAdjustment(
+//      symmetric: hsvAdjustment
+//    )
+//    return self.contrastColour(using: lumaAwareAdjustment)
+//  }
+//
+//  public func contrastColour(
+//    symmetricAdjustment: HSVAdjustment
+//  ) -> RGBColour {
+//    let adjustment = LuminanceAwareAdjustment(symmetric: symmetricAdjustment)
+//    return self.contrastColour(using: adjustment)
+//  }
+//
+//  public func contrastColour(
+//    light: HSVAdjustment,
+//    dark: HSVAdjustment
+//  ) -> RGBColour {
+//    let adjustment = LuminanceAwareAdjustment(light: light, dark: dark)
+//    return self.contrastColour(using: adjustment)
+//  }
 }
 
 public enum ContrastPreset: String, CaseIterable, Identifiable {
@@ -78,12 +81,19 @@ public enum ContrastPreset: String, CaseIterable, Identifiable {
     }
   }
 
-  public func adjustment(
-    amount: Double,
-    isMonochrome: Bool
-  ) -> HSVAdjustment {
-    
+  public func adjustment(for type: HSVLuminanceType) -> HSVAdjustment {
+    switch type {
+      case .light: HSVAdjustment.forLightColours(contrastAmount: self.contrastValue)
+      case .dark: HSVAdjustment.forDarkColours(contrastAmount: self.contrastValue)
+    }
   }
+  
+//  public func adjustment(
+//    amount: Double,
+//    isMonochrome: Bool
+//  ) -> HSVAdjustment {
+//    
+//  }
   
 //  public func level(isMonochrome: Bool) -> ContrastLevel {
 //    return ContrastLevel(

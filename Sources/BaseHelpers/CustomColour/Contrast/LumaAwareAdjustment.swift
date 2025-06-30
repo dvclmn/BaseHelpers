@@ -63,8 +63,10 @@ public struct LuminanceAwareAdjustment: Sendable {
     isMonochrome: Bool
   ) -> Self {
     return LuminanceAwareAdjustment(
-      light: preset.level(isMonochrome: isMonochrome).forLightColours,
-      dark: preset.level(isMonochrome: isMonochrome).forDarkColours
+      light: preset.adjustment(for: .light),
+      dark: preset.adjustment(for: .dark)
+//      light: preset.level(isMonochrome: isMonochrome).forLightColours,
+//      dark: preset.level(isMonochrome: isMonochrome).forDarkColours
     )
   }
 }

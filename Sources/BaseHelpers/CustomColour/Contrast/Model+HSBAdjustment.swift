@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum HSVLuminanceType {
+public enum HSVLuminanceType {
   case dark
   case light
 
@@ -57,7 +57,7 @@ extension HSVAdjustment {
   public static func forLightColours(contrastAmount: Double) -> HSVAdjustment {
     return HSVAdjustment.zero.interpolated(forType: .light, amount: contrastAmount)
   }
-  
+
   public static func forDarkColours(contrastAmount: Double) -> HSVAdjustment {
     return HSVAdjustment.zero.interpolated(forType: .dark, amount: contrastAmount)
   }
