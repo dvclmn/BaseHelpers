@@ -10,7 +10,7 @@ import Foundation
 extension RGBColour {
 
   // MARK: - Main Contrast method
-  public func contrastColour(using adjustment: LuminanceAwareAdjustment) -> RGBColour {
+  private func contrastColour(using adjustment: LuminanceAwareAdjustment) -> RGBColour {
     let hsvColour = HSVColour(fromRGB: self)
     let adjustmentToApply = adjustment.adjustment(forLuminance: luminance)
     let newHSV: HSVColour = hsvColour.applying(adjustment: adjustmentToApply)
@@ -19,8 +19,8 @@ extension RGBColour {
 
   // MARK: - Convenient Overloads
   
-  public func contrastColour(withPreset preset: ContrastPreset) -> RGBColour {
-    let lumaAwareAdjustment = LuminanceAwareAdjustment.contrastPreset(preset)
+  public func contrastColour(withPreset preset: ContrastPreset, isMonochrome: Bool = false) -> RGBColour {
+    let lumaAwareAdjustment = LuminanceAwareAdjustment.contrastPreset(preset, isMonochrome: isMonochrome)
     return self.contrastColour(using: lumaAwareAdjustment)
   }
   
@@ -52,25 +52,6 @@ extension RGBColour {
   }
 }
 
-//public struct ContrastLevel {
-//  /// Scalar from 0 (no change) to 1 (maximum contrast)
-//  public var amount: Double
-//  
-//  public init(amount: Double) {
-//    self.amount = amount.clamped(to: 0...1)
-//  }
-//  
-//  private static let maxDarkAdjustment = HSVAdjustment(h: -17, s: 0.08, b: 0.7)
-//  private static let maxLightAdjustment = HSVAdjustment(h: -14, s: 0.2, b: -0.7)
-//  
-////  public var forDarkColours: HSVAdjustment {
-////    .zero.interpolated(to: Self.maxDarkAdjustment, amount: amount)
-////  }
-//  
-////  public var forLightColours: HSVAdjustment {
-////    .zero.interpolated(to: Self.maxLightAdjustment, amount: amount)
-////  }
-//}
 
 public enum ContrastPreset: String, CaseIterable, Identifiable {
   case subtle

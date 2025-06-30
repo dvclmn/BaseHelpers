@@ -13,11 +13,12 @@ extension Swatch {
   
   public func toRGB(
     _ environment: EnvironmentValues,
-    withPreset preset: ContrastPreset? = nil
+    withPreset preset: ContrastPreset? = nil,
+    isMonochrome: Bool = false
   ) -> RGBColour {
     let rgb = RGBColour(colour: self.colour, environment: environment)
     if let preset {
-      return rgb.contrastColour(withPreset: preset)
+      return rgb.contrastColour(withPreset: preset, isMonochrome: isMonochrome)
     } else {
       return rgb
     }
@@ -26,13 +27,15 @@ extension Swatch {
   }
   public func toHSV(
     _ environment: EnvironmentValues,
-    withPreset preset: ContrastPreset? = nil
+    withPreset preset: ContrastPreset? = nil,
+    isMonochrome: Bool = false
   ) -> HSVColour {
 //    let hsv = HSVColour(colour: self.colour, environment: environment)
     let baseRgb = RGBColour(colour: self.colour, environment: environment)
     let adjustedRGB: RGBColour
     if let preset {
-       adjustedRGB = baseRgb.contrastColour(withPreset: preset)
+      
+       adjustedRGB = baseRgb.contrastColour(withPreset: preset, isMonochrome: isMonochrome)
     } else {
       adjustedRGB = baseRgb
     }

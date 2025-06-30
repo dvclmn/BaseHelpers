@@ -35,11 +35,20 @@ public struct ContrastLevel: Sendable {
     
     static let zero = HSVComponents(hueDegrees: 0, saturation: 0, brightness: 0)
     
-    func interpolated(to: HSVComponents, amount: Double) -> HSVComponents {
-      let saturation: Double
-      .init(
+    func interpolated(
+      to: HSVComponents,
+      amount: Double,
+      isMonochrome: Bool
+    ) -> HSVComponents {
+      
+//      let lightSat: Double = 0.2
+//      let darkSat: Double = 0.2
+      let monochromeSat: Double = 0.2
+      let newSaturation: Double = isMonochrome ? monochromeSat : (saturation + (to.saturation - saturation) * amount)
+      
+      return HSVComponents(
         hueDegrees: hueDegrees + (to.hueDegrees - hueDegrees) * amount,
-        saturation: saturation + (to.saturation - saturation) * amount,
+        saturation: newSaturation,
         brightness: brightness + (to.brightness - brightness) * amount
       )
     }
@@ -70,14 +79,14 @@ public struct ContrastLevel: Sendable {
   public var forDarkColours: HSVAdjustment {
     HSVComponents
       .zero
-      .interpolated(to: Self.maxDark, amount: amount)
+      .interpolated(to: Self.maxDark, amount: amount, isMonochrome: self.isMonochrome)
       .asAdjustment(using: { .relativeDegrees($0) })
   }
   
   public var forLightColours: HSVAdjustment {
     HSVComponents
       .zero
-      .interpolated(to: Self.maxLight, amount: amount)
+      .interpolated(to: Self.maxLight, amount: amount, isMonochrome: self.isMonochrome)
       .asAdjustment(using: { .relativeDegrees($0) })
   }
 }
