@@ -7,7 +7,11 @@
 
 import Foundation
 
-public enum PrimitiveColour: String, Identifiable, CaseIterable, Sendable {
+public enum PrimitiveColour: String, Identifiable, CaseIterable, Sendable, Comparable {
+  public static func < (lhs: PrimitiveColour, rhs: PrimitiveColour) -> Bool {
+    lhs.sortIndex < rhs.sortIndex
+  }
+  
   case red
   case orange
   case yellow
@@ -20,6 +24,10 @@ public enum PrimitiveColour: String, Identifiable, CaseIterable, Sendable {
   public var id: String {
     rawValue
   }
+  
+//  public var sortString: String {
+//
+//  }
   
   public var sortIndex: Int {
     PrimitiveColour.allCases.firstIndex(of: self) ?? 0

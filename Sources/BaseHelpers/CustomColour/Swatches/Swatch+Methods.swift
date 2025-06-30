@@ -9,35 +9,19 @@ import SwiftUI
 
 extension Swatch {
 
-  public var primitivecolour: PrimitiveColour? {
-    guard let match = PrimitiveColour.allCases.first(where: { $0.swatches.contains(self) }) else {
-      return nil
-    }
-    //      let match = PrimitiveColour.allCases.compactMap { $0.swatches.contains(self) ? self : nil }
-    //      let match = PrimitiveColour.allCases.first { $0.swatches.contains(self) }
-
-    return match
-    //      return PrimitiveColour.allCases.map(\.swatches)
-  }
-
-  //  public var primitiveColourGroup: PrimitiveColour {
-  //    switch self {
-  //      case .asciiBlack,
-  //        .asciiGrey,
-  //        .asciiWhite,
-  //        .asciiWarmWhite,
-  //        .whiteOff,
-  //        .whiteBone,
-  //        .whiteTrue:
-  //        return .monochrome
-  //
-  //      case .blue50,
-  //          .blue
-  //
-  //    }
-  //  }
-
   public var id: String { rawValue }
+  
+  public func toRGB(
+    _ environment: EnvironmentValues,
+    withPreset preset: ContrastPreset? = nil
+  ) -> RGBColour {
+    let rgb = RGBColour(colour: self.colour, environment: environment)
+    if let preset {
+      return rgb.contrastColour(using: .contrastPreset(.))
+    }
+    return RGBColour(colour: self.colour, environment: environment)
+//    return RGBColour(fromSwatch: self, environment: environment)
+  }
 
   public var colour: Color {
     Color("swatch/\(rawValue)", bundle: .module)
@@ -50,15 +34,6 @@ extension Swatch {
     return self.groupName + String(number) + (isVibrant ? "V" : "")
   }
 
-  public var isVibrant: Bool {
-    return rawValue.hasSuffix("V")
-  }
-
-  public var colourShadeNumber: Int? {
-    let digits = rawValue.filter { $0.isNumber }
-    return digits.isEmpty ? nil : Int(digits)
-  }
-
   public var type: SwatchType {
     switch true {
       case rawValue.hasPrefix("white"): return .shade(.white)
@@ -69,21 +44,18 @@ extension Swatch {
     }
   }
 
-  //  public var colourShadeLabel: String {
-
-  //    guard let numberString = swatch.colourShadeNumber?.toString else { return "" }
-  //    return swatch.isVibrant ? numberString + "V" : numberString
-  //  }
-
+  // MARK: - Grouping
+  public var colourShadeNumber: Int? {
+    let digits = rawValue.filter { $0.isNumber }
+    return Int(digits)
+  }
   public var groupName: String {
-    let groupString: String = rawValue.prefix(while: { $0.isLetter }).lowercased()
     switch self.type {
       case .base:
-        return groupString
+        return rawValue.prefix(while: { $0.isLetter }).lowercased()
       default:
         return self.type.name
     }
-    //    fiefibef
   }
 
   public static func grouped(includesAscii: Bool = false) -> [String: [Self]] {
@@ -98,7 +70,17 @@ extension Swatch {
     let grouped = Dictionary(grouping: swatches) { $0.groupName }
     return grouped
   }
+  
+  /// May need to revert back to returning an optional, without the default of `red`
+  public var primitiveColour: PrimitiveColour {
+    return PrimitiveColour.allCases.first(where: { $0.swatches.contains(self) }) ?? .red
+  }
 
+  public var isVibrant: Bool {
+    return rawValue.hasSuffix("V")
+  }
+
+  // MARK: - Older
   public func colour(_ brightnessAdjustment: BrightnessAdjustment, amount: CGFloat) -> some View {
     let newColour = colour.brightness(brightnessAdjustment.adjustment(with: amount))
     return newColour
@@ -115,10 +97,6 @@ extension Swatch {
       return swatchList[index]
     }
   }
-
-  //  public static func swatchesFromIndices(_ indices: [Int], swatchList: [Swatch]) -> [Swatch] {
-  //    indices.compactMap { swatchList[$0] }
-  //  }
 
   public static func printSwatchNames(_ list: [Swatch]) -> String {
     let names = list.map { $0.rawValue }

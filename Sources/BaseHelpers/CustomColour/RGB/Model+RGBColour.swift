@@ -13,6 +13,8 @@ public struct RGBColour: Identifiable, Equatable, Hashable, Sendable, Codable, C
   public var green: Double
   public var blue: Double
   public var alpha: Double
+  
+  public var originalSwatch: Swatch?
 
   public init(
     colour: Color,
@@ -55,12 +57,16 @@ public struct RGBColour: Identifiable, Equatable, Hashable, Sendable, Codable, C
     self.alpha = alpha
   }
 
-  public init(fromSwatch swatch: Swatch, environment: EnvironmentValues) {
-    self.init(
-      colour: swatch.colour,
-      environment: environment
-    )
-  }
+//  public init(
+//    fromSwatch swatch: Swatch,
+//    environment: EnvironmentValues
+//  ) {
+//    self.init(
+//      colour: swatch.colour,
+//      environment: environment
+//    )
+//    self.originalSwatch = swatch
+//  }
 
 }
 

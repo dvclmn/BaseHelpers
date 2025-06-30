@@ -18,6 +18,12 @@ extension RGBColour {
   }
 
   // MARK: - Convenient Overloads
+  
+  public func contrastColour(withPreset preset: ContrastPreset) -> RGBColour {
+    let lumaAwareAdjustment = LuminanceAwareAdjustment.contrastPreset(preset)
+    return self.contrastColour(using: lumaAwareAdjustment)
+  }
+  
   public func contrastColour(
     sat: Double,
     brightness: Double,
@@ -46,11 +52,13 @@ extension RGBColour {
   }
 }
 
-public enum ContrastPreset {
+public enum ContrastPreset: String, CaseIterable, Identifiable {
   case subtle
   case moderate
   case standard
   case highContrast
+  
+  public var id: String { rawValue }
 
   public var forDarkColours: HSVAdjustment {
     switch self {

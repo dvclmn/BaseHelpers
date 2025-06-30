@@ -7,20 +7,20 @@
 
 import Foundation
 
-public extension Sequence where Element: Identifiable {
-  
-  func mostRecent<T: Comparable>(
+extension Sequence where Element: Identifiable {
+
+  public func mostRecent<T: Comparable>(
     by dateKeyPath: KeyPath<Element, T>
   ) -> Element? {
-    
+
     self.max(by: { $0[keyPath: dateKeyPath] < $1[keyPath: dateKeyPath] })
-    
+
   }
-  
+
 }
 
-public extension Sequence {
-  func summarise<T: CustomStringConvertible>(
+extension Sequence {
+  public func summarise<T: CustomStringConvertible>(
     key: KeyPath<Element, T>,
     delimiter: Character? = ","
   ) -> String {
@@ -36,4 +36,19 @@ public extension Sequence {
         result += value
       }
   }
+
+  public func sorted<T: Comparable>(
+    by keyPath: KeyPath<Element, T>,
+    using comparator: (T, T) -> Bool = (<)
+  ) -> [Element] {
+    sorted { a, b in
+      comparator(a[keyPath: keyPath], b[keyPath: keyPath])
+    }
+  }
+  
+//  public func grouping(by keyPath: KeyPath<Element, T>) -> Dictionary<Self> {
+//    
+//  }
+//  public func grouping(by keyPath: KeyPath<Element, Int>) ->
+
 }
