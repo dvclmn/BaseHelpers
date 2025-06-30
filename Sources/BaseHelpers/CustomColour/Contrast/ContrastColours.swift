@@ -12,7 +12,7 @@ extension RGBColour {
   // MARK: - Main Contrast method
   private func contrastColour(using adjustment: LuminanceAwareAdjustment) -> RGBColour {
     let hsvColour = HSVColour(fromRGB: self)
-    let adjustmentToApply = adjustment.adjustment(forLuminance: luminance)
+    let adjustmentToApply = adjustment.adjustment(forLuminance: self.luminance)
     let newHSV: HSVColour = hsvColour.applying(adjustment: adjustmentToApply)
     return RGBColour(fromHSV: newHSV)
   }
@@ -76,7 +76,7 @@ public enum ContrastPreset: String, CaseIterable, Identifiable {
     switch self {
       case .subtle: 0.2
       case .moderate: 0.4
-      case .standard: 0.7
+      case .standard: 0.75
       case .highContrast: 1.0
     }
   }

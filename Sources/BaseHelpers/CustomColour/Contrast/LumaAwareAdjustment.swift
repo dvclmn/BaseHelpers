@@ -18,7 +18,7 @@ public struct LuminanceAwareAdjustment: Sendable {
   public init(
     light: HSVAdjustment,
     dark: HSVAdjustment,
-    luminanceTheshold: Double = 0.5
+    luminanceTheshold: Double = 0.4
   ) {
     self.light = light
     self.dark = dark
