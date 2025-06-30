@@ -70,44 +70,4 @@ extension HSVColour {
       alpha: alpha
     )
   }
-
-  //  public func toRGBA() -> RGBColour {
-  //    let result = RGBColour(fromHSV: self)
-  //    return result
-  //  }
-
-  //  public init(fromRGB rgba: RGBColour) {
-  //    let r = rgba.red
-  //    let g = rgba.green
-  //    let b = rgba.blue
-  //    let a = rgba.alpha
-  //
-  //    let maxVal = max(r, g, b)
-  //    let minVal = min(r, g, b)
-  //    let delta = maxVal - minVal
-  //
-  //    var h: Double = 0
-  //    let s: Double = (maxVal == 0) ? 0 : (delta / maxVal)
-  //    let v: Double = maxVal
-  //
-  //    if delta != 0 {
-  //      if maxVal == r {
-  //        h = ((g - b) / delta).truncatingRemainder(dividingBy: 6)
-  //      } else if maxVal == g {
-  //        h = ((b - r) / delta) + 2
-  //      } else {
-  //        h = ((r - g) / delta) + 4
-  //      }
-  //
-  //      h /= 6
-  //      if h < 0 { h += 1 }
-  //    }
-  //
-  //    self.init(
-  //      hue: h,
-  //      saturation: s.clamped(to: 0...1),
-  //      brightness: v.clamped(to: 0...1),
-  //      alpha: a
-  //    )
-  //  }
 }

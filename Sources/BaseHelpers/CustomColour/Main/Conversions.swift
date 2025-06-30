@@ -17,24 +17,23 @@ extension HSVColour {
 
     let maxV: CGFloat = max(rd, max(gd, bd))
     let minV: CGFloat = min(rd, min(gd, bd))
+    let delta: CGFloat = maxV - minV
+    
     var h: CGFloat = 0
     var s: CGFloat = 0
     let b: CGFloat = maxV
 
-    let d: CGFloat = maxV - minV
-
-    s = maxV == 0 ? 0 : d / maxV
-//    s = maxV == 0 ? 0 : d / minV
+    s = (maxV == 0) ? 0 : (delta / maxV)
 
     if maxV == minV {
       h = 0
     } else {
       if maxV == rd {
-        h = (gd - bd) / d + (gd < bd ? 6 : 0)
+        h = (gd - bd) / delta + (gd < bd ? 6 : 0)
       } else if maxV == gd {
-        h = (bd - rd) / d + 2
+        h = (bd - rd) / delta + 2
       } else if maxV == bd {
-        h = (rd - gd) / d + 4
+        h = (rd - gd) / delta + 4
       }
 
       h /= 6
@@ -54,9 +53,9 @@ extension RGBColour {
 
   public init(fromHSV hsv: HSVColour) {
 
-    var r: CGFloat
-    var g: CGFloat
-    var b: CGFloat
+    let r: CGFloat
+    let g: CGFloat
+    let b: CGFloat
 
     let i = Int(hsv.hue * 6)
     let f = hsv.hue * 6 - CGFloat(i)
