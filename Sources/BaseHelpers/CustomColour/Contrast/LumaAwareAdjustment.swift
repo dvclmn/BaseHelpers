@@ -26,20 +26,20 @@ public struct LuminanceAwareAdjustment: Sendable {
   }
 
   /// Provide a *single* adjustment, which auto-inverts for Dark colours
-  public init(
-    symmetric adjustment: HSVAdjustment,
-    luminanceTheshold: Double = 0.5
-  ) {
-    self.light = adjustment
-    
-    self.dark = HSVAdjustment(
-      hueStrategy: adjustment.hueStrategy.reversed,
-      saturation: -adjustment.saturation,
-      brightness: -adjustment.brightness
-    )
-    
-    self.luminanceTheshold = luminanceTheshold
-  }
+//  public init(
+//    symmetric adjustment: HSVAdjustment,
+//    luminanceTheshold: Double = 0.5
+//  ) {
+//    self.light = adjustment
+//    
+//    self.dark = HSVAdjustment(
+//      hueStrategy: adjustment.hueStrategy.reversed,
+//      saturation: -adjustment.saturation,
+//      brightness: -adjustment.brightness
+//    )
+//    
+//    self.luminanceTheshold = luminanceTheshold
+//  }
   //  public init(
 //    symmetric adjustment: HSVAdjustment,
 //    luminanceTheshold: Double = 0.5
