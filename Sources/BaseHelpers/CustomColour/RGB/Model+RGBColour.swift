@@ -14,7 +14,7 @@ public struct RGBColour: Identifiable, Equatable, Hashable, Sendable, Codable, C
   public var blue: Double
   public var alpha: Double
   
-  public var originalSwatch: Swatch?
+//  public var originalSwatch: Swatch?
 
   public init(
     colour: Color,

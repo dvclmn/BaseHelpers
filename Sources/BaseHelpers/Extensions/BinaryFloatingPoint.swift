@@ -8,20 +8,24 @@
 import Foundation
 
 extension BinaryFloatingPoint {
-  
+
   public func hueWrapped() -> Self {
     let value = self.truncatingRemainder(dividingBy: 1.0)
     return value < 0 ? value + 1.0 : value
   }
-  
+
   public var toDouble: Double {
     return Double(self)
   }
-  
+
   public var toFloat: Float {
     return Float(self)
   }
-  
+
+  public func clamped(to range: ClosedRange<Self>) -> Self {
+    return min(max(self, range.lowerBound), range.upperBound)
+  }
+
   public func clamped(toIntRange range: Range<Int>) -> Self {
     return clamped(Self(range.lowerBound), Self(range.upperBound))
   }
@@ -43,7 +47,7 @@ extension BinaryFloatingPoint {
     self.displayString(0)
     //    floatToString(value: self, places: 0)
   }
-  
+
   public init(
     _ value: Self,
     removingZoom zoom: Self,
@@ -57,58 +61,77 @@ extension BinaryFloatingPoint {
   public func removingZoom(_ zoom: Self) -> Self {
     return self / zoom
   }
-  
-  
-  
+
+  /// Maps `self` (e.g. a size) into a derived value (e.g. corner radius or padding),
+  /// favouring non-linear mapping via a curve.
+  ///
+  /// - Parameters:
+  ///   - outputRange: The target range for the derived value.
+  ///   - inputRange: The expected bounds of the size input.
+  ///   - curve: A non-linear adjustment function, like `.squareRoot()`, or a custom easing.
+  ///   - clamped: Whether to clamp input to the input range.
+  /// - Returns: A derived value smoothly mapped from size.
+  public func mappedNonLinearly(
+    to outputRange: ClosedRange<Self>,
+    from inputRange: ClosedRange<Self> = 0...CGFloat.infinity,
+    using curve: (Self) -> Self = { $0 },
+    clamped: Bool = true
+  ) -> Self {
+    let clampedSelf = clamped ? self.clamped(to: inputRange) : self
+    let inputSpan = inputRange.upperBound - inputRange.lowerBound
+    let normalised = (clampedSelf - inputRange.lowerBound) / inputSpan
+    let curved = curve(normalised)
+    let outputSpan = outputRange.upperBound - outputRange.lowerBound
+    return outputRange.lowerBound + curved * outputSpan
+  }
+
   /// Adjusts a value to respond partially to zoom level.
   /// - Parameters:
   ///   - zoom: The current zoom factor (1.0 is default, >1.0 is zoomed in).
   ///   - responsiveness: 0 = fixed size, 1 = fully zoom-scaled, 0.5 = halfway.
   ///   - clampedTo: Optional range to constrain the final adjusted value.
-//  public func adjustedForZoom(
-//    _ zoom: Self,
-//    sensitivity: Self = 0.5,
-//  ) -> Self {
-//    let clampedSensitivity = Double(sensitivity.clamped(to: 0...1))
-//    let adjusted = self * Self(pow(Double(zoom), clampedSensitivity - 1))
-//    return adjusted
-//  }
-  
-//  public static func adjustedForZoom(
-//    value: Self,
-//    zoom: Self,
-//    sensitivity: Self = 0.5,
-//    //    range: ClosedRange<Self>? = nil
-//  ) -> Self {
-//    let clampedSensitivity = Double(sensitivity.clamped(to: 0...1))
-//    let adjusted = value * Self(pow(Double(zoom), clampedSensitivity - 1))
-//    //    if let range = range {
-//    //      return adjusted.clamped(to: range)
-//    //    } else {
-//    //      return adjusted
-//    //    }
-//    return adjusted
-//  }
-  
+  //  public func adjustedForZoom(
+  //    _ zoom: Self,
+  //    sensitivity: Self = 0.5,
+  //  ) -> Self {
+  //    let clampedSensitivity = Double(sensitivity.clamped(to: 0...1))
+  //    let adjusted = self * Self(pow(Double(zoom), clampedSensitivity - 1))
+  //    return adjusted
+  //  }
+
+  //  public static func adjustedForZoom(
+  //    value: Self,
+  //    zoom: Self,
+  //    sensitivity: Self = 0.5,
+  //    //    range: ClosedRange<Self>? = nil
+  //  ) -> Self {
+  //    let clampedSensitivity = Double(sensitivity.clamped(to: 0...1))
+  //    let adjusted = value * Self(pow(Double(zoom), clampedSensitivity - 1))
+  //    //    if let range = range {
+  //    //      return adjusted.clamped(to: range)
+  //    //    } else {
+  //    //      return adjusted
+  //    //    }
+  //    return adjusted
+  //  }
+
   /// Clamps the value to the given range.
-//  func clamped(to range: ClosedRange<Self>) -> Self {
-//    return min(max(self, range.lowerBound), range.upperBound)
-//  }
-  
+  //  func clamped(to range: ClosedRange<Self>) -> Self {
+  //    return min(max(self, range.lowerBound), range.upperBound)
+  //  }
 
-//  /// Adjusts a value to respond partially to zoom level.
-//  /// - Parameters:
-//  ///   - zoom: The current zoom factor (1.0 is default, >1.0 is zoomed in).
-//  ///   - responsiveness: 0 = fixed size, 1 = fully zoom-scaled, 0.5 = halfway.
-//  public func adjustedForZoom(
-//    _ zoom: Self,
-//    sensitivity: Self = 0.5
-//  ) -> Self {
-//    let clampedResponse = min(max(sensitivity, 0), 1)
-//    let adjusted: Self = self * Self(pow(Double(zoom), Double(clampedResponse) - 1))
-//    return adjusted
-//  }
-
+  //  /// Adjusts a value to respond partially to zoom level.
+  //  /// - Parameters:
+  //  ///   - zoom: The current zoom factor (1.0 is default, >1.0 is zoomed in).
+  //  ///   - responsiveness: 0 = fixed size, 1 = fully zoom-scaled, 0.5 = halfway.
+  //  public func adjustedForZoom(
+  //    _ zoom: Self,
+  //    sensitivity: Self = 0.5
+  //  ) -> Self {
+  //    let clampedResponse = min(max(sensitivity, 0), 1)
+  //    let adjusted: Self = self * Self(pow(Double(zoom), Double(clampedResponse) - 1))
+  //    return adjusted
+  //  }
 
   public func toPercentString(within range: ClosedRange<Self>) -> String {
     let normalised: Double = Double(self.normalised(from: range))
@@ -133,11 +156,10 @@ extension BinaryFloatingPoint {
     /// Approximate previous Fibonacci number using the inverse of the golden ratio
     return (self + prevFib) / 2/// Midpoint between current and previous
   }
-  
+
   public var halved: Self {
     self / 2
   }
-
 
   public var constrainedOpacity: Self {
     return min(1.0, max(0.0, self))
@@ -147,21 +169,20 @@ extension BinaryFloatingPoint {
     self > 0
   }
 
-  public func normalised(
-    against value: Double,
-    isClamped: Bool = true
-  ) -> Double {
+//  public func normalised(
+//    against value: Double,
+//    isClamped: Bool = true
+//  ) -> Double {
+//
+//    guard let doubleValue = self as? Double else {
+//      return CGFloat(self) / value
+//    }
+//    return doubleValue / value
+//  }
 
-    guard let doubleValue = self as? Double else {
-      return CGFloat(self) / value
-    }
-    return doubleValue / value
+  public var toFinite: Self {
+    self.clamped(.zero, .infinity)
   }
-
-  public var toFinite: Double {
-    Double(self.clamped(.zero, .infinity))
-  }
-
 
   public func padLeading(
     maxDigits: Int = 3,
@@ -192,23 +213,23 @@ extension BinaryFloatingPoint {
   public func height(for aspectRatio: Self) -> Self {
     return self / aspectRatio
   }
-  
+
   public var degreesToRadians: Self {
     self * .pi / 180
   }
-  
+
   public var radiansToDegrees: Self {
     self * 180 / .pi
   }
-  
+
   /// Returns the shortest angular distance between two angles
   public static func angleDelta(_ angle1: Self, _ angle2: Self) -> Self {
     var delta = angle1 - angle2
-    
+
     // Normalize to [-π, π] range
     while delta > .pi { delta -= 2 * .pi }
     while delta < -.pi { delta += 2 * .pi }
-    
+
     return abs(delta)
   }
 }
