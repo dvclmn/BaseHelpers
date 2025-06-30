@@ -58,14 +58,23 @@ public struct HSVColour: Equatable, Sendable, ColourModel {
 extension HSVColour {
   
   public var resolvedColor: Color.Resolved {
-    // Convert HSV to resolved color
-    let rgb = RGBColour(from: self)
-    return Color.Resolved(
-      red: rgb.red.toFloat,
-      green: rgb.green.toFloat,
-      blue: rgb.blue.toFloat,
-      opacity: rgb.alpha.toFloat
+    /// Convert HSV to resolved color
+    let rgb = RGBC
+//    let rgb = RGBColour(from: self)
+    let thing = Color.Resolved(
+      colorSpace: self.colourSpace.nativeColorSpace,
+      red: <#T##Float#>,
+      green: <#T##Float#>,
+      blue: <#T##Float#>,
+      opacity: <#T##Float#>
     )
+    
+//    return Color.Resolved(
+//      red: rgb.red.toFloat,
+//      green: rgb.green.toFloat,
+//      blue: rgb.blue.toFloat,
+//      opacity: rgb.alpha.toFloat
+//    )
   }
   
   public func converting<T: ColourModel>(to type: T.Type) -> T {
