@@ -10,12 +10,10 @@ import Foundation
 extension RGBColour {
 
   // MARK: - Main Contrast method
-  private func contrastColour(using adjustment: LuminanceAwareAdjustment) -> RGBColour {
-    let hsvColour = HSVColour(fromRGB: self)
-    let adjustmentToApply = adjustment.adjustment(forLuminance: self.luminance)
-    let newHSV: HSVColour = hsvColour.applying(adjustment: adjustmentToApply)
-    return RGBColour(fromHSV: newHSV)
-  }
+//  private func
+//  private func contrastColour(withLuminance luminance: LuminanceLevel) -> RGBColour {
+//  private func contrastColour(using adjustment: LuminanceAwareAdjustment) -> RGBColour {
+//  }
 
   // MARK: - Convenient Overloads
 
@@ -23,9 +21,32 @@ extension RGBColour {
     withPreset preset: ContrastPreset,
     isMonochrome: Bool = false
   ) -> RGBColour {
-    let lumaAwareAdjustment = LuminanceAwareAdjustment.contrastPreset(preset, isMonochrome: isMonochrome)
-    return self.contrastColour(using: lumaAwareAdjustment)
+    
+    let hsvColour = HSVColour(fromRGB: self)
+    
+
+    let adjustmentToApply = preset.adjustment(for: self.luminanceLevel)
+    
+//    let adjustmentToApply = adjustment.adjustment(forLuminance: self.luminance)
+    let newHSV: HSVColour = hsvColour.applying(adjustment: adjustmentToApply)
+    return RGBColour(fromHSV: newHSV)
+//    let lumaAwareAdjustment = LuminanceAwareAdjustment.contrastPreset(preset, isMonochrome: isMonochrome)
+    
+//    return self.contrastColour(using: lumaAwareAdjustment)
   }
+  
+//  public static func contrastPreset(
+//    _ preset: ContrastPreset,
+//    isMonochrome: Bool
+//  ) -> Self {
+//    return LuminanceAwareAdjustment(
+//      light: preset.adjustment(for: .light),
+//      dark: preset.adjustment(for: .dark)
+//      //      light: preset.level(isMonochrome: isMonochrome).forLightColours,
+//      //      dark: preset.level(isMonochrome: isMonochrome).forDarkColours
+//    )
+//  }
+
 }
 
 public enum ContrastPreset: String, CaseIterable, Identifiable {
@@ -54,10 +75,21 @@ public enum ContrastPreset: String, CaseIterable, Identifiable {
     }
   }
 
-  public func adjustment(for type: HSVLuminanceType) -> HSVAdjustment {
-    switch type {
-      case .light: HSVAdjustment.forLightColours(contrastAmount: self.contrastValue)
-      case .dark: HSVAdjustment.forDarkColours(contrastAmount: self.contrastValue)
-    }
+  public func adjustment(for level: LuminanceLevel) -> HSVAdjustment {
+    HSVAdjustment.adjustment(forLumaLevel: level, contrastAmount: self.contrastValue)
+    
+//    switch level {
+//      case .dark:
+//        HSVAdjustment.adjustment(forLumaLevel: <#T##LuminanceLevel#>, contrastAmount: <#T##Double#>)
+//      case .mid:
+//        <#code#>
+//      case .light:
+//        <#code#>
+//    }
+//    switch type {
+//      case .light: HSVAdjustment.forLightColours(contrastAmount: self.contrastValue)
+//        
+//      case .dark: HSVAdjustment.forDarkColours(contrastAmount: self.contrastValue)
+//    }
   }
 }

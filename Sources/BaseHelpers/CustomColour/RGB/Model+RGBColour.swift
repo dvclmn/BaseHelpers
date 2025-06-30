@@ -71,6 +71,10 @@ public struct RGBColour: Identifiable, Equatable, Hashable, Sendable, Codable, C
 }
 
 extension RGBColour {
+  
+  public var luminanceLevel: LuminanceLevel {
+    return LuminanceLevel(from: self.luminance)
+  }
 
   public init(
     r: Double,

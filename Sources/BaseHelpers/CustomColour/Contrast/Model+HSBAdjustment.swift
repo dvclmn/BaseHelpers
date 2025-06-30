@@ -7,10 +7,20 @@
 
 import Foundation
 
-public enum HSVLuminanceType {
+public enum LuminanceLevel {
   case dark
   case mid
   case light
+
+  public init(from luminance: Double) {
+    if luminance > 0.7 {
+      self = .light
+    } else if luminance > 0.3 {
+      self = .mid
+    } else {
+      self = .dark
+    }
+  }
 
   var baseContrastPreset: HSVAdjustment {
     switch self {
@@ -60,19 +70,26 @@ public struct HSVAdjustment: Sendable {
 
 extension HSVAdjustment {
 
-  public static func forLightColours(contrastAmount: Double) -> HSVAdjustment {
-    return HSVAdjustment.zero.interpolated(forType: .light, amount: contrastAmount)
+  public static func adjustment(
+    forLumaLevel level: LuminanceLevel,
+    contrastAmount: Double
+  ) -> HSVAdjustment {
+    self.zero.interpolated(forLevel: level, amount: contrastAmount)
   }
-
-  public static func forDarkColours(contrastAmount: Double) -> HSVAdjustment {
-    return HSVAdjustment.zero.interpolated(forType: .dark, amount: contrastAmount)
-  }
+  
+//  public static func forLightColours(contrastAmount: Double) -> HSVAdjustment {
+//    return HSVAdjustment.zero.interpolated(forType: .light, amount: contrastAmount)
+//  }
+//
+//  public static func forDarkColours(contrastAmount: Double) -> HSVAdjustment {
+//    return HSVAdjustment.zero.interpolated(forType: .dark, amount: contrastAmount)
+//  }
 
   func interpolated(
-    forType type: HSVLuminanceType,
+    forLevel level: LuminanceLevel,
     amount: Double,
   ) -> HSVAdjustment {
-    let baseContrast = type.baseContrastPreset
+    let baseContrast = level.baseContrastPreset
 
     return HSVAdjustment(
       hue: doAThing(factor: amount, newAdjustment: baseContrast, for: .hue),
@@ -92,7 +109,6 @@ extension HSVAdjustment {
     return result
   }
 }
-
 
 extension HSVAdjustment {
   public init(
