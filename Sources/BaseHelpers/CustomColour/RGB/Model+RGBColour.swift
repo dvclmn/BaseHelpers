@@ -9,62 +9,10 @@ import SwiftUI
 
 public struct RGBColour: Identifiable, Equatable, Hashable, Sendable, Codable, ColourModel {
   public let id: UUID
-  private var resolved: Color.Resolved
-
-  public var red: Double {
-    get { resolved.red.toDouble }
-    set {
-      resolved = Color.Resolved(
-        red: newValue.toFloat,
-        green: resolved.green,
-        blue: resolved.blue,
-        opacity: resolved.opacity
-      )
-    }
-  }
-
-  public var green: Double {
-    get { resolved.green.toDouble }
-    set {
-      resolved = Color.Resolved(
-        red: resolved.red,
-        green: newValue.toFloat,
-        blue: resolved.blue,
-        opacity: resolved.opacity
-      )
-    }
-  }
-
-  public var blue: Double {
-    get { resolved.blue.toDouble }
-    set {
-      resolved = Color.Resolved(
-        red: resolved.red,
-        green: resolved.green,
-        blue: newValue.toFloat,
-        opacity: resolved.opacity
-      )
-    }
-  }
-
-  public var alpha: Double {
-    get { resolved.opacity.toDouble }
-    set {
-      resolved = Color.Resolved(
-        red: resolved.red,
-        green: resolved.green,
-        blue: resolved.blue,
-        opacity: newValue.toFloat
-      )
-    }
-  }
-
-  public var nativeColour: Color { Color(resolved) }
-
-  //  public var red: Double
-  //  public var green: Double
-  //  public var blue: Double
-  //  public var alpha: Double
+  public var red: Double
+  public var green: Double
+  public var blue: Double
+  public var alpha: Double
 
   public init(
     colour: Color,
@@ -76,15 +24,15 @@ public struct RGBColour: Identifiable, Equatable, Hashable, Sendable, Codable, C
     )
   }
 
-  //  public init(
-  //    r: Double,
-  //    g: Double,
-  //    b: Double,
-  //    a: Double = 1.0,
-  //
-  //  ) {
-  //    self.init(red: r, green: g, blue: b, alpha: a)
-  //  }
+    public init(
+      r: Double,
+      g: Double,
+      b: Double,
+      a: Double = 1.0,
+  
+    ) {
+      self.init(red: r, green: g, blue: b, alpha: a)
+    }
 
 //  public init(
 //    gray: Double,
@@ -93,43 +41,39 @@ public struct RGBColour: Identifiable, Equatable, Hashable, Sendable, Codable, C
 //    self.init(red: gray, green: gray, blue: gray, alpha: alpha)
 //  }
 
+  public var nativeColour: Color {
+    Color(
+      colourSpace.nativeColorSpace,
+      red: red,
+      green: green,
+      blue: blue,
+      opacity: alpha
+      //      opacity: 1.0
+      //      opacity: includesAlpha ? alpha : 1.0
+    )
+  }
+  
   public init(
     resolved: Color.Resolved,
   ) {
-    self.id = UUID()
-    self.resolved = resolved
-//    self.init(
-//      red: resolved.red.toDouble, green: resolved.green.toDouble, blue: resolved.blue.toDouble,
-//      alpha: resolved.opacity.toDouble)
+    self.init(
+      red: resolved.red.toDouble, green: resolved.green.toDouble, blue: resolved.blue.toDouble,
+      alpha: resolved.opacity.toDouble)
   }
 
+  
   public init(
     red: Double,
     green: Double,
     blue: Double,
-    alpha: Double = 1.0
+    alpha: Double = 1.0,
   ) {
     self.id = UUID()
-    self.resolved = Color.Resolved(
-      red: red.clamped(to: 0...1).toFloat,
-      green: green.clamped(to: 0...1).toFloat,
-      blue: blue.clamped(to: 0...1).toFloat,
-      opacity: alpha.clamped(to: 0...1).toFloat
-    )
+    self.red = red
+    self.green = green
+    self.blue = blue
+    self.alpha = alpha
   }
-  
-//  public init(
-//    red: Double,
-//    green: Double,
-//    blue: Double,
-//    alpha: Double = 1.0,
-//  ) {
-//    self.id = UUID()
-//    self.red = red
-//    self.green = green
-//    self.blue = blue
-//    self.alpha = alpha
-//  }
 
   public init(fromSwatch swatch: Swatch, environment: EnvironmentValues) {
     self.init(
@@ -146,15 +90,13 @@ public struct RGBColour: Identifiable, Equatable, Hashable, Sendable, Codable, C
 
 extension RGBColour {
   
-  public var resolvedColor: Color.Resolved { resolved }
-  
-  public func converting<T: ColourModel>(to type: T.Type) -> T {
-    return T.from(self)
-  }
-  
-  public static func from<T: ColourModel>(_ other: T) -> RGBColour {
-    return RGBColour(resolved: other.resolvedColor)
-  }
+//  public func converting<T: ColourModel>(to type: T.Type) -> T {
+//    return T.from(self)
+//  }
+//  
+//  public static func from<T: ColourModel>(_ other: T) -> RGBColour {
+//    return RGBColour(resolved: other.resolvedColor)
+//  }
 
   //  public func converting
 

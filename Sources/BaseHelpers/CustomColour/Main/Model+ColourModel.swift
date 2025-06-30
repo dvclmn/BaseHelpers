@@ -17,7 +17,8 @@ public protocol ColourModel {
   static func gray(_ brightness: Double, alpha: Double) -> Self
   
   func converting<T: ColourModel>(to type: T.Type) -> T
-  static func from<T: ColourModel>(_ other: T) -> Self
+//  static func from<T: ColourModel>(_ other: T) -> Self
+  init<T: ColourModel>(from other: T)
   
   var colourSpace: ColourSpace { get }
   
