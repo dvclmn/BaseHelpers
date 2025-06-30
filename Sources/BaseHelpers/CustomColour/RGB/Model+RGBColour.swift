@@ -138,9 +138,9 @@ public struct RGBColour: Identifiable, Equatable, Hashable, Sendable, Codable, C
     )
   }
   
-  public init(from hsv: HSVColour) {
-    self = Self.from(hsv)
-  }
+//  public init(from hsv: HSVColour) {
+//    self = Self.from(hsv)
+//  }
 
 }
 
