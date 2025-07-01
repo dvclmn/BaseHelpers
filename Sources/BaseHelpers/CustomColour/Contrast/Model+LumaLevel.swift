@@ -9,7 +9,8 @@ import Foundation
 
 struct LuminanceLevelAdjustment: HSVModifier {
   let level: LuminanceLevel
-  func adjustment(for colour: HSVColour) -> HSVAdjustment {
+  var adjustment: HSVAdjustment {
+//  func adjustment(for colour: HSVColour) -> HSVAdjustment {
     switch level {
       case .dark: HSVAdjustment(-18, -0.01, 0.75)
       case .light: HSVAdjustment(-16, 0.35, -0.75)
@@ -19,7 +20,7 @@ struct LuminanceLevelAdjustment: HSVModifier {
 
 struct ColourPurposeAdjustment: HSVModifier {
   let purpose: ColourPurpose
-  func adjustment(for colour: HSVColour) -> HSVAdjustment {
+  var adjustment: HSVAdjustment {
     switch purpose {
       case .legibility: HSVAdjustment(-6, -0.01, 0.1)
       case .complimentary: HSVAdjustment(-3, 0.1, 0.0)
@@ -29,7 +30,7 @@ struct ColourPurposeAdjustment: HSVModifier {
 
 struct ChromaAdjustment: HSVModifier {
   let chroma: ColourChroma
-  func adjustment(for colour: HSVColour) -> HSVAdjustment {
+  var adjustment: HSVAdjustment {
     switch chroma {
       case .saturated: HSVAdjustment(0, 0.15, 0)
       case .standard: .zero
