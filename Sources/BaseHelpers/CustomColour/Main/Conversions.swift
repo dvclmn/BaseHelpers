@@ -92,5 +92,4 @@ extension RGBColour {
       alpha: hsv.alpha
     )
   }
-
 }

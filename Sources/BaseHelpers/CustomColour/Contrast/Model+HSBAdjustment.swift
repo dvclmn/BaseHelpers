@@ -7,6 +7,8 @@
 
 import Foundation
 
+/// Represents a *delta* adjustment in HSV space
+/// Does not set hsb values to these, but adds to them
 public struct HSVAdjustment: Sendable {
   public var hue: Double
   public var saturation: Double
@@ -31,42 +33,19 @@ public struct HSVAdjustment: Sendable {
 }
 
 extension HSVAdjustment {
-
-  public static func adjustment(
-    _ modification: ColourModification
-  ) -> HSVAdjustment {
-    
-  }
-//  public static func adjustment(
-//    forLumaLevel level: LuminanceLevel,
-//    contrastAmount: Double,
-//    purpose: ContrastPurpose
-//  ) -> HSVAdjustment {
-//    self.zero.interpolated(forLevel: level, amount: contrastAmount, purpose: purpose)
-//  }
-
+  
   func interpolated(
-    forLevel level: LuminanceLevel,
-    amount: Double,
-    purpose: ContrastPurpose
+    towards other: HSVAdjustment,
+    strength: Double
   ) -> HSVAdjustment {
-    let baseContrast = level.baseContrastPreset(purpose: purpose)
-
-    return HSVAdjustment(
-      hue: doAThing(factor: amount, newAdjustment: baseContrast, for: .hue),
-      saturation: doAThing(factor: amount, newAdjustment: baseContrast, for: .saturation),
-      brightness: doAThing(factor: amount, newAdjustment: baseContrast, for: .brightness)
+    let current = self
+    let new = other
+    
+    let adjusted = HSVAdjustment(
+      hue: lerp(from: current.hue, to: new.hue, strength),
+      saturation: lerp(from: current.saturation, to: new.saturation, strength),
+      brightness: lerp(from: current.brightness, to: new.brightness, strength)
     )
-  }
-
-  func doAThing(
-    factor: Double,
-    newAdjustment: HSVAdjustment,
-    for component: HSVComponent
-  ) -> Double {
-    let existingValue: Double = self[keyPath: component.hsvAdjustmentPath]
-    let newValue: Double = newAdjustment[keyPath: component.hsvAdjustmentPath]
-    let result = existingValue + (newValue - existingValue) * factor
-    return result
+    return adjusted
   }
 }

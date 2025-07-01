@@ -7,6 +7,14 @@
 
 import SwiftUI
 
+/// Notes:
+/// In HSV, brightness (value) is the *maximum* of the RGB channels.
+/// But luminance is a weighted sum of the linearised RGB values,
+/// which means:
+/// -  Two colours with the same HSV value might have
+///   wildly different luminance.
+/// -  Luminance depends on how the three channels contribute
+///   based on human perception.
 public struct HSVColour: Equatable, Sendable, ColourModel {
 
   public var hue: Double
@@ -52,6 +60,10 @@ public struct HSVColour: Equatable, Sendable, ColourModel {
 
 extension HSVColour {
 
+  public var luminance: Double {
+    RGBColour(fromHSV: self).luminance
+  }
+
   public static func gray(_ brightness: Double, alpha: Double = 1.0) -> HSVColour {
     return HSVColour(hue: 0, saturation: 0, brightness: brightness, alpha: alpha)
   }
@@ -70,19 +82,6 @@ extension HSVColour {
 
   func applying(adjustment: HSVAdjustment) -> HSVColour {
     let adjustedHue: Double = (hue + adjustment.hue / 360.0).hueWrapped()
-    
-//    let adjustedHue: Double = {
-//      switch adjustment.hueStrategy {
-//        case .relativeDegrees(let delta):
-//          return (hue + delta / 360.0).hueWrapped()
-//
-//        case .fixedDegrees(let absolute):
-//          return (absolute / 360.0).hueWrapped()
-//
-//        case .rotate180:
-//          return (hue + 0.5).hueWrapped()
-//      }
-//    }()
 
     let newSaturation = (saturation + adjustment.saturation).clamped(to: 0...1)
     let newBrightness = (brightness + adjustment.brightness).clamped(to: 0...1)
@@ -95,18 +94,4 @@ extension HSVColour {
     )
   }
 
-  //  func applying(adjustment: HSVAdjustment) -> HSVColour {
-  //
-  //    let newHue = (hue + adjustment.hue / 360.0).hueWrapped()
-  //
-  //    let newSaturation = (saturation + adjustment.saturation).clamped(to: 0...1)
-  //    let newBrightness = (brightness + adjustment.brightness).clamped(to: 0...1)
-  //
-  //    return HSVColour(
-  //      hue: newHue,
-  //      saturation: newSaturation,
-  //      brightness: newBrightness,
-  //      alpha: alpha
-  //    )
-  //  }
 }

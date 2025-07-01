@@ -80,7 +80,10 @@ extension RGBColour {
   ) -> RGBColour {
     
     let hsvColour = HSVColour(fromRGB: self)
-    let adjustmentToApply = preset.adjustment(for: self.luminanceLevel, purpose: purpose)
+    let adjustmentToApply = preset.adjustment(
+      for: self.luminanceLevel,
+      purpose: purpose
+    )
     
     let newHSV: HSVColour = hsvColour.applying(adjustment: adjustmentToApply)
     return RGBColour(fromHSV: newHSV)

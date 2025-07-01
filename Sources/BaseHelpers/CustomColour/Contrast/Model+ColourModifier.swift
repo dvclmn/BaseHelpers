@@ -13,7 +13,6 @@ import Foundation
 public struct ColourModification {
   private let colour: any ColourModel
   let strength: CGFloat
-  let luminance: LuminanceLevel
   let purpose: ContrastPurpose
   let chroma: ContrastChroma
   
@@ -25,7 +24,6 @@ public struct ColourModification {
   ) {
     self.colour = colour
     self.strength = strength
-    self.luminance = luminance
     self.purpose = purpose
     self.chroma = chroma
   }
@@ -36,14 +34,17 @@ public struct ColourModification {
     purpose: ContrastPurpose = .legibility,
     chroma: ContrastChroma = .standard
   ) {
-    self.colour = colour
-    self.strength = preset.contrastValue
-    self.luminance = colour.luminance
-    self.purpose = purpose
-    self.chroma = chroma
+    self.init(
+      colour: colour,
+      strength: preset.adjustmentStrength,
+      purpose: purpose,
+      chroma: chroma
+    )
   }
 }
 
 extension ColourModification {
-  
+  var luminance: Double {
+    return colour.luminance
+  }
 }

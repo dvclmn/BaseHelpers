@@ -24,7 +24,7 @@ public enum ContrastPreset: String, CaseIterable, Identifiable {
     }
   }
 
-  package var contrastValue: Double {
+  package var adjustmentStrength: Double {
     switch self {
       case .subtle: 0.2
       case .moderate: 0.4
@@ -39,7 +39,7 @@ public enum ContrastPreset: String, CaseIterable, Identifiable {
   ) -> HSVAdjustment {
     HSVAdjustment.adjustment(
       forLumaLevel: level,
-      contrastAmount: self.contrastValue,
+      contrastAmount: self.adjustmentStrength,
       purpose: purpose
     )
   }
