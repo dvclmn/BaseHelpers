@@ -15,28 +15,28 @@ public protocol HSVModifier {
 /// float value adjustment amount.
 /// Returns a modified `RGBColour`
 public struct ColourModification {
-  private let colour: any ColourModel
+  private let colour: HSVColour
   let strength: CGFloat
-  let purpose: ContrastPurpose
-  let chroma: ContrastChroma
-  
+  let purpose: ColourPurpose
+  let chroma: ColourChroma
+
   public init(
-    colour: any ColourModel,
+    colour: HSVColour,
     strength: CGFloat,
-    purpose: ContrastPurpose = .legibility,
-    chroma: ContrastChroma = .standard
+    purpose: ColourPurpose = .legibility,
+    chroma: ColourChroma = .standard
   ) {
     self.colour = colour
     self.strength = strength
     self.purpose = purpose
     self.chroma = chroma
   }
-  
+
   public init(
-    colour: any ColourModel,
+    colour: HSVColour,
     preset: ModificationStrengthPreset,
-    purpose: ContrastPurpose = .legibility,
-    chroma: ContrastChroma = .standard
+    purpose: ColourPurpose = .legibility,
+    chroma: ColourChroma = .standard
   ) {
     self.init(
       colour: colour,
@@ -48,6 +48,33 @@ public struct ColourModification {
 }
 
 extension ColourModification {
+
+  func adjusted() -> HSVColour {
+
+    let colourToAdjust = self.colour
+
+    let contributors: [any HSVModifier] = [
+      LuminanceLevelAdjustment(level: self.colour.luminanceLevel),
+      ColourPurposeAdjustment(purpose: self.purpose),
+      ChromaAdjustment(chroma: self.chroma),
+      //      LuminanceLevelAdjustment(level: LuminanceLevel(from: colour.luminance), purpose: .legibility),
+      //      ChromaAdjustment(chroma: .standard),
+      //      StrengthAdjustment(factor: 0.5, base: .init(hue: 5, saturation: 0.1, brightness: 0.1))
+    ]
+
+    let totalAdjustment: HSVAdjustment =
+      contributors
+      .map { $0.adjustment(for: colour) }
+      .reduce(.zero) { partialResult, adjustment in
+        adjustment.interpolated(towards: adjustment, strength: self.strength)
+      }
+//      .reduce(.zero, +)
+
+    let adjustedColour = colourToAdjust.applying(adjustment: totalAdjustment)
+    return adjustedColour
+
+  }
+
   var luminance: Double {
     return colour.luminance
   }

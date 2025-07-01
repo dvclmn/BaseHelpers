@@ -63,6 +63,10 @@ extension HSVColour {
   public var luminance: Double {
     RGBColour(fromHSV: self).luminance
   }
+  
+  public var luminanceLevel: LuminanceLevel {
+    RGBColour(fromHSV: self).luminanceLevel
+  }
 
   public static func gray(_ brightness: Double, alpha: Double = 1.0) -> HSVColour {
     return HSVColour(hue: 0, saturation: 0, brightness: brightness, alpha: alpha)

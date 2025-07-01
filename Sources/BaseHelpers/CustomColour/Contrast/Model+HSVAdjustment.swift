@@ -40,6 +40,22 @@ public struct HSVAdjustment: Sendable {
 
 extension HSVAdjustment {
   
+//  static func + (lhs: HSVAdjustment, rhs: HSVAdjustment) -> HSVAdjustment {
+//    HSVAdjustment(
+//      hue: lhs.hue + rhs.hue,
+//      saturation: lhs.saturation + rhs.saturation,
+//      brightness: lhs.brightness + rhs.brightness
+//    )
+//  }
+  
+  func scaled(by factor: Double) -> HSVAdjustment {
+    HSVAdjustment(
+      hue: hue * factor,
+      saturation: saturation * factor,
+      brightness: brightness * factor
+    )
+  }
+  
   /// Now with this, `HSVAdjustment` knows how to go from
   /// one instance of itself, to another, linearly interpolating.
   ///
