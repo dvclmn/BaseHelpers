@@ -33,12 +33,17 @@ public struct HSVAdjustment: Sendable {
 extension HSVAdjustment {
 
   public static func adjustment(
-    forLumaLevel level: LuminanceLevel,
-    contrastAmount: Double,
-    purpose: ContrastPurpose
+    _ modification: ColourModification
   ) -> HSVAdjustment {
-    self.zero.interpolated(forLevel: level, amount: contrastAmount, purpose: purpose)
+    
   }
+//  public static func adjustment(
+//    forLumaLevel level: LuminanceLevel,
+//    contrastAmount: Double,
+//    purpose: ContrastPurpose
+//  ) -> HSVAdjustment {
+//    self.zero.interpolated(forLevel: level, amount: contrastAmount, purpose: purpose)
+//  }
 
   func interpolated(
     forLevel level: LuminanceLevel,

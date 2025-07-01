@@ -13,6 +13,7 @@ public protocol ColourModel {
   var alpha: Double { get set }
   mutating func opacity(_ opacity: Double)
   static func gray(_ brightness: Double, alpha: Double) -> Self
+  var luminance: Double { get }
   init(resolved: Color.Resolved)
 }
 
