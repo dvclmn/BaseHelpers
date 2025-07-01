@@ -14,17 +14,10 @@ public enum ContrastPurpose {
 
 public enum LuminanceLevel {
   case dark
-  //  case mid
   case light
 
   public init(from luminance: Double) {
-    if luminance > 0.4 {
-      self = .light
-      //    } else if luminance > 0.3 {
-      //      self = .mid
-    } else {
-      self = .dark
-    }
+    self = luminance > 0.4 ? .light : .dark
   }
 
   func baseContrastPreset(purpose: ContrastPurpose) -> HSVAdjustment {
@@ -37,7 +30,7 @@ public enum LuminanceLevel {
               saturation: -0.01,
               brightness: 0.75
             )
-            
+
           case .complimentary:
             HSVAdjustment(
               hue: -22,
@@ -66,12 +59,15 @@ public enum LuminanceLevel {
 }
 
 public struct HSVAdjustment: Sendable {
-
   public var hue: Double
   public var saturation: Double
   public var brightness: Double
 
-  public static let zero = HSVAdjustment(h: 0, s: 0, b: 0)
+  public static let zero = HSVAdjustment(
+    hue: 0,
+    saturation: 0,
+    brightness: 0
+  )
 
   public init(
     hue: Double,
@@ -94,14 +90,6 @@ extension HSVAdjustment {
   ) -> HSVAdjustment {
     self.zero.interpolated(forLevel: level, amount: contrastAmount, purpose: purpose)
   }
-
-  //  public static func forLightColours(contrastAmount: Double) -> HSVAdjustment {
-  //    return HSVAdjustment.zero.interpolated(forType: .light, amount: contrastAmount)
-  //  }
-  //
-  //  public static func forDarkColours(contrastAmount: Double) -> HSVAdjustment {
-  //    return HSVAdjustment.zero.interpolated(forType: .dark, amount: contrastAmount)
-  //  }
 
   func interpolated(
     forLevel level: LuminanceLevel,
@@ -127,15 +115,4 @@ extension HSVAdjustment {
     let result = existingValue + (newValue - existingValue) * factor
     return result
   }
-}
-
-extension HSVAdjustment {
-  public init(
-    h hue: Double,
-    s saturation: Double,
-    b brightness: Double,
-  ) {
-    self.init(hue: hue, saturation: saturation, brightness: brightness)
-  }
-
 }

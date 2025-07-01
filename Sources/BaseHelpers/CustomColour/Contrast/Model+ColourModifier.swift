@@ -7,6 +7,6 @@
 
 import Foundation
 
-public struct ColourModifier {
+public struct ColourModification {
   
 }
