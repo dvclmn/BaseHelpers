@@ -73,6 +73,19 @@ public struct RGBColour: Identifiable, Equatable, Hashable, Sendable, Codable, C
 
 extension RGBColour {
   
+  public func contrastColour(
+    withPreset preset: ContrastPreset,
+    purpose: ContrastPurpose = .legibility,
+    isMonochrome: Bool = false
+  ) -> RGBColour {
+    
+    let hsvColour = HSVColour(fromRGB: self)
+    let adjustmentToApply = preset.adjustment(for: self.luminanceLevel, purpose: purpose)
+    
+    let newHSV: HSVColour = hsvColour.applying(adjustment: adjustmentToApply)
+    return RGBColour(fromHSV: newHSV)
+  }
+  
   public var luminanceLevel: LuminanceLevel {
     return LuminanceLevel(from: self.luminance)
   }
