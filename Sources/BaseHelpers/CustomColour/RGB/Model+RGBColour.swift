@@ -96,6 +96,26 @@ extension RGBColour {
     return adjustedHSV.toRGB
   }
   
+  public func contrastColour(colourModification: ColourModification) -> RGBColour {
+    
+    self.contrastColour(
+      strength: colourModification.strength,
+      purpose: colourModification.purpose,
+      chroma: colourModification.chroma
+    )
+//    let hsvColour = HSVColour(fromRGB: self)
+//    
+//    let modification = ColourModification(
+//      colour: hsvColour,
+//      strength: strength,
+//      purpose: purpose,
+//      chroma: chroma
+//    )
+//    print("HSVModification is: \(modification)")
+//    let adjustedHSV = modification.adjusted()
+//    return adjustedHSV.toRGB
+  }
+  
 //  public func contrastColour(
 //    withPreset preset: ContrastPreset,
 //    purpose: ContrastPurpose = .legibility,

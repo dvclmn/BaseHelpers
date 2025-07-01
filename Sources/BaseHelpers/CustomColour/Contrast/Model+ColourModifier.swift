@@ -51,23 +51,28 @@ extension ColourModification {
 
   func adjusted() -> HSVColour {
 
-    let colourToAdjust = self.colour
-
     let contributors: [any HSVModifier] = [
       LuminanceLevelAdjustment(level: self.colour.luminanceLevel),
       ColourPurposeAdjustment(purpose: self.purpose),
       ChromaAdjustment(chroma: self.chroma),
     ]
 
-    let totalAdjustment: HSVAdjustment =
-      contributors
-      .map { $0.adjustment(for: colour) }
-      .reduce(.zero) { partialResult, adjustment in
-        partialResult + adjustment.interpolated(towards: adjustment, strength: self.strength)
-      }
+    let totalAdjustment: HSVAdjustment
+    for contributor in contributors {
+      let newAdjustment = contributor.adjustment(for: colour)
+      newAdjustment.
+    }
+    
+//    let totalAdjustment: HSVAdjustment =
+//      contributors
+//      .map { $0.adjustment(for: colour) }
+//      .reduce(.zero) { partialResult, adjustment in
+//        let addedResult = partialResult + adjustment
+//        return addedResult.interpolated(towards: adjustment, strength: self.strength)
+//      }
 //      .reduce(.zero, +)
 
-    let adjustedColour = colourToAdjust.applying(adjustment: totalAdjustment)
+    let adjustedColour = self.colour.applying(adjustment: totalAdjustment)
     return adjustedColour
 
   }
