@@ -21,8 +21,8 @@ extension Array where Element == GridItem {
   }
   
   public static func quickAdaptiveColumns(
-    min: CGFloat = 20,
-    max: CGFloat = 200,
+    min: CGFloat,
+    max: CGFloat = .infinity,
     spacing: CGFloat? = nil,
   ) -> Self {
     let result = GridItem(
