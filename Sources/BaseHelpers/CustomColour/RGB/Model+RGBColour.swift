@@ -91,8 +91,8 @@ extension RGBColour {
       purpose: purpose,
       chroma: chroma
     )
+    print("HSVModification is: \(modification)")
     let adjustedHSV = modification.adjusted()
-//    hsvColour.a
     return adjustedHSV.toRGB
   }
   

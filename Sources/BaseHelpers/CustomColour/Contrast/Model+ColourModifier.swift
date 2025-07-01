@@ -57,16 +57,13 @@ extension ColourModification {
       LuminanceLevelAdjustment(level: self.colour.luminanceLevel),
       ColourPurposeAdjustment(purpose: self.purpose),
       ChromaAdjustment(chroma: self.chroma),
-      //      LuminanceLevelAdjustment(level: LuminanceLevel(from: colour.luminance), purpose: .legibility),
-      //      ChromaAdjustment(chroma: .standard),
-      //      StrengthAdjustment(factor: 0.5, base: .init(hue: 5, saturation: 0.1, brightness: 0.1))
     ]
 
     let totalAdjustment: HSVAdjustment =
       contributors
       .map { $0.adjustment(for: colour) }
       .reduce(.zero) { partialResult, adjustment in
-        adjustment.interpolated(towards: adjustment, strength: self.strength)
+        partialResult + adjustment.interpolated(towards: adjustment, strength: self.strength)
       }
 //      .reduce(.zero, +)
 
