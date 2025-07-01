@@ -14,7 +14,8 @@ public struct RGBColour: Identifiable, Equatable, Hashable, Sendable, Codable, C
   public var blue: Double
   public var alpha: Double
   
-//  public var originalSwatch: Swatch?
+  /// Thinking of trying storing a resolved colour, so I don't have to get Env values if not needed?
+
 
   public init(
     colour: Color,

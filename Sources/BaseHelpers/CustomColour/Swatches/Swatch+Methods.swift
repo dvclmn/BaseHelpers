@@ -14,7 +14,7 @@ extension Swatch {
   public func toRGB(
     _ environment: EnvironmentValues,
     withPreset preset: ContrastPreset? = nil,
-    purpose: ContrastPurpose,
+    purpose: ContrastPurpose = .legibility,
     isMonochrome: Bool = false
   ) -> RGBColour {
     let rgb = RGBColour(colour: self.colour, environment: environment)

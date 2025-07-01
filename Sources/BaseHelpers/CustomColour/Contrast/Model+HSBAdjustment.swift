@@ -33,39 +33,32 @@ public enum LuminanceLevel {
         switch purpose {
           case .legibility:
             HSVAdjustment(
-              hue: -19,
-              saturation: -0.09,
-              brightness: 0.7
+              hue: -18,
+              saturation: -0.01,
+              brightness: 0.75
             )
+            
           case .complimentary:
             HSVAdjustment(
-              hue: -19,
-              saturation: -0.09,
-              brightness: 0.7
+              hue: -22,
+              saturation: -0.08,
+              brightness: 0.65
             )
-
         }
-
-      //      case .mid:
-      //        HSVAdjustment(
-      //          hue: -16,
-      //          saturation: -0.01,
-      //          brightness: 0.1
-      //        )
 
       case .light:
         switch purpose {
           case .legibility:
             HSVAdjustment(
-              hue: -12,
-              saturation: 0.25,
-              brightness: -0.7
+              hue: -16,
+              saturation: 0.35,
+              brightness: -0.75
             )
           case .complimentary:
             HSVAdjustment(
-              hue: -12,
-              saturation: 0.25,
-              brightness: -0.7
+              hue: -10,
+              saturation: 0.3,
+              brightness: -0.5
             )
         }
     }

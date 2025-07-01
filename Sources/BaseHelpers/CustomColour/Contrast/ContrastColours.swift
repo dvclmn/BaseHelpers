@@ -19,7 +19,7 @@ extension RGBColour {
 
   public func contrastColour(
     withPreset preset: ContrastPreset,
-    purpose: ContrastPurpose,
+    purpose: ContrastPurpose = .legibility,
     isMonochrome: Bool = false
   ) -> RGBColour {
     
