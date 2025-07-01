@@ -11,37 +11,41 @@ extension Swatch {
 
   public var id: String { rawValue }
   
-  public func toRGB(
-    _ environment: EnvironmentValues,
-    withPreset preset: ContrastPreset? = nil,
-    purpose: ContrastPurpose = .legibility,
-    isMonochrome: Bool = false
-  ) -> RGBColour {
+  public func toRGB(_ environment: EnvironmentValues) -> RGBColour {
     let rgb = RGBColour(colour: self.colour, environment: environment)
-    if let preset {
-      return rgb.contrastColour(
-        withPreset: preset,
-        purpose: purpose,
-        isMonochrome: isMonochrome,
-      )
-    } else {
-      return rgb
-    }
+    return rgb
   }
-  public func toHSV(
-    _ environment: EnvironmentValues,
-    withPreset preset: ContrastPreset? = nil,
-    purpose: ContrastPurpose,
-    isMonochrome: Bool = false
-  ) -> HSVColour {
-    let rgb = self.toRGB(
-      environment,
-      withPreset: preset,
-      purpose: purpose,
-      isMonochrome: isMonochrome
-    )
-    return HSVColour(fromRGB: rgb)
-  }
+//  public func toRGB(
+//    _ environment: EnvironmentValues,
+//    withPreset preset: ContrastPreset? = nil,
+//    purpose: ContrastPurpose = .legibility,
+//    isMonochrome: Bool = false
+//  ) -> RGBColour {
+//    let rgb = RGBColour(colour: self.colour, environment: environment)
+//    if let preset {
+//      return rgb.contrastColour(
+//        withPreset: preset,
+//        purpose: purpose,
+//        isMonochrome: isMonochrome,
+//      )
+//    } else {
+//      return rgb
+//    }
+//  }
+//  public func toHSV(
+//    _ environment: EnvironmentValues,
+//    withPreset preset: ContrastPreset? = nil,
+//    purpose: ContrastPurpose,
+//    isMonochrome: Bool = false
+//  ) -> HSVColour {
+//    let rgb = self.toRGB(
+//      environment,
+//      withPreset: preset,
+//      purpose: purpose,
+//      isMonochrome: isMonochrome
+//    )
+//    return HSVColour(fromRGB: rgb)
+//  }
 
   public var colour: Color {
     Color("swatch/\(rawValue)", bundle: .module)

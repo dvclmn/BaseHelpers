@@ -25,7 +25,7 @@ public enum ModificationStrengthPreset: String, CaseIterable, Identifiable {
     }
   }
 
-  package var adjustmentStrength: Double {
+  public var adjustmentStrength: Double {
     switch self {
       case .subtle: 0.2
       case .moderate: 0.4

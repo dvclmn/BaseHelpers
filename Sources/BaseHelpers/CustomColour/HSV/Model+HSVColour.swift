@@ -59,6 +59,10 @@ public struct HSVColour: Equatable, Sendable, ColourModel {
 }
 
 extension HSVColour {
+  
+  public var toRGB: RGBColour {
+    RGBColour(fromHSV: self)
+  }
 
   public var luminance: Double {
     RGBColour(fromHSV: self).luminance
