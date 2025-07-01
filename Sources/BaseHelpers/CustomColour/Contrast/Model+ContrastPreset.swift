@@ -7,10 +7,6 @@
 
 import Foundation
 
-extension RGBColour {
-
-}
-
 public enum ContrastPreset: String, CaseIterable, Identifiable {
   case subtle
   case moderate
@@ -28,7 +24,7 @@ public enum ContrastPreset: String, CaseIterable, Identifiable {
     }
   }
 
-  private var contrastValue: Double {
+  package var contrastValue: Double {
     switch self {
       case .subtle: 0.2
       case .moderate: 0.4
