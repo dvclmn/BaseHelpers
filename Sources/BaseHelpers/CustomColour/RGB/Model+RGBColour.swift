@@ -84,17 +84,17 @@ extension RGBColour {
 
     let hsvColour = HSVColour(fromRGB: self)
 
-    let modification = ColourModification(
-      strength: strength,
-      purpose: purpose,
-      chroma: chroma
-    )
+//    let modification = ColourModification(
+//      strength: strength,
+//      purpose: purpose,
+//      chroma: chroma
+//    )
     
     let adjustment: HSVAdjustment = {
       let contributors: [any HSVModifier] = [
         LuminanceLevelAdjustment(level: self.luminanceLevel),
-        ColourPurposeAdjustment(purpose: self.purpose),
-        ChromaAdjustment(chroma: self.chroma),
+        ColourPurposeAdjustment(purpose: purpose),
+        ChromaAdjustment(chroma: chroma),
       ]
       
       //    var adjustment: HSVAdjustment {
@@ -105,64 +105,34 @@ extension RGBColour {
       }
       
       let combinedAdjustment: HSVAdjustment = allAdjustments.reduce(.zero) { partialResult, adjustment in
-        partialResult + .zero.interpolated(towards: adjustment, strength: self.strength)
+        partialResult + .zero.interpolated(towards: adjustment, strength: strength.adjustmentStrength)
       }
       
       return combinedAdjustment
       
     }()
     
-      
-      //    let result = allAdjustments.map { adjustment in
-      //      HSVAdjustment.zero.interpolated(towards: adjustment, strength: self.strength)
-      //    }
-      
-      
-      //    for contributor in contributors {
-      //      let newAdjustment = contributor.adjustment(for: colour)
-      //
-      //      let result = HSVAdjustment.zero.interpolated(towards: newAdjustment, strength: self.strength)
-      //
-      //    }
-      
-      //    let totalAdjustment: HSVAdjustment =
-      //      contributors
-      //      .map { $0.adjustment(for: colour) }
-      //      .reduce(.zero) { partialResult, adjustment in
-      //        let addedResult = partialResult + adjustment
-      //        return addedResult.interpolated(towards: adjustment, strength: self.strength)
-      //      }
-      //      .reduce(.zero, +)
-      
-      //    let adjustedColour = self.colour.applying(adjustment: combinedAdjustment)
-      //    return adjustedColour
-      
-//    }
-
-    
-    
-    
-    let modification = ColourModification(
-      luminanceLevel: hsvColour.luminanceLevel,
-//      colour: hsvColour,
-      strength: strength,
-      purpose: purpose,
-      chroma: chroma
-    )
+//    let modification = ColourModification(
+//      luminanceLevel: hsvColour.luminanceLevel,
+////      colour: hsvColour,
+//      strength: strength,
+//      purpose: purpose,
+//      chroma: chroma
+//    )
 //    print("HSVModification is: \(modification)")
-    let adjustedHSV = hsvColour.applying(adjustment: modification.adjustment)
+    let adjustedHSV = hsvColour.applying(adjustment: adjustment)
     return adjustedHSV.toRGB
   }
 
-//  public func contrastColour(modification: ColourModification?) -> RGBColour {
-//    guard let modification else { return self }
-//
-//    return self.contrastColour(
-//      strength: modification.strength,
-//      purpose: modification.purpose,
-//      chroma: modification.chroma
-//    )
-//  }
+  public func contrastColour(modification: ColourModification?) -> RGBColour {
+    guard let modification else { return self }
+
+    return self.contrastColour(
+      strength: modification.strength,
+      purpose: modification.purpose,
+      chroma: modification.chroma
+    )
+  }
 
   //  public func contrastColour(
   //    withPreset preset: ContrastPreset,
