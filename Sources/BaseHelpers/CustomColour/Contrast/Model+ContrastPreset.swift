@@ -7,7 +7,8 @@
 
 import Foundation
 
-public enum ContrastPreset: String, CaseIterable, Identifiable {
+/// Describes discrete steps from 0–1 for Colour modifications
+public enum ModificationStrengthPreset: String, CaseIterable, Identifiable {
   case subtle
   case moderate
   case standard
@@ -33,14 +34,14 @@ public enum ContrastPreset: String, CaseIterable, Identifiable {
     }
   }
 
-  public func adjustment(
-    for level: LuminanceLevel,
-    purpose: ContrastPurpose
-  ) -> HSVAdjustment {
-    HSVAdjustment.adjustment(
-      forLumaLevel: level,
-      contrastAmount: self.adjustmentStrength,
-      purpose: purpose
-    )
-  }
+//  public func adjustment(
+//    for level: LuminanceLevel,
+//    purpose: ContrastPurpose
+//  ) -> HSVAdjustment {
+//    HSVAdjustment.adjustment(
+//      forLumaLevel: level,
+//      contrastAmount: self.adjustmentStrength,
+//      purpose: purpose
+//    )
+//  }
 }

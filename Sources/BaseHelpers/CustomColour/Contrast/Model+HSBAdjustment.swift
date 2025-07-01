@@ -29,11 +29,26 @@ public struct HSVAdjustment: Sendable {
     self.saturation = saturation
     self.brightness = brightness
   }
-
+  public init(
+    _ hue: Double,
+    _ saturation: Double,
+    _ brightness: Double,
+  ) {
+    self.init(hue: hue, saturation: saturation, brightness: brightness)
+  }
 }
 
 extension HSVAdjustment {
   
+  /// Now with this, `HSVAdjustment` knows how to go from
+  /// one instance of itself, to another, linearly interpolating.
+  ///
+  /// The key here is that a `HSVAdjustment` describes
+  /// the properties neccesary to actually *change* a given colour.
+  /// These values/presets are described elsewhere, such as
+  /// `ColourModification` and `ContrastPreset` etc.
+  ///
+  /// But here, we can go from one, to another, which is very useful.
   func interpolated(
     towards other: HSVAdjustment,
     strength: Double
@@ -48,4 +63,8 @@ extension HSVAdjustment {
     )
     return adjusted
   }
+  
+//  public func adjustComponent(
+//
+//  )
 }

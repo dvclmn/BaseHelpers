@@ -7,6 +7,10 @@
 
 import Foundation
 
+public protocol HSVModifier {
+  func adjustment(for colour: HSVColour) -> HSVAdjustment
+}
+
 /// Should take in either a preset `ContrastPreset`, or a
 /// float value adjustment amount.
 /// Returns a modified `RGBColour`
@@ -30,7 +34,7 @@ public struct ColourModification {
   
   public init(
     colour: any ColourModel,
-    preset: ContrastPreset,
+    preset: ModificationStrengthPreset,
     purpose: ContrastPurpose = .legibility,
     chroma: ContrastChroma = .standard
   ) {
