@@ -9,6 +9,31 @@ import Foundation
 
 extension BinaryFloatingPoint {
   
+  public func incrementing(by amount: Self, in range: ClosedRange<Self>? = nil) -> Self {
+    var result = self + amount
+    if let range {
+      result = min(max(result, range.lowerBound), range.upperBound)
+    }
+    return result
+  }
+  
+  public mutating func increment(by amount: Self, in range: ClosedRange<Self>? = nil) {
+    self = incrementing(by: amount, in: range)
+  }
+  
+//  public func incrementing(by amount: Self, in range: ClosedRange<Self>) -> Self {
+//    var value = self
+//    value += amount
+//    return value.clamped(to: range)
+//  }
+//
+//  public mutating func increment(by: )
+  
+  /// Checks that this value is neither infinite, nor Nan
+  public var isValid: Bool {
+    return self.isFinite && !self.isNaN
+  }
+  
   public func hueWrapped() -> Self {
     let value = self.truncatingRemainder(dividingBy: 1.0)
     return value < 0 ? value + 1.0 : value

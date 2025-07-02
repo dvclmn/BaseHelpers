@@ -11,7 +11,7 @@ public enum IconLiteral: Sendable, Equatable, Codable, Hashable {
   case emoji(String)
   case symbol(String)
   
-  public var string: String {
+  public var toString: String {
     switch self {
       case .emoji(let string):
         return string

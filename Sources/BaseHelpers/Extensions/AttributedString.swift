@@ -52,7 +52,7 @@ extension AttributedString {
 
   public mutating func quickHighlight() {
 
-    print(self.string)
+    print(self.toString)
 
     let highlightContainer: AttributeContainer = .highlighter
     self.setAttributes(highlightContainer)
@@ -131,7 +131,7 @@ extension AttributedString {
   }
   
 
-  public var string: String {
+  public var toString: String {
     String(self.characters)
   }
 

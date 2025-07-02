@@ -44,7 +44,7 @@ public enum CompatiblePointerStyle: Sendable {
   //  case columnResize // columnResize(directions: HorizontalDirection.Set)
   case rowResize
   //  case rowResize // (directions: VerticalDirection.Set) -> PointerStyle
-  case frameResize(position: CompatibleFrameResizePosition, directions: CompatibleFrameResizeDirection = .outward)  //(position: FrameResizePosition, directions: FrameResizeDirection.Set = .all) -> PointerStyle
+  case frameResize(position: CompatibleFrameResizePosition, directions: CompatibleFrameResizeDirection = .all)  //(position: FrameResizePosition, directions: FrameResizeDirection.Set = .all) -> PointerStyle
   case image(Image, hotSpot: UnitPoint)  // (_ image: Image, hotSpot: UnitPoint) -> PointerStyle
 }
 

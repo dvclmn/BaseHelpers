@@ -26,7 +26,7 @@ public struct CharacterSize: ViewModifier {
     content
       .overlay {
         VStack {
-          Text(character.string)
+          Text(character.toString)
             .font(fontStyle)
             .viewLength(.horizontal, shouldDebounce: true) { width in
               widthDidChange(width)

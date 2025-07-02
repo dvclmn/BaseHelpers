@@ -8,7 +8,7 @@
 import Foundation
 
 public extension Character {
-  var string: String {
+  var toString: String {
     String(self)
   }
 }

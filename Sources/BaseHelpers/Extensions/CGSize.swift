@@ -74,6 +74,10 @@ extension CGSize {
     }
   }
   
+  public var halved: CGSize {
+    return CGSize(width: width / 2, height: height / 2)
+  }
+  
   public static let trackpad = CGSize(
     width: 700,
     height: 438

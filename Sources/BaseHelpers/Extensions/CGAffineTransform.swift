@@ -12,15 +12,17 @@ extension CGAffineTransform {
   public var hasTranslation: Bool {
     return tx != 0 || ty != 0
   }
+  
+  public var panOffset: CGSize {
+    return CGSize(width: tx, height: ty)
+  }
 
   public var hasScale: Bool {
-    let scaleX = sqrt(a * a + c * c)
-    let scaleY = sqrt(b * b + d * d)
     return abs(scaleX - 1.0) > 0.001 || abs(scaleY - 1.0) > 0.001
   }
 
   public var hasRotation: Bool {
-    // Check if the transform has rotation by seeing if it's not axis-aligned
+    /// Check if the transform has rotation by seeing if it's not axis-aligned
     return abs(b) > 0.001 || abs(c) > 0.001
   }
 
