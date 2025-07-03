@@ -8,7 +8,7 @@
 import Foundation
 
 /// Represents an integer-based position in a 2D Grid (rows and columns)
-public struct GridPosition: Equatable, Hashable, Sendable, Codable {
+public struct GridPosition: GridBase, AxisAware {
   public let row: Int
   public let column: Int
 

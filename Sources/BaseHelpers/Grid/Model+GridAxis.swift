@@ -7,33 +7,33 @@
 
 import SwiftUI
 
-//public protocol Dimensionable {
-//  var row: Int { get }
-//  var column: Int { get }
-//}
+public protocol AxisAware {
+  var row: Int { get }
+  var column: Int { get }
+}
 
-public enum GridAxis {
-  case row
-  case column
+public enum GridAxis: GridBase {
+  case horizontal
+  case vertical
 
   var locationKeyPath: WritableKeyPath<CGPoint, CGFloat> {
     switch self {
-      case .row: return \.x
-      case .column: return \.y
+      case .horizontal: return \.x
+      case .vertical: return \.y
     }
   }
 
   var sizeKeyPath: KeyPath<CGSize, CGFloat> {
     switch self {
-      case .row: return \.width
-      case .column: return \.height
+      case .horizontal: return \.width
+      case .vertical: return \.height
     }
   }
   
-  var opposing: GridDimension {
+  var opposing: Self {
     switch self {
-      case .row: return .column
-      case .column: return .row
+      case .horizontal: return .vertical
+      case .vertical: return .horizontal
     }
   }
 
@@ -92,21 +92,22 @@ public enum GridAxis {
 //}
 
 /// Metadata
-extension GridDimension {
+extension GridAxis {
+  
   var name: String {
     switch self {
-      case .row: "Width"
-      case .column: "Height"
+      case .horizontal: "Width"
+      case .vertical: "Height"
     }
   }
   
   var icon: String {
     switch self {
-      case .row:
+      case .horizontal:
         "arrow.left.and.right.text.vertical"
         //          "rectangle.portrait.arrowtriangle.2.outward"
         
-      case .column:
+      case .vertical:
         "arrow.up.and.down.text.horizontal"
         //          "rectangle.arrowtriangle.2.outward"
     }
@@ -114,15 +115,15 @@ extension GridDimension {
   
   var altName: String {
     switch self {
-      case .row: "Columns"
-      case .column: "Rows"
+      case .horizontal: "Columns"
+      case .vertical: "Rows"
     }
   }
   
   var altName02: String {
     switch self {
-      case .row: "Horizontal"
-      case .column: "Vertical"
+      case .horizontal: "Horizontal"
+      case .vertical: "Vertical"
     }
   }
 }
