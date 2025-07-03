@@ -7,9 +7,18 @@
 
 import Foundation
 
-public extension Character {
-  var toString: String {
+extension Character {
+  public var toString: String {
     String(self)
+  }
+
+  public var descriptiveName: String {
+    switch self {
+      case " ": "Space"
+      case "\n": "New Line"
+      case "\t": "Tab"
+      default: String(self)
+    }
   }
 }
 
@@ -19,29 +28,26 @@ extension Character: Codable {
     var container = encoder.singleValueContainer()
     try container.encode(String(self))
   }
-  
+
   public init(from decoder: Decoder) throws {
     let container = try decoder.singleValueContainer()
     let string = try container.decode(String.self)
-    
+
     guard let character = string.first else {
       throw DecodingError.dataCorruptedError(
         in: container,
         debugDescription: "Empty String cannot be converted to Character."
       )
     }
-    
+
     guard string.count == 1 else {
       throw DecodingError.dataCorruptedError(
         in: container,
         debugDescription: "Multi-character String cannot be converted to Character."
       )
     }
-    
+
     self = character
   }
-  
-
-  
 
 }
