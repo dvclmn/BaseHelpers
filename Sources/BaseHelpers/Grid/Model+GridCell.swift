@@ -35,6 +35,36 @@ extension GridCell {
   }
 
   public var isEmpty: Bool { character == " " }
+
+  static func generateCells(from text: String) -> [GridCell] {
+
+    let dimensions = text.gridDimensions
+
+    var cells: [GridCell] = []
+    
+    for (rowIndex, line) in text.lines.enumerated() {
+      /// Process characters
+      for (columnIndex, character) in line.enumerated() {
+        cells.append(
+          GridCell(
+            character: character,
+            position: GridPosition(row: rowIndex, column: columnIndex),
+            colour: .white
+          )
+        )
+      }
+      /// Pad remainder of row with spaces
+      let padding = dimensions.columns - line.count
+      if padding > 0 {
+        for colIndex in line.count..<dimensions.columns {
+          let position = GridPosition(row: rowIndex, column: colIndex)
+          cells.append(GridCell.createBlank(at: position))
+
+        }
+      }
+    }
+    return cells
+  }  // END generate Cells from Text
 }
 
 enum GridCellError: LocalizedError {
@@ -60,8 +90,9 @@ extension GridCell: CustomStringConvertible {
       Colour: \(colour)
     """
   }
-  
+
   public var descriptionOneLine: String {
-    return "GridCanvas Cell: Character `\(character.descriptiveName)`, ArtworkPosition `\(position)`, Colour `\(colour)`"
+    return
+      "GridCanvas Cell: Character `\(character.descriptiveName)`, ArtworkPosition `\(position)`, Colour `\(colour)`"
   }
 }

@@ -8,17 +8,19 @@
 import Foundation
 
 extension String {
+  
+  public func lines(
+    omittingEmptySubsequences: Bool = false
+  ) -> [String] {
 
-  public var lines: [Substring] {
-    let result = self.split(
-      separator: "\n",
-      maxSplits: Int.max,
-      omittingEmptySubsequences: false
-    )
-    return result
+    let lines: [String] = self.substringLines(omittingEmptySubsequences: omittingEmptySubsequences).map { substring in
+      String(substring)
+    }
+    
+    return lines
   }
 
-  public func lines(omittingEmptySubsequences: Bool) -> [Substring] {
+  public func substringLines(omittingEmptySubsequences: Bool = false) -> [Substring] {
     let result = self.split(
       separator: "\n",
       maxSplits: Int.max,
@@ -32,25 +34,24 @@ extension String {
   }
 
   public var longestLineLength: Int {
-    //    print("Let's get longest line length.")
-    //    print("Line count: \(lines.count)")
-    let longestLine = lines.map { $0.count }.max() ?? 1
-
-
-    //    print("Longest line length: \(longestLine)")
-
+    let longestLine = substringLines().map { $0.count }.max() ?? 1
     return longestLine
+  }
+
+  public var gridDimensions: GridDimensions {
+    let columns: Int = longestLineLength
+    let rows: Int = substringLines().count
+    return GridDimensions(columns: columns, rows: rows)
   }
 
   public func indentingEachLine(_ level: Int = 1, indentChar: String = "\t") -> String {
     let indent = String(repeating: indentChar, count: level)
-    let result = self.lines
+    let result = self.substringLines()
       .map { indent + $0 }
       .joined(separator: "\n")
 
     return result
   }
-
 
   public func components(separatedBy separator: Character) -> [String] {
     return self.split(separator: separator).map(String.init)
@@ -95,64 +96,64 @@ extension String {
     wrapWithDividers: Bool = false,
     emptyPlaceholder: String = "(Empty)"
   ) -> String {
-    
+
     // Handle empty string
     if self.isEmpty {
       let result = emptyPlaceholder
       return wrapWithDividers ? wrapInDividers(result) : result
     }
-    
+
     // Ensure minimum length for meaningful truncation
-    let minLength = 2 // Minimum to show at least 1 char on each side (or 2 chars + "..." if showEnd is false)
+    let minLength = 2  // Minimum to show at least 1 char on each side (or 2 chars + "..." if showEnd is false)
     let effectiveMaxLength = max(minLength, maxLength)
-    
+
     // If string is short enough, return as-is
     if self.count <= effectiveMaxLength {
       return wrapWithDividers ? wrapInDividers(self) : self
     }
-    
+
     let ellipsis = "..."
-    
+
     let result: String
-    
+
     if showEnd {
       // Show beginning and end: "begin...end"
       // Split the maxLength evenly between prefix and suffix
       let prefixLength = effectiveMaxLength / 2
       let suffixLength = effectiveMaxLength - prefixLength  // This handles odd numbers by giving extra to suffix
-      
+
       let prefix = String(self.prefix(prefixLength))
       let suffix = String(self.suffix(suffixLength))
-      
+
       result = "\(prefix)\(ellipsis)\(suffix)"
     } else {
       // Show only beginning: "begin..."
       let prefix = String(self.prefix(effectiveMaxLength))
-      
+
       result = "\(prefix)\(ellipsis)"
     }
-    
+
     return wrapWithDividers ? wrapInDividers(result) : result
   }
-  
+
   /// Wraps text in decorative dividers for display purposes
   private func wrapInDividers(_ text: String) -> String {
     return "\n---\n\(text)\n---\n"
   }
-  
+
   // MARK: - Usage Examples
   /*
    let uuid = "550e8400-e29b-41d4-a716-446655440000"
    print(uuid.truncateMiddle(maxLength: 8))  // "550e...0000" (4 + 4 chars)
-   
+  
    let shortText = "Hello"
    print(shortText.truncateMiddle(maxLength: 10))  // "Hello"
-   
+  
    let longText = "This is a very long string that needs truncation"
    print(longText.truncateMiddle(maxLength: 12))  // "This i...cation" (6 + 6 chars)
    print(longText.truncateMiddle(maxLength: 10))  // "This ...ation" (5 + 5 chars)
    print(longText.truncateMiddle(maxLength: 15, showEnd: false))  // "This is a very ..."
-   
+  
    let empty = ""
    print(empty.truncateMiddle())  // "(Empty)"
    */
