@@ -6,6 +6,11 @@
 //
 
 public struct GridDimensions: GridBase {
-  var columns: Int
-  var rows: Int
+  public var columns: Int
+  public var rows: Int
+  
+  public init(columns: Int, rows: Int) {
+    self.columns = columns
+    self.rows = rows
+  }
 }

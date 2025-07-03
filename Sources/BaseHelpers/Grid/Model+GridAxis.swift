@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-public protocol AxisAware {
+public protocol GridAxisAware {
   var row: Int { get }
   var column: Int { get }
 }
