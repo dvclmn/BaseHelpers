@@ -17,7 +17,7 @@ public struct GridCell: GridBase {
     id: UUID = UUID(),
     character: Character,
     position: GridPosition,
-    colour: RGBColour
+    colour: RGBColour = .white
   ) {
     self.id = id
     self.character = character
@@ -29,9 +29,9 @@ public struct GridCell: GridBase {
 extension GridCell {
   public static func createBlank(
     at position: GridPosition,
-    colour: RGBColour? = nil
+    colour: RGBColour = .white
   ) -> GridCell {
-    return GridCell(character: " ", position: position, colour: colour ?? .white)
+    return GridCell(character: " ", position: position, colour: colour)
   }
 
   public var isEmpty: Bool { character == " " }
@@ -42,7 +42,7 @@ extension GridCell {
 
     var cells: [GridCell] = []
     
-    for (rowIndex, line) in text.lines.enumerated() {
+    for (rowIndex, line) in text.substringLines().enumerated() {
       /// Process characters
       for (columnIndex, character) in line.enumerated() {
         cells.append(
