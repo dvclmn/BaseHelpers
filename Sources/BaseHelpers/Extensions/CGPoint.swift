@@ -7,8 +7,6 @@
 
 import SwiftUI
 
-
-
 public enum CoordinateMappingMode {
   /// Fill destination rect exactly, even if aspect ratio is distorted
   case stretch
@@ -22,9 +20,52 @@ public enum CoordinateMappingMode {
 
 extension CGPoint {
 
+  // MARK: - UnitPoint
+  public func debugColour(unitPoint: UnitPoint, in size: CGSize) -> Color {
+    guard self.isNear(unitPoint: unitPoint, in: size) else {
+      return Color.clear
+    }
+    return unitPoint.debugColour
+  }
+
+  public func isNear(
+    unitPoint: UnitPoint,
+    in size: CGSize,
+    threshold: CGFloat = 10
+  ) -> Bool {
+    let targetPoint = unitPoint.toCGPoint(in: size)
+    return self.distance(to: targetPoint) <= threshold
+  }
+  
+  /// Returns true if both width and height are greater than zero
+  public var isPositive: Bool {
+    return x > 0 && y > 0
+  }
+  
+//  public var isGreaterThanZero: Bool {
+//    return self.x > 0 && self.y > 0
+//  }
+
+  public func toUnitPoint(in size: CGSize) -> UnitPoint {
+    guard size.isPositive else {
+      return .center
+    }
+
+    return UnitPoint(x: x / size.width, y: y / size.height)
+  }
+
   public init(fromSize size: CGSize) {
     self.init(x: size.width, y: size.height)
   }
+
+  public func isWithin(size: CGSize) -> Bool {
+    return self.x > 0 || self.x < size.width
+      || self.y > 0 || self.y < size.height
+  }
+  //  if point.x < 0 || point.x > size.width || point.y < 0 || point.y > size.height {
+  //    y += spacing
+  //    return
+  //  }
 
   /// Assumes top-left anchor for origin
   public func isWithin(_ rect: CGRect) -> Bool {
@@ -251,14 +292,6 @@ extension CGPoint {
     )
 
     return result
-  }
-
-  public func unitPoint(in size: CGSize) -> UnitPoint {
-    guard size.width > 0 && size.height > 0 else {
-      return .center  // or another reasonable default
-    }
-
-    return UnitPoint(x: x / size.width, y: y / size.height)
   }
 
   public var isEmpty: Bool {

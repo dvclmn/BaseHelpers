@@ -36,7 +36,7 @@ extension GridCell {
 
   public var isEmpty: Bool { character == " " }
 
-  static func generateCells(from text: String) -> [GridCell] {
+  public static func generateCells(from text: String) -> [GridCell] {
 
     let dimensions = text.gridDimensions
 

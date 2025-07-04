@@ -13,10 +13,7 @@ public typealias ViewLengthOutput = (CGFloat) -> Void
 /// `CGSize`, for width and height of view
 public struct ViewSizeModifier: ViewModifier {
   @State private var debouncer: AsyncDebouncer?
-//  private let debouncer: AsyncDebouncer?
-  
   let valueOutput: ViewSizeOutput
-  
   public init(
     shouldDebounce: Bool,
     debounceInterval: Double,
@@ -25,7 +22,7 @@ public struct ViewSizeModifier: ViewModifier {
     self._debouncer = State(initialValue: shouldDebounce ? AsyncDebouncer(interval: debounceInterval) : nil)
     self.valueOutput = valueOutput
   }
-  
+
   public func body(content: Content) -> some View {
     content
       .onGeometryChange(for: CGSize.self) { proxy in
@@ -44,15 +41,14 @@ public struct ViewSizeModifier: ViewModifier {
   }
 }
 
-
 /// `CGFloat`, for just width, or just height
 public struct ViewLengthModifier: ViewModifier {
 
   private let debouncer: AsyncDebouncer?
-  
+
   let axis: Axis
   let valueOutput: ViewLengthOutput
-  
+
   public init(
     axis: Axis,
     shouldDebounce: Bool,
@@ -62,7 +58,7 @@ public struct ViewLengthModifier: ViewModifier {
     self.axis = axis
     self.valueOutput = valueOutput
   }
-  
+
   public func body(content: Content) -> some View {
     content
       .onGeometryChange(for: CGFloat.self) { proxy in
@@ -75,7 +71,7 @@ public struct ViewLengthModifier: ViewModifier {
         }
       } action: { newValue in
         Task {
-          
+
           if let debouncer {
             await debouncer.execute { @MainActor in
               valueOutput(newValue)
@@ -83,13 +79,9 @@ public struct ViewLengthModifier: ViewModifier {
           } else {
             valueOutput(newValue)
           }
-          
-//          await debouncer.execute { @MainActor in
-//            valueOutput(newValue)
-//          }
         }
-      } // END geom change modifier
-      
+      }  // END geom change modifier
+
   }
 }
 extension View {

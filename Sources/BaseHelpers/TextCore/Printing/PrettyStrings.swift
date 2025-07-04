@@ -44,38 +44,8 @@ extension PrettyPrint {
       case let array as [Value]:
         return arrayString(array)
 
-      case let dict as [AnyHashable: Any]:
-        if dict.isEmpty { return "[:]" }
-
-        // If we're at max depth, truncate the dictionary
-        if currentDepth >= maxDepth {
-          return "{...}"
-        }
-
-        let maxKeyLength =
-          dict.keys.map {
-            prettyPrintValue($0, indent: 0, currentDepth: currentDepth, maxDepth: maxDepth).count
-          }.max() ?? 0
-
-        var result = "[\n"
-        for (key, value) in dict {
-          let keyString = prettyPrintValue(key, indent: indent + 2, currentDepth: currentDepth, maxDepth: maxDepth)
-
-          // For nested structures at maxDepth, show {...}
-          let valueString: String
-          if shouldTruncateValue(value) && currentDepth + 1 >= maxDepth {
-            valueString = "{...}"
-          } else {
-            valueString = prettyPrintValue(
-              value, indent: indent + 2, currentDepth: currentDepth + 1, maxDepth: maxDepth)
-          }
-
-          let padding = max(0, maxKeyLength - keyString.count + 1)
-          result += "\(nestedIndentation)\(keyString):\(String(repeating: " ", count: padding))\(valueString),\n"
-        }
-        result = String(result.dropLast(2))
-        result += "\n\(indentation)]"
-        return result
+      case let dict as [AnyHashable: Value]:
+        return dictString(dict)
 
       default:
         let mirror = Mirror(reflecting: value)
@@ -91,29 +61,30 @@ extension PrettyPrint {
         let padding = calculatePadding(for: mirror.children)
 
         var result = "{\n"
-        for child in mirror.children {
-          if let label = child.label {
-            let key = "\"\(label)\""
-            let spaces = String(repeating: " ", count: max(0, padding - key.count))
-
-            // For nested structures at maxDepth, show {...}
-            let valueString: String
-            if shouldTruncateValue(child.value) && currentDepth + 1 >= maxDepth {
-              valueString = "{...}"
-            } else {
-              valueString = prettyPrintValue(
-                child.value, indent: indent + 2, currentDepth: currentDepth + 1, maxDepth: maxDepth)
-            }
-
-            result += "\(nestedIndentation)\(key):\(spaces)\(valueString),\n"
-          }
-        }
+//        for child in mirror.children {
+//          if let label = child.label {
+//            let key = "\"\(label)\""
+//            let spaces = String(repeating: " ", count: max(0, padding - key.count))
+//
+//            // For nested structures at maxDepth, show {...}
+//            let valueString: String
+//            if shouldTruncateValue(child.value) && currentDepth + 1 >= maxDepth {
+//              valueString = "{...}"
+//            } else {
+//              valueString = prettyPrintValue(
+//                child.value, indent: indent + 2, currentDepth: currentDepth + 1, maxDepth: maxDepth)
+//            }
+//
+//            result += "\(nestedIndentation)\(key):\(spaces)\(valueString),\n"
+//          }
+//        }
         result = String(result.dropLast(2))
         result += "\n\(indentation)}"
         return result
     }
   }
 
+  // MARK: - Array
   private func arrayString(_ array: [Value]) -> String {
     if array.isEmpty { return "[]" }
 
@@ -124,18 +95,56 @@ extension PrettyPrint {
 
     var result = "[\n"
     for element in array {
-      result +=
-        "\(nestedIndentation)\(prettyPrintValue(element, indent: indent + 2, currentDepth: currentDepth + 1, maxDepth: maxDepth)),\n"
+      fatalError("Need to finish implementing this")
+//      result +=
+//        "\(nestedIndentation)\(prettyPrintValue(element, indent: indent + 2, currentDepth: currentDepth + 1, maxDepth: maxDepth)),\n"
     }
     result = String(result.dropLast(2))
     result += "\n\(indentation)]"
     return result
 
   }
-
-  private func calculateIndentation(_ indentCharacter: String?) -> Int {
-
+  
+  // MARK: - Dictionary
+  private func dictString(_ dict: [AnyHashable: Value]) -> String {
+    if dict.isEmpty { return "[:]" }
+    
+    /// If at max depth, truncate the dictionary
+    if currentDepth >= maxDepth {
+      return "{...}"
+    }
+    
+    #warning("Need to continue work on this")
+//    let maxKeyLength =
+//    dict.keys.map {
+//      
+////      prettyPrinted($0, indent: 0, currentDepth: currentDepth, maxDepth: maxDepth).count
+//    }.max() ?? 0
+//    
+//    var result = "[\n"
+//    for (key, value) in dict {
+//      let keyString = prettyPrintValue(key, indent: indent + 2, currentDepth: currentDepth, maxDepth: maxDepth)
+//      
+//      // For nested structures at maxDepth, show {...}
+//      let valueString: String
+//      if shouldTruncateValue(value) && currentDepth + 1 >= maxDepth {
+//        valueString = "{...}"
+//      } else {
+//        valueString = prettyPrintValue(
+//          value, indent: indent + 2, currentDepth: currentDepth + 1, maxDepth: maxDepth)
+//      }
+//      
+//      let padding = max(0, maxKeyLength - keyString.count + 1)
+//      result += "\(nestedIndentation)\(keyString):\(String(repeating: " ", count: padding))\(valueString),\n"
+//    }
+//    result = String(result.dropLast(2))
+//    result += "\n\(indentation)]"
+    return "dictionary result"
   }
+
+//  private func calculateIndentation(_ indentCharacter: String?) -> Int {
+//
+//  }
 }
 
 //public extension Array {
