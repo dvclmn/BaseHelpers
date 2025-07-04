@@ -13,7 +13,9 @@ public struct PrettyPrint<Value: CustomStringConvertible> {
 
   private var indent: Int = 0
   private var currentDepth: Int = 0
+
   
+
   public init(
     _ value: Value,
     maxDepth: Int = 3,
@@ -21,92 +23,89 @@ public struct PrettyPrint<Value: CustomStringConvertible> {
     self.value = value
     self.maxDepth = maxDepth
   }
+}
+
+extension PrettyPrint {
   
+  private var indentation: String {
+    String(repeating: " ", count: self.indent)
+  }
+  private var nestedIndentationation: String {
+    String(repeating: " ", count: self.indent + 2)
+  }
+
   public var prettyPrinted: String {
-    let indentation = String(repeating: " ", count: self.indent)
-    let nestedIndent = String(repeating: " ", count: self.indent + 2)
-    
-    // Handle DirectlyPrintable types (these should always show their value)
-    if let printable = value as? DirectlyPrintable {
-      return printable.printableString
-    }
-    
+
+    //    if let printable = value as? DirectlyPrintable {
+    //      return printable.printableString
+    //    }
+
     switch value {
-      case let array as [Any]:
-        if array.isEmpty { return "[]" }
-        
-        // If we're at max depth, truncate the array
-        if currentDepth >= maxDepth {
-          return "[...]"
-        }
-        
-        var result = "[\n"
-        for element in array {
-          result += "\(nestedIndent)\(prettyPrintValue(element, indent: indent + 2, currentDepth: currentDepth + 1, maxDepth: maxDepth)),\n"
-        }
-        result = String(result.dropLast(2))
-        result += "\n\(indentation)]"
-        return result
-        
+      case let array as [Value]:
+        return arrayString(array)
+
       case let dict as [AnyHashable: Any]:
         if dict.isEmpty { return "[:]" }
-        
+
         // If we're at max depth, truncate the dictionary
         if currentDepth >= maxDepth {
           return "{...}"
         }
-        
-        let maxKeyLength = dict.keys.map {
-          prettyPrintValue($0, indent: 0, currentDepth: currentDepth, maxDepth: maxDepth).count
-        }.max() ?? 0
-        
+
+        let maxKeyLength =
+          dict.keys.map {
+            prettyPrintValue($0, indent: 0, currentDepth: currentDepth, maxDepth: maxDepth).count
+          }.max() ?? 0
+
         var result = "[\n"
         for (key, value) in dict {
           let keyString = prettyPrintValue(key, indent: indent + 2, currentDepth: currentDepth, maxDepth: maxDepth)
-          
+
           // For nested structures at maxDepth, show {...}
           let valueString: String
           if shouldTruncateValue(value) && currentDepth + 1 >= maxDepth {
             valueString = "{...}"
           } else {
-            valueString = prettyPrintValue(value, indent: indent + 2, currentDepth: currentDepth + 1, maxDepth: maxDepth)
+            valueString = prettyPrintValue(
+              value, indent: indent + 2, currentDepth: currentDepth + 1, maxDepth: maxDepth)
           }
-          
+
           let padding = max(0, maxKeyLength - keyString.count + 1)
-          result += "\(nestedIndent)\(keyString):\(String(repeating: " ", count: padding))\(valueString),\n"
+          result += "\(nestedIndentation)\(keyString):\(String(repeating: " ", count: padding))\(valueString),\n"
         }
         result = String(result.dropLast(2))
         result += "\n\(indentation)]"
         return result
-        
+
       default:
         let mirror = Mirror(reflecting: value)
         if mirror.children.isEmpty {
           return String(describing: value)
         }
-        
+
         // If we're at max depth, truncate the object
         if currentDepth >= maxDepth {
           return "{...}"
         }
-        
+
         let padding = calculatePadding(for: mirror.children)
-        
+
         var result = "{\n"
         for child in mirror.children {
           if let label = child.label {
             let key = "\"\(label)\""
             let spaces = String(repeating: " ", count: max(0, padding - key.count))
-            
+
             // For nested structures at maxDepth, show {...}
             let valueString: String
             if shouldTruncateValue(child.value) && currentDepth + 1 >= maxDepth {
               valueString = "{...}"
             } else {
-              valueString = prettyPrintValue(child.value, indent: indent + 2, currentDepth: currentDepth + 1, maxDepth: maxDepth)
+              valueString = prettyPrintValue(
+                child.value, indent: indent + 2, currentDepth: currentDepth + 1, maxDepth: maxDepth)
             }
-            
-            result += "\(nestedIndent)\(key):\(spaces)\(valueString),\n"
+
+            result += "\(nestedIndentation)\(key):\(spaces)\(valueString),\n"
           }
         }
         result = String(result.dropLast(2))
@@ -115,13 +114,35 @@ public struct PrettyPrint<Value: CustomStringConvertible> {
     }
   }
 
+  private func arrayString(_ array: [Value]) -> String {
+    if array.isEmpty { return "[]" }
+
+    /// If at max depth, truncate the array
+    if currentDepth >= maxDepth {
+      return "[...]"
+    }
+
+    var result = "[\n"
+    for element in array {
+      result +=
+        "\(nestedIndentation)\(prettyPrintValue(element, indent: indent + 2, currentDepth: currentDepth + 1, maxDepth: maxDepth)),\n"
+    }
+    result = String(result.dropLast(2))
+    result += "\n\(indentation)]"
+    return result
+
+  }
+
+  private func calculateIndentation(_ indentCharacter: String?) -> Int {
+
+  }
 }
 
 //public extension Array {
 //  var prettyPrinted: String {
 //    prettyPrintValue(self, indent: 0, currentDepth: 0, maxDepth: 2)
 //  }
-//  
+//
 //  func prettyPrinted(maxDepth: Int = .max) -> String {
 //    prettyPrintValue(self, indent: 0, currentDepth: 0, maxDepth: maxDepth)
 //  }
@@ -131,7 +152,7 @@ public struct PrettyPrint<Value: CustomStringConvertible> {
 //  var prettyPrinted: String {
 //    prettyPrintValue(self, indent: 0, currentDepth: 0, maxDepth: 2)
 //  }
-//  
+//
 //  func prettyPrinted(maxDepth: Int = .max) -> String {
 //    prettyPrintValue(self, indent: 0, currentDepth: 0, maxDepth: maxDepth)
 //  }
@@ -142,7 +163,6 @@ private func calculatePadding(for children: Mirror.Children) -> Int {
   let maxLength = children.compactMap { $0.label }.map { $0.count + 2 }.max() ?? 0
   return maxLength + 1  // Add 1 for the colon
 }
-
 
 // Protocol for types that can be directly printed
 //private protocol DirectlyPrintable {
@@ -177,11 +197,10 @@ private func calculatePadding(for children: Mirror.Children) -> Int {
 //  var printableString: String { "\"\(base64EncodedString())\"" }
 //}
 
-
 // Helper function to determine if a value should be truncated
 //private func shouldTruncateValue(_ value: Any) -> Bool {
 //  if value is DirectlyPrintable { return false }
-//  
+//
 //  switch value {
 //    case is [Any], is [AnyHashable: Any]:
 //      return true
@@ -191,16 +210,19 @@ private func calculatePadding(for children: Mirror.Children) -> Int {
 //  }
 //}
 
+extension Regex<
+  Regex<
+    (
+      Substring,
+      leading: Substring,
+      content: Substring,
+      trailing: Substring
+    )
+  >.RegexOutput
+>.Match {
 
-public extension Regex<Regex<(
-  Substring,
-  leading: Substring,
-  content: Substring,
-  trailing: Substring
-)>.RegexOutput>.Match {
-  
-  var prettyDescription: String {
-    
+  public var prettyDescription: String {
+
     var result = "Match:\n"
     result += "  Range: Lower bound: \(self.range.lowerBound), Upper bound: \(self.range.upperBound)\n"
     result += "  Matched text: \"\(self.0)\"\n"
@@ -210,19 +232,20 @@ public extension Regex<Regex<(
     result += "    Content: \"\(self.content)\"\n"
     result += "    Trailing: \"\(self.trailing)\"\n"
     return result
-    
+
   }
-  
-  var briefDescription: String {
-    
-    let result = "Matches (leading, content, trailing):  ░░░░░\"\(self.output.leading)\"░░░░░\"\(self.output.content)\"░░░░░\"\(self.output.trailing)\"░░░░░\n"
+
+  public var briefDescription: String {
+
+    let result =
+      "Matches (leading, content, trailing):  ░░░░░\"\(self.output.leading)\"░░░░░\"\(self.output.content)\"░░░░░\"\(self.output.trailing)\"░░░░░\n"
     return result
-    
+
   }
-  
-  func boxedDescription(header: String) -> String {
+
+  public func boxedDescription(header: String) -> String {
     fatalError("Need to implement this")
-    
+
     //    return SwiftBox.drawBox(
     //      header: header,
     //      content: self.prettyDescription
@@ -230,38 +253,37 @@ public extension Regex<Regex<(
   }
 }
 
-public extension Regex<Regex<(Substring, Substring)>.RegexOutput>.Match {
-  
-  var prettyDescription: String {
+extension Regex<Regex<(Substring, Substring)>.RegexOutput>.Match {
+
+  public var prettyDescription: String {
     var result = "Match:\n"
     result += "  Range: \(self.range)\n"
     result += "  Matched text: \"\(self.0)\"\n"
-    
+
     if !self.1.isEmpty {
       result += "  Captured group: \"\(self.1)\"\n"
     }
-    
+
     result += "  Output:\n"
     result += "    Full match: \"\(self.output.0)\"\n"
     result += "    Capture: \"\(self.output.1)\"\n"
     return result
   }
-  
-  func boxedDescription(header: String) -> String {
-    
+
+  public func boxedDescription(header: String) -> String {
+
     fatalError("Need to implement this")
     //    return SwiftBox.draw(header: header, content: self.prettyDescription)
   }
-  
-  
+
 }
 
-public extension Regex<Regex<Substring>.RegexOutput>.Match {
-  var prettyDescription: String {
+extension Regex<Regex<Substring>.RegexOutput>.Match {
+  public var prettyDescription: String {
     var result = "Match:\n"
     result += "  Range: \(self.range)\n"
     result += "  Matched text: \"\(self)\"\n"
-    
+
     result += "  Output:\n"
     result += "  Full match: \"\(self.output)\"\n"
     return result
