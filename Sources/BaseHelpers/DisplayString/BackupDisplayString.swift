@@ -69,50 +69,50 @@ extension CGVector {
 }
 
 extension UnitPoint {
-  public var displayString: String {
-    self.displayString(style: .long)
-  }
-  
-  public func displayString(decimalPlaces: Int = 2, style: DisplayStringStyle = .short) -> String {
-    
-    let width: String = "\(self.x.displayString(decimalPlaces))"
-    let height: String = "\(self.y.displayString(decimalPlaces))"
-    
-    switch style {
-      case .short:
-        return "\(width) x \(height)"
-        
-      case .long, .standard:
-        return "X \(width)  Y \(height)"
-        
-    }
-  }
+//  public var displayString: String {
+//    self.displayString(style: .long)
+//  }
+//  
+//  public func displayString(decimalPlaces: Int = 2, style: DisplayStringStyle = .short) -> String {
+//    
+//    let width: String = "\(self.x.displayString(decimalPlaces))"
+//    let height: String = "\(self.y.displayString(decimalPlaces))"
+//    
+//    switch style {
+//      case .short:
+//        return "\(width) x \(height)"
+//        
+//      case .long, .standard:
+//        return "X \(width)  Y \(height)"
+//        
+//    }
+//  }
 
 }
 
 extension CGRect {
-  public var displayString: String {
-    self.displayString()
-  }
-  
-  public func displayString(
-    decimalPlaces: Int = 2,
-    style: DisplayStringStyle = .short
-  ) -> String {
-    
-    let originX: String = "\(self.origin.x.displayString(decimalPlaces))"
-    let originY: String = "\(self.origin.y.displayString(decimalPlaces))"
-    let width: String = "\(self.width.displayString(decimalPlaces))"
-    let height: String = "\(self.height.displayString(decimalPlaces))"
-    
-    switch style {
-      case .short, .standard:
-        return "X \(originX), Y \(originY), W \(width), H \(height)"
-        
-      case .long:
-        return "X \(originX), Y \(originY), Width \(width), Height \(height)"
-    }
-  }
-  
+//  public var displayString: String {
+//    self.displayString()
+//  }
+//  
+//  public func displayString(
+//    decimalPlaces: Int = 2,
+//    style: DisplayStringStyle = .short
+//  ) -> String {
+//    
+//    let originX: String = "\(self.origin.x.displayString(decimalPlaces))"
+//    let originY: String = "\(self.origin.y.displayString(decimalPlaces))"
+//    let width: String = "\(self.width.displayString(decimalPlaces))"
+//    let height: String = "\(self.height.displayString(decimalPlaces))"
+//    
+//    switch style {
+//      case .short, .standard:
+//        return "X \(originX), Y \(originY), W \(width), H \(height)"
+//        
+//      case .long:
+//        return "X \(originX), Y \(originY), Width \(width), Height \(height)"
+//    }
+//  }
+//  
 
 }

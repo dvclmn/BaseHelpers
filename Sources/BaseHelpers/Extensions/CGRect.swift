@@ -8,6 +8,20 @@
 import SwiftUI
 
 extension CGRect {
+  
+  public func displayString(
+    _ decimalPlaces: Int = 2,
+    grouping: Decimal.FormatStyle.Configuration.Grouping = .automatic
+  ) -> String {
+    
+    let cgPoint = self.origin
+    let size = self.size
+    
+    let formattedA = cgPoint.displayString(decimalPlaces, grouping: grouping)
+//    let formattedA: String = value.valueA.formatted(.number.precision(.fractionLength(decimalPlaces)).grouping(grouping))
+//    let formattedB: String = value.valueA.formatted(.number.precision(.fractionLength(decimalPlaces)).grouping(grouping))
+//    return String(formattedA + " x " + formattedB)
+  }
 
   public static let example01 = CGRect(
     x: 0,

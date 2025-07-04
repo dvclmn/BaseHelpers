@@ -13,10 +13,10 @@ extension CGFloat {
   
 //  public var value: BinaryFloatingPoint { self }
 
-  public func displayString(
-    decimalPlaces: Int = 2,
-    style: DisplayStringStyle = .short
-  ) -> String {
-    return String(format: "%.\(decimalPlaces)f", self)
-  }
+//  public func displayString(
+//    decimalPlaces: Int = 2,
+//    style: DisplayStringStyle = .short
+//  ) -> String {
+//    return String(format: "%.\(decimalPlaces)f", self)
+//  }
 }

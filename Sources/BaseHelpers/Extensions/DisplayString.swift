@@ -7,30 +7,36 @@
 
 import SwiftUI
 
-public protocol ValuePairable {
-  var valueA: CGFloat { get }
-  var valueB: CGFloat { get }
+public protocol ValuePair {
+  var valueA: Double { get }
+  var valueB: Double { get }
 }
+//public protocol ValueSingle{
+//  var value: Double { get }
+//}
 
-extension CGPoint: ValuePairable {
-  public var valueA: CGFloat { x }
-  public var valueB: CGFloat { y }
+extension CGPoint: ValuePair {
+  public var valueA: Double { x }
+  public var valueB: Double { y }
 }
-extension CGSize: ValuePairable {
-  public var valueA: CGFloat { width }
-  public var valueB: CGFloat { height }
+extension CGSize: ValuePair {
+  public var valueA: Double { width }
+  public var valueB: Double { height }
 }
-extension CGVector: ValuePairable {
-  public var valueA: CGFloat { dx }
-  public var valueB: CGFloat { dy }
+extension CGVector: ValuePair {
+  public var valueA: Double { dx }
+  public var valueB: Double { dy }
 }
-extension UnitPoint: ValuePairable {
-  public var valueA: CGFloat { x }
-  public var valueB: CGFloat { y }
+extension UnitPoint: ValuePair {
+  public var valueA: Double { x }
+  public var valueB: Double { y }
 }
+//extension BinaryFloatingPoint {
+//  public var value: Double { Double(self) }
+//}
 
-public protocol DisplayStringable {
-  associatedtype Value: ValuePairable
+public protocol ValuePairStringable {
+  associatedtype Value: ValuePair
   var value: Value { get }
   func displayString(
     _ decimalPlaces: Int,
@@ -38,32 +44,39 @@ public protocol DisplayStringable {
   ) -> String
 }
 
-extension DisplayStringable {
+public protocol SingleValueStringable {
+  associatedtype Value: BinaryFloatingPoint
+  var value: Value { get }
+  func displayString(
+    _ decimalPlaces: Int,
+    grouping: Decimal.FormatStyle.Configuration.Grouping
+  ) -> String
+}
+
+extension ValuePairStringable {
   public func displayString(
     _ decimalPlaces: Int = 2,
     grouping: Decimal.FormatStyle.Configuration.Grouping = .automatic
   ) -> String {
     
-    
-    let formattedDX: String = Double(self.dx).formatted(.number.precision(.fractionLength(decimalPlaces)).grouping(grouping))
-    let formattedDY: String = Double(self.dy).formatted(.number.precision(.fractionLength(decimalPlaces)).grouping(grouping))
-    return String(formattedDX + " x " + formattedDY)
-    
-//    let numberFormatter = NumberFormatter()
-//    numberFormatter.minimumFractionDigits = decimalPlaces
-//    numberFormatter.maximumFractionDigits = decimalPlaces
-//    numberFormatter.usesGroupingSeparator = (grouping != .never)
-//    
-//    let formatStyle = FloatingPointFormatStyle<Double>()
-//      .precision(.fractionLength(decimalPlaces))
-//      .grouping(grouping)
-//    
-//    let formattedA = Double(value.valueA).formatted(formatStyle)
-//    let formattedB = Double(value.valueB).formatted(formatStyle)
-    
-    return "\(formattedA) × \(formattedB)"
+    let formattedA: String = value.valueA.formatted(.number.precision(.fractionLength(decimalPlaces)).grouping(grouping))
+    let formattedB: String = value.valueA.formatted(.number.precision(.fractionLength(decimalPlaces)).grouping(grouping))
+    return String(formattedA + " x " + formattedB)
   }
 }
+extension BinaryFloatingPoint {
+  public func displayString(
+    _ decimalPlaces: Int = 2,
+    grouping: Decimal.FormatStyle.Configuration.Grouping = .automatic
+  ) -> String {
+    
+    let formatted: String = Double(self).formatted(.number.precision(.fractionLength(decimalPlaces)).grouping(grouping))
+
+    return String(formatted)
+  }
+}
+
+
 
 
 //extension CGPoint: ValuePairable {

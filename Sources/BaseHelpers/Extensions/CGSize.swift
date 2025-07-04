@@ -12,22 +12,22 @@ import Foundation
 
 extension CGSize {
   
-  public var displayString: String {
-    self.displayString()
-  }
-  
-  public func displayString(
-    _ decimalPlaces: Int = 2,
-    grouping: Decimal.FormatStyle.Configuration.Grouping = .automatic
-//    grouping: FloatingPointFormatStyle<Double>.Configuration.Grouping = .automatic
-  ) -> String {
-    
-    let width: Double = self.width
-    let height: Double = self.height
-    let formattedWidth: String = width.formatted(.number.precision(.fractionLength(decimalPlaces)).grouping(grouping))
-    let formattedHeight: String = height.formatted(.number.precision(.fractionLength(decimalPlaces)).grouping(grouping))
-    return String(formattedWidth + " x " + formattedHeight)
-  }
+//  public var displayString: String {
+//    self.displayString()
+//  }
+//  
+//  public func displayString(
+//    _ decimalPlaces: Int = 2,
+//    grouping: Decimal.FormatStyle.Configuration.Grouping = .automatic
+////    grouping: FloatingPointFormatStyle<Double>.Configuration.Grouping = .automatic
+//  ) -> String {
+//    
+//    let width: Double = self.width
+//    let height: Double = self.height
+//    let formattedWidth: String = width.formatted(.number.precision(.fractionLength(decimalPlaces)).grouping(grouping))
+//    let formattedHeight: String = height.formatted(.number.precision(.fractionLength(decimalPlaces)).grouping(grouping))
+//    return String(formattedWidth + " x " + formattedHeight)
+//  }
   
   /// Strategy for handling views that are larger than their container
   public enum PlacementStrategy {

@@ -9,19 +9,19 @@ import Foundation
 
 extension CGVector {
   
-  public var displayString: String {
-    self.displayString()
-  }
-  
-  public func displayString(
-    _ decimalPlaces: Int = 2,
-    grouping: Decimal.FormatStyle.Configuration.Grouping = .automatic
-  ) -> String {
-    
-    let formattedDX: String = Double(self.dx).formatted(.number.precision(.fractionLength(decimalPlaces)).grouping(grouping))
-    let formattedDY: String = Double(self.dy).formatted(.number.precision(.fractionLength(decimalPlaces)).grouping(grouping))
-    return String(formattedDX + " x " + formattedDY)
-  }
+//  public var displayString: String {
+//    self.displayString()
+//  }
+//  
+//  public func displayString(
+//    _ decimalPlaces: Int = 2,
+//    grouping: Decimal.FormatStyle.Configuration.Grouping = .automatic
+//  ) -> String {
+//    
+//    let formattedDX: String = Double(self.dx).formatted(.number.precision(.fractionLength(decimalPlaces)).grouping(grouping))
+//    let formattedDY: String = Double(self.dy).formatted(.number.precision(.fractionLength(decimalPlaces)).grouping(grouping))
+//    return String(formattedDX + " x " + formattedDY)
+//  }
 
   /// Implements fundamental kinematic calculation (velocity = displacement/time)
 //  public static func computeSimpleVelocity(

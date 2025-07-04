@@ -55,23 +55,23 @@ extension BinaryFloatingPoint {
     return clamped(Self(range.lowerBound), Self(range.upperBound))
   }
   
-  public func displayString(
-    _ decimalPlaces: Int = 2,
-    grouping: FloatingPointFormatStyle<Self>.Configuration.Grouping = .automatic
-  ) -> String {
-    let doubleValue = Double(self)
-    let formatted = doubleValue.formatted(.number.precision(.fractionLength(decimalPlaces)).grouping(grouping))
-    return String(formatted)
-  }
+//  public func displayString(
+//    _ decimalPlaces: Int = 2,
+//    grouping: FloatingPointFormatStyle<Self>.Configuration.Grouping = .automatic
+//  ) -> String {
+//    let doubleValue = Double(self)
+//    let formatted = doubleValue.formatted(.number.precision(.fractionLength(decimalPlaces)).grouping(grouping))
+//    return String(formatted)
+//  }
+//  
+//  public var displayString: String {
+//    return self.displayString()
+//  }
   
-  public var displayString: String {
-    return self.displayString()
-  }
-  
-  public var toInt: String {
-    self.displayString(0)
+//  public var toInt: String {
+//    self.displayString(0)
     //    floatToString(value: self, places: 0)
-  }
+//  }
   
   public init(
     _ value: Self,
