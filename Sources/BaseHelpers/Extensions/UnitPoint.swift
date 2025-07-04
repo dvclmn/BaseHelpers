@@ -7,28 +7,41 @@
 
 import SwiftUI
 
-
 extension UnitPoint: @retroactive Identifiable {
   public var id: String { self.name }
 }
 
 extension UnitPoint {
-  
-//  public func startPoint(
-//    for axis: Axis,
-//    mapping: DimensionToAxisConvention
-//  ) -> Self {
-//
-//  }
-//  public func endPoint(
-//    for axis: Axis,
-//    mapping: DimensionToAxisConvention
-//  ) -> Self {
-//    switch mapping {
-//      case .widthIsHorizontal: Self.trailing
-//      case .heightIsHorizontal: Self.bottom
-//    }
-//  }
+
+  public static var allKnownCases: [UnitPoint] {
+    return [
+      .topLeading,
+      .top,
+      .topTrailing,
+      .trailing,
+      .bottomTrailing,
+      .bottom,
+      .bottomLeading,
+      .leading,
+      .center,
+    ]
+  }
+
+  //
+  //    for axis: Axis,
+  //    mapping: DimensionToAxisConvention
+  //  ) -> Self {
+  //
+  //  }
+  //  public func endPoint(
+  //    for axis: Axis,
+  //    mapping: DimensionToAxisConvention
+  //  ) -> Self {
+  //    switch mapping {
+  //      case .widthIsHorizontal: Self.trailing
+  //      case .heightIsHorizontal: Self.bottom
+  //    }
+  //  }
 
   public func toCGPoint(in size: CGSize) -> CGPoint {
     let result = CGPoint(
@@ -49,8 +62,6 @@ extension UnitPoint {
     )
     return result
   }
-
- 
 
   // Corner intermediates (positioned between corners and edge centers)
   public static let topLeadingMid = UnitPoint(x: 0.25, y: 0.25)
@@ -100,8 +111,6 @@ extension UnitPoint {
       default: .center
     }
   }
-  
-  
 
   public var toAlignment: Alignment {
 
@@ -159,7 +168,7 @@ extension UnitPoint {
       .bottomTrailing,
     ]
   }
-  
+
   /// This is just for visual debugging
   public var debugColour: Color {
     switch self {

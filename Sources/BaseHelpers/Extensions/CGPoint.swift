@@ -46,12 +46,45 @@ extension CGPoint {
 //    return self.x > 0 && self.y > 0
 //  }
 
+//  public func toUnitPoint(in size: CGSize) -> UnitPoint {
+//    guard size.isPositive else {
+//      return .center
+//    }
+//
+//    return UnitPoint(x: x / size.width, y: y / size.height)
+//  }
+//
+  
+  /// Returns the relative UnitPoint (not snapped) within a given size.
+  ///
+  /// Usage:
+  /// ```
+  /// let point = CGPoint(x: 10, y: 5)
+  /// let frameSize = CGSize(width: 100, height: 100)
+  ///
+  /// let closestAnchor = point.nearestAnchor(in: frameSize)
+  /// print(closestAnchor)  // Might print `.topLeading` if point is near (0,0)
+  /// ```
   public func toUnitPoint(in size: CGSize) -> UnitPoint {
-    guard size.isPositive else {
-      return .center
-    }
-
+    guard size.isPositive else { return .center }
     return UnitPoint(x: x / size.width, y: y / size.height)
+  }
+  
+  /// Returns the closest named UnitPoint (e.g., .topLeading, .center, etc) within a given size.
+  public func nearestAnchor(in size: CGSize) -> UnitPoint {
+    let relative = toUnitPoint(in: size)
+    
+    let anchors = UnitPoint.allKnownCases
+    
+    func distanceSquared(from a: UnitPoint, to b: UnitPoint) -> CGFloat {
+      let dx = a.x - b.x
+      let dy = a.y - b.y
+      return dx * dx + dy * dy
+    }
+    
+    return anchors.min(by: {
+      distanceSquared(from: relative, to: $0) < distanceSquared(from: relative, to: $1)
+    }) ?? .center
   }
 
   public init(fromSize size: CGSize) {
