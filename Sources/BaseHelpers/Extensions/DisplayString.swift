@@ -10,6 +10,10 @@ import SwiftUI
 public protocol ValuePair {
   var valueA: Double { get }
   var valueB: Double { get }
+  func displayString(
+    _ decimalPlaces: Int,
+    grouping: Decimal.FormatStyle.Configuration.Grouping
+  ) -> String
 }
 //public protocol ValueSingle{
 //  var value: Double { get }
@@ -35,32 +39,29 @@ extension UnitPoint: ValuePair {
 //  public var value: Double { Double(self) }
 //}
 
-public protocol ValuePairStringable {
-  associatedtype Value: ValuePair
-  var value: Value { get }
+//public protocol ValuePairStringable {
+//  associatedtype Value: ValuePair
+//  var value: Value { get }
+  
+//}
+
+public protocol SingleValue {
+//  associatedtype Value: BinaryFloatingPoint
+//  var value: Value { get }
   func displayString(
     _ decimalPlaces: Int,
     grouping: Decimal.FormatStyle.Configuration.Grouping
   ) -> String
 }
 
-public protocol SingleValueStringable {
-  associatedtype Value: BinaryFloatingPoint
-  var value: Value { get }
-  func displayString(
-    _ decimalPlaces: Int,
-    grouping: Decimal.FormatStyle.Configuration.Grouping
-  ) -> String
-}
-
-extension ValuePairStringable {
+extension ValuePair {
   public func displayString(
     _ decimalPlaces: Int = 2,
     grouping: Decimal.FormatStyle.Configuration.Grouping = .automatic
   ) -> String {
     
-    let formattedA: String = value.valueA.formatted(.number.precision(.fractionLength(decimalPlaces)).grouping(grouping))
-    let formattedB: String = value.valueA.formatted(.number.precision(.fractionLength(decimalPlaces)).grouping(grouping))
+    let formattedA: String = valueA.formatted(.number.precision(.fractionLength(decimalPlaces)).grouping(grouping))
+    let formattedB: String = valueA.formatted(.number.precision(.fractionLength(decimalPlaces)).grouping(grouping))
     return String(formattedA + " x " + formattedB)
   }
 }

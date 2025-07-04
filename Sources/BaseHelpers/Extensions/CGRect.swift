@@ -14,13 +14,10 @@ extension CGRect {
     grouping: Decimal.FormatStyle.Configuration.Grouping = .automatic
   ) -> String {
     
-    let cgPoint = self.origin
-    let size = self.size
-    
-    let formattedA = cgPoint.displayString(decimalPlaces, grouping: grouping)
-//    let formattedA: String = value.valueA.formatted(.number.precision(.fractionLength(decimalPlaces)).grouping(grouping))
-//    let formattedB: String = value.valueA.formatted(.number.precision(.fractionLength(decimalPlaces)).grouping(grouping))
-//    return String(formattedA + " x " + formattedB)
+    let formattedOrigin = self.origin.displayString(decimalPlaces, grouping: grouping)
+    let formattedSize = self.size.displayString(decimalPlaces, grouping: grouping)
+
+    return String("Origin: \(formattedOrigin), Size: \(formattedSize)")
   }
 
   public static let example01 = CGRect(
