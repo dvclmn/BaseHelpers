@@ -6,10 +6,28 @@
 //
 
 import SwiftUI
+import Foundation
 
 
 
 extension CGSize {
+  
+  public var displayString: String {
+    self.displayString()
+  }
+  
+  public func displayString(
+    _ decimalPlaces: Int = 2,
+    grouping: Decimal.FormatStyle.Configuration.Grouping = .automatic
+//    grouping: FloatingPointFormatStyle<Double>.Configuration.Grouping = .automatic
+  ) -> String {
+    
+    let width: Double = self.width
+    let height: Double = self.height
+    let formattedWidth: String = width.formatted(.number.precision(.fractionLength(decimalPlaces)).grouping(grouping))
+    let formattedHeight: String = height.formatted(.number.precision(.fractionLength(decimalPlaces)).grouping(grouping))
+    return String(formattedWidth + " x " + formattedHeight)
+  }
   
   /// Strategy for handling views that are larger than their container
   public enum PlacementStrategy {
@@ -233,6 +251,16 @@ public func + (lhs: CGSize, rhs: CGSize) -> CGSize {
     width: lhs.width + rhs.width,
     height: lhs.height + rhs.height
   )
+}
+public func + (lhs: CGSize, rhs: CGFloat) -> CGSize {
+  return CGSize(
+    width: lhs.width + rhs,
+    height: lhs.height + rhs
+  )
+}
+
+public func += (lhs: inout CGSize, rhs: CGFloat) {
+  lhs = lhs + rhs
 }
 
 

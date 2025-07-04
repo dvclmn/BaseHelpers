@@ -7,10 +7,14 @@
 
 import SwiftUI
 
-public protocol GridAxisAware {
-  var row: Int { get }
-  var column: Int { get }
-}
+//public protocol GridAxisAware {
+//  var row: Int { get }
+//  var column: Int { get }
+//}
+//public protocol GridDimensionsAware {
+//  var rows: Int { get }
+//  var columns: Int { get }
+//}
 
 public enum GridAxis: GridBase {
   case horizontal
@@ -29,7 +33,7 @@ public enum GridAxis: GridBase {
       case .vertical: return \.height
     }
   }
-  
+
   var opposing: Self {
     switch self {
       case .horizontal: return .vertical
@@ -38,26 +42,33 @@ public enum GridAxis: GridBase {
   }
 
   /// The 'actual' value, for the corresponding property, from the `GridCanvas` itself
-//  var dimensionKey: WritableKeyPath<GridCanvas.Dimensions, Int> {
-//    switch self {
-//      case .horizontal: \.columns
-//      case .vertical: \.rows
-//    }
-//  }
-//  /// Returns the key path for the opposite dimension
-//  var opposingDimensionKey: KeyPath<GridCanvas.Dimensions, Int> {
-//    switch self {
-//      case .horizontal: \.rows
-//      case .vertical: \.columns
-//    }
-//  }
 
-//  var gridPositionKey: KeyPath<GridPosition, Int> {
-//    switch self {
-//      case .horizontal: \.column
-//      case .vertical: \.row
-//    }
-//  }
+  public var dimensionsKeyPath: WritableKeyPath<GridDimensions, Int> {
+    switch self {
+      case .horizontal: \.columns
+      case .vertical: \.rows
+    }
+  }
+  //  public func dimensionKey<T: GridDimensions>(_ type: T.Type) -> WritableKeyPath<T, Int> {
+  //    switch self {
+  //      case .horizontal: \.columns
+  //      case .vertical: \.rows
+  //    }
+  //  }
+  //  /// Returns the key path for the opposite dimension
+  //  var opposingDimensionKey: KeyPath<GridDimensions, Int> {
+  //    switch self {
+  //      case .horizontal: \.rows
+  //      case .vertical: \.columns
+  //    }
+  //  }
+
+   public var positionKeyPath: KeyPath<GridPosition, Int> {
+      switch self {
+        case .horizontal: \.column
+        case .vertical: \.row
+      }
+    }
 
   //    var artworkPositionKey: KeyPath<ArtworkPosition, Int> {
   //      switch self {
@@ -76,51 +87,51 @@ public enum GridAxis: GridBase {
 }
 
 //extension CGPoint {
-//  func getValue(in dimension: GridCanvas.Dimension) -> CGFloat {
+//  func getValue(in dimension: GridAxis) -> CGFloat {
 //    self[keyPath: dimension.locationKeyPath]
 //  }
 //
-//  mutating func setValue(_ value: CGFloat, in dimension: GridCanvas.Dimension) {
+//  mutating func setValue(_ value: CGFloat, in dimension: GridAxis) {
 //    self[keyPath: dimension.locationKeyPath] = value
 //  }
 //}
 //
 //extension CGSize {
-//  func getValue(in dimension: GridCanvas.Dimension) -> CGFloat {
+//  func getValue(in dimension: GridAxis) -> CGFloat {
 //    self[keyPath: dimension.sizeKeyPath]
 //  }
 //}
 
 /// Metadata
 extension GridAxis {
-  
-  var name: String {
+
+  public var name: String {
     switch self {
       case .horizontal: "Width"
       case .vertical: "Height"
     }
   }
-  
-  var icon: String {
+
+  public var icon: String {
     switch self {
       case .horizontal:
         "arrow.left.and.right.text.vertical"
-        //          "rectangle.portrait.arrowtriangle.2.outward"
-        
+      //          "rectangle.portrait.arrowtriangle.2.outward"
+
       case .vertical:
         "arrow.up.and.down.text.horizontal"
-        //          "rectangle.arrowtriangle.2.outward"
+    //          "rectangle.arrowtriangle.2.outward"
     }
   }
-  
-  var altName: String {
+
+  public var altName: String {
     switch self {
       case .horizontal: "Columns"
       case .vertical: "Rows"
     }
   }
-  
-  var altName02: String {
+
+  public var altName02: String {
     switch self {
       case .horizontal: "Horizontal"
       case .vertical: "Vertical"
