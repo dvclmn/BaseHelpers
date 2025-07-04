@@ -71,10 +71,27 @@ extension CGPoint {
   }
   
   /// Returns the closest named UnitPoint (e.g., .topLeading, .center, etc) within a given size.
-  public func nearestAnchor(in size: CGSize) -> UnitPoint {
+  /// If the point is within a central region defined by tolerance, `.center` is returned.
+  public func nearestAnchor(
+    in size: CGSize,
+    centerTolerance: CGFloat = 0.2
+  ) -> UnitPoint {
     let relative = toUnitPoint(in: size)
     
-    let anchors = UnitPoint.allKnownCases
+    /// If close enough to center, return .center early
+    let center = UnitPoint.center
+    let dx = abs(relative.x - center.x)
+    let dy = abs(relative.y - center.y)
+    
+    if dx <= centerTolerance / 2 && dy <= centerTolerance / 2 {
+      return .center
+    }
+    
+    let anchors: [UnitPoint] = [
+      .topLeading, .top, .topTrailing,
+      .leading, .trailing,
+      .bottomLeading, .bottom, .bottomTrailing
+    ]
     
     func distanceSquared(from a: UnitPoint, to b: UnitPoint) -> CGFloat {
       let dx = a.x - b.x
@@ -86,6 +103,21 @@ extension CGPoint {
       distanceSquared(from: relative, to: $0) < distanceSquared(from: relative, to: $1)
     }) ?? .center
   }
+//  public func nearestAnchor(in size: CGSize) -> UnitPoint {
+//    let relative = toUnitPoint(in: size)
+//    
+//    let anchors = UnitPoint.allKnownCases
+//    
+//    func distanceSquared(from a: UnitPoint, to b: UnitPoint) -> CGFloat {
+//      let dx = a.x - b.x
+//      let dy = a.y - b.y
+//      return dx * dx + dy * dy
+//    }
+//    
+//    return anchors.min(by: {
+//      distanceSquared(from: relative, to: $0) < distanceSquared(from: relative, to: $1)
+//    }) ?? .center
+//  }
 
   public init(fromSize size: CGSize) {
     self.init(x: size.width, y: size.height)
