@@ -7,11 +7,11 @@
 
 import Foundation
 
-public enum DisplayStringStyle {
-  case short
-  case standard
-  case long
-}
+//public enum DisplayStringStyle {
+//  case short
+//  case standard
+//  case long
+//}
 
 
 

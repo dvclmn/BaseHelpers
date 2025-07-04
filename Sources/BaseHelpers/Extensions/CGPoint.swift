@@ -7,6 +7,52 @@
 
 import SwiftUI
 
+extension CGPoint: ValuePairable {
+  public var valueAPath: KeyPath<Self, CGFloat> { \.x }
+  public var valueBPath: KeyPath<Self, CGFloat> { \.y }
+}
+extension CGSize: ValuePairable {
+  public var valueAPath: KeyPath<Self, CGFloat> { \.width }
+  public var valueBPath: KeyPath<Self, CGFloat> { \.height }
+}
+extension CGVector: ValuePairable {
+  public var valueAPath: KeyPath<Self, CGFloat> { \.dx }
+  public var valueBPath: KeyPath<Self, CGFloat> { \.dy }
+}
+extension UnitPoint: ValuePairable {
+  public var valueAPath: KeyPath<Self, CGFloat> { \.x }
+  public var valueBPath: KeyPath<Self, CGFloat> { \.y }
+}
+
+public protocol ValuePairable {
+  associatedtype Root: ValuePairable
+  var valueAPath: KeyPath<Root, CGFloat> { get }
+  var valueBPath: KeyPath<Root, CGFloat> { get }
+}
+public protocol DisplayStringable {
+  associatedtype Value: ValuePairable
+  var value: Value { get }
+  var displayString: String { get }
+  
+}
+extension DisplayStringable {
+  public var displayString: String {
+    self.displayString()
+  }
+
+  public func displayString(
+    _ decimalPlaces: Int = 2,
+    grouping: Decimal.FormatStyle.Configuration.Grouping = .automatic
+  ) -> String {
+
+    let formattedA: String = Double(self[keyPath: valueAPath]).formatted(
+      .number.precision(.fractionLength(decimalPlaces)).grouping(grouping))
+    let formattedB: String = Double(self.y).formatted(
+      .number.precision(.fractionLength(decimalPlaces)).grouping(grouping))
+    return String(formattedA + " x " + formattedB)
+  }
+}
+
 public enum CoordinateMappingMode {
   /// Fill destination rect exactly, even if aspect ratio is distorted
   case stretch
@@ -19,16 +65,16 @@ public enum CoordinateMappingMode {
 }
 
 extension CGPoint {
-  
+
   public init(fromSize size: CGSize) {
     self.init(x: size.width, y: size.height)
   }
-  
+
   /// Assumes top-left anchor for origin
   public func isWithin(_ rect: CGRect) -> Bool {
     let isXWithin: Bool = self.x >= rect.leadingEdge && self.x <= rect.trailingEdge
     let isYWithin: Bool = self.y >= rect.topEdge && self.y <= rect.bottomEdge
-    
+
     return isXWithin && isYWithin
   }
 
@@ -92,7 +138,6 @@ extension CGPoint {
     return result
   }
 
-
   public var normalised: CGPoint {
     guard length > 0 else { return .zero }
     return CGPoint(
@@ -120,7 +165,7 @@ extension CGPoint {
   //    let p1: CGPoint = self
   //    return hypot(p2.x - p1.x, p2.y - p1.y)
   //  }
-  
+
   /// Returns true if both x and y coordinates are in the range [0.0, 1.0]
   public var isNormalised: Bool {
     return x >= 0.0 && x <= 1.0 && y >= 0.0 && y <= 1.0
@@ -225,7 +270,6 @@ extension CGPoint {
     return CGRect(origin: origin, size: size)
   }
 
-
   public func removingZoom(_ zoom: CGFloat) -> CGPoint {
     CGPoint(x: self.x / zoom, y: self.y / zoom)
   }
@@ -261,8 +305,6 @@ extension CGPoint {
     return UnitPoint(x: x / size.width, y: y / size.height)
   }
 
- 
-
   public var isEmpty: Bool {
     x.isZero && y.isZero
   }
@@ -277,10 +319,9 @@ extension CGPoint {
 
   public var isNan: Bool {
     let result: Bool = x.isNaN || y.isNaN
-//    print("Point `\(self)` is Not a Number? (NaN): \(result)")
+    //    print("Point `\(self)` is Not a Number? (NaN): \(result)")
     return result
   }
-
 
   // Shift right (increases x)
   public func shiftRight(_ distance: CGFloat) -> CGPoint {
@@ -335,7 +376,6 @@ extension CGPoint {
   ///
   /// ```
 
-
   /// Returns a point along the line defined by `start` and `end`.
   /// - Parameters:
   ///   - start: The starting point of the line.
@@ -364,7 +404,6 @@ extension CGPoint {
     return CGPoint.pointAlong(from: self, to: end, t: t)
   }
 
-
   /// Returns a point at a specified distance along the line defined by `start` and `end`.
   /// - Parameters:
   ///   - start: The starting point of the line.
@@ -391,7 +430,6 @@ extension CGPoint {
     )
   }
 
-
   /// Returns a point at a specified distance along the line from this point to `end`.
   /// - Parameters:
   ///   - end: The ending point of the line.
@@ -400,7 +438,6 @@ extension CGPoint {
   public func pointAlong(to end: CGPoint, distance: CGFloat) -> CGPoint {
     return CGPoint.pointAlong(from: self, to: end, distance: distance)
   }
-
 
   /// Where `self` is a normalised point
   ///
@@ -420,7 +457,6 @@ extension CGPoint {
       y: origin.y + (self.y * size.height)
     )
   }
-
 
   // Generate a spiral as an array of points, starting from this point as center
   public func generateSpiral(
@@ -528,9 +564,7 @@ extension Array where Element == CGPoint {
     }
   }
 
-
 }
-
 
 // MARK: - Subtraction
 infix operator - : AdditionPrecedence
@@ -561,7 +595,6 @@ public func - (lhs: CGPoint, rhs: CGFloat) -> CGPoint {
 //public func subtracting(_ size: CGSize) -> CGPoint {
 //  return CGPoint(x: self.x - size.width, y: self.y - size.height)
 //}
-
 
 // MARK: - Addition
 infix operator + : AdditionPrecedence
@@ -626,8 +659,6 @@ public func * (lhs: CGPoint, rhs: CGSize) -> CGPoint {
   )
 }
 
-
-
 //public func / (lhs: CGPoint, rhs: CGSize) -> CGPoint {
 //  CGPoint(
 //    x: rhs.width != 0 ? lhs.x / rhs.width : 0,
@@ -671,7 +702,6 @@ public func -= (lhs: inout CGPoint, rhs: CGPoint) {
 public func -= (lhs: inout CGPoint, rhs: CGSize) {
   lhs = lhs - rhs
 }
-
 
 // MARK: - Greater than
 infix operator > : ComparisonPrecedence
