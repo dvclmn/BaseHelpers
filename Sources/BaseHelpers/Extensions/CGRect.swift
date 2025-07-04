@@ -9,16 +9,7 @@ import SwiftUI
 
 extension CGRect {
   
-  public func displayString(
-    _ decimalPlaces: Int = 2,
-    grouping: Decimal.FormatStyle.Configuration.Grouping = .automatic
-  ) -> String {
-    
-    let formattedOrigin = self.origin.displayString(decimalPlaces, grouping: grouping)
-    let formattedSize = self.size.displayString(decimalPlaces, grouping: grouping)
-
-    return String("Origin: \(formattedOrigin), Size: \(formattedSize)")
-  }
+  
 
   public static let example01 = CGRect(
     x: 0,
@@ -31,39 +22,6 @@ extension CGRect {
     Path(self)
   }
 
-  /// Returns a CGRect that positions this rect inside the given `viewSize`,
-  /// using the provided `anchorPoint` (like `.topLeading`, `.center`, etc.).
-  ///
-  /// This is useful when you want to align a specific point of your view
-  /// (like the topLeading corner) with the given origin in `.position()`.
-  //  public func positionedIn(
-  //    viewSize: CGSize,
-  //    anchorPoint: UnitPoint = .center
-  //  ) -> CGRect {
-  //    // Convert UnitPoint (0...1, 0...1) into actual CGPoint in viewSize
-  //    let anchorInView = CGPoint(
-  //      x: viewSize.width * anchorPoint.x,
-  //      y: viewSize.height * anchorPoint.y
-  //    )
-  //
-  //    // Convert UnitPoint into anchor in the rect itself
-  //    let anchorInSelf = CGPoint(
-  //      x: self.width * anchorPoint.x,
-  //      y: self.height * anchorPoint.y
-  //    )
-  //
-  //    // The origin needed to place `self` so its anchor aligns with `anchorInView`
-  //    let newOrigin = CGPoint(
-  //      x: anchorInView.x - anchorInSelf.x,
-  //      y: anchorInView.y - anchorInSelf.y
-  //    )
-  //
-  ////    print("This CGRect's original origin point: \(self.origin.displayString)")
-  ////    print("And new origin point?: \(newOrigin.displayString)")
-  //
-  //    return CGRect(origin: newOrigin, size: self.size)
-  //  }
-
   /// This can be made better, but got this because SwiftUI's `.position()`
   /// modifier places the *centre* of the view at the origin. If the origin is
   /// meant to be the top leading corner, then this can help compensate for that.
@@ -74,19 +32,6 @@ extension CGRect {
 
     let viewMid = viewSize.midpoint
     let selfMid = self.size.midpoint
-
-
-    /// We get the width and height (e.g. of a canvas, within a view)
-    //      let rectWidth: CGFloat = self.width
-    //      let rectHeight: CGFloat = self.height
-
-    /// Halve it — this should be the rect's midpoint right?
-    //      let rectWidthHalf = rectWidth / 2
-    //      let rectHeightHalf = rectHeight / 2
-
-    /// We get the width and height of the containing view and halve *that*
-    //      let viewWidthHalf: CGFloat = viewSize.width / 2
-    //      let viewHeightHalf: CGFloat = viewSize.height / 2
 
     let newOrigin = CGPoint(
       x: viewMid.x - selfMid.x,
@@ -113,54 +58,9 @@ extension CGRect {
     return CGRect(origin: origin, size: self.size)
   }
 
-  //  public func midPoint(isFlippedForSwiftUI: Bool = true) -> CGPoint {
-  //    let midX: CGFloat = self.midX
-  //    let midY: CGFloat = self.midY
-  //
-  //    return CGPoint(x: midX, y: isFlippedForSwiftUI ? (midY * -1) : midY)
-  //
-  //  }
-
-  //  public func centred(in viewSize: CGSize) -> CGRect {
-  //    let something = size.midpoint
-  //    let halfX = self.width / 2
-  //    let halfY = self.height / 2
-  //
-  //    let originalOrigin: CGPoint = self.origin
-  //
-  //    return CGRect(
-  //      origin: .zero,
-  //      size: self.size
-  //    )
-  //
-  //  }
-
   public var toCGSize: CGSize {
     CGSize(width: width, height: height)
   }
-
-  //  public var displayString: String {
-  //    self.displayString()
-  //  }
-  //
-  //  public func displayString(
-  //    decimalPlaces: Int = 2,
-  //    style: DisplayStringStyle = .short
-  //  ) -> String {
-  //
-  //    let originX: String = "\(self.origin.x.displayString(decimalPlaces))"
-  //    let originY: String = "\(self.origin.y.displayString(decimalPlaces))"
-  //    let width: String = "\(self.width.displayString(decimalPlaces))"
-  //    let height: String = "\(self.height.displayString(decimalPlaces))"
-  //
-  //    switch style {
-  //      case .short, .initials:
-  //        return "X \(originX), Y \(originY), W \(width), H \(height)"
-  //
-  //      case .full:
-  //        return "X \(originX), Y \(originY), Width \(width), Height \(height)"
-  //    }
-  //  }
 
   // Corner points
   public var topLeft: CGPoint {

@@ -9,19 +9,7 @@ import Foundation
 
 extension BinaryFloatingPoint {
   
-  public var displayString: String {
-    return displayString()
-  }
   
-  public func displayString(
-    _ decimalPlaces: Int = 2,
-    grouping: Decimal.FormatStyle.Configuration.Grouping = .automatic
-  ) -> String {
-    
-    let formatted: String = Double(self).formatted(.number.precision(.fractionLength(decimalPlaces)).grouping(grouping))
-    
-    return String(formatted)
-  }
   
   public func incrementing(by amount: Self, in range: ClosedRange<Self>? = nil) -> Self {
     var result = self + amount

@@ -10,7 +10,7 @@ import SwiftUI
 public enum ValueDisplayStyle {
   case labels
   case plain
-  
+
   public var isShowingLabels: Bool { self == .labels }
 }
 
@@ -69,94 +69,109 @@ extension ValuePair {
     grouping: Decimal.FormatStyle.Configuration.Grouping = .automatic
   ) -> String {
 
-    
+    let formatter = ValuePairFormatter(pair: self, config: .init())
+    return formatter.displayString
   }
-  
-  
+}
+
+extension BinaryFloatingPoint {
+  public var displayString: String {
+    return displayString()
+  }
+
+  public func displayString(
+    _ decimalPlaces: Int = 2,
+    grouping: Decimal.FormatStyle.Configuration.Grouping = .automatic
+  ) -> String {
+
+    let formatter = SingleValueFormatter(
+      config: .init(
+        decimalPlaces: decimalPlaces,
+        grouping: grouping,
+        style: .plain,
+        hasSpaceBetweenValues: false
+      )
+    )
+    return formatter.displayString(Double(self), valueLabel: "")
+
+  }
+}
+extension CGRect {
+  public func displayString(
+    _ decimalPlaces: Int = 2,
+    grouping: Decimal.FormatStyle.Configuration.Grouping = .automatic
+  ) -> String {
+    
+    let formattedOrigin = self.origin.displayString(decimalPlaces, grouping: grouping)
+    let formattedSize = self.size.displayString(decimalPlaces, grouping: grouping)
+    
+    return String("Origin: \(formattedOrigin), Size: \(formattedSize)")
+  }
 }
 
 struct DisplayStringConfig {
   let decimalPlaces: Int
   let grouping: Decimal.FormatStyle.Configuration.Grouping
   let style: ValueDisplayStyle
-  let hasSpaceBetweenValues: Bool = true
-  
+  let hasSpaceBetweenValues: Bool
+
   init(
     decimalPlaces: Int = 2,
     grouping: Decimal.FormatStyle.Configuration.Grouping = .automatic,
-    style: ValueDisplayStyle = .labels
+    style: ValueDisplayStyle = .labels,
+    hasSpaceBetweenValues: Bool = true
   ) {
     self.decimalPlaces = decimalPlaces
     self.grouping = grouping
     self.style = style
+    self.hasSpaceBetweenValues = hasSpaceBetweenValues
   }
 }
 
 struct ValuePairFormatter {
   let pair: any ValuePair
   let config: DisplayStringConfig
+
+  init(
+    pair: any ValuePair,
+    config: DisplayStringConfig
+  ) {
+    self.pair = pair
+    self.config = config
+  }
+}
+
+extension ValuePairFormatter {
+  var displayString: String {
+
+    let formatter = SingleValueFormatter(config: config)
+
+    let formattedA: String = formatter.displayString(pair.valueA, valueLabel: pair.valueALabel)
+    let formattedB: String = formatter.displayString(pair.valueB, valueLabel: pair.valueBLabel)
+
+    let spaceIfNeeded: String = config.hasSpaceBetweenValues ? " " : ""
+
+    let formattedResult = String("\(formattedA),\(spaceIfNeeded)\(formattedB)")
+    return formattedResult
+  }
 }
 
 struct SingleValueFormatter {
-  let value: Double
   let config: DisplayStringConfig
-  
+
   init(
-    valueA: Double,
-//    valueB: Double?,
-    decimalPlaces: Int = 2,
-    grouping: Decimal.FormatStyle.Configuration.Grouping = .automatic,
-    style: ValueDisplayStyle = .labels
+    config: DisplayStringConfig
   ) {
-    self.valueA = valueA
-//    self.valueB = valueB
-    self.decimalPlaces = decimalPlaces
-    self.grouping = grouping
-    self.style = style
+    self.config = config
   }
-  
-  var displayString: String {
-    
-    let formattedA: String = formatValue(valueA)
-    
-//    guard let valueB else {
-//      return formattedA
-//    }
-    let formattedB: String = formatValue(valueB)
-    
-    let formattedResult: String
-    let spaceIfNeeded: String = hasSpaceBetweenValues ? " " : ""
-    
-    if style.isShowingLabels {
-      formattedResult = String("\(self.valueALabel) \(formattedA),\(spaceIfNeeded)\(self.valueBLabel) \(formattedB)")
-      
-    } else {
-      formattedResult = String("\(formattedA),\(spaceIfNeeded)\(formattedB)")
-    }
-    
-    
-    
-    return formattedResult
-    
-//    let formattedA: String = formatValue(valueA, decimalPlaces: decimalPlaces, grouping: grouping)
-//    let formattedB: String = formatValue(valueB, decimalPlaces: decimalPlaces, grouping: grouping)
-    
-//    valueA.formatted(.number.precision(.fractionLength(decimalPlaces)).grouping(grouping))
-//    let formattedB: String = valueB.formatted(.number.precision(.fractionLength(decimalPlaces)).grouping(grouping))
-  }
-  
-  private func process(_ string: inout String) {
-    
-  }
-  
-  private func formatValue(
-    _ value: Double,
-//    decimalPlaces: Int,
-//    grouping: Decimal.FormatStyle.Configuration.Grouping
-  ) -> String {
-    return value.formatted(
-      .number.precision(.fractionLength(decimalPlaces)).grouping(grouping)
+
+  func displayString(_ value: Double, valueLabel: String) -> String {
+
+    let formatted: String = value.formatted(
+      .number.precision(.fractionLength(config.decimalPlaces)).grouping(config.grouping)
     )
+    return formatted
+
   }
-  
+
 }
