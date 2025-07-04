@@ -75,23 +75,41 @@ extension ValuePair {
   
 }
 
-struct ValueFormatter {
-  let valueA: Double
-  let valueB: Double?
+struct DisplayStringConfig {
   let decimalPlaces: Int
   let grouping: Decimal.FormatStyle.Configuration.Grouping
   let style: ValueDisplayStyle
   let hasSpaceBetweenValues: Bool = true
   
   init(
+    decimalPlaces: Int = 2,
+    grouping: Decimal.FormatStyle.Configuration.Grouping = .automatic,
+    style: ValueDisplayStyle = .labels
+  ) {
+    self.decimalPlaces = decimalPlaces
+    self.grouping = grouping
+    self.style = style
+  }
+}
+
+struct ValuePairFormatter {
+  let pair: any ValuePair
+  let config: DisplayStringConfig
+}
+
+struct SingleValueFormatter {
+  let value: Double
+  let config: DisplayStringConfig
+  
+  init(
     valueA: Double,
-    valueB: Double?,
+//    valueB: Double?,
     decimalPlaces: Int = 2,
     grouping: Decimal.FormatStyle.Configuration.Grouping = .automatic,
     style: ValueDisplayStyle = .labels
   ) {
     self.valueA = valueA
-    self.valueB = valueB
+//    self.valueB = valueB
     self.decimalPlaces = decimalPlaces
     self.grouping = grouping
     self.style = style
@@ -101,15 +119,17 @@ struct ValueFormatter {
     
     let formattedA: String = formatValue(valueA)
     
-    guard let valueB else {
-      return formattedA
-    }
+//    guard let valueB else {
+//      return formattedA
+//    }
     let formattedB: String = formatValue(valueB)
     
     let formattedResult: String
     let spaceIfNeeded: String = hasSpaceBetweenValues ? " " : ""
+    
     if style.isShowingLabels {
       formattedResult = String("\(self.valueALabel) \(formattedA),\(spaceIfNeeded)\(self.valueBLabel) \(formattedB)")
+      
     } else {
       formattedResult = String("\(formattedA),\(spaceIfNeeded)\(formattedB)")
     }
