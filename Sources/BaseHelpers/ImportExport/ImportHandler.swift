@@ -7,15 +7,10 @@
 
 import Foundation
 
-/// In cases where the filename is useful as well as the data
-public struct ImportedFile {
-  public let name: String
-  public let contents: String
-}
-
 public struct ImportHandler {
 
   /// Load a string from a file at a specific URL.
+  /// Doesn't assume is coming from a specific Bundle
   public static func loadString(from fileURL: URL, encoding: String.Encoding = .utf8) throws -> String {
     do {
       return try String(contentsOf: fileURL, encoding: encoding)
@@ -23,18 +18,7 @@ public struct ImportHandler {
       throw ImportError.failedToRead(error.localizedDescription)
     }
   }
-  
-  public static func loadOptionalStringFromBundle(
-    named fileName: String,
-    withExtension fileExtension: String,
-    bundle: Bundle = .main
-  ) -> String? {
-    guard let url = bundle.url(forResource: fileName, withExtension: fileExtension) else {
-      return nil
-    }
-    return try? String(contentsOf: url)
-  }
-  
+
   /// Load a file from the main or provided bundle.
   public static func loadStringFromBundle(
     named fileName: String,
@@ -46,48 +30,37 @@ public struct ImportHandler {
     }
     return try loadString(from: url)
   }
-  
-  public static func loadFileIncludingFileName(
-    named fileName: String,
-    withExtension fileExtension: String,
-    bundle: Bundle = .main
-  ) throws -> ImportedFile {
-    let contents = try loadStringFromBundle(named: fileName, withExtension: fileExtension, bundle: bundle)
-    return ImportedFile(name: fileName, contents: contents)
-  }
 
-  /// Load and decode JSON from a file URL.
-  public static func loadJSON<T: Decodable>(
+  /// Load and decode Data from a file URL.
+  public static func loadData<T: Decodable>(
     from url: URL,
     type: T.Type,
-    decoder: JSONDecoder = .init()
   ) throws -> T {
     let data = try Data(contentsOf: url)
     do {
-      print("Attempting to decode JSON from URL \(url)")
+      let decoder = JSONDecoder()
+      print("Attempting to decode Data from URL \(url)")
       return try decoder.decode(type, from: data)
     } catch {
-      print("Failed to decode JSON from URL \(url) with error \(error)")
+      print("Failed to decode Data from URL \(url) with error \(error)")
       throw ImportError.decodingFailed(error)
     }
   }
 
-  /// Load and decode JSON from bundle
-  public static func loadJSON<T: Decodable>(
+  /// Load and decode Dat from bundle
+  public static func loadData<T: Decodable>(
     named name: String,
     type: T.Type,
     withExtension ext: String = "json",
     bundle: Bundle = .main,
-    decoder: JSONDecoder = .init()
   ) throws -> T {
     guard let url = bundle.url(forResource: name, withExtension: ext) else {
       print("Resource named \(name).\(ext) not found in bundle \(bundle)")
       throw ImportError.resourceNotFound("\(name).\(ext)")
     }
-    return try loadJSON(
+    return try loadData(
       from: url,
-      type: type,
-      decoder: decoder
+      type: type
     )
   }
 
@@ -135,3 +108,27 @@ public struct ImportHandler {
   //    }
   //  }
 }
+
+/// The below seems useful, but I'm providing the filename
+/// then, I dont need the busywork to just get it back, right?
+//  public static func loadFileIncludingFileName(
+//    named fileName: String,
+//    withExtension fileExtension: String,
+//    bundle: Bundle = .main
+//  ) throws -> ImportedFile {
+//    let contents = try loadStringFromBundle(
+//      named: fileName,
+//      withExtension: fileExtension,
+//      bundle: bundle
+//    )
+//    return ImportedFile(
+//      name: fileName,
+//      contents: contents
+//    )
+//  }
+
+/// In cases where the filename is useful as well as the data
+//public struct ImportedFile {
+//  public let name: String
+//  public let contents: String
+//}
