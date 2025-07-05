@@ -51,7 +51,7 @@ public struct ImportHandler {
   public static func loadData<T: Decodable>(
     named name: String,
     type: T.Type,
-    withExtension ext: String = "json",
+    withExtension ext: String,
     bundle: Bundle = .main,
   ) throws -> T {
     guard let url = bundle.url(forResource: name, withExtension: ext) else {
