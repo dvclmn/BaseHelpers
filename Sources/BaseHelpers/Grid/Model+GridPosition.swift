@@ -17,15 +17,13 @@ public struct GridPosition: GridBase {
     self.column = column
   }
 
+  /// `point` must already be mapped to local Canvas space
   public init(
     point: CGPoint,
     cellSize: CGSize
   ) {
-    let row = Int(floor(point.y / cellSize.height))
-    let col = Int(floor(point.x / cellSize.width))
-
-    self.row = row
-    self.column = col
+    let position = GridPosition.fromCGPoint(point, at: cellSize)
+    self = position
   }
 
   /// Converts grid position to canvas-space point
@@ -36,6 +34,20 @@ public struct GridPosition: GridBase {
       x: CGFloat(column) * cellSize.width,
       y: CGFloat(row) * cellSize.height
     )
+  }
+
+  /// `cellSize` is the width and height in points
+  /// of a single cell in the current `GridCanvas`.
+  /// It is not affected by zoom, it operates in local
+  /// Canvas Space
+  public static func fromCGPoint(
+    _ point: CGPoint,
+    at cellSize: CGSize
+  ) -> GridPosition {
+    let row = Int(floor(point.y / cellSize.height))
+    let col = Int(floor(point.x / cellSize.width))
+
+    return GridPosition(row: row, column: col)
   }
 
   public func toIndex(columns: Int) -> Int {
@@ -59,7 +71,7 @@ public struct GridPosition: GridBase {
     let (newCol, newRow) = direction.offset(x: column, y: row, by: delta)
     self = GridPosition(row: newRow, column: newCol)
   }
-  
+
 }
 
 public func + (lhs: GridPosition, rhs: GridPosition) -> GridPosition {

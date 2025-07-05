@@ -101,6 +101,10 @@ extension CGSize {
     height: 438
   )
   
+  public func removingZoom(_ zoom: CGFloat) -> CGSize {
+    return self / zoom
+  }
+  
 //  public func centeredIn(viewSize: CGSize) -> CGSize {
 //    
 //    let viewMid = viewSize.midpoint
