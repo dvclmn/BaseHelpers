@@ -6,8 +6,6 @@
 //
 
 import Foundation
-import BaseHelpers
-import BaseStyles
 import CoreGraphics
 
 public struct PatternConfiguration: Codable, Equatable, Hashable, Sendable {
@@ -41,6 +39,9 @@ public struct PatternConfiguration: Codable, Equatable, Hashable, Sendable {
 }
 
 extension PatternConfiguration {
+  
+  public static let `default`: PatternConfiguration = .init()
+  
   public static let checkboardExample = PatternConfiguration(
     size: 20,
     gap: 10,

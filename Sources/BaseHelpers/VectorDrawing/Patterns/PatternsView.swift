@@ -7,8 +7,6 @@
 
 //#if canImport(AppKit)
 
-import BaseHelpers
-import BaseStyles
 import SwiftUI
 
 public struct PatternPreset: Sendable {
@@ -56,28 +54,28 @@ public struct PatternCanvas: View {
     Canvas {
       context,
       size in
-
-      switch style {
-        case .checkerboard:
-          context.drawCheckerboard(
-            config: config,
-            size: size,
-            offset: config.offset
-          )
-
-        case .chevron:
-          context.drawChevron(config: config, size: size)
-
-        case .stitches:
-          context.drawStitches(config: config, size: size)
-
-        case .waves:
-          context.drawWaves(config: config, size: size)
-
-        case .stripes:
-          context.drawStripes(config: config, size: size)
-
-      }
+      context.drawPattern(style, in: size)
+//      switch style {
+//        case .checkerboard:
+//          context.drawCheckerboard(
+//            config: config,
+//            size: size,
+//            offset: config.offset
+//          )
+//
+//        case .chevron:
+//          context.drawChevron(config: config, size: size)
+//
+//        case .stitches:
+//          context.drawStitches(config: config, size: size)
+//
+//        case .waves:
+//          context.drawWaves(config: config, size: size)
+//
+//        case .stripes:
+//          context.drawStripes(config: config, size: size)
+//
+//      }
     }
   }
 }

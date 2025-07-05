@@ -19,6 +19,8 @@ struct RoughnessExampleView: View {
     
     VStack {
       
+      
+      
       RoundedRectangle(cornerRadius: 10)
         .roughen(roughness: roughness, segments: segments, jitter: jitter)
         .fill(.mint)
