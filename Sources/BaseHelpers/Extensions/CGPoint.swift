@@ -19,6 +19,12 @@ public enum CoordinateMappingMode {
 }
 
 extension CGPoint {
+  
+  public func removingPanAndZoom(pan: CGSize, zoom: CGFloat) -> CGPoint {
+    let unPanned: CGPoint = self - pan
+    let unZoomed: CGPoint = unPanned / zoom
+    return unZoomed
+  }
 
   // MARK: - UnitPoint
   public func debugColour(unitPoint: UnitPoint, in size: CGSize) -> Color {
@@ -232,6 +238,7 @@ extension CGPoint {
   public var isNormalised: Bool {
     return x >= 0.0 && x <= 1.0 && y >= 0.0 && y <= 1.0
   }
+
 
   public static func angleInRadians(
     from p1: CGPoint,

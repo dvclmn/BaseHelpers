@@ -9,8 +9,6 @@ import Foundation
 
 extension BinaryFloatingPoint {
   
-  
-  
   public func incrementing(by amount: Self, in range: ClosedRange<Self>? = nil) -> Self {
     var result = self + amount
     if let range {
@@ -394,3 +392,5 @@ public func inverseLerp<V: BinaryFloatingPoint, T: BinaryFloatingPoint>(_ v0: V,
 //  }
 //
 //}
+
+

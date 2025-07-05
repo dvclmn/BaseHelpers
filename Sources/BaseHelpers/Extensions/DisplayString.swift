@@ -69,7 +69,13 @@ extension ValuePair {
     grouping: Decimal.FormatStyle.Configuration.Grouping = .automatic
   ) -> String {
 
-    let formatter = ValuePairFormatter(pair: self, config: .init())
+    let config = DisplayStringConfig(
+      decimalPlaces: decimalPlaces,
+      grouping: grouping,
+      style: style,
+      hasSpaceBetweenValues: hasSpace
+    )
+    let formatter = ValuePairFormatter(pair: self, config: config)
     return formatter.displayString
   }
 }

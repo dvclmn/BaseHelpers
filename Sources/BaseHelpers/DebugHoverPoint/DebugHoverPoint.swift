@@ -18,16 +18,11 @@ public struct DebugHoverPointModifier: ViewModifier {
       .overlay {
         if let point {
           DebugCircle(point)
-
         }
       }
   }
 }
 extension DebugHoverPointModifier {
-
-//  var pointWasNudged: Bool {
-//    offsetPoint(point) > .zero
-//  }
 
   var nearbyPoint: UnitPoint? {
     guard let point else { return nil }
@@ -35,16 +30,8 @@ extension DebugHoverPointModifier {
   }
 
   private var edgeBasedOffset: CGSize {
-
     guard let nearbyPoint, nearbyPoint != UnitPoint.center else { return .zero }
     let offset = nearbyPoint.offset(by: 80)
-//    let nudged = point + offset
-//    let nudged = nearbyPoint.applyOffset { axis in
-//      axis == .horizontal ? 10 : 40
-//    } apply: { dx, dy in
-//      CGPoint(x: point.x + dx, y: point.y + dy)
-//    }
-
     return offset
   }
 
@@ -64,8 +51,8 @@ extension DebugHoverPointModifier {
           .clipShape(.rect(cornerRadius: 3))
           .offset(y: -circleRadius * 2)
           .offset(edgeBasedOffset)
-          //          .offset(pointWasNudged ? offsetPoint(point) : .zero)
-//          .animation(.spring, value: edgeBasedOffset)
+        //          .offset(pointWasNudged ? offsetPoint(point) : .zero)
+        //          .animation(.spring, value: edgeBasedOffset)
         //          .animation(.spring, value: pointWasNudged)
       }
       .position(point)
