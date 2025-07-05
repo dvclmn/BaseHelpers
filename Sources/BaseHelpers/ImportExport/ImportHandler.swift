@@ -7,55 +7,13 @@
 
 import Foundation
 
-//public enum ImportError: Error, LocalizedError {
-//  case fileNotFound
-//  case invalidFormat
-//  case resourcePathNotFound
-//
-//
-//  public var errorDescription: String {
-//    switch self {
-//      case .fileNotFound:
-//        return "File not found"
-//
-//      case .invalidFormat:
-//        return "Invalid file format"
-//
-//      case .resourcePathNotFound:
-//        return "Resource path not found"
-//    }
-//  }
-//}
-
-
-public enum ImportError: Error, CustomStringConvertible {
-  case resourceNotFound(String)
-  case failedToRead(String)
-  case fileExtensionMissing
-  case decodingFailed(Error)
-  
-  public var description: String {
-    switch self {
-      case .resourceNotFound(let path):
-        return "Resource not found at path: \(path)"
-      case .failedToRead(let reason):
-        return "Failed to read file: \(reason)"
-      case .fileExtensionMissing:
-        return "File extension missing. Please specify a valid file type."
-      case .decodingFailed(let error):
-        return "Failed to decode data: \(error)"
-    }
-  }
+/// In cases where the filename is useful as well as the data
+public struct ImportedFile {
+  public let name: String
+  public let contents: String
 }
 
 public struct ImportHandler {
-  
-//  public static func urlForPreviewResource(
-//    named resourceName: String,
-//    ext: String = "txt"
-//  ) -> URL? {
-//    return Bundle.main.url(forResource: resourceName, withExtension: ext)
-//  }
 
   /// Load a string from a file at a specific URL.
   public static func loadString(from fileURL: URL, encoding: String.Encoding = .utf8) throws -> String {
@@ -65,7 +23,18 @@ public struct ImportHandler {
       throw ImportError.failedToRead(error.localizedDescription)
     }
   }
-
+  
+  public static func loadOptionalStringFromBundle(
+    named fileName: String,
+    withExtension fileExtension: String,
+    bundle: Bundle = .main
+  ) -> String? {
+    guard let url = bundle.url(forResource: fileName, withExtension: fileExtension) else {
+      return nil
+    }
+    return try? String(contentsOf: url)
+  }
+  
   /// Load a file from the main or provided bundle.
   public static func loadStringFromBundle(
     named fileName: String,
@@ -76,6 +45,15 @@ public struct ImportHandler {
       throw ImportError.resourceNotFound("\(fileName).\(fileExtension)")
     }
     return try loadString(from: url)
+  }
+  
+  public static func loadFileIncludingFileName(
+    named fileName: String,
+    withExtension fileExtension: String,
+    bundle: Bundle = .main
+  ) throws -> ImportedFile {
+    let contents = try loadStringFromBundle(named: fileName, withExtension: fileExtension, bundle: bundle)
+    return ImportedFile(name: fileName, contents: contents)
   }
 
   /// Load and decode JSON from a file URL.
@@ -112,12 +90,11 @@ public struct ImportHandler {
       decoder: decoder
     )
   }
-  
-//  public static func loadData(named fileName: String) throws -> Data {
-//    let location: URL = .applicationSupportDirectory
-//    
-//  }
-  
+
+  //  public static func loadData(named fileName: String) throws -> Data {
+  //    let location: URL = .applicationSupportDirectory
+  //
+  //  }
 
   //  /// Load raw string from a resource in a given bundle.
   //  public static func loadString(
