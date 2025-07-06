@@ -21,25 +21,25 @@ extension GraphicsContext {
           size: size
         )
       case .chevron:
-        return drawCheckerboard(
+        return drawChevron(
           config: config,
           size: size
         )
         
       case .stitches:
-        return drawCheckerboard(
+        return drawStitches(
           config: config,
           size: size
         )
         
       case .waves:
-        return drawCheckerboard(
+        return drawWaves(
           config: config,
           size: size
         )
         
       case .stripes:
-        return drawCheckerboard(
+        return drawStripes(
           config: config,
           size: size
         )
@@ -54,22 +54,26 @@ import SwiftUI
 
 public struct GraphicContextPresetsView: View {
   
-  @State private var selectedPreset: PatternStyle = .checkerboard
+  @State private var selectedPreset: PatternStyle = .stitches
   
   public var body: some View {
     
     Canvas { context, size in
       context.drawPattern(selectedPreset, in: size)
     }
-    .toolbar {
+    .background(.blue.quinary)
+//    .toolbar {
 //      ToolbarItem {
 //        Picker("Patterns", selection: $selectedPreset) {
-//          ForEach(PatternStyle.allCases) { pattern in
-//            Text(pattern.name).tag(pattern)
-//          }
+//          Text("Checkerboard").tag(PatternStyle.checkerboard)
+//          Text("Waves").tag(PatternStyle.waves)
+////          ForEach(PatternStyle.allCases, id: \.self) { pattern in
+////            Text(pattern.name).tag(pattern)
+////          }
 //        }
+//        .pickerStyle(.segmented)
 //      }
-    }
+//    }
     
   }
 }

@@ -84,42 +84,41 @@ extension RGBColour {
 
     let hsvColour = HSVColour(fromRGB: self)
 
-//    let modification = ColourModification(
-//      strength: strength,
-//      purpose: purpose,
-//      chroma: chroma
-//    )
-    
+    //    let modification = ColourModification(
+    //      strength: strength,
+    //      purpose: purpose,
+    //      chroma: chroma
+    //    )
+
     let adjustment: HSVAdjustment = {
       let contributors: [any HSVModifier] = [
         LuminanceLevelAdjustment(level: self.luminanceLevel),
         ColourPurposeAdjustment(purpose: purpose),
         ChromaAdjustment(chroma: chroma),
       ]
-      
+
       //    var adjustment: HSVAdjustment {
-      
-      
+
       let allAdjustments: [HSVAdjustment] = contributors.map { modifier in
         modifier.adjustment
       }
-      
+
       let combinedAdjustment: HSVAdjustment = allAdjustments.reduce(.zero) { partialResult, adjustment in
         partialResult + .zero.interpolated(towards: adjustment, strength: strength.adjustmentStrength)
       }
-      
+
       return combinedAdjustment
-      
+
     }()
-    
-//    let modification = ColourModification(
-//      luminanceLevel: hsvColour.luminanceLevel,
-////      colour: hsvColour,
-//      strength: strength,
-//      purpose: purpose,
-//      chroma: chroma
-//    )
-//    print("HSVModification is: \(modification)")
+
+    //    let modification = ColourModification(
+    //      luminanceLevel: hsvColour.luminanceLevel,
+    ////      colour: hsvColour,
+    //      strength: strength,
+    //      purpose: purpose,
+    //      chroma: chroma
+    //    )
+    //    print("HSVModification is: \(modification)")
     let adjustedHSV = hsvColour.applying(adjustment: adjustment)
     return adjustedHSV.toRGB
   }
@@ -186,4 +185,14 @@ extension RGBColour {
     )
   }
 
+}
+
+extension RGBColour: CustomStringConvertible {
+  public var description: String {
+    let result = """
+      RGBColour[R: \(self.red), G: \(self.green), B: \(self.blue)]
+      """
+
+    return result
+  }
 }

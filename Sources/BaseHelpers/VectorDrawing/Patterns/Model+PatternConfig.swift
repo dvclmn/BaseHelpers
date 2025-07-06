@@ -11,8 +11,8 @@ import CoreGraphics
 public struct PatternConfiguration: Codable, Equatable, Hashable, Sendable {
   
   /// This is a generic reference to the 'main' quality of the pattern,
-  /// that makes sense to receive a size. This is not an ideal pattern,
-  /// and can afford to be improved upon
+  /// that makes sense to receive a size. This is not an ideal approach,
+  /// and could afford to be improved upon / made clearer
   var size: Double
   
   /// Again, a generic value for whatever most represents a 'gap',
@@ -28,7 +28,7 @@ public struct PatternConfiguration: Codable, Equatable, Hashable, Sendable {
     gap: Double = 10,
     offset: CGSize = .zero,
     primaryColour: RGBColour = .greyDark,
-    secondaryColour: RGBColour = .white
+    secondaryColour: RGBColour = .grey
   ) {
     self.size = size
     self.gap = gap

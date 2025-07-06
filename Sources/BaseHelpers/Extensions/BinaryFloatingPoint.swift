@@ -209,6 +209,10 @@ extension BinaryFloatingPoint {
     self.clamped(.zero, .infinity)
   }
   
+  public var isGreaterThanZero: Bool {
+    self > 0
+  }
+  
   //  public func padLeading(
   //    maxDigits: Int = 3,
   //    decimalPlaces: Int? = nil,

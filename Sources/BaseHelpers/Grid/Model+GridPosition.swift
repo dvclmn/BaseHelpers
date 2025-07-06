@@ -80,3 +80,11 @@ public func + (lhs: GridPosition, rhs: GridPosition) -> GridPosition {
     column: lhs.column + rhs.column
   )
 }
+
+extension GridPosition: CustomStringConvertible {
+  public var description: String {
+    """
+    GridPosition[X: \(column), Y: \(row)]
+    """
+  }
+}

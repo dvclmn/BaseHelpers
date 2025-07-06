@@ -24,7 +24,7 @@ extension GraphicsContext {
     let repetitions = Int(ceil(size.height / (zigZagHeight + config.gap))) + 3
     
     /// Iterate through each row of zig-zags
-    /// The -1 start ensures we cover the top edge of the canvas
+    /// The `-2` start ensures we cover the top edge of the canvas
     for row in -2..<repetitions {
       var path = Path()
       

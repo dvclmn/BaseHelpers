@@ -41,7 +41,7 @@ extension GridCell {
     let dimensions = text.gridDimensions
 
     var cells: [GridCell] = []
-    
+
     for (rowIndex, line) in text.substringLines().enumerated() {
       /// Process characters
       for (columnIndex, character) in line.enumerated() {
@@ -82,17 +82,37 @@ enum GridCellError: LocalizedError {
 }
 
 extension GridCell: CustomStringConvertible {
+  
   public var description: String {
     """
-    GridCanvas Cell
-      Character: \(character.descriptiveName) 
-      ArtworkPosition: \(position) 
-      Colour: \(colour)
+    
+    GridCell: 
+      - Character \"\(character.descriptiveName)\"
+      - \(position)
+    
     """
+    
   }
+  
+//  public var description: String {
+//    """
+//    
+//    GridCell: 
+//      - Character \"\(character.descriptiveName)\"
+//      - \(position)
+//      - \(colour)
+//
+//    """
+//    
+//  }
+  
+//  public var description: String {
+//    """
+//    /// GridCell ///
+//      Character: \"\(character.descriptiveName)\" 
+//      \(position) 
+//      \(colour)
+//    """
+//  }
 
-  public var descriptionOneLine: String {
-    return
-      "GridCanvas Cell: Character `\(character.descriptiveName)`, ArtworkPosition `\(position)`, Colour `\(colour)`"
-  }
 }

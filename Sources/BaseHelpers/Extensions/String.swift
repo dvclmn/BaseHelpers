@@ -8,7 +8,7 @@
 import Foundation
 
 extension String {
-  
+
   public func lines(
     omittingEmptySubsequences: Bool = false
   ) -> [String] {
@@ -16,7 +16,7 @@ extension String {
     let lines: [String] = self.substringLines(omittingEmptySubsequences: omittingEmptySubsequences).map { substring in
       String(substring)
     }
-    
+
     return lines
   }
 
