@@ -58,10 +58,16 @@ extension UnitPoint: ValuePair {
   public var valueBLabel: String { "Y" }
 }
 extension GridPosition: ValuePair {
-  public var valueA: Double { Double(row) }
-  public var valueB: Double { Double(column) }
-  public var valueALabel: String { "R" }
-  public var valueBLabel: String { "C" }
+  public var valueA: Double { Double(column) }
+  public var valueB: Double { Double(row) }
+  public var valueALabel: String { "C" }
+  public var valueBLabel: String { "R" }
+}
+extension GridDimensions: ValuePair {
+  public var valueA: Double { Double(columns) }
+  public var valueB: Double { Double(rows) }
+  public var valueALabel: String { "C" }
+  public var valueBLabel: String { "R" }
 }
 
 extension ValuePair {
