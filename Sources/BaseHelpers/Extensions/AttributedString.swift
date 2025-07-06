@@ -7,26 +7,16 @@
 
 import SwiftUI
 
-public extension NSMutableAttributedString {
-  
-  @MainActor func setAttributeSet(
-    _ attributeSet: AttributeSet,
-    range: NSRange,
-    with typingAttributes: Attributes? = nil
-  ) {
-    
-    if let typingAttributes = typingAttributes {
-      
-      setAttributes(attributeSet.attributes, range: range)
-      addAttributes(typingAttributes, range: range)
-    } else {
-      setAttributes(attributeSet.attributes, range: range)
-    }
-  }
-}
-
-
 extension AttributedString {
+  
+//  public static func valuePair(
+//    _ value: any ValuePair,
+//    seperator: String = "x"
+//  ) -> AttributedString {
+//    let string =
+//    let attrString = AttributedString(value.valueA.displayString)
+//    
+//  }
   
   public func index(at offset: Int) -> AttributedString.Index? {
     guard offset >= 0 && offset <= characters.count else {
