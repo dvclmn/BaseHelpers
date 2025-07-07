@@ -22,9 +22,13 @@ public enum IconLiteral: Sendable, Equatable, Codable, Hashable {
 }
 
 public struct QuickLabel: Equatable, Sendable, Codable {
-  public let text: String
+  public let attributedText: AttributedString
   public let icon: IconLiteral?
   public let role: Role?
+  
+  public var text: String {
+    return attributedText.toString
+  }
   
   public static let blank: QuickLabel = .init("")
   
@@ -33,8 +37,22 @@ public struct QuickLabel: Equatable, Sendable, Codable {
     _ icon: IconLiteral? = nil,
     role: Role? = nil
   ) {
-    self.text = text
+    self.attributedText = AttributedString(text)
     self.icon = icon
+    self.role = role
+  }
+  
+  public init(
+    _ text: AttributedString,
+    iconString: String? = nil,
+    role: Role? = nil
+  ) {
+    self.attributedText = text
+    if let iconString {
+      self.icon = .symbol(iconString)
+    } else {
+      self.icon = nil
+    }
     self.role = role
   }
   
@@ -43,7 +61,7 @@ public struct QuickLabel: Equatable, Sendable, Codable {
     _ icon: String,
     role: Role? = nil
   ) {
-    self.text = text
+    self.attributedText = AttributedString(text)
     self.icon = IconLiteral.symbol(icon)
     self.role = role
   }
@@ -57,10 +75,10 @@ public struct QuickLabel: Equatable, Sendable, Codable {
     role: Role? = nil
   ) {
     if bool {
-      self.text = textTrue
+      self.attributedText = AttributedString(textTrue)
       self.icon = iconTrue
     } else {
-      self.text = textFalse
+      self.attributedText = AttributedString(textFalse)
       self.icon = iconFalse
     }
     self.role = role
