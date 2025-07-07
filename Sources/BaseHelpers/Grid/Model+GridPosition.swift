@@ -71,6 +71,10 @@ public struct GridPosition: GridBase {
     let (newCol, newRow) = direction.offset(x: column, y: row, by: delta)
     self = GridPosition(row: newRow, column: newCol)
   }
+  
+  public func isValidWithin(grid: GridDimensions) -> Bool {
+    return grid.contains(self)
+  }
 
 }
 

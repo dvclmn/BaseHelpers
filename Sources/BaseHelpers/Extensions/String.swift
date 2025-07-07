@@ -8,6 +8,13 @@
 import Foundation
 
 extension String {
+  
+  public var addNewLine: String {
+    guard self.last != "\n" else {
+      return self
+    }
+    return self + "\n"
+  }
 
   public func lines(
     omittingEmptySubsequences: Bool = false
