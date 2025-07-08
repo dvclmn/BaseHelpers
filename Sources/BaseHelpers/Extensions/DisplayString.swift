@@ -119,27 +119,30 @@ extension CGRect {
     _ decimalPlaces: Int = 2,
     grouping: Decimal.FormatStyle.Configuration.Grouping = .automatic
   ) -> String {
-    
+
     let formattedOrigin = self.origin.displayString(decimalPlaces, grouping: grouping)
     let formattedSize = self.size.displayString(decimalPlaces, grouping: grouping)
-    
+
     return String("Origin: \(formattedOrigin), Size: \(formattedSize)")
   }
 }
 
 struct DisplayStringConfig {
   let decimalPlaces: Int
+  let integerPlaces: Int
   let grouping: Decimal.FormatStyle.Configuration.Grouping
   let style: ValueDisplayStyle
   let hasSpaceBetweenValues: Bool
 
   init(
     decimalPlaces: Int = 2,
+    integerPlaces: Int = 4,
     grouping: Decimal.FormatStyle.Configuration.Grouping = .automatic,
     style: ValueDisplayStyle = .labels,
     hasSpaceBetweenValues: Bool = true
   ) {
     self.decimalPlaces = decimalPlaces
+    self.integerPlaces = integerPlaces
     self.grouping = grouping
     self.style = style
     self.hasSpaceBetweenValues = hasSpaceBetweenValues
@@ -186,7 +189,17 @@ struct SingleValueFormatter {
   func displayString(_ value: Double, valueLabel: String) -> String {
 
     let formatted: String = value.formatted(
-      .number.precision(.fractionLength(config.decimalPlaces)).grouping(config.grouping)
+      //      .number.precision(
+      //        .integerAndFractionLength(
+      //          integer: config.integerPlaces,
+      //          fraction: config.decimalPlaces
+      //        )
+      //      ).grouping(config.grouping)
+      .number.precision(
+        .fractionLength(
+          config.decimalPlaces
+        )
+      ).grouping(config.grouping)
     )
     return formatted
 

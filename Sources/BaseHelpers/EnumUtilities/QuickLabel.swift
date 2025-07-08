@@ -21,7 +21,7 @@ public enum IconLiteral: Sendable, Equatable, Codable, Hashable {
   }
 }
 
-public struct QuickLabel: Equatable, Sendable, Codable {
+public struct QuickLabel: Equatable, Hashable, Sendable, Codable {
   public let attributedText: AttributedString
   public let icon: IconLiteral?
   public let role: Role?
@@ -99,5 +99,11 @@ extension QuickLabel {
         case .warning: .yellow
       }
     }
+  }
+}
+
+extension QuickLabel: CustomStringConvertible {
+  public var description: String {
+    return "QuickLabel[\"\(text)\", icon: \"\(icon?.toString ?? "")\"]"
   }
 }
