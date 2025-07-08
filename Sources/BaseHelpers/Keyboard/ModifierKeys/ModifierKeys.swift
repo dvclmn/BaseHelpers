@@ -37,7 +37,7 @@ public struct CompatibleModifierKeys: OptionSet, Sendable {
     self.rawValue = rawValue
   }
   public let rawValue: Int
-  
+
   public static let capsLock = Self(rawValue: 1 << 0)
   public static let shift = Self(rawValue: 1 << 1)
   public static let control = Self(rawValue: 1 << 2)
@@ -50,6 +50,18 @@ extension CompatibleModifierKeys {
   public init(from appKitKey: NSEvent.ModifierFlags) {
     self = appKitKey.toCompatibleModifier
   }
+
+  public var symbol: String {
+    switch self {
+      case .shift: "􀆝"
+      case .control: "􀆍"
+      case .option: "􀆕"
+      case .command: "􀆔"
+      case .capsLock: "􀆡"
+      default:
+        ""
+    }
+  }
 }
 
 @available(macOS 15, iOS 18, *)
@@ -58,36 +70,6 @@ extension CompatibleModifierKeys {
     self = swiftUIKey.toCompatibleModifier
   }
 }
-
-//public enum CompatibleModifierKey: String, CaseIterable, Identifiable, Hashable, Sendable {
-//  case command
-//  case shift
-//  case option
-//  case control
-//  case capsLock
-//
-//  public var id: String { self.rawValue }
-//
-//  public var name: String {
-//    switch self {
-//      case .command: "Command"
-//      case .shift: "Shift"
-//      case .option: "Option"
-//      case .control: "Control"
-//      case .capsLock: "Caps Lock"
-//    }
-//  }
-//
-//  public var symbol: String {
-//    switch self {
-//      case .shift: "􀆝"
-//      case .control: "􀆍"
-//      case .option: "􀆕"
-//      case .command: "􀆔"
-//      case .capsLock: "􀆡"
-//    }
-//  }
-//}
 
 @available(macOS 15, iOS 18, *)
 extension EventModifiers {
@@ -122,6 +104,36 @@ extension NSEvent.ModifierFlags {
   }
 }
 #endif
+
+//public enum CompatibleModifierKey: String, CaseIterable, Identifiable, Hashable, Sendable {
+//  case command
+//  case shift
+//  case option
+//  case control
+//  case capsLock
+//
+//  public var id: String { self.rawValue }
+//
+//  public var name: String {
+//    switch self {
+//      case .command: "Command"
+//      case .shift: "Shift"
+//      case .option: "Option"
+//      case .control: "Control"
+//      case .capsLock: "Caps Lock"
+//    }
+//  }
+//
+//  public var symbol: String {
+//    switch self {
+//      case .shift: "􀆝"
+//      case .control: "􀆍"
+//      case .option: "􀆕"
+//      case .command: "􀆔"
+//      case .capsLock: "􀆡"
+//    }
+//  }
+//}
 
 //extension Modifiers {
 //  public var names: String? {

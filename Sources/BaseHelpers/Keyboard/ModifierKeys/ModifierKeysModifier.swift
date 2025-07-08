@@ -13,15 +13,15 @@ public struct ModifierKeysModifier: ViewModifier {
 
   public func body(content: Content) -> some View {
 
-    #if canImport(AppKit)
-
     if #available(macOS 15, iOS 18, *) {
       content
         .onModifierKeysChanged(mask: .defaultKeys, initial: true) { old, new in
           self.modifierKeys = Modifiers(from: new)
         }
+        .environment(\.modifierKeys, modifierKeys)
 
     } else {
+      #if canImport(AppKit)
       content
         .onAppear {
           NSEvent.addLocalMonitorForEvents(matching: [.flagsChanged]) { event in
@@ -30,11 +30,10 @@ public struct ModifierKeysModifier: ViewModifier {
           }
         }
         .environment(\.modifierKeys, modifierKeys)
+      #else
+      content
+      #endif
     }
-
-    #else
-    content
-    #endif
 
   }
 }
