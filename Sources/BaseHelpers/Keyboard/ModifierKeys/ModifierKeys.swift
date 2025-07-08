@@ -27,72 +27,116 @@ import SwiftUI
 /// ```
 
 extension EnvironmentValues {
-  @Entry public var modifierKeys: Modifiers = .init()
+  @Entry public var modifierKeys: Modifiers = []
 }
 
-extension Set where Element == ModifierKey {
+public typealias Modifiers = CompatibleModifierKeys
+
+public struct CompatibleModifierKeys: OptionSet, Sendable {
+  public init(rawValue: Int) {
+    self.rawValue = rawValue
+  }
+  public let rawValue: Int
   
-  public func containsOnly(_ key: ModifierKey) -> Bool {
-    return self.contains(where: { $0 == key})
+  public static let capsLock = Self(rawValue: 1 << 0)
+  public static let shift = Self(rawValue: 1 << 1)
+  public static let control = Self(rawValue: 1 << 2)
+  public static let option = Self(rawValue: 1 << 3)
+  public static let command = Self(rawValue: 1 << 4)
+
+}
+
+extension CompatibleModifierKeys {
+  public init(from appKitKey: NSEvent.ModifierFlags) {
+    self = appKitKey.toCompatibleModifier
   }
 }
 
-
-public typealias Modifiers = Set<ModifierKey>
-
-extension ModifierKey: CustomStringConvertible {
-  public var description: String { self.name }
+@available(macOS 15, iOS 18, *)
+extension CompatibleModifierKeys {
+  public init(from swiftUIKey: EventModifiers) {
+    self = swiftUIKey.toCompatibleModifier
+  }
 }
 
-public enum ModifierKey: String, CaseIterable, Identifiable, Hashable, Sendable {
-  case command
-  case shift
-  case option
-  case control
+//public enum CompatibleModifierKey: String, CaseIterable, Identifiable, Hashable, Sendable {
+//  case command
+//  case shift
+//  case option
+//  case control
+//  case capsLock
+//
+//  public var id: String { self.rawValue }
+//
+//  public var name: String {
+//    switch self {
+//      case .command: "Command"
+//      case .shift: "Shift"
+//      case .option: "Option"
+//      case .control: "Control"
+//      case .capsLock: "Caps Lock"
+//    }
+//  }
+//
+//  public var symbol: String {
+//    switch self {
+//      case .shift: "􀆝"
+//      case .control: "􀆍"
+//      case .option: "􀆕"
+//      case .command: "􀆔"
+//      case .capsLock: "􀆡"
+//    }
+//  }
+//}
 
-  public var id: String { self.rawValue }
-  public var name: String { self.rawValue.capitalized }
+@available(macOS 15, iOS 18, *)
+extension EventModifiers {
 
-  public var symbol: String {
+  public static var defaultKeys: Self {
+    [.command, .shift, .option, .control, .capsLock]
+  }
+
+  public var toCompatibleModifier: CompatibleModifierKeys {
     switch self {
-      case .shift: "􀆝"
-      case .control: "􀆍"
-      case .option: "􀆕"
-      case .command: "􀆔"
+      case .shift: return .shift
+      case .control: return .control
+      case .option: return .option
+      case .command: return .command
+      case .capsLock: return .capsLock
+      default: return []
     }
   }
 }
-
-extension Modifiers {
-  public var names: String? {
-    guard !self.isEmpty else {
-      return nil
-    }
-    return self.map(\.name).joined()
-  }
-
-  public var symbols: String? {
-    guard !self.isEmpty else {
-      return nil
-    }
-    return self.map(\.symbol).joined()
-  }
-}
-
-//#if os(macOS)
-
 
 #if canImport(AppKit)
-  extension NSEvent.ModifierFlags {
-    public func toModifierKey() -> ModifierKey? {
-      switch self {
-        case .shift: return .shift
-        case .control: return .control
-        case .option: return .option
-        case .command: return .command
-        default: return nil
-      }
+extension NSEvent.ModifierFlags {
+  public var toCompatibleModifier: CompatibleModifierKeys {
+    switch self {
+      case .shift: return .shift
+      case .control: return .control
+      case .option: return .option
+      case .command: return .command
+      case .capsLock: return .capsLock
+      default: return []
     }
   }
+}
 #endif
 
+//extension Modifiers {
+//  public var names: String? {
+//    guard !self.isEmpty else {
+//      return nil
+//    }
+//    return self.map(\.name).joined()
+//  }
+//
+//  public var symbols: String? {
+//    guard !self.isEmpty else {
+//      return nil
+//    }
+//    return self.map(\.symbol).joined()
+//  }
+//}
+
+//#if os(macOS)

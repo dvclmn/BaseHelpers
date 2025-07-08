@@ -7,7 +7,7 @@
 
 import Foundation
 
-/// Represents an integer-based position in a 2D Grid (rows and columns)
+/// Represents a position in a 2D Grid (rows and columns)
 public struct GridPosition: GridBase {
   public let row: Int
   public let column: Int

@@ -14,19 +14,24 @@ public struct ModifierKeysModifier: ViewModifier {
   public func body(content: Content) -> some View {
 
     #if canImport(AppKit)
-    content
-      .onAppear {
-        let modifierList: [NSEvent.ModifierFlags] = [.shift, .control, .option, .command]
-        print("Setting up modifier keys.")
-        NSEvent.addLocalMonitorForEvents(matching: [.flagsChanged]) { event in
-          modifierKeys = Set(
-            modifierList.compactMap { flag in
-              event.modifierFlags.contains(flag) ? flag.toModifierKey() : nil
-            })
-          return event
+
+    if #available(macOS 15, iOS 18, *) {
+      content
+        .onModifierKeysChanged(mask: .defaultKeys, initial: true) { old, new in
+          self.modifierKeys = Modifiers(from: new)
         }
-      }
-      .environment(\.modifierKeys, modifierKeys)
+
+    } else {
+      content
+        .onAppear {
+          NSEvent.addLocalMonitorForEvents(matching: [.flagsChanged]) { event in
+            self.modifierKeys = Modifiers(from: event.modifierFlags)
+            return event
+          }
+        }
+        .environment(\.modifierKeys, modifierKeys)
+    }
+
     #else
     content
     #endif
