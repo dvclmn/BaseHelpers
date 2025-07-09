@@ -8,8 +8,6 @@
 import SwiftUI
 
 extension CGRect {
-  
-  
 
   public static let example01 = CGRect(
     x: 0,
@@ -83,7 +81,6 @@ extension CGRect {
     CGPoint(x: midX, y: midY)
   }
 
-
   /// `CGRect` represents a rectangle in a 2D coordinate system.
   /// The `origin` property represents the starting point (or the top-left corner).
   ///
@@ -140,9 +137,11 @@ extension CGRect {
       height: newMaxY - newMinY
     )
   }
-  
-  
-  public static func normalised(from start: CGPoint, to current: CGPoint) -> CGRect {
+
+  public static func reversible(
+    from start: CGPoint,
+    to current: CGPoint
+  ) -> CGRect {
     let origin = CGPoint(
       x: min(start.x, current.x),
       y: min(start.y, current.y)
@@ -153,7 +152,7 @@ extension CGRect {
     )
     return CGRect(origin: origin, size: size)
   }
-  
+
   public static func fromPoints(_ a: CGPoint, _ b: CGPoint) -> CGRect {
     CGRect(
       x: min(a.x, b.x),

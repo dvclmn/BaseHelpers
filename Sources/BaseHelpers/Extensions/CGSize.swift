@@ -255,6 +255,12 @@ public func - (lhs: CGSize, rhs: CGFloat) -> CGSize {
     height: lhs.height - rhs
   )
 }
+public func - (lhs: CGSize, rhs: CGPoint) -> CGSize {
+  return CGSize(
+    width: lhs.width - rhs.x,
+    height: lhs.height - rhs.y
+  )
+}
 
 public func + (lhs: CGSize, rhs: CGSize) -> CGSize {
   return CGSize(

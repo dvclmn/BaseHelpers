@@ -9,41 +9,42 @@
 import SwiftUI
 
 public struct KeysPressedModifier: ViewModifier {
-  
+
   @State private var keyDownMonitor: Any?
   @State private var keyUpMonitor: Any?
   @State private var heldKeys: Set<KeyEquivalent> = []
 
   let keys: Set<KeyEquivalent>
   let onPress: (KeyEquivalent) -> Void
-  let isHeld: (KeyEquivalent, Bool) -> Void
-  
+  let isHeld: (Set<KeyEquivalent>) -> Void
+
   public func body(content: Content) -> some View {
     content
       .onAppear {
         keyDownMonitor = NSEvent.addLocalMonitorForEvents(matching: .keyDown) { event in
           guard let character = event.characters?.lowercased().first,
-                let key = keys.first(where: { $0.character == character }) else {
+            let key = keys.first(where: { $0.character == character })
+          else {
             return event
           }
-          
-          if !heldKeys.contains(key) {
-            heldKeys.insert(key)
-            isHeld(key, true)
-            onPress(key)
-          }
-          
+          //          if !heldKeys.contains(key) {
+          heldKeys.insert(key)
+          isHeld(heldKeys)
+          onPress(key)
+          //          }
+
           return nil
         }
-        
+
         keyUpMonitor = NSEvent.addLocalMonitorForEvents(matching: .keyUp) { event in
           guard let character = event.characters?.lowercased().first,
-                let key = keys.first(where: { $0.character == character }) else {
+            let key = keys.first(where: { $0.character == character })
+          else {
             return event
           }
-          
+
           heldKeys.remove(key)
-          isHeld(key, false)
+          isHeld(heldKeys)
           return nil
 
         }
@@ -60,8 +61,8 @@ public struct KeysPressedModifier: ViewModifier {
 }
 
 // Usage example:
-public extension View {
-  func keysPressed(
+extension View {
+  public func keysPressed(
     _ keys: Set<KeyEquivalent>,
     onPress: @escaping (KeyEquivalent) -> Void
   ) -> some View {
@@ -69,15 +70,15 @@ public extension View {
       KeysPressedModifier(
         keys: keys,
         onPress: onPress,
-        isHeld: { _, _ in }
+        isHeld: { _ in }
       )
     )
   }
-  
-  func keysHeld(
+
+  public func keysHeld(
     _ keys: Set<KeyEquivalent>,
-    isHeld: @escaping (KeyEquivalent, Bool) -> Void,
-    onPress: @escaping (KeyEquivalent) -> Void = { _ in }
+    onPress: @escaping (KeyEquivalent) -> Void = { _ in },
+    isHeld: @escaping (Set<KeyEquivalent>) -> Void,
   ) -> some View {
     self.modifier(
       KeysPressedModifier(
