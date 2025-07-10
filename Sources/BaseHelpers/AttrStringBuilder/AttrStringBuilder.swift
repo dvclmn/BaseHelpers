@@ -48,7 +48,6 @@ extension AttributedString {
     self = content()
   }
 
-  // Fluent styling methods
   public func colour(_ colour: Color) -> AttributedString {
     var result = self
     result.foregroundColor = colour
@@ -92,21 +91,6 @@ extension AttributedString {
   }
 }
 
-// MARK: - Example Protocol and Usage
-//protocol FloatPair {
-//  var valueA: Double { get }
-//  var valueB: Double { get }
-//}
-//
-//extension FloatPair {
-//  var displayStringA: String { String(format: "%.0f", valueA) }
-//  var displayStringB: String { String(format: "%.0f", valueB) }
-//}
-//
-//struct ExampleFloatPair: FloatPair {
-//  let valueA: Double
-//  let valueB: Double
-//}
 
 // MARK: - DSL Functions
 @AttrString
