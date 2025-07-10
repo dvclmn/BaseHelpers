@@ -14,33 +14,18 @@ public enum ValueDisplayStyle {
   public var isShowingLabels: Bool { self == .labels }
 }
 
-/// This is for helping unify some operations that benefit
-/// both `CGPoint` and `CGSize`. This protocol does
-/// care about axis; x/y, horizontal/vertical etc
-public protocol FloatPair {
-  /// For `CGPoint` this is `x`. For `CGSize` this is `width`
-  var valueX: CGFloat { get }
 
-  /// For `CGPoint` this is `y`. For `CGSize` this is `height`
-  var valueY: CGFloat { get }
-}
-
-/// This unifies types that have a pair of numeric values,
-/// usually for formatting display as a String
-public protocol NumericPair {
-  /// For `CGPoint` this is `x`. For `CGSize` this is `width`
-  var valueA: CGFloat { get }
-
-  /// For `CGPoint` this is `y`. For `CGSize` this is `height`
-  var valueB: CGFloat { get }
-}
-
+/// This unifies types that have a pair of values
+/// that can be formatted for display as a String
 public protocol DisplayStringable {
-  associatedtype Value
+  associatedtype Value // Constrain?
   var value: Value { get }
-  var valueLabel: String { get }
-  var displayString: String { get }
   
+  /// Value label I think only works in the context
+  /// of at least a *pair*, not at the single-value level.
+//  var valueLabel: String { get }
+  var displayString: String { get }
+
   /// I should get more clarity on what types I'm targeeting
   /// via the above `associatedtype Value`, to better
   /// constrain the below (e.g. grouping may be meaingless
@@ -53,63 +38,64 @@ public protocol DisplayStringable {
   ) -> String
 }
 
-/// I think I can just express the other shapes, directly.
-/// E.g. single float values like `CGFloat` using `BinaryFloatingPoint`,
-/// `CGRect`, who has four values to display, etc.
-public protocol FloatPair {
-  var valueA: Double { get }
-  var valueB: Double { get }
-
+/// A good example is `CGPoint`:
+/// ```
+/// valueA = self.x
+/// valueB = self.y
+/// valueALabel = "x"
+/// valueBLabel = "y"
+/// ```
+public protocol DisplayPair {
+  associatedtype Value: DisplayStringable
+  var valueA: Value { get }
+  var valueB: Value { get }
   var valueALabel: String { get }
   var valueBLabel: String { get }
-
-  var displayString: String { get }
-  func displayString(
-    _ decimalPlaces: Int,
-    style: ValueDisplayStyle,
-    hasSpace: Bool,
-    grouping: Decimal.FormatStyle.Configuration.Grouping
-  ) -> String
 }
 
-extension CGPoint: FloatPair {
+extension BinaryFloatingPoint: DisplayStringable {
+  public var value: Self { self }
+}
+
+
+extension CGPoint: DisplayStringable {
   public var valueA: Double { x }
   public var valueB: Double { y }
   public var valueALabel: String { "X" }
   public var valueBLabel: String { "Y" }
 }
-extension CGSize: FloatPair {
+extension CGSize: DisplayStringable {
   public var valueA: Double { width }
   public var valueB: Double { height }
   public var valueALabel: String { "W" }
   public var valueBLabel: String { "H" }
 }
-extension CGVector: FloatPair {
+extension CGVector: DisplayStringable {
   public var valueA: Double { dx }
   public var valueB: Double { dy }
   public var valueALabel: String { "DX" }
   public var valueBLabel: String { "DY" }
 }
-extension UnitPoint: FloatPair {
+extension UnitPoint: DisplayStringable {
   public var valueA: Double { x }
   public var valueB: Double { y }
   public var valueALabel: String { "X" }
   public var valueBLabel: String { "Y" }
 }
-extension GridPosition: FloatPair {
+extension GridPosition: DisplayStringable {
   public var valueA: Double { Double(column) }
   public var valueB: Double { Double(row) }
   public var valueALabel: String { "C" }
   public var valueBLabel: String { "R" }
 }
-extension GridDimensions: FloatPair {
+extension GridDimensions: DisplayStringable {
   public var valueA: Double { Double(columns) }
   public var valueB: Double { Double(rows) }
   public var valueALabel: String { "C" }
   public var valueBLabel: String { "R" }
 }
 
-extension FloatPair {
+extension DisplayStringable {
 
   public var displayString: String { self.displayString() }
 
