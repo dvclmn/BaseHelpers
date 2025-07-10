@@ -9,6 +9,24 @@ import SwiftUI
 
 extension GraphicsContext {
   
+  public func fillAndStroke(
+    _ path: Path,
+    fillColour: Color,
+    strokeColour: Color,
+    strokeThickness: CGFloat = 1
+  ) {
+    
+    self.fill(
+      path,
+      with: .color(fillColour)
+    )
+    self.stroke(
+      path,
+      with: .color(strokeColour),
+      lineWidth: strokeThickness
+    )
+  }
+  
   public func drawPattern(
     _ pattern: PatternStyle,
     config: PatternConfiguration = .default,

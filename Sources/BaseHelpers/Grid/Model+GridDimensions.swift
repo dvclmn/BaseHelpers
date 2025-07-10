@@ -5,6 +5,8 @@
 //  Created by Dave Coleman on 3/7/2025.
 //
 
+import Foundation
+
 public struct GridDimensions: GridBase {
   public var columns: Int
   public var rows: Int
@@ -14,6 +16,12 @@ public struct GridDimensions: GridBase {
   public init(columns: Int, rows: Int) {
     self.columns = columns
     self.rows = rows
+  }
+  
+  public init(size: CGSize, cellSize: CGSize) {
+    let widthInCells = max(0, Int(size.width / cellSize.width))
+    let heightInCells = max(0, Int(size.height / cellSize.height))
+    self.init(columns: widthInCells, rows: heightInCells)
   }
 }
 
