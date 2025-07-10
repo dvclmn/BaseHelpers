@@ -27,13 +27,15 @@ public protocol DisplayPair {
   func displayString(
     _ places: DecimalPlaces,
     style: ValueDisplayStyle,
+    separator: String,
     hasSpace: Bool,
     grouping: Grouping
   ) -> String
-  
+
   func displayStringStyled(
     _ places: DecimalPlaces,
     style: ValueDisplayStyle,
+    separator: String,
     hasSpace: Bool,
     grouping: Grouping
   ) -> AttributedString
@@ -50,43 +52,44 @@ extension DisplayPair {
     return result
   }
 
-  func displayString(
+  public func displayString(
     _ places: DecimalPlaces,
     style: ValueDisplayStyle,
     separator: String = "x",
-    hasSpace: Bool,
-    grouping: Grouping
+    hasSpace: Bool = true,
+    grouping: Grouping = .automatic
   ) -> String {
 
     let valA: String = valueA.displayString(places, grouping: grouping)
     let valB: String = valueB.displayString(places, grouping: grouping)
-    
+
     let spaceIfNeeded: String = hasSpace ? " " : ""
-    let result: String = "\(valueALabel)\(spaceIfNeeded)\(valA)\(spaceIfNeeded)\(separator)\(spaceIfNeeded)\(valueBLabel)\(spaceIfNeeded)\(valB)"
-    
+    let result: String =
+      "\(valueALabel)\(spaceIfNeeded)\(valA)\(spaceIfNeeded)\(separator)\(spaceIfNeeded)\(valueBLabel)\(spaceIfNeeded)\(valB)"
+
     return result
-//    StyledText(hasSpace ? " \(separator) " : separator)
-//      .colour(.secondary)
-//      .bold()
-//    StyledText(value.valueB.displayString(places))
-//    
-//    let pair = valuePair(
-//      self,
-//      places: places,
-//      separator: separator,
-//      hasSpace: hasSpace
-//    )
-//    return pair.toString
+    //    StyledText(hasSpace ? " \(separator) " : separator)
+    //      .colour(.secondary)
+    //      .bold()
+    //    StyledText(value.valueB.displayString(places))
+    //
+    //    let pair = valuePair(
+    //      self,
+    //      places: places,
+    //      separator: separator,
+    //      hasSpace: hasSpace
+    //    )
+    //    return pair.toString
   }
 
-  func displayStringStyled(
-    _ places: DecimalPlaces,
-    style: ValueDisplayStyle,
+  public func displayStringStyled(
+    _ places: DecimalPlaces = .fractionLength(2),
+    style: ValueDisplayStyle = .labels,
     separator: String = "x",
-    hasSpace: Bool,
-    grouping: Grouping
+    hasSpace: Bool = true,
+    grouping: Grouping = .automatic
   ) -> AttributedString {
-    
+
     let pair = valuePair(
       self,
       places: places,

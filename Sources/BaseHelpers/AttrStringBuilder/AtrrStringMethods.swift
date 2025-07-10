@@ -15,9 +15,7 @@ public func valuePair<T: DisplayPair>(
   separator: String = "x",
   hasSpace: Bool = true
 ) -> AttributedString {
-  StyledText(value.valueA.displayString(
-    places, hasSpace: hasSpace
-  )
+  StyledText(value.valueA.displayString(places))
   StyledText(hasSpace ? " \(separator) " : separator)
     .colour(.secondary)
     .bold()
