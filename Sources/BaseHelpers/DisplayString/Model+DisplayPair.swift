@@ -23,9 +23,16 @@ public protocol DisplayPair {
   
   var displayString: String { get }
   var displayStringStyled: AttributedString { get }
+  
+  func displayString(
+    _ places: DecimalPlaces,
+    style: ValueDisplayStyle,
+    hasSpace: Bool,
+    grouping: Grouping
+  ) -> String
 }
 
-extension DisplayPair  {
+extension DisplayPair {
   
   public var displayString: String {
     return displayStringStyled.toString
@@ -35,6 +42,22 @@ extension DisplayPair  {
     let result = valuePair(self)
     return result
   }
+  
+  func displayString(
+    _ places: DecimalPlaces,
+    style: ValueDisplayStyle,
+    hasSpace: Bool,
+    grouping: Grouping
+  ) -> String {
+    
+    let pair = valuePair(self, places: places, separator: <#T##String#>)
+    
+//    let valA = self.valueA.displayString(places, style: style, hasSpace: hasSpace, grouping: grouping)
+//    let valB = self.valueB.displayString(places, style: style, hasSpace: hasSpace, grouping: grouping)
+//    
+//    return
+  }
+  
 }
 
 //public protocol ValuePair {
