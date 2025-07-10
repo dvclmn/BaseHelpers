@@ -10,7 +10,7 @@ import SwiftUI
 extension AttributedString {
   
 //  public static func valuePair(
-//    _ value: any ValuePair,
+//    _ value: any FloatPair,
 //    seperator: String = "x"
 //  ) -> AttributedString {
 //    let string =

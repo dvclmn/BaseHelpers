@@ -12,21 +12,6 @@ public struct GridRect: GridBase {
   public let size: GridDimensions
 
   /// This expects a `CGRect` that's already mapped
-  //  public init(
-  //    rect: CGRect,
-  //    cellSize: CGSize
-  //  ) {
-  //    let origin = GridPosition(
-  //      point: rect.origin,
-  //      cellSize: cellSize
-  //    )
-  //    let cellWidth: Int = Int(rect.size.width / cellSize.width)
-  //    let cellHeight: Int = Int(rect.size.height / cellSize.height)
-  //    let size = GridDimensions(columns: cellWidth, rows: cellHeight)
-  //
-  //    self.init(origin: origin, size: size)
-  //  }
-
   public init(rect: CGRect, cellSize: CGSize) {
 
     assert(rect.width >= 0 && rect.height >= 0, "GridRect initialised with negative dimensions: \(rect)")

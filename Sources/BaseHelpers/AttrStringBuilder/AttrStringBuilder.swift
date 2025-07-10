@@ -93,17 +93,17 @@ extension AttributedString {
 }
 
 // MARK: - Example Protocol and Usage
-//protocol ValuePair {
+//protocol FloatPair {
 //  var valueA: Double { get }
 //  var valueB: Double { get }
 //}
 //
-//extension ValuePair {
+//extension FloatPair {
 //  var displayStringA: String { String(format: "%.0f", valueA) }
 //  var displayStringB: String { String(format: "%.0f", valueB) }
 //}
 //
-//struct ExampleValuePair: ValuePair {
+//struct ExampleFloatPair: FloatPair {
 //  let valueA: Double
 //  let valueB: Double
 //}
@@ -111,7 +111,7 @@ extension AttributedString {
 // MARK: - DSL Functions
 @AttrString
 public func valuePair(
-  _ value: any ValuePair,
+  _ value: any FloatPair,
   decimalPlaces: Int = 2,
   separator: String = "x"
 ) -> AttributedString {
@@ -174,7 +174,7 @@ public func bulletList(_ items: [String]) -> AttributedString {
 // MARK: - Usage Examples
 //func exampleUsage() {
 //  // Basic usage
-//  let pair = ExampleValuePair(valueA: 1290, valueB: 340)
+//  let pair = ExampleFloatPair(valueA: 1290, valueB: 340)
 //  let result1 = valuePair(pair)
 //
 //  // With custom separator

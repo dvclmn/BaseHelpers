@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+
 public enum CoordinateMappingMode {
   /// Fill destination rect exactly, even if aspect ratio is distorted
   case stretch
