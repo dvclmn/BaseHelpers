@@ -56,7 +56,7 @@ extension DisplayPair {
     _ places: DecimalPlaces,
     style: ValueDisplayStyle,
     separator: String = "x",
-    hasSpace: Bool = true,
+    hasSpace: Bool = false,
     grouping: Grouping = .automatic
   ) -> String {
 
@@ -68,25 +68,13 @@ extension DisplayPair {
       "\(valueALabel)\(spaceIfNeeded)\(valA)\(spaceIfNeeded)\(separator)\(spaceIfNeeded)\(valueBLabel)\(spaceIfNeeded)\(valB)"
 
     return result
-    //    StyledText(hasSpace ? " \(separator) " : separator)
-    //      .colour(.secondary)
-    //      .bold()
-    //    StyledText(value.valueB.displayString(places))
-    //
-    //    let pair = valuePair(
-    //      self,
-    //      places: places,
-    //      separator: separator,
-    //      hasSpace: hasSpace
-    //    )
-    //    return pair.toString
   }
 
   public func displayStringStyled(
     _ places: DecimalPlaces = .fractionLength(2),
     style: ValueDisplayStyle = .labels,
     separator: String = "x",
-    hasSpace: Bool = true,
+    hasSpace: Bool = false,
     grouping: Grouping = .automatic
   ) -> AttributedString {
 
@@ -100,9 +88,3 @@ extension DisplayPair {
   }
 
 }
-
-//public protocol ValuePair {
-//  associatedtype Value
-//  var valueA: Value { get }
-//  var valueB: Value { get }
-//}

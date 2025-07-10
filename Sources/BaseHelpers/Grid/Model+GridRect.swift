@@ -49,14 +49,23 @@ public struct GridRect: GridBase {
 }
 
 extension GridRect {
+  
   /// Iterates over all GridPositions within this GridRect
-  public var allPositions: [GridPosition] {
-    (0..<size.rows).flatMap { r in
-      (0..<size.columns).map { c in
-        GridPosition(row: origin.row + r, column: origin.column + c)
+  public var positions: [GridPosition] {
+    (origin.row ..< origin.row + size.rows).flatMap { row in
+      (origin.column ..< origin.column + size.columns).map { col in
+        GridPosition(row: row, column: col)
       }
     }
   }
+  
+//  public var allPositions: [GridPosition] {
+//    (0..<size.rows).flatMap { r in
+//      (0..<size.columns).map { c in
+//        GridPosition(row: origin.row + r, column: origin.column + c)
+//      }
+//    }
+//  }
 
   public func contains(_ position: GridPosition) -> Bool {
     let rowRange = origin.row..<(origin.row + size.rows)
@@ -64,12 +73,29 @@ extension GridRect {
     return rowRange.contains(position.row) && colRange.contains(position.column)
   }
 
-  func asCGRect(cellSize: CGSize) -> CGRect {
+  public func asCGRect(cellSize: CGSize) -> CGRect {
     CGRect(
       x: CGFloat(origin.column) * cellSize.width,
       y: CGFloat(origin.row) * cellSize.height,
       width: CGFloat(size.columns) * cellSize.width,
       height: CGFloat(size.rows) * cellSize.height
     )
+  }
+  
+  public func clamped(to bounds: GridDimensions) -> GridRect {
+    let clampedOrigin = GridPosition(
+      row: max(0, min(origin.row, bounds.rows - 1)),
+      column: max(0, min(origin.column, bounds.columns - 1))
+    )
+    
+    let endRow = min(origin.row + size.rows, bounds.rows)
+    let endCol = min(origin.column + size.columns, bounds.columns)
+    
+    let clampedSize = GridDimensions(
+      columns: max(0, endCol - clampedOrigin.column),
+      rows: max(0, endRow - clampedOrigin.row)
+    )
+    
+    return GridRect(origin: clampedOrigin, size: clampedSize)
   }
 }
