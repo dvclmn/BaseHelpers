@@ -7,34 +7,34 @@
 
 import Foundation
 
-struct FloatPairFormatter {
-  let pair: any FloatPair
-  let config: DisplayStringConfig
-  
-  init(
-    pair: any FloatPair,
-    config: DisplayStringConfig
-  ) {
-    self.pair = pair
-    self.config = config
-  }
-}
-
-
-extension FloatPairFormatter {
-  var displayString: String {
-    
-    let formatter = SingleValueFormatter(config: config)
-    
-    let formattedA: String = formatter.displayString(pair.valueA, valueLabel: pair.valueALabel)
-    let formattedB: String = formatter.displayString(pair.valueB, valueLabel: pair.valueBLabel)
-    
-    let spaceIfNeeded: String = config.hasSpaceBetweenValues ? " " : ""
-    
-    let formattedResult = String("\(formattedA),\(spaceIfNeeded)\(formattedB)")
-    return formattedResult
-  }
-}
+//struct FloatPairFormatter {
+//  let pair: any FloatPair
+//  let config: DisplayStringConfig
+//  
+//  init(
+//    pair: any FloatPair,
+//    config: DisplayStringConfig
+//  ) {
+//    self.pair = pair
+//    self.config = config
+//  }
+//}
+//
+//
+//extension FloatPairFormatter {
+//  var displayString: String {
+//    
+//    let formatter = SingleValueFormatter(config: config)
+//    
+//    let formattedA: String = formatter.displayString(pair.valueA, valueLabel: pair.valueALabel)
+//    let formattedB: String = formatter.displayString(pair.valueB, valueLabel: pair.valueBLabel)
+//    
+//    let spaceIfNeeded: String = config.hasSpaceBetweenValues ? " " : ""
+//    
+//    let formattedResult = String("\(formattedA),\(spaceIfNeeded)\(formattedB)")
+//    return formattedResult
+//  }
+//}
 
 //struct SingleValueFormatter<Value: SingleValueStringable> {
 //  let value: any SingleValueStringable

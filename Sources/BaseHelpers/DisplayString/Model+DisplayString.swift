@@ -7,15 +7,20 @@
 
 import SwiftUI
 
+public typealias DecimalPlaces = FloatingPointFormatStyle<Double>.Configuration.Precision
+public typealias Grouping = FloatingPointFormatStyle<Double>.Configuration.Grouping
+
+//public typealias DecimalPlaces<Value: BinaryFloatingPoint> = FloatingPointFormatStyle<Value>.Configuration.Precision
+//public typealias Grouping<Value: BinaryFloatingPoint> = FloatingPointFormatStyle<Value>.Configuration.Grouping
+
+// MARK: - Single Values
 /// This unifies types that have a pair of values
 /// that can be formatted for display as a String
 public protocol SingleValueStringable {
-  associatedtype Value
-  var value: Value { get }
 
-  /// Value label I think only works in the context
-  /// of at least a *pair*, not at the single-value level.
-
+  /// This can be further constrained via extensions, I guess?
+  //  associatedtype Value: BinaryFloatingPoint
+  var value: Double { get }
   var displayString: String { get }
 
   /// I should get more clarity on what types I'm targeeting
@@ -23,61 +28,49 @@ public protocol SingleValueStringable {
   /// constrain the below (e.g. grouping may be meaingless
   /// if not a numeric value).
   func displayString(
-    _ decimalPlaces: Int,
+    _ places: DecimalPlaces,
     style: ValueDisplayStyle,
     hasSpace: Bool,
-    grouping: Decimal.FormatStyle.Configuration.Grouping
+    grouping: Grouping
   ) -> String
-}
-
-/// A good example is `CGPoint`:
-/// ```
-/// valueA = self.x
-/// valueB = self.y
-/// valueALabel = "X"
-/// valueBLabel = "Y"
-/// ```
-public protocol DisplayPair {
-  associatedtype Value: SingleValueStringable
-  var valueA: Value { get }
-  var valueB: Value { get }
-  var valueALabel: String { get }
-  var valueBLabel: String { get }
 }
 
 /// `SingleValueStringable` doesn't concern itself with
 /// properties like `valueLabel`s (e.g. "W" for width etc).
 /// Just formatting a single value, and returning it for
 /// any further processing required
-extension SingleValueStringable where Self.Value: BinaryFloatingPoint {
+extension SingleValueStringable {
+
   
   /// A convenience that just returns the `displayString()`
   /// method with it's default values
   public var displayString: String { self.displayString() }
-  
+
   /// I like the API of `NumberFormatStyleConfiguration.Precision`,
   /// so I've chosen not to abstract over it, but use it directly, to
   /// express the decimal/integer places.
   public func displayString(
-    _ places: FloatingPointFormatStyle<Self.Value>.Configuration.Precision = .fractionLength(2),
+    _ places: DecimalPlaces = .fractionLength(2),
     style: ValueDisplayStyle = .labels,
     hasSpace: Bool = true,
-    grouping: FloatingPointFormatStyle<Self.Value>.Configuration.Grouping = .automatic
+    grouping: Grouping = .automatic
   ) -> String {
-    
+
     /// Manually converting from the more ambiguous `BinaryFloatingPoint`,
     /// to `Double`, so the compiler knows exactly what we're dealing with
     let valueToFormat = Double(self.value)
-    
-    let formatted = valueToFormat.formatted(.number.precision(places).grouping(grouping))
-    
+
+    let formatted = valueToFormat.formatted(
+      .number.precision(places)
+        .grouping(grouping)
+    )
+
     return formatted
   }
 }
 
-
-
 //extension BinaryFloatingPoint {
+//
 //  public var displayString: String {
 //    return displayString()
 //  }
