@@ -29,8 +29,6 @@ public protocol SingleValueStringable {
   /// if not a numeric value).
   func displayString(
     _ places: DecimalPlaces,
-    style: ValueDisplayStyle,
-    hasSpace: Bool,
     grouping: Grouping
   ) -> String
 }
@@ -51,8 +49,6 @@ extension SingleValueStringable {
   /// express the decimal/integer places.
   public func displayString(
     _ places: DecimalPlaces = .fractionLength(2),
-    style: ValueDisplayStyle = .labels,
-    hasSpace: Bool = true,
     grouping: Grouping = .automatic
   ) -> String {
 
