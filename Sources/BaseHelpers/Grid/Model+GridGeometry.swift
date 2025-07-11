@@ -9,6 +9,8 @@ import Foundation
 
 public enum GridGeometry {
   
+  
+  
   /// This can come from `GridRect`s `asCGRect`
 //  public static func rect(for position: GridPosition, cellSize: CGSize) -> CGRect {
 //    CGRect(

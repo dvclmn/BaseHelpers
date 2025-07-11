@@ -7,15 +7,6 @@
 
 import SwiftUI
 
-//public protocol GridAxisAware {
-//  var row: Int { get }
-//  var column: Int { get }
-//}
-//public protocol GridDimensionsAware {
-//  var rows: Int { get }
-//  var columns: Int { get }
-//}
-
 public enum GridAxis: GridBase {
   case horizontal
   case vertical
@@ -42,65 +33,20 @@ public enum GridAxis: GridBase {
   }
 
   /// The 'actual' value, for the corresponding property, from the `GridCanvas` itself
-
   public var dimensionsKeyPath: WritableKeyPath<GridDimensions, Int> {
     switch self {
       case .horizontal: \.columns
       case .vertical: \.rows
     }
   }
-  //  public func dimensionKey<T: GridDimensions>(_ type: T.Type) -> WritableKeyPath<T, Int> {
-  //    switch self {
-  //      case .horizontal: \.columns
-  //      case .vertical: \.rows
-  //    }
-  //  }
-  //  /// Returns the key path for the opposite dimension
-  //  var opposingDimensionKey: KeyPath<GridDimensions, Int> {
-  //    switch self {
-  //      case .horizontal: \.rows
-  //      case .vertical: \.columns
-  //    }
-  //  }
 
-   public var positionKeyPath: KeyPath<GridPosition, Int> {
-      switch self {
-        case .horizontal: \.column
-        case .vertical: \.row
-      }
+  public var positionKeyPath: KeyPath<GridPosition, Int> {
+    switch self {
+      case .horizontal: \.column
+      case .vertical: \.row
     }
-
-  //    var artworkPositionKey: KeyPath<ArtworkPosition, Int> {
-  //      switch self {
-  //        case .horizontal: \.col
-  //        case .vertical: \.row
-  //      }
-  //    }
-
-  //    var cellPositionKey: KeyPath<GridCanvas.CellPosition, Int> {
-  //      switch self {
-  //        case .horizontal: \.col
-  //        case .vertical: \.row
-  //      }
-  //    }
-
+  }
 }
-
-//extension CGPoint {
-//  func getValue(in dimension: GridAxis) -> CGFloat {
-//    self[keyPath: dimension.locationKeyPath]
-//  }
-//
-//  mutating func setValue(_ value: CGFloat, in dimension: GridAxis) {
-//    self[keyPath: dimension.locationKeyPath] = value
-//  }
-//}
-//
-//extension CGSize {
-//  func getValue(in dimension: GridAxis) -> CGFloat {
-//    self[keyPath: dimension.sizeKeyPath]
-//  }
-//}
 
 /// Metadata
 extension GridAxis {

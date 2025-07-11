@@ -8,8 +8,31 @@
 import Foundation
 
 extension String {
+
+  public static func createBlankString(
+    width: Int,
+    height: Int,
+    character: Character = " "
+  ) -> String {
+    guard width > 0 && height > 0 else { return "" }
+    
+    let rowString = String(repeating: character, count: width)
+    let rows = Array(repeating: rowString, count: height)
+    return rows.joined(separator: "\n")
+  }
   
-  public var addNewLine: String {
+//  public static func createBlankString(
+//    width: Int,
+//    height: Int,
+//    character: Character = " "
+//  ) -> String {
+//    let rowString = String(repeating: String(character), count: width)
+//    let result = String(repeating: rowString.addNewLine, count: height)
+//    return result
+//  }
+
+  /// Adds a new line to the end of the current String, unless already present
+  public var addingNewLine: String {
     guard self.last != "\n" else {
       return self
     }
