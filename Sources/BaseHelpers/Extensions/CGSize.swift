@@ -105,6 +105,10 @@ extension CGSize {
     return self / zoom
   }
   
+  public var longestDimension: CGFloat {
+    return max(width, height)
+  }
+  
 //  public func centeredIn(viewSize: CGSize) -> CGSize {
 //    
 //    let viewMid = viewSize.midpoint

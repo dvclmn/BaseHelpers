@@ -8,7 +8,7 @@
 import Foundation
 
 extension BinaryFloatingPoint {
-  
+
   public func incrementing(by amount: Self, in range: ClosedRange<Self>? = nil) -> Self {
     var result = self + amount
     if let range {
@@ -16,63 +16,63 @@ extension BinaryFloatingPoint {
     }
     return result
   }
-  
+
   public mutating func increment(by amount: Self, in range: ClosedRange<Self>? = nil) {
     self = incrementing(by: amount, in: range)
   }
-  
-//  public func incrementing(by amount: Self, in range: ClosedRange<Self>) -> Self {
-//    var value = self
-//    value += amount
-//    return value.clamped(to: range)
-//  }
-//
-//  public mutating func increment(by: )
-  
+
+  //  public func incrementing(by amount: Self, in range: ClosedRange<Self>) -> Self {
+  //    var value = self
+  //    value += amount
+  //    return value.clamped(to: range)
+  //  }
+  //
+  //  public mutating func increment(by: )
+
   /// Checks that this value is neither infinite, nor Nan
   public var isValid: Bool {
     return self.isFinite && !self.isNaN
   }
-  
+
   public func hueWrapped() -> Self {
     let value = self.truncatingRemainder(dividingBy: 1.0)
     return value < 0 ? value + 1.0 : value
   }
-  
+
   public var toDouble: Double {
     return Double(self)
   }
-  
+
   public var toFloat: Float {
     return Float(self)
   }
-  
+
   public func clamped(to range: ClosedRange<Self>) -> Self {
     return min(max(self, range.lowerBound), range.upperBound)
   }
-  
+
   public func clamped(toIntRange range: Range<Int>) -> Self {
     return clamped(Self(range.lowerBound), Self(range.upperBound))
   }
-  
-//  public func displayString(
-//    _ decimalPlaces: Int = 2,
-//    grouping: FloatingPointFormatStyle<Self>.Configuration.Grouping = .automatic
-//  ) -> String {
-//    let doubleValue = Double(self)
-//    let formatted = doubleValue.formatted(.number.precision(.fractionLength(decimalPlaces)).grouping(grouping))
-//    return String(formatted)
-//  }
-//  
-//  public var displayString: String {
-//    return self.displayString()
-//  }
-  
-//  public var toInt: String {
-//    self.displayString(0)
-    //    floatToString(value: self, places: 0)
-//  }
-  
+
+  //  public func displayString(
+  //    _ decimalPlaces: Int = 2,
+  //    grouping: FloatingPointFormatStyle<Self>.Configuration.Grouping = .automatic
+  //  ) -> String {
+  //    let doubleValue = Double(self)
+  //    let formatted = doubleValue.formatted(.number.precision(.fractionLength(decimalPlaces)).grouping(grouping))
+  //    return String(formatted)
+  //  }
+  //
+  //  public var displayString: String {
+  //    return self.displayString()
+  //  }
+
+  //  public var toInt: String {
+  //    self.displayString(0)
+  //    floatToString(value: self, places: 0)
+  //  }
+
   public init(
     _ value: Self,
     removingZoom zoom: Self,
@@ -82,11 +82,11 @@ extension BinaryFloatingPoint {
     let adjusted = value * Self(pow(Double(zoom), clampedSensitivity - 1))
     self.init(adjusted)
   }
-  
+
   public func removingZoom(_ zoom: Self) -> Self {
     return self / zoom
   }
-  
+
   /// Maps `self` (e.g. a size) into a derived value (e.g. corner radius or padding),
   /// favouring non-linear mapping via a curve.
   ///
@@ -109,7 +109,7 @@ extension BinaryFloatingPoint {
     let outputSpan = outputRange.upperBound - outputRange.lowerBound
     return outputRange.lowerBound + curved * outputSpan
   }
-  
+
   /// Adjusts a value to respond partially to zoom level.
   /// - Parameters:
   ///   - zoom: The current zoom factor (1.0 is default, >1.0 is zoomed in).
@@ -123,7 +123,7 @@ extension BinaryFloatingPoint {
   //    let adjusted = self * Self(pow(Double(zoom), clampedSensitivity - 1))
   //    return adjusted
   //  }
-  
+
   //  public static func adjustedForZoom(
   //    value: Self,
   //    zoom: Self,
@@ -139,12 +139,12 @@ extension BinaryFloatingPoint {
   //    //    }
   //    return adjusted
   //  }
-  
+
   /// Clamps the value to the given range.
   //  func clamped(to range: ClosedRange<Self>) -> Self {
   //    return min(max(self, range.lowerBound), range.upperBound)
   //  }
-  
+
   //  /// Adjusts a value to respond partially to zoom level.
   //  /// - Parameters:
   //  ///   - zoom: The current zoom factor (1.0 is default, >1.0 is zoomed in).
@@ -157,43 +157,111 @@ extension BinaryFloatingPoint {
   //    let adjusted: Self = self * Self(pow(Double(zoom), Double(clampedResponse) - 1))
   //    return adjusted
   //  }
+
+  /// Applies non-linear zoom scaling to provide better control at different zoom levels
+  /// - Parameters:
+  ///   - zoomLevel: The current zoom level
+  ///   - zoomRange: The valid zoom range
+  ///   - lowSensitivityThreshold: Zoom level below which sensitivity is reduced (default: 1.0) Can be thought of as 'what is considered low zoom level'
+  ///   - highSensitivityThreshold: Zoom level above which sensitivity is increased (default: 5.0)
+  ///   - curve: The power curve factor (default: 1.5). Higher values = more dramatic curve
+  /// - Returns: The transformed zoom scale to apply to the view
+  public static func nonLinearZoomScale(
+    zoomLevel: Double,
+    zoomRange: ClosedRange<Double>,
+    lowSensitivityThreshold: Double = 1.0,
+    highSensitivityThreshold: Double = 5.0,
+    curve: Double = 1.5
+  ) -> Double {
+
+    /// Clamp the zoom level to the valid range
+    let clampedZoom = min(max(zoomLevel, zoomRange.lowerBound), zoomRange.upperBound)
+
+    /// Normalize the zoom level to 0...1 range
+    let normalizedZoom = (clampedZoom - zoomRange.lowerBound) / (zoomRange.upperBound - zoomRange.lowerBound)
+
+    /// Calculate threshold positions in normalized space
+    let lowThresholdNorm =
+      (lowSensitivityThreshold - zoomRange.lowerBound) / (zoomRange.upperBound - zoomRange.lowerBound)
+    let highThresholdNorm =
+      (highSensitivityThreshold - zoomRange.lowerBound) / (zoomRange.upperBound - zoomRange.lowerBound)
+
+    let transformedZoom: Double
+
+    if normalizedZoom <= lowThresholdNorm {
+      /// Low zoom range: reduce sensitivity (compress the curve)
+      let localNorm = normalizedZoom / lowThresholdNorm
+      let compressed = pow(localNorm, 1.0 / curve)  // Inverse curve for compression
+      transformedZoom = compressed * lowThresholdNorm
+
+    } else if normalizedZoom >= highThresholdNorm {
+      /// High zoom range: increase sensitivity (expand the curve)
+      let localNorm = (normalizedZoom - highThresholdNorm) / (1.0 - highThresholdNorm)
+      let expanded = pow(localNorm, curve)
+      transformedZoom = highThresholdNorm + expanded * (1.0 - highThresholdNorm)
+
+    } else {
+      /// Middle range: linear scaling
+      transformedZoom = normalizedZoom
+    }
+
+    /// Convert back to actual zoom range
+    return transformedZoom * (zoomRange.upperBound - zoomRange.lowerBound) + zoomRange.lowerBound
+  }
   
+  /// Simplified non-linear zoom scaling using a single curve parameter
+  /// - Parameters:
+  ///   - zoomLevel: The current zoom level
+  ///   - zoomRange: The valid zoom range
+  ///   - sensitivity: Controls the curve (0.5 = less sensitive at low zoom, 2.0 = more sensitive at low zoom)
+  /// - Returns: The transformed zoom scale
+  public static func simpleNonLinearZoomScale(
+    zoomLevel: Double,
+    zoomRange: ClosedRange<Double>,
+    sensitivity: Double = 0.7
+  ) -> Double {
+    let clampedZoom = min(max(zoomLevel, zoomRange.lowerBound), zoomRange.upperBound)
+    let normalizedZoom = (clampedZoom - zoomRange.lowerBound) / (zoomRange.upperBound - zoomRange.lowerBound)
+    let transformedZoom = pow(normalizedZoom, sensitivity)
+    return transformedZoom * (zoomRange.upperBound - zoomRange.lowerBound) + zoomRange.lowerBound
+  }
+
   public func toPercentString(within range: ClosedRange<Self>) -> String {
     let normalised: Double = Double(self.normalised(from: range))
     return String(normalised.formatted(.percent.precision(.fractionLength(0))))
   }
-  
+
   /// E.g. converting `0.8` to `0.2`
   public var inversePercentage: Self {
     /// Ensure falloff is between 0.0 and 1.0
     let bounded = min(max(self, 0.0), 1.0)
     return 1.0 - bounded
   }
-  
+
   public var bump: Self {
     let nextFib = self * 1.618
     /// Approximate next Fibonacci number
     return (self + nextFib) / 2/// Midpoint between current and next
   }
-  
+
   public var bumpDown: Self {
     let prevFib = self * 0.618
     /// Approximate previous Fibonacci number using the inverse of the golden ratio
     return (self + prevFib) / 2/// Midpoint between current and previous
   }
-  
+
   public var halved: Self {
     self / 2
   }
-  
+
   public var constrainedOpacity: Self {
     return min(1.0, max(0.0, self))
   }
-  
+
   public var isPositive: Bool {
     self > 0
   }
-  
+
   //  public func normalised(
   //    against value: Double,
   //    isClamped: Bool = true
@@ -204,15 +272,15 @@ extension BinaryFloatingPoint {
   //    }
   //    return doubleValue / value
   //  }
-  
+
   public var toFinite: Self {
     self.clamped(.zero, .infinity)
   }
-  
+
   public var isGreaterThanZero: Bool {
     self > 0
   }
-  
+
   //  public func padLeading(
   //    maxDigits: Int = 3,
   //    decimalPlaces: Int? = nil,
@@ -235,33 +303,33 @@ extension BinaryFloatingPoint {
   //    )
   //
   //  }
-  
+
   /// Calculates height from width using the given aspect ratio
   /// - Parameter aspectRatio: The aspect ratio (width / height)
   /// - Returns: The calculated height value
   public func height(for aspectRatio: Self) -> Self {
     return self / aspectRatio
   }
-  
+
   public var degreesToRadians: Self {
     self * .pi / 180
   }
-  
+
   public var radiansToDegrees: Self {
     self * 180 / .pi
   }
-  
+
   /// Returns the shortest angular distance between two angles
   public static func angleDelta(_ angle1: Self, _ angle2: Self) -> Self {
     var delta = angle1 - angle2
-    
+
     // Normalize to [-π, π] range
     while delta > .pi { delta -= 2 * .pi }
     while delta < -.pi { delta += 2 * .pi }
-    
+
     return abs(delta)
   }
-  
+
 }
 
 //
@@ -396,5 +464,3 @@ public func inverseLerp<V: BinaryFloatingPoint, T: BinaryFloatingPoint>(_ v0: V,
 //  }
 //
 //}
-
-

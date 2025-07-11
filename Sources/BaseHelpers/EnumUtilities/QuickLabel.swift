@@ -6,17 +6,21 @@
 //
 
 import SwiftUI
+import BaseStyles
 
 public enum IconLiteral: Sendable, Equatable, Codable, Hashable {
   case emoji(String)
   case symbol(String)
-  
+  case customSymbol(CustomSymbol)
+
   public var toString: String {
     switch self {
       case .emoji(let string):
         return string
       case .symbol(let string):
         return string
+      case .customSymbol(let symbol):
+        return symbol.reference
     }
   }
 }
@@ -25,13 +29,13 @@ public struct QuickLabel: Equatable, Hashable, Sendable, Codable {
   public let attributedText: AttributedString
   public let icon: IconLiteral?
   public let role: Role?
-  
+
   public var text: String {
     return attributedText.toString
   }
-  
+
   public static let blank: QuickLabel = .init("")
-  
+
   public init(
     _ text: String,
     _ icon: IconLiteral? = nil,
@@ -41,7 +45,7 @@ public struct QuickLabel: Equatable, Hashable, Sendable, Codable {
     self.icon = icon
     self.role = role
   }
-  
+
   public init(
     _ text: AttributedString,
     iconString: String? = nil,
@@ -55,7 +59,7 @@ public struct QuickLabel: Equatable, Hashable, Sendable, Codable {
     }
     self.role = role
   }
-  
+
   public init(
     _ text: String,
     _ icon: String,
@@ -65,7 +69,7 @@ public struct QuickLabel: Equatable, Hashable, Sendable, Codable {
     self.icon = IconLiteral.symbol(icon)
     self.role = role
   }
-  
+
   public init(
     _ bool: Bool,
     _ textTrue: String,
@@ -85,13 +89,12 @@ public struct QuickLabel: Equatable, Hashable, Sendable, Codable {
   }
 }
 
-
 extension QuickLabel {
   public enum Role: Equatable, Sendable, Codable {
     case success
     case destructive
     case warning
-    
+
     var colour: Color {
       switch self {
         case .success: .green
