@@ -20,16 +20,6 @@ extension String {
     let rows = Array(repeating: rowString, count: height)
     return rows.joined(separator: "\n")
   }
-  
-//  public static func createBlankString(
-//    width: Int,
-//    height: Int,
-//    character: Character = " "
-//  ) -> String {
-//    let rowString = String(repeating: String(character), count: width)
-//    let result = String(repeating: rowString.addNewLine, count: height)
-//    return result
-//  }
 
   /// Adds a new line to the end of the current String, unless already present
   public var addingNewLine: String {

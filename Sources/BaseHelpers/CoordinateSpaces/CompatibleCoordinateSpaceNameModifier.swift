@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-public struct CoordinateSpaceNameModifier: ViewModifier {
+public struct CompatibleCoordinateSpaceNameModifier: ViewModifier {
   
   let name: AnyHashable
   public func body(content: Content) -> some View {
@@ -23,6 +23,6 @@ public struct CoordinateSpaceNameModifier: ViewModifier {
 }
 extension View {
   public func setCoordinateSpaceName<T: Hashable>(_ name: T) -> some View {
-    self.modifier(CoordinateSpaceNameModifier(name: name))
+    self.modifier(CompatibleCoordinateSpaceNameModifier(name: name))
   }
 }
