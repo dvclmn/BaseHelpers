@@ -7,16 +7,6 @@
 
 import Foundation
 
-extension ClosedRange where Bound == CGFloat {
-  public var toDoubleRange: ClosedRange<Double> {
-    Double(self.lowerBound) ... Double(self.upperBound)
-  }
-}
-extension ClosedRange where Bound == Double {
-  public var toCGFloatRange: ClosedRange<CGFloat> {
-    CGFloat(self.lowerBound) ... CGFloat(self.upperBound)
-  }
-}
 
 extension NSRange {
   public var info: String {

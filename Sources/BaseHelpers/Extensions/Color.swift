@@ -10,6 +10,10 @@ import NSUI
 import SwiftUI
 
 extension Color {
+  
+  public var lowOpacity: Color {
+    self.opacity(0.3)
+  }
 
   public func mixCompatible(
     with rhs: Color,
