@@ -41,20 +41,10 @@ public enum DebugPathElement: Hashable, CaseIterable {
       case .nodeLine: .blue
       case .controlBezier: .orange
       case .controlQuad: .orange
-      case .connection: .red
-      case .close: .gray
+      case .connection: .brown
+      case .close: .pink
     }
   }
-
-//  public func draw(
-//    shape: any Shape,
-//    rect: CGRect,
-//    element: (Path) -> Void
-//  ) {
-//    let debugResult = shape.path(in: rect).analyse()
-//    guard let path = debugResult.debugPaths[self] else { return }
-//    element(path)
-//  }
 
 }
 

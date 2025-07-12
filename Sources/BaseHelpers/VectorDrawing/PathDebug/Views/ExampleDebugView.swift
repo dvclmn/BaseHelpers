@@ -16,8 +16,8 @@ struct PathDebugExampleView: View {
 
       ShapeDebug {
         SwiftBird()
-//        RoundedRectangle(cornerRadius: 40)
-//          .fill(.blue)
+        //        RoundedRectangle(cornerRadius: 40)
+        //          .fill(.blue)
       }
       .frame(width: 300, height: 200)
 
