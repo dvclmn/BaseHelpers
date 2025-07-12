@@ -7,9 +7,10 @@
 
 import SwiftUI
 
-public enum PointType {
+public enum DebugPathType {
   case node(NodeType)
   case control(CurveType)
+  case connection
   case close
 
   public init(fromElement element: Path.Element) {
@@ -23,13 +24,14 @@ public enum PointType {
       }
   }
 
-  public var shape: PointShape {
-    switch self {
-      case .node: .square
-      case .control: .circle
-      case .close: .cross
-    }
-  }
+  //  public var shape: PointShape {
+  //    switch self {
+  //      case .node: .square
+  //      case .control: .circle
+  //      case .connection: .circle
+  //      case .close: .cross
+  //    }
+  //  }
 
   public var displayColour: Color {
     switch self {
@@ -47,6 +49,8 @@ public enum PointType {
           case .quadratic:
             .orange
         }
+        
+      case .connection: .red
       case .close:
         .gray
     }
@@ -57,10 +61,25 @@ public enum PointType {
 public enum NodeType {
   case move
   case line
+
+  public var shape: PointShape {
+    switch self {
+      case .move: .square
+      case .line: .square
+    }
+  }
+
 }
 public enum CurveType {
   case bezier
   case quadratic
+
+  public var shape: PointShape {
+    switch self {
+      case .bezier: .circle
+      case .quadratic: .circle
+    }
+  }
 }
 
 //public protocol PathPoint {

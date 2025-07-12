@@ -8,18 +8,11 @@
 import SwiftUI
 
 struct DebugPath {
-  let path: Path
-  let type: PointType
-  let style: PointStyle
-  
-  init(
-    path: Path = Path(),
-    type: PointType,
-    style: PointStyle
-  ) {
-    self.path = path
+  var path: Path = Path()
+  let type: DebugPathType
+
+  init(type: DebugPathType) {
     self.type = type
-    self.style = style
   }
 }
 
@@ -31,12 +24,16 @@ extension Path {
   /// In CanvasPathDebug, we create the path via a closure: (CGSize) -> Path.
   /// So: in both cases, PathAnalyzer just analyzes the resulting Path, not the Shape or the rect.
   /// Expect that this function is passed a fully constructed path.
-  public func analyse() -> DebugPaths {
+  public func analyse() -> [DebugPath] {
 
-    var nodePath = DebugPath
-//    var nodePath = Path()
-//    var controlPointPath = Path()
-//    var connectionPath = Path()
+    var nodeMovePath = DebugPath(type: .node(.move))
+    var nodeLinePath = DebugPath(type: .node(.line))
+    var bezierPath = DebugPath(type: .control(.bezier))
+    var quadPath = DebugPath(type: .control(.quadratic))
+    var connectionPath = DebugPath(type: .connection)
+    //    var nodePath = Path()
+    //    var controlPointPath = Path()
+    //    var connectionPath = Path()
     var lastNodePoint: CGPoint?
 
     self.forEach { element in
@@ -44,33 +41,33 @@ extension Path {
       switch element {
 
         case .move(let point):
-          addPoint(to: &nodePath, at: point, element: element)
+          addPoint(to: &nodeMovePath.path, at: point, element: element)
           lastNodePoint = point
 
         case .line(let point):
-          addPoint(to: &nodePath, at: point, element: element)
+          addPoint(to: &nodeLinePath.path, at: point, element: element)
           lastNodePoint = point
 
         case .quadCurve(let point, let controlPoint):
-          addPoint(to: &nodePath, at: point, element: element)
-          addPoint(to: &controlPointPath, at: controlPoint, element: element)
+          addPoint(to: &quadPath.path, at: point, element: element)
+          addPoint(to: &quadPath.path, at: controlPoint, element: element)
           if let lastNode = lastNodePoint {
-            connectionPath.move(to: lastNode)
-            connectionPath.addLine(to: controlPoint)
+            connectionPath.path.move(to: lastNode)
+            connectionPath.path.addLine(to: controlPoint)
           }
-          connectionPath.move(to: controlPoint)
-          connectionPath.addLine(to: point)
+          connectionPath.path.move(to: controlPoint)
+          connectionPath.path.addLine(to: point)
           lastNodePoint = point
 
         case .curve(let point, let control1, let control2):
-          addPoint(to: &nodePath, at: point, element: element)
-          addPoint(to: &controlPointPath, at: control1, element: element)
-          addPoint(to: &controlPointPath, at: control2, element: element)
+          addPoint(to: &nodeLinePath.path, at: point, element: element)
+          addPoint(to: &bezierPath.path, at: control1, element: element)
+          addPoint(to: &bezierPath.path, at: control2, element: element)
           if let lastNode = lastNodePoint {
-            connectionPath.move(to: lastNode)
-            connectionPath.addLine(to: control1)
-            connectionPath.move(to: point)
-            connectionPath.addLine(to: control2)
+            connectionPath.path.move(to: lastNode)
+            connectionPath.path.addLine(to: control1)
+            connectionPath.path.move(to: point)
+            connectionPath.path.addLine(to: control2)
           }
           lastNodePoint = point
 
@@ -80,20 +77,22 @@ extension Path {
       }
     }
 
-    return DebugPaths(
-      original: self,
-      nodes: nodePath,
-      controlPoints: controlPointPath,
-      connections: connectionPath
-    )
+    return [ nodeMovePath, nodeLinePath, bezierPath, quadPath, connectionPath ]
+//    return DebugPaths(
+//      original: self,
+//      nodes: nodePath,
+//      controlPoints: controlPointPath,
+//      connections: connectionPath
+//    )
 
     func addPoint(
       to path: inout Path,
       at point: CGPoint,
-      element: Path.Element
+      type: DebugPathType
+//      element: Path.Element
         //      pointType: PointType
     ) {
-      let pointSize = element.debugStyle.size.rawValue
+      let pointSize = PointSize.normal.rawValue
       //      let pointSize = config.pointSize(for: pointType)
 
       let rect = CGRect(
@@ -102,12 +101,14 @@ extension Path {
         width: pointSize,
         height: pointSize)
 
-      switch element.debugStyle.shape {
-        case .circle:
-          path.addEllipse(in: rect)
-        case .square:
-          path.addRect(rect)
-      }
+      path.addPath(type.)
+//      switch element.debugStyle.shape {
+//        case .circle:
+//          path.
+//          path.addEllipse(in: rect)
+//        case .square:
+//          path.addRect(rect)
+//      }
     }
   }
 }

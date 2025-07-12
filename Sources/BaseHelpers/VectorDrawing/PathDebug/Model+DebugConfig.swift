@@ -44,6 +44,17 @@ public enum PointShape {
   case circle
   case square
   case cross
+  
+  public func shapePath(in rect: CGRect) -> Path {
+    switch self {
+      case .circle:
+          .init(ellipseIn: rect)
+      case .square:
+          .init(rect)
+      case .cross:
+          .init(roundedRect: rect, cornerRadius: max(1, rect.size.width * 0.3))
+    }
+  }
 }
 
 public enum PointSize: CGFloat {
@@ -70,9 +81,9 @@ public struct PathStyle {
   }
 }
 
-public struct DebugPaths {
-  public let original: Path
-  public let nodes: Path
-  public let controlPoints: Path
-  public let connections: Path
-}
+//public struct DebugPaths {
+//  public let original: Path
+//  public let nodes: Path
+//  public let controlPoints: Path
+//  public let connections: Path
+//}
