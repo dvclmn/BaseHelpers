@@ -7,6 +7,17 @@
 
 import SwiftUI
 
+public struct PathDebugger<T: Shape> {
+  public let shape: T
+  public let config: PathDebugConfig
+  
+  public func debugPaths(in rect: CGRect) -> DebugPaths {
+    let originalPath = shape.path(in: rect)
+    let paths: DebugPaths = PathAnalyser.analyse(originalPath, config: config)
+    return paths
+  }
+}
+
 public typealias ColouredPoint = (point: CGPoint, color: Color)
 
 public struct DebugPaths {

@@ -30,7 +30,7 @@ public struct RatioTracker {
   private var previous: CGFloat?
   
   public init(
-    range: ClosedRange<Double> = 0.01...2.0
+    range: ClosedRange<Double>
   ) {
     self.range = range
   }

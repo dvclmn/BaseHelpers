@@ -9,6 +9,16 @@ import SwiftUI
 
 extension GraphicsContext {
   
+  public func drawCircle(
+    at origin: CGPoint,
+    size: CGFloat = 6,
+    colour: Color = .blue
+  ) {
+    let circleOrigin = origin.shift(by: size / 2)
+    let circleRect = CGRect(origin: circleOrigin , size: CGSize(fromLength: size))
+    self.fill(.init(ellipseIn: circleRect), with: .color(colour))
+  }
+  
   public func fillAndStroke(
     _ path: Path,
     fillColour: Color,
@@ -63,6 +73,34 @@ extension GraphicsContext {
         )
         
     }
+  }
+  // MARK: - Path Debug
+  public func debugPath(
+    path: Path,
+    config: PathDebugConfig = .init()
+  ) {
+    let debugPaths = PathAnalyser.analyse(path, config: config)
+    
+    self.stroke(
+      debugPaths.original,
+      with: .color(config.stroke.colour),
+      lineWidth: config.stroke.width
+    )
+    self.stroke(
+      debugPaths.connections,
+      with: .color(config.controlPoint.guideColour),
+      lineWidth: config.stroke.width
+    )
+    self.stroke(
+      debugPaths.nodes,
+      with: .color(config.node.colour),
+      lineWidth: config.stroke.width
+    )
+    self.stroke(
+      debugPaths.controlPoints,
+      with: .color(config.controlPoint.colour),
+      lineWidth: config.stroke.width
+    )
   }
 
 }

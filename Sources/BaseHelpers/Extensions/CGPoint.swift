@@ -130,6 +130,9 @@ extension CGPoint {
   public init(fromSize size: CGSize) {
     self.init(x: size.width, y: size.height)
   }
+  public init(fromLength length: CGFloat) {
+    self.init(x: length, y: length)
+  }
 
   public func isWithin(size: CGSize) -> Bool {
     return self.x > 0 || self.x < size.width
@@ -386,35 +389,40 @@ extension CGPoint {
     return result
   }
 
-  // Shift right (increases x)
+  /// Shift right (increases x)
   public func shiftRight(_ distance: CGFloat) -> CGPoint {
     return CGPoint(x: self.x + distance, y: self.y)
   }
 
-  // Shift left (decreases x)
+  /// Shift left (decreases x)
   public func shiftLeft(_ distance: CGFloat) -> CGPoint {
     return CGPoint(x: self.x - distance, y: self.y)
   }
 
-  // Shift down (increases y)
+  /// Shift down (increases y)
   public func shiftDown(_ distance: CGFloat) -> CGPoint {
     return CGPoint(x: self.x, y: self.y + distance)
   }
 
-  // Shift up (decreases y)
+  /// Shift up (decreases y)
   public func shiftUp(_ distance: CGFloat) -> CGPoint {
     let copy = self
     return CGPoint(x: copy.x, y: copy.y - distance)
   }
 
-  // Shift diagonally
+  /// Shift diagonally
   public func shift(dx: CGFloat, dy: CGFloat) -> CGPoint {
     return CGPoint(x: self.x + dx, y: self.y + dy)
   }
 
-  // Shift by another point
+  /// Shift by another point
   public func shift(by point: CGPoint) -> CGPoint {
     return CGPoint(x: self.x + point.x, y: self.y + point.y)
+  }
+  
+  /// Shift by the same value in both directions
+  public func shift(by delta: CGFloat) -> CGPoint {
+    return CGPoint(x: self.x + delta, y: self.y + delta)
   }
 
   public static func midPoint(

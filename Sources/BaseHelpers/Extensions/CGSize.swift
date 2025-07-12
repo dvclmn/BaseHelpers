@@ -108,6 +108,13 @@ extension CGSize {
   public var longestDimension: CGFloat {
     return max(width, height)
   }
+  public var shortestDimension: CGFloat {
+    return min(width, height)
+  }
+  
+  public init(fromLength length: CGFloat) {
+    self.init(width: length, height: length)
+  }
   
 //  public func centeredIn(viewSize: CGSize) -> CGSize {
 //    
