@@ -39,7 +39,7 @@ public enum DebugPathElement: Hashable, CaseIterable {
     switch self {
       case .nodeMove: .cyan
       case .nodeLine: .blue
-      case .controlBezier: .brown
+      case .controlBezier: .orange
       case .controlQuad: .orange
       case .connection: .red
       case .close: .gray
