@@ -11,16 +11,13 @@ public struct PathDebugConfig {
 
   public let pathStyle: PathStyle
   public let labelFontSize: CGFloat
-//  public let guideColour: Color
 
   public init(
     pathStyle: PathStyle = .init(),
     labelFontSize: CGFloat = 11,
-//    guideColour: Color = .orange
   ) {
     self.pathStyle = pathStyle
     self.labelFontSize = labelFontSize
-//    self.guideColour = guideColour
   }
 }
 
@@ -28,7 +25,7 @@ public struct PathStyle {
   public let fillColour: Color
   public let strokeColour: Color
   public let linewidth: CGFloat
-  
+
   public init(
     fillColour: Color = .indigo.lowOpacity,
     strokeColour: Color = .cyan,
@@ -39,4 +36,3 @@ public struct PathStyle {
     self.linewidth = linewidth
   }
 }
-

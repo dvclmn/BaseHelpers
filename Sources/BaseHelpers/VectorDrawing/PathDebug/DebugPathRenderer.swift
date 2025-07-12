@@ -18,6 +18,8 @@ public struct PathDebugRenderer {
       lineWidth: config.pathStyle.linewidth)
 
     for (element, path) in result.debugPaths {
+      
+      let pathPoint = path.currentPoint
       context.fill(path, with: .color(element.displayColour))
 
       if element == .connection {
@@ -49,4 +51,16 @@ public struct PathDebugRenderer {
         .fill(DebugPathElement.nodeLine.displayColour)
     }
   }
+}
+
+extension GraphicsContext {
+
+  public func debugPath(
+    path: Path,
+    config: PathDebugConfig = .init()
+  ) {
+    let result = path.analyse()
+    PathDebugRenderer(result: result, config: config).draw(in: self)
+  }
+
 }

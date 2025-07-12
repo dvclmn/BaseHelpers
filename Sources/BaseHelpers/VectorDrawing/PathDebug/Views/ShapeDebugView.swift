@@ -30,34 +30,5 @@ public struct ShapeDebug<S: Shape>: View {
           PathDebugRenderer(result: result, config: config).shapeView()
         }
       }
-//      .fill(config.pathStyle.fillColour)
-//      .overlay {
-//        GeometryReader { proxy in
-//          let rect = proxy.frame(in: .local)
-//          let debugResult = shape.path(in: rect).analyse()
-//
-//          ZStack {
-//            /// Original path
-//            debugResult.original
-//              .stroke(
-//                config.pathStyle.strokeColour,
-//                lineWidth: config.pathStyle.linewidth)
-//
-//            /// Connection lines
-//            debugResult.connections
-//              .stroke(
-//                DebugPathElement.connection.displayColour,
-//                lineWidth: config.pathStyle.linewidth)
-//
-//            /// Control points
-//            debugResult.controlPoints
-//              .fill(DebugPathElement.controlBezier.displayColour)
-//
-//            /// Node points
-//            debugResult.nodes
-//              .fill(DebugPathElement.nodeLine.displayColour)
-//          }
-//        }
-//      }
   }
 }
