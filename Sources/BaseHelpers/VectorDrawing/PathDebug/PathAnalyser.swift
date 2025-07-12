@@ -7,34 +7,6 @@
 
 import SwiftUI
 
-public struct PathDebugResult {
-  public let original: Path
-  public let debugPaths: DebugPaths
-
-  public var connections: Path { debugPaths[.connection] ?? Path() }
-  public var nodes: Path {
-    var combined = Path()
-    if let moves = debugPaths[.nodeMove] { combined.addPath(moves) }
-    if let lines = debugPaths[.nodeLine] { combined.addPath(lines) }
-    return combined
-  }
-  public var controlPoints: Path {
-    var combined = Path()
-    if let bezier = debugPaths[.controlBezier] { combined.addPath(bezier) }
-    if let quad = debugPaths[.controlQuad] { combined.addPath(quad) }
-    return combined
-  }
-}
-
-//struct DebugPath {
-//  var path: Path = Path()
-//  let type: DebugPathElement
-//
-//  init(type: DebugPathElement) {
-//    self.type = type
-//  }
-//}
-
 public typealias DebugPaths = [DebugPathElement: Path]
 
 extension Path {
@@ -96,8 +68,13 @@ extension Path {
           lastNodePoint = point
 
         case .closeSubpath:
-          // Could add a visual indicator for close operations if needed
-          break
+          // Add a visual indicator for close operations
+          if let lastNode = lastNodePoint {
+            addPoint(
+              to: &debugPaths[.close]!, at: lastNode,
+              element: .close, pointRadius: pointRadius)
+          }
+          lastNodePoint = nil  // Reset for new subpath
       }
     }
 
@@ -126,15 +103,29 @@ extension Path {
     to endPoint: CGPoint,
     controlPoints: [CGPoint]
   ) {
-    // Connect from last node to first control point
-    if let start = startPoint, let firstControl = controlPoints.first {
-      path.move(to: start)
-      path.addLine(to: firstControl)
-    }
+    /// For curves, we want to show the control structure:
+    /// `startPoint -> control1 -> control2 -> endPoint`
+    /// But we don't connect control points to the end point directly
+    guard let start = startPoint else { return }
 
-    // Connect control points to end point
-    for controlPoint in controlPoints {
-      path.move(to: controlPoint)
+    if controlPoints.count == 1 {
+      /// Quadratic curve: `start -> control -> end`
+      let control = controlPoints[0]
+      path.move(to: start)
+      path.addLine(to: control)
+      path.move(to: control)
+      path.addLine(to: endPoint)
+    } else if controlPoints.count == 2 {
+      /// Cubic curve: `start -> control1, control2 -> end`
+      /// Show the control polygon: `start -> control1 -> control2 -> end`
+      let control1 = controlPoints[0]
+      let control2 = controlPoints[1]
+
+      path.move(to: start)
+      path.addLine(to: control1)
+      path.move(to: control1)
+      path.addLine(to: control2)
+      path.move(to: control2)
       path.addLine(to: endPoint)
     }
   }
