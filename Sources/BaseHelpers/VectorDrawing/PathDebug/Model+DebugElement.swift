@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-public enum DebugPathElement: Hashable {
+public enum DebugPathElement: Hashable, CaseIterable {
   //  case node(NodeType)
   //  case control(CurveType)
   case nodeMove
@@ -17,6 +17,7 @@ public enum DebugPathElement: Hashable {
   case connection
   case close
 
+  
   public init(fromElement element: Path.Element) {
     self =
       switch element {
@@ -52,10 +53,20 @@ public enum DebugPathElement: Hashable {
     rect: CGRect,
     element: (Path) -> Void
   ) {
-    let debugPaths: DebugPaths = shape.path(in: rect).analyse()
-    guard let path = debugPaths[self] else { return }
-    return element(path)
+    let debugResult = shape.path(in: rect).analyse()
+    guard let path = debugResult.debugPaths[self] else { return }
+    element(path)
   }
+  
+//  public func draw(
+//    shape: any Shape,
+//    rect: CGRect,
+//    element: (Path) -> Void
+//  ) {
+//    let debugPaths: DebugPaths = shape.path(in: rect).analyse()
+//    guard let path = debugPaths[self] else { return }
+//    return element(path)
+//  }
   //  public func draw(config: , element: (PathStyle, Path) -> Void) {
   //    return element(self)
   //  }
@@ -86,20 +97,46 @@ public enum DebugPathElement: Hashable {
 //  }
 //}
 
-public enum PointShape {
-  case circle
-  case square
-  case cross
+//public enum PointShape {
+//  case circle
+//  case square
+//  case cross
+//
+//  public func shapePath(in rect: CGRect) -> Path {
+//    switch self {
+//      case .circle:
+//        .init(ellipseIn: rect)
+//      case .square:
+//        .init(rect)
+//      case .cross:
+//        .init(roundedRect: rect, cornerRadius: max(1, rect.size.width * 0.3))
+//    }
+//  }
+//}
 
+public enum PointShape {
+  case square
+  case circle
+  case cross
+  
   public func shapePath(in rect: CGRect) -> Path {
+    var path = Path()
+    let center = CGPoint(x: rect.midX, y: rect.midY)
+    let radius = min(rect.width, rect.height) / 2
+    
     switch self {
-      case .circle:
-        .init(ellipseIn: rect)
       case .square:
-        .init(rect)
+        path.addRect(rect)
+      case .circle:
+        path.addEllipse(in: rect)
       case .cross:
-        .init(roundedRect: rect, cornerRadius: max(1, rect.size.width * 0.3))
+        path.move(to: CGPoint(x: center.x - radius, y: center.y))
+        path.addLine(to: CGPoint(x: center.x + radius, y: center.y))
+        path.move(to: CGPoint(x: center.x, y: center.y - radius))
+        path.addLine(to: CGPoint(x: center.x, y: center.y + radius))
     }
+    
+    return path
   }
 }
 

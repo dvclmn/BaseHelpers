@@ -7,6 +7,25 @@
 
 import SwiftUI
 
+public struct PathDebugResult {
+  public let original: Path
+  public let debugPaths: DebugPaths
+
+  public var connections: Path { debugPaths[.connection] ?? Path() }
+  public var nodes: Path {
+    var combined = Path()
+    if let moves = debugPaths[.nodeMove] { combined.addPath(moves) }
+    if let lines = debugPaths[.nodeLine] { combined.addPath(lines) }
+    return combined
+  }
+  public var controlPoints: Path {
+    var combined = Path()
+    if let bezier = debugPaths[.controlBezier] { combined.addPath(bezier) }
+    if let quad = debugPaths[.controlQuad] { combined.addPath(quad) }
+    return combined
+  }
+}
+
 //struct DebugPath {
 //  var path: Path = Path()
 //  let type: DebugPathElement
@@ -19,89 +38,104 @@ import SwiftUI
 public typealias DebugPaths = [DebugPathElement: Path]
 
 extension Path {
+  public func analyse(pointSize: PointSize = .normal) -> PathDebugResult {
+    var debugPaths: DebugPaths = Dictionary(
+      uniqueKeysWithValues: DebugPathElement.allCases.map { ($0, Path()) }
+    )
 
-  //  let originalPath:
-
-  /// In `ShapeDebug`, we create the path via shape.path(in: geometry.frame(in: .local)).
-  /// In CanvasPathDebug, we create the path via a closure: (CGSize) -> Path.
-  /// So: in both cases, PathAnalyzer just analyzes the resulting Path, not the Shape or the rect.
-  /// Expect that this function is passed a fully constructed path.
-  public func analyse() -> DebugPaths {
-
-    var debugPaths: DebugPaths = [
-      .nodeMove: Path(),
-      .nodeLine: Path(),
-      .controlBezier: Path(),
-      .controlQuad: Path(),
-      .connection: Path(),
-      .close: Path(),
-    ]
-    //    var nodeLinePath = DebugPath(type: .node(.line))
-    //    var bezierPath = DebugPath(type: .control(.bezier))
-    //    var quadPath = DebugPath(type: .control(.quadratic))
-    //    var connectionPath = DebugPath(type: .connection)
-    //    var nodePath = Path()
-    //    var controlPointPath = Path()
-    //    var connectionPath = Path()
     var lastNodePoint: CGPoint?
-
-    let pointSize = PointSize.normal.rawValue
+    let pointRadius = pointSize.rawValue
 
     self.forEach { element in
-      //      element.addPoint(to: &nodePath, at: element., size: <#T##PointSize#>)
       switch element {
-
         case .move(let point):
-          addPoint(to: &debugPaths[.nodeMove].path, at: point, type: .nodeMove)
+          addPoint(
+            to: &debugPaths[.nodeMove]!, at: point,
+            element: .nodeMove, pointRadius: pointRadius)
           lastNodePoint = point
 
         case .line(let point):
-          addPoint(to: &nodeLinePath.path, at: point, element: element)
+          addPoint(
+            to: &debugPaths[.nodeLine]!, at: point,
+            element: .nodeLine, pointRadius: pointRadius)
           lastNodePoint = point
 
         case .quadCurve(let point, let controlPoint):
-          addPoint(to: &quadPath.path, at: point, element: element)
-          addPoint(to: &quadPath.path, at: controlPoint, element: element)
-          if let lastNode = lastNodePoint {
-            connectionPath.path.move(to: lastNode)
-            connectionPath.path.addLine(to: controlPoint)
-          }
-          connectionPath.path.move(to: controlPoint)
-          connectionPath.path.addLine(to: point)
+          // Add node point
+          addPoint(
+            to: &debugPaths[.nodeLine]!, at: point,
+            element: .nodeLine, pointRadius: pointRadius)
+          // Add control point
+          addPoint(
+            to: &debugPaths[.controlQuad]!, at: controlPoint,
+            element: .controlQuad, pointRadius: pointRadius)
+          // Add connection lines
+          addConnections(
+            to: &debugPaths[.connection]!,
+            from: lastNodePoint, to: point,
+            controlPoints: [controlPoint])
           lastNodePoint = point
 
         case .curve(let point, let control1, let control2):
-          addPoint(to: &nodeLinePath.path, at: point, element: element)
-          addPoint(to: &bezierPath.path, at: control1, element: element)
-          addPoint(to: &bezierPath.path, at: control2, element: element)
-          if let lastNode = lastNodePoint {
-            connectionPath.path.move(to: lastNode)
-            connectionPath.path.addLine(to: control1)
-            connectionPath.path.move(to: point)
-            connectionPath.path.addLine(to: control2)
-          }
+          // Add node point
+          addPoint(
+            to: &debugPaths[.nodeLine]!, at: point,
+            element: .nodeLine, pointRadius: pointRadius)
+          // Add control points
+          addPoint(
+            to: &debugPaths[.controlBezier]!, at: control1,
+            element: .controlBezier, pointRadius: pointRadius)
+          addPoint(
+            to: &debugPaths[.controlBezier]!, at: control2,
+            element: .controlBezier, pointRadius: pointRadius)
+          // Add connection lines
+          addConnections(
+            to: &debugPaths[.connection]!,
+            from: lastNodePoint, to: point,
+            controlPoints: [control1, control2])
           lastNodePoint = point
 
         case .closeSubpath:
+          // Could add a visual indicator for close operations if needed
           break
-
       }
     }
 
-    return debugPaths
+    return PathDebugResult(original: self, debugPaths: debugPaths)
+  }
 
-    func addPoint(
-      to path: inout Path,
-      at point: CGPoint,
-      element: DebugPathElement
-    ) {
-      let rect = CGRect(
-        x: point.x - pointSize / 2,
-        y: point.y - pointSize / 2,
-        width: pointSize,
-        height: pointSize)
+  private func addPoint(
+    to path: inout Path,
+    at point: CGPoint,
+    element: DebugPathElement,
+    pointRadius: CGFloat
+  ) {
+    let rect = CGRect(
+      x: point.x - pointRadius / 2,
+      y: point.y - pointRadius / 2,
+      width: pointRadius,
+      height: pointRadius
+    )
 
-      path.addPath(element.shape.shapePath(in: rect))
+    path.addPath(element.shape.shapePath(in: rect))
+  }
+
+  private func addConnections(
+    to path: inout Path,
+    from startPoint: CGPoint?,
+    to endPoint: CGPoint,
+    controlPoints: [CGPoint]
+  ) {
+    // Connect from last node to first control point
+    if let start = startPoint, let firstControl = controlPoints.first {
+      path.move(to: start)
+      path.addLine(to: firstControl)
+    }
+
+    // Connect control points to end point
+    for controlPoint in controlPoints {
+      path.move(to: controlPoint)
+      path.addLine(to: endPoint)
     }
   }
 }
