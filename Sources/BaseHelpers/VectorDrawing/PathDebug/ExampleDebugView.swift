@@ -18,6 +18,7 @@ struct PathDebugExampleView: View {
 
       ShapeDebug {
         RoundedRectangle(cornerRadius: 20)
+//          .fill(.blue)
       }
       .frame(width: 300, height: 200)
 

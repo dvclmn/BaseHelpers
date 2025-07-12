@@ -18,23 +18,23 @@ extension GraphicsContext {
 
     self.stroke(
       debugPaths.original,
-      with: .color(config.stroke.colour),
-      lineWidth: config.stroke.width
+      with: .color(config.pathStyle.strokeColour),
+      lineWidth: config.pathStyle.linewidth
     )
     self.stroke(
       debugPaths.connections,
       with: .color(config.guideColour),
-      lineWidth: config.stroke.width
+      lineWidth: config.pathStyle.linewidth
     )
     self.stroke(
       debugPaths.nodes,
-      with: .color(config.node.colour),
-      lineWidth: config.stroke.width
+      with: .color(config.nodeStyle.colour),
+      lineWidth: config.pathStyle.linewidth
     )
     self.stroke(
       debugPaths.controlPoints,
-      with: .color(config.controlPoint.colour),
-      lineWidth: config.stroke.width
+      with: .color(config.controlPointStyle.colour),
+      lineWidth: config.pathStyle.linewidth
     )
   }
 }

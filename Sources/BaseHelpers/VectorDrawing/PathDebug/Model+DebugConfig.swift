@@ -9,29 +9,34 @@ import SwiftUI
 
 public struct PathDebugConfig {
   
-  
-//  public let stroke: Stroke
   public let pathStyle: PathStyle
-  public let node: PointType = .node
-  public let controlPoint: PointType = .control
-//  public let controlPoint: ControlPoint
+  public let nodeStyle: PointStyle
+  public let controlPointStyle: PointStyle
   public let labelFontSize: CGFloat
   public let guideColour: Color
   
   public init(
-    pointSize: PointSize = .normal,
     pathStyle: PathStyle = .init(),
-    node: Node = .init(),
-    controlPoint: ControlPoint = .init(),
-    labelFontSize: CGFloat = 12,
+    nodeStyle: PointStyle = .init(),
+    controlPointStyle: PointStyle = .init(),
+    labelFontSize: CGFloat = 11,
     guideColour: Color = .orange
   ) {
-    self.pointSize = pointSize
-    self.stroke = stroke
-    self.node = node
-    self.controlPoint = controlPoint
+    self.pathStyle = pathStyle
+    self.nodeStyle = nodeStyle
+    self.controlPointStyle = controlPointStyle
     self.labelFontSize = labelFontSize
     self.guideColour = guideColour
+  }
+}
+extension PathDebugConfig {
+  public func pointSize(for type: PointType) -> CGFloat {
+    switch type {
+      case .node:
+        self.nodeStyle.size.rawValue
+      case .control:
+        self.controlPointStyle.size.rawValue
+    }
   }
 }
 
@@ -49,17 +54,24 @@ public enum PointSize: CGFloat {
 }
 
 public struct PathStyle {
-  public let fill: Color
-  public let stroke: Color
+  public let fillColour: Color
+  public let strokeColour: Color
   public let linewidth: CGFloat
   
   public init(
-    fill: Color = .brown,
-    stroke: Color = .blue,
+    fillColour: Color = .brown,
+    strokeColour: Color = .blue,
     linewidth: CGFloat = 1
   ) {
-    self.fill = fill
-    self.stroke = stroke
+    self.fillColour = fillColour
+    self.strokeColour = strokeColour
     self.linewidth = linewidth
   }
+}
+
+public struct DebugPaths {
+  public let original: Path
+  public let nodes: Path
+  public let controlPoints: Path
+  public let connections: Path
 }

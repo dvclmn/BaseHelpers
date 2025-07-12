@@ -10,48 +10,56 @@ import SwiftUI
 public struct ShapeDebug<S: Shape>: View {
 
   public let shape: S
-  public let debugger: PathDebug<S>
+  //  public let debugger: PathDebug<S>
+  //  public let fill: Color
   public let config: PathDebugConfig
-//  public let fill: Color
 
   public init(
-    fill: Color = .blue.opacity(0.3),
+    //    fill: Color = .blue.opacity(0.3),
     config: PathDebugConfig = .init(),
     @ViewBuilder shape: @escaping () -> S
   ) {
-    self.fill = fill
-    self.debugger = PathDebug(shape: shape(), config: config)
+    //    self.fill = fill
+    //    self.debugger = PathDebug(shape: shape(), config: config)
+    self.config = config
     self.shape = shape()
   }
 
   public var body: some View {
     shape
-      .fill(fill)
+      .fill(config.pathStyle.fillColour.lowOpacity)
       .overlay {
-        GeometryReader { geometry in
-          let paths = debugger.debugPaths(in: geometry.frame(in: .local))
+        GeometryReader { proxy in
+          let paths = debugPaths(in: proxy.frame(in: .local))
 
           paths.original.stroke(
-            debugger.config.stroke.colour,
-            lineWidth: debugger.config.stroke.width
+            config.pathStyle.strokeColour,
+            lineWidth: config.pathStyle.linewidth
           )
 
           paths.connections.stroke(
-            debugger.config.guideColour,
-            lineWidth: debugger.config.stroke.width
+            config.guideColour,
+            lineWidth: config.pathStyle.linewidth
           )
 
           paths.nodes.stroke(
-            debugger.config.node.colour,
-            lineWidth: debugger.config.stroke.width
+            config.nodeStyle.colour,
+            lineWidth: config.pathStyle.linewidth
           )
 
           paths.controlPoints.stroke(
-            debugger.config.controlPoint.colour,
-            lineWidth: debugger.config.stroke.width
+            config.controlPointStyle.colour,
+            lineWidth: config.pathStyle.linewidth
           )
 
         }  // END geo reader
       }  // END overlay
+  }
+}
+extension ShapeDebug {
+  private func debugPaths(in rect: CGRect) -> DebugPaths {
+    let originalPath = shape.path(in: rect)
+    let paths: DebugPaths = PathAnalyser.analyse(originalPath, config: config)
+    return paths
   }
 }
