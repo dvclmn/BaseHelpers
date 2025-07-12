@@ -36,7 +36,7 @@ public struct ShapeDebug<S: Shape>: View {
           )
 
           paths.connections.stroke(
-            debugger.config.controlPoint.guideColour,
+            debugger.config.guideColour,
             lineWidth: debugger.config.stroke.width
           )
 

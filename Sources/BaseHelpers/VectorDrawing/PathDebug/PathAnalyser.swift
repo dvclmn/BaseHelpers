@@ -70,7 +70,7 @@ public struct PathAnalyser {
       at point: CGPoint,
       pointType: PointType
     ) {
-      let pointSize = config.pointSize.value
+      let pointSize = config.pointSize.rawValue
 
       let rect = CGRect(
         x: point.x - pointSize / 2,
