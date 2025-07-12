@@ -28,29 +28,31 @@ extension Path {
   /// Expect that this function is passed a fully constructed path.
   public func analyse() -> DebugPaths {
 
-    let debugPaths: DebugPaths = [
+    var debugPaths: DebugPaths = [
       .nodeMove: Path(),
       .nodeLine: Path(),
       .controlBezier: Path(),
       .controlQuad: Path(),
       .connection: Path(),
-      .close: Path()
+      .close: Path(),
     ]
-//    var nodeLinePath = DebugPath(type: .node(.line))
-//    var bezierPath = DebugPath(type: .control(.bezier))
-//    var quadPath = DebugPath(type: .control(.quadratic))
-//    var connectionPath = DebugPath(type: .connection)
+    //    var nodeLinePath = DebugPath(type: .node(.line))
+    //    var bezierPath = DebugPath(type: .control(.bezier))
+    //    var quadPath = DebugPath(type: .control(.quadratic))
+    //    var connectionPath = DebugPath(type: .connection)
     //    var nodePath = Path()
     //    var controlPointPath = Path()
     //    var connectionPath = Path()
     var lastNodePoint: CGPoint?
+
+    let pointSize = PointSize.normal.rawValue
 
     self.forEach { element in
       //      element.addPoint(to: &nodePath, at: element., size: <#T##PointSize#>)
       switch element {
 
         case .move(let point):
-          addPoint(to: &nodeMovePath.path, at: point, element: element)
+          addPoint(to: &debugPaths[.nodeMove].path, at: point, type: .nodeMove)
           lastNodePoint = point
 
         case .line(let point):
@@ -86,38 +88,20 @@ extension Path {
       }
     }
 
-    return [ nodeMovePath, nodeLinePath, bezierPath, quadPath, connectionPath ]
-//    return DebugPaths(
-//      original: self,
-//      nodes: nodePath,
-//      controlPoints: controlPointPath,
-//      connections: connectionPath
-//    )
+    return debugPaths
 
     func addPoint(
       to path: inout Path,
       at point: CGPoint,
-      type: DebugPathElement
-//      element: Path.Element
-        //      pointType: PointType
+      element: DebugPathElement
     ) {
-      let pointSize = PointSize.normal.rawValue
-      //      let pointSize = config.pointSize(for: pointType)
-
       let rect = CGRect(
         x: point.x - pointSize / 2,
         y: point.y - pointSize / 2,
         width: pointSize,
         height: pointSize)
 
-      path.addPath(type.)
-//      switch element.debugStyle.shape {
-//        case .circle:
-//          path.
-//          path.addEllipse(in: rect)
-//        case .square:
-//          path.addRect(rect)
-//      }
+      path.addPath(element.shape.shapePath(in: rect))
     }
   }
 }
