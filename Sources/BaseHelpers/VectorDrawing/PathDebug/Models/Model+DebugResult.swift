@@ -12,6 +12,7 @@ public struct PathDebugResult {
   public let debugPaths: DebugPaths
   
   public var connections: Path { debugPaths[.connection] ?? Path() }
+  
   public var nodes: Path {
     var combined = Path()
     if let moves = debugPaths[.nodeMove] { combined.addPath(moves) }

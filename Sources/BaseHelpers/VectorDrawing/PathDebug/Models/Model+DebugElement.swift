@@ -46,15 +46,15 @@ public enum DebugPathElement: Hashable, CaseIterable {
     }
   }
 
-  public func draw(
-    shape: any Shape,
-    rect: CGRect,
-    element: (Path) -> Void
-  ) {
-    let debugResult = shape.path(in: rect).analyse()
-    guard let path = debugResult.debugPaths[self] else { return }
-    element(path)
-  }
+//  public func draw(
+//    shape: any Shape,
+//    rect: CGRect,
+//    element: (Path) -> Void
+//  ) {
+//    let debugResult = shape.path(in: rect).analyse()
+//    guard let path = debugResult.debugPaths[self] else { return }
+//    element(path)
+//  }
 
 }
 

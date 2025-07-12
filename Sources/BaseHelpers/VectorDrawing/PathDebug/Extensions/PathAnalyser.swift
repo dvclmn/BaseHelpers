@@ -103,28 +103,24 @@ extension Path {
     to endPoint: CGPoint,
     controlPoints: [CGPoint]
   ) {
-    /// For curves, we want to show the control structure:
-    /// `startPoint -> control1 -> control2 -> endPoint`
-    /// But we don't connect control points to the end point directly
+
     guard let start = startPoint else { return }
 
     if controlPoints.count == 1 {
-      /// Quadratic curve: `start -> control -> end`
+      
       let control = controlPoints[0]
       path.move(to: start)
       path.addLine(to: control)
       path.move(to: control)
-      path.addLine(to: endPoint)
+
     } else if controlPoints.count == 2 {
-      /// Cubic curve: `start -> control1, control2 -> end`
-      /// Show the control polygon: `start -> control1 -> control2 -> end`
+      
       let control1 = controlPoints[0]
       let control2 = controlPoints[1]
 
       path.move(to: start)
       path.addLine(to: control1)
       path.move(to: control1)
-      path.addLine(to: control2)
       path.move(to: control2)
       path.addLine(to: endPoint)
     }
