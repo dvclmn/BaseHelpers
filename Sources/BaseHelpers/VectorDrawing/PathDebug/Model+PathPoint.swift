@@ -7,20 +7,27 @@
 
 import SwiftUI
 
-public protocol PointType {
-  var shape: PointShape { get }
-  var colour: Color { get }
+public enum PointType {
+  case node
 }
+//public protocol PointType {
+//  var shape: PointShape { get }
+//  var size: PointSize { get }
+//  var colour: Color { get }
+//}
 
 public struct Node: PointType {
   public let shape: PointShape
+  public let size: PointSize
   public let colour: Color
   
   public init(
     shape: PointShape = .square,
+    size: PointSize = .normal
     colour: Color = .brown
   ) {
     self.shape = shape
+    self.size = size
     self.colour = colour
   }
 }

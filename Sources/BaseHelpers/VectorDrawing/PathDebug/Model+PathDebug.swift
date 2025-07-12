@@ -9,7 +9,7 @@ import SwiftUI
 
 public struct PathDebug<T: Shape> {
   public let shape: T
-  public let config: PathDebugConfig
+  
   
   public func debugPaths(in rect: CGRect) -> DebugPaths {
     let originalPath = shape.path(in: rect)
@@ -28,17 +28,18 @@ public struct DebugPaths {
 
 }
 
-public struct Stroke {
-  var colour: Color
-  var width: CGFloat
-  
-  public init(
-    colour: Color = .gray,
-    width: CGFloat = 1,
-  ) {
-    self.colour = colour
-    self.width = width
-  }
-}
+//public struct StrokeConfig {
+//  var colour: Color
+//  var width: CGFloat
+//  
+//  public init(
+//    colour: Color = .gray,
+//    width: CGFloat = 1,
+//  ) {
+//    self.colour = colour
+//    self.width = width
+//  }
+//}
+
 
 

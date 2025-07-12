@@ -9,9 +9,10 @@ import SwiftUI
 
 public struct ShapeDebug<S: Shape>: View {
 
-  public let debugger: PathDebug<S>
-  public let fill: Color
   public let shape: S
+  public let debugger: PathDebug<S>
+  public let config: PathDebugConfig
+//  public let fill: Color
 
   public init(
     fill: Color = .blue.opacity(0.3),
