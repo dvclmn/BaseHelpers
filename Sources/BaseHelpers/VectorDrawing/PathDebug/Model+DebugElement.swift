@@ -8,8 +8,6 @@
 import SwiftUI
 
 public enum DebugPathElement: Hashable, CaseIterable {
-  //  case node(NodeType)
-  //  case control(CurveType)
   case nodeMove
   case nodeLine
   case controlBezier
@@ -17,7 +15,6 @@ public enum DebugPathElement: Hashable, CaseIterable {
   case connection
   case close
 
-  
   public init(fromElement element: Path.Element) {
     self =
       switch element {
@@ -31,7 +28,8 @@ public enum DebugPathElement: Hashable, CaseIterable {
 
   public var shape: PointShape {
     switch self {
-      case .nodeMove, .nodeLine: .square
+      case .nodeMove: .triangle
+      case .nodeLine: .square
       case .controlBezier, .controlQuad: .circle
       case .connection, .close: .cross
     }
@@ -57,87 +55,7 @@ public enum DebugPathElement: Hashable, CaseIterable {
     guard let path = debugResult.debugPaths[self] else { return }
     element(path)
   }
-  
-//  public func draw(
-//    shape: any Shape,
-//    rect: CGRect,
-//    element: (Path) -> Void
-//  ) {
-//    let debugPaths: DebugPaths = shape.path(in: rect).analyse()
-//    guard let path = debugPaths[self] else { return }
-//    return element(path)
-//  }
-  //  public func draw(config: , element: (PathStyle, Path) -> Void) {
-  //    return element(self)
-  //  }
 
-}
-
-//public enum NodeType {
-//  case move
-//  case line
-//
-//  public var shape: PointShape {
-//    switch self {
-//      case .move: .square
-//      case .line: .square
-//    }
-//  }
-//
-//}
-//public enum CurveType {
-//  case bezier
-//  case quadratic
-//
-//  public var shape: PointShape {
-//    switch self {
-//      case .bezier: .circle
-//      case .quadratic: .circle
-//    }
-//  }
-//}
-
-//public enum PointShape {
-//  case circle
-//  case square
-//  case cross
-//
-//  public func shapePath(in rect: CGRect) -> Path {
-//    switch self {
-//      case .circle:
-//        .init(ellipseIn: rect)
-//      case .square:
-//        .init(rect)
-//      case .cross:
-//        .init(roundedRect: rect, cornerRadius: max(1, rect.size.width * 0.3))
-//    }
-//  }
-//}
-
-public enum PointShape {
-  case square
-  case circle
-  case cross
-  
-  public func shapePath(in rect: CGRect) -> Path {
-    var path = Path()
-    let center = CGPoint(x: rect.midX, y: rect.midY)
-    let radius = min(rect.width, rect.height) / 2
-    
-    switch self {
-      case .square:
-        path.addRect(rect)
-      case .circle:
-        path.addEllipse(in: rect)
-      case .cross:
-        path.move(to: CGPoint(x: center.x - radius, y: center.y))
-        path.addLine(to: CGPoint(x: center.x + radius, y: center.y))
-        path.move(to: CGPoint(x: center.x, y: center.y - radius))
-        path.addLine(to: CGPoint(x: center.x, y: center.y + radius))
-    }
-    
-    return path
-  }
 }
 
 public enum PointSize: CGFloat {

@@ -9,8 +9,6 @@ import SwiftUI
 
 struct PathDebugExampleView: View {
 
-  //  let currentAngle: Double = 80
-
   var body: some View {
     VStack(spacing: 40) {
       Text("ShapeDebug")

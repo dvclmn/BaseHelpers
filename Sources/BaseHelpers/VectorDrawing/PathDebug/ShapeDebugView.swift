@@ -27,35 +27,29 @@ public struct ShapeDebug<S: Shape>: View {
         GeometryReader { proxy in
           let rect = proxy.frame(in: .local)
           let debugResult = shape.path(in: rect).analyse()
-          
+
           ZStack {
-            // Original path
+            /// Original path
             debugResult.original
-              .stroke(config.pathStyle.strokeColour,
-                      lineWidth: config.pathStyle.linewidth)
-            
-            // Connection lines
+              .stroke(
+                config.pathStyle.strokeColour,
+                lineWidth: config.pathStyle.linewidth)
+
+            /// Connection lines
             debugResult.connections
-              .stroke(config.guideColour,
-                      lineWidth: config.pathStyle.linewidth * 0.5)
-            
-            // Control points
+              .stroke(
+                config.guideColour,
+                lineWidth: config.pathStyle.linewidth * 0.5)
+
+            /// Control points
             debugResult.controlPoints
               .fill(DebugPathElement.controlBezier.displayColour)
-            
-            // Node points
+
+            /// Node points
             debugResult.nodes
               .fill(DebugPathElement.nodeLine.displayColour)
           }
         }
       }
   }
-}
-extension ShapeDebug {
-//  private func debugPaths(in rect: CGRect) -> DebugPaths {
-//    let originalPath = shape.path(in: rect)
-////    let paths: DebugPaths = PathAnalyser.analyse(originalPath, config: config)
-////    let paths: [DebugPath] = PathAnalyser.analyse(originalPath, config: config)
-//    return paths
-//  }
 }

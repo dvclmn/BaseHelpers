@@ -30,8 +30,8 @@ public struct PathStyle {
   public let linewidth: CGFloat
   
   public init(
-    fillColour: Color = .brown,
-    strokeColour: Color = .blue,
+    fillColour: Color = .indigo.lowOpacity,
+    strokeColour: Color = .cyan,
     linewidth: CGFloat = 1
   ) {
     self.fillColour = fillColour
