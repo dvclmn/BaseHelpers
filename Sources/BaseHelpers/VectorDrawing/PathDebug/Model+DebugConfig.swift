@@ -8,61 +8,20 @@
 import SwiftUI
 
 public struct PathDebugConfig {
-  
+
   public let pathStyle: PathStyle
-//  public let nodeStyle: PointStyle
-//  public let controlPointStyle: PointStyle
   public let labelFontSize: CGFloat
   public let guideColour: Color
-  
+
   public init(
     pathStyle: PathStyle = .init(),
-//    nodeStyle: PointStyle = .init(),
-//    controlPointStyle: PointStyle = .init(),
     labelFontSize: CGFloat = 11,
     guideColour: Color = .orange
   ) {
     self.pathStyle = pathStyle
-//    self.nodeStyle = nodeStyle
-//    self.controlPointStyle = controlPointStyle
     self.labelFontSize = labelFontSize
     self.guideColour = guideColour
   }
-}
-//extension PathDebugConfig {
-//  public func pointSize(for type: PointType) -> CGFloat {
-//    switch type {
-//      case .node:
-//        self.nodeStyle.size.rawValue
-//      case .control:
-//        self.controlPointStyle.size.rawValue
-//    }
-//  }
-//}
-
-public enum PointShape {
-  case circle
-  case square
-  case cross
-  
-  public func shapePath(in rect: CGRect) -> Path {
-    switch self {
-      case .circle:
-          .init(ellipseIn: rect)
-      case .square:
-          .init(rect)
-      case .cross:
-          .init(roundedRect: rect, cornerRadius: max(1, rect.size.width * 0.3))
-    }
-  }
-}
-
-public enum PointSize: CGFloat {
-  case mini = 2
-  case small = 4
-  case normal = 6
-  case large = 10
-  case huge = 14
 }
 
 public struct PathStyle {
@@ -81,9 +40,3 @@ public struct PathStyle {
   }
 }
 
-//public struct DebugPaths {
-//  public let original: Path
-//  public let nodes: Path
-//  public let controlPoints: Path
-//  public let connections: Path
-//}

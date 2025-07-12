@@ -7,80 +7,116 @@
 
 import SwiftUI
 
-public enum DebugPathType {
-  case node(NodeType)
-  case control(CurveType)
+public enum DebugPathElement: Hashable {
+  //  case node(NodeType)
+  //  case control(CurveType)
+  case nodeMove
+  case nodeLine
+  case controlBezier
+  case controlQuad
   case connection
   case close
 
   public init(fromElement element: Path.Element) {
     self =
       switch element {
-        case .move: .node(.move)
-        case .line: .node(.line)
-        case .quadCurve: .control(.quadratic)
-        case .curve: .control(.bezier)
+        case .move: .nodeMove
+        case .line: .nodeLine
+        case .quadCurve: .controlQuad
+        case .curve: .controlBezier
         case .closeSubpath: .close
       }
   }
 
-  //  public var shape: PointShape {
-  //    switch self {
-  //      case .node: .square
-  //      case .control: .circle
-  //      case .connection: .circle
-  //      case .close: .cross
-  //    }
-  //  }
+  public var shape: PointShape {
+    switch self {
+      case .nodeMove, .nodeLine: .square
+      case .controlBezier, .controlQuad: .circle
+      case .connection, .close: .cross
+    }
+  }
 
   public var displayColour: Color {
     switch self {
-      case .node(let nodeType):
-        switch nodeType {
-          case .move:
-            .cyan
-          case .line:
-            .blue
-        }
-      case .control(let curveType):
-        switch curveType {
-          case .bezier:
-            .brown
-          case .quadratic:
-            .orange
-        }
-        
+      case .nodeMove: .cyan
+      case .nodeLine: .blue
+      case .controlBezier: .brown
+      case .controlQuad: .orange
       case .connection: .red
-      case .close:
-        .gray
+      case .close: .gray
     }
   }
 
+  public func draw(
+    shape: any Shape,
+    rect: CGRect,
+    element: (Path) -> Void
+  ) {
+    let debugPaths: DebugPaths = shape.path(in: rect).analyse()
+    guard let path = debugPaths[self] else { return }
+    return element(path)
+  }
+  //  public func draw(config: , element: (PathStyle, Path) -> Void) {
+  //    return element(self)
+  //  }
+
 }
 
-public enum NodeType {
-  case move
-  case line
+//public enum NodeType {
+//  case move
+//  case line
+//
+//  public var shape: PointShape {
+//    switch self {
+//      case .move: .square
+//      case .line: .square
+//    }
+//  }
+//
+//}
+//public enum CurveType {
+//  case bezier
+//  case quadratic
+//
+//  public var shape: PointShape {
+//    switch self {
+//      case .bezier: .circle
+//      case .quadratic: .circle
+//    }
+//  }
+//}
 
-  public var shape: PointShape {
+public enum PointShape {
+  case circle
+  case square
+  case cross
+
+  public func shapePath(in rect: CGRect) -> Path {
     switch self {
-      case .move: .square
-      case .line: .square
-    }
-  }
-
-}
-public enum CurveType {
-  case bezier
-  case quadratic
-
-  public var shape: PointShape {
-    switch self {
-      case .bezier: .circle
-      case .quadratic: .circle
+      case .circle:
+        .init(ellipseIn: rect)
+      case .square:
+        .init(rect)
+      case .cross:
+        .init(roundedRect: rect, cornerRadius: max(1, rect.size.width * 0.3))
     }
   }
 }
+
+public enum PointSize: CGFloat {
+  case mini = 2
+  case small = 4
+  case normal = 6
+  case large = 10
+  case huge = 14
+}
+
+//public struct DebugPaths {
+//  public let original: Path
+//  public let nodes: Path
+//  public let controlPoints: Path
+//  public let connections: Path
+//}
 
 //public protocol PathPoint {
 //  var type: PointType { get }

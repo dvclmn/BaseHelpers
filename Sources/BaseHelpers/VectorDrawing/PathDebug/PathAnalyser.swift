@@ -7,14 +7,16 @@
 
 import SwiftUI
 
-struct DebugPath {
-  var path: Path = Path()
-  let type: DebugPathType
+//struct DebugPath {
+//  var path: Path = Path()
+//  let type: DebugPathElement
+//
+//  init(type: DebugPathElement) {
+//    self.type = type
+//  }
+//}
 
-  init(type: DebugPathType) {
-    self.type = type
-  }
-}
+public typealias DebugPaths = [DebugPathElement: Path]
 
 extension Path {
 
@@ -24,13 +26,20 @@ extension Path {
   /// In CanvasPathDebug, we create the path via a closure: (CGSize) -> Path.
   /// So: in both cases, PathAnalyzer just analyzes the resulting Path, not the Shape or the rect.
   /// Expect that this function is passed a fully constructed path.
-  public func analyse() -> [DebugPath] {
+  public func analyse() -> DebugPaths {
 
-    var nodeMovePath = DebugPath(type: .node(.move))
-    var nodeLinePath = DebugPath(type: .node(.line))
-    var bezierPath = DebugPath(type: .control(.bezier))
-    var quadPath = DebugPath(type: .control(.quadratic))
-    var connectionPath = DebugPath(type: .connection)
+    let debugPaths: DebugPaths = [
+      .nodeMove: Path(),
+      .nodeLine: Path(),
+      .controlBezier: Path(),
+      .controlQuad: Path(),
+      .connection: Path(),
+      .close: Path()
+    ]
+//    var nodeLinePath = DebugPath(type: .node(.line))
+//    var bezierPath = DebugPath(type: .control(.bezier))
+//    var quadPath = DebugPath(type: .control(.quadratic))
+//    var connectionPath = DebugPath(type: .connection)
     //    var nodePath = Path()
     //    var controlPointPath = Path()
     //    var connectionPath = Path()
@@ -88,7 +97,7 @@ extension Path {
     func addPoint(
       to path: inout Path,
       at point: CGPoint,
-      type: DebugPathType
+      type: DebugPathElement
 //      element: Path.Element
         //      pointType: PointType
     ) {
