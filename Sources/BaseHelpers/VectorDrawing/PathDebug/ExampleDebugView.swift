@@ -9,21 +9,20 @@ import SwiftUI
 
 struct PathDebugExampleView: View {
 
-  let currentAngle: Double = 80
+  //  let currentAngle: Double = 80
 
   var body: some View {
     VStack(spacing: 40) {
-      Text("ShapeDebugger")
+      Text("ShapeDebug")
         .foregroundStyle(.white)
 
-      ShapeDebugger {
+      ShapeDebug {
         RoundedRectangle(cornerRadius: 20)
       }
       .frame(width: 300, height: 200)
 
-      Text("CanvasPathDebugger")
+      Text("CanvasPathDebug")
         .foregroundStyle(.white)
-
 
       Canvas { context, size in
 
@@ -41,7 +40,6 @@ struct PathDebugExampleView: View {
           )
         }
         context.stroke(circlePath, with: .color(.gray), lineWidth: 2)
-
         context.debugPath(path: circlePath)
 
       }

@@ -9,8 +9,8 @@ import SwiftUI
 
 public struct PathAnalyser {
 
-  /// In ShapeDebug, we create the path via shape.path(in: geometry.frame(in: .local)).
-  /// In CanvasPathDebugger, we create the path via a closure: (CGSize) -> Path.
+  /// In `ShapeDebug`, we create the path via shape.path(in: geometry.frame(in: .local)).
+  /// In CanvasPathDebug, we create the path via a closure: (CGSize) -> Path.
   /// So: in both cases, PathAnalyzer just analyzes the resulting Path, not the Shape or the rect.
   /// Expect that this function is passed a fully constructed path.
   public static func analyse(_ path: Path, config: PathDebugConfig) -> DebugPaths {
@@ -20,40 +20,38 @@ public struct PathAnalyser {
     var connectionPath = Path()
     var lastNodePoint: CGPoint?
 
-//    print("PathDebugger: Starting path analysis")
-
     path.forEach { element in
       switch element {
-        case .move(let to):
-          addPoint(to: &nodePath, at: to, pointType: config.node)
-          lastNodePoint = to
+        case .move(let point):
+          addPoint(to: &nodePath, at: point, pointType: config.node)
+          lastNodePoint = point
 
-        case .line(let to):
-          addPoint(to: &nodePath, at: to, pointType: config.node)
-          lastNodePoint = to
+        case .line(let point):
+          addPoint(to: &nodePath, at: point, pointType: config.node)
+          lastNodePoint = point
 
-        case .quadCurve(let to, let control):
-          addPoint(to: &nodePath, at: to, pointType: config.node)
-          addPoint(to: &controlPointPath, at: control, pointType: config.controlPoint)
+        case .quadCurve(let point, let controlPoint):
+          addPoint(to: &nodePath, at: point, pointType: config.node)
+          addPoint(to: &controlPointPath, at: controlPoint, pointType: config.controlPoint)
           if let lastNode = lastNodePoint {
             connectionPath.move(to: lastNode)
-            connectionPath.addLine(to: control)
+            connectionPath.addLine(to: controlPoint)
           }
-          connectionPath.move(to: control)
-          connectionPath.addLine(to: to)
-          lastNodePoint = to
+          connectionPath.move(to: controlPoint)
+          connectionPath.addLine(to: point)
+          lastNodePoint = point
 
-        case .curve(let to, let control1, let control2):
-          addPoint(to: &nodePath, at: to, pointType: config.node)
+        case .curve(let point, let control1, let control2):
+          addPoint(to: &nodePath, at: point, pointType: config.node)
           addPoint(to: &controlPointPath, at: control1, pointType: config.controlPoint)
           addPoint(to: &controlPointPath, at: control2, pointType: config.controlPoint)
           if let lastNode = lastNodePoint {
             connectionPath.move(to: lastNode)
             connectionPath.addLine(to: control1)
-            connectionPath.move(to: to)
+            connectionPath.move(to: point)
             connectionPath.addLine(to: control2)
           }
-          lastNodePoint = to
+          lastNodePoint = point
 
         case .closeSubpath:
           break
