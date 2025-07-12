@@ -43,6 +43,7 @@ public struct PathDebugConfig {
 public enum PointShape {
   case circle
   case square
+  case cross
 }
 
 public enum PointSize: CGFloat {

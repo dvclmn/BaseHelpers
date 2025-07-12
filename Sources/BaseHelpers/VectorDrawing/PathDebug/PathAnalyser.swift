@@ -7,22 +7,39 @@
 
 import SwiftUI
 
-extension Path {
+struct DebugPath {
+  let path: Path
+  let type: PointType
+  let style: PointStyle
   
-//  let originalPath:
+  init(
+    path: Path = Path(),
+    type: PointType,
+    style: PointStyle
+  ) {
+    self.path = path
+    self.type = type
+    self.style = style
+  }
+}
+
+extension Path {
+
+  //  let originalPath:
 
   /// In `ShapeDebug`, we create the path via shape.path(in: geometry.frame(in: .local)).
   /// In CanvasPathDebug, we create the path via a closure: (CGSize) -> Path.
   /// So: in both cases, PathAnalyzer just analyzes the resulting Path, not the Shape or the rect.
   /// Expect that this function is passed a fully constructed path.
-  public static func analyse(_ path: Path) -> DebugPaths {
+  public func analyse() -> DebugPaths {
 
-    var nodePath = Path()
-    var controlPointPath = Path()
-    var connectionPath = Path()
+    var nodePath = DebugPath
+//    var nodePath = Path()
+//    var controlPointPath = Path()
+//    var connectionPath = Path()
     var lastNodePoint: CGPoint?
 
-    path.forEach { element in
+    self.forEach { element in
       //      element.addPoint(to: &nodePath, at: element., size: <#T##PointSize#>)
       switch element {
 
@@ -64,7 +81,7 @@ extension Path {
     }
 
     return DebugPaths(
-      original: path,
+      original: self,
       nodes: nodePath,
       controlPoints: controlPointPath,
       connections: connectionPath

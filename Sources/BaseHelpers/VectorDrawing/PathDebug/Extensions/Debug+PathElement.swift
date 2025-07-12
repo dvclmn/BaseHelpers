@@ -7,53 +7,53 @@
 
 import SwiftUI
 
-extension Path.Element {
-  public var debugStyle: PointStyle {
-    
-    let size: PointSize = .normal
-    return switch self {
-      case .move:
-        PointStyle(
-          displayName: self.displayName,
-          shape: .square,
-          colour: .blue,
-          size: size
-        )
-      case .line:
-        PointStyle(
-          displayName: self.displayName,
-          shape: .square,
-          colour: .cyan,
-          size: size
-        )
-        
-      case .quadCurve:
-        PointStyle(
-          displayName: self.displayName,
-          shape: .circle,
-          colour: .orange,
-          size: size
-        )
-        
-      case .curve:
-        PointStyle(
-          displayName: self.displayName,
-          shape: .circle,
-          colour: .brown,
-          size: size
-        )
-        
-      case .closeSubpath:
-        PointStyle(
-          displayName: self.displayName,
-          shape: .circle,
-          colour: .gray,
-          size: size
-        )
-    }
-    
-  }
-  
+//extension Path.Element {
+//  public var debugStyle: PointStyle {
+//    
+//    let size: PointSize = .normal
+//    return switch self {
+//      case .move:
+//        PointStyle(
+//          displayName: self.displayName,
+//          shape: .square,
+//          colour: .blue,
+//          size: size
+//        )
+//      case .line:
+//        PointStyle(
+//          displayName: self.displayName,
+//          shape: .square,
+//          colour: .cyan,
+//          size: size
+//        )
+//        
+//      case .quadCurve:
+//        PointStyle(
+//          displayName: self.displayName,
+//          shape: .circle,
+//          colour: .orange,
+//          size: size
+//        )
+//        
+//      case .curve:
+//        PointStyle(
+//          displayName: self.displayName,
+//          shape: .circle,
+//          colour: .brown,
+//          size: size
+//        )
+//        
+//      case .closeSubpath:
+//        PointStyle(
+//          displayName: self.displayName,
+//          shape: .circle,
+//          colour: .gray,
+//          size: size
+//        )
+//    }
+//    
+//  }
+//  
   //  public func addPoint(
   //    to path: inout Path,
   //    at point: CGPoint,
@@ -90,14 +90,14 @@ extension Path.Element {
   //    }
   //  }
   
-  public var displayName: String {
-    switch self {
-      case .move(let point): "Move(\(point))"
-      case .line(let point): "Line(\(point))"
-      case .quadCurve(let point, let control): "QuadCurve(\(point),\(control))"
-      case .curve(let point, let control1, let control2): "Curve(\(point),\(control1),\(control2))"
-      case .closeSubpath: "Close"
-    }
-  }
-  
-}
+//  public var displayName: String {
+//    switch self {
+//      case .move(let point): "Move(\(point))"
+//      case .line(let point): "Line(\(point))"
+//      case .quadCurve(let point, let control): "QuadCurve(\(point),\(control))"
+//      case .curve(let point, let control1, let control2): "Curve(\(point),\(control1),\(control2))"
+//      case .closeSubpath: "Close"
+//    }
+//  }
+//  
+//}
