@@ -9,38 +9,54 @@ import SwiftUI
 
 public enum PointType {
   case node
+  case control
 }
-//public protocol PointType {
-//  var shape: PointShape { get }
-//  var size: PointSize { get }
-//  var colour: Color { get }
-//}
+public protocol PathPoint {
+  var type: PointType { get }
+  var style: PointStyle { get }
+  //  var shape: PointShape { get }
+  //  var size: PointSize { get }
+  //  var colour: Color { get }
+}
 
-public struct Node: PointType {
+public struct PointStyle {
+  //  public let type: PointType
+  public let colour: Color
   public let shape: PointShape
   public let size: PointSize
-  public let colour: Color
-  
+
   public init(
+    //    type: PointType,
+    colour: Color = .brown,
     shape: PointShape = .square,
-    size: PointSize = .normal
-    colour: Color = .brown
+    size: PointSize = .normal,
   ) {
+    //    self.type = type
+    self.colour = colour
     self.shape = shape
     self.size = size
-    self.colour = colour
   }
 }
 
-public struct ControlPoint: PointType {
-  public let shape: PointShape
-  public let colour: Color
+public struct ControlPoint: PathPoint {
+  public var type: PointType { .control }
+  public let style: PointStyle
+
+  public init(
+    style: PointStyle = .init()
+  ) {
+    self.style = style
+  }
+
+}
+public struct Node: PathPoint {
+  public var type: PointType { .node }
+  public let style: PointStyle
   
   public init(
-    shape: PointShape = .circle,
-    colour: Color = .green,
+    style: PointStyle = .init()
   ) {
-    self.shape = shape
-    self.colour = colour
+    self.style = style
   }
+  
 }

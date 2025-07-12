@@ -12,8 +12,9 @@ public struct PathDebugConfig {
   
 //  public let stroke: Stroke
   public let pathStyle: PathStyle
-  public let node: Node
-  public let controlPoint: ControlPoint
+  public let node: PointType = .node
+  public let controlPoint: PointType = .control
+//  public let controlPoint: ControlPoint
   public let labelFontSize: CGFloat
   public let guideColour: Color
   
