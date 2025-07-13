@@ -164,7 +164,9 @@ extension CGSize {
     CGRect(origin: .zero, size: self)
   }
 
-  
+  public var toCGPoint: CGPoint {
+    CGPoint(x: width, y: height)
+  }
   /// Returns true if both width and height are greater than zero
   public var isPositive: Bool {
     width > 0 && height > 0

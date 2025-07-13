@@ -7,34 +7,115 @@
 
 import SwiftUI
 
-struct SpaceTransform {
-  var scale: CGFloat = 1
-  var rotation: Angle = .zero
-  var translation: CGPoint = .zero
+public enum OriginReference {
+  /// Origin is top-left (like GeometryReader)
+  case topLeft
   
-  func apply(to point: CGPoint) -> CGPoint {
+  /// Origin is the centre of the space (like .position() or CALayer anchor)
+  case centre
+}
+
+
+public struct SpaceTransform {
+  public var scale: CGFloat
+  public var rotation: Angle
+  public var translation: CGPoint
+  public var originReference: OriginReference
+  public var size: CGSize  // Needed to compute centre offset
+  
+  public init(
+    scale: CGFloat = 1.0,
+    rotation: Angle = .zero,
+    translation: CGPoint = .zero,
+    originReference: OriginReference,
+    size: CGSize
+  ) {
+    self.scale = scale
+    self.rotation = rotation
+    self.translation = translation
+    self.originReference = originReference
+    self.size = size
+  }
+//  public init(
+//    scale: CGFloat = 1.0,
+//    rotation: Angle = .zero,
+//    translation: CGPoint = .zero
+//  ) {
+//    self.scale = scale
+//    self.rotation = rotation
+//    self.translation = translation
+//  }
+  
+  public func apply(to point: CGPoint) -> CGPoint {
     var p = point
     
-    /// Translate
-    p.x -= translation.x
-    p.y -= translation.y
+    /// Step 1: adjust for origin reference
+    switch originReference {
+      case .topLeft:
+        break
+      case .centre:
+        // Move point relative to the centre
+        let centre = CGPoint(x: size.width / 2, y: size.height / 2)
+        p -= centre
+    }
     
-    /// Rotate
-    let radians = rotation.radians
-    let s = sin(radians)
-    let c = cos(radians)
-    let xRot = p.x * c - p.y * s
-    let yRot = p.x * s + p.y * c
-    p = CGPoint(x: xRot, y: yRot)
+    /// Step 2: apply scale
+    p = p * (1 / scale)
     
-    /// Scale
-    p.x /= scale
-    p.y /= scale
+    /// Step 3: apply rotation
+    if rotation != .zero {
+      let radians = rotation.radians
+      let s = sin(radians)
+      let c = cos(radians)
+      p = CGPoint(
+        x: p.x * c - p.y * s,
+        y: p.x * s + p.y * c
+      )
+    }
+    
+    /// Step 4: apply translation
+    p -= translation
     
     return p
+    
+//    /// Translate
+//    p.x -= translation.x
+//    p.y -= translation.y
+//    
+//    /// Rotate
+//    let radians = rotation.radians
+//    let s = sin(radians)
+//    let c = cos(radians)
+//    let xRot = p.x * c - p.y * s
+//    let yRot = p.x * s + p.y * c
+//    p = CGPoint(x: xRot, y: yRot)
+//    
+//    /// Scale
+//    p.x /= scale
+//    p.y /= scale
+//    
+//    return p
   }
   
-  func transform(rect: CGRect) -> CGRect {
+  public func concatenated(with other: SpaceTransform) -> SpaceTransform {
+    // Compose scale, rotation, translation
+    
+    let combinedScale = self.scale * other.scale
+    let combinedRotation = self.rotation + other.rotation
+    
+    // Compose translations (this is slightly naive and assumes no rotation/scale interactions)
+    let combinedTranslation = self.translation + other.translation
+    
+    return SpaceTransform(
+      scale: combinedScale,
+      rotation: combinedRotation,
+      translation: combinedTranslation,
+      originReference: .topLeft, // or `.centre`, depending on your pipeline needs
+      size: size // choose which size is appropriate to carry forward
+    )
+  }
+  
+  public func transform(rect: CGRect) -> CGRect {
     /// Optional: apply transform to each corner, then compute bounds
     let corners = [
       CGPoint(x: rect.minX, y: rect.minY),
@@ -53,7 +134,7 @@ struct SpaceTransform {
     )
   }
   
-  func inverted() -> SpaceTransform {
+  public func inverted() -> SpaceTransform {
     /// Invert scale: 2 → 0.5
     let invertedScale = 1 / scale
     
@@ -62,7 +143,13 @@ struct SpaceTransform {
     
     /// Invert translation *after* accounting for rotation and scale
     /// We undo the transform effect on the origin
-    var inverse = SpaceTransform(scale: invertedScale, rotation: invertedRotation, translation: .zero)
+    var inverse = SpaceTransform(
+      scale: invertedScale,
+      rotation: invertedRotation,
+      translation: .zero,
+      originReference: self.originReference,
+      size: self.size
+    )
     
     /// Apply forward transform to origin to see where it ended up
     /// Then compute translation to undo that
