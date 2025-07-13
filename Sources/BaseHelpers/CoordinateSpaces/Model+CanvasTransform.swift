@@ -39,18 +39,20 @@ extension CanvasTransform {
       rotation = .zero
     }
   }
+  
+  
 
   //  mutating func zoomToFit(size: CGSize) {
   //    let padding: CGFloat = 40
   //
   //  }
 
-  var asAffineTransform: CGAffineTransform {
-    CGAffineTransform.identity
-      .translatedBy(x: pan.width, y: pan.height)
-      .rotated(by: rotation.radians)
-      .scaledBy(x: zoom, y: zoom)
-  }
+//  var asAffineTransform: CGAffineTransform {
+//    CGAffineTransform.identity
+//      .translatedBy(x: pan.width, y: pan.height)
+//      .rotated(by: rotation.radians)
+//      .scaledBy(x: zoom, y: zoom)
+//  }
 
 }
 
