@@ -27,8 +27,8 @@ public protocol DisplayPair {
   func displayString(
     _ places: DecimalPlaces,
     style: ValueDisplayStyle,
-    separator: String,
-    hasSpace: Bool,
+    separator: String, // Add spaces as needed here
+//    hasSpace: Bool,
     grouping: Grouping
   ) -> String
 
@@ -36,7 +36,7 @@ public protocol DisplayPair {
     _ places: DecimalPlaces,
     style: ValueDisplayStyle,
     separator: String,
-    hasSpace: Bool,
+//    hasSpace: Bool,
     grouping: Grouping
   ) -> AttributedString
 }
@@ -56,23 +56,21 @@ extension DisplayPair {
     _ places: DecimalPlaces,
     style: ValueDisplayStyle,
     separator: String = "x",
-    hasSpace: Bool = false,
+//    hasSpace: Bool = false,
     grouping: Grouping = .automatic
   ) -> String {
 
     let valA: String = valueA.displayString(places, grouping: grouping)
     let valB: String = valueB.displayString(places, grouping: grouping)
 
-    let spaceIfNeeded: String = hasSpace ? " " : ""
-
     let result: String
     switch style {
       case .labels:
         result =
-          "\(valueALabel)\(spaceIfNeeded)\(valA)\(spaceIfNeeded)\(separator)\(spaceIfNeeded)\(valueBLabel)\(spaceIfNeeded)\(valB)"
+          "\(valueALabel) \(valA)\(separator)\(valueBLabel) \(valB)"
 
       case .plain:
-        result = "\(valA)\(spaceIfNeeded)\(separator)\(spaceIfNeeded)\(valB)"
+        result = "\(valA)\(separator)\(valB)"
     }
     return result
   }
@@ -81,7 +79,7 @@ extension DisplayPair {
     _ places: DecimalPlaces = .fractionLength(2),
     style: ValueDisplayStyle = .labels,
     separator: String = "x",
-    hasSpace: Bool = false,
+//    hasSpace: Bool = false,
     grouping: Grouping = .automatic
   ) -> AttributedString {
 
@@ -89,7 +87,7 @@ extension DisplayPair {
       self,
       places: places,
       separator: separator,
-      hasSpace: hasSpace
+//      hasSpace: hasSpace
     )
     return pair
   }

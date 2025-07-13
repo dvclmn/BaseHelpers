@@ -13,10 +13,10 @@ public func valuePair<T: DisplayPair>(
   _ value: T,
   places: DecimalPlaces = .fractionLength(2),
   separator: String = "x",
-  hasSpace: Bool = false
+//  hasSpace: Bool = false
 ) -> AttributedString {
   StyledText(value.valueA.displayString(places))
-  StyledText(hasSpace ? " \(separator) " : separator)
+  StyledText(separator)
     .colour(.secondary)
     .bold()
   StyledText(value.valueB.displayString(places))

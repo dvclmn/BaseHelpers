@@ -21,14 +21,29 @@ public enum DebugPoint {
   }
 }
 
+public enum DebugTextPosition {
+  case aboveOrigin
+  case belowOrigin
+  
+  var multiplierForYPosition: CGFloat {
+    switch self {
+      case .aboveOrigin:
+        return 1
+      case .belowOrigin:
+        return -1
+    }
+  }
+}
+
 extension GraphicsContext {
 
   // MARK: - Quick Text Label, w/ Background and Dot
   public func drawDebugText(
     _ text: String,
     at point: CGPoint,
+    positioned debugTextPosition: DebugTextPosition = .aboveOrigin,
     colour: Color = .primary,
-    fontSize: CGFloat = 11,
+    fontSize: CGFloat = 18,
     debugPoint: DebugPoint,
     zoomLevel: CGFloat
   ) {
@@ -50,7 +65,7 @@ extension GraphicsContext {
       .foregroundStyle(colour)
 
     let labelRect = CGRect(
-      origin: point.centredIn(size: labelSize).shifted(dx: 0, dy: -labelHeightUnZoomed * 1.2),
+      origin: point.centredIn(size: labelSize).shifted(dx: 0, dy: (labelHeightUnZoomed * 1.2) * debugTextPosition.multiplierForYPosition),
       size: labelSize
     )
     self.fill(labelRect.path, with: .color(Swatch.plum40.colour))
