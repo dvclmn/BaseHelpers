@@ -10,16 +10,16 @@ import Foundation
 /// This should just take a *current* `CGSize` (coordinate space),
 /// and a target coordinate space. As well as pan and zoom to adjust for.
 
-struct PointRemapper {
-  /// Aka origin size
-  let currentSize: CGSize
+struct CoordinateSpaceRemapper {
+  
+  let originalSize: CGSize
   
   /// This assumes the target is *centred* within the current.
   /// Which may be dumb, but that suits my needs right now
   let targetSize: CGSize
 }
 
-extension PointRemapper {
+extension CoordinateSpaceRemapper {
   
   /// A transform from current-space coordinates to target-local space
   func remappedToTarget(
@@ -42,7 +42,7 @@ extension PointRemapper {
     zoom: CGFloat, pan: CGSize
   ) -> CGPoint {
     
-    let adjustedSize: CGSize = currentSize - zoomedTargetSize(zoom)
+    let adjustedSize: CGSize = originalSize - zoomedTargetSize(zoom)
     let adjustedSizeHalved: CGSize = adjustedSize / 2.0
     
     let adjustedWithPan: CGSize = adjustedSizeHalved + pan

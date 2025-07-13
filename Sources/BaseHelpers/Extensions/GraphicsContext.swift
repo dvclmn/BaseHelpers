@@ -54,13 +54,14 @@ extension GraphicsContext {
   ) {
 
     let zoom = zoomLevel ?? 1.0
-    let fontSizeUnZoomed = fontSize.removingZoom(zoom)
+    let fontSizeUnZoomed = fontSize.removingZoomPercent(zoom)
+//    let fontSizeUnZoomed = fontSize.removingZoom(zoom)
 
     /// Calculate size, for drawing Label background
     let labelWidthUnZoomed: CGFloat = {
       let approximateCharacterWidth: CGFloat = fontSize * 0.7
       let labelCharacterWidth = CGFloat(text.firstLine.count) * approximateCharacterWidth
-      return labelCharacterWidth.removingZoom(zoom)
+      return labelCharacterWidth.removingZoomPercent(zoom)
     }()
     let labelHeightUnZoomed: CGFloat = fontSizeUnZoomed * 1.5
     let labelSize = CGSize(width: labelWidthUnZoomed, height: labelHeightUnZoomed)

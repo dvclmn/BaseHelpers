@@ -105,6 +105,12 @@ extension CGSize {
     return self / zoom
   }
   
+  func removingZoomPercent(_ zoomPercent: CGFloat) -> CGSize {
+    let adjustedWidth = self.width.removingZoomPercent(zoomPercent)
+    let adjustedHeight = self.height.removingZoomPercent(zoomPercent)
+    return CGSize(width: adjustedWidth, height: adjustedHeight)
+  }
+  
   public var longestDimension: CGFloat {
     return max(width, height)
   }

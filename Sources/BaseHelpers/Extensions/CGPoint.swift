@@ -387,7 +387,8 @@ extension CGPoint {
   }
 
   public func removingZoom(_ zoom: CGFloat) -> CGPoint {
-    CGPoint(x: self.x / zoom, y: self.y / zoom)
+    return self / zoom
+//    CGPoint(x: self.x / zoom, y: self.y / zoom)
   }
   
   func removingZoomPercent(_ zoomPercent: CGFloat) -> CGPoint {
