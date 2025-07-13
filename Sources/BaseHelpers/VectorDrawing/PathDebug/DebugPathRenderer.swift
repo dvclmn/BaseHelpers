@@ -33,7 +33,7 @@ public struct PathDebugRenderer {
 
     /// Draw coordinate labels
     for label in result.labelPoints where label.element.isLabelled {
-      
+
       context.drawDebugText(
         label.point.displayString(
           .fractionLength(0),
@@ -41,16 +41,12 @@ public struct PathDebugRenderer {
           style: .plain,
         ),
         at: label.point,
+        positioned: .aboveOrigin,
+        colour: .primary,
+        fontSize: config.labelFontSize,
         pointDisplay: .none,
         zoomPercent: zoomPercent
       )
-//      let point = label.point
-//      let text = Text(point.displayString(.fractionLength(0), style: .plain, separator: ","))
-//        .font(.system(size: 8))
-//        .foregroundColor(.secondary)
-//
-//      //      let resolved = context.resolve(text)
-//      context.draw(text, at: point + CGSize(width: 4, height: 4))
     }
   }
 

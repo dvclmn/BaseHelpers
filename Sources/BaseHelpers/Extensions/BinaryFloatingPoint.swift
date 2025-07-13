@@ -83,8 +83,16 @@ extension BinaryFloatingPoint {
     self.init(adjusted)
   }
 
+  /// This directly removes a zoom level, which depending on the
+  /// permitted range, could be any value.
   public func removingZoom(_ zoom: Self) -> Self {
     return self / zoom
+  }
+  
+  /// This removes a zoom range which has been normalised from 0-1
+  func removingZoomPercent(_ zoomPercent: Self) -> Self {
+    let result = Double(self) / pow(1 + Double(zoomPercent), 1)
+    return Self(result)
   }
 
   /// Maps `self` (e.g. a size) into a derived value (e.g. corner radius or padding),

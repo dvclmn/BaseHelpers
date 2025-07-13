@@ -48,7 +48,7 @@ extension GraphicsContext {
     at point: CGPoint,
     positioned debugTextPosition: DebugTextPosition = .aboveOrigin,
     colour: Color = .primary,
-    fontSize: CGFloat = 18,
+    fontSize: CGFloat = 11,
     pointDisplay: DebugPoint,
     zoomPercent zoomLevel: CGFloat? // Pass in normalised zoom if relevant
   ) {

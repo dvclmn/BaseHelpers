@@ -389,6 +389,12 @@ extension CGPoint {
   public func removingZoom(_ zoom: CGFloat) -> CGPoint {
     CGPoint(x: self.x / zoom, y: self.y / zoom)
   }
+  
+  func removingZoomPercent(_ zoomPercent: CGFloat) -> CGPoint {
+    let adjustedX = self.x.removingZoomPercent(zoomPercent)
+    let adjustedY = self.y.removingZoomPercent(zoomPercent)
+    return CGPoint(x: adjustedX, y: adjustedY)
+  }
 
   public var toCGSize: CGSize {
     return CGSize(width: self.x, height: self.y)
