@@ -44,7 +44,7 @@ extension GraphicsContext {
     positioned debugTextPosition: DebugTextPosition = .aboveOrigin,
     colour: Color = .primary,
     fontSize: CGFloat = 18,
-    debugPoint: DebugPoint,
+    pointDisplay: DebugPoint,
     zoomLevel: CGFloat
   ) {
 
@@ -72,7 +72,7 @@ extension GraphicsContext {
     self.draw(text, at: labelRect.midpoint)
 
     /// Draw dot at provided point, if needed
-    if let pointColour = debugPoint.colourForPoint {
+    if let pointColour = pointDisplay.colourForPoint {
       self.drawCircleCentred(at: point, colour: pointColour)
     }
   }

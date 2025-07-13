@@ -26,16 +26,16 @@ public protocol DisplayPair {
 
   func displayString(
     _ places: DecimalPlaces,
-    style: ValueDisplayStyle,
     separator: String, // Add spaces as needed here
+    style: ValueDisplayStyle,
 //    hasSpace: Bool,
     grouping: Grouping
   ) -> String
 
   func displayStringStyled(
     _ places: DecimalPlaces,
-    style: ValueDisplayStyle,
     separator: String,
+    style: ValueDisplayStyle,
 //    hasSpace: Bool,
     grouping: Grouping
   ) -> AttributedString
@@ -54,8 +54,8 @@ extension DisplayPair {
 
   public func displayString(
     _ places: DecimalPlaces,
-    style: ValueDisplayStyle,
     separator: String = "x",
+    style: ValueDisplayStyle = .plain,
 //    hasSpace: Bool = false,
     grouping: Grouping = .automatic
   ) -> String {
@@ -77,8 +77,8 @@ extension DisplayPair {
 
   public func displayStringStyled(
     _ places: DecimalPlaces = .fractionLength(2),
-    style: ValueDisplayStyle = .labels,
     separator: String = "x",
+    style: ValueDisplayStyle = .plain,
 //    hasSpace: Bool = false,
     grouping: Grouping = .automatic
   ) -> AttributedString {
