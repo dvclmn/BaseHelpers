@@ -23,6 +23,7 @@ public enum DebugPoint {
 
 extension GraphicsContext {
 
+  // MARK: - Quick Text Label, w/ Background and Dot
   public func drawDebugText(
     _ text: String,
     at point: CGPoint,
@@ -34,41 +35,46 @@ extension GraphicsContext {
 
     let fontSizeUnZoomed = fontSize.removingZoom(zoomLevel)
 
+    /// Calculate size, for drawing Label background
     let labelWidthUnZoomed: CGFloat = {
-      let labelCharacterWidth = CGFloat(text.firstLine.count) * fontSize
+      let approximateCharacterWidth: CGFloat = fontSize * 0.7
+      let labelCharacterWidth = CGFloat(text.firstLine.count) * approximateCharacterWidth
       return labelCharacterWidth.removingZoom(zoomLevel)
     }()
-    let labelHeightUnZoomed: CGFloat = fontSizeUnZoomed * 1.2
+    let labelHeightUnZoomed: CGFloat = fontSizeUnZoomed * 1.5
     let labelSize = CGSize(width: labelWidthUnZoomed, height: labelHeightUnZoomed)
 
+    /// Set up Text, with basic styles
     let text = Text(text)
       .font(.system(size: fontSizeUnZoomed, weight: .semibold))
       .foregroundStyle(colour)
 
-    if let pointColour = debugPoint.colourForPoint {
-      //      let pointRect = CGRect(origin: point, size: CGSize(fromLength: fontSize * 0.8))
-      //      self.fill(.init(ellipseIn: pointRect), with: .color(pointColour))
-      self.drawCircleCentred(at: point, colour: pointColour)
-    }
-
     let labelRect = CGRect(
-      origin: point - (labelSize / 2),
+      origin: point.centredIn(size: labelSize).shifted(dx: 0, dy: -labelHeightUnZoomed * 1.2),
       size: labelSize
     )
     self.fill(labelRect.path, with: .color(Swatch.plum40.colour))
-    self.draw(text, at: labelRect.origin)
+    self.draw(text, at: labelRect.midpoint)
+
+    /// Draw dot at provided point, if needed
+    if let pointColour = debugPoint.colourForPoint {
+      self.drawCircleCentred(at: point, colour: pointColour)
+    }
   }
 
+  // MARK: - Centered Circle
   public func drawCircleCentred(
     at origin: CGPoint,
     size: CGFloat = 6,
     colour: Color = .blue
   ) {
-    let circleOrigin = origin.shift(by: -(size / 2))
+    //    let circleOrigin = origin.aligned(to: .center, in: CGSize(fromLength: size))
+    let circleOrigin = origin.shifted(by: -(size / 2))
     let circleRect = CGRect(origin: circleOrigin, size: CGSize(fromLength: size))
     self.fill(.init(ellipseIn: circleRect), with: .color(colour))
   }
 
+  // MARK: - Quick Fill and Stroke
   public func fillAndStroke(
     _ path: Path,
     fillColour: Color,
@@ -87,6 +93,7 @@ extension GraphicsContext {
     )
   }
 
+  // MARK: - Patterns
   public func drawPattern(
     _ pattern: PatternStyle,
     config: PatternConfiguration = .default,

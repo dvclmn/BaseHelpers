@@ -20,41 +20,74 @@ extension CGRect {
     Path(self)
   }
 
-  /// This can be made better, but got this because SwiftUI's `.position()`
-  /// modifier places the *centre* of the view at the origin. If the origin is
-  /// meant to be the top leading corner, then this can help compensate for that.
-  public func centeredIn(
-    viewSize: CGSize,
-    //    anchorPoint: UnitPoint = .topLeading,
+  /// Returns the centre point of this rectangle
+  public var midpoint: CGPoint {
+    CGPoint(x: midX, y: midY)
+  }
+
+  /// Returns a new rect with the same size, but positioned so it's centred in the given size
+  //  public func centred(in container: CGSize) -> CGRect {
+  //    let origin = CGPoint(
+  //      x: (container.width - width) / 2,
+  //      y: (container.height - height) / 2
+  //    )
+  //    return CGRect(origin: origin, size: size)
+  //  }
+
+  /// Positions this rect inside the container, aligned according to the given UnitPoint.
+  ///
+  /// Note: This mirrors how alignment guides work in SwiftUI — the origin of the
+  /// rect shifts so that the point described by anchor within the container aligns
+  /// to the same point in the rect.
+  public func aligned(
+    in container: CGSize,
+    to anchor: UnitPoint = .center
   ) -> CGRect {
-
-    let viewMid = viewSize.midpoint
-    let selfMid = self.size.midpoint
-
-    let newOrigin = CGPoint(
-      x: viewMid.x - selfMid.x,
-      y: viewMid.y - selfMid.y
-    )
-
-    return CGRect(
-      x: newOrigin.x,
-      y: newOrigin.y,
-      width: self.width,
-      height: self.height
-    )
-  }
-
-  public func reallyCentredIn(viewSize: CGSize) -> CGPoint {
-    self.centeredIn(viewSize: viewSize).center
-  }
-
-  public func centred(in containerSize: CGSize) -> CGRect {
     let origin = CGPoint(
-      x: (containerSize.width - self.width) / 2,
-      y: (containerSize.height - self.height) / 2
+      x: (container.width - self.width) * anchor.x,
+      y: (container.height - self.height) * anchor.y
     )
     return CGRect(origin: origin, size: self.size)
   }
+
+  /// Returns the point you'd pass to `.position()` to centre this rect within the given size
+  /// (i.e. the centre of the centred rect)
+  //  public func centrePosition(in container: CGSize) -> CGPoint {
+  //    centred(in: container).midpoint
+  //  }
+
+  //  /// This can be made better, but got this because SwiftUI's `.position()`
+  //  /// modifier places the *centre* of the view at the origin. If the origin is
+  //  /// meant to be the top leading corner, then this can help compensate for that.
+  //  public func centeredIn(size: CGSize) -> CGRect {
+  //
+  //    let viewMid = size.midpoint
+  //    let selfMid = self.size.midpoint
+  //
+  //    let newOrigin = CGPoint(
+  //      x: viewMid.x - selfMid.x,
+  //      y: viewMid.y - selfMid.y
+  //    )
+  //
+  //    return CGRect(
+  //      x: newOrigin.x,
+  //      y: newOrigin.y,
+  //      width: self.width,
+  //      height: self.height
+  //    )
+  //  }
+  //
+  //  public func reallyCentredIn(size: CGSize) -> CGPoint {
+  //    self.centeredIn(size: size).center
+  //  }
+  //
+  //  public func centred(in containerSize: CGSize) -> CGRect {
+  //    let origin = CGPoint(
+  //      x: (containerSize.width - self.width) / 2,
+  //      y: (containerSize.height - self.height) / 2
+  //    )
+  //    return CGRect(origin: origin, size: self.size)
+  //  }
 
   public var toCGSize: CGSize {
     CGSize(width: width, height: height)

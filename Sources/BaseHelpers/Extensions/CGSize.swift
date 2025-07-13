@@ -115,28 +115,6 @@ extension CGSize {
   public init(fromLength length: CGFloat) {
     self.init(width: length, height: length)
   }
-  
-//  public func centeredIn(viewSize: CGSize) -> CGSize {
-//    
-//    let viewMid = viewSize.midpoint
-//    let selfMid = self.midpoint
-//
-//    let newOrigin = CGPoint(
-//      x: viewMid.x - selfMid.x,
-//      y: viewMid.y - selfMid.y
-//    )
-//    
-//    return CGRect(
-//      x: newOrigin.x,
-//      y: newOrigin.y,
-//      width: self.width,
-//      height: self.height
-//    )
-//  }
-//  
-//  public func reallyCentredIn(viewSize: CGSize) -> CGPoint {
-//    self.centeredIn(viewSize: viewSize).center
-//  }
 
   public func value(for axis: Axis) -> CGFloat {
     switch axis {
@@ -180,23 +158,6 @@ extension CGSize {
     CGRect(origin: .zero, size: self)
   }
 
-//  public func toCGRect(centredIn viewSize: CGSize) -> CGRect? {
-//    
-//    guard viewSize > self else {
-//      print("Attempting to place a view within a smaller parent view is not yet supported.")
-//      return nil
-//    }
-//    
-//    let x = (viewSize.width - width) / 2
-//    let y = (viewSize.height - height) / 2
-//    return CGRect(x: x, y: y, width: width, height: height)
-//  }
-//  
-//  func centeredRect(in viewSize: CGSize) -> CGRect {
-//    let x = (viewSize.width - width) / 2
-//    let y = (viewSize.height - height) / 2
-//    return CGRect(x: x, y: y, width: width, height: height)
-//  }
   
   /// Returns true if both width and height are greater than zero
   public var isPositive: Bool {
@@ -212,25 +173,11 @@ extension CGSize {
   public var isNonNegative: Bool {
     width >= 0 && height >= 0
   }
-
-  public var midpoint: CGPoint {
-    let result = CGPoint(
-      x: self.width / 2,
-      y: self.height / 2
-    )
-    precondition(!result.isNan || result.isFinite, "Don't want to thing the thing")
-    return result
-  }
   
-//  public var centrePoint: CGPoint {
-//    let result = CGPoint(
-//      x: self.width / 2,
-//      y: self.height / 2
-//    )
-//    precondition(!result.isNan || result.isFinite, "Don't want to thing the thing")
-//    return result
-//  }
-
+  /// Returns the centre point of the size, relative to a (0,0) origin
+  public var midpoint: CGPoint {
+    return CGPoint(x: width / 2, y: height / 2)
+  }
 
   public var widthOrHeightIsZero: Bool {
     self.width.isZero || self.height.isZero

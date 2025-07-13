@@ -7,7 +7,6 @@
 
 import SwiftUI
 
-
 public enum CoordinateMappingMode {
   /// Fill destination rect exactly, even if aspect ratio is distorted
   case stretch
@@ -20,13 +19,12 @@ public enum CoordinateMappingMode {
 }
 
 extension CGPoint {
-  
+
   public func removingPanAndZoom(pan: CGSize, zoom: CGFloat) -> CGPoint {
     let unPanned: CGPoint = self - pan
     let unZoomed: CGPoint = unPanned / zoom
     return unZoomed
   }
-
 
   // MARK: - UnitPoint
   public func debugColour(unitPoint: UnitPoint, in size: CGSize) -> Color {
@@ -44,25 +42,25 @@ extension CGPoint {
     let targetPoint = unitPoint.toCGPoint(in: size)
     return self.distance(to: targetPoint) <= threshold
   }
-  
+
   /// Returns true if both width and height are greater than zero
   public var isPositive: Bool {
     return x > 0 && y > 0
   }
-  
-//  public var isGreaterThanZero: Bool {
-//    return self.x > 0 && self.y > 0
-//  }
 
-//  public func toUnitPoint(in size: CGSize) -> UnitPoint {
-//    guard size.isPositive else {
-//      return .center
-//    }
-//
-//    return UnitPoint(x: x / size.width, y: y / size.height)
-//  }
-//
-  
+  //  public var isGreaterThanZero: Bool {
+  //    return self.x > 0 && self.y > 0
+  //  }
+
+  //  public func toUnitPoint(in size: CGSize) -> UnitPoint {
+  //    guard size.isPositive else {
+  //      return .center
+  //    }
+  //
+  //    return UnitPoint(x: x / size.width, y: y / size.height)
+  //  }
+  //
+
   /// Returns the relative UnitPoint (not snapped) within a given size.
   ///
   /// Usage:
@@ -77,7 +75,47 @@ extension CGPoint {
     guard size.isPositive else { return .center }
     return UnitPoint(x: x / size.width, y: y / size.height)
   }
-  
+
+  /// Returns a new CGPoint aligned relative to a container of the given size,
+  /// using a unit point as the anchor.
+  ///
+  /// Important: For this one, think of `self` as an offset or adjustment to be
+  /// applied relative to the anchor point described by the `unitPoint`.
+  ///
+  /// For example, if you wanted to place something 10pts to the right and 5pts
+  /// below the bottomTrailing of a 300×400 container:
+  /// ```
+  /// let offset = CGPoint(x: 10, y: 5)
+  /// let result = offset.aligned(to: .bottomTrailing, in: CGSize(width: 300, height: 400))
+  /// // → CGPoint(x: 310, y: 405)
+  /// ```
+  public func aligned(
+    to unitPoint: UnitPoint,
+    in containerSize: CGSize
+  ) -> CGPoint {
+    let anchor = CGPoint(
+      x: unitPoint.x * containerSize.width,
+      y: unitPoint.y * containerSize.height
+    )
+    return CGPoint(x: anchor.x + self.x, y: anchor.y + self.y)
+  }
+
+  /// Alternative to above `aligned(to:,in:)`
+  /// This is aligning a `CGPoint` within a container, based on anchor.
+  /// Aka shifts the current point so that it lands at the target anchor.
+  ///
+  /// Returns a new point positioned within a container so that this point
+  /// becomes aligned to the specified anchor.
+  public func repositioned(
+    to unitPoint: UnitPoint,
+    in containerSize: CGSize
+  ) -> CGPoint {
+    let anchor = CGPoint(
+      x: unitPoint.x * containerSize.width,
+      y: unitPoint.y * containerSize.height)
+    return CGPoint(x: anchor.x - self.x, y: anchor.y - self.y)
+  }
+
   /// Returns the closest named UnitPoint (e.g., .topLeading, .center, etc) within a given size.
   /// If the point is within a central region defined by tolerance, `.center` is returned.
   public func nearestAnchor(
@@ -85,47 +123,47 @@ extension CGPoint {
     centerTolerance: CGFloat = 0.2
   ) -> UnitPoint {
     let relative = toUnitPoint(in: size)
-    
+
     /// If close enough to center, return .center early
     let center = UnitPoint.center
     let dx = abs(relative.x - center.x)
     let dy = abs(relative.y - center.y)
-    
+
     if dx <= centerTolerance / 2 && dy <= centerTolerance / 2 {
       return .center
     }
-    
+
     let anchors: [UnitPoint] = [
       .topLeading, .top, .topTrailing,
       .leading, .trailing,
-      .bottomLeading, .bottom, .bottomTrailing
+      .bottomLeading, .bottom, .bottomTrailing,
     ]
-    
+
     func distanceSquared(from a: UnitPoint, to b: UnitPoint) -> CGFloat {
       let dx = a.x - b.x
       let dy = a.y - b.y
       return dx * dx + dy * dy
     }
-    
+
     return anchors.min(by: {
       distanceSquared(from: relative, to: $0) < distanceSquared(from: relative, to: $1)
     }) ?? .center
   }
-//  public func nearestAnchor(in size: CGSize) -> UnitPoint {
-//    let relative = toUnitPoint(in: size)
-//    
-//    let anchors = UnitPoint.allKnownCases
-//    
-//    func distanceSquared(from a: UnitPoint, to b: UnitPoint) -> CGFloat {
-//      let dx = a.x - b.x
-//      let dy = a.y - b.y
-//      return dx * dx + dy * dy
-//    }
-//    
-//    return anchors.min(by: {
-//      distanceSquared(from: relative, to: $0) < distanceSquared(from: relative, to: $1)
-//    }) ?? .center
-//  }
+  //  public func nearestAnchor(in size: CGSize) -> UnitPoint {
+  //    let relative = toUnitPoint(in: size)
+  //
+  //    let anchors = UnitPoint.allKnownCases
+  //
+  //    func distanceSquared(from a: UnitPoint, to b: UnitPoint) -> CGFloat {
+  //      let dx = a.x - b.x
+  //      let dy = a.y - b.y
+  //      return dx * dx + dy * dy
+  //    }
+  //
+  //    return anchors.min(by: {
+  //      distanceSquared(from: relative, to: $0) < distanceSquared(from: relative, to: $1)
+  //    }) ?? .center
+  //  }
 
   public init(fromSize size: CGSize) {
     self.init(x: size.width, y: size.height)
@@ -163,6 +201,11 @@ extension CGPoint {
     public init(rawValue: Int) {
       self.rawValue = rawValue
     }
+  }
+
+  public func centredIn(size: CGSize) -> CGPoint {
+    let centred: CGSize = size / 2
+    return self - centred
   }
 
   /// Map cursorX to a stretched range
@@ -243,7 +286,6 @@ extension CGPoint {
   public var isNormalised: Bool {
     return x >= 0.0 && x <= 1.0 && y >= 0.0 && y <= 1.0
   }
-
 
   public static func angleInRadians(
     from p1: CGPoint,
@@ -390,38 +432,38 @@ extension CGPoint {
   }
 
   /// Shift right (increases x)
-  public func shiftRight(_ distance: CGFloat) -> CGPoint {
+  public func shiftedRight(_ distance: CGFloat) -> CGPoint {
     return CGPoint(x: self.x + distance, y: self.y)
   }
 
   /// Shift left (decreases x)
-  public func shiftLeft(_ distance: CGFloat) -> CGPoint {
+  public func shiftedLeft(_ distance: CGFloat) -> CGPoint {
     return CGPoint(x: self.x - distance, y: self.y)
   }
 
   /// Shift down (increases y)
-  public func shiftDown(_ distance: CGFloat) -> CGPoint {
+  public func shiftedDown(_ distance: CGFloat) -> CGPoint {
     return CGPoint(x: self.x, y: self.y + distance)
   }
 
   /// Shift up (decreases y)
-  public func shiftUp(_ distance: CGFloat) -> CGPoint {
+  public func shiftedUp(_ distance: CGFloat) -> CGPoint {
     let copy = self
     return CGPoint(x: copy.x, y: copy.y - distance)
   }
 
   /// Shift diagonally
-  public func shift(dx: CGFloat, dy: CGFloat) -> CGPoint {
+  public func shifted(dx: CGFloat, dy: CGFloat) -> CGPoint {
     return CGPoint(x: self.x + dx, y: self.y + dy)
   }
 
   /// Shift by another point
-  public func shift(by point: CGPoint) -> CGPoint {
+  public func shifted(by point: CGPoint) -> CGPoint {
     return CGPoint(x: self.x + point.x, y: self.y + point.y)
   }
-  
+
   /// Shift by the same value in both directions
-  public func shift(by delta: CGFloat) -> CGPoint {
+  public func shifted(by delta: CGFloat) -> CGPoint {
     return CGPoint(x: self.x + delta, y: self.y + delta)
   }
 
