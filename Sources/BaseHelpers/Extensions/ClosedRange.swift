@@ -21,13 +21,7 @@ extension ClosedRange where Bound == Double {
 }
 
 extension ClosedRange where Bound: BinaryFloatingPoint {
-  /// "Give me the value that is 20% along the zoom range"
-  /// `let zoom = (0.1...40).value(atPercent: 0.2)  // → 8.08`
-  /// The inverse operation of the below `fractionThroughRange(for:)`
-  public func value(atPercent percent: Self.Bound) -> Self.Bound {
-    lowerBound + (upperBound - lowerBound) * percent
-  }
-  
+
   /// Returns the fractional position of the given value within the range.
   /// The inverse operation of the above `value(atPercent:)`
   /// "How far through the zoom range is 8.08?"
@@ -41,8 +35,20 @@ extension ClosedRange where Bound: BinaryFloatingPoint {
   ///
   /// - Parameter value: A value that lies somewhere within or near this range.
   /// - Returns: A `Double` representing how far through the range the value lies.
-  public func fractionThroughRange(for value: Self.Bound) -> Self.Bound {
-    guard lowerBound != upperBound else { return 0.0 }
+  public func percentThrough(_ value: Bound) -> Bound {
+    guard lowerBound != upperBound else { return 0 }
     return (value - lowerBound) / (upperBound - lowerBound)
   }
+//  public func fractionThroughRange(for value: Self.Bound) -> Self.Bound {
+//    guard lowerBound != upperBound else { return 0.0 }
+//    return (value - lowerBound) / (upperBound - lowerBound)
+//  }
+  
+  /// "Give me the value that is 20% along the zoom range"
+  /// `let zoom = (0.1...40).value(atPercent: 0.2)  // → 8.08`
+  /// The inverse operation of the below `fractionThroughRange(for:)`
+  public func value(atPercent percent: Self.Bound) -> Self.Bound {
+    lowerBound + (upperBound - lowerBound) * percent
+  }
+  
 }

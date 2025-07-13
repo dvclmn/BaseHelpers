@@ -27,7 +27,11 @@ public struct ShapeDebug<S: Shape>: View {
         GeometryReader { proxy in
           let rect = proxy.frame(in: .local)
           let result = shape.path(in: rect).analyse()
-          PathDebugRenderer(result: result, config: config).shapeView()
+          PathDebugRenderer(
+            result: result,
+            config: config,
+            zoomPercent: nil
+          ).shapeView()
         }
       }
   }

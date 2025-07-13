@@ -10,6 +10,7 @@ import SwiftUI
 public struct PathDebugRenderer {
   let result: PathDebugResult
   let config: PathDebugConfig
+  let zoomPercent: CGFloat?
 
   public func draw(in context: GraphicsContext) {
     context.stroke(
@@ -41,7 +42,7 @@ public struct PathDebugRenderer {
         ),
         at: label.point,
         pointDisplay: .none,
-        zoomLevel: 1.0
+        zoomPercent: zoomPercent
       )
 //      let point = label.point
 //      let text = Text(point.displayString(.fractionLength(0), style: .plain, separator: ","))
@@ -79,10 +80,15 @@ extension GraphicsContext {
 
   public func debugPath(
     path: Path,
-    config: PathDebugConfig = .init()
+    config: PathDebugConfig = .init(),
+    zoomPercent: CGFloat?
   ) {
     let result = path.analyse()
-    PathDebugRenderer(result: result, config: config).draw(in: self)
+    PathDebugRenderer(
+      result: result,
+      config: config,
+      zoomPercent: zoomPercent
+    ).draw(in: self)
   }
 
 }

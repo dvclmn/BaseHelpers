@@ -38,6 +38,11 @@ public enum DebugTextPosition {
 extension GraphicsContext {
 
   // MARK: - Quick Text Label, w/ Background and Dot
+  /// Note: This relies on the zoom level passed to `zoomPercent` being already
+  /// normalised / expressed as a percentage. Aka range-indepedant.
+  ///
+  /// Otherwise changing the zoom range in the caller domain will have
+  /// unintended effects on font size calculations
   public func drawDebugText(
     _ text: String,
     at point: CGPoint,
@@ -45,16 +50,17 @@ extension GraphicsContext {
     colour: Color = .primary,
     fontSize: CGFloat = 18,
     pointDisplay: DebugPoint,
-    zoomLevel: CGFloat
+    zoomPercent zoomLevel: CGFloat? // Pass in normalised zoom if relevant
   ) {
 
-    let fontSizeUnZoomed = fontSize.removingZoom(zoomLevel)
+    let zoom = zoomLevel ?? 1.0
+    let fontSizeUnZoomed = fontSize.removingZoom(zoom)
 
     /// Calculate size, for drawing Label background
     let labelWidthUnZoomed: CGFloat = {
       let approximateCharacterWidth: CGFloat = fontSize * 0.7
       let labelCharacterWidth = CGFloat(text.firstLine.count) * approximateCharacterWidth
-      return labelCharacterWidth.removingZoom(zoomLevel)
+      return labelCharacterWidth.removingZoom(zoom)
     }()
     let labelHeightUnZoomed: CGFloat = fontSizeUnZoomed * 1.5
     let labelSize = CGSize(width: labelWidthUnZoomed, height: labelHeightUnZoomed)

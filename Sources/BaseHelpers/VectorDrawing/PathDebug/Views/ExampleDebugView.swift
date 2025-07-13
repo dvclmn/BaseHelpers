@@ -40,7 +40,7 @@ struct PathDebugExampleView: View {
           )
         }
         context.stroke(circlePath, with: .color(.gray), lineWidth: 2)
-        context.debugPath(path: circlePath)
+        context.debugPath(path: circlePath, zoomPercent: nil)
 
       }
 
