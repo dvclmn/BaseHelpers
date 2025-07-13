@@ -9,7 +9,7 @@ import SwiftUI
 
 public enum DebugPoint {
   case none
-  case point(Color)
+  case point(Color = .orange)
 
   var colourForPoint: Color? {
     switch self {
@@ -28,10 +28,9 @@ extension GraphicsContext {
     at point: CGPoint,
     colour: Color = .primary,
     fontSize: CGFloat = 11,
-    debugPoint: DebugPoint = .point(.orange),
+    debugPoint: DebugPoint,
     zoomLevel: CGFloat
   ) {
-    //    let fontSize = CGFloat(11).removingZoom(zoomLevel)
 
     let fontSizeUnZoomed = fontSize.removingZoom(zoomLevel)
 
@@ -47,8 +46,9 @@ extension GraphicsContext {
       .foregroundStyle(colour)
 
     if let pointColour = debugPoint.colourForPoint {
-      let pointRect = CGRect(origin: point, size: CGSize(fromLength: fontSize * 0.8))
-      self.fill(.init(ellipseIn: pointRect), with: .color(pointColour))
+      //      let pointRect = CGRect(origin: point, size: CGSize(fromLength: fontSize * 0.8))
+      //      self.fill(.init(ellipseIn: pointRect), with: .color(pointColour))
+      self.drawCircleCentred(at: point, colour: pointColour)
     }
 
     let labelRect = CGRect(
@@ -59,12 +59,12 @@ extension GraphicsContext {
     self.draw(text, at: labelRect.origin)
   }
 
-  public func drawCircle(
+  public func drawCircleCentred(
     at origin: CGPoint,
     size: CGFloat = 6,
     colour: Color = .blue
   ) {
-    let circleOrigin = origin.shift(by: size / 2)
+    let circleOrigin = origin.shift(by: -(size / 2))
     let circleRect = CGRect(origin: circleOrigin, size: CGSize(fromLength: size))
     self.fill(.init(ellipseIn: circleRect), with: .color(colour))
   }
