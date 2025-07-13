@@ -20,6 +20,11 @@ extension String {
     let rows = Array(repeating: rowString, count: height)
     return rows.joined(separator: "\n")
   }
+  
+  public var firstLine: String {
+    let firstSubstring = self.split(separator: "\n").first ?? ""
+    return String(firstSubstring)
+  }
 
   /// Adds a new line to the end of the current String, unless already present
   public var addingNewLine: String {
@@ -40,7 +45,9 @@ extension String {
     return lines
   }
 
-  public func substringLines(omittingEmptySubsequences: Bool = false) -> [Substring] {
+  public func substringLines(
+    omittingEmptySubsequences: Bool = false
+  ) -> [Substring] {
     let result = self.split(
       separator: "\n",
       maxSplits: Int.max,

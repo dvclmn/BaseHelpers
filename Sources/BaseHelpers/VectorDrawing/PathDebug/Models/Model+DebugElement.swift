@@ -34,6 +34,14 @@ public enum DebugPathElement: Hashable, CaseIterable {
       case .connection, .close: .cross
     }
   }
+  
+  var isLabelled: Bool {
+    switch self {
+      case .nodeMove, .nodeLine: true
+//      case .nodeMove, .nodeLine, .controlBezier, .controlQuad: true
+      default: false
+    }
+  }
 
   public var displayColour: Color {
     switch self {

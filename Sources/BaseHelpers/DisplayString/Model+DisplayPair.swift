@@ -64,9 +64,16 @@ extension DisplayPair {
     let valB: String = valueB.displayString(places, grouping: grouping)
 
     let spaceIfNeeded: String = hasSpace ? " " : ""
-    let result: String =
-      "\(valueALabel)\(spaceIfNeeded)\(valA)\(spaceIfNeeded)\(separator)\(spaceIfNeeded)\(valueBLabel)\(spaceIfNeeded)\(valB)"
 
+    let result: String
+    switch style {
+      case .labels:
+        result =
+          "\(valueALabel)\(spaceIfNeeded)\(valA)\(spaceIfNeeded)\(separator)\(spaceIfNeeded)\(valueBLabel)\(spaceIfNeeded)\(valB)"
+
+      case .plain:
+        result = "\(valA)\(spaceIfNeeded)\(separator)\(spaceIfNeeded)\(valB)"
+    }
     return result
   }
 

@@ -11,10 +11,11 @@ public typealias DebugPaths = [DebugPathElement: Path]
 
 extension Path {
 
-  public func analyse(pointSize: PointSize = .normal) -> PathDebugResult {
+  func analyse(pointSize: PointSize = .normal) -> PathDebugResult {
     var debugPaths: DebugPaths = Dictionary(
       uniqueKeysWithValues: DebugPathElement.allCases.map { ($0, Path()) }
     )
+    var labelPoints: [LabelledPoint] = []
 
     var lastNodePoint: CGPoint?
     let radius = pointSize.rawValue
@@ -24,18 +25,21 @@ extension Path {
 
       for (type, point) in info.pointsToMark {
         debugPaths[type, default: Path()].addDot(at: point, radius: radius, using: type)
+        labelPoints.append(LabelledPoint(point: point, element: type))
       }
 
       if let (from, to, controls) = info.connection {
-        debugPaths[.connection, default: Path()].addConnections(
-          from: from, to: to, controlPoints: controls
-        )
+        debugPaths[.connection, default: Path()].addConnections(from: from, to: to, controlPoints: controls)
       }
 
       lastNodePoint = info.newLastPoint
     }
 
-    return PathDebugResult(original: self, debugPaths: debugPaths)
+    return PathDebugResult(
+      original: self,
+      debugPaths: debugPaths,
+      labelPoints: labelPoints
+    )
   }
 
 }

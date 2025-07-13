@@ -17,17 +17,28 @@ public struct PathDebugRenderer {
       with: .color(config.pathStyle.strokeColour),
       lineWidth: config.pathStyle.linewidth)
 
+    /// Draw paths and points
     for (element, path) in result.debugPaths {
-      
-      let pathPoint = path.currentPoint
       context.fill(path, with: .color(element.displayColour))
 
       if element == .connection {
         context.stroke(
           result.connections,
           with: .color(element.displayColour),
-          lineWidth: config.pathStyle.linewidth)
+          lineWidth: config.pathStyle.linewidth
+        )
       }
+    }
+
+    /// Draw coordinate labels
+    for label in result.labelPoints where label.element.isLabelled {
+      let point = label.point
+      let text = Text(point.displayString(.fractionLength(0), style: .plain, separator: ","))
+        .font(.system(size: 8))
+        .foregroundColor(.secondary)
+
+//      let resolved = context.resolve(text)
+      context.draw(text, at: point + CGSize(width: 4, height: 4))
     }
   }
 
