@@ -25,7 +25,7 @@ public protocol DisplayPair {
   var displayStringStyled: AttributedString { get }
 
   func displayString(
-    _ places: DecimalPlaces,
+    places: DecimalPlaces,
     separator: String, // Add spaces as needed here
     style: ValueDisplayStyle,
 //    hasSpace: Bool,
@@ -33,7 +33,7 @@ public protocol DisplayPair {
   ) -> String
 
   func displayStringStyled(
-    _ places: DecimalPlaces,
+    places: DecimalPlaces,
     separator: String,
     style: ValueDisplayStyle,
 //    hasSpace: Bool,
@@ -53,15 +53,15 @@ extension DisplayPair {
   }
 
   public func displayString(
-    _ places: DecimalPlaces,
+    places: DecimalPlaces,
     separator: String = "x",
     style: ValueDisplayStyle = .plain,
 //    hasSpace: Bool = false,
     grouping: Grouping = .automatic
   ) -> String {
 
-    let valA: String = valueA.displayString(places, grouping: grouping)
-    let valB: String = valueB.displayString(places, grouping: grouping)
+    let valA: String = valueA.displayString(places: places, grouping: grouping)
+    let valB: String = valueB.displayString(places: places, grouping: grouping)
 
     let result: String
     switch style {
@@ -76,7 +76,7 @@ extension DisplayPair {
   }
 
   public func displayStringStyled(
-    _ places: DecimalPlaces = .fractionLength(2),
+    places: DecimalPlaces = .fractionLength(2),
     separator: String = "x",
     style: ValueDisplayStyle = .plain,
 //    hasSpace: Bool = false,

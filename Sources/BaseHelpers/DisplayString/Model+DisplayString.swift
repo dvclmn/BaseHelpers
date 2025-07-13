@@ -28,7 +28,7 @@ public protocol SingleValueStringable {
   /// constrain the below (e.g. grouping may be meaingless
   /// if not a numeric value).
   func displayString(
-    _ places: DecimalPlaces,
+    places: DecimalPlaces,
     grouping: Grouping
   ) -> String
 }
@@ -48,7 +48,7 @@ extension SingleValueStringable {
   /// so I've chosen not to abstract over it, but use it directly, to
   /// express the decimal/integer places.
   public func displayString(
-    _ places: DecimalPlaces = .fractionLength(2),
+    places: DecimalPlaces = .fractionLength(2),
     grouping: Grouping = .automatic
   ) -> String {
 

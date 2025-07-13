@@ -36,7 +36,7 @@ public struct PathDebugRenderer {
 
       context.drawDebugText(
         label.point.displayString(
-          .fractionLength(0),
+          places: .fractionLength(0),
           separator: ",",
           style: .plain,
         ),
