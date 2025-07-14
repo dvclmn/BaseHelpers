@@ -8,14 +8,14 @@
 import SwiftUI
 
 public struct CanvasTransform: Equatable, Sendable {
-  
+
   /// The current actual zoom scale (used in transforms)
   public var zoom: CGFloat
   public var pan: CGSize
   public var rotation: Angle
-  
-  let zoomRange: ClosedRange<CGFloat> = 0.1...40.0
-  let baselineZoom: CGFloat = 6.0   // "100%" zoom level
+
+  public let zoomRange: ClosedRange<Double> = 0.1...40.0
+  let baselineZoom: CGFloat = 6.0  // "100%" zoom level
 
   public static let identity = CanvasTransform()
 
@@ -44,11 +44,7 @@ extension CanvasTransform {
       rotation = .zero
     }
   }
-  
-  
-  
-  
-  
+
   /// The zoom percentage (0.0 to 1.0) representing position along the zoom range (logarithmically scaled)
   public var zoomPercent: CGFloat {
     get {
@@ -62,14 +58,24 @@ extension CanvasTransform {
     }
   }
   
+
   /// Converts a 0.0...1.0 percent value to a zoom, using logarithmic scaling
-  public static func zoom(for percent: CGFloat, in range: ClosedRange<CGFloat>) -> CGFloat {
+  public static func zoom(
+    for percent: CGFloat,
+    in range: ClosedRange<Double>
+  ) -> CGFloat {
     let logMin = log(range.lowerBound)
     let logMax = log(range.upperBound)
     let logValue = logMin + percent * (logMax - logMin)
     return exp(logValue)
   }
   
+  /// Convenience for easy zoom percentage setting
+  public mutating func setZoomPercent(_ percent: CGFloat) {
+    self.zoom = Self.zoom(for: percent, in: self.zoomRange)
+    
+  }
+
   /// Converts zoom to a displayed UI percentage relative to your defined baseline
   public var displayedZoomPercent: Int {
     Int((zoom / baselineZoom) * 100.0)
@@ -80,12 +86,12 @@ extension CanvasTransform {
   //
   //  }
 
-//  var asAffineTransform: CGAffineTransform {
-//    CGAffineTransform.identity
-//      .translatedBy(x: pan.width, y: pan.height)
-//      .rotated(by: rotation.radians)
-//      .scaledBy(x: zoom, y: zoom)
-//  }
+  //  var asAffineTransform: CGAffineTransform {
+  //    CGAffineTransform.identity
+  //      .translatedBy(x: pan.width, y: pan.height)
+  //      .rotated(by: rotation.radians)
+  //      .scaledBy(x: zoom, y: zoom)
+  //  }
 
 }
 
@@ -100,4 +106,3 @@ public struct TransformTypes: OptionSet, Sendable {
   public static let rotation = Self(rawValue: 1 << 2)
   public static let all: Self = [.pan, .zoom, .rotation]
 }
-
