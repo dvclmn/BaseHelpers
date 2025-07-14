@@ -60,19 +60,36 @@ extension GridRect {
     rect: CGRect,
     cellSize: CGSize
   ) -> CGRect {
-    assert(rect.width >= 0 && rect.height >= 0, "GridRect initialised with negative dimensions: \(rect)")
-
+    /// Step 1: Standardise the rect, so origin is always top-left
+    let standardisedRect = rect.standardized
+    
+    /// Step 2: Snap the origin to the grid
     let origin = GridPosition(
-      point: rect.origin,
+      point: standardisedRect.origin,
       cellSize: cellSize
     )
     
-    let size = GridDimensions(size: rect.size, cellSize: cellSize)
-
+    /// Step 3: Compute the far edge of the selection
+    let maxX = standardisedRect.maxX
+    let maxY = standardisedRect.maxY
+    
+    let endPosition = GridPosition(
+      point: CGPoint(x: maxX, y: maxY),
+      cellSize: cellSize
+    )
+    
+    /// Step 4: Compute size by difference (inclusive selection)
+    let columns = endPosition.column - origin.column + 1
+    let rows = endPosition.row - origin.row + 1
+    
+    let size = GridDimensions(
+      columns: max(1, columns),
+      rows: max(1, rows)
+    )
+    
+    /// Step 5: Build and return CGRect
     let gridRect = GridRect(origin: origin, size: size)
-    let cgRect = gridRect.asCGRect(cellSize: cellSize)
-    return cgRect
-
+    return gridRect.asCGRect(cellSize: cellSize)
   }
 
   public func asCGRect(cellSize: CGSize) -> CGRect {

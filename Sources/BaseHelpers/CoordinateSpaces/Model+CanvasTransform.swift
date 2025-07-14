@@ -15,12 +15,14 @@ public struct CanvasTransform: Equatable, Sendable {
   public var rotation: Angle
 
   public let zoomRange: ClosedRange<Double> = 0.1...40.0
-  let baselineZoom: CGFloat = 6.0  // "100%" zoom level
+
+  /// "100%" zoom level
+  let baselineZoom: CGFloat = 6.0
 
   public static let identity = CanvasTransform()
 
   public init(
-    zoom: CGFloat = 1.0,
+    zoom: CGFloat = 4.0,
     pan: CGSize = .zero,
     rotation: Angle = .zero
   ) {
@@ -35,7 +37,7 @@ extension CanvasTransform {
   /// Zoom to 100%
   public mutating func reset(_ transformations: TransformTypes = .all) {
     if transformations.contains(.zoom) {
-      zoom = 1.0
+      resetZoom()
     }
     if transformations.contains(.pan) {
       pan = .zero
@@ -57,7 +59,10 @@ extension CanvasTransform {
       zoom = Self.zoom(for: newValue, in: zoomRange)
     }
   }
-  
+
+  private mutating func resetZoom() {
+    setZoomPercent(1.0)
+  }
 
   /// Converts a 0.0...1.0 percent value to a zoom, using logarithmic scaling
   public static func zoom(
@@ -69,11 +74,11 @@ extension CanvasTransform {
     let logValue = logMin + percent * (logMax - logMin)
     return exp(logValue)
   }
-  
+
   /// Convenience for easy zoom percentage setting
   public mutating func setZoomPercent(_ percent: CGFloat) {
     self.zoom = Self.zoom(for: percent, in: self.zoomRange)
-    
+
   }
 
   /// Converts zoom to a displayed UI percentage relative to your defined baseline
