@@ -8,9 +8,14 @@
 import SwiftUI
 
 public struct CanvasTransform: Equatable, Sendable {
+  
+  /// The current actual zoom scale (used in transforms)
   public var zoom: CGFloat
   public var pan: CGSize
   public var rotation: Angle
+  
+  let zoomRange: ClosedRange<CGFloat> = 0.1...40.0
+  let baselineZoom: CGFloat = 6.0   // "100%" zoom level
 
   public static let identity = CanvasTransform()
 
@@ -41,6 +46,34 @@ extension CanvasTransform {
   }
   
   
+  
+  
+  
+  /// The zoom percentage (0.0 to 1.0) representing position along the zoom range (logarithmically scaled)
+  public var zoomPercent: CGFloat {
+    get {
+      let logMin = log(zoomRange.lowerBound)
+      let logMax = log(zoomRange.upperBound)
+      let logLevel = log(zoom)
+      return (logLevel - logMin) / (logMax - logMin)
+    }
+    set {
+      zoom = Self.zoom(for: newValue, in: zoomRange)
+    }
+  }
+  
+  /// Converts a 0.0...1.0 percent value to a zoom, using logarithmic scaling
+  public static func zoom(for percent: CGFloat, in range: ClosedRange<CGFloat>) -> CGFloat {
+    let logMin = log(range.lowerBound)
+    let logMax = log(range.upperBound)
+    let logValue = logMin + percent * (logMax - logMin)
+    return exp(logValue)
+  }
+  
+  /// Converts zoom to a displayed UI percentage relative to your defined baseline
+  public var displayedZoomPercent: Int {
+    Int((zoom / baselineZoom) * 100.0)
+  }
 
   //  mutating func zoomToFit(size: CGSize) {
   //    let padding: CGFloat = 40

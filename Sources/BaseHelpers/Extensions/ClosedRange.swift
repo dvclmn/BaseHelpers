@@ -39,11 +39,7 @@ extension ClosedRange where Bound: BinaryFloatingPoint {
     guard lowerBound != upperBound else { return 0 }
     return (value - lowerBound) / (upperBound - lowerBound)
   }
-//  public func fractionThroughRange(for value: Self.Bound) -> Self.Bound {
-//    guard lowerBound != upperBound else { return 0.0 }
-//    return (value - lowerBound) / (upperBound - lowerBound)
-//  }
-  
+
   /// "Give me the value that is 20% along the zoom range"
   /// `let zoom = (0.1...40).value(atPercent: 0.2)  // → 8.08`
   /// The inverse operation of the below `fractionThroughRange(for:)`
