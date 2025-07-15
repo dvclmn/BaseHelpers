@@ -11,8 +11,14 @@ import SwiftUI
 
 extension Color {
   
+  public var faintOpacity: Color {
+    self.opacity(0.1)
+  }
   public var lowOpacity: Color {
     self.opacity(0.3)
+  }
+  public var midOpacity: Color {
+    self.opacity(0.6)
   }
 
   public func mixCompatible(

@@ -85,6 +85,12 @@ public func + (lhs: GridPosition, rhs: GridPosition) -> GridPosition {
   )
 }
 
+extension Collection where Element == GridPosition {
+  public func toCGRect(cellSize: CGSize) -> CGRect {
+    
+  }
+}
+
 extension GridPosition: CustomStringConvertible {
   public var description: String {
     """

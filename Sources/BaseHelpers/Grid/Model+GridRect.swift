@@ -35,7 +35,40 @@ public struct GridRect: GridBase {
       rows: maxRow - minRow + 1
     )
     self.init(origin: origin, size: size)
+  }
 
+  public init(fromCGRect rect: CGRect, cellSize: CGSize) {
+    /// Step 1: Standardise the rect, so origin is always top-left
+    let standardisedRect = rect.standardized
+
+    /// Step 2: Snap the origin to the grid
+    let origin = GridPosition(
+      point: standardisedRect.origin,
+      cellSize: cellSize
+    )
+
+    /// Step 3: Compute the far edge of the selection
+    let maxX = standardisedRect.maxX
+    let maxY = standardisedRect.maxY
+
+    let endPosition = GridPosition(
+      point: CGPoint(x: maxX, y: maxY),
+      cellSize: cellSize
+    )
+
+    /// Step 4: Compute size by difference (inclusive selection)
+    let columns = endPosition.column - origin.column + 1
+    let rows = endPosition.row - origin.row + 1
+
+    let size = GridDimensions(
+      columns: max(1, columns),
+      rows: max(1, rows)
+    )
+
+    /// Step 5: Build and return CGRect
+    let gridRect = GridRect(origin: origin, size: size)
+
+    self = gridRect
   }
 }
 
@@ -56,41 +89,6 @@ extension GridRect {
     return rowRange.contains(position.row) && colRange.contains(position.column)
   }
 
-  public static func cgRectSnappedToCell(
-    rect: CGRect,
-    cellSize: CGSize
-  ) -> CGRect {
-    /// Step 1: Standardise the rect, so origin is always top-left
-    let standardisedRect = rect.standardized
-    
-    /// Step 2: Snap the origin to the grid
-    let origin = GridPosition(
-      point: standardisedRect.origin,
-      cellSize: cellSize
-    )
-    
-    /// Step 3: Compute the far edge of the selection
-    let maxX = standardisedRect.maxX
-    let maxY = standardisedRect.maxY
-    
-    let endPosition = GridPosition(
-      point: CGPoint(x: maxX, y: maxY),
-      cellSize: cellSize
-    )
-    
-    /// Step 4: Compute size by difference (inclusive selection)
-    let columns = endPosition.column - origin.column + 1
-    let rows = endPosition.row - origin.row + 1
-    
-    let size = GridDimensions(
-      columns: max(1, columns),
-      rows: max(1, rows)
-    )
-    
-    /// Step 5: Build and return CGRect
-    let gridRect = GridRect(origin: origin, size: size)
-    return gridRect.asCGRect(cellSize: cellSize)
-  }
 
   public func asCGRect(cellSize: CGSize) -> CGRect {
     CGRect(
