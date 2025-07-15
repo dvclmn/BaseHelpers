@@ -5,7 +5,7 @@
 //  Created by Dave Coleman on 3/7/2025.
 //
 
-import Foundation
+import SwiftUI
 
 /// Represents a position in a 2D Grid (rows and columns)
 public struct GridPosition: GridBase {
@@ -25,6 +25,9 @@ public struct GridPosition: GridBase {
     let position = GridPosition.fromCGPoint(point, at: cellSize)
     self = position
   }
+}
+
+extension GridPosition {
 
   /// Converts grid position to canvas-space point
   /// - Parameter cellSize: The size of each grid cell
@@ -48,6 +51,24 @@ public struct GridPosition: GridBase {
     let col = Int(floor(point.x / cellSize.width))
 
     return GridPosition(row: row, column: col)
+  }
+
+  public func neighbour(at edge: CellEdge) -> GridPosition {
+    switch edge {
+      case .top: return GridPosition(row: row - 1, column: column)
+      case .bottom: return GridPosition(row: row + 1, column: column)
+      case .left: return GridPosition(row: row, column: column - 1)
+      case .right: return GridPosition(row: row, column: column + 1)
+    }
+  }
+
+  public func toCGRect(cellSize: CGSize) -> CGRect {
+    CGRect(
+      x: CGFloat(column) * cellSize.width,
+      y: CGFloat(row) * cellSize.height,
+      width: cellSize.width,
+      height: cellSize.height
+    )
   }
 
   public func toIndex(columns: Int) -> Int {
@@ -86,7 +107,7 @@ public func + (lhs: GridPosition, rhs: GridPosition) -> GridPosition {
 }
 
 extension Collection where Element == GridPosition {
-  
+
   /// This version of `toCGRect` skips needing to create intermediate
   /// `GridRect`, instead just creating one at the end.
   public func toCGRect(cellSize: CGSize) -> CGRect {
@@ -135,5 +156,34 @@ extension GridPosition: CustomStringConvertible {
     """
     GridPosition[X: \(column), Y: \(row)]
     """
+  }
+}
+
+public enum CellEdge: CaseIterable {
+  case top, bottom, left, right
+
+  public func path(in rect: CGRect) -> Path {
+    switch self {
+      case .top:
+        return Path {
+          $0.move(to: rect.minXminY)
+          $0.addLine(to: rect.maxXminY)
+        }
+      case .bottom:
+        return Path {
+          $0.move(to: rect.minXmaxY)
+          $0.addLine(to: rect.maxXmaxY)
+        }
+      case .left:
+        return Path {
+          $0.move(to: rect.minXminY)
+          $0.addLine(to: rect.minXmaxY)
+        }
+      case .right:
+        return Path {
+          $0.move(to: rect.maxXminY)
+          $0.addLine(to: rect.maxXmaxY)
+        }
+    }
   }
 }

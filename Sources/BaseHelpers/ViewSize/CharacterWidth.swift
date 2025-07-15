@@ -28,8 +28,8 @@ public struct CharacterSize: ViewModifier {
         VStack {
           Text(character.toString)
             .font(fontStyle)
-            .viewLength(.horizontal, shouldDebounce: true) { width in
-              widthDidChange(width)
+            .viewSize(mode: .debounce(0.1)) { size in
+              widthDidChange(size.width)
             }
             .hidden()
         }
