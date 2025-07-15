@@ -20,10 +20,7 @@ public struct GridRect: GridBase {
   }
 
   /// Creates a GridRect that bounds two GridPositions inclusively
-  public init(
-    bounding a: GridPosition,
-    _ b: GridPosition,
-  ) {
+  public init(boundingPositions a: GridPosition, _ b: GridPosition) {
     let minRow = min(a.row, b.row)
     let maxRow = max(a.row, b.row)
     let minCol = min(a.column, b.column)
@@ -38,16 +35,16 @@ public struct GridRect: GridBase {
   }
 
   public init(fromCGRect rect: CGRect, cellSize: CGSize) {
-    /// Step 1: Standardise the rect, so origin is always top-left
+    /// Standardise the rect, so origin is always top-left
     let standardisedRect = rect.standardized
 
-    /// Step 2: Snap the origin to the grid
+    /// Snap the origin to the grid
     let origin = GridPosition(
       point: standardisedRect.origin,
       cellSize: cellSize
     )
 
-    /// Step 3: Compute the far edge of the selection
+    /// Compute the far edge of the selection
     let maxX = standardisedRect.maxX
     let maxY = standardisedRect.maxY
 
@@ -56,19 +53,8 @@ public struct GridRect: GridBase {
       cellSize: cellSize
     )
 
-    /// Step 4: Compute size by difference (inclusive selection)
-    let columns = endPosition.column - origin.column + 1
-    let rows = endPosition.row - origin.row + 1
-
-    let size = GridDimensions(
-      columns: max(1, columns),
-      rows: max(1, rows)
-    )
-
-    /// Step 5: Build and return CGRect
-    let gridRect = GridRect(origin: origin, size: size)
-
-    self = gridRect
+    /// Reuse bounding initialiser
+    self.init(boundingPositions: origin, endPosition)
   }
 }
 
@@ -88,35 +74,51 @@ extension GridRect {
     let colRange = origin.column..<(origin.column + size.columns)
     return rowRange.contains(position.row) && colRange.contains(position.column)
   }
-
-
-  public func asCGRect(cellSize: CGSize) -> CGRect {
-    CGRect(
-      x: CGFloat(origin.column) * cellSize.width,
-      y: CGFloat(origin.row) * cellSize.height,
-      width: CGFloat(size.columns) * cellSize.width,
-      height: CGFloat(size.rows) * cellSize.height
+  
+  public func toCGRect(cellSize: CGSize) -> CGRect {
+    let originPoint = origin.toCGPoint(cellSize: cellSize)
+    let size = CGSize(
+      width: CGFloat(self.size.columns) * cellSize.width,
+      height: CGFloat(self.size.rows) * cellSize.height
     )
+    return CGRect(origin: originPoint, size: size)
   }
 
   public func clamped(to bounds: GridDimensions) -> GridRect {
-
     let clampedOrigin = GridPosition(
       row: max(0, min(origin.row, bounds.rows - 1)),
       column: max(0, min(origin.column, bounds.columns - 1))
     )
-
-    let endRow = min(origin.row + size.rows, bounds.rows)
-    let endCol = min(origin.column + size.columns, bounds.columns)
-
-    let clampedSize = GridDimensions(
-      columns: max(0, endCol - clampedOrigin.column),
-      rows: max(0, endRow - clampedOrigin.row)
+    
+    let endRowExclusive = min(origin.row + size.rows, bounds.rows)
+    let endColExclusive = min(origin.column + size.columns, bounds.columns)
+    
+    let clampedEnd = GridPosition(
+      row: endRowExclusive - 1,
+      column: endColExclusive - 1
     )
-
-    return GridRect(
-      origin: clampedOrigin,
-      size: clampedSize,
-    )
+    
+    return GridRect(boundingPositions: clampedOrigin, clampedEnd)
   }
+  
+//  public func clamped(to bounds: GridDimensions) -> GridRect {
+//
+//    let clampedOrigin = GridPosition(
+//      row: max(0, min(origin.row, bounds.rows - 1)),
+//      column: max(0, min(origin.column, bounds.columns - 1))
+//    )
+//
+//    let endRow = min(origin.row + size.rows, bounds.rows)
+//    let endCol = min(origin.column + size.columns, bounds.columns)
+//
+//    let clampedSize = GridDimensions(
+//      columns: max(0, endCol - clampedOrigin.column),
+//      rows: max(0, endRow - clampedOrigin.row)
+//    )
+//
+//    return GridRect(
+//      origin: clampedOrigin,
+//      size: clampedSize,
+//    )
+//  }
 }

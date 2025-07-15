@@ -71,7 +71,7 @@ public struct GridPosition: GridBase {
     let (newCol, newRow) = direction.offset(x: column, y: row, by: delta)
     self = GridPosition(row: newRow, column: newCol)
   }
-  
+
   public func isValidWithin(grid: GridDimensions) -> Bool {
     return grid.contains(self)
   }
@@ -86,10 +86,49 @@ public func + (lhs: GridPosition, rhs: GridPosition) -> GridPosition {
 }
 
 extension Collection where Element == GridPosition {
+  
+  /// This version of `toCGRect` skips needing to create intermediate
+  /// `GridRect`, instead just creating one at the end.
   public func toCGRect(cellSize: CGSize) -> CGRect {
-    
+    guard let first = self.first else { return .null }
+
+    var minRow = first.row
+    var maxRow = first.row
+    var minCol = first.column
+    var maxCol = first.column
+
+    for position in self.dropFirst() {
+      minRow = Swift.min(minRow, position.row)
+      maxRow = Swift.max(maxRow, position.row)
+      minCol = Swift.min(minCol, position.column)
+      maxCol = Swift.max(maxCol, position.column)
+    }
+
+    let origin = GridPosition(row: minRow, column: minCol)
+    let size = GridDimensions(
+      columns: maxCol - minCol + 1,
+      rows: maxRow - minRow + 1
+    )
+
+    let gridRect = GridRect(origin: origin, size: size)
+    return gridRect.toCGRect(cellSize: cellSize)
   }
 }
+
+//extension Collection where Element == GridPosition {
+//  /// Returns a CGRect in pixel coordinates that encompasses all GridPositions.
+//  public func toCGRect(cellSize: CGSize) -> CGRect {
+//    guard let first = self.first else { return .null }
+//
+//    let boundingRect = self.dropFirst().reduce(
+//      into: GridRect(origin: first, size: .zero)
+//    ) { partialResult, position in
+//      partialResult = GridRect(boundingPositions: partialResult.origin, position)
+//    }
+//
+//    return boundingRect.toCGRect(cellSize: cellSize)
+//  }
+//}
 
 extension GridPosition: CustomStringConvertible {
   public var description: String {
