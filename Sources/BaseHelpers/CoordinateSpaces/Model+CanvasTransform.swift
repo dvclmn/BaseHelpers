@@ -32,6 +32,41 @@ public struct CanvasTransform: Equatable, Sendable {
   }
 }
 
+// MARK: - Coord Space transforms
+extension CanvasTransform {
+  public func canvasPoint(forViewportPoint point: CGPoint) -> CGPoint {
+    let translated = CGPoint(
+      x: (point.x - pan.width) / zoom,
+      y: (point.y - pan.height) / zoom
+    )
+    // If supporting rotation, apply inverse rotation here.
+    return translated
+  }
+  
+  public func viewportPoint(forCanvasPoint point: CGPoint) -> CGPoint {
+    let scaled = CGPoint(
+      x: point.x * zoom,
+      y: point.y * zoom
+    )
+    let translated = CGPoint(
+      x: scaled.x + pan.width,
+      y: scaled.y + pan.height
+    )
+    return translated
+  }
+  
+  public mutating func adjustPan(
+    keeping canvasPoint: CGPoint,
+    underViewportPoint anchor: CGPoint
+  ) {
+    let viewportPoint = viewportPoint(forCanvasPoint: canvasPoint)
+    let deltaX = anchor.x - viewportPoint.x
+    let deltaY = anchor.y - viewportPoint.y
+    pan.width += deltaX
+    pan.height += deltaY
+  }
+}
+
 extension CanvasTransform {
 
   /// Zoom to 100%
@@ -85,6 +120,9 @@ extension CanvasTransform {
   public var displayedZoomPercent: Int {
     Int((zoom / baselineZoom) * 100.0)
   }
+  
+ 
+
 
   //  mutating func zoomToFit(size: CGSize) {
   //    let padding: CGFloat = 40
