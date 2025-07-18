@@ -46,7 +46,7 @@ extension GridCell {
         cells.append(
           GridCell(
             character: character,
-            position: GridPosition(row: rowIndex, column: columnIndex),
+            position: GridPosition(column: columnIndex, row: rowIndex),
             colour: .white
           )
         )
@@ -55,7 +55,7 @@ extension GridCell {
       let padding = dimensions.columns - line.count
       if padding > 0 {
         for colIndex in line.count..<dimensions.columns {
-          let position = GridPosition(row: rowIndex, column: colIndex)
+          let position = GridPosition(column: colIndex, row: rowIndex)
           cells.append(GridCell.createBlank(at: position))
 
         }

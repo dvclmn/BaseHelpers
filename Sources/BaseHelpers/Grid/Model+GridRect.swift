@@ -26,7 +26,7 @@ public struct GridRect: GridBase {
     let minCol = min(a.column, b.column)
     let maxCol = max(a.column, b.column)
 
-    let origin = GridPosition(row: minRow, column: minCol)
+    let origin = GridPosition(column: minCol, row: minRow)
     let size = GridDimensions(
       columns: maxCol - minCol + 1,
       rows: maxRow - minRow + 1
@@ -53,8 +53,7 @@ public struct GridRect: GridBase {
       cellSize: cellSize
     )
 
-    /// Reuse bounding initialiser
-    self.init(boundingPositions: origin, endPosition)
+    self.init(boundingPositions: origin ?? .zero, endPosition ?? .zero)
   }
 }
 
@@ -64,7 +63,7 @@ extension GridRect {
   public var positions: [GridPosition] {
     (origin.row..<origin.row + size.rows).flatMap { row in
       (origin.column..<origin.column + size.columns).map { col in
-        GridPosition(row: row, column: col)
+        GridPosition(column: col, row: row)
       }
     }
   }
@@ -86,16 +85,16 @@ extension GridRect {
 
   public func clamped(to bounds: GridDimensions) -> GridRect {
     let clampedOrigin = GridPosition(
+      column: max(0, min(origin.column, bounds.columns - 1)),
       row: max(0, min(origin.row, bounds.rows - 1)),
-      column: max(0, min(origin.column, bounds.columns - 1))
     )
     
     let endRowExclusive = min(origin.row + size.rows, bounds.rows)
     let endColExclusive = min(origin.column + size.columns, bounds.columns)
     
     let clampedEnd = GridPosition(
+      column: endColExclusive - 1,
       row: endRowExclusive - 1,
-      column: endColExclusive - 1
     )
     
     return GridRect(boundingPositions: clampedOrigin, clampedEnd)

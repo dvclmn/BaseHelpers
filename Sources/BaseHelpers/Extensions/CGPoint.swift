@@ -431,6 +431,10 @@ extension CGPoint {
   public var isFinite: Bool {
     x.isFinite && y.isFinite
   }
+  
+  public var hasValidValue: Bool {
+    return !isNan && isFinite
+  }
 
   public var isNan: Bool {
     let result: Bool = x.isNaN || y.isNaN

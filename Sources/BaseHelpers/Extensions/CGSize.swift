@@ -171,6 +171,18 @@ extension CGSize {
   public var isPositive: Bool {
     width > 0 && height > 0
   }
+  
+  public var hasValidValue: Bool {
+    return !isNan && isFinite
+  }
+  
+  public var isFinite: Bool {
+    width.isFinite && height.isFinite
+  }
+  
+  public var isNan: Bool {
+    return width.isNaN || height.isNaN
+  }
 
   /// Returns true if either width or height is zero or negative
   public var isZeroOrNegative: Bool {

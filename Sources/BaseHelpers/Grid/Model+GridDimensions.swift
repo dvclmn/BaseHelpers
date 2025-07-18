@@ -54,6 +54,13 @@ extension GridDimensions {
 }
 
 extension GridDimensions {
+  public func toCGSize(withCellSize cellSize: CGSize) -> CGSize {
+    return CGSize(
+      width: CGFloat(self.columns) * cellSize.width,
+      height: CGFloat(self.rows) * cellSize.height,
+    )
+  }
+  
   // MARK: - Greater than
   public func bothGreaterThan(rhs: GridDimensions) -> Bool {
     self.rows > rhs.rows && self.columns > rhs.columns

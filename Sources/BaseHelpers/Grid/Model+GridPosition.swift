@@ -9,12 +9,15 @@ import SwiftUI
 
 /// Represents a position in a 2D Grid (rows and columns)
 public struct GridPosition: GridBase {
-  public let row: Int
   public let column: Int
+  public let row: Int
 
-  public init(row: Int, column: Int) {
-    self.row = row
+  public init(
+    column: Int,
+    row: Int,
+  ) {
     self.column = column
+    self.row = row
   }
 
   /// `cellSize` is the width and height in points
@@ -23,14 +26,15 @@ public struct GridPosition: GridBase {
   /// Canvas Space
   ///
   /// `point` must already be mapped to local Canvas space
-  public init(
+  public init?(
     point: CGPoint,
     cellSize: CGSize
   ) {
+    guard point.hasValidValue, cellSize.hasValidValue else { return nil }
     let row = Int(floor(point.y / cellSize.height))
     let col = Int(floor(point.x / cellSize.width))
 
-    self.init(row: row, column: col)
+    self.init(column: col, row: row)
   }
 }
 
@@ -48,10 +52,10 @@ extension GridPosition {
 
   public func neighbour(at edge: CellEdge) -> GridPosition {
     switch edge {
-      case .top: return GridPosition(row: row - 1, column: column)
-      case .bottom: return GridPosition(row: row + 1, column: column)
-      case .left: return GridPosition(row: row, column: column - 1)
-      case .right: return GridPosition(row: row, column: column + 1)
+      case .top: return GridPosition(column: column, row: row - 1)
+      case .bottom: return GridPosition(column: column, row: row + 1)
+      case .left: return GridPosition(column: column - 1, row: row)
+      case .right: return GridPosition(column: column + 1, row: row)
     }
   }
 
@@ -69,11 +73,11 @@ extension GridPosition {
   }
 
   public static var zero: GridPosition {
-    GridPosition(row: 0, column: 0)
+    GridPosition(column: 0, row: 0)
   }
   /// Basic offset methods
   public func offsetBy(row deltaRow: Int, col deltaCol: Int) -> GridPosition {
-    GridPosition(row: row + deltaRow, column: column + deltaCol)
+    GridPosition(column: column + deltaCol, row: row + deltaRow)
   }
 
   public mutating func offsetting(by delta: GridPosition) {
@@ -83,7 +87,7 @@ extension GridPosition {
 
   public mutating func offsetting(_ direction: Direction, by delta: Int = 1) {
     let (newCol, newRow) = direction.offset(x: column, y: row, by: delta)
-    self = GridPosition(row: newRow, column: newCol)
+    self = GridPosition(column: newCol, row: newRow)
   }
 
   public func isValidWithin(grid: GridDimensions) -> Bool {
@@ -94,8 +98,7 @@ extension GridPosition {
 
 public func + (lhs: GridPosition, rhs: GridPosition) -> GridPosition {
   return GridPosition(
-    row: lhs.row + rhs.row,
-    column: lhs.column + rhs.column
+    column: lhs.column + rhs.column, row: lhs.row + rhs.row
   )
 }
 
@@ -118,7 +121,7 @@ extension Collection where Element == GridPosition {
       maxCol = Swift.max(maxCol, position.column)
     }
 
-    let origin = GridPosition(row: minRow, column: minCol)
+    let origin = GridPosition(column: minCol, row: minRow)
     let size = GridDimensions(
       columns: maxCol - minCol + 1,
       rows: maxRow - minRow + 1
@@ -164,4 +167,43 @@ public enum CellEdge: CaseIterable {
         }
     }
   }
+}
+
+extension GridPosition {
+  func wrapped(columns: Int, rows: Int) -> GridPosition {
+    let wrappedCol = ((column - 1) % columns + columns) % columns + 1
+    let wrappedRow = ((row - 1) % rows + rows) % rows + 1
+    return GridPosition(column: wrappedCol, row: wrappedRow)
+  }
+  
+  func movedLeft(columns: Int) -> GridPosition {
+    GridPosition(column: column - 1, row: row)
+      .wrapped(columns: columns, rows: 1)
+  }
+  
+  func movedRight(columns: Int) -> GridPosition {
+    GridPosition(column: column + 1, row: row)
+      .wrapped(columns: columns, rows: 1)
+  }
+  
+  func movedUp(rows: Int) -> GridPosition {
+    GridPosition(column: column, row: row - 1)
+      .wrapped(columns: 1, rows: rows)
+  }
+  
+  func movedDown(rows: Int) -> GridPosition {
+    GridPosition(column: column, row: row + 1)
+      .wrapped(columns: 1, rows: rows)
+  }
+  
+  func movedBy(
+    deltaCol: Int,
+    deltaRow: Int,
+    columns: Int,
+    rows: Int
+  ) -> GridPosition {
+    GridPosition(column: column + deltaCol, row: row + deltaRow)
+      .wrapped(columns: columns, rows: rows)
+  }
+  
 }
