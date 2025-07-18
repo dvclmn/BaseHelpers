@@ -170,40 +170,43 @@ public enum CellEdge: CaseIterable {
 }
 
 extension GridPosition {
-  func wrapped(columns: Int, rows: Int) -> GridPosition {
+  public func wrapped(
+    columns: Int,
+    rows: Int
+  ) -> GridPosition {
     let wrappedCol = ((column - 1) % columns + columns) % columns + 1
     let wrappedRow = ((row - 1) % rows + rows) % rows + 1
     return GridPosition(column: wrappedCol, row: wrappedRow)
   }
   
-  func movedLeft(columns: Int) -> GridPosition {
+  public func movedLeft(columns: Int) -> GridPosition {
     GridPosition(column: column - 1, row: row)
       .wrapped(columns: columns, rows: 1)
   }
   
-  func movedRight(columns: Int) -> GridPosition {
+  public func movedRight(columns: Int) -> GridPosition {
     GridPosition(column: column + 1, row: row)
       .wrapped(columns: columns, rows: 1)
   }
   
-  func movedUp(rows: Int) -> GridPosition {
+  public func movedUp(rows: Int) -> GridPosition {
     GridPosition(column: column, row: row - 1)
       .wrapped(columns: 1, rows: rows)
   }
   
-  func movedDown(rows: Int) -> GridPosition {
+  public func movedDown(rows: Int) -> GridPosition {
     GridPosition(column: column, row: row + 1)
       .wrapped(columns: 1, rows: rows)
   }
   
-  func movedBy(
-    deltaCol: Int,
-    deltaRow: Int,
-    columns: Int,
-    rows: Int
-  ) -> GridPosition {
-    GridPosition(column: column + deltaCol, row: row + deltaRow)
-      .wrapped(columns: columns, rows: rows)
-  }
+//  public func movedBy(
+//    deltaCol: Int,
+//    deltaRow: Int,
+//    columns: Int,
+//    rows: Int
+//  ) -> GridPosition {
+//    GridPosition(column: column + deltaCol, row: row + deltaRow)
+//      .wrapped(columns: columns, rows: rows)
+//  }
   
 }
