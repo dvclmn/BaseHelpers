@@ -42,13 +42,7 @@ public struct RatioTracker {
     let rawRatio = Double(current / previous)
     return CGFloat(rawRatio.clamped(to: range))
   }
-  
-//  public mutating func ratio(from current: CGFloat) -> CGFloat {
-//    defer { previous = current }
-//    guard let previous, previous != 0 else { return 1 } // neutral ratio
-//    return current / previous
-//  }
-  
+
   public mutating func reset() {
     previous = nil
   }

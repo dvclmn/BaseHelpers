@@ -8,18 +8,16 @@
 import Foundation
 
 public struct GridCell: GridBase {
-  public let id: UUID
+  public var id: GridPosition { position }
   public var character: Character
   public var position: GridPosition
   public var colour: RGBColour
 
   public init(
-    id: UUID = UUID(),
     character: Character,
     position: GridPosition,
     colour: RGBColour = .white
   ) {
-    self.id = id
     self.character = character
     self.position = position
     self.colour = colour

@@ -17,13 +17,20 @@ public struct GridPosition: GridBase {
     self.column = column
   }
 
+  /// `cellSize` is the width and height in points
+  /// of a single cell in the current `GridCanvas`.
+  /// It is not affected by zoom, it operates in local
+  /// Canvas Space
+  ///
   /// `point` must already be mapped to local Canvas space
   public init(
     point: CGPoint,
     cellSize: CGSize
   ) {
-    let position = GridPosition.fromCGPoint(point, at: cellSize)
-    self = position
+    let row = Int(floor(point.y / cellSize.height))
+    let col = Int(floor(point.x / cellSize.width))
+
+    self.init(row: row, column: col)
   }
 }
 
@@ -37,20 +44,6 @@ extension GridPosition {
       x: CGFloat(column) * cellSize.width,
       y: CGFloat(row) * cellSize.height
     )
-  }
-
-  /// `cellSize` is the width and height in points
-  /// of a single cell in the current `GridCanvas`.
-  /// It is not affected by zoom, it operates in local
-  /// Canvas Space
-  public static func fromCGPoint(
-    _ point: CGPoint,
-    at cellSize: CGSize
-  ) -> GridPosition {
-    let row = Int(floor(point.y / cellSize.height))
-    let col = Int(floor(point.x / cellSize.width))
-
-    return GridPosition(row: row, column: col)
   }
 
   public func neighbour(at edge: CellEdge) -> GridPosition {
@@ -135,21 +128,6 @@ extension Collection where Element == GridPosition {
     return gridRect.toCGRect(cellSize: cellSize)
   }
 }
-
-//extension Collection where Element == GridPosition {
-//  /// Returns a CGRect in pixel coordinates that encompasses all GridPositions.
-//  public func toCGRect(cellSize: CGSize) -> CGRect {
-//    guard let first = self.first else { return .null }
-//
-//    let boundingRect = self.dropFirst().reduce(
-//      into: GridRect(origin: first, size: .zero)
-//    ) { partialResult, position in
-//      partialResult = GridRect(boundingPositions: partialResult.origin, position)
-//    }
-//
-//    return boundingRect.toCGRect(cellSize: cellSize)
-//  }
-//}
 
 extension GridPosition: CustomStringConvertible {
   public var description: String {

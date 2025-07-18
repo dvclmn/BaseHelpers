@@ -44,6 +44,16 @@ public struct CompatibleModifierKeys: OptionSet, Sendable {
   public static let option = Self(rawValue: 1 << 3)
   public static let command = Self(rawValue: 1 << 4)
 
+  public var displayName: String {
+    switch self {
+      case .shift: "Shift"
+      case .control: "Control"
+      case .option: "Option"
+      case .command: "Command"
+      case .capsLock: "Caps Lock"
+      default: "Unknown"
+    }
+  }
 }
 
 extension CompatibleModifierKeys {
@@ -62,6 +72,10 @@ extension CompatibleModifierKeys {
         ""
     }
   }
+}
+
+extension CompatibleModifierKeys: CustomStringConvertible {
+  public var description: String { displayName }
 }
 
 @available(macOS 15, iOS 18, *)
