@@ -11,7 +11,7 @@ extension String {
 
   public enum SubsequenceStrategy {
     case omitAllEmpty
-    case omitEmptyIfLastLine
+    case omitLastLineIfEmpty
     case doNotOmit
 
     //    public var omittingEmptySubsequences: Bool {
@@ -22,7 +22,7 @@ extension String {
       switch self {
         case .omitAllEmpty:
           return true
-        case .omitEmptyIfLastLine:
+        case .omitLastLineIfEmpty:
           return false
         case .doNotOmit:
           return false
@@ -86,23 +86,22 @@ extension String {
     //    let seperator = "\n"
     //    let maxSplits = Int.max
 
-    let subsequence: [String.SubSequence] = self.split(
+    let subsequence: [Substring] = self.split(
       separator: "\n",
       maxSplits: Int.max,
       omittingEmptySubsequences: subsequenceStrategy.omitEmptySubsequences
     )
 
     switch subsequenceStrategy {
-      case .omitAllEmpty:
+      case .omitAllEmpty, .doNotOmit:
         return subsequence
 
-      case .omitEmptyIfLastLine:
+      case .omitLastLineIfEmpty:
         guard let lastLine = subsequence.last else { return subsequence }
-        let result = lastLine.isEmpty ? Array(subsequence.dropLast()) : subsequence
+        let lastLineIsEmpty: Bool = lastLine.allSatisfy { $0 == " " }
+        let result = lastLineIsEmpty ? Array(subsequence.dropLast()) : subsequence
         return result
 
-      case .doNotOmit:
-        return subsequence
     }
   }
 

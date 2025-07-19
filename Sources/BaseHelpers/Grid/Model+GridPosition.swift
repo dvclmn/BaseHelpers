@@ -16,8 +16,10 @@ public struct GridPosition: GridBase {
     column: Int,
     row: Int,
   ) {
-    self.column = column
-    self.row = row
+    precondition(column > 0 && row > 0, "GridPosition cannot be initialised at 0,0")
+//    guard column > 0, row > 0 else { fatalError("") }
+    self.column = column - 1
+    self.row = row - 1
   }
 
   /// `cellSize` is the width and height in points
@@ -34,11 +36,17 @@ public struct GridPosition: GridBase {
     let row = Int(floor(point.y / cellSize.height))
     let col = Int(floor(point.x / cellSize.width))
 
-    self.init(column: col, row: row)
+//    guard row > 0, col > 0 else { return nil }
+    
+    self.init(column: max(1, col), row: max(1, row))
   }
 }
 
 extension GridPosition {
+  
+  public var isGreaterThanZero: Bool {
+    return column > 0 && row > 0
+  }
 
   /// Converts grid position to canvas-space point
   /// - Parameter cellSize: The size of each grid cell
@@ -72,8 +80,9 @@ extension GridPosition {
     row * columns + column
   }
 
-  public static var zero: GridPosition {
-    GridPosition(column: 0, row: 0)
+
+  public static var origin: GridPosition {
+    GridPosition(column: 1, row: 1)
   }
   /// Basic offset methods
   public func offsetBy(row deltaRow: Int, col deltaCol: Int) -> GridPosition {

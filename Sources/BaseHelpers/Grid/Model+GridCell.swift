@@ -40,13 +40,13 @@ extension GridCell {
 
     var cells: [GridCell] = []
 
-    for (rowIndex, line) in text.substringLines(omittingEmptySubsequences: true).enumerated() {
+    for (rowIndex, line) in text.substringLines(subsequenceStrategy: .omitLastLineIfEmpty).enumerated() {
       /// Process characters
       for (columnIndex, character) in line.enumerated() {
         cells.append(
           GridCell(
             character: character,
-            position: GridPosition(column: columnIndex, row: rowIndex),
+            position: GridPosition(column: columnIndex + 1, row: rowIndex + 1),
             colour: .white
           )
         )
