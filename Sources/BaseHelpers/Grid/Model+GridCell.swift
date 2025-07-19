@@ -40,7 +40,7 @@ extension GridCell {
 
     var cells: [GridCell] = []
 
-    for (rowIndex, line) in text.substringLines().enumerated() {
+    for (rowIndex, line) in text.substringLines(omittingEmptySubsequences: true).enumerated() {
       /// Process characters
       for (columnIndex, character) in line.enumerated() {
         cells.append(

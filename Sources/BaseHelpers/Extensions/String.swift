@@ -9,18 +9,49 @@ import Foundation
 
 extension String {
 
+  public enum SubsequenceStrategy {
+    case omitAllEmpty
+    case omitEmptyIfLastLine
+    case doNotOmit
+
+    //    public var omittingEmptySubsequences: Bool {
+    //      return self == .omitAllEmpty
+    //    }
+
+    public var omitEmptySubsequences: Bool {
+      switch self {
+        case .omitAllEmpty:
+          return true
+        case .omitEmptyIfLastLine:
+          return false
+        case .doNotOmit:
+          return false
+      }
+    }
+
+    //    public func subsequence(_ string: String) -> [String.SubSequence] {
+    //      let result = string.split(
+    //        separator: "\n",
+    //        maxSplits: Int.max,
+    //        omittingEmptySubsequences: true
+    //      )
+    //
+    //      return result
+    //    }
+  }
+
   public static func createBlankString(
     width: Int,
     height: Int,
     character: Character = " "
   ) -> String {
     guard width > 0 && height > 0 else { return "" }
-    
+
     let rowString = String(repeating: character, count: width)
     let rows = Array(repeating: rowString, count: height)
     return rows.joined(separator: "\n")
   }
-  
+
   public var firstLine: String {
     let firstSubstring = self.split(separator: "\n").first ?? ""
     return String(firstSubstring)
@@ -35,10 +66,13 @@ extension String {
   }
 
   public func lines(
-    omittingEmptySubsequences: Bool = false
+    subsequenceStrategy: SubsequenceStrategy = .doNotOmit
+      //    omittingEmptySubsequences: Bool = false
   ) -> [String] {
 
-    let lines: [String] = self.substringLines(omittingEmptySubsequences: omittingEmptySubsequences).map { substring in
+    let lines: [String] = self.substringLines(
+      subsequenceStrategy: subsequenceStrategy
+    ).map { substring in
       String(substring)
     }
 
@@ -46,14 +80,30 @@ extension String {
   }
 
   public func substringLines(
-    omittingEmptySubsequences: Bool = false
+    subsequenceStrategy: SubsequenceStrategy = .doNotOmit,
+    //    omittingEmptySubsequences: Bool = false
   ) -> [Substring] {
-    let result = self.split(
+    //    let seperator = "\n"
+    //    let maxSplits = Int.max
+
+    let subsequence: [String.SubSequence] = self.split(
       separator: "\n",
       maxSplits: Int.max,
-      omittingEmptySubsequences: omittingEmptySubsequences
+      omittingEmptySubsequences: subsequenceStrategy.omitEmptySubsequences
     )
-    return result
+
+    switch subsequenceStrategy {
+      case .omitAllEmpty:
+        return subsequence
+
+      case .omitEmptyIfLastLine:
+        guard let lastLine = subsequence.last else { return subsequence }
+        let result = lastLine.isEmpty ? Array(subsequence.dropLast()) : subsequence
+        return result
+
+      case .doNotOmit:
+        return subsequence
+    }
   }
 
   public var url: URL? {
