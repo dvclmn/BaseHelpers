@@ -56,8 +56,8 @@ extension GridDimensions {
 extension GridDimensions {
   public func toCGSize(withCellSize cellSize: CGSize) -> CGSize {
     return CGSize(
-      width: CGFloat(self.columns) * cellSize.width,
-      height: CGFloat(self.rows) * cellSize.height,
+      width: CGFloat(columns) * cellSize.width,
+      height: CGFloat(rows) * cellSize.height,
     )
   }
   

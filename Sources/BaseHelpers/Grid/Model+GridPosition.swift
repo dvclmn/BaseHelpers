@@ -170,43 +170,65 @@ public enum CellEdge: CaseIterable {
 }
 
 extension GridPosition {
-  public func wrapped(
-    columns: Int,
-    rows: Int
+  
+  public func moved(
+    in direction: Direction,
+    by delta: Int = 1,
+    gridDimensions: GridDimensions
   ) -> GridPosition {
+    let offset = direction.offset(x: column, y: row, by: delta)
+    return GridPosition(column: offset.x, row: offset.y)
+      .wrapped(columns: gridDimensions.columns, rows: gridDimensions.rows)
+  }
+  
+  public func wrapped(columns: Int, rows: Int) -> GridPosition {
     let wrappedCol = ((column - 1) % columns + columns) % columns + 1
     let wrappedRow = ((row - 1) % rows + rows) % rows + 1
     return GridPosition(column: wrappedCol, row: wrappedRow)
   }
   
-  public func movedLeft(columns: Int) -> GridPosition {
-    GridPosition(column: column - 1, row: row)
-      .wrapped(columns: columns, rows: 1)
-  }
-  
-  public func movedRight(columns: Int) -> GridPosition {
-    GridPosition(column: column + 1, row: row)
-      .wrapped(columns: columns, rows: 1)
-  }
-  
-  public func movedUp(rows: Int) -> GridPosition {
-    GridPosition(column: column, row: row - 1)
-      .wrapped(columns: 1, rows: rows)
-  }
-  
-  public func movedDown(rows: Int) -> GridPosition {
-    GridPosition(column: column, row: row + 1)
-      .wrapped(columns: 1, rows: rows)
-  }
-  
+//  public func wrapped(
+//    gridDimensions: GridDimensions
+////    columns: Int,
+////    rows: Int
+//  ) -> GridPosition {
+//    let columns = gridDimensions.columns
+//    let rows = gridDimensions.rows
+//    
+//    let wrappedCol = ((column - 1) % columns + columns) % columns + 1
+//    let wrappedRow = ((row - 1) % rows + rows) % rows + 1
+//    return GridPosition(column: wrappedCol, row: wrappedRow)
+//  }
+//  
+//  private func movedLeft(columns: Int) -> GridPosition {
+//    GridPosition(column: column - 1, row: row)
+//      .wrapped(columns: columns, rows: 1)
+//  }
+//  
+//  private func movedRight(columns: Int) -> GridPosition {
+//    GridPosition(column: column + 1, row: row)
+//      .wrapped(columns: columns, rows: 1)
+//  }
+//  
+//  private func movedUp(rows: Int) -> GridPosition {
+//    GridPosition(column: column, row: row - 1)
+//      .wrapped(columns: 1, rows: rows)
+//  }
+//  
+//  private func movedDown(rows: Int) -> GridPosition {
+//    GridPosition(column: column, row: row + 1)
+//      .wrapped(columns: 1, rows: rows)
+//  }
+//  
 //  public func movedBy(
 //    deltaCol: Int,
 //    deltaRow: Int,
-//    columns: Int,
-//    rows: Int
+//    gridDimensions: GridDimensions
+////    columns: Int,
+////    rows: Int
 //  ) -> GridPosition {
 //    GridPosition(column: column + deltaCol, row: row + deltaRow)
-//      .wrapped(columns: columns, rows: rows)
+//      .wrapped(columns: gridDimensions.columns, rows: gridDimensions.rows)
 //  }
   
 }
