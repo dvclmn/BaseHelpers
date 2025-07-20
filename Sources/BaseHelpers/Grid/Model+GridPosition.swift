@@ -31,13 +31,12 @@ public struct GridPosition: GridBase {
     point: CGPoint,
     cellSize: CGSize
   ) {
-    guard point.hasValidValue, cellSize.hasValidValue else { return nil }
+    /// Going to let the main init's precondition catch this
+//    guard point.hasValidValue, cellSize.hasValidValue else { return nil }
     let row = Int(floor(point.y / cellSize.height))
     let col = Int(floor(point.x / cellSize.width))
 
-    //    guard row > 0, col > 0 else { return nil }
-
-    self.init(column: max(1, col), row: max(1, row))
+    self.init(column: col, row: row)
   }
 }
 
@@ -109,7 +108,7 @@ extension GridPosition {
   public func isValidWithin(grid: GridDimensions) -> Bool {
     return grid.contains(self)
   }
-  
+
   public func moved(
     in direction: Direction,
     by delta: Int = 1,
@@ -119,7 +118,7 @@ extension GridPosition {
     return GridPosition(column: offset.x, row: offset.y)
       .wrapped(columns: gridDimensions.columns, rows: gridDimensions.rows)
   }
-  
+
   public func wrapped(columns: Int, rows: Int) -> GridPosition {
     let wrappedCol = ((column - 1) % columns + columns) % columns + 1
     let wrappedRow = ((row - 1) % rows + rows) % rows + 1

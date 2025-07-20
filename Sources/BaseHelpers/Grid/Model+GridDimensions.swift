@@ -11,10 +11,10 @@ public struct GridDimensions: GridBase {
   public var columns: Int
   public var rows: Int
 
-  public static let zero = GridDimensions(columns: 0, rows: 0)
+  public static let minSize = GridDimensions(columns: 1, rows: 1)
 
   public init(columns: Int, rows: Int) {
-    precondition(columns >= 0 && rows >= 0, "GridDimensions cannot have negative dimensions.")
+    precondition(columns > 0 && rows > 0, "GridDimensions cannot have zero or negative dimensions.")
     self.columns = columns
     self.rows = rows
   }
@@ -23,15 +23,10 @@ public struct GridDimensions: GridBase {
     size: CGSize,
     cellSize: CGSize
   ) {
-
     let widthInCells = Int(size.width / cellSize.width)
     let heightInCells = Int(size.height / cellSize.height)
 
-    /// This means we at least initialise with 1 Cell
-    let widthClamped = max(1, widthInCells)
-    let heightClamped = max(1, heightInCells)
-
-    self.init(columns: widthClamped, rows: heightClamped)
+    self.init(columns: widthInCells, rows: heightInCells)
   }
 }
 
@@ -61,7 +56,7 @@ extension GridDimensions {
       height: CGFloat(rows) * cellSize.height,
     )
   }
-  
+
   // MARK: - Greater than
   public func bothGreaterThan(rhs: GridDimensions) -> Bool {
     self.rows > rhs.rows && self.columns > rhs.columns

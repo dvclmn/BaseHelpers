@@ -93,8 +93,8 @@ extension GridRect {
     let endColExclusive = min(origin.column + size.columns, bounds.columns)
     
     let clampedEnd = GridPosition(
-      column: max(0, endColExclusive),
-      row: max(0, endRowExclusive),
+      column: max(0, endColExclusive - 1),
+      row: max(0, endRowExclusive - 1),
     )
     
     return GridRect(boundingPositions: clampedOrigin, clampedEnd)
