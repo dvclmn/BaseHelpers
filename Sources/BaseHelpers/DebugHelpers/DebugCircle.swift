@@ -8,10 +8,9 @@
 import SwiftUI
 
 public struct DebugCircleModifier: ViewModifier {
-  
+
   let location: CGPoint?
   let size: CGFloat
-  let isShowingLocation: Bool
   public func body(content: Content) -> some View {
     content
       .overlay {
@@ -20,14 +19,14 @@ public struct DebugCircleModifier: ViewModifier {
             Circle()
               .fill(.purple)
               .frame(width: size, height: size)
-            
+
             Text(location.displayString)
               .font(.caption)
               .padding(4)
               .background(.thinMaterial)
               .clipShape(.rect(cornerRadius: 3))
               .offset(y: -size * 2)
-          } // END zstack
+          }  // END zstack
           .position(location)
         }
       }
@@ -37,13 +36,11 @@ extension View {
   public func debugCircle(
     _ location: CGPoint?,
     size: CGFloat = 10,
-    isShowingLocation: Bool = false
   ) -> some View {
     self.modifier(
       DebugCircleModifier(
         location: location,
         size: size,
-        isShowingLocation: isShowingLocation
       )
     )
   }

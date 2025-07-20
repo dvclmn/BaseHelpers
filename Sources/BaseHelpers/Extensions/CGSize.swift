@@ -271,7 +271,10 @@ public func += (lhs: inout CGSize, rhs: CGFloat) {
 infix operator * : MultiplicationPrecedence
 
 public func * (lhs: CGSize, rhs: CGFloat) -> CGSize {
-  return CGSize(width: lhs.width * rhs, height: lhs.height * rhs)
+  return CGSize(
+    width: lhs.width * rhs,
+    height: lhs.height * rhs
+  )
 }
 
 public func positiveScale(_ size: CGSize, by factor: CGFloat) -> CGSize {

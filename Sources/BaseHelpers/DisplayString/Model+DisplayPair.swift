@@ -18,8 +18,8 @@ public protocol DisplayPair {
   associatedtype Value: SingleValueStringable
   var valueA: Value { get }
   var valueB: Value { get }
-  var valueALabel: String { get }
-  var valueBLabel: String { get }
+  var valueALabel: DisplayPairLabel { get }
+  var valueBLabel: DisplayPairLabel { get }
 
   var displayString: String { get }
   var displayStringStyled: AttributedString { get }
@@ -39,6 +39,26 @@ public protocol DisplayPair {
 //    hasSpace: Bool,
     grouping: Grouping
   ) -> AttributedString
+}
+
+public struct DisplayPairLabel {
+  let abbreviated: String
+  let full: String
+  
+  public init(abbreviated: String, full: String) {
+    self.abbreviated = abbreviated
+    self.full = full
+  }
+  
+  public init(_ abbreviated: String, _ full: String) {
+    self.abbreviated = abbreviated
+    self.full = full
+  }
+  
+  public init(_ abbreviated: String, full: String? = nil) {
+    self.abbreviated = abbreviated
+    self.full = full ?? abbreviated
+  }
 }
 
 extension DisplayPair {
@@ -65,9 +85,15 @@ extension DisplayPair {
 
     let result: String
     switch style {
-      case .labels:
-        result =
-          "\(valueALabel) \(valA)\(separator)\(valueBLabel) \(valB)"
+      case .labels(let style):
+        switch style {
+          case .abbreviated:
+            result = "\(valueALabel.abbreviated) \(valA)\(separator)\(valueBLabel.abbreviated) \(valB)"
+          case .full:
+            result = "\(valueALabel.full) \(valA)\(separator)\(valueBLabel.full) \(valB)"
+        }
+//        result =
+//          "\(valueALabel) \(valA)\(separator)\(valueBLabel) \(valB)"
 
       case .plain:
         result = "\(valA)\(separator)\(valB)"

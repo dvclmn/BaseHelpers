@@ -16,7 +16,11 @@ public struct GridPosition: GridBase {
     column: Int,
     row: Int,
   ) {
-    precondition(row >= 0 && column >= 0, "GridPosition cannot be negative.")
+    #warning("Temporarily turning this off, to fix the issue")
+    if row < 0 || column < 0 {
+      print("BAD, GridPosition cannot be negative. Row: \(row), Column: \(column)")
+    }
+    //    precondition(row >= 0 && column >= 0, "GridPosition cannot be negative.")
     self.column = column
     self.row = row
   }
@@ -32,7 +36,7 @@ public struct GridPosition: GridBase {
     cellSize: CGSize
   ) {
     /// Going to let the main init's precondition catch this
-//    guard point.hasValidValue, cellSize.hasValidValue else { return nil }
+    //    guard point.hasValidValue, cellSize.hasValidValue else { return nil }
     let row = Int(floor(point.y / cellSize.height))
     let col = Int(floor(point.x / cellSize.width))
 
@@ -48,12 +52,15 @@ extension GridPosition {
     GridPosition(column: 0, row: 0)
   }
 
-  var displayRow: Int { row + 1 }
-  var displayColumn: Int { column + 1 }
-
-  public var displayString: String {
-    "Row \(displayRow), Column \(displayColumn)"
+  /// Position starting from one, for UI
+  public var displayPosition: GridPosition {
+    GridPosition(column: column + 1, row: row + 1)
   }
+  //  var displayRow: Int { row + 1 }
+  //  var displayColumn: Int { column + 1 }
+  //  public var displayString: String {
+  //    "Row \(displayRow), Column \(displayColumn)"
+  //  }
 
   public var isGreaterThanZero: Bool {
     return column > 0 && row > 0

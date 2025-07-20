@@ -7,9 +7,14 @@
 
 import Foundation
 
-public enum ValueDisplayStyle {
-  case labels
+public enum ValueDisplayStyle: Equatable {
+  case labels(ValueLabelStyle = .abbreviated)
   case plain
   
-  public var isShowingLabels: Bool { self == .labels }
+  public var isShowingLabels: Bool { self == .labels(.abbreviated) || self == .labels(.full) }
+}
+
+public enum ValueLabelStyle: Equatable {
+  case abbreviated
+  case full
 }
