@@ -21,16 +21,15 @@ public struct GridRect: GridBase {
 
   /// Creates a GridRect that bounds two GridPositions inclusively
   public init(boundingPositions a: GridPosition, _ b: GridPosition) {
-//    guard a.isGreaterThanZero && b.isGreaterThanZero else { return nil }
     let minRow = min(a.row, b.row)
     let maxRow = max(a.row, b.row)
     let minCol = min(a.column, b.column)
     let maxCol = max(a.column, b.column)
 
-    let origin = GridPosition(column: max(1, minCol), row: max(1, minRow))
+    let origin = GridPosition(column: minCol, row: minRow)
     let size = GridDimensions(
-      columns: max(1, (maxCol - minCol + 1)),
-      rows: max(1, (maxRow - minRow + 1))
+      columns: maxCol - minCol + 1,
+      rows: maxRow - minRow + 1
     )
     self.init(origin: origin, size: size)
   }
@@ -54,7 +53,7 @@ public struct GridRect: GridBase {
       cellSize: cellSize
     )
 
-    self.init(boundingPositions: origin ?? .origin, endPosition ?? .origin)
+    self.init(boundingPositions: origin ?? .zero, endPosition ?? .zero)
   }
 }
 
@@ -64,7 +63,7 @@ extension GridRect {
   public var positions: [GridPosition] {
     (origin.row..<origin.row + size.rows).flatMap { row in
       (origin.column..<origin.column + size.columns).map { col in
-        GridPosition(column: col + 1, row: row + 1)
+        GridPosition(column: col, row: row)
       }
     }
   }
@@ -86,16 +85,16 @@ extension GridRect {
 
   public func clamped(to bounds: GridDimensions) -> GridRect {
     let clampedOrigin = GridPosition(
-      column: max(1, min(origin.column, bounds.columns - 1)),
-      row: max(1, min(origin.row, bounds.rows - 1)),
+      column: max(0, min(origin.column, bounds.columns - 1)),
+      row: max(0, min(origin.row, bounds.rows - 1)),
     )
     
     let endRowExclusive = min(origin.row + size.rows, bounds.rows)
     let endColExclusive = min(origin.column + size.columns, bounds.columns)
     
     let clampedEnd = GridPosition(
-      column: max(1, endColExclusive - 1),
-      row: max(1, endRowExclusive - 1),
+      column: max(0, endColExclusive),
+      row: max(0, endRowExclusive),
     )
     
     return GridRect(boundingPositions: clampedOrigin, clampedEnd)

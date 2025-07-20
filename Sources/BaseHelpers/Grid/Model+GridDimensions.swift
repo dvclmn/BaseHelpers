@@ -11,9 +11,10 @@ public struct GridDimensions: GridBase {
   public var columns: Int
   public var rows: Int
 
-  public static let `default` = GridDimensions(columns: 1, rows: 1)
+  public static let zero = GridDimensions(columns: 0, rows: 0)
 
   public init(columns: Int, rows: Int) {
+    precondition(columns >= 0 && rows >= 0, "GridDimensions cannot have negative dimensions.")
     self.columns = columns
     self.rows = rows
   }

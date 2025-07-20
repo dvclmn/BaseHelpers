@@ -16,10 +16,9 @@ public struct GridPosition: GridBase {
     column: Int,
     row: Int,
   ) {
-    precondition(column > 0 && row > 0, "GridPosition cannot be initialised at 0,0")
-//    guard column > 0, row > 0 else { fatalError("") }
-    self.column = column - 1
-    self.row = row - 1
+    precondition(row >= 0 && column >= 0, "GridPosition cannot be negative.")
+    self.column = column
+    self.row = row
   }
 
   /// `cellSize` is the width and height in points
@@ -36,14 +35,27 @@ public struct GridPosition: GridBase {
     let row = Int(floor(point.y / cellSize.height))
     let col = Int(floor(point.x / cellSize.width))
 
-//    guard row > 0, col > 0 else { return nil }
-    
+    //    guard row > 0, col > 0 else { return nil }
+
     self.init(column: max(1, col), row: max(1, row))
   }
 }
 
 extension GridPosition {
-  
+
+  /// Note: zero-based count for internal representation,
+  /// one-based for UI
+  public static var zero: GridPosition {
+    GridPosition(column: 0, row: 0)
+  }
+
+  var displayRow: Int { row + 1 }
+  var displayColumn: Int { column + 1 }
+
+  public var displayString: String {
+    "Row \(displayRow), Column \(displayColumn)"
+  }
+
   public var isGreaterThanZero: Bool {
     return column > 0 && row > 0
   }
@@ -60,9 +72,9 @@ extension GridPosition {
 
   public func neighbour(at edge: CellEdge) -> GridPosition {
     switch edge {
-      case .top: return GridPosition(column: column, row: row - 1)
+      case .top: return GridPosition(column: column, row: max(1, (row - 1)))
       case .bottom: return GridPosition(column: column, row: row + 1)
-      case .left: return GridPosition(column: column - 1, row: row)
+      case .left: return GridPosition(column: max(1, (column - 1)), row: row)
       case .right: return GridPosition(column: column + 1, row: row)
     }
   }
@@ -80,10 +92,6 @@ extension GridPosition {
     row * columns + column
   }
 
-
-  public static var origin: GridPosition {
-    GridPosition(column: 1, row: 1)
-  }
   /// Basic offset methods
   public func offsetBy(row deltaRow: Int, col deltaCol: Int) -> GridPosition {
     GridPosition(column: column + deltaCol, row: row + deltaRow)
@@ -179,7 +187,7 @@ public enum CellEdge: CaseIterable {
 }
 
 extension GridPosition {
-  
+
   public func moved(
     in direction: Direction,
     by delta: Int = 1,
@@ -189,55 +197,11 @@ extension GridPosition {
     return GridPosition(column: offset.x, row: offset.y)
       .wrapped(columns: gridDimensions.columns, rows: gridDimensions.rows)
   }
-  
+
   public func wrapped(columns: Int, rows: Int) -> GridPosition {
     let wrappedCol = ((column - 1) % columns + columns) % columns + 1
     let wrappedRow = ((row - 1) % rows + rows) % rows + 1
     return GridPosition(column: wrappedCol, row: wrappedRow)
   }
-  
-//  public func wrapped(
-//    gridDimensions: GridDimensions
-////    columns: Int,
-////    rows: Int
-//  ) -> GridPosition {
-//    let columns = gridDimensions.columns
-//    let rows = gridDimensions.rows
-//    
-//    let wrappedCol = ((column - 1) % columns + columns) % columns + 1
-//    let wrappedRow = ((row - 1) % rows + rows) % rows + 1
-//    return GridPosition(column: wrappedCol, row: wrappedRow)
-//  }
-//  
-//  private func movedLeft(columns: Int) -> GridPosition {
-//    GridPosition(column: column - 1, row: row)
-//      .wrapped(columns: columns, rows: 1)
-//  }
-//  
-//  private func movedRight(columns: Int) -> GridPosition {
-//    GridPosition(column: column + 1, row: row)
-//      .wrapped(columns: columns, rows: 1)
-//  }
-//  
-//  private func movedUp(rows: Int) -> GridPosition {
-//    GridPosition(column: column, row: row - 1)
-//      .wrapped(columns: 1, rows: rows)
-//  }
-//  
-//  private func movedDown(rows: Int) -> GridPosition {
-//    GridPosition(column: column, row: row + 1)
-//      .wrapped(columns: 1, rows: rows)
-//  }
-//  
-//  public func movedBy(
-//    deltaCol: Int,
-//    deltaRow: Int,
-//    gridDimensions: GridDimensions
-////    columns: Int,
-////    rows: Int
-//  ) -> GridPosition {
-//    GridPosition(column: column + deltaCol, row: row + deltaRow)
-//      .wrapped(columns: gridDimensions.columns, rows: gridDimensions.rows)
-//  }
-  
+
 }
