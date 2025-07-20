@@ -34,35 +34,70 @@ extension GridCell {
 
   public var isEmpty: Bool { character == " " }
 
+  // MARK: - Convert Text to Cells
   public static func generateCells(from text: String) -> [GridCell] {
-
     let dimensions = text.gridDimensions
+    let lines = text.substringLines(subsequenceStrategy: .omitLastLineIfEmpty)
 
-    var cells: [GridCell] = []
-
-    for (rowIndex, line) in text.substringLines(subsequenceStrategy: .omitLastLineIfEmpty).enumerated() {
-      /// Process characters
-      for (columnIndex, character) in line.enumerated() {
-        cells.append(
-          GridCell(
-            character: character,
-            position: GridPosition(column: columnIndex + 1, row: rowIndex + 1),
-            colour: .white
-          )
-        )
-      }
-      /// Pad remainder of row with spaces
-      let padding = dimensions.columns - line.count
-      if padding > 0 {
-        for colIndex in line.count..<dimensions.columns {
-          let position = GridPosition(column: colIndex, row: rowIndex)
-          cells.append(GridCell.createBlank(at: position))
-
-        }
-      }
+    return lines.enumerated().flatMap {
+      rowIndex,
+      line in
+      createRowCells(
+        from: line,
+        rowIndex: rowIndex,
+        targetWidth: dimensions.columns
+      )
     }
-    return cells
-  }  // END generate Cells from Text
+  }
+
+  private static func createRowCells(
+    from line: Substring,
+    rowIndex: Int,
+    targetWidth: Int
+  ) -> [GridCell] {
+    let characterCells = line.enumerated().map { columnIndex, character in
+      GridCell(
+        character: character,
+        position: GridPosition(column: columnIndex, row: rowIndex),
+        colour: .white
+      )
+    }
+
+    let paddingCells = (line.count..<targetWidth).map { columnIndex in
+      GridCell.createBlank(at: GridPosition(column: columnIndex, row: rowIndex))
+    }
+
+    return characterCells + paddingCells
+  }
+
+  //  public static func generateCells(from text: String) -> [GridCell] {
+  //
+  //    let dimensions = text.gridDimensions
+  //
+  //    var cells: [GridCell] = []
+  //    for (rowIndex, line) in text.substringLines(subsequenceStrategy: .omitLastLineIfEmpty).enumerated() {
+  //      /// Process characters
+  //      for (columnIndex, character) in line.enumerated() {
+  //        cells.append(
+  //          GridCell(
+  //            character: character,
+  //            position: GridPosition(column: columnIndex, row: rowIndex),
+  //            colour: .white
+  //          )
+  //        )
+  //      }
+  //      /// Pad remainder of row with spaces
+  //      let padding = dimensions.columns - line.count
+  //      if padding > 0 {
+  //        for colIndex in line.count..<dimensions.columns {
+  //          let position = GridPosition(column: colIndex, row: rowIndex)
+  //          cells.append(GridCell.createBlank(at: position))
+  //
+  //        }
+  //      }
+  //    } // END Cells enumeration
+  //    return cells
+  //  }  // END generate Cells from Text
 }
 
 enum GridCellError: LocalizedError {
@@ -80,37 +115,37 @@ enum GridCellError: LocalizedError {
 }
 
 extension GridCell: CustomStringConvertible {
-  
+
   public var description: String {
     """
-    
+
     GridCell: 
       - Character \"\(character.descriptiveName)\"
       - \(position)
-    
+
     """
-    
+
   }
-  
-//  public var description: String {
-//    """
-//    
-//    GridCell: 
-//      - Character \"\(character.descriptiveName)\"
-//      - \(position)
-//      - \(colour)
-//
-//    """
-//    
-//  }
-  
-//  public var description: String {
-//    """
-//    /// GridCell ///
-//      Character: \"\(character.descriptiveName)\" 
-//      \(position) 
-//      \(colour)
-//    """
-//  }
+
+  //  public var description: String {
+  //    """
+  //
+  //    GridCell:
+  //      - Character \"\(character.descriptiveName)\"
+  //      - \(position)
+  //      - \(colour)
+  //
+  //    """
+  //
+  //  }
+
+  //  public var description: String {
+  //    """
+  //    /// GridCell ///
+  //      Character: \"\(character.descriptiveName)\"
+  //      \(position)
+  //      \(colour)
+  //    """
+  //  }
 
 }
