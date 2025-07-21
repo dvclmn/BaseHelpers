@@ -60,8 +60,9 @@ public struct GridRect: GridBase {
   }
 
   public init(
-    fromCGRect rect: CGRect,
+    fromRect rect: CGRect,
     cellSize: CGSize,
+    //    clampedTo bounds: GridDimensions? = nil
   ) {
     /// Standardise the rect, so origin is always top-left
     let standardisedRect = rect.standardized
@@ -72,15 +73,10 @@ public struct GridRect: GridBase {
         cellSize: cellSize,
       )
 
-    /// Compute the far edge of the selection
-    let maxX = standardisedRect.maxX
-    let maxY = standardisedRect.maxY
-
-    let endPosition =
-      GridPosition(
-        point: CGPoint(x: maxX, y: maxY),
-        cellSize: cellSize,
-      )
+    let endPosition = GridPosition(
+      point: standardisedRect.bottomRight,
+      cellSize: cellSize,
+    )
 
     self.init(
       boundingPositions: origin,
@@ -129,33 +125,81 @@ extension GridRect {
   //
   //  }
 
-  public static func clamped(
-    origin: GridPosition,
-    size: GridDimensions,
+  public static func create(
+    fromRect rect: CGRect,
+    clampedTo bounds: GridDimensions,
+    //    origin: GridPosition,
+    //    size: GridDimensions,
     cellSize: CGSize,
-    to bounds: GridDimensions
   ) -> GridRect {
-    
-    let clampedOrigin = origin.clamped(to: bounds)
-    let clampedSize = size.reducedToFit(within: bounds)
-//    let clampedOrigin = GridPosition(
-//      column: max(0, min(origin.column, bounds.columns - 1)),
-//      row: max(0, min(origin.row, bounds.rows - 1)),
+    /// Standardise the rect, so origin is always top-left
+    let standardisedRect = rect.standardized
+
+    /// Clamp origin
+
+    //    let clampedOrigin = GridPosition.createIfContained(
+//      within: bounds,
+//      at: standardisedRect.origin,
+//      cellSize: cellSize
+//    )
+//    
+//    let clampedEnd = GridPosition.createIfContained(
+//      within: bounds,
+//      at: standardisedRect.bottomRight,
+//      cellSize: cellSize
 //    )
 
-    let endRowExclusive = min(origin.row + size.rows, bounds.rows)
-    let endColExclusive = min(origin.column + size.columns, bounds.columns)
+    //    let clampedOrigin = origin.clamped(to: bounds)
 
-    let clampedEnd = GridPosition(
-      column: max(0, endColExclusive - 1),
-      row: max(0, endRowExclusive - 1),
-    )
+    /// Compute exclusive end position
+//    let endRowExclusive = min(clampedOrigin.row + size.rows, bounds.rows)
+//    let endColExclusive = min(clampedOrigin.column + size.columns, bounds.columns)
+
+    /// Derive new size (end minus origin)
+//    let clampedSize = GridDimensions(
+//      columns: endColExclusive - clampedOrigin.column,
+//      rows: endRowExclusive - clampedOrigin.row
+//    )
 
     return GridRect(
       boundingPositions: clampedOrigin,
       clampedEnd,
       cellSize: cellSize
     )
+//    return GridRect(
+//      origin: clampedOrigin,
+//      size: clampedSize,
+//      cellSize: cellSize
+//    )
   }
+
+  //  public static func clamped(
+  //    origin: GridPosition,
+  //    size: GridDimensions,
+  //    cellSize: CGSize,
+  //    to bounds: GridDimensions
+  //  ) -> GridRect {
+  //
+  //    let clampedOrigin = origin.clamped(to: bounds)
+  //    let clampedSize = size.reducedToFit(within: bounds)
+  ////    let clampedOrigin = GridPosition(
+  ////      column: max(0, min(origin.column, bounds.columns - 1)),
+  ////      row: max(0, min(origin.row, bounds.rows - 1)),
+  ////    )
+  //
+  //    let endRowExclusive = min(origin.row + size.rows, bounds.rows)
+  //    let endColExclusive = min(origin.column + size.columns, bounds.columns)
+  //
+  //    let clampedEnd = GridPosition(
+  //      column: max(0, endColExclusive - 1),
+  //      row: max(0, endRowExclusive - 1),
+  //    )
+  //
+  //    return GridRect(
+  //      boundingPositions: clampedOrigin,
+  //      clampedEnd,
+  //      cellSize: cellSize
+  //    )
+  //  }
 
 }

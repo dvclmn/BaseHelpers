@@ -36,29 +36,41 @@ public struct GridPosition: GridBase {
   public init(
     point: CGPoint,
     cellSize: CGSize,
+    within dimensions: GridDimensions? = nil
   ) {
+
     /// `floor()` here maps a continuous coordinate to the
     /// nearest lower integer, effectively identifying which grid cell
     /// the point belongs to.
     let row = Int(floor(point.y / cellSize.height))
     let col = Int(floor(point.x / cellSize.width))
 
-    let position = GridPosition(column: col, row: row)
-    self = position
+    let unclampedPosition = GridPosition(column: col, row: row)
+
+    if let dimensions {
+      let clamped = unclampedPosition.clamped(to: dimensions)
+      self = clamped
+    } else {
+      self = unclampedPosition
+    }
   }
 }
 
 extension GridPosition {
-  
-  public func clamped(to dimensions: GridDimensions) -> GridPosition {
+
+  public func clamped(
+    to dimensions: GridDimensions
+  ) -> GridPosition {
     let clampedColumn = max(0, min(dimensions.columns - 1, column))
     let clampedRow = max(0, min(dimensions.rows - 1, row))
     return GridPosition(column: clampedColumn, row: clampedRow)
   }
 
-  public static func create(
-    at point: CGPoint,
+  /// Creates a GridPosition only if contained within the
+  /// provided `GridDimensions`
+  public static func createIfContained(
     within dimensions: GridDimensions,
+    at point: CGPoint,
     cellSize: CGSize
   ) -> GridPosition? {
     guard dimensions.contains(point: point, cellSize: cellSize) else { return nil }
