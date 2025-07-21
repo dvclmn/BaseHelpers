@@ -9,8 +9,6 @@ import SwiftUI
 
 extension CGRect {
 
- 
-
   public var path: Path {
     Path(self)
   }
@@ -87,12 +85,11 @@ extension CGRect {
   public var toCGSize: CGSize {
     CGSize(width: width, height: height)
   }
-  
+
   public var minXminY: CGPoint { CGPoint(x: minX, y: minY) }
   public var maxXminY: CGPoint { CGPoint(x: maxX, y: minY) }
   public var minXmaxY: CGPoint { CGPoint(x: minX, y: maxY) }
   public var maxXmaxY: CGPoint { CGPoint(x: maxX, y: maxY) }
-
 
   // Corner points
   public var topLeft: CGPoint {
@@ -202,14 +199,12 @@ extension CGRect {
     let y = (containerSize.height - size.height) / 2
     self.init(x: x, y: y, width: size.width, height: size.height)
   }
-  
-  
+
   public static let example01 = CGRect(
     x: 0,
     y: 0,
     width: 100,
     height: 100
   )
-  
 
 }

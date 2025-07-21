@@ -24,7 +24,7 @@ public enum DebugPoint {
 public enum DebugTextPosition {
   case aboveOrigin
   case belowOrigin
-  
+
   var multiplierForYPosition: CGFloat {
     switch self {
       case .aboveOrigin:
@@ -50,12 +50,12 @@ extension GraphicsContext {
     colour: Color = .primary,
     fontSize: CGFloat = 11,
     pointDisplay: DebugPoint,
-    zoomPercent zoomLevel: CGFloat? // Pass in normalised zoom if relevant
+    zoomPercent zoomLevel: CGFloat?  // Pass in normalised zoom if relevant
   ) {
 
     let zoom = zoomLevel ?? 1.0
     let fontSizeUnZoomed = fontSize.removingZoomPercent(zoom)
-//    let fontSizeUnZoomed = fontSize.removingZoom(zoom)
+    //    let fontSizeUnZoomed = fontSize.removingZoom(zoom)
 
     /// Calculate size, for drawing Label background
     let labelWidthUnZoomed: CGFloat = {
@@ -72,7 +72,8 @@ extension GraphicsContext {
       .foregroundStyle(colour)
 
     let labelRect = CGRect(
-      origin: point.centredIn(size: labelSize).shifted(dx: 0, dy: (labelHeightUnZoomed * 1.2) * debugTextPosition.multiplierForYPosition),
+      origin: point.centredIn(size: labelSize).shifted(
+        dx: 0, dy: (labelHeightUnZoomed * 1.2) * debugTextPosition.multiplierForYPosition),
       size: labelSize
     )
     self.fill(labelRect.path, with: .color(Swatch.plum40.colour))

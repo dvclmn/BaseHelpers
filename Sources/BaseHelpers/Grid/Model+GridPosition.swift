@@ -16,15 +16,15 @@ public struct GridPosition: GridBase {
     column: Int,
     row: Int,
   ) {
-//    #warning("Temporarily turning this off, to fix the issue")
-    if row < 0 || column < 0 {
-      print("BAD, GridPosition cannot be negative. Row: \(row), Column: \(column)")
-    }
+    //    #warning("Temporarily turning this off, to fix the issue")
+    //    if row < 0 || column < 0 {
+    //      print("BAD, GridPosition cannot be negative. Row: \(row), Column: \(column)")
+    //    }
     //    precondition(row >= 0 && column >= 0, "GridPosition cannot be negative.")
     self.column = column
-//    self.column = max(0, column)
+    //    self.column = max(0, column)
     self.row = row
-//    self.row = max(0, row)
+    //    self.row = max(0, row)
   }
 
   /// `cellSize` is the width and height in points
@@ -33,32 +33,37 @@ public struct GridPosition: GridBase {
   /// Canvas Space
   ///
   /// `point` must already be mapped to local Canvas space
-  public init?(
+  public init(
     point: CGPoint,
     cellSize: CGSize,
-    dimensions: GridDimensions
   ) {
-    guard dimensions.contains(point: point, cellSize: cellSize) else { return nil }
-    /// Going to let the main init's precondition catch this
-    //    guard point.hasValidValue, cellSize.hasValidValue else { return nil }
-    
-    
     /// `floor()` here maps a continuous coordinate to the
     /// nearest lower integer, effectively identifying which grid cell
     /// the point belongs to.
-
     let row = Int(floor(point.y / cellSize.height))
     let col = Int(floor(point.x / cellSize.width))
-    
+
     let position = GridPosition(column: col, row: row)
-    print("GridPosition from `GridPosition's own init?(point: CGPoint,cellSize: CGSize)`: \(position)")
     self = position
   }
 }
 
 extension GridPosition {
   
-  
+  public func clamped(to dimensions: GridDimensions) -> GridPosition {
+    let clampedColumn = max(0, min(dimensions.columns - 1, column))
+    let clampedRow = max(0, min(dimensions.rows - 1, row))
+    return GridPosition(column: clampedColumn, row: clampedRow)
+  }
+
+  public static func create(
+    at point: CGPoint,
+    within dimensions: GridDimensions,
+    cellSize: CGSize
+  ) -> GridPosition? {
+    guard dimensions.contains(point: point, cellSize: cellSize) else { return nil }
+    return GridPosition(point: point, cellSize: cellSize)
+  }
 
   /// Note: zero-based count for internal representation,
   /// one-based for UI
@@ -79,8 +84,8 @@ extension GridPosition {
   public var isGreaterThanZero: Bool {
     return column > 0 && row > 0
   }
-  
-  public var isPositive: Bool {
+
+  public var isGreaterThanOrEqualToZero: Bool {
     return column >= 0 && row >= 0
   }
 

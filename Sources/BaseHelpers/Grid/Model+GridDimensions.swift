@@ -51,6 +51,20 @@ extension GridDimensions {
   public var bottomRight: GridPosition {
     return GridPosition(column: columns - 1, row: rows - 1)
   }
+  
+  public func reducedToFit(within bounds: GridDimensions) -> GridDimensions {
+    return GridDimensions(
+      columns: min(self.columns, bounds.columns),
+      rows: min(self.rows, bounds.rows)
+    )
+  }
+  
+//  public func clamped(to bounds: GridDimensions) -> GridDimensions {
+//    let minColumns = min(self.columns, bounds.columns)
+//    let minRows = min(self.rows, bounds.rows)
+//    
+//    return GridDimensions(columns: minColumns, rows: minRows)
+//  }
 
   /// Returns `true` if the given point lies within the grid's bounds.
   ///
