@@ -47,6 +47,32 @@ extension GridDimensions {
       && position.column >= 0
       && position.column < columns
   }
+  
+  public var bottomRight: GridPosition {
+    return GridPosition(column: columns - 1, row: rows - 1)
+  }
+
+  /// Returns `true` if the given point lies within the grid's bounds.
+  ///
+  /// The grid is assumed to start at origin (0,0) in screen space.
+  ///
+  /// - Parameters:
+  ///   - point: A point in screen-space coordinates.
+  ///   - cellSize: The size of each grid cell.
+  /// - Returns: `true` if the point is within the grid’s area, else `false`.
+  public func contains(
+    point: CGPoint,
+    cellSize: CGSize
+  ) -> Bool {
+    let gridSize = toCGSize(withCellSize: cellSize)
+
+    return point.x >= 0
+      && point.y >= 0
+      && point.x < gridSize.width
+      && point.y < gridSize.height
+  }
+  
+  
 }
 
 extension GridDimensions {

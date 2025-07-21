@@ -8,9 +8,9 @@
 import Foundation
 
 @discardableResult
-public func updateIfChanged<T: Equatable>(_ value: T, into target: inout T) -> Bool {
-  guard target != value else { return false }
-  target = value
+public func updateIfChanged<T: Equatable>(_ newValue: T, into target: inout T) -> Bool {
+  guard target != newValue else { return false }
+  target = newValue
   return true
 }
 

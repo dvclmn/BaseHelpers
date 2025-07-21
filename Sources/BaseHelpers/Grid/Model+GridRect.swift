@@ -21,39 +21,62 @@ public struct GridRect: GridBase {
 
   /// Creates a GridRect that bounds two GridPositions inclusively
   public init(boundingPositions a: GridPosition, _ b: GridPosition) {
+
+    precondition(a.isPositive && b.isPositive, "GridPositions must be positive (zero or greater). A: \(a), B: \(b)")
+
     let minRow = min(a.row, b.row)
     let maxRow = max(a.row, b.row)
     let minCol = min(a.column, b.column)
     let maxCol = max(a.column, b.column)
 
     let origin = GridPosition(column: minCol, row: minRow)
+
+    //    print("GridPosition from `init(boundingPositions a: GridPosition, _ b: GridPosition)`: \(origin)")
+
     let size = GridDimensions(
       columns: maxCol - minCol + 1,
       rows: maxRow - minRow + 1
     )
+
     self.init(origin: origin, size: size)
   }
 
-  public init(fromCGRect rect: CGRect, cellSize: CGSize) {
+  /// ~~Currently, this dictates that a GridRect cannot be formed outside
+  /// of the bounds of the GridDimensions. I need to verify this is
+  /// actually what I want.~~
+  ///
+  /// Edit: Have changed to *clamp*, not return `nil`
+  public init(
+    fromCGRect rect: CGRect,
+    cellSize: CGSize,
+    dimensions: GridDimensions
+  ) {
     /// Standardise the rect, so origin is always top-left
     let standardisedRect = rect.standardized
 
-    /// Snap the origin to the grid
-    let origin = GridPosition(
-      point: standardisedRect.origin,
-      cellSize: cellSize
-    )
+    /// Snap the origin to the grid. If returns nil,
+    /// then default to a `zero` origin.
+    let origin =
+      GridPosition(
+        point: standardisedRect.origin,
+        cellSize: cellSize,
+        dimensions: dimensions
+      ) ?? GridPosition.zero
 
     /// Compute the far edge of the selection
     let maxX = standardisedRect.maxX
     let maxY = standardisedRect.maxY
 
-    let endPosition = GridPosition(
-      point: CGPoint(x: maxX, y: maxY),
-      cellSize: cellSize
-    )
+    /// If this comes back `nil`, we use the GridDimension's
+    /// `bottomRight` property. Effectively 'clamping' the result
+    let endPosition =
+      GridPosition(
+        point: CGPoint(x: maxX, y: maxY),
+        cellSize: cellSize,
+        dimensions: dimensions
+      ) ?? dimensions.bottomRight
 
-    self.init(boundingPositions: origin ?? .zero, endPosition ?? .zero)
+    self.init(boundingPositions: origin, endPosition)
   }
 }
 
@@ -73,7 +96,7 @@ extension GridRect {
     let colRange = origin.column..<(origin.column + size.columns)
     return rowRange.contains(position.row) && colRange.contains(position.column)
   }
-  
+
   public func toCGRect(cellSize: CGSize) -> CGRect {
     let originPoint = origin.toCGPoint(cellSize: cellSize)
     let size = CGSize(
@@ -88,36 +111,36 @@ extension GridRect {
       column: max(0, min(origin.column, bounds.columns - 1)),
       row: max(0, min(origin.row, bounds.rows - 1)),
     )
-    
+
     let endRowExclusive = min(origin.row + size.rows, bounds.rows)
     let endColExclusive = min(origin.column + size.columns, bounds.columns)
-    
+
     let clampedEnd = GridPosition(
       column: max(0, endColExclusive - 1),
       row: max(0, endRowExclusive - 1),
     )
-    
+
     return GridRect(boundingPositions: clampedOrigin, clampedEnd)
   }
-  
-//  public func clamped(to bounds: GridDimensions) -> GridRect {
-//
-//    let clampedOrigin = GridPosition(
-//      row: max(0, min(origin.row, bounds.rows - 1)),
-//      column: max(0, min(origin.column, bounds.columns - 1))
-//    )
-//
-//    let endRow = min(origin.row + size.rows, bounds.rows)
-//    let endCol = min(origin.column + size.columns, bounds.columns)
-//
-//    let clampedSize = GridDimensions(
-//      columns: max(0, endCol - clampedOrigin.column),
-//      rows: max(0, endRow - clampedOrigin.row)
-//    )
-//
-//    return GridRect(
-//      origin: clampedOrigin,
-//      size: clampedSize,
-//    )
-//  }
+
+  //  public func clamped(to bounds: GridDimensions) -> GridRect {
+  //
+  //    let clampedOrigin = GridPosition(
+  //      row: max(0, min(origin.row, bounds.rows - 1)),
+  //      column: max(0, min(origin.column, bounds.columns - 1))
+  //    )
+  //
+  //    let endRow = min(origin.row + size.rows, bounds.rows)
+  //    let endCol = min(origin.column + size.columns, bounds.columns)
+  //
+  //    let clampedSize = GridDimensions(
+  //      columns: max(0, endCol - clampedOrigin.column),
+  //      rows: max(0, endRow - clampedOrigin.row)
+  //    )
+  //
+  //    return GridRect(
+  //      origin: clampedOrigin,
+  //      size: clampedSize,
+  //    )
+  //  }
 }

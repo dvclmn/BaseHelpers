@@ -43,14 +43,13 @@ extension CGPoint {
     return self.distance(to: targetPoint) <= threshold
   }
 
-  /// Returns true if both width and height are greater than zero
-  public var isPositive: Bool {
-    return x > 0 && y > 0
+  public var isGreaterThanOrEqualToZero: Bool {
+    return x >= 0 && y >= 0
   }
 
-  //  public var isGreaterThanZero: Bool {
-  //    return self.x > 0 && self.y > 0
-  //  }
+  public var isGreaterThanZero: Bool {
+    return x > 0 && y > 0
+  }
 
   //  public func toUnitPoint(in size: CGSize) -> UnitPoint {
   //    guard size.isPositive else {
@@ -388,9 +387,9 @@ extension CGPoint {
 
   public func removingZoom(_ zoom: CGFloat) -> CGPoint {
     return self / zoom
-//    CGPoint(x: self.x / zoom, y: self.y / zoom)
+    //    CGPoint(x: self.x / zoom, y: self.y / zoom)
   }
-  
+
   func removingZoomPercent(_ zoomPercent: CGFloat) -> CGPoint {
     let adjustedX = self.x.removingZoomPercent(zoomPercent)
     let adjustedY = self.y.removingZoomPercent(zoomPercent)
@@ -431,7 +430,7 @@ extension CGPoint {
   public var isFinite: Bool {
     x.isFinite && y.isFinite
   }
-  
+
   public var hasValidValue: Bool {
     return !isNan && isFinite
   }

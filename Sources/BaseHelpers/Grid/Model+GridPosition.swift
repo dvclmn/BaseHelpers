@@ -16,13 +16,15 @@ public struct GridPosition: GridBase {
     column: Int,
     row: Int,
   ) {
-    #warning("Temporarily turning this off, to fix the issue")
+//    #warning("Temporarily turning this off, to fix the issue")
     if row < 0 || column < 0 {
       print("BAD, GridPosition cannot be negative. Row: \(row), Column: \(column)")
     }
     //    precondition(row >= 0 && column >= 0, "GridPosition cannot be negative.")
     self.column = column
+//    self.column = max(0, column)
     self.row = row
+//    self.row = max(0, row)
   }
 
   /// `cellSize` is the width and height in points
@@ -33,18 +35,30 @@ public struct GridPosition: GridBase {
   /// `point` must already be mapped to local Canvas space
   public init?(
     point: CGPoint,
-    cellSize: CGSize
+    cellSize: CGSize,
+    dimensions: GridDimensions
   ) {
+    guard dimensions.contains(point: point, cellSize: cellSize) else { return nil }
     /// Going to let the main init's precondition catch this
     //    guard point.hasValidValue, cellSize.hasValidValue else { return nil }
+    
+    
+    /// `floor()` here maps a continuous coordinate to the
+    /// nearest lower integer, effectively identifying which grid cell
+    /// the point belongs to.
+
     let row = Int(floor(point.y / cellSize.height))
     let col = Int(floor(point.x / cellSize.width))
-
-    self.init(column: col, row: row)
+    
+    let position = GridPosition(column: col, row: row)
+    print("GridPosition from `GridPosition's own init?(point: CGPoint,cellSize: CGSize)`: \(position)")
+    self = position
   }
 }
 
 extension GridPosition {
+  
+  
 
   /// Note: zero-based count for internal representation,
   /// one-based for UI
@@ -64,6 +78,10 @@ extension GridPosition {
 
   public var isGreaterThanZero: Bool {
     return column > 0 && row > 0
+  }
+  
+  public var isPositive: Bool {
+    return column >= 0 && row >= 0
   }
 
   /// Converts grid position to canvas-space point
@@ -109,7 +127,9 @@ extension GridPosition {
 
   public mutating func offsetting(_ direction: Direction, by delta: Int = 1) {
     let (newCol, newRow) = direction.offset(x: column, y: row, by: delta)
-    self = GridPosition(column: newCol, row: newRow)
+    let position = GridPosition(column: newCol, row: newRow)
+    print("GridPosition from `offsetting(_ direction: Direction...)`: \(position)")
+    self = position
   }
 
   public func isValidWithin(grid: GridDimensions) -> Bool {
@@ -129,7 +149,9 @@ extension GridPosition {
   public func wrapped(columns: Int, rows: Int) -> GridPosition {
     let wrappedCol = ((column - 1) % columns + columns) % columns + 1
     let wrappedRow = ((row - 1) % rows + rows) % rows + 1
-    return GridPosition(column: wrappedCol, row: wrappedRow)
+    let position = GridPosition(column: wrappedCol, row: wrappedRow)
+    print("GridPosition from `wrapped(columns: Int, rows: Int)`: \(position)")
+    return position
   }
 
 }
