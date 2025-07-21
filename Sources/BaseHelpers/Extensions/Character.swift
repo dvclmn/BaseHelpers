@@ -12,12 +12,25 @@ extension Character {
     String(self)
   }
 
-  public var descriptiveName: String {
+  public var descriptiveName: String? {
     switch self {
       case " ": "Space"
       case "\n": "New Line"
       case "\t": "Tab"
-      default: String(self)
+      case "(": "Left Parenthesis"
+      case ")": "Right Parenthesis"
+      case "[": "Left Square Bracket"
+      case "]": "Right Square Bracket"
+      case "{": "Left Curly Brace"
+      case "}": "Right Curly Brace"
+      case "<": "Less Than Sign"
+      case ">": "Greater Than Sign"
+      case "&": "Ampersand"
+      case "@": "At Sign"
+      case "#": "Number Sign"
+      case "%": "Percent Sign"
+      case "$": "Dollar Sign"
+      default: nil
     }
   }
 }
