@@ -20,6 +20,8 @@ let package = Package(
     .package(url: "https://github.com/apple/swift-docc-plugin", from: "1.0.0"),
     .package(url: "https://github.com/mattmassicotte/nsui", from: "1.3.0"),
     .package(url: "https://github.com/ukushu/Ifrit", from: "3.0.0"),
+    /// Important: Hoping to keep BaseHelpers as light on dependancies as possible.
+    /// Especially my own Swift Packages
 //    .package(url: "https://github.com/dvclmn/BaseStyles", branch: "main"),
   ],
   
@@ -32,14 +34,6 @@ let package = Package(
         .product(name: "IfritStatic", package: "Ifrit"),
       ],
       resources: [.copy("Assets.xcassets")],
-      swiftSettings: [.enableUpcomingFeature("BareSlashRegexLiterals")],
     ),
   ],
-//  swiftLanguageModes: [.v5]
 )
-
-//#if swift(>=5.6)
-//package.dependencies += [
-//  .package(url: "https://github.com/apple/swift-docc-plugin", from: "1.0.0")
-//]
-//#endif
