@@ -12,7 +12,7 @@ extension Character {
     String(self)
   }
 
-  public var descriptiveName: String? {
+  public var descriptiveName: String {
     switch self {
       case " ": "Space"
       case "\n": "New Line"
@@ -30,7 +30,7 @@ extension Character {
       case "#": "Number Sign"
       case "%": "Percent Sign"
       case "$": "Dollar Sign"
-      default: nil
+      default: "undefined"
     }
   }
 }

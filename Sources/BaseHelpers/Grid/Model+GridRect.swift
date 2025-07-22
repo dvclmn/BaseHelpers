@@ -131,12 +131,24 @@ extension GridRect {
     //    origin: GridPosition,
     //    size: GridDimensions,
     cellSize: CGSize,
-  ) -> GridRect {
+  ) -> GridRect? {
     /// Standardise the rect, so origin is always top-left
     let standardisedRect = rect.standardized
 
+    /// Important: The provided `CGRect` may not
     /// Clamp origin
-
+    let clampedOrigin = GridPosition(
+      point: standardisedRect.origin,
+      cellSize: cellSize,
+      within: bounds
+    )
+    
+    let clampedEnd = GridPosition(
+      point: standardisedRect.bottomRight,
+      cellSize: cellSize,
+      within: bounds
+    )
+    
     //    let clampedOrigin = GridPosition.createIfContained(
 //      within: bounds,
 //      at: standardisedRect.origin,

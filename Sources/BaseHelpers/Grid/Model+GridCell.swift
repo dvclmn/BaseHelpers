@@ -65,7 +65,7 @@ extension GridCell {
 
     let paddingCells = (line.count..<targetWidth).map { columnIndex in
       let position = GridPosition(column: columnIndex, row: rowIndex)
-      print("GridPosition from `createRowCells()`: \(position)")
+//      print("GridPosition from `createRowCells()`: \(position)")
       return GridCell.createBlank(at: position)
     }
 

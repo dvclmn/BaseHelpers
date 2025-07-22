@@ -38,7 +38,6 @@ public struct GridPosition: GridBase {
     cellSize: CGSize,
     within dimensions: GridDimensions? = nil
   ) {
-
     /// `floor()` here maps a continuous coordinate to the
     /// nearest lower integer, effectively identifying which grid cell
     /// the point belongs to.
