@@ -117,6 +117,6 @@ public func / (lhs: CGSize, rhs: CGFloat) -> CGSize {
 
 //infix operator >= : ComparisonPrecedence
 /// Returns true if both width and height are greater than or equal to the compared size
-public func >= (lhs: CGSize, rhs: CGSize) -> Bool {
-  return lhs.width >= rhs.width && lhs.height >= rhs.height
-}
+//public func >= (lhs: CGSize, rhs: CGSize) -> Bool {
+//  return lhs.width >= rhs.width && lhs.height >= rhs.height
+//}

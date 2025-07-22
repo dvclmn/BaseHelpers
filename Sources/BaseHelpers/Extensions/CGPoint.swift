@@ -320,7 +320,7 @@ extension CGPoint {
   public func mapPoint(
     from source: CGRect,
     to destination: CGRect,
-    mode: CoordinateMappingMode = .fit
+    mode: ResizeMode = .fit
   ) -> CGPoint {
     switch mode {
       case .stretch:

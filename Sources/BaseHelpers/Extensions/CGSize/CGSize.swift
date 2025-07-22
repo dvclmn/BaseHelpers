@@ -72,89 +72,29 @@ extension CGSize {
     if self == .zero {
       return self
     }
-
     let widthRatio = size.width / self.width
     let heightRatio = size.height / self.height
-    
-    let ratio:CGFloat = switch mode {
-        case .fit: min(widthRatio, heightRatio)
- case .fill: max(widthRatio, heightRatio)
-      case .stretch: size
+
+    /// Handle stretch mode separately since it doesn't preserve aspect ratio
+    if mode == .stretch {
+      return size
     }
-    
+
+    let ratio: CGFloat =
+      switch mode {
+        case .fit: min(widthRatio, heightRatio)
+        case .fill: max(widthRatio, heightRatio)
+        case .stretch: 1.0
+      }
+
     return CGSize(
       width: self.width * ratio,
       height: self.height * ratio
     )
   }
 
-//  public func aspectRatioFill(into size: CGSize) -> CGSize {
-//    if self == .zero {
-//      return self
-//    }
-//
-//    let widthRatio = size.width / self.width
-//    let heightRatio = size.height / self.height
-//    let aspectFillRatio = max(widthRatio, heightRatio)
-//    return CGSize(
-//      width: self.width * aspectFillRatio,
-//      height: self.height * aspectFillRatio
-//    )
-//  }
-  
-
-  // MARK: - Comparisons
-  /// Returns true if both width and height are greater than zero
-  public var isGreaterThanZero: Bool {
-    width > 0 && height > 0
-  }
-
-  /// Returns true if both width and height are greater than or equal to zero
-  public var isGreaterThanOrEqualToZero: Bool {
-    width >= 0 && height >= 0
-  }
-
-  /// Returns true if either width or height is zero or negative
-  public var isLessThanOrEqualToZero: Bool {
-    !isGreaterThanZero
-  }
-
   public var hasValidValue: Bool {
     return !isNan && isFinite
-  }
-
-  // MARK: - > Greater Than
-  public func isAnyDimensionGreaterThan(_ value: CGFloat) -> Bool {
-    return width > value || height > value
-  }
-
-  public func isAnyDimensionGreaterThanOrEqualTo(_ value: CGFloat) -> Bool {
-    return width >= value || height >= value
-  }
-
-  public func areBothDimensionsGreaterThan(_ value: CGFloat) -> Bool {
-    return width > value && height > value
-  }
-
-  public func areBothDimensionsGreaterThanOrEqualTo(_ value: CGFloat) -> Bool {
-    return width >= value && height >= value
-  }
-
-  // MARK: - < Less Than
-  public func isAnyDimensionLessThan(_ value: CGFloat) -> Bool {
-    return width < value || height < value
-  }
-
-  public func isAnyDimensionLessThanOrEqualTo(_ value: CGFloat) -> Bool {
-    return width <= value || height <= value
-  }
-
-  public func areBothDimensionsLessThan(_ value: CGFloat) -> Bool {
-    return width < value && height < value
-  }
-
-  public func areBothDimensionsLessThanOrEqualTo(_ value: CGFloat) -> Bool {
-    return width <= value && height <= value
   }
 
   /// Returns true if both dimensions are finite
