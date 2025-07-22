@@ -29,28 +29,31 @@ public struct GridPosition: GridBase {
   /// `point` must already be mapped to local Canvas space
   public init(
     point: CGPoint,
-    cellSize: CGSize,
-    within dimensions: GridDimensions? = nil
+    cellSize: CGSize
   ) {
     /// `floor()` here maps a continuous coordinate to the
     /// nearest lower integer, effectively identifying which grid cell
     /// the point belongs to.
-    let row = Int(floor(point.y / cellSize.height))
     let col = Int(floor(point.x / cellSize.width))
+    let row = Int(floor(point.y / cellSize.height))
 
-    let unclampedPosition = GridPosition(column: col, row: row)
-
-    if let dimensions {
-      let clamped = unclampedPosition.clamped(to: dimensions)
-      self = clamped
-    } else {
-      self = unclampedPosition
-    }
+    self.init(column: col, row: row)
+//    let unclampedPosition = GridPosition(column: col, row: row)
+//self = unclampedPosition
+//    if let dimensions {
+//      let clamped = unclampedPosition.clamped(to: dimensions)
+//      self = clamped
+//    } else {
+//      self = unclampedPosition
+//    }
   }
 }
 
 extension GridPosition {
 
+  /// Returns a position guaranteed to be within the provided dimensions.
+  /// Returns `0` for a row/column if it falls outside these dimensions.
+  /// Not suitable for cases where you *only want a position* if it falls inside.
   public func clamped(
     to dimensions: GridDimensions
   ) -> GridPosition {
@@ -66,6 +69,7 @@ extension GridPosition {
     at point: CGPoint,
     cellSize: CGSize
   ) -> GridPosition? {
+    
     guard dimensions.contains(point: point, cellSize: cellSize) else { return nil }
     return GridPosition(point: point, cellSize: cellSize)
   }

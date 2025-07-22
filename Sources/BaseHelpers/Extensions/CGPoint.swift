@@ -148,21 +148,6 @@ extension CGPoint {
       distanceSquared(from: relative, to: $0) < distanceSquared(from: relative, to: $1)
     }) ?? .center
   }
-  //  public func nearestAnchor(in size: CGSize) -> UnitPoint {
-  //    let relative = toUnitPoint(in: size)
-  //
-  //    let anchors = UnitPoint.allKnownCases
-  //
-  //    func distanceSquared(from a: UnitPoint, to b: UnitPoint) -> CGFloat {
-  //      let dx = a.x - b.x
-  //      let dy = a.y - b.y
-  //      return dx * dx + dy * dy
-  //    }
-  //
-  //    return anchors.min(by: {
-  //      distanceSquared(from: relative, to: $0) < distanceSquared(from: relative, to: $1)
-  //    }) ?? .center
-  //  }
 
   public init(fromSize size: CGSize) {
     self.init(x: size.width, y: size.height)
@@ -172,13 +157,11 @@ extension CGPoint {
   }
 
   public func isWithin(size: CGSize) -> Bool {
-    return self.x > 0 || self.x < size.width
-      || self.y > 0 || self.y < size.height
+    return self.x >= 0
+      || self.x < size.width
+      || self.y >= 0
+      || self.y < size.height
   }
-  //  if point.x < 0 || point.x > size.width || point.y < 0 || point.y > size.height {
-  //    y += spacing
-  //    return
-  //  }
 
   /// Assumes top-left anchor for origin
   public func isWithin(_ rect: CGRect) -> Bool {
@@ -262,8 +245,8 @@ extension CGPoint {
   }
 
   public var length: CGFloat {
+    /// Previously: `sqrt(x * x + y * y)`
     hypot(x, y)
-    //    sqrt(x * x + y * y)
   }
 
   /// Below is equivalent to a previous version, which used
@@ -274,12 +257,6 @@ extension CGPoint {
     let p1: CGPoint = self
     return hypot(p2.x - p1.x, p2.y - p1.y)
   }
-
-  //  public func distance(to p2: CGPoint?) -> CGFloat? {
-  //    guard let p2 else { return nil }
-  //    let p1: CGPoint = self
-  //    return hypot(p2.x - p1.x, p2.y - p1.y)
-  //  }
 
   /// Returns true if both x and y coordinates are in the range [0.0, 1.0]
   public var isNormalised: Bool {
@@ -387,7 +364,6 @@ extension CGPoint {
 
   public func removingZoom(_ zoom: CGFloat) -> CGPoint {
     return self / zoom
-    //    CGPoint(x: self.x / zoom, y: self.y / zoom)
   }
 
   func removingZoomPercent(_ zoomPercent: CGFloat) -> CGPoint {
@@ -400,7 +376,8 @@ extension CGPoint {
     return CGSize(width: self.x, height: self.y)
   }
 
-  public func clamp(_ maxValue: CGFloat) -> CGPoint {
+  @available(*, deprecated, message: "Not sure this makes sense, consider revising.")
+  public func clamp(toMax maxValue: CGFloat) -> CGPoint {
     return CGPoint(
       x: max(-maxValue, min(maxValue, self.x)),
       y: max(-maxValue, min(maxValue, self.y))
@@ -419,10 +396,6 @@ extension CGPoint {
     return result
   }
 
-  public var isEmpty: Bool {
-    x.isZero && y.isZero
-  }
-
   public var isZero: Bool {
     x.isZero && y.isZero
   }
@@ -436,9 +409,7 @@ extension CGPoint {
   }
 
   public var isNan: Bool {
-    let result: Bool = x.isNaN || y.isNaN
-    //    print("Point `\(self)` is Not a Number? (NaN): \(result)")
-    return result
+    x.isNaN || y.isNaN
   }
 
   /// Shift right (increases x)
@@ -542,11 +513,11 @@ extension CGPoint {
     let dy = end.y - start.y
     let totalDistance = sqrt(dx * dx + dy * dy)
 
-    // Calculate the unit vector in the direction from start to end
+    /// Calculate the unit vector in the direction from start to end
     let unitVectorX = dx / totalDistance
     let unitVectorY = dy / totalDistance
 
-    // Calculate the new point at the specified distance
+    /// Calculate the new point at the specified distance
     return CGPoint(
       x: start.x + unitVectorX * distance,
       y: start.y + unitVectorY * distance
@@ -562,24 +533,6 @@ extension CGPoint {
     return CGPoint.pointAlong(from: self, to: end, distance: distance)
   }
 
-  /// Where `self` is a normalised point
-  ///
-  /// Example usage:
-  /// ```
-  /// let touchPos = convertNormalizedToConcrete(
-  ///   in: trackPadSize
-  /// )
-  /// ```
-  @available(*, deprecated, renamed: "mapped(to:)", message: "Naming and use is a bit unclear.")
-  public func convertNormalisedToConcrete(
-    in size: CGSize,
-    origin: CGPoint = .zero
-  ) -> CGPoint {
-    return CGPoint(
-      x: origin.x + (self.x * size.width),
-      y: origin.y + (self.y * size.height)
-    )
-  }
 
   // Generate a spiral as an array of points, starting from this point as center
   public func generateSpiral(

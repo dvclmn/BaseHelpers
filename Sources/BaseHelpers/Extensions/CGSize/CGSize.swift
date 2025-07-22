@@ -32,10 +32,6 @@ extension CGSize {
 
   // MARK: - General
 
-  public var halved: CGSize {
-    return CGSize(width: width / 2, height: height / 2)
-  }
-
   public var longestDimension: CGFloat {
     return max(width, height)
   }
@@ -48,6 +44,14 @@ extension CGSize {
       case .horizontal: width
       case .vertical: height
     }
+  }
+  
+  /// Returns the offset needed to centre a child of the given size within this container.
+  public func centeringOffset(forChild childSize: CGSize) -> CGSize {
+    return CGSize(
+      width: (self.width - childSize.width) / 2,
+      height: (self.height - childSize.height) / 2
+    )
   }
 
   /// Returns a new size reduced evenly on all four sides by the specified inset value, and clamped to min value of `0`.
@@ -64,6 +68,11 @@ extension CGSize {
   public var midpoint: CGPoint {
     return CGPoint(x: width / 2, y: height / 2)
   }
+  
+  public var halved: CGSize {
+    return CGSize(width: width / 2, height: height / 2)
+  }
+
 
   public func aspectRatio(
     mode: ResizeMode,
