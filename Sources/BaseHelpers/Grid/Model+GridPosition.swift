@@ -7,7 +7,7 @@
 
 import Foundation
 
-/// Represents a position in a 2D Grid (rows and columns)
+/// Represents a position in a 2D Grid (rows and columns).
 public struct GridPosition: GridBase {
   public let column: Int
   public let row: Int
@@ -16,15 +16,9 @@ public struct GridPosition: GridBase {
     column: Int,
     row: Int,
   ) {
-    //    #warning("Temporarily turning this off, to fix the issue")
-    //    if row < 0 || column < 0 {
-    //      print("BAD, GridPosition cannot be negative. Row: \(row), Column: \(column)")
-    //    }
-    //    precondition(row >= 0 && column >= 0, "GridPosition cannot be negative.")
+    precondition(row >= 0 && column >= 0, "GridPosition cannot be negative, in either dimension.")
     self.column = column
-    //    self.column = max(0, column)
     self.row = row
-    //    self.row = max(0, row)
   }
 
   /// `cellSize` is the width and height in points

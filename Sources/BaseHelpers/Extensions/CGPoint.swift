@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-public enum CoordinateMappingMode {
+public enum ResizeMode {
   /// Fill destination rect exactly, even if aspect ratio is distorted
   case stretch
 
@@ -71,7 +71,7 @@ extension CGPoint {
   /// print(closestAnchor)  // Might print `.topLeading` if point is near (0,0)
   /// ```
   public func toUnitPoint(in size: CGSize) -> UnitPoint {
-    guard size.isPositive else { return .center }
+    guard size.isGreaterThanOrEqualToZero else { return .center }
     return UnitPoint(x: x / size.width, y: y / size.height)
   }
 
