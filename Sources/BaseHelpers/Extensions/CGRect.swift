@@ -7,7 +7,45 @@
 
 import SwiftUI
 
+public enum RectCorner {
+  case topLeading, topTrailing, bottomLeading, bottomTrailing
+}
+
 extension CGRect {
+
+  public func point(for corner: RectCorner) -> CGPoint {
+    switch corner {
+      case .topLeading: CGPoint(x: minX, y: minY)
+      case .topTrailing: CGPoint(x: maxX, y: minY)
+      case .bottomLeading: CGPoint(x: minX, y: maxY)
+      case .bottomTrailing: CGPoint(x: maxX, y: maxY)
+    }
+  }
+
+  public func edgePoints(for edge: RectEdge) -> (start: CGPoint, end: CGPoint) {
+    switch edge {
+      case .top:
+        return (CGPoint(x: minX, y: minY), CGPoint(x: maxX, y: minY))
+      case .bottom:
+        return (CGPoint(x: minX, y: maxY), CGPoint(x: maxX, y: maxY))
+      case .left:
+        return (CGPoint(x: minX, y: minY), CGPoint(x: minX, y: maxY))
+      case .right:
+        return (CGPoint(x: maxX, y: minY), CGPoint(x: maxX, y: maxY))
+    }
+  }
+
+  //  public var minXminY: CGPoint { CGPoint(x: minX, y: minY) }
+  //  public var maxXminY: CGPoint { CGPoint(x: maxX, y: minY) }
+  //  public var minXmaxY: CGPoint { CGPoint(x: minX, y: maxY) }
+  //  public var maxXmaxY: CGPoint { CGPoint(x: maxX, y: maxY) }
+  //
+  //  /// Important: Below methods assume origin is top-left
+  //  public var topLeadingCorner: CGPoint { CGPoint(x: minX, y: minY) }
+  //  public var topTrailingCorner: CGPoint { CGPoint(x: maxX, y: minY) }
+  //  public var bottomLeadingCorner: CGPoint { CGPoint(x: minX, y: maxY) }
+  //  public var bottomTrailingCorner: CGPoint { CGPoint(x: maxX, y: maxY) }
+  //  public var center: CGPoint { CGPoint(x: midX, y: midY) }
 
   public var path: Path {
     Path(self)
@@ -84,32 +122,6 @@ extension CGRect {
 
   public var toCGSize: CGSize {
     CGSize(width: width, height: height)
-  }
-
-  public var minXminY: CGPoint { CGPoint(x: minX, y: minY) }
-  public var maxXminY: CGPoint { CGPoint(x: maxX, y: minY) }
-  public var minXmaxY: CGPoint { CGPoint(x: minX, y: maxY) }
-  public var maxXmaxY: CGPoint { CGPoint(x: maxX, y: maxY) }
-
-  // Corner points
-  public var topLeft: CGPoint {
-    CGPoint(x: minX, y: minY)
-  }
-
-  public var topRight: CGPoint {
-    CGPoint(x: maxX, y: minY)
-  }
-
-  public var bottomLeft: CGPoint {
-    CGPoint(x: minX, y: maxY)
-  }
-
-  public var bottomRight: CGPoint {
-    CGPoint(x: maxX, y: maxY)
-  }
-
-  public var center: CGPoint {
-    CGPoint(x: midX, y: midY)
   }
 
   /// `CGRect` represents a rectangle in a 2D coordinate system.

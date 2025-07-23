@@ -71,7 +71,7 @@ extension CGSize {
     !isGreaterThanZero
   }
 
-  public func isAnyDimensionGreaterThan(_ value: CGFloat) -> Bool {
+  public func isEitherDimensionGreaterThan(_ value: CGFloat) -> Bool {
     compareDimensions(to: value, using: >, matchMode: .any)
   }
 
@@ -79,7 +79,7 @@ extension CGSize {
     compareDimensions(to: value, using: >, matchMode: .both)
   }
 
-  public func isAnyDimensionLessThan(_ value: CGFloat) -> Bool {
+  public func isEitherDimensionLessThan(_ value: CGFloat) -> Bool {
     compareDimensions(to: value, using: <, matchMode: .any)
   }
 
@@ -87,7 +87,7 @@ extension CGSize {
     compareDimensions(to: value, using: <, matchMode: .both)
   }
 
-  public func isAnyDimensionGreaterThan(_ other: CGSize) -> Bool {
+  public func isEitherDimensionGreaterThan(_ other: CGSize) -> Bool {
     compareDimensions(to: other, using: >, matchMode: .any)
   }
 
@@ -95,7 +95,7 @@ extension CGSize {
     compareDimensions(to: other, using: >, matchMode: .both)
   }
 
-  public func isAnyDimensionLessThan(_ other: CGSize) -> Bool {
+  public func isEitherDimensionLessThan(_ other: CGSize) -> Bool {
     compareDimensions(to: other, using: <, matchMode: .any)
   }
 

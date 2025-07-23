@@ -108,7 +108,7 @@ extension GridPosition {
     )
   }
 
-  public func neighbour(at edge: CellEdge) -> GridPosition {
+  public func neighbour(at edge: RectEdge) -> GridPosition {
     let delta = edge.directionVector
     return GridPosition(
       column: max(0, column + delta.column),

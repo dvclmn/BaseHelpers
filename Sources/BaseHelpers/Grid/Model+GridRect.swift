@@ -59,34 +59,68 @@ public struct GridRect: GridBase {
     )
   }
 
-  public init(
-    fromRect rect: CGRect,
-    cellSize: CGSize,
-    //    clampedTo bounds: GridDimensions? = nil
-  ) {
-    /// Standardise the rect, so origin is always top-left
-    let standardisedRect = rect.standardized
-
-    let origin =
-      GridPosition(
-        point: standardisedRect.origin,
-        cellSize: cellSize,
-      )
-
-    let endPosition = GridPosition(
-      point: standardisedRect.bottomRight,
-      cellSize: cellSize,
-    )
-
-    self.init(
-      boundingPositions: origin,
-      endPosition,
-      cellSize: cellSize
-    )
+  public init(fromRect rect: CGRect, cellSize: CGSize) {
+    let (a, b) = Self.gridPositions(from: rect, cellSize: cellSize)
+    self.init(boundingPositions: a, b, cellSize: cellSize)
   }
+  
+//  public init(
+//    fromRect rect: CGRect,
+//    cellSize: CGSize,
+//    //    clampedTo bounds: GridDimensions? = nil
+//  ) {
+//    /// Standardise the rect, so origin is always top-left
+//    let standardisedRect = rect.standardized
+//
+//    let origin =
+//      GridPosition(
+//        point: standardisedRect.origin,
+//        cellSize: cellSize,
+//      )
+//
+//    let endPosition = GridPosition(
+//      point: standardisedRect.point(for: .bottomTrailing),
+//      cellSize: cellSize,
+//    )
+//
+//    self.init(
+//      boundingPositions: origin,
+//      endPosition,
+//      cellSize: cellSize
+//    )
+//  }
 }
 
 extension GridRect {
+  
+  /// Converts a rect and cell size into a pair of GridPositions.
+  /// Always uses top-leading and bottom-trailing corners.
+  public static func gridPositions(
+    from rect: CGRect,
+    cellSize: CGSize
+  ) -> (GridPosition, GridPosition) {
+    let standardised = rect.standardized
+    let a = GridPosition(point: standardised.origin, cellSize: cellSize)
+    let b = GridPosition(point: standardised.point(for: .bottomTrailing), cellSize: cellSize)
+    return (a, b)
+  }
+
+  /// Same as `gridPositions(from:)` but returns nil if either position
+  /// falls outside of bounds.
+  public static func gridPositionsIfContained(
+    in bounds: GridDimensions,
+    from rect: CGRect,
+    cellSize: CGSize
+  ) -> (GridPosition, GridPosition)? {
+    let standardised = rect.standardized
+    guard
+      let a = GridPosition.createIfContained(within: bounds, at: standardised.origin, cellSize: cellSize),
+      let b = GridPosition.createIfContained(within: bounds, at: standardised.point(for: .bottomTrailing), cellSize: cellSize)
+    else {
+      return nil
+    }
+    return (a, b)
+  }
 
   /// Iterates over all GridPositions within this GridRect
   public var positions: [GridPosition] {
@@ -128,33 +162,44 @@ extension GridRect {
   public static func createIfContained(
     within bounds: GridDimensions,
     fromRect rect: CGRect,
-    cellSize: CGSize,
+    cellSize: CGSize
   ) -> GridRect? {
-    /// Standardise the rect, so origin is always top-left
-    let standardisedRect = rect.standardized
-
-    guard
-      let origin = GridPosition.createIfContained(
-        within: bounds,
-        at: standardisedRect.origin,
-        cellSize: cellSize
-      )
+    guard let (a, b) = gridPositionsIfContained(in: bounds, from: rect, cellSize: cellSize)
     else { return nil }
-
-    guard
-      let end = GridPosition.createIfContained(
-        within: bounds,
-        at: standardisedRect.bottomRight,
-        cellSize: cellSize
-      )
-    else { return nil }
-
-    return GridRect(
-      boundingPositions: origin,
-      end,
-      cellSize: cellSize
-    )
-
+    
+    return GridRect(boundingPositions: a, b, cellSize: cellSize)
   }
+  
+//  public static func createIfContained(
+//    within bounds: GridDimensions,
+//    fromRect rect: CGRect,
+//    cellSize: CGSize,
+//  ) -> GridRect? {
+//    /// Standardise the rect, so origin is always top-left
+//    let standardisedRect = rect.standardized
+//
+//    guard
+//      let origin = GridPosition.createIfContained(
+//        within: bounds,
+//        at: standardisedRect.origin,
+//        cellSize: cellSize
+//      )
+//    else { return nil }
+//
+//    guard
+//      let end = GridPosition.createIfContained(
+//        within: bounds,
+//        at: standardisedRect.point(for: .bottomTrailing),
+//        cellSize: cellSize
+//      )
+//    else { return nil }
+//
+//    return GridRect(
+//      boundingPositions: origin,
+//      end,
+//      cellSize: cellSize
+//    )
+//
+//  }
 
 }

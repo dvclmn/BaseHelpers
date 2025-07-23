@@ -534,7 +534,7 @@ extension CGPoint {
   }
 
 
-  // Generate a spiral as an array of points, starting from this point as center
+  /// Generate a spiral as an array of points, starting from this point as center
   public func generateSpiral(
     turns: CGFloat = 1.5,
     maxRadius: CGFloat = 50,
@@ -560,7 +560,7 @@ extension CGPoint {
     return points
   }
 
-  // Alternative: Golden ratio spiral (more mathematically pure)
+  /// Alternative: Golden ratio spiral (more mathematically pure)
   public func generateGoldenSpiral(
     turns: CGFloat = 1.5,
     scale: CGFloat = 20,
@@ -643,7 +643,6 @@ extension Array where Element == CGPoint {
 }
 
 // MARK: - Subtraction
-infix operator - : AdditionPrecedence
 
 public func - (lhs: CGPoint, rhs: CGPoint) -> CGPoint {
   return CGPoint(
@@ -651,9 +650,6 @@ public func - (lhs: CGPoint, rhs: CGPoint) -> CGPoint {
     y: lhs.y - rhs.y
   )
 }
-//public func subtracting(_ point: CGPoint) -> CGPoint {
-//  return CGPoint(x: self.x - point.x, y: self.y - point.y)
-//}
 
 public func - (lhs: CGPoint, rhs: CGSize) -> CGPoint {
   return CGPoint(
@@ -668,12 +664,8 @@ public func - (lhs: CGPoint, rhs: CGFloat) -> CGPoint {
     y: lhs.y - rhs
   )
 }
-//public func subtracting(_ size: CGSize) -> CGPoint {
-//  return CGPoint(x: self.x - size.width, y: self.y - size.height)
-//}
 
 // MARK: - Addition
-infix operator + : AdditionPrecedence
 
 public func + (lhs: CGPoint, rhs: CGPoint) -> CGPoint {
   return CGPoint(
@@ -681,12 +673,6 @@ public func + (lhs: CGPoint, rhs: CGPoint) -> CGPoint {
     y: lhs.y + rhs.y
   )
 }
-//public func adding(_ point: CGPoint) -> CGPoint {
-//  return CGPoint(
-//    x: self.x + point.x,
-//    y: self.y + point.y
-//  )
-//}
 
 public func + (lhs: CGPoint, rhs: CGSize) -> CGPoint {
   return CGPoint(
@@ -710,7 +696,6 @@ public func + (lhs: CGSize, rhs: CGPoint) -> CGSize {
 }
 
 // MARK: - Multiplication
-infix operator * : MultiplicationPrecedence
 
 public func * (lhs: CGPoint, rhs: CGPoint) -> CGPoint {
   return CGPoint(
@@ -718,9 +703,6 @@ public func * (lhs: CGPoint, rhs: CGPoint) -> CGPoint {
     y: lhs.y * rhs.y
   )
 }
-//public func multiplying(by value: CGFloat) -> CGPoint {
-//  return CGPoint(x: self.x * value, y: self.y * value)
-//}
 
 public func * (lhs: CGPoint, rhs: CGFloat) -> CGPoint {
   return CGPoint(
@@ -735,12 +717,6 @@ public func * (lhs: CGPoint, rhs: CGSize) -> CGPoint {
   )
 }
 
-//public func / (lhs: CGPoint, rhs: CGSize) -> CGPoint {
-//  CGPoint(
-//    x: rhs.width != 0 ? lhs.x / rhs.width : 0,
-//    y: rhs.height != 0 ? lhs.y / rhs.height : 0
-//  )
-//}
 
 public func / (lhs: CGPoint, rhs: CGSize) -> CGPoint {
   precondition(rhs.width != 0 && rhs.height != 0, "Cannot divide by zero size")
@@ -758,7 +734,6 @@ public func / (lhs: CGPoint, rhs: CGFloat) -> CGPoint {
 }
 
 // MARK: - Plus Equals
-infix operator += : AssignmentPrecedence
 
 public func += (lhs: inout CGPoint, rhs: CGPoint) {
   lhs = lhs + rhs
@@ -769,7 +744,6 @@ public func += (lhs: inout CGPoint, rhs: CGSize) {
 }
 
 // MARK: - Minus Equals
-infix operator -= : AssignmentPrecedence
 
 public func -= (lhs: inout CGPoint, rhs: CGPoint) {
   lhs = lhs - rhs
@@ -780,15 +754,14 @@ public func -= (lhs: inout CGPoint, rhs: CGSize) {
 }
 
 // MARK: - Greater than
-infix operator > : ComparisonPrecedence
-
-public func > (lhs: CGPoint, rhs: CGPoint) -> Bool {
-  lhs.x > rhs.x || lhs.y > rhs.y
-}
-
-// MARK: - Less than
-infix operator < : ComparisonPrecedence
-
-public func < (lhs: CGPoint, rhs: CGPoint) -> Bool {
-  lhs.x < rhs.x || lhs.y < rhs.y
-}
+/// These can be too ambiguous (use of `||` or `&&`?)
+/// See `CGSize` for better approach
+//public func > (lhs: CGPoint, rhs: CGPoint) -> Bool {
+//  lhs.x > rhs.x || lhs.y > rhs.y
+//}
+//
+//// MARK: - Less than
+//
+//public func < (lhs: CGPoint, rhs: CGPoint) -> Bool {
+//  lhs.x < rhs.x || lhs.y < rhs.y
+//}
