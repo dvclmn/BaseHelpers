@@ -38,14 +38,6 @@ public struct GridPosition: GridBase {
     let row = Int(floor(point.y / cellSize.height))
 
     self.init(column: col, row: row)
-//    let unclampedPosition = GridPosition(column: col, row: row)
-//self = unclampedPosition
-//    if let dimensions {
-//      let clamped = unclampedPosition.clamped(to: dimensions)
-//      self = clamped
-//    } else {
-//      self = unclampedPosition
-//    }
   }
 }
 
@@ -69,7 +61,7 @@ extension GridPosition {
     at point: CGPoint,
     cellSize: CGSize
   ) -> GridPosition? {
-    
+
     guard dimensions.contains(point: point, cellSize: cellSize) else { return nil }
     return GridPosition(point: point, cellSize: cellSize)
   }
@@ -84,11 +76,6 @@ extension GridPosition {
   public var displayPosition: GridPosition {
     GridPosition(column: column + 1, row: row + 1)
   }
-  //  var displayRow: Int { row + 1 }
-  //  var displayColumn: Int { column + 1 }
-  //  public var displayString: String {
-  //    "Row \(displayRow), Column \(displayColumn)"
-  //  }
 
   public var isGreaterThanZero: Bool {
     return column > 0 && row > 0
@@ -156,24 +143,24 @@ extension GridPosition {
     gridDimensions: GridDimensions
   ) -> GridPosition {
     let offset = direction.offset(x: column, y: row, by: delta)
-    return GridPosition(column: offset.x, row: offset.y)
-      .wrapped(columns: gridDimensions.columns, rows: gridDimensions.rows)
+
+    let newPosition = GridPosition(column: offset.x, row: offset.y)
+    let wrappedPosition = newPosition.wrapped(columns: gridDimensions.columns, rows: gridDimensions.rows)
+
+    return wrappedPosition
   }
 
   public func wrapped(columns: Int, rows: Int) -> GridPosition {
     let wrappedCol = ((column - 1) % columns + columns) % columns + 1
     let wrappedRow = ((row - 1) % rows + rows) % rows + 1
     let position = GridPosition(column: wrappedCol, row: wrappedRow)
-    print("GridPosition from `wrapped(columns: Int, rows: Int)`: \(position)")
     return position
   }
 
 }
 
 public func + (lhs: GridPosition, rhs: GridPosition) -> GridPosition {
-  return GridPosition(
-    column: lhs.column + rhs.column, row: lhs.row + rhs.row
-  )
+  return GridPosition(column: lhs.column + rhs.column, row: lhs.row + rhs.row)
 }
 
 extension GridPosition: CustomStringConvertible {

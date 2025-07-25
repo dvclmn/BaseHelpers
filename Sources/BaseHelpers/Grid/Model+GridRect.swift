@@ -169,37 +169,6 @@ extension GridRect {
     
     return GridRect(boundingPositions: a, b, cellSize: cellSize)
   }
-  
-//  public static func createIfContained(
-//    within bounds: GridDimensions,
-//    fromRect rect: CGRect,
-//    cellSize: CGSize,
-//  ) -> GridRect? {
-//    /// Standardise the rect, so origin is always top-left
-//    let standardisedRect = rect.standardized
-//
-//    guard
-//      let origin = GridPosition.createIfContained(
-//        within: bounds,
-//        at: standardisedRect.origin,
-//        cellSize: cellSize
-//      )
-//    else { return nil }
-//
-//    guard
-//      let end = GridPosition.createIfContained(
-//        within: bounds,
-//        at: standardisedRect.point(for: .bottomTrailing),
-//        cellSize: cellSize
-//      )
-//    else { return nil }
-//
-//    return GridRect(
-//      boundingPositions: origin,
-//      end,
-//      cellSize: cellSize
-//    )
-//
-//  }
+
 
 }

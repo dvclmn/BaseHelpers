@@ -44,16 +44,31 @@ public struct CompatibleModifierKeys: OptionSet, Sendable {
   public static let option = Self(rawValue: 1 << 3)
   public static let command = Self(rawValue: 1 << 4)
 
-  public var displayName: String {
-    switch self {
-      case .shift: "Shift"
-      case .control: "Control"
-      case .option: "Option"
-      case .command: "Command"
-      case .capsLock: "Caps Lock"
-      default: "Unknown"
-    }
+  public var displayNames: [String] {
+    var names: [String] = []
+    if contains(.capsLock) { names.append("Caps Lock") }
+    if contains(.shift) { names.append("Shift") }
+    if contains(.control) { names.append("Control") }
+    if contains(.option) { names.append("Option") }
+    if contains(.command) { names.append("Command") }
+    return names
   }
+
+  public var displayName: String {
+    let names = displayNames
+    return names.isEmpty ? "None" : names.joined(separator: " + ")
+  }
+
+  //  public var displayName: String {
+  //    switch self {
+  //      case .shift: "Shift"
+  //      case .control: "Control"
+  //      case .option: "Option"
+  //      case .command: "Command"
+  //      case .capsLock: "Caps Lock"
+  //      default: "Unknown"
+  //    }
+  //  }
 }
 
 extension CompatibleModifierKeys {
