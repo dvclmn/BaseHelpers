@@ -73,7 +73,7 @@ extension GridPosition {
   }
 
   /// Position starting from one, for UI
-  public var displayPosition: GridPosition {
+  public var displayRepresentation: GridPosition {
     GridPosition(column: column + 1, row: row + 1)
   }
 
@@ -133,8 +133,8 @@ extension GridPosition {
     self = position
   }
 
-  public func isValidWithin(grid: GridDimensions) -> Bool {
-    return grid.contains(self)
+  public func isValidWithin(dimensions: GridDimensions) -> Bool {
+    return dimensions.contains(self)
   }
 
   public func moved(
@@ -145,16 +145,21 @@ extension GridPosition {
     let offset = direction.offset(x: column, y: row, by: delta)
 
     let newPosition = GridPosition(column: offset.x, row: offset.y)
-    let wrappedPosition = newPosition.wrapped(columns: gridDimensions.columns, rows: gridDimensions.rows)
+    let wrappedPosition = newPosition.wrapped(
+      columns: gridDimensions.columns,
+      rows: gridDimensions.rows
+    )
+    precondition(
+      wrappedPosition.isValidWithin(dimensions: gridDimensions),
+      "Cell position of \(wrappedPosition) is out of bounds in grid dimensions \(gridDimensions).")
 
     return wrappedPosition
   }
 
   public func wrapped(columns: Int, rows: Int) -> GridPosition {
-    let wrappedCol = ((column - 1) % columns + columns) % columns + 1
-    let wrappedRow = ((row - 1) % rows + rows) % rows + 1
-    let position = GridPosition(column: wrappedCol, row: wrappedRow)
-    return position
+    let wrappedCol = (column % columns + columns) % columns
+    let wrappedRow = (row % rows + rows) % rows
+    return GridPosition(column: wrappedCol, row: wrappedRow)
   }
 
 }
