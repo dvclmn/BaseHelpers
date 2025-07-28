@@ -143,20 +143,55 @@ extension GridPosition {
     gridDimensions: GridDimensions
   ) -> GridPosition {
     let offset = direction.offset(x: column, y: row, by: delta)
-
-    let newPosition = GridPosition(column: offset.x, row: offset.y)
-    let wrappedPosition = newPosition.wrapped(
-      columns: gridDimensions.columns,
-      rows: gridDimensions.rows
+    
+    /// Wrap raw x/y before creating the new GridPosition, otherwise
+    /// the position could get initialised with a negative number
+    let wrappedPosition = GridPosition.wrapped(
+      column: offset.x,
+      row: offset.y,
+      in: gridDimensions
     )
-    precondition(
-      wrappedPosition.isValidWithin(dimensions: gridDimensions),
-      "Cell position of \(wrappedPosition) is out of bounds in grid dimensions \(gridDimensions).")
-
     return wrappedPosition
+//    let wrappedCol = (offset.x % gridDimensions.columns + gridDimensions.columns) % gridDimensions.columns
+//    let wrappedRow = (offset.y % gridDimensions.rows + gridDimensions.rows) % gridDimensions.rows
+//    
+//    return GridPosition(column: wrappedCol, row: wrappedRow)
   }
+  
+//  public func moved(
+//    in direction: Direction,
+//    by delta: Int = 1,
+//    gridDimensions: GridDimensions
+//  ) -> GridPosition {
+//    let offset = direction.offset(x: column, y: row, by: delta)
+//
+//    let newPosition = GridPosition(column: offset.x, row: offset.y)
+//    let wrappedPosition = newPosition.wrapped(
+//      columns: gridDimensions.columns,
+//      rows: gridDimensions.rows
+//    )
+//    precondition(
+//      wrappedPosition.isValidWithin(dimensions: gridDimensions),
+//      "Cell position of \(wrappedPosition) is out of bounds in grid dimensions \(gridDimensions).")
+//
+//    return wrappedPosition
+//  }
 
-  public func wrapped(columns: Int, rows: Int) -> GridPosition {
+//  public func wrapped(columns: Int, rows: Int) -> GridPosition {
+//    let wrappedCol = (column % columns + columns) % columns
+//    let wrappedRow = (row % rows + rows) % rows
+//    return GridPosition(column: wrappedCol, row: wrappedRow)
+//  }
+  
+  /// Column and Row as 'raw' `Int`s are used here, intead of a `GridPosition`,
+  /// as `GridPosition` cannot represent negative values
+  public static func wrapped(
+    column: Int,
+    row: Int,
+    in dimensions: GridDimensions
+  ) -> GridPosition {
+    let (columns, rows) = (dimensions.columns, dimensions.rows)
+    
     let wrappedCol = (column % columns + columns) % columns
     let wrappedRow = (row % rows + rows) % rows
     return GridPosition(column: wrappedCol, row: wrappedRow)

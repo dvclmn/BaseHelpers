@@ -442,6 +442,12 @@ extension CGPoint {
   public func shifted(by point: CGPoint) -> CGPoint {
     return CGPoint(x: self.x + point.x, y: self.y + point.y)
   }
+  public func shifted(by offset: CGSize) -> CGPoint {
+    return CGPoint(
+      x: self.x + offset.width,
+      y: self.y + offset.height
+    )
+  }
 
   /// Shift by the same value in both directions
   public func shifted(by delta: CGFloat) -> CGPoint {
@@ -453,6 +459,18 @@ extension CGPoint {
     to p2: CGPoint
   ) -> CGPoint {
     return pointAlong(from: p1, to: p2, t: 0.5)
+  }
+
+  public func applyPanAndZoom(pan: CGSize, zoom: CGFloat) -> CGPoint {
+    let scaled = CGPoint(
+      x: x * zoom,
+      y: y * zoom
+    )
+    let translated = CGPoint(
+      x: scaled.x + pan.width,
+      y: scaled.y + pan.height
+    )
+    return translated
   }
 
   /// Find a point along the line between two points
@@ -532,7 +550,6 @@ extension CGPoint {
   public func pointAlong(to end: CGPoint, distance: CGFloat) -> CGPoint {
     return CGPoint.pointAlong(from: self, to: end, distance: distance)
   }
-
 
   /// Generate a spiral as an array of points, starting from this point as center
   public func generateSpiral(
@@ -695,6 +712,31 @@ public func + (lhs: CGSize, rhs: CGPoint) -> CGSize {
   )
 }
 
+public func + (lhs: CGPoint, rhs: CGFloat) -> CGPoint {
+  return CGPoint(
+    x: lhs.x + rhs,
+    y: lhs.y + rhs
+  )
+}
+
+public func += (lhs: inout CGPoint, rhs: CGPoint) {
+  lhs = lhs + rhs
+}
+
+public func += (lhs: inout CGPoint, rhs: CGSize) {
+  lhs = lhs + rhs
+}
+
+// MARK: - Minus Equals
+
+public func -= (lhs: inout CGPoint, rhs: CGPoint) {
+  lhs = lhs - rhs
+}
+
+public func -= (lhs: inout CGPoint, rhs: CGSize) {
+  lhs = lhs - rhs
+}
+
 // MARK: - Multiplication
 
 public func * (lhs: CGPoint, rhs: CGPoint) -> CGPoint {
@@ -717,7 +759,6 @@ public func * (lhs: CGPoint, rhs: CGSize) -> CGPoint {
   )
 }
 
-
 public func / (lhs: CGPoint, rhs: CGSize) -> CGPoint {
   precondition(rhs.width != 0 && rhs.height != 0, "Cannot divide by zero size")
   return CGPoint(
@@ -734,24 +775,6 @@ public func / (lhs: CGPoint, rhs: CGFloat) -> CGPoint {
 }
 
 // MARK: - Plus Equals
-
-public func += (lhs: inout CGPoint, rhs: CGPoint) {
-  lhs = lhs + rhs
-}
-
-public func += (lhs: inout CGPoint, rhs: CGSize) {
-  lhs = lhs + rhs
-}
-
-// MARK: - Minus Equals
-
-public func -= (lhs: inout CGPoint, rhs: CGPoint) {
-  lhs = lhs - rhs
-}
-
-public func -= (lhs: inout CGPoint, rhs: CGSize) {
-  lhs = lhs - rhs
-}
 
 // MARK: - Greater than
 /// These can be too ambiguous (use of `||` or `&&`?)

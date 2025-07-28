@@ -20,6 +20,9 @@ extension Color {
   public var midOpacity: Color {
     self.opacity(0.6)
   }
+  public var almostFullOpacity: Color {
+    self.opacity(0.85)
+  }
 
   public func mixCompatible(
     with rhs: Color,

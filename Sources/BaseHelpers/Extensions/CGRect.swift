@@ -206,10 +206,17 @@ extension CGRect {
   }
 
   /// Useful for a CGRect that needs to be centered within a View
-  init(size: CGSize, centeredIn containerSize: CGSize) {
+  public init(size: CGSize, centeredIn containerSize: CGSize) {
     let x = (containerSize.width - size.width) / 2
     let y = (containerSize.height - size.height) / 2
     self.init(x: x, y: y, width: size.width, height: size.height)
+  }
+  
+  /// Useful for occasions where origin and size properties
+  /// are already defined, just need to be plugged in,
+  /// and an extra-quick init is helpful
+  public init(_ origin: CGPoint,_ size: CGSize) {
+    self.init(origin: origin, size: size)
   }
 
   public static let example01 = CGRect(

@@ -53,6 +53,14 @@ extension CGSize {
       height: (self.height - childSize.height) / 2
     )
   }
+  
+  /// Returns the child size that would produce the given centring offset within this container.
+//  public func childSize(fromCenteringOffset offset: CGSize) -> CGSize {
+//    return CGSize(
+//      width: self.width - (offset.width * 2),
+//      height: self.height - (offset.height * 2)
+//    )
+//  }
 
   /// Returns a new size reduced evenly on all four sides by the specified inset value, and clamped to min value of `0`.
   /// - Parameter inset: The amount to inset from all edges. Width and height are each reduced by 2x this value, 1x for each opposing side

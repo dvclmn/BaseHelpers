@@ -102,6 +102,20 @@ extension GridCell {
   //  }  // END generate Cells from Text
 }
 
+extension CGSize {
+  public func cellCount(
+    alongAxis axis: GridAxis,
+    cellSize: CGSize
+  ) -> Int {
+    switch axis {
+      case .columns:
+        return Int(self.width / cellSize.width)
+      case .rows:
+        return Int(self.height / cellSize.height)
+    }
+  }
+}
+
 enum GridCellError: LocalizedError {
   case outOfBounds(index: Int)
   case indexOutOfRange(index: Int, count: Int)

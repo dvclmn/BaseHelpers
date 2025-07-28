@@ -100,8 +100,8 @@ extension GraphicsContext {
   // MARK: - Quick Fill and Stroke
   public func fillAndStroke(
     _ path: Path,
-    fillColour: Color,
-    strokeColour: Color,
+    fillColour: Color = .blue.lowOpacity,
+    strokeColour: Color = .indigo,
     strokeThickness: CGFloat = 1
   ) {
 
