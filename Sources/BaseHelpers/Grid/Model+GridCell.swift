@@ -25,6 +25,11 @@ public struct GridCell: GridBase {
 }
 
 extension GridCell {
+  
+//  public static var empty: GridCell {
+//    GridCe
+//  }
+  
   public static func createBlank(
     at position: GridPosition,
     colour: RGBColour = .white

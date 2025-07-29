@@ -719,6 +719,7 @@ public func + (lhs: CGPoint, rhs: CGFloat) -> CGPoint {
   )
 }
 
+// MARK: - Addition in place
 public func += (lhs: inout CGPoint, rhs: CGPoint) {
   lhs = lhs + rhs
 }

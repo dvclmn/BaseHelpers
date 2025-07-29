@@ -42,6 +42,14 @@ extension UnitPoint {
   //      case .heightIsHorizontal: Self.bottom
   //    }
   //  }
+  
+  /// Returns a rect of given size, positioned inside `container` so that `self` (the alignment point)
+  /// corresponds to the same point in the new rect.
+  public func positionedRect(size: CGSize, in container: CGRect) -> CGRect {
+    let originX = container.origin.x + (container.width - size.width) * self.x
+    let originY = container.origin.y + (container.height - size.height) * self.y
+    return CGRect(origin: CGPoint(x: originX, y: originY), size: size)
+  }
 
   public func toCGPoint(in size: CGSize) -> CGPoint {
     let result = CGPoint(
