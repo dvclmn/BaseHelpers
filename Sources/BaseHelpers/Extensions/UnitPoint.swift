@@ -27,22 +27,6 @@ extension UnitPoint {
     ]
   }
 
-  //
-  //    for axis: Axis,
-  //    mapping: DimensionToAxisConvention
-  //  ) -> Self {
-  //
-  //  }
-  //  public func endPoint(
-  //    for axis: Axis,
-  //    mapping: DimensionToAxisConvention
-  //  ) -> Self {
-  //    switch mapping {
-  //      case .widthIsHorizontal: Self.trailing
-  //      case .heightIsHorizontal: Self.bottom
-  //    }
-  //  }
-  
   /// Returns a rect of given size, positioned inside `container` so that `self` (the alignment point)
   /// corresponds to the same point in the new rect.
   public func positionedRect(size: CGSize, in container: CGRect) -> CGRect {
@@ -192,7 +176,7 @@ extension UnitPoint {
       default: Color.gray
     }
   }
-  
+
   /// Example usage:
   ///
   /// ```
@@ -217,7 +201,7 @@ extension UnitPoint {
     let dy = directionalOffset(value: amount(.vertical), axisValue: y)
     return apply(dx, dy)
   }
-  
+
   /// Simpler version
   ///
   /// ```
@@ -231,14 +215,14 @@ extension UnitPoint {
     let dy = y < 0.5 ? +amount : y > 0.5 ? -amount : 0
     return CGSize(width: dx, height: dy)
   }
-  
+
   private func directionalOffset(value: CGFloat, axisValue: CGFloat) -> CGFloat {
     if axisValue < 0.5 {
       return +value  // Left or top → move right/down
     } else if axisValue > 0.5 {
       return -value  // Right or bottom → move left/up
     } else {
-      return 0       // Centre → no offset
+      return 0  // Centre → no offset
     }
   }
 }
