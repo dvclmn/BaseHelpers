@@ -33,7 +33,7 @@ extension EnvironmentValues {
 public typealias Keys = Set<KeyEquivalent>
 public typealias Modifiers = CompatibleModifierKeys
 
-public struct CompatibleModifierKeys: OptionSet, Sendable {
+public struct CompatibleModifierKeys: OptionSet, Sendable, Hashable {
   public init(rawValue: Int) {
     self.rawValue = rawValue
   }
@@ -45,33 +45,6 @@ public struct CompatibleModifierKeys: OptionSet, Sendable {
   public static let option = Self(rawValue: 1 << 3)
   public static let command = Self(rawValue: 1 << 4)
 
-  public var displayNames: [String] {
-    var names: [String] = []
-    if contains(.capsLock) { names.append("Caps Lock") }
-    if contains(.shift) { names.append("Shift") }
-    if contains(.control) { names.append("Control") }
-    if contains(.option) { names.append("Option") }
-    if contains(.command) { names.append("Command") }
-    return names
-  }
-  
-  public func displayName(elements: ModifierDisplayElement) -> String {
-    let names = displayNames
-    let icon = symbol
-    return names.isEmpty ? "None" : names.joined(separator: " + ")
-  }
-
-  public var symbol: String {
-    switch self {
-      case .shift: "􀆝"
-      case .control: "􀆍"
-      case .option: "􀆕"
-      case .command: "􀆔"
-      case .capsLock: "􀆡"
-      default:
-        ""
-    }
-  }
 }
 
 extension CompatibleModifierKeys {
@@ -79,10 +52,50 @@ extension CompatibleModifierKeys {
     self = appKitKey.toCompatibleModifier
   }
 
+  struct ModifierMetadata: Hashable {
+    let name: String
+    let symbol: String
+  }
+
+  private static let metadata: [CompatibleModifierKeys: ModifierMetadata] = [
+    .shift: .init(name: "Shift", symbol: "􀆝"),
+    .control: .init(name: "Control", symbol: "􀆍"),
+    .option: .init(name: "Option", symbol: "􀆕"),
+    .command: .init(name: "Command", symbol: "􀆔"),
+    .capsLock: .init(name: "Caps Lock", symbol: "􀆡"),
+  ]
+
+  private var individualOptions: [CompatibleModifierKeys] {
+    Self.metadata.keys.filter { contains($0) }
+  }
+
+  public func displayName(
+    elements: ModifierDisplayElement,
+    separator: String = " + ",
+    emptyText: String = "None"
+  ) -> String {
+    let components: [String] = individualOptions.compactMap { option in
+      guard let meta = Self.metadata[option] else { return nil }
+
+      switch elements {
+        case .name:
+          return meta.name
+        case .icon:
+          return meta.symbol
+        case .both:
+          return "\(meta.symbol) \(meta.name)"
+        default:
+          return nil
+      }
+    }
+
+    return components.isEmpty ? emptyText : components.joined(separator: separator)
+  }
+
 }
 
 extension CompatibleModifierKeys: CustomStringConvertible {
-  public var description: String { displayName }
+  public var description: String { displayName(elements: .name) }
 }
 
 @available(macOS 15, iOS 18, *)
@@ -126,13 +139,12 @@ extension NSEvent.ModifierFlags {
 }
 #endif
 
-
 public struct ModifierDisplayElement: OptionSet, Sendable {
   public init(rawValue: Int) {
     self.rawValue = rawValue
   }
   public let rawValue: Int
-  
+
   public static let name = Self(rawValue: 1 << 0)
   public static let icon = Self(rawValue: 1 << 1)
   public static let both: Self = [.name, .icon]
