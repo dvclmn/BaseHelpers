@@ -137,7 +137,7 @@ extension UnitPoint {
     }
   }
 
-  public static var topRow: [UnitPoint] {
+  public static var rowTop: [UnitPoint] {
     [
       .topLeading,
       .top,
@@ -145,7 +145,7 @@ extension UnitPoint {
     ]
   }
 
-  public static var middleRow: [UnitPoint] {
+  public static var rowMiddle: [UnitPoint] {
     [
       .leading,
       .center,
@@ -153,10 +153,34 @@ extension UnitPoint {
     ]
   }
 
-  public static var bottomRow: [UnitPoint] {
+  public static var rowBottom: [UnitPoint] {
     [
       .bottomLeading,
       .bottom,
+      .bottomTrailing,
+    ]
+  }
+
+  public static var columnLeading: [UnitPoint] {
+    [
+      .topLeading,
+      .leading,
+      .bottomLeading,
+    ]
+  }
+
+  public static var columnMiddle: [UnitPoint] {
+    [
+      .top,
+      .center,
+      .bottom,
+    ]
+  }
+
+  public static var columnTrailing: [UnitPoint] {
+    [
+      .topTrailing,
+      .trailing,
       .bottomTrailing,
     ]
   }
