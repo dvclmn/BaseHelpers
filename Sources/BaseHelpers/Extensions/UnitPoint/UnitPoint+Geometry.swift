@@ -8,7 +8,28 @@
 import SwiftUI
 
 extension UnitPoint {
-  
+
+  public var isCorner: Bool {
+    switch self {
+      case .topLeading, .topTrailing, .bottomTrailing, .bottomLeading: true
+      default: false
+    }
+  }
+
+  public var isHorizontalEdge: Bool {
+    switch self {
+      case .top, .bottom: true
+      default: false
+    }
+  }
+
+  public var isVerticalEdge: Bool {
+    switch self {
+      case .leading, .trailing: true
+      default: false
+    }
+  }
+
   /// A collection of unit points arranged horizontally along the top edge.
   ///
   /// This property provides the three unit points that form the top row of a rectangular layout.
@@ -41,7 +62,7 @@ extension UnitPoint {
       .topTrailing,
     ]
   }
-  
+
   /// A collection of unit points arranged horizontally along the vertical center.
   ///
   /// This property provides the three unit points that form the middle row of a rectangular layout.
@@ -72,7 +93,7 @@ extension UnitPoint {
       .trailing,
     ]
   }
-  
+
   /// A collection of unit points arranged horizontally along the bottom edge.
   ///
   /// This property provides the three unit points that form the bottom row of a rectangular layout.
@@ -104,7 +125,7 @@ extension UnitPoint {
       .bottomTrailing,
     ]
   }
-  
+
   /// A collection of unit points arranged vertically along the leading edge.
   ///
   /// This property provides the three unit points that form the leading column of a rectangular layout.
@@ -139,7 +160,7 @@ extension UnitPoint {
       .bottomLeading,
     ]
   }
-  
+
   /// A collection of unit points arranged vertically along the horizontal center.
   ///
   /// This property provides the three unit points that form the middle column of a rectangular layout.
@@ -172,7 +193,7 @@ extension UnitPoint {
       .bottom,
     ]
   }
-  
+
   /// A collection of unit points arranged vertically along the trailing edge.
   ///
   /// This property provides the three unit points that form the trailing column of a rectangular layout

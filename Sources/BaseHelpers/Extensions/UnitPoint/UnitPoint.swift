@@ -13,6 +13,22 @@ extension UnitPoint: @retroactive Identifiable {
 
 extension UnitPoint {
 
+  public var name: String {
+    switch self {
+      case .topLeading: "Top Leading"
+      case .top: "Top"
+      case .topTrailing: "Top Trailing"
+      case .trailing: "Trailing"
+      case .bottomTrailing: "Bottom Trailing"
+      case .bottom: "Bottom"
+      case .bottomLeading: "Bottom Leading"
+      case .leading: "Leading"
+      case .center: "Center"
+      default:
+        "Unknown"
+    }
+  }
+
   public static var allKnownCases: [UnitPoint] {
     return [
       .topLeading,
@@ -55,19 +71,19 @@ extension UnitPoint {
     return result
   }
 
-  // Corner intermediates (positioned between corners and edge centers)
+  /// Corner intermediates (positioned between corners and edge centers)
   public static let topLeadingMid = UnitPoint(x: 0.25, y: 0.25)
   public static let topTrailingMid = UnitPoint(x: 0.75, y: 0.25)
   public static let bottomLeadingMid = UnitPoint(x: 0.25, y: 0.75)
   public static let bottomTrailingMid = UnitPoint(x: 0.75, y: 0.75)
 
-  // Edge intermediates (positioned between edge centers and corners)
+  /// Edge intermediates (positioned between edge centers and corners)
   public static let topMid = UnitPoint(x: 0.5, y: 0.25)
   public static let leadingMid = UnitPoint(x: 0.25, y: 0.5)
   public static let trailingMid = UnitPoint(x: 0.75, y: 0.5)
   public static let bottomMid = UnitPoint(x: 0.5, y: 0.75)
 
-  // Quarter points along edges
+  /// Quarter points along edges
   public static let topQuarter = UnitPoint(x: 0.25, y: 0.0)
   public static let topThreeQuarters = UnitPoint(x: 0.75, y: 0.0)
   public static let leadingQuarter = UnitPoint(x: 0.0, y: 0.25)
@@ -77,13 +93,13 @@ extension UnitPoint {
   public static let bottomQuarter = UnitPoint(x: 0.25, y: 1.0)
   public static let bottomThreeQuarters = UnitPoint(x: 0.75, y: 1.0)
 
-  // Center region intermediates
+  /// Center region intermediates
   public static let centerLeading = UnitPoint(x: 0.25, y: 0.5)
   public static let centerTrailing = UnitPoint(x: 0.75, y: 0.5)
   public static let centerTop = UnitPoint(x: 0.5, y: 0.25)
   public static let centerBottom = UnitPoint(x: 0.5, y: 0.75)
 
-  // Diagonal points
+  /// Diagonal points
   public static let diagonalQuarter = UnitPoint(x: 0.25, y: 0.25)
   public static let diagonalThreeQuarters = UnitPoint(x: 0.75, y: 0.75)
   public static let diagonalInverseQuarter = UnitPoint(x: 0.25, y: 0.75)
@@ -105,9 +121,7 @@ extension UnitPoint {
   }
 
   public var toAlignment: Alignment {
-
     switch self {
-
       case .topLeading: .topLeading
       case .top: .top
       case .topTrailing: .topTrailing
@@ -119,70 +133,6 @@ extension UnitPoint {
       case .center: .center
       default: .center
     }
-  }
-
-  public var name: String {
-    switch self {
-      case .topLeading: "Top Leading"
-      case .top: "Top"
-      case .topTrailing: "Top Trailing"
-      case .trailing: "Trailing"
-      case .bottomTrailing: "Bottom Trailing"
-      case .bottom: "Bottom"
-      case .bottomLeading: "Bottom Leading"
-      case .leading: "Leading"
-      case .center: "Center"
-      default:
-        "Unknown"
-    }
-  }
-
-  public static var rowTop: [UnitPoint] {
-    [
-      .topLeading,
-      .top,
-      .topTrailing,
-    ]
-  }
-
-  public static var rowMiddle: [UnitPoint] {
-    [
-      .leading,
-      .center,
-      .trailing,
-    ]
-  }
-
-  public static var rowBottom: [UnitPoint] {
-    [
-      .bottomLeading,
-      .bottom,
-      .bottomTrailing,
-    ]
-  }
-
-  public static var columnLeading: [UnitPoint] {
-    [
-      .topLeading,
-      .leading,
-      .bottomLeading,
-    ]
-  }
-
-  public static var columnMiddle: [UnitPoint] {
-    [
-      .top,
-      .center,
-      .bottom,
-    ]
-  }
-
-  public static var columnTrailing: [UnitPoint] {
-    [
-      .topTrailing,
-      .trailing,
-      .bottomTrailing,
-    ]
   }
 
   /// This is just for visual debugging
@@ -201,52 +151,4 @@ extension UnitPoint {
     }
   }
 
-  /// Example usage:
-  ///
-  /// ```
-  /// let anchor: UnitPoint = .topLeading
-  ///
-  /// let nudged = anchor.applyOffset(axisOffset: { axis in
-  ///   axis == .horizontal ? 8 : 10
-  /// }) { dx, dy in
-  ///   CGPoint(x: originalPoint.x + dx, y: originalPoint.y + dy)
-  /// }
-  ///
-  /// ```
-  /// Applies a directional offset based on the position of the `UnitPoint`.
-  /// - Parameters:
-  ///   - amount: A closure providing the offset amount for a given axis.
-  ///   - apply: A closure that receives the final dx/dy values (you decide how to use them).
-  public func applyOffset<T>(
-    axisOffset amount: (_ axis: Axis) -> CGFloat,
-    apply: (_ dx: CGFloat, _ dy: CGFloat) -> T
-  ) -> T {
-    let dx = directionalOffset(value: amount(.horizontal), axisValue: x)
-    let dy = directionalOffset(value: amount(.vertical), axisValue: y)
-    return apply(dx, dy)
-  }
-
-  /// Simpler version
-  ///
-  /// ```
-  /// let anchor: UnitPoint = .bottomTrailing
-  /// let offset = anchor.offset(by: 12)
-  /// // offset = CGSize(width: -12, height: -12)
-  ///
-  /// ```
-  public func offset(by amount: CGFloat) -> CGSize {
-    let dx = x < 0.5 ? +amount : x > 0.5 ? -amount : 0
-    let dy = y < 0.5 ? +amount : y > 0.5 ? -amount : 0
-    return CGSize(width: dx, height: dy)
-  }
-
-  private func directionalOffset(value: CGFloat, axisValue: CGFloat) -> CGFloat {
-    if axisValue < 0.5 {
-      return +value  // Left or top → move right/down
-    } else if axisValue > 0.5 {
-      return -value  // Right or bottom → move left/up
-    } else {
-      return 0  // Centre → no offset
-    }
-  }
 }
