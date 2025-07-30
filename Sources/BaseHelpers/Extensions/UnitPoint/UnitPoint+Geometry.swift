@@ -7,7 +7,36 @@
 
 import SwiftUI
 
+
+public enum OpposingDimensionLength {
+  case infinite
+  case zero
+}
+
 extension UnitPoint {
+  
+
+  public func boundarySize(
+    fixedLength: CGFloat,
+    opposingDimensionLength: OpposingDimensionLength = .infinite,
+    includeCorners: Bool = true
+  ) -> CGSize {
+    let length: CGFloat =
+      switch opposingDimensionLength {
+        case .infinite: .infinity
+        case .zero: 0
+      }
+
+    if isHorizontalEdge {
+      return CGSize(width: length, height: fixedLength)
+    } else if isVerticalEdge {
+      return CGSize(width: fixedLength, height: length)
+    } else if isCorner {
+      return includeCorners ? CGSize(width: fixedLength, height: fixedLength) : .zero
+    } else {
+      return .zero
+    }
+  }
 
   public var isCorner: Bool {
     switch self {
