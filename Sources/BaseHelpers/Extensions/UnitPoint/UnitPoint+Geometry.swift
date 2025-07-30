@@ -7,6 +7,13 @@
 
 import SwiftUI
 
+public enum UnitPointType {
+  case horizontalEdge
+  case verticalEdge
+  case corner
+  case centre
+}
+
 extension UnitPoint {
 
   public func valueFromSize(
@@ -65,6 +72,18 @@ extension UnitPoint {
         width: .zero,
         height: .zero
       )
+    }
+  }
+
+  public var pointType: UnitPointType {
+    if isCorner {
+      .corner
+    } else if isHorizontalEdge {
+      .horizontalEdge
+    } else if isVerticalEdge {
+      .verticalEdge
+    } else {
+      .centre
     }
   }
 

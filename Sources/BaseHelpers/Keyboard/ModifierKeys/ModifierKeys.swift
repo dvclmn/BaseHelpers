@@ -54,27 +54,11 @@ public struct CompatibleModifierKeys: OptionSet, Sendable {
     if contains(.command) { names.append("Command") }
     return names
   }
-
-  public var displayName: String {
+  
+  public func displayName(elements: ModifierDisplayElement) -> String {
     let names = displayNames
+    let icon = symbol
     return names.isEmpty ? "None" : names.joined(separator: " + ")
-  }
-
-  //  public var displayName: String {
-  //    switch self {
-  //      case .shift: "Shift"
-  //      case .control: "Control"
-  //      case .option: "Option"
-  //      case .command: "Command"
-  //      case .capsLock: "Caps Lock"
-  //      default: "Unknown"
-  //    }
-  //  }
-}
-
-extension CompatibleModifierKeys {
-  public init(from appKitKey: NSEvent.ModifierFlags) {
-    self = appKitKey.toCompatibleModifier
   }
 
   public var symbol: String {
@@ -88,6 +72,13 @@ extension CompatibleModifierKeys {
         ""
     }
   }
+}
+
+extension CompatibleModifierKeys {
+  public init(from appKitKey: NSEvent.ModifierFlags) {
+    self = appKitKey.toCompatibleModifier
+  }
+
 }
 
 extension CompatibleModifierKeys: CustomStringConvertible {
@@ -134,6 +125,18 @@ extension NSEvent.ModifierFlags {
   }
 }
 #endif
+
+
+public struct ModifierDisplayElement: OptionSet, Sendable {
+  public init(rawValue: Int) {
+    self.rawValue = rawValue
+  }
+  public let rawValue: Int
+  
+  public static let name = Self(rawValue: 1 << 0)
+  public static let icon = Self(rawValue: 1 << 1)
+  public static let both: Self = [.name, .icon]
+}
 
 //public enum CompatibleModifierKey: String, CaseIterable, Identifiable, Hashable, Sendable {
 //  case command

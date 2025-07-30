@@ -42,6 +42,45 @@ public struct GridPosition: GridBase {
 }
 
 extension GridPosition {
+  
+  public static func createEdgePositions(
+    edge: GridEdge,
+    rowCount: Int,
+    columnCount: Int
+  ) -> [GridPosition] {
+    switch edge {
+      case .top:
+        return createRow(0, columns: 0..<columnCount)
+      case .bottom:
+        return createRow(rowCount - 1, columns: 0..<columnCount)
+      case .leading:
+        return createColumn(0, rows: 0..<rowCount)
+      case .trailing:
+        return createColumn(columnCount - 1, rows: 0..<rowCount)
+    }
+  }
+  
+  public static func createRow(_ rowIndex: Int, columns: Range<Int>) -> [GridPosition] {
+    columns.map { GridPosition(column: $0, row: rowIndex) }
+  }
+  
+  public static func createColumn(_ columnIndex: Int, rows: Range<Int>) -> [GridPosition] {
+    rows.map { GridPosition(column: columnIndex, row: $0) }
+  }
+  
+//  public static func createRow(
+//    _ rowIndex: Int,
+//    columns: ClosedRange<Int>
+//  ) -> [GridPosition] {
+//    columns.map { GridPosition(column: $0, row: rowIndex) }
+//  }
+//  
+//  public static func createColumn(
+//    _ columnIndex: Int,
+//    rows: ClosedRange<Int>
+//  ) -> [GridPosition] {
+//    rows.map { GridPosition(column: columnIndex, row: $0) }
+//  }
 
   /// Returns a position guaranteed to be within the provided dimensions.
   /// Returns `0` for a row/column if it falls outside these dimensions.
