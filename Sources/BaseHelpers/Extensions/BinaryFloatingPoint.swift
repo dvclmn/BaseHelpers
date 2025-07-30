@@ -85,10 +85,21 @@ extension BinaryFloatingPoint {
 
   /// This directly removes a zoom level, which depending on the
   /// permitted range, could be any value.
-  public func removingZoom(_ zoom: Self) -> Self {
-    return self / zoom
+  //  public func removingZoom(_ zoom: Self) -> Self {
+  //    return self / zoom
+  //  }
+
+  public func removingZoom(
+    _ zoom: Self,
+    clampedTo range: ClosedRange<Self>? = nil
+  ) -> Self {
+    guard let range else {
+      return self / zoom
+    }
+    let clampedZoom = zoom.clamped(to: range)
+    return self / clampedZoom
   }
-  
+
   /// This removes a zoom range which has been normalised from 0-1
   func removingZoomPercent(_ zoomPercent: Self) -> Self {
     let result = Double(self) / pow(1 + Double(zoomPercent), 1)
@@ -181,40 +192,42 @@ extension BinaryFloatingPoint {
     highSensitivityThreshold: Double = 5.0,
     curve: Double = 1.5
   ) -> Double {
-    
+
     // Clamp the zoom level to the valid range
     let clampedZoom = min(max(zoomLevel, zoomRange.lowerBound), zoomRange.upperBound)
-    
+
     // Normalize the zoom level to 0...1 range
     let normalizedZoom = (clampedZoom - zoomRange.lowerBound) / (zoomRange.upperBound - zoomRange.lowerBound)
-    
+
     // Calculate threshold positions in normalized space
-    let lowThresholdNorm = (lowSensitivityThreshold - zoomRange.lowerBound) / (zoomRange.upperBound - zoomRange.lowerBound)
-    let highThresholdNorm = (highSensitivityThreshold - zoomRange.lowerBound) / (zoomRange.upperBound - zoomRange.lowerBound)
-    
+    let lowThresholdNorm =
+      (lowSensitivityThreshold - zoomRange.lowerBound) / (zoomRange.upperBound - zoomRange.lowerBound)
+    let highThresholdNorm =
+      (highSensitivityThreshold - zoomRange.lowerBound) / (zoomRange.upperBound - zoomRange.lowerBound)
+
     let transformedZoom: Double
-    
+
     if normalizedZoom <= lowThresholdNorm {
       // Low zoom range: reduce sensitivity (expand the curve - slower response)
       let localNorm = normalizedZoom / lowThresholdNorm
-      let expanded = pow(localNorm, curve) // Use curve to slow down response
+      let expanded = pow(localNorm, curve)  // Use curve to slow down response
       transformedZoom = expanded * lowThresholdNorm
-      
+
     } else if normalizedZoom >= highThresholdNorm {
       // High zoom range: increase sensitivity (compress the curve - faster response)
       let localNorm = (normalizedZoom - highThresholdNorm) / (1.0 - highThresholdNorm)
-      let compressed = pow(localNorm, 1.0 / curve) // Inverse curve for faster response
+      let compressed = pow(localNorm, 1.0 / curve)  // Inverse curve for faster response
       transformedZoom = highThresholdNorm + compressed * (1.0 - highThresholdNorm)
-      
+
     } else {
       // Middle range: linear scaling
       transformedZoom = normalizedZoom
     }
-    
+
     // Convert back to actual zoom range
     return transformedZoom * (zoomRange.upperBound - zoomRange.lowerBound) + zoomRange.lowerBound
   }
-  
+
   /// Simplified non-linear zoom scaling using a single curve parameter
   /// - Parameters:
   ///   - zoomLevel: The current zoom level

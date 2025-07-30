@@ -7,34 +7,64 @@
 
 import SwiftUI
 
-
-public enum OpposingDimensionLength {
-  case infinite
-  case zero
-}
-
 extension UnitPoint {
-  
+
+  public func valueFromSize(
+    size: CGSize,
+    fallBackIfCorner fallBack: CGFloat = 0
+  ) -> CGFloat {
+    guard let sizeKeyPath else {
+      return fallBack
+    }
+    return size[keyPath: sizeKeyPath]
+  }
+
+  public var sizeKeyPath: KeyPath<CGSize, CGFloat>? {
+    if isHorizontalEdge {
+      return \.height
+    } else if isVerticalEdge {
+      return \.width
+    } else {
+      return nil
+    }
+  }
 
   public func boundarySize(
     fixedLength: CGFloat,
     opposingDimensionLength: OpposingDimensionLength = .infinite,
     includeCorners: Bool = true
-  ) -> CGSize {
-    let length: CGFloat =
-      switch opposingDimensionLength {
-        case .infinite: .infinity
-        case .zero: 0
-      }
+  ) -> FrameDimensions {
+
+    let opposingLength: CGFloat? = opposingDimensionLength.value
 
     if isHorizontalEdge {
-      return CGSize(width: length, height: fixedLength)
+      return FrameDimensions(
+        width: opposingLength,
+        height: fixedLength
+      )
+
     } else if isVerticalEdge {
-      return CGSize(width: fixedLength, height: length)
+      return FrameDimensions(
+        width: fixedLength,
+        height: opposingLength
+      )
+
     } else if isCorner {
-      return includeCorners ? CGSize(width: fixedLength, height: fixedLength) : .zero
+      return includeCorners
+        ? FrameDimensions(
+          width: fixedLength,
+          height: fixedLength
+        )
+        : FrameDimensions(
+          width: .zero,
+          height: .zero
+        )
+      //      FrameDimensions(nil, nil)
     } else {
-      return .zero
+      return FrameDimensions(
+        width: .zero,
+        height: .zero
+      )
     }
   }
 
