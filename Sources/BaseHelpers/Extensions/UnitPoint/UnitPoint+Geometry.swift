@@ -14,17 +14,10 @@ public enum UnitPointType {
   case centre
 }
 
+
+
 extension UnitPoint {
 
-  public func valueFromSize(
-    size: CGSize,
-    fallBackIfCorner fallBack: CGFloat = 0
-  ) -> CGFloat {
-    guard let sizeKeyPath else {
-      return fallBack
-    }
-    return size[keyPath: sizeKeyPath]
-  }
 
   public var sizeKeyPath: KeyPath<CGSize, CGFloat>? {
     if isHorizontalEdge {
@@ -36,44 +29,6 @@ extension UnitPoint {
     }
   }
 
-  public func boundarySize(
-    fixedLength: CGFloat,
-    opposingDimensionLength: OpposingDimensionLength = .infinite,
-    includeCorners: Bool = true
-  ) -> FrameDimensions {
-
-    let opposingLength: CGFloat? = opposingDimensionLength.value
-
-    if isHorizontalEdge {
-      return FrameDimensions(
-        width: opposingLength,
-        height: fixedLength
-      )
-
-    } else if isVerticalEdge {
-      return FrameDimensions(
-        width: fixedLength,
-        height: opposingLength
-      )
-
-    } else if isCorner {
-      return includeCorners
-        ? FrameDimensions(
-          width: fixedLength,
-          height: fixedLength
-        )
-        : FrameDimensions(
-          width: .zero,
-          height: .zero
-        )
-      //      FrameDimensions(nil, nil)
-    } else {
-      return FrameDimensions(
-        width: .zero,
-        height: .zero
-      )
-    }
-  }
 
   public var pointType: UnitPointType {
     if isCorner {

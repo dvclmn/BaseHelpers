@@ -113,28 +113,26 @@ extension EventModifiers {
   }
 
   public var toCompatibleModifier: CompatibleModifierKeys {
-    switch self {
-      case .shift: return .shift
-      case .control: return .control
-      case .option: return .option
-      case .command: return .command
-      case .capsLock: return .capsLock
-      default: return []
-    }
+    var result: CompatibleModifierKeys = []
+    if contains(.shift) { result.insert(.shift) }
+    if contains(.control) { result.insert(.control) }
+    if contains(.option) { result.insert(.option) }
+    if contains(.command) { result.insert(.command) }
+    if contains(.capsLock) { result.insert(.capsLock) }
+    return result
   }
 }
 
 #if canImport(AppKit)
 extension NSEvent.ModifierFlags {
   public var toCompatibleModifier: CompatibleModifierKeys {
-    switch self {
-      case .shift: return .shift
-      case .control: return .control
-      case .option: return .option
-      case .command: return .command
-      case .capsLock: return .capsLock
-      default: return []
-    }
+    var result: CompatibleModifierKeys = []
+    if contains(.shift) { result.insert(.shift) }
+    if contains(.control) { result.insert(.control) }
+    if contains(.option) { result.insert(.option) }
+    if contains(.command) { result.insert(.command) }
+    if contains(.capsLock) { result.insert(.capsLock) }
+    return result
   }
 }
 #endif
