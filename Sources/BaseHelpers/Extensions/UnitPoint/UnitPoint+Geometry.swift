@@ -19,16 +19,7 @@ public enum UnitPointType {
 extension UnitPoint {
 
 
-  public var sizeKeyPath: KeyPath<CGSize, CGFloat>? {
-    if isHorizontalEdge {
-      return \.height
-    } else if isVerticalEdge {
-      return \.width
-    } else {
-      return nil
-    }
-  }
-
+  
 
   public var pointType: UnitPointType {
     if isCorner {
