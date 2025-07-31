@@ -8,17 +8,34 @@
 import SwiftUI
 
 /// For `UnitPoint` corner cases (e.g. `topLeading`, `bottomTrailing`)
-public enum CornerStrategy {
-  case include
-  case exclude(CornerFallBack)
+enum CornerResolutionStrategy {
+  case useFixedLength
+  case collapse
+  case fallback(DimensionLength)
   
-  public var shouldIncludeCorners: Bool {
+  func resolvedSize(using fixedLength: CGFloat, in container: CGSize) -> CGSize {
     switch self {
-      case .include: true
-      case .exclude: false
+      case .useFixedLength:
+        return CGSize(width: fixedLength, height: fixedLength)
+      case .collapse:
+        return .zero
+      case .fallback(let fallbackLength):
+        let val = fallbackLength.value ?? 0
+        return CGSize(width: val, height: val)
     }
   }
 }
+//public enum CornerStrategy {
+//  case include
+//  case exclude(CornerFallBack)
+//  
+//  public var shouldIncludeCorners: Bool {
+//    switch self {
+//      case .include: true
+//      case .exclude: false
+//    }
+//  }
+//}
 public enum CornerFallBack {
   case width
   case height
@@ -34,6 +51,64 @@ public enum CornerFallBack {
     }
   }
 }
+public enum DimensionLength {
+  case fixed(CGFloat)
+  case fill    // == .infinity
+  case collapse // == .zero
+  case auto     // == nil
+  
+  var value: CGFloat? {
+    switch self {
+      case .fixed(let v): return v
+      case .fill: return .infinity
+      case .collapse: return 0
+      case .auto: return nil
+    }
+  }
+}
+
+public struct UnitRect {
+  let anchor: UnitPoint
+  let width: DimensionLength
+  let height: DimensionLength
+  let cornerStrategy: CornerResolutionStrategy
+  
+  public func resolvedSize(in container: CGSize) -> FrameDimensions {
+    let w = resolvedWidth(in: container)
+    let h = resolvedHeight(in: container)
+    return FrameDimensions(width: w, height: h)
+  }
+  
+  private func resolvedWidth(in size: CGSize) -> CGFloat? {
+    if anchor.isVerticalEdge { return width.value }
+    if anchor.isCorner {
+      return cornerStrategy.shouldIncludeCorners ? width.value : 0
+    }
+    return width.value
+  }
+  
+  private func resolvedHeight(in size: CGSize) -> CGFloat? {
+    if anchor.isHorizontalEdge { return height.value }
+    if anchor.isCorner {
+      return cornerStrategy.shouldIncludeCorners ? height.value : 0
+    }
+    return height.value
+  }
+}
+//public enum OpposingDimensionLength {
+//  case infinite
+//  case zero
+//  case `nil`
+//  
+//  public var value: CGFloat? {
+//    switch self {
+//      case .infinite: CGFloat.infinity
+//      case .zero: CGFloat.zero
+//      case .nil: nil
+//    }
+//  }
+//}
+
 
 extension UnitPoint {
   

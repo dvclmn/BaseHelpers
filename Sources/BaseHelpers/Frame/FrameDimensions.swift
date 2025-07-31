@@ -47,16 +47,3 @@ public struct FrameDimensions {
 //  }
 }
 
-public enum OpposingDimensionLength {
-  case infinite
-  case zero
-  case `nil`
-
-  public var value: CGFloat? {
-    switch self {
-      case .infinite: CGFloat.infinity
-      case .zero: CGFloat.zero
-      case .nil: nil
-    }
-  }
-}
