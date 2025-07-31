@@ -47,12 +47,14 @@ extension UnitPoint {
     return size[keyPath: sizeKeyPath]
   }
   
-  
+  /// The goal:
+  ///
+  /// To create a Rectangle within a container `CGSize`,
+  /// based on a provided `UnitPoint`.
   public func boundarySize(
     fixedLength: CGFloat,
     opposingDimensionLength: OpposingDimensionLength = .infinite,
     corners: CornerStrategy = .include
-    //    includeCorners: Bool = true
   ) -> FrameDimensions {
     
     let opposingLength: CGFloat? = opposingDimensionLength.value
