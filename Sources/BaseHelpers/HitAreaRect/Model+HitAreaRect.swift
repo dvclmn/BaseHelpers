@@ -42,7 +42,6 @@ public struct HitAreaRect {
 
     }
   }
-
 }
 
 extension HitAreaRect {
@@ -79,9 +78,14 @@ extension HitAreaRect {
         return HitAreaRect(anchor: edge, size: .zero, alignment: edge.toAlignment)
     }
 
+    let hitAreaSize =  CGSize(
+      width: max(0, width),
+      height: max(0, height)
+    )
+    
     return HitAreaRect(
       anchor: edge,
-      size: CGSize(width: width, height: height),
+      size: hitAreaSize,
       alignment: edge.toAlignment
     )
   }

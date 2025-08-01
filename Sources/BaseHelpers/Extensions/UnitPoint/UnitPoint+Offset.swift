@@ -48,7 +48,10 @@ extension UnitPoint {
     return CGSize(width: dx, height: dy)
   }
   
-  private func directionalOffset(value: CGFloat, axisValue: CGFloat) -> CGFloat {
+  private func directionalOffset(
+    value: CGFloat,
+    axisValue: CGFloat
+  ) -> CGFloat {
     if axisValue < 0.5 {
       return +value  // Left or top → move right/down
     } else if axisValue > 0.5 {
