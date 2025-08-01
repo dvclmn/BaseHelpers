@@ -18,14 +18,19 @@ public struct HitAreaRectModifier: ViewModifier {
   public func body(content: Content) -> some View {
     content
       .frame(
-        width: hitArea.size.width,
-        height: hitArea.size.height
+        maxWidth: layout.fillSize.width,
+        maxHeight: layout.fillSize.height
       )
+      .padding(layout.edgePadding)
+      //      .frame(
+      //        width: hitArea.size.width,
+      //        height: hitArea.size.height
+      //      )
       .background(colour)
       .frame(
         maxWidth: .infinity,
         maxHeight: .infinity,
-        alignment: hitArea.alignment
+        alignment: layout.alignment
       )
       .offset(rectOffset)
       .viewSize(mode: .noDebounce) { size in
@@ -34,23 +39,23 @@ public struct HitAreaRectModifier: ViewModifier {
   }
 }
 extension HitAreaRectModifier {
-  
+
   var rectOffset: CGSize {
     switch offset {
-        
+
       case .inside:
         return unitPoint.offset(by: thickness / 2)
-        
+
       case .outside:
         return unitPoint.offset(by: -thickness)
-        
-        /// I think this is default behaviour
+
+      /// I think this is default behaviour
       case .centre: return .zero
-        
+
     }
   }
-  
-  var hitArea: HitAreaLayout {
+
+  var layout: HitAreaLayout {
     return HitAreaLayout(
       from: unitPoint,
       container: containerSize,
