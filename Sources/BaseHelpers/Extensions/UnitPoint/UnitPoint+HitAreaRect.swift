@@ -41,7 +41,7 @@ public struct HitAreaRect: View {
 
       .background(colour)
 
-      .border(Color.red.opacity(0.3))
+//      .border(Color.red.opacity(0.3))
 
       //      .alignmentGuide(unitPoint.toAlignment.horizontal) { dimensions in
       //        guard let value = unitPoint.valueFromViewDimensions(dimensions: dimensions) else { return .zero }
@@ -79,6 +79,13 @@ extension HitAreaRect {
         return unitPoint.offset(by: thickness / 2)
 
       case .outside:
+        guard unitPoint.isEdge else {
+          return unitPoint.offset(
+            dx: -thickness,
+            dy: -(thickness * 2)
+          )
+          //          return unitPoint.offset(by: -(thickness * 2))
+        }
         return unitPoint.offset(by: -thickness)
 
       /// I think this is default behaviour

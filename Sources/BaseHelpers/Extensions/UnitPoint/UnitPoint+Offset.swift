@@ -25,13 +25,21 @@ extension UnitPoint {
   /// - Parameters:
   ///   - amount: A closure providing the offset amount for a given axis.
   ///   - apply: A closure that receives the final dx/dy values (you decide how to use them).
-  public func applyOffset<T>(
-    axisOffset amount: (_ axis: Axis) -> CGFloat,
-    apply: (_ dx: CGFloat, _ dy: CGFloat) -> T
-  ) -> T {
-    let dx = directionalOffset(value: amount(.horizontal), axisValue: x)
-    let dy = directionalOffset(value: amount(.vertical), axisValue: y)
-    return apply(dx, dy)
+//  public func applyOffset<T>(
+//    axisOffset amount: (_ axis: Axis) -> CGFloat,
+//    apply: (_ dx: CGFloat, _ dy: CGFloat) -> T
+//  ) -> T {
+//    let dx = directionalOffset(value: amount(.horizontal), axisValue: x)
+//    let dy = directionalOffset(value: amount(.vertical), axisValue: y)
+//    return apply(dx, dy)
+//  }
+  
+  /// Returns an offset based on this UnitPoint's position.
+  /// Positive `dx`/`dy` will push away from edges, negative will pull inward.
+  public func offset(dx: CGFloat, dy: CGFloat) -> CGSize {
+    let horizontal = x < 0.5 ? +dx : x > 0.5 ? -dx : 0
+    let vertical   = y < 0.5 ? +dy : y > 0.5 ? -dy : 0
+    return CGSize(width: horizontal, height: vertical)
   }
   
   /// Simpler version

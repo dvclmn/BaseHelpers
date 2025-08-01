@@ -34,7 +34,7 @@ public enum DimensionLength {
 
   var value: CGFloat? {
     switch self {
-      case .fixed(let v): return v
+      case .fixed(let value): return value
       case .fill: return .infinity
       case .collapse: return 0
       case .auto: return nil
