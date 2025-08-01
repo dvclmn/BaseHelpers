@@ -50,8 +50,8 @@ extension HitAreaRectModifier {
     }
   }
   
-  var hitArea: HitAreaRect {
-    return HitAreaRect(
+  var hitArea: HitAreaLayout {
+    return HitAreaLayout(
       from: unitPoint,
       container: containerSize,
       thickness: thickness

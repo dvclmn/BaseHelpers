@@ -34,7 +34,7 @@ extension UnitPoint {
       default: false
     }
   }
-  
+
   public var isEdge: Bool {
     return isHorizontalEdge || isVerticalEdge
   }
@@ -50,6 +50,16 @@ extension UnitPoint {
     switch self {
       case .leading, .trailing: true
       default: false
+    }
+  }
+
+  public var toAxis: Axis? {
+    if isHorizontalEdge {
+      return Axis.horizontal
+    } else if isVerticalEdge {
+      return Axis.vertical
+    } else {
+      return nil
     }
   }
 
