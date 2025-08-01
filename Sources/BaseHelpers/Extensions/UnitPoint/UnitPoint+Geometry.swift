@@ -14,12 +14,7 @@ public enum UnitPointType {
   case centre
 }
 
-
-
 extension UnitPoint {
-
-
-  
 
   public var pointType: UnitPointType {
     if isCorner {

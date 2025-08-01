@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+
+
 /// For `UnitPoint` corner cases (e.g. `topLeading`, `bottomTrailing`)
 public enum CornerResolutionStrategy {
   case useFixedLength
@@ -25,32 +27,7 @@ public enum CornerResolutionStrategy {
     }
   }
 }
-//public enum CornerStrategy {
-//  case include
-//  case exclude(CornerFallBack)
-//
-//  public var shouldIncludeCorners: Bool {
-//    switch self {
-//      case .include: true
-//      case .exclude: false
-//    }
-//  }
-//}
-public enum CornerFallBack {
-  case width
-  case height
-  case zero
-  case custom(CGFloat)
 
-  public func value(_ size: CGSize) -> CGFloat {
-    switch self {
-      case .width: size.width
-      case .height: size.height
-      case .zero: .zero
-      case .custom(let float): float
-    }
-  }
-}
 public enum DimensionLength {
   case fixed(CGFloat)
   case fill  // == .infinity
@@ -130,11 +107,18 @@ public struct UnitRect {
       return height.value  // fallback (non-edge case)
     }
   }
-  
+
   public var alignment: Alignment {
     anchor.toAlignment
   }
 }
+
+public enum RectBoundaryPlacement {
+  case inside
+  case centre
+  case outside
+}
+
 //public enum OpposingDimensionLength {
 //  case infinite
 //  case zero
@@ -160,7 +144,7 @@ extension UnitPoint {
     }
     return size[keyPath: sizeKeyPath]
   }
-  
+
   private var sizeKeyPath: KeyPath<CGSize, CGFloat>? {
     if isHorizontalEdge {
       return \.height
@@ -170,12 +154,28 @@ extension UnitPoint {
       return nil
     }
   }
+}
 
+public enum CornerFallBack {
+  case width
+  case height
+  case zero
+  case custom(CGFloat)
 
-  /// The goal:
-  ///
-  /// To create a Rectangle within a container `CGSize`,
-  /// based on a provided `UnitPoint`.
+  public func value(_ size: CGSize) -> CGFloat {
+    switch self {
+      case .width: size.width
+      case .height: size.height
+      case .zero: .zero
+      case .custom(let float): float
+    }
+  }
+}
+
+/// The goal:
+///
+/// To create a Rectangle within a container `CGSize`,
+/// based on a provided `UnitPoint`.
 //  public func boundarySize(
 //    fixedLength: CGFloat,
 //    opposingDimensionLength: OpposingDimensionLength = .infinite,
@@ -213,5 +213,3 @@ extension UnitPoint {
 //      )
 //    }
 //  }
-
-}
