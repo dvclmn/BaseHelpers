@@ -32,8 +32,8 @@ public struct GridRect: GridBase {
   /// `GridPosition`(s) that lay at negative coordinates.
   /// Otherwise `GridRect` is too restricted.
   public init(
-    boundingPositions a: GridPosition,
-    _ b: GridPosition,
+    startPosition a: GridPosition,
+    endPosition b: GridPosition,
     cellSize: CGSize
   ) {
 
@@ -61,7 +61,7 @@ public struct GridRect: GridBase {
 
   public init(fromRect rect: CGRect, cellSize: CGSize) {
     let (a, b) = Self.gridPositions(from: rect, cellSize: cellSize)
-    self.init(boundingPositions: a, b, cellSize: cellSize)
+    self.init(startPosition: a, endPosition: b, cellSize: cellSize)
   }
   
 //  public init(
@@ -167,7 +167,7 @@ extension GridRect {
     guard let (a, b) = gridPositionsIfContained(in: bounds, from: rect, cellSize: cellSize)
     else { return nil }
     
-    return GridRect(boundingPositions: a, b, cellSize: cellSize)
+    return GridRect(startPosition: a, endPosition: b, cellSize: cellSize)
   }
 
 

@@ -7,72 +7,69 @@
 
 import SwiftUI
 
-public struct HitAreaRect: View {
+public struct HitAreaRectModifier: ViewModifier {
+
+  @State private var isHovering: Bool = false
+
+  private let offset: RectBoundaryPlacement = .outside
+  //  private let corners: HitAreaCorner = .
 
   let unitPoint: UnitPoint
-  let thickness: CGFloat
-  let offset: RectBoundaryPlacement
+  let size: CGSize
+  //  let thickness: CGFloat
+  //  let cornerSize: CGSize
   let colour: Color
-  let corners: HitAreaCorner
+  let onTap: () -> Void
 
-  public init(
-    unitPoint: UnitPoint,
-    thickness: CGFloat,
-    offset: RectBoundaryPlacement = .centre,
-    colour: Color = .blue,
-    corners: HitAreaCorner
-  ) {
-    self.unitPoint = unitPoint
-    self.thickness = thickness
-    self.offset = offset
-    self.colour = colour
-    self.corners = corners
-  }
+  /// Let's make an assumption for simplicity;
+  /// Corners with a fixed Size, and Outside
+  /// boundary placment
+  //  let corners: HitAreaCorner
+  //  let offset: RectBoundaryPlacement
 
-  public var body: some View {
+  public func body(content: Content) -> some View {
+    content
+      .overlay(alignment: unitPoint.toAlignment) {
+        Rectangle()
+          .fill(.clear)
+          .frame(
+            maxWidth: layout.fillSize.width,
+            maxHeight: layout.fillSize.height
+          )
+          .padding(layout.edgePadding)
 
-    Rectangle()
-      .fill(.clear)
-      .frame(
-        maxWidth: layout.fillSize.width,
-        maxHeight: layout.fillSize.height
-      )
-      .padding(layout.edgePadding)
+          .background(isHovering ? colour.midOpacity : .clear)
+          .border(isHovering ? colour : .clear)
 
-      .background(colour)
-
-//      .border(Color.red.opacity(0.3))
-
-      //      .alignmentGuide(unitPoint.toAlignment.horizontal) { dimensions in
-      //        guard let value = unitPoint.valueFromViewDimensions(dimensions: dimensions) else { return .zero }
-      //        return value * 2
-      //      }
-      //      .alignmentGuide(unitPoint.toAlignment.vertical) { dimensions in
-      //        switch unitPoint.pointType {
-      //          case .horizontalEdge:
-      //            guard let value = unitPoint.valueFromViewDimensions(dimensions: dimensions) else { return .zero }
-      //            return value / 2
-      //          case .verticalEdge:
-      //            return .zero
-      //          case .corner:
-      //            return -200
-      //          case .centre:
-      //            return .zero
-      //        }
-      ////        guard let value = unitPoint.valueFromViewDimensions(dimensions: dimensions) else { return .zero }
-      ////        return value * 2
-      //      }
-      .frame(
-        maxWidth: .infinity,
-        maxHeight: .infinity,
-        alignment: layout.alignment
-      )
-      .offset(rectOffset)
+          .onHover { hovering in
+            isHovering = hovering
+          }
+          .simultaneousGesture(
+            TapGesture()
+              .onEnded { _ in
+                if isHovering {
+                  onTap()
+                }
+              }
+          )
+          //          .onTapGesture {
+          //            onTap()
+          //          }
+          .offset(rectOffset)
+      }
   }
 }
-extension HitAreaRect {
+extension HitAreaRectModifier {
+
+  var thickness: CGFloat {
+    unitPoint.valueFromSize(
+      size,
+      fallBackIfCorner: .width
+    )
+  }
 
   var rectOffset: CGSize {
+
     switch offset {
 
       case .inside:
@@ -98,10 +95,97 @@ extension HitAreaRect {
     return HitAreaLayout(
       from: unitPoint,
       thickness: thickness,
-      corners: corners
+      corners: .fixedSize(size)
     )
   }
 }
+
+extension View {
+  public func hitAreaRect(
+    unitPoint: UnitPoint,
+    size: CGSize,
+    //    thickness: CGFloat,
+    //    cornerSize: CGSize,
+    colour: Color = .blue,
+    onTap: @escaping () -> Void
+  ) -> some View {
+    self.modifier(
+      HitAreaRectModifier(
+        unitPoint: unitPoint,
+        size: size,
+        //        thickness: thickness,
+        //        cornerSize: cornerSize,
+        colour: colour,
+        onTap: onTap
+      )
+    )
+  }
+}
+
+//public struct HitAreaRect: View {
+//
+//  let unitPoint: UnitPoint
+//  let thickness: CGFloat
+//  let offset: RectBoundaryPlacement
+//  let colour: Color
+//  let corners: HitAreaCorner
+//
+//  public init(
+//    unitPoint: UnitPoint,
+//    thickness: CGFloat,
+//    offset: RectBoundaryPlacement = .centre,
+//    colour: Color = .blue,
+//    corners: HitAreaCorner
+//  ) {
+//    self.unitPoint = unitPoint
+//    self.thickness = thickness
+//    self.offset = offset
+//    self.colour = colour
+//    self.corners = corners
+//  }
+//
+//  public var body: some View {
+//
+//    Rectangle()
+//      .fill(.clear)
+//      .frame(
+//        maxWidth: layout.fillSize.width,
+//        maxHeight: layout.fillSize.height
+//      )
+//      .padding(layout.edgePadding)
+//
+//      .background(colour)
+//
+////      .border(Color.red.opacity(0.3))
+//
+//      //      .alignmentGuide(unitPoint.toAlignment.horizontal) { dimensions in
+//      //        guard let value = unitPoint.valueFromViewDimensions(dimensions: dimensions) else { return .zero }
+//      //        return value * 2
+//      //      }
+//      //      .alignmentGuide(unitPoint.toAlignment.vertical) { dimensions in
+//      //        switch unitPoint.pointType {
+//      //          case .horizontalEdge:
+//      //            guard let value = unitPoint.valueFromViewDimensions(dimensions: dimensions) else { return .zero }
+//      //            return value / 2
+//      //          case .verticalEdge:
+//      //            return .zero
+//      //          case .corner:
+//      //            return -200
+//      //          case .centre:
+//      //            return .zero
+//      //        }
+//      ////        guard let value = unitPoint.valueFromViewDimensions(dimensions: dimensions) else { return .zero }
+//      ////        return value * 2
+//      //      }
+//      .frame(
+//        maxWidth: .infinity,
+//        maxHeight: .infinity,
+//        alignment: layout.alignment
+//      )
+//      .offset(rectOffset)
+//  }
+//}
+
 //#if DEBUG
 //@available(macOS 15, iOS 18, *)
 //#Preview(traits: .size(.normal)) {
