@@ -10,15 +10,9 @@ import SwiftUI
 /// An Adaptation
 public struct HitAreaLayout {
   public let anchor: UnitPoint
-  public let fillDirection: Axis // .horizontal or .vertical
+  public let fillDirection: Axis
   public let thickness: CGFloat
   public let excludingCorners: Bool
-//}
-
-//public struct HitAreaRect {
-//  public let anchor: UnitPoint
-//  public let size: CGSize
-//  public let alignment: Alignment
 
   public init(
     anchor: UnitPoint,
@@ -31,33 +25,18 @@ public struct HitAreaLayout {
     self.thickness = thickness
     self.excludingCorners = excludingCorners
   }
-  
-//  public init(
-//    anchor: UnitPoint,
-//    size: CGSize,
-//    alignment: Alignment
-//  ) {
-//    self.anchor = anchor
-//    self.size = size
-//    self.alignment = alignment
-//  }
 
   public init(
     from unitPoint: UnitPoint,
-    container size: CGSize,
     thickness: CGFloat,
+    excludingCorners: Bool
   ) {
     if unitPoint.isEdge {
       self = HitAreaLayout.edge(
         unitPoint,
         thickness: thickness,
-        excludingCorners: true
+        excludingCorners: excludingCorners
       )
-//      self = HitAreaRect.fromEdge(
-//        unitPoint,
-//        container: size,
-//        thickness: thickness
-//      )
 
     } else {
       self = HitAreaLayout.corner(

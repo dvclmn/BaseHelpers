@@ -77,6 +77,7 @@ extension UnitPoint {
 public enum CornerFallBack {
   case width
   case height
+//  case detect(UnitPoint)
   case zero
   case custom(CGFloat)
 
@@ -84,6 +85,7 @@ public enum CornerFallBack {
     switch self {
       case .width: size.width
       case .height: size.height
+//      case .detect(let unitPoint): size[keyPath: unitPoint.si]
       case .zero: .zero
       case .custom(let float): float
     }
