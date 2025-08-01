@@ -30,9 +30,7 @@ public struct HitAreaRect: View {
   }
 
   public var body: some View {
-    //    ZStack {
-    //
-    //    }
+
     Rectangle()
       .fill(.clear)
       .frame(
@@ -42,11 +40,13 @@ public struct HitAreaRect: View {
       .padding(layout.edgePadding)
 
       .background(colour)
-      .frame(
-        maxWidth: .infinity,
-        maxHeight: .infinity,
-        alignment: layout.alignment
-      )
+      
+      .border(Color.red.opacity(0.3))
+//      .frame(
+//        maxWidth: .infinity,
+//        maxHeight: .infinity,
+//        alignment: layout.alignment
+//      )
       .offset(rectOffset)
   }
 }

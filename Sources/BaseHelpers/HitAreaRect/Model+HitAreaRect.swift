@@ -10,18 +10,22 @@ import SwiftUI
 /// An Adaptation
 public struct HitAreaLayout {
   public let anchor: UnitPoint
-  public let fillDirection: Axis
+//  public let fillDirection: Axis
   public let thickness: CGFloat
   public let excludingCorners: Bool
+  
+  public var fillDirection: Axis {
+    anchor.toAxis ?? .vertical
+  }
 
   public init(
     anchor: UnitPoint,
-    fill: Axis,
+//    fill: Axis,
     thickness: CGFloat,
     excludingCorners: Bool
   ) {
     self.anchor = anchor
-    self.fillDirection = fill
+//    self.fillDirection = fill
     self.thickness = thickness
     self.excludingCorners = excludingCorners
   }
@@ -55,16 +59,8 @@ extension HitAreaLayout {
     thickness: CGFloat,
     excludingCorners: Bool
   ) -> HitAreaLayout {
-    let fill: Axis
-    switch edge {
-      case .top, .bottom: fill = .horizontal
-      case .leading, .trailing: fill = .vertical
-      default:
-        preconditionFailure("Use `.corner(...)` for corners")
-    }
     return HitAreaLayout(
       anchor: edge,
-      fill: fill,
       thickness: thickness,
       excludingCorners: excludingCorners
     )
@@ -76,7 +72,6 @@ extension HitAreaLayout {
   ) -> HitAreaLayout {
     HitAreaLayout(
       anchor: corner,
-      fill: .horizontal, // not really used
       thickness: size,
       excludingCorners: false
     )
