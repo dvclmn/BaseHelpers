@@ -34,6 +34,10 @@ extension UnitPoint {
       default: false
     }
   }
+  
+  public var isEdge: Bool {
+    return isHorizontalEdge || isVerticalEdge
+  }
 
   public var isHorizontalEdge: Bool {
     switch self {

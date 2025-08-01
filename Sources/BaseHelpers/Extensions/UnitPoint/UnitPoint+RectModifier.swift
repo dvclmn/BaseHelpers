@@ -7,21 +7,21 @@
 
 import SwiftUI
 
-
-public struct RectangleOverlayModifier: ViewModifier {
+public struct HitAreaRectModifier: ViewModifier {
   @State private var containerSize: CGSize = .zero
-  let unitRect: UnitRect
+//  let unitRect: UnitRect
+  let hitArea: HitAreaRect
   let colour: Color
 
   public func body(content: Content) -> some View {
     content
-      .frame(width: size.width, height: size.height)
+      .frame(width: hitArea.size.width, height: hitArea.size.height)
 //      .alignmentGuide(.leading) { d in 0 }
       .background(colour)
       .frame(
         maxWidth: .infinity,
         maxHeight: .infinity,
-        alignment: unitRect.anchor.toAlignment
+        alignment: hitArea.alignment
       )
       .viewSize(mode: .noDebounce) { size in
         containerSize = size
@@ -29,30 +29,49 @@ public struct RectangleOverlayModifier: ViewModifier {
     //      )
   }
 }
-extension RectangleOverlayModifier {
-  var size: FrameDimensions { unitRect.resolvedSize(in: containerSize) }
-}
+//extension RectangleOverlayModifier {
+//  var size: FrameDimensions { unitRect.resolvedSize(in: containerSize) }
+//}
 
 extension View {
-  public func boundaryRect(
-    _ anchor: UnitPoint,
-    width: DimensionLength,
-    height: DimensionLength,
-    colour: Color = .blue,
-    corners: CornerResolutionStrategy
+  
+  func hitAreaRect(
+    unitPoint: UnitPoint,
+    container size: CGSize,
+    thickness: CGFloat,
+    colour: Color = .blue
   ) -> some View {
     self.modifier(
-      RectangleOverlayModifier(
-        unitRect: UnitRect(
-          anchor: anchor,
-          width: width,
-          height: height,
-          cornerStrategy: corners
+      HitAreaRectModifier(
+        hitArea: HitAreaRect(
+          from: unitPoint,
+          container: size,
+          thickness: thickness
         ),
-        colour: colour,
+        colour: colour
       )
     )
   }
+  
+//  public func boundaryRect(
+//    _ anchor: UnitPoint,
+//    width: DimensionLength,
+//    height: DimensionLength,
+//    colour: Color = .blue,
+//    corners: CornerResolutionStrategy
+//  ) -> some View {
+//    self.modifier(
+//      RectangleOverlayModifier(
+//        unitRect: UnitRect(
+//          anchor: anchor,
+//          width: width,
+//          height: height,
+//          cornerStrategy: corners
+//        ),
+//        colour: colour,
+//      )
+//    )
+//  }
 }
 
 //public struct UnitRectModifier: ViewModifier {
