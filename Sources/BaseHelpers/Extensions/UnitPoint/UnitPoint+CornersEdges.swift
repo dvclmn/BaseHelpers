@@ -7,8 +7,6 @@
 
 import SwiftUI
 
-
-
 /// For `UnitPoint` corner cases (e.g. `topLeading`, `bottomTrailing`)
 public enum CornerResolutionStrategy {
   case useFixedLength
@@ -44,7 +42,6 @@ public enum DimensionLength {
   }
 }
 
-
 public enum RectBoundaryPlacement {
   case inside
   case centre
@@ -54,7 +51,7 @@ public enum RectBoundaryPlacement {
 extension UnitPoint {
 
   public func valueFromSize(
-    size: CGSize,
+    _ size: CGSize,
     fallBackIfCorner fallBack: CornerFallBack = .zero
   ) -> CGFloat {
     guard let sizeKeyPath else {
@@ -63,7 +60,26 @@ extension UnitPoint {
     return size[keyPath: sizeKeyPath]
   }
 
+  public func valueFromViewDimensions(
+    dimensions: ViewDimensions
+  ) -> CGFloat? {
+    guard let viewDimensionsKeyPath else {
+      return nil
+    }
+    return dimensions[keyPath: viewDimensionsKeyPath]
+  }
+
   private var sizeKeyPath: KeyPath<CGSize, CGFloat>? {
+    if isHorizontalEdge {
+      return \.height
+    } else if isVerticalEdge {
+      return \.width
+    } else {
+      return nil
+    }
+  }
+
+  private var viewDimensionsKeyPath: KeyPath<ViewDimensions, CGFloat>? {
     if isHorizontalEdge {
       return \.height
     } else if isVerticalEdge {
@@ -77,7 +93,7 @@ extension UnitPoint {
 public enum CornerFallBack {
   case width
   case height
-//  case detect(UnitPoint)
+  //  case detect(UnitPoint)
   case zero
   case custom(CGFloat)
 
@@ -85,7 +101,7 @@ public enum CornerFallBack {
     switch self {
       case .width: size.width
       case .height: size.height
-//      case .detect(let unitPoint): size[keyPath: unitPoint.si]
+      //      case .detect(let unitPoint): size[keyPath: unitPoint.si]
       case .zero: .zero
       case .custom(let float): float
     }

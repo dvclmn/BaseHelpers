@@ -13,20 +13,20 @@ public struct HitAreaRect: View {
   let thickness: CGFloat
   let offset: RectBoundaryPlacement
   let colour: Color
-  let excludingCorners: Bool
+  let corners: HitAreaCorner
 
   public init(
     unitPoint: UnitPoint,
     thickness: CGFloat,
     offset: RectBoundaryPlacement = .centre,
     colour: Color = .blue,
-    excludingCorners: Bool
+    corners: HitAreaCorner
   ) {
     self.unitPoint = unitPoint
     self.thickness = thickness
     self.offset = offset
     self.colour = colour
-    self.excludingCorners = excludingCorners
+    self.corners = corners
   }
 
   public var body: some View {
@@ -40,13 +40,33 @@ public struct HitAreaRect: View {
       .padding(layout.edgePadding)
 
       .background(colour)
-      
+
       .border(Color.red.opacity(0.3))
-//      .frame(
-//        maxWidth: .infinity,
-//        maxHeight: .infinity,
-//        alignment: layout.alignment
-//      )
+
+      //      .alignmentGuide(unitPoint.toAlignment.horizontal) { dimensions in
+      //        guard let value = unitPoint.valueFromViewDimensions(dimensions: dimensions) else { return .zero }
+      //        return value * 2
+      //      }
+      //      .alignmentGuide(unitPoint.toAlignment.vertical) { dimensions in
+      //        switch unitPoint.pointType {
+      //          case .horizontalEdge:
+      //            guard let value = unitPoint.valueFromViewDimensions(dimensions: dimensions) else { return .zero }
+      //            return value / 2
+      //          case .verticalEdge:
+      //            return .zero
+      //          case .corner:
+      //            return -200
+      //          case .centre:
+      //            return .zero
+      //        }
+      ////        guard let value = unitPoint.valueFromViewDimensions(dimensions: dimensions) else { return .zero }
+      ////        return value * 2
+      //      }
+      .frame(
+        maxWidth: .infinity,
+        maxHeight: .infinity,
+        alignment: layout.alignment
+      )
       .offset(rectOffset)
   }
 }
@@ -71,7 +91,7 @@ extension HitAreaRect {
     return HitAreaLayout(
       from: unitPoint,
       thickness: thickness,
-      excludingCorners: excludingCorners
+      corners: corners
     )
   }
 }

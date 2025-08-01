@@ -12,7 +12,8 @@ public struct HitAreaLayout {
   public let anchor: UnitPoint
 //  public let fillDirection: Axis
   public let thickness: CGFloat
-  public let excludingCorners: Bool
+  public let corners: HitAreaCorner
+//  public let excludingCorners: Bool
   
   public var fillDirection: Axis {
     anchor.toAxis ?? .vertical
@@ -22,30 +23,32 @@ public struct HitAreaLayout {
     anchor: UnitPoint,
 //    fill: Axis,
     thickness: CGFloat,
-    excludingCorners: Bool
+    corners: HitAreaCorner
   ) {
     self.anchor = anchor
 //    self.fillDirection = fill
     self.thickness = thickness
-    self.excludingCorners = excludingCorners
+    self.corners = corners
   }
 
   public init(
     from unitPoint: UnitPoint,
     thickness: CGFloat,
-    excludingCorners: Bool
+    corners: HitAreaCorner,
   ) {
     if unitPoint.isEdge {
       self = HitAreaLayout.edge(
         unitPoint,
         thickness: thickness,
-        excludingCorners: excludingCorners
+        corners: corners
       )
 
     } else {
       self = HitAreaLayout.corner(
         unitPoint,
-        size: thickness
+        thickness: thickness,
+        corners: corners
+//        size: thickness
       )
 
     }
@@ -57,23 +60,27 @@ extension HitAreaLayout {
   public static func edge(
     _ edge: UnitPoint,
     thickness: CGFloat,
-    excludingCorners: Bool
+    corners: HitAreaCorner
   ) -> HitAreaLayout {
     return HitAreaLayout(
       anchor: edge,
       thickness: thickness,
-      excludingCorners: excludingCorners
+      corners: corners
     )
   }
   
   public static func corner(
     _ corner: UnitPoint,
-    size: CGFloat
+    thickness: CGFloat,
+    corners: HitAreaCorner,
+//    size: CGFloat
   ) -> HitAreaLayout {
+    
     HitAreaLayout(
       anchor: corner,
-      thickness: size,
-      excludingCorners: false
+      thickness: thickness,
+      corners: corners
+//      excludingCorners: false
     )
   }
   
@@ -82,16 +89,21 @@ extension HitAreaLayout {
   }
   
   public var fillSize: CGSize {
-    switch fillDirection {
-      case .horizontal:
+    switch anchor.pointType {
+      case .horizontalEdge:
         return CGSize(width: .infinity, height: thickness)
-      case .vertical:
+      case .verticalEdge:
         return CGSize(width: thickness, height: .infinity)
+      case .corner:
+        return corners.value(thickness)
+      case .centre:
+        return .zero
+        
     }
   }
   
   public var edgePadding: EdgeInsets {
-    guard excludingCorners else { return .zero }
+    guard !corners.shouldIncludeCorners else { return .zero }
     let inset = thickness
     switch anchor {
       case .top:
@@ -120,6 +132,28 @@ extension EdgeInsets {
     self.trailing = trailing
   }
 }
+
+public enum HitAreaCorner {
+  case zero // No corner needed
+  case thickness
+  case fixedSize(CGSize)
+  
+  public func value(_ thickness: CGFloat) -> CGSize {
+    switch self {
+      case .zero: .zero
+      case .thickness: CGSize(fromLength: thickness)
+      case .fixedSize(let size): size
+    }
+  }
+  
+  public var shouldIncludeCorners: Bool {
+    switch self {
+      case .zero: false
+      default: true
+    }
+  }
+}
+
   
   /// The edge we’re describing: e.g. `.top`, `.trailing`
   /// The full canvas size (so we know how wide/tall things are)
