@@ -70,7 +70,6 @@ extension UnitPoint {
     )
     return result
   }
-  
 
   /// Corner intermediates (positioned between corners and edge centers)
   public static let topLeadingMid = UnitPoint(x: 0.25, y: 0.25)
@@ -108,33 +107,45 @@ extension UnitPoint {
 
   public var opposing: UnitPoint {
     switch self {
-      case .topLeading: .bottomTrailing
-      case .top: .bottom
-      case .topTrailing: .bottomLeading
-      case .trailing: .leading
-      case .bottomTrailing: .topLeading
-      case .bottom: .top
-      case .bottomLeading: .topTrailing
-      case .leading: .trailing
-      case .center: .center
-      default: .center
+      case .top: return .bottom
+      case .bottom: return .top
+      case .leading: return .trailing
+      case .trailing: return .leading
+      case .topLeading: return .bottomTrailing
+      case .topTrailing: return .bottomLeading
+      case .bottomLeading: return .topTrailing
+      case .bottomTrailing: return .topLeading
+      default: return .center
     }
   }
 
   public var toAlignment: Alignment {
     switch self {
-      case .topLeading: .topLeading
-      case .top: .top
-      case .topTrailing: .topTrailing
-      case .trailing: .trailing
-      case .bottomTrailing: .bottomTrailing
-      case .bottom: .bottom
-      case .bottomLeading: .bottomLeading
-      case .leading: .leading
-      case .center: .center
-      default: .center
+      case .top: return .top
+      case .bottom: return .bottom
+      case .leading: return .leading
+      case .trailing: return .trailing
+      case .topLeading: return .topLeading
+      case .topTrailing: return .topTrailing
+      case .bottomLeading: return .bottomLeading
+      case .bottomTrailing: return .bottomTrailing
+      default: return .center
     }
   }
+  //  public var toAlignment: Alignment {
+  //    switch self {
+  //      case .topLeading: .topLeading
+  //      case .top: .top
+  //      case .topTrailing: .topTrailing
+  //      case .trailing: .trailing
+  //      case .bottomTrailing: .bottomTrailing
+  //      case .bottom: .bottom
+  //      case .bottomLeading: .bottomLeading
+  //      case .leading: .leading
+  //      case .center: .center
+  //      default: .center
+  //    }
+  //  }
 
   /// This is just for visual debugging
   public var debugColour: Color {

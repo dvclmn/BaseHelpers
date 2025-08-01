@@ -44,94 +44,12 @@ public enum DimensionLength {
   }
 }
 
-public struct UnitRect {
-  public let anchor: UnitPoint
-  public let width: DimensionLength
-  public let height: DimensionLength
-  public let cornerStrategy: CornerResolutionStrategy
-
-  public init(
-    anchor: UnitPoint,
-    width: DimensionLength,
-    height: DimensionLength,
-    cornerStrategy: CornerResolutionStrategy = .useFixedLength
-  ) {
-    self.anchor = anchor
-    self.width = width
-    self.height = height
-    self.cornerStrategy = cornerStrategy
-  }
-
-  public func resolvedSize(in container: CGSize) -> FrameDimensions {
-    if anchor.isCorner {
-      let cornerSize = cornerStrategy.resolvedSize(
-        using: fixedLengthValue,
-        in: container
-      )
-      return FrameDimensions(
-        width: cornerSize.width,
-        height: cornerSize.height
-      )
-    }
-
-    return FrameDimensions(
-      width: resolvedWidth(in: container),
-      height: resolvedHeight(in: container)
-    )
-  }
-
-  // MARK: - Helpers
-
-  private var fixedLengthValue: CGFloat {
-    /// This assumes you're treating either width or height as the "fixed"
-    /// axis when dealing with corner sizing. You can adjust this as needed.
-    width.value ?? height.value ?? 0
-  }
-
-  private func resolvedWidth(in container: CGSize) -> CGFloat? {
-    if anchor.isVerticalEdge {
-      return width.value
-    } else if anchor.isHorizontalEdge {
-      return width.value
-    } else {
-      return width.value  // fallback (non-edge case)
-    }
-  }
-
-  private func resolvedHeight(in container: CGSize) -> CGFloat? {
-    if anchor.isHorizontalEdge {
-      return height.value
-    } else if anchor.isVerticalEdge {
-      return height.value
-    } else {
-      return height.value  // fallback (non-edge case)
-    }
-  }
-
-  public var alignment: Alignment {
-    anchor.toAlignment
-  }
-}
 
 public enum RectBoundaryPlacement {
   case inside
   case centre
   case outside
 }
-
-//public enum OpposingDimensionLength {
-//  case infinite
-//  case zero
-//  case `nil`
-//
-//  public var value: CGFloat? {
-//    switch self {
-//      case .infinite: CGFloat.infinity
-//      case .zero: CGFloat.zero
-//      case .nil: nil
-//    }
-//  }
-//}
 
 extension UnitPoint {
 
