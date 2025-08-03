@@ -7,7 +7,12 @@
 
 import SwiftUI
 
-public struct HitAreaRectModifier: ViewModifier {
+/// This is a total duplicate of `HitAreaRectModifier`. I was having trouble
+/// getting my head around how this should differ from
+/// a Selection-based DragGesture hit area, for reszing
+/// the Canvas. So have duplicated them, and will
+/// probably join back together later if it makes sense
+public struct CellPreviewRectModifier: ViewModifier {
 
   @State private var isHovering: Bool = false
 
@@ -59,7 +64,7 @@ public struct HitAreaRectModifier: ViewModifier {
       }
   }
 }
-extension HitAreaRectModifier {
+extension CellPreviewRectModifier {
 
   var thickness: CGFloat {
     unitPoint.valueFromSize(
@@ -101,7 +106,7 @@ extension HitAreaRectModifier {
 }
 
 extension View {
-  public func hitAreaRect(
+  public func cellPreviewRect(
     unitPoint: UnitPoint,
     size: CGSize,
     //    thickness: CGFloat,
@@ -110,7 +115,7 @@ extension View {
     onTap: @escaping () -> Void
   ) -> some View {
     self.modifier(
-      HitAreaRectModifier(
+      CellPreviewRectModifier(
         unitPoint: unitPoint,
         size: size,
         //        thickness: thickness,

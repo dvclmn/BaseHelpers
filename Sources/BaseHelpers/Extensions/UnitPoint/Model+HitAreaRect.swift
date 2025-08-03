@@ -10,23 +10,23 @@ import SwiftUI
 /// An Adaptation
 public struct HitAreaLayout {
   public let anchor: UnitPoint
-//  public let fillDirection: Axis
+  //  public let fillDirection: Axis
   public let thickness: CGFloat
   public let corners: HitAreaCorner
-//  public let excludingCorners: Bool
-  
+  //  public let excludingCorners: Bool
+
   public var fillDirection: Axis {
     anchor.toAxis ?? .vertical
   }
 
   public init(
     anchor: UnitPoint,
-//    fill: Axis,
+    //    fill: Axis,
     thickness: CGFloat,
     corners: HitAreaCorner
   ) {
     self.anchor = anchor
-//    self.fillDirection = fill
+    //    self.fillDirection = fill
     self.thickness = thickness
     self.corners = corners
   }
@@ -48,7 +48,7 @@ public struct HitAreaLayout {
         unitPoint,
         thickness: thickness,
         corners: corners
-//        size: thickness
+          //        size: thickness
       )
 
     }
@@ -56,7 +56,7 @@ public struct HitAreaLayout {
 }
 
 extension HitAreaLayout {
-  
+
   public static func edge(
     _ edge: UnitPoint,
     thickness: CGFloat,
@@ -68,26 +68,26 @@ extension HitAreaLayout {
       corners: corners
     )
   }
-  
+
   public static func corner(
     _ corner: UnitPoint,
     thickness: CGFloat,
     corners: HitAreaCorner,
-//    size: CGFloat
+    //    size: CGFloat
   ) -> HitAreaLayout {
-    
+
     HitAreaLayout(
       anchor: corner,
       thickness: thickness,
       corners: corners
-//      excludingCorners: false
+        //      excludingCorners: false
     )
   }
-  
+
   public var alignment: Alignment {
     anchor.toAlignment
   }
-  
+
   public var fillSize: CGSize {
     switch anchor.pointType {
       case .horizontalEdge:
@@ -98,10 +98,10 @@ extension HitAreaLayout {
         return corners.value(thickness)
       case .centre:
         return .zero
-        
+
     }
   }
-  
+
   public var edgePadding: EdgeInsets {
     guard !corners.shouldIncludeCorners else { return .zero }
     let inset = thickness
@@ -123,7 +123,7 @@ extension EdgeInsets {
   static var zero: EdgeInsets {
     EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)
   }
-  
+
   init(top: CGFloat = 0, leading: CGFloat = 0, bottom: CGFloat = 0, trailing: CGFloat = 0) {
     self.init()
     self.top = top
@@ -134,10 +134,10 @@ extension EdgeInsets {
 }
 
 public enum HitAreaCorner {
-  case zero // No corner needed
+  case zero  // No corner needed
   case thickness
   case fixedSize(CGSize)
-  
+
   public func value(_ thickness: CGFloat) -> CGSize {
     switch self {
       case .zero: .zero
@@ -145,7 +145,7 @@ public enum HitAreaCorner {
       case .fixedSize(let size): size
     }
   }
-  
+
   public var shouldIncludeCorners: Bool {
     switch self {
       case .zero: false
@@ -154,12 +154,11 @@ public enum HitAreaCorner {
   }
 }
 
-  
-  /// The edge we’re describing: e.g. `.top`, `.trailing`
-  /// The full canvas size (so we know how wide/tall things are)
-  /// How 'thick' the hit area should be (e.g. 20 points)
-  /// Whether to leave room for corner hit areas
-  /// If so, how big the corners are (to subtract from edge length)
+/// The edge we’re describing: e.g. `.top`, `.trailing`
+/// The full canvas size (so we know how wide/tall things are)
+/// How 'thick' the hit area should be (e.g. 20 points)
+/// Whether to leave room for corner hit areas
+/// If so, how big the corners are (to subtract from edge length)
 //  public static func fromEdge(
 //    _ edge: UnitPoint,
 //    container: CGSize,
@@ -192,7 +191,7 @@ public enum HitAreaCorner {
 //      width: max(0, width),
 //      height: max(0, height)
 //    )
-//    
+//
 //    return HitAreaRect(
 //      anchor: edge,
 //      size: hitAreaSize,
