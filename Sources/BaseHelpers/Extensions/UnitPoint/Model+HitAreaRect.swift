@@ -10,19 +10,22 @@ import SwiftUI
 public struct HitAreaLayout {
   let anchor: UnitPoint
   let thickness: CGFloat
+  let offset: RectBoundaryPlacement
   let shouldIncludeCorners: Bool
 
-  public var fillDirection: Axis {
+  var fillDirection: Axis {
     anchor.toAxis ?? .vertical
   }
 
   public init(
     anchor: UnitPoint,
     thickness: CGFloat,
+    offset: RectBoundaryPlacement,
     shouldIncludeCorners: Bool,
   ) {
     self.anchor = anchor
     self.thickness = thickness
+    self.offset = offset
     self.shouldIncludeCorners = shouldIncludeCorners
   }
 }
@@ -47,33 +50,46 @@ extension HitAreaLayout {
     }
   }
 
+  /// Padding created to accomodate corners if present
   public var edgePadding: EdgeInsets {
-    guard shouldIncludeCorners else { return .zero }
+
     let inset = thickness
-    switch anchor {
-      case .top:
-        return EdgeInsets(leading: inset, trailing: inset)
-      case .bottom:
-        return EdgeInsets(leading: inset, trailing: inset)
-      case .leading:
-        return EdgeInsets(top: inset, bottom: inset)
-      case .trailing:
-        return EdgeInsets(top: inset, bottom: inset)
+
+    let padding: EdgeInsets =
+      switch (offset, shouldIncludeCorners) {
+        case (.outside, _): .zero
+        case (_, false): .zero
+        case (.inside, true): anchor.hitAreaPadding(inset)
+        case (.centre, true): anchor.hitAreaPadding(inset / 2)
+
+      }
+
+    return padding
+  }
+
+  public var rectOffset: CGSize {
+
+    let offsetAmount: CGFloat =
+      switch offset {
+        case .inside: .zero
+        case .outside: -thickness
+        case .centre: -thickness / 2
+      }
+    return anchor.offset(by: offsetAmount)
+  }
+}
+
+extension UnitPoint {
+  func hitAreaPadding(_ amount: CGFloat) -> EdgeInsets {
+    switch self {
+      case .top, .bottom:
+        return EdgeInsets(leading: amount, trailing: amount)
+
+      case .leading, .trailing:
+        return EdgeInsets(top: amount, bottom: amount)
+
       default:
         return .zero
     }
-  }
-}
-extension EdgeInsets {
-  static var zero: EdgeInsets {
-    EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)
-  }
-
-  init(top: CGFloat = 0, leading: CGFloat = 0, bottom: CGFloat = 0, trailing: CGFloat = 0) {
-    self.init()
-    self.top = top
-    self.leading = leading
-    self.bottom = bottom
-    self.trailing = trailing
   }
 }
