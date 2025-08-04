@@ -22,10 +22,16 @@ extension Comparable {
 //    min(max(self, range.lowerBound), range.upperBound)
 //  }
   
-  public func clamped(_ lowerBound: Self, _ upperBound: Self) -> Self {
-    precondition(lowerBound <= upperBound, "Invalid range: lowerBound must be less than or equal to upperBound.")
-    return min(max(self, lowerBound), upperBound)
+  /// `min` == `lowerBound`
+  /// `max` == `upperBound`
+  public func clamped(_ min: Self, _ max: Self) -> Self {
+    return Swift.min(Swift.max(self, min), max)
   }
+  
+//  public func clamped(_ lowerBound: Self, _ upperBound: Self) -> Self {
+//    precondition(lowerBound <= upperBound, "Invalid range: lowerBound must be less than or equal to upperBound.")
+//    return min(max(self, lowerBound), upperBound)
+//  }
   
 //  public func constrained(_ atLeast: Self, _ atMost: Self) -> Self {
 //    return min(max(self, atLeast), atMost)

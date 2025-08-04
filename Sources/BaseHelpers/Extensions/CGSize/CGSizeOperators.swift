@@ -53,6 +53,10 @@ public func + (lhs: CGFloat, rhs: CGSize) -> CGSize {
 public func += (lhs: inout CGSize, rhs: CGFloat) {
   lhs = lhs + rhs
 }
+public func += (lhs: inout CGSize, rhs: CGSize) {
+  lhs.width += rhs.width
+  lhs.height += rhs.height
+}
 
 // MARK: - Multiplication
 //infix operator * : MultiplicationPrecedence
