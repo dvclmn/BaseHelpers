@@ -120,6 +120,19 @@ extension CGSize {
     }
   }
 }
+extension CGFloat {
+  public func cellCount(
+    forAxis axis: GridAxis,
+    cellSize: CGSize
+  ) -> Int {
+    switch axis {
+      case .columns:
+        return Int(self / cellSize.width)
+      case .rows:
+        return Int(self / cellSize.height)
+    }
+  }
+}
 
 enum GridCellError: LocalizedError {
   case outOfBounds(index: Int)

@@ -7,18 +7,17 @@
 
 import SwiftUI
 
-public func ??<T: Sendable>(lhs: Binding<Optional<T>>, rhs: T) -> Binding<T> {
+public func ?? <T: Sendable>(lhs: Binding<T?>, rhs: T) -> Binding<T> {
   Binding(
     get: { lhs.wrappedValue ?? rhs },
     set: { lhs.wrappedValue = $0 }
   )
 }
 
-
 // MARK: - Optional bindings
 /// By SwiftfulThinking
-public extension Optional where Wrapped == String {
-  var _boundString: String? {
+extension Optional where Wrapped == String {
+  public var _boundString: String? {
     get {
       return self
     }
@@ -26,7 +25,7 @@ public extension Optional where Wrapped == String {
       self = newValue
     }
   }
-  var boundString: String {
+  public var boundString: String {
     get {
       return _boundString ?? ""
     }
@@ -36,8 +35,8 @@ public extension Optional where Wrapped == String {
   }
 }
 
-public extension Optional where Wrapped == Int {
-  var _boundInt: Int? {
+extension Optional where Wrapped == Int {
+  public var _boundInt: Int? {
     get {
       return self
     }
@@ -45,8 +44,8 @@ public extension Optional where Wrapped == Int {
       self = newValue
     }
   }
-  
-  var boundInt: Int {
+
+  public var boundInt: Int {
     get {
       return _boundInt ?? 0
     }
@@ -55,8 +54,8 @@ public extension Optional where Wrapped == Int {
     }
   }
 }
-public extension Optional where Wrapped == Bool {
-  var _boundBool: Bool? {
+extension Optional where Wrapped == Bool {
+  public var _boundBool: Bool? {
     get {
       return self
     }
@@ -64,13 +63,34 @@ public extension Optional where Wrapped == Bool {
       self = newValue
     }
   }
-  
-  var boundBool: Bool {
+
+  public var boundBool: Bool {
     get {
       return _boundBool ?? false
     }
     set {
       _boundBool = (newValue == false) ? nil : newValue
+    }
+  }
+}
+
+extension Optional where Wrapped == CGSize {
+  public var _boundSize: CGSize? {
+    get {
+      return self
+    }
+    set {
+      self = newValue
+    }
+  }
+
+  public var boundSize: CGSize {
+    //  func boundSize(_ fallback: CGSize = .zero) -> CGSize {
+    get {
+      return _boundSize ?? .zero
+    }
+    set {
+      _boundSize = (newValue == .zero) ? nil : newValue
     }
   }
 }

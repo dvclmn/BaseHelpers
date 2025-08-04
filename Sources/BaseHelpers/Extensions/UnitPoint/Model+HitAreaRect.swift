@@ -13,10 +13,6 @@ public struct HitAreaLayout {
   let offset: RectBoundaryPlacement
   let shouldIncludeCorners: Bool
 
-  var fillDirection: Axis {
-    anchor.toAxis ?? .vertical
-  }
-
   public init(
     anchor: UnitPoint,
     thickness: CGFloat,

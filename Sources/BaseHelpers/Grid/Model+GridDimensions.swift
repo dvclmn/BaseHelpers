@@ -31,6 +31,8 @@ public struct GridDimensions: GridBase {
 }
 
 extension GridDimensions {
+
+  
   public static let maxCellsAlongLength: Int = 90_000
   public static let minCellsAlongLength: Int = 1
 
@@ -90,6 +92,7 @@ extension GridDimensions {
 }
 
 extension GridDimensions {
+  
   public func toCGSize(withCellSize cellSize: CGSize) -> CGSize {
     return CGSize(
       width: CGFloat(columns) * cellSize.width,
