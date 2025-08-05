@@ -67,6 +67,12 @@ public func * (lhs: CGSize, rhs: CGFloat) -> CGSize {
     height: lhs.height * rhs
   )
 }
+public func * (lhs: CGSize, rhs: CGSize) -> CGSize {
+  return CGSize(
+    width: lhs.width * rhs.width,
+    height: lhs.height * rhs.height
+  )
+}
 
 // MARK: - Division
 public func / (lhs: CGSize, rhs: CGSize) -> CGSize {

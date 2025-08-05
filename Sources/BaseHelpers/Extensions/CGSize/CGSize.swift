@@ -86,6 +86,18 @@ extension CGSize {
     )
     return CGSize(width: clampedWidth, height: clampedHeight)
   }
+  
+  public func clamped(
+    max maxValue: CGFloat,
+    min minValue: CGFloat
+  ) -> CGSize {
+    let maxSize = CGSize(fromLength: maxValue)
+    let minSize = CGSize(fromLength: minValue)
+    
+    return self.clamped(max: maxSize, min: minSize)
+  }
+  
+  
 
   /// Returns the centre point of the size
   public var midpoint: CGPoint {

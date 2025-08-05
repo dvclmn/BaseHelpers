@@ -27,23 +27,20 @@ public struct FrameDimensions {
     self.alignment = alignment
   }
   
-//  public init(
-//    for unitPoint: UnitPoint,
-//    corners: CornerStrategy
-//  ) {
-//    
-//  }
-
-//  public init(
-//    _ width: CGFloat?,
-//    _ height: CGFloat?,
-//    alignment: Alignment = .center
-//  ) {
-//    self.init(
-//      width: width,
-//      height: height,
-//      alignment: alignment
-//    )
-//  }
+  public init(
+    fromSize size: CGSize,
+//    width: CGFloat? = nil,
+//    height: CGFloat? = nil,
+    alignment: Alignment = .center
+  ) {
+    self.width = size.width
+    self.height = size.height
+    self.alignment = alignment
+  }
+}
+extension FrameDimensions: CustomStringConvertible {
+  public var description: String {
+    return "FrameDimensions[W: \(width?.displayString ?? "nil"), H: \(height?.displayString ?? "nil"), Alignment: \(alignment.displayName)]"
+  }
 }
 

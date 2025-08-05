@@ -8,18 +8,18 @@
 import SwiftUI
 
 public struct HitAreaLayout {
-  let anchor: UnitPoint
+  let controlPoint: UnitPoint
   let thickness: CGFloat
   let offset: RectBoundaryPlacement
   let shouldIncludeCorners: Bool
 
   public init(
-    anchor: UnitPoint,
+    controlPoint: UnitPoint,
     thickness: CGFloat,
     offset: RectBoundaryPlacement,
     shouldIncludeCorners: Bool,
   ) {
-    self.anchor = anchor
+    self.controlPoint = controlPoint
     self.thickness = thickness
     self.offset = offset
     self.shouldIncludeCorners = shouldIncludeCorners
@@ -29,11 +29,14 @@ public struct HitAreaLayout {
 extension HitAreaLayout {
 
   public var alignment: Alignment {
-    anchor.toAlignment
+    controlPoint.toAlignment
   }
 
-  public var fillSize: CGSize {
-    switch anchor.pointType {
+  /// Important: Remember this is for individual Hit Areas.
+  /// This does not represent the overall size or frame of the
+  /// Resizable View.
+  public var fillSizeMax: CGSize {
+    switch controlPoint.pointType {
       case .horizontalEdge:
         return CGSize(width: .infinity, height: thickness)
       case .verticalEdge:
@@ -55,8 +58,8 @@ extension HitAreaLayout {
       switch (offset, shouldIncludeCorners) {
         case (.outside, _): .zero
         case (_, false): .zero
-        case (.inside, true): anchor.hitAreaPadding(inset)
-        case (.centre, true): anchor.hitAreaPadding(inset / 2)
+        case (.inside, true): controlPoint.hitAreaPadding(inset)
+        case (.centre, true): controlPoint.hitAreaPadding(inset / 2)
 
       }
 
@@ -71,8 +74,10 @@ extension HitAreaLayout {
         case .outside: -thickness
         case .centre: -thickness / 2
       }
-    return anchor.offset(by: offsetAmount)
+    return controlPoint.offset(by: offsetAmount)
   }
+  
+  
 }
 
 extension UnitPoint {
