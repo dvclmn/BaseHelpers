@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-extension EnvironmentValues {
-  @Entry public var zoomLevel: CGFloat = 1.0
-  @Entry public var panOffset: CGSize = .zero
-}
+//extension EnvironmentValues {
+//  @Entry public var zoomLevel: CGFloat = 1.0
+//  @Entry public var panOffset: CGSize = .zero
+//}

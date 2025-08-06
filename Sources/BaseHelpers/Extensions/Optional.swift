@@ -14,6 +14,12 @@ public func ?? <T: Sendable>(lhs: Binding<T?>, rhs: T) -> Binding<T> {
   )
 }
 
+extension Optional where Wrapped: DisplayPair {
+  public var displayIfAvailable: String {
+    return self?.displayString ?? "nil"
+  }
+}
+
 // MARK: - Optional bindings
 /// By SwiftfulThinking
 extension Optional where Wrapped == String {
