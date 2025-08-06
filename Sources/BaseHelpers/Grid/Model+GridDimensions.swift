@@ -33,6 +33,7 @@ public struct GridDimensions: GridBase {
 extension GridDimensions {
 
   
+  
   public static let maxCellsAlongLength: Int = 90_000
   public static let minCellsAlongLength: Int = 1
 

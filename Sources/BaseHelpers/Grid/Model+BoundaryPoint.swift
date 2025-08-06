@@ -35,6 +35,92 @@ extension GridBoundaryPoint {
         case .leading: .leading
       }
   }
+  
+  public init(fromResizePoint point: ResizePoint) {
+    self = switch point {
+      case .topLeading: .topLeading
+      case .topTrailing: .topTrailing
+      case .bottomLeading: .bottomLeading
+      case .bottomTrailing: .bottomTrailing
+      case .top: .top
+      case .trailing: .trailing
+      case .leading: .leading
+      case .bottom: .bottom
+    }
+  }
+
+  //  public func sizeDelta(
+  //    startSize: CGSize,
+  //    newSize: CGSize,
+  //    cellSize: CGSize
+  //  ) {
+  //    let sizeDelta: CGSize = newSize - startSize
+  //  }
+
+  /// Checks whether a size delta is valid for the control point.
+  /// i.e. the opposite axis should not change.
+  public func isValidSizeDelta(
+    from oldSize: CGSize,
+    to newSize: CGSize
+  ) -> Bool {
+    switch self {
+      case .top, .bottom:
+        return oldSize.width == newSize.width
+      case .leading, .trailing:
+        return oldSize.height == newSize.height
+      case .topLeading, .bottomLeading, .topTrailing, .bottomTrailing:
+        /// Both axes are allowed to change at corners
+        return true
+    }
+  }
+
+  public func sizeDelta(
+    columnDelta: Int,
+    rowDelta: Int,
+  ) -> GridDimensions {
+    switch self {
+      case .top:
+        return GridDimensions(
+          columns: 0,
+          rows: -rowDelta
+        )
+      case .bottom:
+        return GridDimensions(
+          columns: 0,
+          rows: rowDelta
+        )
+      case .leading:
+        return GridDimensions(
+          columns: -columnDelta,
+          rows: 0
+        )
+      case .trailing:
+        return GridDimensions(
+          columns: columnDelta,
+          rows: 0
+        )
+      case .topLeading:
+        return GridDimensions(
+          columns: -columnDelta,
+          rows: -rowDelta
+        )
+      case .bottomLeading:
+        return GridDimensions(
+          columns: -columnDelta,
+          rows: rowDelta
+        )
+      case .topTrailing:
+        return GridDimensions(
+          columns: columnDelta,
+          rows: -rowDelta
+        )
+      case .bottomTrailing:
+        return GridDimensions(
+          columns: columnDelta,
+          rows: rowDelta
+        )
+    }
+  }
 
   public var isRowEdge: Bool {
     self == .top || self == .bottom
@@ -70,7 +156,7 @@ extension GridBoundaryPoint {
       default: nil
     }
   }
-  
+
   public var affectedEdges: GridEdge.Set {
     switch self {
       case .top: return [.top]
