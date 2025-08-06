@@ -113,9 +113,9 @@ extension CGSize {
     cellSize: CGSize
   ) -> Int {
     switch axis {
-      case .columns:
+      case .column:
         return Int(self.width / cellSize.width)
-      case .rows:
+      case .row:
         return Int(self.height / cellSize.height)
     }
   }
@@ -126,9 +126,9 @@ extension CGFloat {
     cellSize: CGSize
   ) -> Int {
     switch axis {
-      case .columns:
+      case .column:
         return Int(self / cellSize.width)
-      case .rows:
+      case .row:
         return Int(self / cellSize.height)
     }
   }

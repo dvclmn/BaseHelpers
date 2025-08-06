@@ -9,10 +9,10 @@ import SwiftUI
 
 public enum GridAxis: String, GridBase, CaseIterable, Identifiable {
   /// Horizontal
-  case columns
+  case column
 
   /// Vertical
-  case rows
+  case row
 
   public static let fixedLength: CGFloat = 18
 
@@ -20,59 +20,59 @@ public enum GridAxis: String, GridBase, CaseIterable, Identifiable {
 
   public var locationKeyPath: WritableKeyPath<CGPoint, CGFloat> {
     switch self {
-      case .columns: return \.x
-      case .rows: return \.y
+      case .column: return \.x
+      case .row: return \.y
     }
   }
 
   public var sizeKeyPath: KeyPath<CGSize, CGFloat> {
     switch self {
-      case .columns: return \.width
-      case .rows: return \.height
+      case .column: return \.width
+      case .row: return \.height
     }
   }
 
   public var opposing: Self {
     switch self {
-      case .columns: return .rows
-      case .rows: return .columns
+      case .column: return .row
+      case .row: return .column
     }
   }
 
   /// The 'actual' value, for the corresponding property, from the `GridCanvas` itself
   public var dimensionsKeyPath: WritableKeyPath<GridDimensions, Int> {
     switch self {
-      case .columns: \.columns
-      case .rows: \.rows
+      case .column: \.columns
+      case .row: \.rows
     }
   }
 
   public var positionKeyPath: KeyPath<GridPosition, Int> {
     switch self {
-      case .columns: \.column
-      case .rows: \.row
+      case .column: \.column
+      case .row: \.row
     }
   }
 
   public var numberingFrameSize: (CGFloat?, CGFloat?) {
 
     return switch self {
-      case .columns: (nil, Self.fixedLength)
-      case .rows: (Self.fixedLength, nil)
+      case .column: (nil, Self.fixedLength)
+      case .row: (Self.fixedLength, nil)
     }
   }
 
   public var cellNumberTextAlignment: UnitPoint {
     switch self {
-      case .columns: .center
-      case .rows: .trailing
+      case .column: .center
+      case .row: .trailing
     }
   }
 
   public var numberingShapeAlignment: Alignment {
     switch self {
-      case .columns: .top
-      case .rows: .leading
+      case .column: .top
+      case .row: .leading
     }
   }
 
@@ -81,13 +81,13 @@ public enum GridAxis: String, GridBase, CaseIterable, Identifiable {
     cellSize: CGSize
   ) -> CGPoint {
     switch self {
-      case .columns:
+      case .column:
         CGPoint(
           x: CGFloat(cellIndex - 1) * cellSize.width,
           y: 0  // Columns align along the Y axis
         )
 
-      case .rows:
+      case .row:
         CGPoint(
           x: 0,  // Rows align down the X axis
           y: CGFloat(cellIndex - 1) * cellSize.height
@@ -100,12 +100,12 @@ public enum GridAxis: String, GridBase, CaseIterable, Identifiable {
   ) -> CGSize {
     guard let frame = canvasFrameInViewport else { return .zero }
     return switch self {
-      case .columns:
+      case .column:
         CGSize(
           width: frame.origin.x,
           height: 0
         )
-      case .rows:
+      case .row:
         CGSize(
           /// Width is zero as I don't want to decouple
           width: 0,
@@ -122,12 +122,12 @@ public enum GridAxis: String, GridBase, CaseIterable, Identifiable {
 
     guard let canvasFrameInViewport else { return false }
     switch self {
-      case .columns:
+      case .column:
         let minX = canvasFrameInViewport.minX - buffer
         let hasOverflow: Bool = minX < 0
         return hasOverflow
 
-      case .rows:
+      case .row:
         let minY = canvasFrameInViewport.minY - buffer
         let hasOverflow: Bool = minY < 0
         return hasOverflow
@@ -141,18 +141,18 @@ extension GridAxis {
 
   public var name: String {
     switch self {
-      case .columns: "Width"
-      case .rows: "Height"
+      case .column: "Width"
+      case .row: "Height"
     }
   }
 
   public var icon: String {
     switch self {
-      case .columns:
+      case .column:
         "arrow.left.and.right.text.vertical"
       //          "rectangle.portrait.arrowtriangle.2.outward"
 
-      case .rows:
+      case .row:
         "arrow.up.and.down.text.horizontal"
     //          "rectangle.arrowtriangle.2.outward"
     }
@@ -160,15 +160,15 @@ extension GridAxis {
 
   public var altName: String {
     switch self {
-      case .columns: "Columns"
-      case .rows: "Rows"
+      case .column: "Columns"
+      case .row: "Rows"
     }
   }
 
   public var altName02: String {
     switch self {
-      case .columns: "Horizontal"
-      case .rows: "Vertical"
+      case .column: "Horizontal"
+      case .row: "Vertical"
     }
   }
 }

@@ -53,9 +53,9 @@ extension GridBoundaryPoint {
 
   public var gridAxis: GridAxis? {
     if isRowEdge {
-      .rows
+      .row
     } else if isColumnEdge {
-      .columns
+      .column
     } else {
       nil
     }
@@ -68,6 +68,19 @@ extension GridBoundaryPoint {
       case .leading: .leading
       case .trailing: .trailing
       default: nil
+    }
+  }
+  
+  public var affectedEdges: GridEdge.Set {
+    switch self {
+      case .top: return [.top]
+      case .bottom: return [.bottom]
+      case .leading: return [.leading]
+      case .trailing: return [.trailing]
+      case .topLeading: return [.top, .leading]
+      case .topTrailing: return [.top, .trailing]
+      case .bottomLeading: return [.bottom, .leading]
+      case .bottomTrailing: return [.bottom, .trailing]
     }
   }
 

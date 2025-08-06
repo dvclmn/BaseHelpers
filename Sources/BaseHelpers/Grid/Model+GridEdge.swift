@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-public enum GridEdge: GridBase {
+public enum GridEdge: GridBase, CaseIterable {
   case top
   case trailing
   case bottom
@@ -22,5 +22,38 @@ public enum GridEdge: GridBase {
     let point = GridBoundaryPoint(fromEdge: self)
     return point
   }
-  
+
+  public var gridAxis: GridAxis {
+    switch self {
+      case .top, .bottom: return .row
+      case .leading, .trailing: return .column
+    }
+  }
+
+}
+
+extension GridEdge {
+  public struct Set: OptionSet, Sendable {
+    public init(rawValue: Int) {
+      self.rawValue = rawValue
+    }
+    public let rawValue: Int
+    
+    public static let top = Self(rawValue: 1 << 0)
+    public static let trailing = Self(rawValue: 1 << 1)
+    public static let bottom = Self(rawValue: 1 << 2)
+    public static let leading = Self(rawValue: 1 << 3)
+    public static let all: Self = [.top, .trailing, .bottom, .leading]
+  }
+}
+
+extension GridEdge.Set {
+  public init(_ edge: GridEdge) {
+    switch edge {
+      case .top: self = .top
+      case .trailing: self = .trailing
+      case .bottom: self = .bottom
+      case .leading: self = .leading
+    }
+  }
 }
