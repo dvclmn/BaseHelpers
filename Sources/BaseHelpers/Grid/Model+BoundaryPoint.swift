@@ -77,48 +77,90 @@ extension GridBoundaryPoint {
   public func sizeDelta(
     columnDelta: Int,
     rowDelta: Int,
-  ) -> GridDimensions {
+  ) -> GridDelta {
     switch self {
+        
       case .top:
-        return GridDimensions(
+        return GridDelta(
           columns: 0,
-          rows: -rowDelta
+          rows: rowDelta
         )
       case .bottom:
-        return GridDimensions(
+        return GridDelta(
           columns: 0,
           rows: rowDelta
         )
       case .leading:
-        return GridDimensions(
-          columns: -columnDelta,
+        return GridDelta(
+          columns: columnDelta,
           rows: 0
         )
       case .trailing:
-        return GridDimensions(
+        return GridDelta(
           columns: columnDelta,
           rows: 0
         )
       case .topLeading:
-        return GridDimensions(
-          columns: -columnDelta,
-          rows: -rowDelta
+        return GridDelta(
+          columns: columnDelta,
+          rows: rowDelta
         )
       case .bottomLeading:
-        return GridDimensions(
-          columns: -columnDelta,
+        return GridDelta(
+          columns: columnDelta,
           rows: rowDelta
         )
       case .topTrailing:
-        return GridDimensions(
-          columns: columnDelta,
-          rows: -rowDelta
-        )
-      case .bottomTrailing:
-        return GridDimensions(
+        return GridDelta(
           columns: columnDelta,
           rows: rowDelta
         )
+      case .bottomTrailing:
+        return GridDelta(
+          columns: columnDelta,
+          rows: rowDelta
+        )
+        
+//      case .top:
+//        return GridDelta(
+//          columns: 0,
+//          rows: -rowDelta
+//        )
+//      case .bottom:
+//        return GridDelta(
+//          columns: 0,
+//          rows: rowDelta
+//        )
+//      case .leading:
+//        return GridDelta(
+//          columns: -columnDelta,
+//          rows: 0
+//        )
+//      case .trailing:
+//        return GridDelta(
+//          columns: columnDelta,
+//          rows: 0
+//        )
+//      case .topLeading:
+//        return GridDelta(
+//          columns: -columnDelta,
+//          rows: -rowDelta
+//        )
+//      case .bottomLeading:
+//        return GridDelta(
+//          columns: -columnDelta,
+//          rows: rowDelta
+//        )
+//      case .topTrailing:
+//        return GridDelta(
+//          columns: columnDelta,
+//          rows: -rowDelta
+//        )
+//      case .bottomTrailing:
+//        return GridDelta(
+//          columns: columnDelta,
+//          rows: rowDelta
+//        )
     }
   }
 

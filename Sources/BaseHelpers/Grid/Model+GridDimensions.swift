@@ -11,8 +11,6 @@ public struct GridDimensions: GridBase {
   public var columns: Int
   public var rows: Int
 
-  public static let minSize = GridDimensions(columns: 1, rows: 1)
-
   public init(columns: Int, rows: Int) {
     precondition(columns > 0 && rows > 0, "GridDimensions cannot have zero or negative dimensions.")
     self.columns = columns
@@ -32,8 +30,15 @@ public struct GridDimensions: GridBase {
 
 extension GridDimensions {
 
-  
-  
+  public static let minSize = GridDimensions(
+    columns: minCellsAlongLength,
+    rows: minCellsAlongLength
+  )
+  public static let maxSize = GridDimensions(
+    columns: maxCellsAlongLength,
+    rows: maxCellsAlongLength
+  )
+
   public static let maxCellsAlongLength: Int = 90_000
   public static let minCellsAlongLength: Int = 1
 
@@ -50,24 +55,24 @@ extension GridDimensions {
       && position.column >= 0
       && position.column < columns
   }
-  
+
   public var bottomRight: GridPosition {
     return GridPosition(column: columns - 1, row: rows - 1)
   }
-  
+
   public func reducedToFit(within bounds: GridDimensions) -> GridDimensions {
     return GridDimensions(
       columns: min(self.columns, bounds.columns),
       rows: min(self.rows, bounds.rows)
     )
   }
-  
-//  public func clamped(to bounds: GridDimensions) -> GridDimensions {
-//    let minColumns = min(self.columns, bounds.columns)
-//    let minRows = min(self.rows, bounds.rows)
-//    
-//    return GridDimensions(columns: minColumns, rows: minRows)
-//  }
+
+  //  public func clamped(to bounds: GridDimensions) -> GridDimensions {
+  //    let minColumns = min(self.columns, bounds.columns)
+  //    let minRows = min(self.rows, bounds.rows)
+  //
+  //    return GridDimensions(columns: minColumns, rows: minRows)
+  //  }
 
   /// Returns `true` if the given point lies within the grid's bounds.
   ///
@@ -88,12 +93,11 @@ extension GridDimensions {
       && point.x < gridSize.width
       && point.y < gridSize.height
   }
-  
-  
+
 }
 
 extension GridDimensions {
-  
+
   public func toCGSize(withCellSize cellSize: CGSize) -> CGSize {
     return CGSize(
       width: CGFloat(columns) * cellSize.width,

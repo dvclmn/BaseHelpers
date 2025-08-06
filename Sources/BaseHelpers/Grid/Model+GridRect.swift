@@ -37,15 +37,12 @@ public struct GridRect: GridBase {
     cellSize: CGSize
   ) {
 
-    //    precondition(a.isPositive && b.isPositive, "GridPositions must be positive (zero or greater). A: \(a), B: \(b)")
     let minRow = min(a.row, b.row)
     let maxRow = max(a.row, b.row)
     let minCol = min(a.column, b.column)
     let maxCol = max(a.column, b.column)
 
     let origin = GridPosition(column: minCol, row: minRow)
-
-    //    print("GridPosition from `init(boundingPositions a: GridPosition, _ b: GridPosition)`: \(origin)")
 
     let size = GridDimensions(
       columns: maxCol - minCol + 1,
@@ -63,36 +60,36 @@ public struct GridRect: GridBase {
     let (a, b) = Self.gridPositions(from: rect, cellSize: cellSize)
     self.init(startPosition: a, endPosition: b, cellSize: cellSize)
   }
-  
-//  public init(
-//    fromRect rect: CGRect,
-//    cellSize: CGSize,
-//    //    clampedTo bounds: GridDimensions? = nil
-//  ) {
-//    /// Standardise the rect, so origin is always top-left
-//    let standardisedRect = rect.standardized
-//
-//    let origin =
-//      GridPosition(
-//        point: standardisedRect.origin,
-//        cellSize: cellSize,
-//      )
-//
-//    let endPosition = GridPosition(
-//      point: standardisedRect.point(for: .bottomTrailing),
-//      cellSize: cellSize,
-//    )
-//
-//    self.init(
-//      boundingPositions: origin,
-//      endPosition,
-//      cellSize: cellSize
-//    )
-//  }
+
+  //  public init(
+  //    fromRect rect: CGRect,
+  //    cellSize: CGSize,
+  //    //    clampedTo bounds: GridDimensions? = nil
+  //  ) {
+  //    /// Standardise the rect, so origin is always top-left
+  //    let standardisedRect = rect.standardized
+  //
+  //    let origin =
+  //      GridPosition(
+  //        point: standardisedRect.origin,
+  //        cellSize: cellSize,
+  //      )
+  //
+  //    let endPosition = GridPosition(
+  //      point: standardisedRect.point(for: .bottomTrailing),
+  //      cellSize: cellSize,
+  //    )
+  //
+  //    self.init(
+  //      boundingPositions: origin,
+  //      endPosition,
+  //      cellSize: cellSize
+  //    )
+  //  }
 }
 
 extension GridRect {
-  
+
   /// Converts a rect and cell size into a pair of GridPositions.
   /// Always uses top-leading and bottom-trailing corners.
   public static func gridPositions(
@@ -115,7 +112,8 @@ extension GridRect {
     let standardised = rect.standardized
     guard
       let a = GridPosition.createIfContained(within: bounds, at: standardised.origin, cellSize: cellSize),
-      let b = GridPosition.createIfContained(within: bounds, at: standardised.point(for: .bottomTrailing), cellSize: cellSize)
+      let b = GridPosition.createIfContained(
+        within: bounds, at: standardised.point(for: .bottomTrailing), cellSize: cellSize)
     else {
       return nil
     }
@@ -166,9 +164,8 @@ extension GridRect {
   ) -> GridRect? {
     guard let (a, b) = gridPositionsIfContained(in: bounds, from: rect, cellSize: cellSize)
     else { return nil }
-    
+
     return GridRect(startPosition: a, endPosition: b, cellSize: cellSize)
   }
-
 
 }
