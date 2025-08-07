@@ -93,15 +93,21 @@ extension GridDimensions {
       && point.x < gridSize.width
       && point.y < gridSize.height
   }
-
 }
 
 extension GridDimensions {
 
+  public func width(with cellSize: CGSize) -> CGFloat {
+    CGFloat(columns) * cellSize.width
+  }
+  public func height(with cellSize: CGSize) -> CGFloat {
+    CGFloat(rows) * cellSize.height
+  }
+
   public func toCGSize(withCellSize cellSize: CGSize) -> CGSize {
     return CGSize(
-      width: CGFloat(columns) * cellSize.width,
-      height: CGFloat(rows) * cellSize.height,
+      width: width(with: cellSize),
+      height: height(with: cellSize),
     )
   }
 
@@ -127,3 +133,9 @@ extension GridDimensions: CustomStringConvertible {
     "Columns: \(columns) Rows: \(rows)"
   }
 }
+
+//extension CGSize {
+//  public init(fromGridDimensions dimensions: GridDimensions) {
+//     
+//  }
+//}
