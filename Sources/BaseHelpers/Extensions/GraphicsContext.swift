@@ -38,9 +38,9 @@ public enum DebugTextPosition {
 public struct GridLineConfiguration {
   let columns: Int
   let rows: Int
+  let cellSize: CGSize
   let colour: Color
   let strokeThickness: CGFloat
-  let cellSize: CGSize
   
   public init(
     columnCount: Int,
@@ -51,9 +51,9 @@ public struct GridLineConfiguration {
   ) {
     self.columns = columnCount
     self.rows = rowCount
+    self.cellSize = cellSize
     self.colour = colour
     self.strokeThickness = strokeThickness
-    self.cellSize = cellSize
   }
 }
 

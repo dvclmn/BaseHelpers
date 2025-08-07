@@ -35,30 +35,22 @@ extension GridBoundaryPoint {
         case .leading: .leading
       }
   }
-  
+
   public init(fromResizePoint point: ResizePoint) {
-    self = switch point {
-      case .topLeading: .topLeading
-      case .topTrailing: .topTrailing
-      case .bottomLeading: .bottomLeading
-      case .bottomTrailing: .bottomTrailing
-      case .top: .top
-      case .trailing: .trailing
-      case .leading: .leading
-      case .bottom: .bottom
-    }
+    self =
+      switch point {
+        case .topLeading: .topLeading
+        case .topTrailing: .topTrailing
+        case .bottomLeading: .bottomLeading
+        case .bottomTrailing: .bottomTrailing
+        case .top: .top
+        case .trailing: .trailing
+        case .leading: .leading
+        case .bottom: .bottom
+      }
   }
 
-  //  public func sizeDelta(
-  //    startSize: CGSize,
-  //    newSize: CGSize,
-  //    cellSize: CGSize
-  //  ) {
-  //    let sizeDelta: CGSize = newSize - startSize
-  //  }
-
   /// Checks whether a size delta is valid for the control point.
-  /// i.e. the opposite axis should not change.
   public func isValidSizeDelta(
     from oldSize: CGSize,
     to newSize: CGSize
@@ -79,7 +71,7 @@ extension GridBoundaryPoint {
     rowDelta: Int,
   ) -> GridDelta {
     switch self {
-        
+
       case .top:
         return GridDelta(
           columns: 0,
@@ -120,47 +112,6 @@ extension GridBoundaryPoint {
           columns: columnDelta,
           rows: rowDelta
         )
-        
-//      case .top:
-//        return GridDelta(
-//          columns: 0,
-//          rows: -rowDelta
-//        )
-//      case .bottom:
-//        return GridDelta(
-//          columns: 0,
-//          rows: rowDelta
-//        )
-//      case .leading:
-//        return GridDelta(
-//          columns: -columnDelta,
-//          rows: 0
-//        )
-//      case .trailing:
-//        return GridDelta(
-//          columns: columnDelta,
-//          rows: 0
-//        )
-//      case .topLeading:
-//        return GridDelta(
-//          columns: -columnDelta,
-//          rows: -rowDelta
-//        )
-//      case .bottomLeading:
-//        return GridDelta(
-//          columns: -columnDelta,
-//          rows: rowDelta
-//        )
-//      case .topTrailing:
-//        return GridDelta(
-//          columns: columnDelta,
-//          rows: -rowDelta
-//        )
-//      case .bottomTrailing:
-//        return GridDelta(
-//          columns: columnDelta,
-//          rows: rowDelta
-//        )
     }
   }
 
