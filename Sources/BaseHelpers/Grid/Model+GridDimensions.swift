@@ -19,12 +19,11 @@ public struct GridDimensions: GridBase {
 
   public init(
     size: CGSize,
-    cellSize: CGSize
+    cellSize: CGSize,
+    strategy: SnapStrategy = .round
   ) {
-    let widthInCells = Int(size.width / cellSize.width)
-    let heightInCells = Int(size.height / cellSize.height)
-
-    self.init(columns: widthInCells, rows: heightInCells)
+    let counts = size.snappedCellCounts(cellSize: cellSize, strategy: strategy)
+    self.init(columns: counts.columns, rows: counts.rows)
   }
 }
 
@@ -66,13 +65,6 @@ extension GridDimensions {
       rows: min(self.rows, bounds.rows)
     )
   }
-
-  //  public func clamped(to bounds: GridDimensions) -> GridDimensions {
-  //    let minColumns = min(self.columns, bounds.columns)
-  //    let minRows = min(self.rows, bounds.rows)
-  //
-  //    return GridDimensions(columns: minColumns, rows: minRows)
-  //  }
 
   /// Returns `true` if the given point lies within the grid's bounds.
   ///
