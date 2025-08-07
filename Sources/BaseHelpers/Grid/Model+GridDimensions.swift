@@ -48,24 +48,30 @@ extension GridDimensions {
     return self.bothGreaterThan(rhs: Self.minCellsAlongLength)
   }
 
-  public func contains(_ position: GridPosition) -> Bool {
-    return position.row >= 0
-      && position.row < rows
-      && position.column >= 0
-      && position.column < columns
-  }
 
-  public var bottomRight: GridPosition {
+
+//  public var bottomRight: GridPosition {
+//    return GridPosition(column: columns - 1, row: rows - 1)
+//  }
+  public var bottomRight: GridPosition? {
+    guard columns > 0, rows > 0 else { return nil }
     return GridPosition(column: columns - 1, row: rows - 1)
   }
 
-  public func reducedToFit(within bounds: GridDimensions) -> GridDimensions {
-    return GridDimensions(
-      columns: min(self.columns, bounds.columns),
-      rows: min(self.rows, bounds.rows)
-    )
+  public func reducedToFit(within bounds: GridDimensions) -> GridDimensions? {
+    let cols = min(self.columns, bounds.columns)
+    let rows = min(self.rows, bounds.rows)
+    guard cols > 0, rows > 0 else { return nil }
+    return GridDimensions(columns: cols, rows: rows)
   }
 
+  public func contains(position: GridPosition) -> Bool {
+    return position.column >= 0
+    && position.column < columns
+    && position.row >= 0
+    && position.row < rows
+  }
+  
   /// Returns `true` if the given point lies within the grid's bounds.
   ///
   /// The grid is assumed to start at origin (0,0) in screen space.
@@ -84,6 +90,18 @@ extension GridDimensions {
       && point.y >= 0
       && point.x < gridSize.width
       && point.y < gridSize.height
+  }
+
+
+//  public func contains(point: CGPoint, cellSize: CGSize) -> Bool {
+//    contains(position(for: point, cellSize: cellSize))
+//  }
+//  
+  public func position(for point: CGPoint, cellSize: CGSize) -> GridPosition {
+    GridPosition(
+      column: Int(floor(point.x / cellSize.width)),
+      row: Int(floor(point.y / cellSize.height))
+    )
   }
 }
 
@@ -128,6 +146,6 @@ extension GridDimensions: CustomStringConvertible {
 
 //extension CGSize {
 //  public init(fromGridDimensions dimensions: GridDimensions) {
-//     
+//
 //  }
 //}
