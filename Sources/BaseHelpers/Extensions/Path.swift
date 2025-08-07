@@ -9,10 +9,10 @@ import SwiftUI
 
 extension Path {
   public static func createGrid(
+    columns: Int,
+    rows: Int,
     cellSize: CGSize,
     containerSize: CGSize,
-    columns: Int,
-    rows: Int
   ) -> Path {
     Path { p in
       /// Horizontal lines

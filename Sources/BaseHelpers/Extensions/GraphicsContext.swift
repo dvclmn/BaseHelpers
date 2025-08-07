@@ -35,7 +35,49 @@ public enum DebugTextPosition {
   }
 }
 
+public struct GridLineConfiguration {
+  let columns: Int
+  let rows: Int
+  let colour: Color
+  let strokeThickness: CGFloat
+  let cellSize: CGSize
+  
+  public init(
+    columnCount: Int,
+    rowCount: Int,
+    cellSize: CGSize,
+    colour: Color = .gray.opacity(0.4),
+    strokeThickness: CGFloat = 1.0,
+  ) {
+    self.columns = columnCount
+    self.rows = rowCount
+    self.colour = colour
+    self.strokeThickness = strokeThickness
+    self.cellSize = cellSize
+  }
+}
+
+
 extension GraphicsContext {
+
+  public func drawGridLines(
+    config: GridLineConfiguration,
+//    columns: Int,
+//    rows: Int,
+//    colour: Color = .gray,
+//    strokeThickness: CGFloat = 1,
+//    cellSize: CGSize,
+    containerSize: CGSize,
+  ) {
+
+    let path = Path.createGrid(
+      columns: config.columns,
+      rows: config.rows,
+      cellSize: config.cellSize,
+      containerSize: containerSize
+    )
+    self.stroke(path, with: .color(config.colour), lineWidth: config.strokeThickness)
+  }
 
   // MARK: - Quick Text Label, w/ Background and Dot
   /// Note: This relies on the zoom level passed to `zoomPercent` being already
