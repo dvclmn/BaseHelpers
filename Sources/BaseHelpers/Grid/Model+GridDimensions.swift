@@ -22,8 +22,11 @@ public struct GridDimensions: GridBase {
     cellSize: CGSize,
     strategy: SnapStrategy = .round
   ) {
-    let counts = size.snappedCellCounts(cellSize: cellSize, strategy: strategy)
-    self.init(columns: counts.columns, rows: counts.rows)
+    let dimensions = size.cellSnappedDimensions(
+      cellSize: cellSize,
+      strategy: strategy
+    )
+    self.init(columns: dimensions.columns, rows: dimensions.rows)
   }
 }
 

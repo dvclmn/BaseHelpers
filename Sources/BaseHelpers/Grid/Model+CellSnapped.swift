@@ -13,20 +13,49 @@ public enum SnapStrategy {
   case round
 }
 
+//extension BinaryFloatingPoint {
+//  public func cellCount(
+//    forCellAxis axis: GridAxis,
+//    cellSize: CGSize
+//  ) -> Int {
+//    switch axis {
+//      case .column:
+//        //        return Int(self / Self(cellSize.width))
+//      case .row:
+//        //        return Int(self / Self(cellSize.height))
+//    }
+//  }
+//}
+
 extension CGSize {
 
   public func quantisedCanvasSize(
     cellSize: CGSize,
     strategy: SnapStrategy
   ) -> CGSize {
-    let snappedCounts = snappedCellCounts(cellSize: cellSize, strategy: strategy)
+    let snappedCounts = cellSnappedDimensions(cellSize: cellSize, strategy: strategy)
     return CGSize(
       width: CGFloat(snappedCounts.columns) * cellSize.width,
       height: CGFloat(snappedCounts.rows) * cellSize.height
     )
   }
 
-  public func snappedCellCounts(
+  public func cellCount(
+    alongAxis axis: GridAxis,
+    cellSize: CGSize,
+    strategy: SnapStrategy
+  ) -> Int {
+    let dimensions = self.cellSnappedDimensions(
+      cellSize: cellSize,
+      strategy: strategy
+    )
+    return switch axis {
+      case .column: dimensions.columns
+      case .row: dimensions.rows
+    }
+  }
+
+  public func cellSnappedDimensions(
     cellSize: CGSize,
     strategy: SnapStrategy
   ) -> GridDimensions {

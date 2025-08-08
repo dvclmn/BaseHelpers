@@ -25,16 +25,13 @@ public struct GridCell: GridBase {
 }
 
 extension GridCell {
-  
-//  public static var empty: GridCell {
-//    GridCe
-//  }
-  
+
   public static func createBlank(
     at position: GridPosition,
-    colour: RGBColour = .white
+    colour: RGBColour = .white,
+    character: Character = " "
   ) -> GridCell {
-    return GridCell(character: " ", position: position, colour: colour)
+    return GridCell(character: character, position: position, colour: colour)
   }
 
   public var isEmpty: Bool { character == " " }
@@ -70,68 +67,12 @@ extension GridCell {
 
     let paddingCells = (line.count..<targetWidth).map { columnIndex in
       let position = GridPosition(column: columnIndex, row: rowIndex)
-//      print("GridPosition from `createRowCells()`: \(position)")
       return GridCell.createBlank(at: position)
     }
 
     return characterCells + paddingCells
   }
 
-  //  public static func generateCells(from text: String) -> [GridCell] {
-  //
-  //    let dimensions = text.gridDimensions
-  //
-  //    var cells: [GridCell] = []
-  //    for (rowIndex, line) in text.substringLines(subsequenceStrategy: .omitLastLineIfEmpty).enumerated() {
-  //      /// Process characters
-  //      for (columnIndex, character) in line.enumerated() {
-  //        cells.append(
-  //          GridCell(
-  //            character: character,
-  //            position: GridPosition(column: columnIndex, row: rowIndex),
-  //            colour: .white
-  //          )
-  //        )
-  //      }
-  //      /// Pad remainder of row with spaces
-  //      let padding = dimensions.columns - line.count
-  //      if padding > 0 {
-  //        for colIndex in line.count..<dimensions.columns {
-  //          let position = GridPosition(column: colIndex, row: rowIndex)
-  //          cells.append(GridCell.createBlank(at: position))
-  //
-  //        }
-  //      }
-  //    } // END Cells enumeration
-  //    return cells
-  //  }  // END generate Cells from Text
-}
-
-extension CGSize {
-  public func cellCount(
-    alongAxis axis: GridAxis,
-    cellSize: CGSize
-  ) -> Int {
-    switch axis {
-      case .column:
-        return Int(self.width / cellSize.width)
-      case .row:
-        return Int(self.height / cellSize.height)
-    }
-  }
-}
-extension CGFloat {
-  public func cellCount(
-    forAxis axis: GridAxis,
-    cellSize: CGSize
-  ) -> Int {
-    switch axis {
-      case .column:
-        return Int(self / cellSize.width)
-      case .row:
-        return Int(self / cellSize.height)
-    }
-  }
 }
 
 enum GridCellError: LocalizedError {
@@ -160,26 +101,5 @@ extension GridCell: CustomStringConvertible {
     """
 
   }
-
-  //  public var description: String {
-  //    """
-  //
-  //    GridCell:
-  //      - Character \"\(character.descriptiveName)\"
-  //      - \(position)
-  //      - \(colour)
-  //
-  //    """
-  //
-  //  }
-
-  //  public var description: String {
-  //    """
-  //    /// GridCell ///
-  //      Character: \"\(character.descriptiveName)\"
-  //      \(position)
-  //      \(colour)
-  //    """
-  //  }
 
 }

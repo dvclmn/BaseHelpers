@@ -56,12 +56,9 @@ extension GridMatrix {
 
   public mutating func resize(
     by delta: GridDelta,
-    at boundaryPoint: GridBoundaryPoint
+    at edges: GridEdge.Set
   ) {
-
-    let edges = boundaryPoint.affectedEdges
     for edge in GridEdge.allCases where edges.contains(GridEdge.Set(edge)) {
-
       switch edge.gridAxis {
         case .row:
           if delta.rows > 0 {
@@ -77,6 +74,14 @@ extension GridMatrix {
           }
       }
     }
+  }
+
+  public mutating func resize(
+    by delta: GridDelta,
+    at boundaryPoint: GridBoundaryPoint
+  ) {
+    let edges = boundaryPoint.affectedEdges
+    self.resize(by: delta, at: edges)
   }
 
   mutating func addColumns(to edge: GridEdge, count: Int = 1) {

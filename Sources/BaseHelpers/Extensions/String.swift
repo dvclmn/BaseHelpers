@@ -45,7 +45,7 @@ extension String {
     height: Int,
     character: Character = " "
   ) -> String {
-    guard width > 0 && height > 0 else { return "" }
+    precondition(width > 0 && height > 0, "Cannot create a string with zero width or height.")
 
     let rowString = String(repeating: character, count: width)
     let rows = Array(repeating: rowString, count: height)
