@@ -15,4 +15,14 @@ public struct GridDelta: GridBase {
     self.columns = columns
     self.rows = rows
   }
+  
+  public init(
+    old oldDimensions: GridDimensions,
+    new newDimensions: GridDimensions
+  ) {
+    self.init(
+      columns: newDimensions.columns - oldDimensions.columns,
+      rows: newDimensions.rows - oldDimensions.rows
+    )
+  }
 }

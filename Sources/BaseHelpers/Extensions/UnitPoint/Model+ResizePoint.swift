@@ -21,6 +21,8 @@ public enum ResizePoint: String, CaseIterable, Identifiable {
 }
 
 extension ResizePoint {
+  
+  public var name: String { rawValue }
 
   public init(fromUnitPoint unitPoint: UnitPoint) {
     self =
