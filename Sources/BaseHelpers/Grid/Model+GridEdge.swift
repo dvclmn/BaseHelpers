@@ -58,4 +58,11 @@ extension GridEdge.Set {
       case .leading: self = .leading
     }
   }
+
+  public var names: String {
+    GridEdge.allCases
+      .filter { contains(Self($0)) }
+      .map(\.name)
+      .joined(separator: ", ")
+  }
 }

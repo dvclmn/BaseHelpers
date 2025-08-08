@@ -17,40 +17,39 @@ extension CGFloat: SingleValueStringable {
 extension CGPoint: DisplayPair {
   public var valueA: Double { x }
   public var valueB: Double { y }
-  public var valueALabel: DisplayPairLabel { .init("X") }
-  public var valueBLabel: DisplayPairLabel { .init("Y") }
+  public var valueALabel: DisplayPairValueLabel { .init("X") }
+  public var valueBLabel: DisplayPairValueLabel { .init("Y") }
 }
 
 
 extension CGSize: DisplayPair {
   public var valueA: Double { width }
   public var valueB: Double { height }
-  public var valueALabel: DisplayPairLabel { .init("W", "Width") }
-  public var valueBLabel: DisplayPairLabel { .init("H", "Height") }
+  public var valueALabel: DisplayPairValueLabel { .init("W", "Width") }
+  public var valueBLabel: DisplayPairValueLabel { .init("H", "Height") }
 }
 extension CGVector: DisplayPair {
   public var valueA: Double { dx }
   public var valueB: Double { dy }
-  public var valueALabel: DisplayPairLabel { .init("DX") }
-  public var valueBLabel: DisplayPairLabel { .init("DY") }
-//  public var valueALabel: String { "DX" }
-//  public var valueBLabel: String { "DY" }
+  public var valueALabel: DisplayPairValueLabel { .init("DX") }
+  public var valueBLabel: DisplayPairValueLabel { .init("DY") }
+
 }
 extension UnitPoint: DisplayPair {
   public var valueA: Double { x }
   public var valueB: Double { y }
-  public var valueALabel: DisplayPairLabel { .init("X") }
-  public var valueBLabel: DisplayPairLabel { .init("Y") }
+  public var valueALabel: DisplayPairValueLabel { .init("X") }
+  public var valueBLabel: DisplayPairValueLabel { .init("Y") }
 }
 extension GridPosition: DisplayPair {
   public var valueA: Double { Double(column) }
   public var valueB: Double { Double(row) }
-  public var valueALabel: DisplayPairLabel { .init("C", "Column") }
-  public var valueBLabel: DisplayPairLabel { .init("R", "Row") }
+  public var valueALabel: DisplayPairValueLabel { .init("C", "Column") }
+  public var valueBLabel: DisplayPairValueLabel { .init("R", "Row") }
 }
 extension GridDimensions: DisplayPair {
   public var valueA: Double { Double(columns) }
   public var valueB: Double { Double(rows) }
-  public var valueALabel: DisplayPairLabel { .init("C", "Columns") }
-  public var valueBLabel: DisplayPairLabel { .init("R", "Rows") }
+  public var valueALabel: DisplayPairValueLabel { .init("C", "Columns") }
+  public var valueBLabel: DisplayPairValueLabel { .init("R", "Rows") }
 }

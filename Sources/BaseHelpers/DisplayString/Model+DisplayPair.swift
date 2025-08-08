@@ -18,17 +18,16 @@ public protocol DisplayPair {
   associatedtype Value: SingleValueStringable
   var valueA: Value { get }
   var valueB: Value { get }
-  var valueALabel: DisplayPairLabel { get }
-  var valueBLabel: DisplayPairLabel { get }
+  var valueALabel: DisplayPairValueLabel { get }
+  var valueBLabel: DisplayPairValueLabel { get }
 
   var displayString: String { get }
   var displayStringStyled: AttributedString { get }
 
   func displayString(
     places: DecimalPlaces,
-    separator: String, // Add spaces as needed here
+    separator: String,
     style: ValueDisplayStyle,
-//    hasSpace: Bool,
     grouping: Grouping
   ) -> String
 
@@ -36,25 +35,24 @@ public protocol DisplayPair {
     places: DecimalPlaces,
     separator: String,
     style: ValueDisplayStyle,
-//    hasSpace: Bool,
     grouping: Grouping
   ) -> AttributedString
 }
 
-public struct DisplayPairLabel {
+public struct DisplayPairValueLabel {
   let abbreviated: String
   let full: String
-  
+
   public init(abbreviated: String, full: String) {
     self.abbreviated = abbreviated
     self.full = full
   }
-  
+
   public init(_ abbreviated: String, _ full: String) {
     self.abbreviated = abbreviated
     self.full = full
   }
-  
+
   public init(_ abbreviated: String, full: String? = nil) {
     self.abbreviated = abbreviated
     self.full = full ?? abbreviated
@@ -76,7 +74,7 @@ extension DisplayPair {
     places: DecimalPlaces,
     separator: String = "x",
     style: ValueDisplayStyle = .plain,
-//    hasSpace: Bool = false,
+    //    hasSpace: Bool = false,
     grouping: Grouping = .automatic
   ) -> String {
 
@@ -92,8 +90,8 @@ extension DisplayPair {
           case .full:
             result = "\(valueALabel.full) \(valA)\(separator)\(valueBLabel.full) \(valB)"
         }
-//        result =
-//          "\(valueALabel) \(valA)\(separator)\(valueBLabel) \(valB)"
+      //        result =
+      //          "\(valueALabel) \(valA)\(separator)\(valueBLabel) \(valB)"
 
       case .plain:
         result = "\(valA)\(separator)\(valB)"
@@ -105,7 +103,7 @@ extension DisplayPair {
     places: DecimalPlaces = .fractionLength(2),
     separator: String = "x",
     style: ValueDisplayStyle = .plain,
-//    hasSpace: Bool = false,
+    //    hasSpace: Bool = false,
     grouping: Grouping = .automatic
   ) -> AttributedString {
 
@@ -113,7 +111,7 @@ extension DisplayPair {
       self,
       places: places,
       separator: separator,
-//      hasSpace: hasSpace
+      //      hasSpace: hasSpace
     )
     return pair
   }
