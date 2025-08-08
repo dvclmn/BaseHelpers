@@ -27,6 +27,79 @@ public struct GridDimensions: GridBase {
   }
 }
 
+// MARK: - Containment Methods
+extension GridDimensions {
+  /// Checks if a point (in pixel coordinates) falls within the grid bounds
+  public func contains(point: CGPoint, cellSize: CGSize) -> Bool {
+    let gridSize = toCGSize(withCellSize: cellSize)
+    return point.x >= 0
+      && point.y >= 0
+      && point.x < gridSize.width
+      && point.y < gridSize.height
+  }
+
+  /// Checks if a grid position is within valid bounds
+  public func contains(position: GridPosition) -> Bool {
+    return position.column >= 0 && position.column < columns && position.row >= 0 && position.row < rows
+  }
+
+  /// Convenience method: converts point to position and checks if it's valid
+  public func containsValidPosition(for point: CGPoint, cellSize: CGSize) -> Bool {
+    let gridPosition = position(for: point, cellSize: cellSize)
+    return contains(position: gridPosition)
+  }
+}
+
+// MARK: - Coordinate Conversion
+extension GridDimensions {
+  public func position(for point: CGPoint, cellSize: CGSize) -> GridPosition {
+    GridPosition(
+      column: Int(floor(point.x / cellSize.width)),
+      row: Int(floor(point.y / cellSize.height))
+    )
+  }
+}
+
+// MARK: - Size Calculations
+extension GridDimensions {
+  public func width(with cellSize: CGSize) -> CGFloat {
+    CGFloat(columns) * cellSize.width
+  }
+  
+  public func height(with cellSize: CGSize) -> CGFloat {
+    CGFloat(rows) * cellSize.height
+  }
+  
+  public func toCGSize(withCellSize cellSize: CGSize) -> CGSize {
+    CGSize(
+      width: width(with: cellSize),
+      height: height(with: cellSize)
+    )
+  }
+}
+
+// MARK: - Additional Convenience Methods
+extension GridDimensions {
+  /// Total number of cells in the grid
+  public var cellCount: Int {
+    columns * rows
+  }
+  
+  /// All valid positions in the grid
+  public var allPositions: [GridPosition] {
+    (0..<rows).flatMap { row in
+      (0..<columns).map { column in
+        GridPosition(column: column, row: row)
+      }
+    }
+  }
+  
+  /// Check if this grid can fit within another grid
+  public func fits(within other: GridDimensions) -> Bool {
+    return self.columns <= other.columns && self.rows <= other.rows
+  }
+}
+
 extension GridDimensions {
 
   public static let minSize = GridDimensions(
@@ -48,11 +121,6 @@ extension GridDimensions {
     return self.bothGreaterThan(rhs: Self.minCellsAlongLength)
   }
 
-
-
-//  public var bottomRight: GridPosition {
-//    return GridPosition(column: columns - 1, row: rows - 1)
-//  }
   public var bottomRight: GridPosition? {
     guard columns > 0, rows > 0 else { return nil }
     return GridPosition(column: columns - 1, row: rows - 1)
@@ -65,61 +133,10 @@ extension GridDimensions {
     return GridDimensions(columns: cols, rows: rows)
   }
 
-  public func contains(position: GridPosition) -> Bool {
-    return position.column >= 0
-    && position.column < columns
-    && position.row >= 0
-    && position.row < rows
-  }
-  
-  /// Returns `true` if the given point lies within the grid's bounds.
-  ///
-  /// The grid is assumed to start at origin (0,0) in screen space.
-  ///
-  /// - Parameters:
-  ///   - point: A point in screen-space coordinates.
-  ///   - cellSize: The size of each grid cell.
-  /// - Returns: `true` if the point is within the grid’s area, else `false`.
-  public func contains(
-    point: CGPoint,
-    cellSize: CGSize
-  ) -> Bool {
-    let gridSize = toCGSize(withCellSize: cellSize)
 
-    return point.x >= 0
-      && point.y >= 0
-      && point.x < gridSize.width
-      && point.y < gridSize.height
-  }
-
-
-//  public func contains(point: CGPoint, cellSize: CGSize) -> Bool {
-//    contains(position(for: point, cellSize: cellSize))
-//  }
-//  
-  public func position(for point: CGPoint, cellSize: CGSize) -> GridPosition {
-    GridPosition(
-      column: Int(floor(point.x / cellSize.width)),
-      row: Int(floor(point.y / cellSize.height))
-    )
-  }
 }
 
 extension GridDimensions {
-
-  public func width(with cellSize: CGSize) -> CGFloat {
-    CGFloat(columns) * cellSize.width
-  }
-  public func height(with cellSize: CGSize) -> CGFloat {
-    CGFloat(rows) * cellSize.height
-  }
-
-  public func toCGSize(withCellSize cellSize: CGSize) -> CGSize {
-    return CGSize(
-      width: width(with: cellSize),
-      height: height(with: cellSize),
-    )
-  }
 
   // MARK: - Greater than
   public func bothGreaterThan(rhs: GridDimensions) -> Bool {

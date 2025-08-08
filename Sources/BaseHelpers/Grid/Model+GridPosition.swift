@@ -173,7 +173,7 @@ extension GridPosition {
   }
 
   public func isValidWithin(dimensions: GridDimensions) -> Bool {
-    return dimensions.contains(self)
+    return dimensions.contains(position: self)
   }
 
   public func moved(

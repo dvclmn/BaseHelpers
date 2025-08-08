@@ -32,10 +32,10 @@ extension CGSize {
   ) -> GridDimensions {
     let colsRaw = self.width / cellSize.width
     let rowsRaw = self.height / cellSize.height
-    
+
     let cols: Int
     let rows: Int
-    
+
     switch strategy {
       case .floor:
         cols = Int(floor(colsRaw))
@@ -47,7 +47,7 @@ extension CGSize {
         cols = Int(colsRaw.rounded())
         rows = Int(rowsRaw.rounded())
     }
-    
+
     return GridDimensions(columns: cols, rows: rows)
   }
 
