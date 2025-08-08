@@ -26,3 +26,8 @@ public struct GridDelta: GridBase {
     )
   }
 }
+extension GridDelta: CustomStringConvertible {
+  public var description: String {
+    "GridDelta[C: \(columns), R: \(rows)]"
+  }
+}

@@ -7,11 +7,13 @@
 
 import SwiftUI
 
-public enum GridEdge: GridBase, CaseIterable {
+public enum GridEdge: String, GridBase, CaseIterable {
   case top
   case trailing
   case bottom
   case leading
+
+  public var name: String { rawValue.capitalized }
 
   public init?(fromBoundaryPoint point: GridBoundaryPoint) {
     guard let edge = point.gridEdge else { return nil }
@@ -38,7 +40,7 @@ extension GridEdge {
       self.rawValue = rawValue
     }
     public let rawValue: Int
-    
+
     public static let top = Self(rawValue: 1 << 0)
     public static let trailing = Self(rawValue: 1 << 1)
     public static let bottom = Self(rawValue: 1 << 2)

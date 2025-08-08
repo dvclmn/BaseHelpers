@@ -8,24 +8,72 @@
 import SwiftUI
 
 public struct GridResizeHelper {
-//  let oldSize: CGSize
-//  let oldDimensions: GridDimensions
   let oldGeometry: GridGeometry
   let newSize: CGSize
-  let boundaryPoint: ResizePoint
+  let boundaryPoint: GridBoundaryPoint
   let anchorPoint: UnitPoint
+
+  public init(
+    oldGeometry: GridGeometry,
+    newSize: CGSize,
+    boundaryPoint: GridBoundaryPoint,
+    anchorPoint: UnitPoint
+  ) {
+    self.oldGeometry = oldGeometry
+    self.newSize = newSize
+    self.boundaryPoint = boundaryPoint
+    self.anchorPoint = anchorPoint
+  }
+}
+extension GridResizeHelper {
+
+  var cellSize: CGSize { oldGeometry.cellSize }
+
+  public var resizeDelta: GridDelta {
+
+    let oldDimensions = oldGeometry.dimensions
+    let newDimensions = GridDimensions(
+      size: newSize,
+      cellSize: cellSize,
+    )
+    assert(
+      boundaryPoint
+        .isValidSizeDelta(
+          from: oldDimensions,
+          to: newDimensions
+        ),
+      "Invalid size delta for boundary point"
+    )
+
+    return GridDelta(old: oldDimensions, new: newDimensions)
+  }
+
+  public var effectiveEdges: GridEdge.Set { boundaryPoint.edgesToResize(anchor: anchorPoint) }
+
+  public func resize(_ artwork: inout GridMatrix) {
+    artwork.resize(by: resizeDelta, at: effectiveEdges)
+  }
 }
 
+// MARK: - Grid Geometry
 public struct GridGeometry: Sendable, Equatable {
-  let cellSize: CGSize
-  let dimensions: GridDimensions
-  
-  init(cellSize: CGSize = .zero, dimensions: GridDimensions = .minSize) {
+  public let cellSize: CGSize
+  public let dimensions: GridDimensions
+
+  public static let zero = GridGeometry(
+    cellSize: .zero,
+    dimensions: .minSize
+  )
+
+  public init(
+    cellSize: CGSize,
+    dimensions: GridDimensions
+  ) {
     self.cellSize = cellSize
     self.dimensions = dimensions
   }
-  
-  var canvasSize: CGSize {
+
+  public var canvasSize: CGSize {
     dimensions.toCGSize(withCellSize: cellSize)
   }
 }

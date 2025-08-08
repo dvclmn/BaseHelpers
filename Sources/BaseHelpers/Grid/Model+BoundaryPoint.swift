@@ -66,6 +66,21 @@ extension GridBoundaryPoint {
     }
   }
 
+  public func isValidSizeDelta(
+    from oldDimensions: GridDimensions,
+    to newDimensions: GridDimensions
+  ) -> Bool {
+    switch self {
+      case .top, .bottom:
+        return oldDimensions.columns == newDimensions.columns
+      case .leading, .trailing:
+        return oldDimensions.rows == newDimensions.rows
+      case .topLeading, .bottomLeading, .topTrailing, .bottomTrailing:
+        /// Both axes are allowed to change at corners
+        return true
+    }
+  }
+
   public var isRowEdge: Bool {
     self == .top || self == .bottom
   }
@@ -112,6 +127,20 @@ extension GridBoundaryPoint {
       case .bottomLeading: return [.bottom, .leading]
       case .bottomTrailing: return [.bottom, .trailing]
     }
+  }
+
+  public func edgesToResize(anchor: UnitPoint) -> GridEdge.Set {
+
+    /// Start with what the dragged point says
+    var edges = self.affectedEdges
+
+    /// Remove any edges that pass through the anchor
+    if anchor.x == 0.0 { edges.remove(.leading) }
+    if anchor.x == 1.0 { edges.remove(.trailing) }
+    if anchor.y == 0.0 { edges.remove(.top) }
+    if anchor.y == 1.0 { edges.remove(.bottom) }
+
+    return edges
   }
 
 }
