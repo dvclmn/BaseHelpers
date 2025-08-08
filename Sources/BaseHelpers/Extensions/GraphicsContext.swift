@@ -70,6 +70,7 @@ extension GraphicsContext {
     containerSize: CGSize,
   ) {
 
+    let zoom = context.environment(\.canvasZoom)
     let path = Path.createGrid(
       columns: config.columns,
       rows: config.rows,

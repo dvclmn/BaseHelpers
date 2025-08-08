@@ -66,32 +66,6 @@ extension GridBoundaryPoint {
     }
   }
 
-  public func sizeDelta(
-    columnDelta: Int,
-    rowDelta: Int
-  ) -> GridDelta {
-    switch self {
-      case .top:
-        return GridDelta(columns: 0, rows: -rowDelta)
-      case .bottom:
-        return GridDelta(columns: 0, rows: rowDelta)
-
-      case .leading:
-        return GridDelta(columns: -columnDelta, rows: 0)
-      case .trailing:
-        return GridDelta(columns: columnDelta, rows: 0)
-
-      case .topLeading:
-        return GridDelta(columns: -columnDelta, rows: -rowDelta)
-      case .bottomLeading:
-        return GridDelta(columns: -columnDelta, rows: rowDelta)
-      case .topTrailing:
-        return GridDelta(columns: columnDelta, rows: -rowDelta)
-      case .bottomTrailing:
-        return GridDelta(columns: columnDelta, rows: rowDelta)
-    }
-  }
-
   public var isRowEdge: Bool {
     self == .top || self == .bottom
   }
