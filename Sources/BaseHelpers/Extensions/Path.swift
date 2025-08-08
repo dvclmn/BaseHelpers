@@ -8,23 +8,30 @@
 import SwiftUI
 
 extension Path {
+  
+  public init(fromSize size: CGSize) {
+    self.init { path in
+      path.addRect(CGRect(origin: .zero, size: size))
+    }
+  }
+  
   public static func createGrid(
     columns: Int,
     rows: Int,
     cellSize: CGSize,
-    containerSize: CGSize,
+    containerSize: CGSize
   ) -> Path {
     Path { p in
       /// Horizontal lines
       for row in 0...rows {
-        let y = CGFloat(row) * cellSize.height
+        let y = min(CGFloat(row) * cellSize.height, containerSize.height)
         p.move(to: CGPoint(x: 0, y: y))
         p.addLine(to: CGPoint(x: containerSize.width, y: y))
       }
-
+      
       /// Vertical lines
       for column in 0...columns {
-        let x = CGFloat(column) * cellSize.width
+        let x = min(CGFloat(column) * cellSize.width, containerSize.width)
         p.move(to: CGPoint(x: x, y: 0))
         p.addLine(to: CGPoint(x: x, y: containerSize.height))
       }

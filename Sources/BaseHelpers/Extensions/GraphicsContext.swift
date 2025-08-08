@@ -62,19 +62,13 @@ extension GraphicsContext {
 
   public func drawGridLines(
     config: GridLineConfiguration,
-//    columns: Int,
-//    rows: Int,
-//    colour: Color = .gray,
-//    strokeThickness: CGFloat = 1,
-//    cellSize: CGSize,
     containerSize: CGSize,
   ) {
-
-    let zoom = context.environment(\.canvasZoom)
+    let zoom = self.environment.canvasZoom
     let path = Path.createGrid(
       columns: config.columns,
       rows: config.rows,
-      cellSize: config.cellSize,
+      cellSize: config.cellSize.addingZoom(zoom),
       containerSize: containerSize
     )
     self.stroke(path, with: .color(config.colour), lineWidth: config.strokeThickness)

@@ -12,10 +12,12 @@ import SwiftUI
 /// I think `.frame()` lets you fall back to the layout system's
 /// proposed frame size (for that dimenion) when you pass
 /// in an optional value.
-public struct FrameDimensions {
+public struct FrameDimensions: Sendable {
   public var width: CGFloat?
   public var height: CGFloat?
   public var alignment: Alignment
+  
+  public static let `default` = FrameDimensions()
 
   public init(
     width: CGFloat? = nil,
@@ -38,6 +40,14 @@ public struct FrameDimensions {
     self.alignment = alignment
   }
 }
+
+extension FrameDimensions {
+  public var toCGSize: CGSize? {
+    guard let width, let height else { return nil }
+    return CGSize(width: width, height: height)
+  }
+}
+
 extension FrameDimensions: CustomStringConvertible {
   public var description: String {
     return "FrameDimensions[W: \(width?.displayString ?? "nil"), H: \(height?.displayString ?? "nil"), Alignment: \(alignment.displayName)]"
