@@ -30,7 +30,6 @@ extension GridResizeHelper {
   var cellSize: CGSize { oldGeometry.cellSize }
 
   public var resizeDelta: GridDelta {
-
     let oldDimensions = oldGeometry.dimensions
     let newDimensions = GridDimensions(
       size: newSize,

@@ -7,6 +7,21 @@
 
 import SwiftUI
 
+/// Note: `GridAxis` is about how indices progress across the grid,
+/// not about how the things themselves are shaped.
+///
+/// Even though a column is (in isolation) a 'vertical thing'.
+///
+/// ```
+///  x →   column 0   column 1   column 2
+///       ┌───┬───┬───┐
+///  y ↓  │   │   │   │   row 0
+///       ├───┼───┼───┤
+///       │   │   │   │   row 1
+///       ├───┼───┼───┤
+///       │   │   │   │   row 2
+///
+/// ```
 public enum GridAxis: String, GridBase, CaseIterable, Identifiable {
   /// Horizontal
   case column

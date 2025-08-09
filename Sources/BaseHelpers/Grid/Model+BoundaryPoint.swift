@@ -81,12 +81,22 @@ extension GridBoundaryPoint {
     }
   }
 
+  public var gridEdge: GridEdge? {
+    switch self {
+      case .top: .top
+      case .bottom: .bottom
+      case .leading: .leading
+      case .trailing: .trailing
+      default: nil
+    }
+  }
+
   public var isRowEdge: Bool {
-    self == .top || self == .bottom
+    gridEdge?.isRowEdge ?? false
   }
 
   public var isColumnEdge: Bool {
-    self == .leading || self == .trailing
+    gridEdge?.isColumnEdge ?? false
   }
 
   public var isCorner: Bool {
@@ -103,16 +113,6 @@ extension GridBoundaryPoint {
       .column
     } else {
       nil
-    }
-  }
-
-  public var gridEdge: GridEdge? {
-    switch self {
-      case .top: .top
-      case .bottom: .bottom
-      case .leading: .leading
-      case .trailing: .trailing
-      default: nil
     }
   }
 

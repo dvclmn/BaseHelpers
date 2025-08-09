@@ -13,20 +13,6 @@ public enum SnapStrategy {
   case round
 }
 
-//extension BinaryFloatingPoint {
-//  public func cellCount(
-//    forCellAxis axis: GridAxis,
-//    cellSize: CGSize
-//  ) -> Int {
-//    switch axis {
-//      case .column:
-//        //        return Int(self / Self(cellSize.width))
-//      case .row:
-//        //        return Int(self / Self(cellSize.height))
-//    }
-//  }
-//}
-
 extension CGSize {
 
   public func quantisedCanvasSize(
@@ -45,7 +31,7 @@ extension CGSize {
     cellSize: CGSize,
     strategy: SnapStrategy
   ) -> Int {
-    let dimensions = self.cellSnappedDimensions(
+    let dimensions = cellSnappedDimensions(
       cellSize: cellSize,
       strategy: strategy
     )

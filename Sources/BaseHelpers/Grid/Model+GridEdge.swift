@@ -12,6 +12,14 @@ public enum GridEdge: String, GridBase, CaseIterable {
   case trailing
   case bottom
   case leading
+  
+  public var isRowEdge: Bool {
+    self == .top || self == .bottom
+  }
+  
+  public var isColumnEdge: Bool {
+    self == .leading || self == .trailing
+  }
 
   public var name: String { rawValue.capitalized }
 

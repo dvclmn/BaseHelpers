@@ -235,17 +235,7 @@ extension GridMatrix {
       self[row: position.row, column: position.column] = value
     }
   }
-  //  public subscript(at position: GridPosition) -> GridCell? {
-  //    get {
-  //      guard isValid(position: position) else { return nil }
-  //      return self[row: position.row, column: position.column]
-  //    }
-  //    set {
-  //      self[row: position.row, column: position.column] = newValue
-  //    }
-  //
-  //  }
-
+  
   public subscript(row row: Int, column column: Int) -> GridCell {
     get {
       cells[row * columns + column]
@@ -254,21 +244,6 @@ extension GridMatrix {
       cells[row * columns + column] = newValue
     }
   }
-
-  //  public subscript(row: Int, column: Int) -> GridCell {
-  //    get { cells[row * columns + column] }
-  //    set { cells[row * columns + column] = newValue }
-  //  }
-
-  /// `let cell = artwork.content[someGridPosition]`
-  //  subscript(position position: GridPosition) -> GridCell {
-  //    get { self[position.row, position.column] }
-  //    set { self[position.row, position.column] = newValue }
-  //  }
-
-  //  func getCellIfValid(at position: GridPosition) -> GridCell? {
-  //
-  //  }
 
 }
 
