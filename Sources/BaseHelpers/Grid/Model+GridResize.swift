@@ -30,6 +30,7 @@ extension GridResizeHelper {
   var cellSize: CGSize { oldGeometry.cellSize }
 
   public var resizeDelta: GridDelta {
+
     let oldDimensions = oldGeometry.dimensions
     let newDimensions = GridDimensions(
       size: newSize,
@@ -43,15 +44,16 @@ extension GridResizeHelper {
         ),
       "Invalid size delta for boundary point"
     )
+    let delta = GridDelta(old: oldDimensions, new: newDimensions)
 
-    return GridDelta(old: oldDimensions, new: newDimensions)
+    return delta
   }
-
-  public var effectiveEdges: GridEdge.Set { boundaryPoint.edgesToResize(anchor: anchorPoint) }
 
   public func resize(_ artwork: inout GridMatrix) {
-    artwork.resize(by: resizeDelta, at: effectiveEdges)
+    artwork.resize(by: resizeDelta, at: affectedEdges)
   }
+
+  public var affectedEdges: GridEdge.Set { boundaryPoint.edgesToResize(anchor: anchorPoint) }
 }
 
 // MARK: - Grid Geometry

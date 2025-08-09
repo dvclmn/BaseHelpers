@@ -129,10 +129,20 @@ extension GridBoundaryPoint {
     }
   }
 
+  /// Note: `centre` anchor forces both opposing edges to be included
   public func edgesToResize(anchor: UnitPoint) -> GridEdge.Set {
 
     /// Start with what the dragged point says
     var edges = self.affectedEdges
+
+    if anchor == .center {
+      if edges.contains(.leading) || edges.contains(.trailing) {
+        edges.insert([.leading, .trailing])
+      }
+      if edges.contains(.top) || edges.contains(.bottom) {
+        edges.insert([.top, .bottom])
+      }
+    }
 
     /// Remove any edges that pass through the anchor
     if anchor.x == 0.0 { edges.remove(.leading) }
