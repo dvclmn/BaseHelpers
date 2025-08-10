@@ -32,20 +32,26 @@ extension GridDelta: CustomStringConvertible {
   }
 }
 
-extension GridDelta: CustomDebugStringConvertible {
-  public var debugDescription: String {
+extension GridDelta {
+  public func activityDescription(includeTypeName: Bool = false) -> String {
+    
+    let typeName: String = includeTypeName ? "GridDelta: " : ""
     let parts = [describeChange(count: columns, singular: "Column", plural: "Columns"),
                  describeChange(count: rows, singular: "Row", plural: "Rows")]
       .compactMap { $0 }
     
     if parts.isEmpty {
-      return "GridDelta: No change"
+      return typeName + "No change"
     }
     
-    return "GridDelta: " + parts.joined(separator: ", ")
+    return typeName + parts.joined(separator: ", ")
   }
   
-  private func describeChange(count: Int, singular: String, plural: String) -> String? {
+  private func describeChange(
+    count: Int,
+    singular: String,
+    plural: String
+  ) -> String? {
     guard count != 0 else { return nil }
     
     let action = count > 0 ? "Adding" : "Removing"
