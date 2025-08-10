@@ -47,64 +47,7 @@ public struct ViewSizeModifier: ViewModifier {
   }
 }
 
-/// `CGFloat`, for just width, or just height
-//public struct ViewLengthModifier: ViewModifier {
-//  
-//  @State private var debouncer: AsyncDebouncer?
-////  private let debouncer: AsyncDebouncer?
-//
-//  let axis: Axis
-//  let valueOutput: ViewLengthOutput
-//
-//  public init(
-//    axis: Axis,
-////    shouldDebounce: Bool,
-//    valueOutput: @escaping ViewLengthOutput
-//  ) {
-//    self.debouncer = shouldDebounce ? AsyncDebouncer() : nil
-//    self.axis = axis
-//    self.valueOutput = valueOutput
-//  }
-//
-//  public func body(content: Content) -> some View {
-//    content
-//      .onGeometryChange(for: CGFloat.self) { proxy in
-//        switch axis {
-//          case .horizontal:
-//            return proxy.size.width
-//
-//          case .vertical:
-//            return proxy.size.height
-//        }
-//      } action: { newValue in
-//        Task {
-//          if let debouncer {
-//            await debouncer.execute { @MainActor in
-//              valueOutput(newValue)
-//            }
-//          } else {
-//            valueOutput(newValue)
-//          }
-//        }
-//      }  // END geom change modifier
-//
-//  }
-//}
 extension View {
-//  public func viewLength(
-//    _ axis: Axis = .horizontal,
-//    shouldDebounce: Bool = true,
-//    valueOutput: @escaping ViewLengthOutput
-//  ) -> some View {
-//    self.modifier(
-//      ViewLengthModifier(
-//        axis: axis,
-//        shouldDebounce: shouldDebounce,
-//        valueOutput: valueOutput
-//      )
-//    )
-//  }
-
   public func viewSize(
     mode debounceMode: DebounceMode = .debounce(0.1),
     //    shouldDebounce: Bool = true,

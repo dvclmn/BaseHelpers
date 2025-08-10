@@ -36,7 +36,6 @@ public protocol SingleValueStringable {
 /// any further processing required
 extension SingleValueStringable {
 
-  
   /// A convenience that just returns the `displayString()`
   /// method with it's default values
   public var displayString: String { self.displayString() }
