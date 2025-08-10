@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// Looking for `clamp` methods? See `Extrensions/Comparable`
 extension BinaryFloatingPoint {
 
   public func incrementing(by amount: Self, in range: ClosedRange<Self>? = nil) -> Self {
@@ -39,16 +40,6 @@ extension BinaryFloatingPoint {
     return Float(self)
   }
 
-  public func clamped(to range: ClosedRange<Self>) -> Self {
-    return min(max(self, range.lowerBound), range.upperBound)
-  }
-
-  public func clamped(toIntRange range: Range<Int>) -> Self {
-    return clamped(Self(range.lowerBound), Self(range.upperBound))
-  }
-
-  
-
   /// Maps `self` (e.g. a size) into a derived value (e.g. corner radius or padding),
   /// favouring non-linear mapping via a curve.
   ///
@@ -72,7 +63,6 @@ extension BinaryFloatingPoint {
     return outputRange.lowerBound + curved * outputSpan
   }
 
- 
   public func toPercentString(within range: ClosedRange<Self>) -> String {
     let normalised: Double = Double(self.normalised(from: range))
     return String(normalised.formatted(.percent.precision(.fractionLength(0))))
@@ -105,16 +95,8 @@ extension BinaryFloatingPoint {
     return min(1.0, max(0.0, self))
   }
 
-  public var isPositive: Bool {
-    self > 0
-  }
-
-  public var isGreaterThanZero: Bool {
-    self > 0
-  }
-  public var isGreaterThanOrEqualToZero: Bool {
-    self >= 0
-  }
+  public var isGreaterThanZero: Bool { self > 0 }
+  public var isGreaterThanOrEqualToZero: Bool { self >= 0 }
 
   /// Calculates height from width using the given aspect ratio
   /// - Parameter aspectRatio: The aspect ratio (width / height)
