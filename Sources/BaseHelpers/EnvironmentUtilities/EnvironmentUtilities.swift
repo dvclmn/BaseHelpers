@@ -11,3 +11,11 @@ import SwiftUI
 //  @Entry public var zoomLevel: CGFloat = 1.0
 //  @Entry public var panOffset: CGSize = .zero
 //}
+
+extension EnvironmentValues {
+  
+  /// This is expected to represent be a single, self-contained View,
+  /// not including any native components like Toolbar or Inspector.
+  @Entry public var viewportSize: CGSize? = nil
+  
+}

@@ -17,7 +17,7 @@ public struct ViewSizeModifier: ViewModifier {
   let valueOutput: ViewSizeOutput
 
   public init(
-    mode: DebounceMode = .debounce(0.1),
+    mode: DebounceMode,
     valueOutput: @escaping ViewSizeOutput
   ) {
     switch mode {
@@ -50,14 +50,11 @@ public struct ViewSizeModifier: ViewModifier {
 extension View {
   public func viewSize(
     mode debounceMode: DebounceMode = .debounce(0.1),
-    //    shouldDebounce: Bool = true,
-    //    debounceInterval: Double = 0.1,
     valueOutput: @escaping ViewSizeOutput,
   ) -> some View {
     self.modifier(
       ViewSizeModifier(
-        //        shouldDebounce: shouldDebounce,
-        //        debounceInterval: debounceInterval,
+        mode: debounceMode,
         valueOutput: valueOutput
       )
     )
