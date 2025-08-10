@@ -39,21 +39,27 @@ extension Comparable where Self: BinaryFloatingPoint {
     return min(max(self, range.lowerBound), range.upperBound)
   }
 
-  /// Normalises `self` as a percentage (0 to 100) within the given source range.
-  /// - Returns: A linear percentage (not clamped).
-  /// - Precondition: The range must be valid (i.e.,`lowerBound < upperBound`).
-  public func normalised(from range: ClosedRange<Self>) -> Self {
-    precondition(range.lowerBound < range.upperBound, "Invalid range: lowerBound must be less than upperBound.")
-    return (self - range.lowerBound) / (range.upperBound - range.lowerBound) * 100
-  }
-
-  /// Normalises `self` as a clamped percentage (0 to 100) within the given source range.
-  /// - Returns: Value is first clamped to range, then normalised.
-  /// - Precondition: The range must be valid (i.e., lowerBound < upperBound).
-  public func normalisedClamped(from range: ClosedRange<Self>) -> Self {
-    precondition(range.lowerBound < range.upperBound, "Invalid range: lowerBound must be less than upperBound.")
-    let clampedSelf = self.clamped(to: range)
-    return (clampedSelf - range.lowerBound) / (range.upperBound - range.lowerBound) * 100
-  }
+  
+  
+  
+  /// Re the below: I realised that these are multiplying by `100`, which is a pretty
+  /// huge assumption, and not communicated in the method name at all.
+  /// I have switched these off for now, and will likely remove later.
+//  /// Normalises `self` as a percentage (0 to 100) within the given source range.
+//  /// - Returns: A linear percentage (not clamped).
+//  /// - Precondition: The range must be valid (i.e.,`lowerBound < upperBound`).
+//  public func normalised(from range: ClosedRange<Self>) -> Self {
+//    precondition(range.lowerBound < range.upperBound, "Invalid range: lowerBound must be less than upperBound.")
+//    return (self - range.lowerBound) / (range.upperBound - range.lowerBound) * 100
+//  }
+//
+//  /// Normalises `self` as a clamped percentage (0 to 100) within the given source range.
+//  /// - Returns: Value is first clamped to range, then normalised.
+//  /// - Precondition: The range must be valid (i.e., lowerBound < upperBound).
+//  public func normalisedClamped(from range: ClosedRange<Self>) -> Self {
+//    precondition(range.lowerBound < range.upperBound, "Invalid range: lowerBound must be less than upperBound.")
+//    let clampedSelf = self.clamped(to: range)
+//    return (clampedSelf - range.lowerBound) / (range.upperBound - range.lowerBound) * 100
+//  }
 
 }
