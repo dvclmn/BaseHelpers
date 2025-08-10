@@ -91,6 +91,10 @@ extension BinaryFloatingPoint {
     self / 2
   }
 
+  public var clampedToPositive: Self {
+    clamped(.zero, .infinity)
+  }
+  
   public var constrainedOpacity: Self {
     return min(1.0, max(0.0, self))
   }

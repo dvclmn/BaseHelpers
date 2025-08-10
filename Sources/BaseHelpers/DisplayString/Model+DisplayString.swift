@@ -10,9 +10,6 @@ import SwiftUI
 public typealias DecimalPlaces = FloatingPointFormatStyle<Double>.Configuration.Precision
 public typealias Grouping = FloatingPointFormatStyle<Double>.Configuration.Grouping
 
-//public typealias DecimalPlaces<Value: BinaryFloatingPoint> = FloatingPointFormatStyle<Value>.Configuration.Precision
-//public typealias Grouping<Value: BinaryFloatingPoint> = FloatingPointFormatStyle<Value>.Configuration.Grouping
-
 // MARK: - Single Values
 /// This unifies types that have a pair of values
 /// that can be formatted for display as a String
@@ -64,39 +61,3 @@ extension SingleValueStringable {
     return formatted
   }
 }
-
-//extension BinaryFloatingPoint {
-//
-//  public var displayString: String {
-//    return displayString()
-//  }
-//
-//  public func displayString(
-//    _ decimalPlaces: Int = 2,
-//    grouping: Decimal.FormatStyle.Configuration.Grouping = .automatic
-//  ) -> String {
-//
-//    let formatter = SingleValueFormatter(
-//      config: .init(
-//        decimalPlaces: decimalPlaces,
-//        grouping: grouping,
-//        style: .plain,
-//        hasSpaceBetweenValues: false
-//      )
-//    )
-//    return formatter.displayString(Double(self), valueLabel: "")
-//
-//  }
-//}
-//extension CGRect {
-//  public func displayString(
-//    _ decimalPlaces: Int = 2,
-//    grouping: Decimal.FormatStyle.Configuration.Grouping = .automatic
-//  ) -> String {
-//
-//    let formattedOrigin = self.origin.displayString(decimalPlaces, grouping: grouping)
-//    let formattedSize = self.size.displayString(decimalPlaces, grouping: grouping)
-//
-//    return String("Origin: \(formattedOrigin), Size: \(formattedSize)")
-//  }
-//}
