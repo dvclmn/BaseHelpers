@@ -16,34 +16,12 @@ extension Comparable {
     return clamped(range.lowerBound, range.upperBound)
   }
 
-  //  public func clamped(to range: ClosedRange<Self>) -> Self {
-  //    return min(max(self, range.lowerBound), range.upperBound)
-  //  }
-  //
-
-  //  func clamped(to range: ClosedRange<Self>) -> Self {
-  //    min(max(self, range.lowerBound), range.upperBound)
-  //  }
-
   /// `min` == `lowerBound`
   /// `max` == `upperBound`
   public func clamped(_ min: Self, _ max: Self) -> Self {
     return Swift.min(Swift.max(self, min), max)
   }
 
-  //  public func clamped(_ lowerBound: Self, _ upperBound: Self) -> Self {
-  //    precondition(lowerBound <= upperBound, "Invalid range: lowerBound must be less than or equal to upperBound.")
-  //    return min(max(self, lowerBound), upperBound)
-  //  }
-
-  //  public func constrained(_ atLeast: Self, _ atMost: Self) -> Self {
-  //    return min(max(self, atLeast), atMost)
-  //  }
-  //
-  //  public func clamped(to range: ClosedRange<Self>) -> Self {
-  //    let validRange = min(range.lowerBound, range.upperBound)...max(range.lowerBound, range.upperBound)
-  //    return min(max(self, validRange.lowerBound), validRange.upperBound)
-  //  }
 }
 
 extension Comparable where Self: BinaryFloatingPoint {
@@ -78,20 +56,4 @@ extension Comparable where Self: BinaryFloatingPoint {
     return (clampedSelf - range.lowerBound) / (range.upperBound - range.lowerBound) * 100
   }
 
-  //  public func clampedAndFinite(to range: ClosedRange<Self>) -> Self? {
-  //
-  //    let minValue = min(range.lowerBound, range.upperBound)
-  //    let maxValue = max(range.lowerBound, range.upperBound)
-  //
-  //    let validRange = minValue...maxValue
-  //
-  //    guard validRange.lowerBound.isFinite && validRange.upperBound.isFinite else { return nil }
-  //    let result = min(max(self, validRange.lowerBound), validRange.upperBound)
-  //    return result
-  //  }
-  //
-  //  public func normalised(from originalRange: (min: Self, max: Self)) -> Self {
-  //    guard originalRange.min < originalRange.max else { return self }
-  //    return (self - originalRange.min) / (originalRange.max - originalRange.min) * 100
-  //  }
 }
