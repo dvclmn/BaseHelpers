@@ -9,17 +9,6 @@ import Foundation
 
 /// Looking for `clamp` methods? See `Extrensions/Comparable`
 extension BinaryFloatingPoint {
-  
-  /// Converts a value in the given range into a fraction between 0.0 and 1.0.
-  /// Values below/above the range will be clamped.
-  public func normalised(from range: ClosedRange<Self>) -> Self {
-    precondition(
-      range.lowerBound < range.upperBound,
-      "Range must have a positive width."
-    )
-    let clampedValue = min(max(self, range.lowerBound), range.upperBound)
-    return (clampedValue - range.lowerBound) / (range.upperBound - range.lowerBound)
-  }
 
   public func incrementing(by amount: Self, in range: ClosedRange<Self>? = nil) -> Self {
     var result = self + amount
@@ -105,7 +94,7 @@ extension BinaryFloatingPoint {
   public var clampedToPositive: Self {
     clamped(.zero, .infinity)
   }
-  
+
   public var constrainedOpacity: Self {
     return min(1.0, max(0.0, self))
   }
