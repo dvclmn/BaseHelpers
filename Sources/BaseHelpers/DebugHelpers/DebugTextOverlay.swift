@@ -15,9 +15,15 @@ public struct DebugTextOverlayModifier: ViewModifier {
     content
       .overlay(alignment: alignment) {
         Text(value)
-          .padding()
+          .font(.callout)
+          .foregroundStyle(.primary.opacity(0.8))
+          .monospacedDigit()
+          .padding(.horizontal, 6)
+          .padding(.vertical, 4)
           .background(.regularMaterial)
           .background(.black.lowOpacity)
+          .clipShape(.rect(cornerRadius: 3))
+          .padding()
       }
   }
 }
