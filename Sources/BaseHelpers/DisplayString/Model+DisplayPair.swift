@@ -24,15 +24,17 @@ public protocol DisplayPair {
   var displayString: String { get }
   var displayStringStyled: AttributedString { get }
 
+  /// This is the value pair counterpart to
+  /// `SingleValueStringable` method of the same name.
   func displayString(
-    places: DecimalPlaces,
+    _ places: DecimalPlaces,
     separator: String,
     style: ValueDisplayStyle,
     grouping: Grouping
   ) -> String
 
   func displayStringStyled(
-    places: DecimalPlaces,
+    _ places: DecimalPlaces,
     separator: String,
     style: ValueDisplayStyle,
     grouping: Grouping
@@ -71,28 +73,27 @@ extension DisplayPair {
   }
 
   public func displayString(
-    places: DecimalPlaces,
+    _ places: DecimalPlaces,
     separator: String = "x",
     style: ValueDisplayStyle = .plain,
     //    hasSpace: Bool = false,
     grouping: Grouping = .automatic
   ) -> String {
 
-    let valA: String = valueA.displayString(places: places, grouping: grouping)
-    let valB: String = valueB.displayString(places: places, grouping: grouping)
+    let valA: String = valueA.displayString(places, grouping: grouping)
+    let valB: String = valueB.displayString(places, grouping: grouping)
 
     let result: String
     switch style {
       case .labels(let style):
+        
+        /// Note the inclusion of intentional spaces after labels in the below
         switch style {
           case .abbreviated:
             result = "\(valueALabel.abbreviated) \(valA)\(separator)\(valueBLabel.abbreviated) \(valB)"
           case .full:
             result = "\(valueALabel.full) \(valA)\(separator)\(valueBLabel.full) \(valB)"
         }
-      //        result =
-      //          "\(valueALabel) \(valA)\(separator)\(valueBLabel) \(valB)"
-
       case .plain:
         result = "\(valA)\(separator)\(valB)"
     }
@@ -100,19 +101,13 @@ extension DisplayPair {
   }
 
   public func displayStringStyled(
-    places: DecimalPlaces = .fractionLength(2),
+    _ places: DecimalPlaces = .fractionLength(2),
     separator: String = "x",
     style: ValueDisplayStyle = .plain,
-    //    hasSpace: Bool = false,
     grouping: Grouping = .automatic
   ) -> AttributedString {
 
-    let pair = valuePair(
-      self,
-      places: places,
-      separator: separator,
-      //      hasSpace: hasSpace
-    )
+    let pair = valuePair(self, places: places, separator: separator)
     return pair
   }
 

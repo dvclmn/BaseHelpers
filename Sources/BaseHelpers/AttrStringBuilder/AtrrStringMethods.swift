@@ -15,11 +15,11 @@ public func valuePair<T: DisplayPair>(
   separator: String = "x",
 //  hasSpace: Bool = false
 ) -> AttributedString {
-  StyledText(value.valueA.displayString(places: places))
+  StyledText(value.valueA.displayString(places))
   StyledText(separator)
     .colour(.secondary)
     .bold()
-  StyledText(value.valueB.displayString(places: places))
+  StyledText(value.valueB.displayString(places))
 }
 
 @AttrString

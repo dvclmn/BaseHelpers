@@ -93,7 +93,6 @@ extension UnitPoint {
 public enum CornerFallBack {
   case width
   case height
-  //  case detect(UnitPoint)
   case zero
   case custom(CGFloat)
 
@@ -101,51 +100,9 @@ public enum CornerFallBack {
     switch self {
       case .width: size.width
       case .height: size.height
-      //      case .detect(let unitPoint): size[keyPath: unitPoint.si]
       case .zero: .zero
       case .custom(let float): float
     }
   }
 }
 
-/// The goal:
-///
-/// To create a Rectangle within a container `CGSize`,
-/// based on a provided `UnitPoint`.
-//  public func boundarySize(
-//    fixedLength: CGFloat,
-//    opposingDimensionLength: OpposingDimensionLength = .infinite,
-//    corners: CornerStrategy = .include
-//  ) -> FrameDimensions {
-//
-//    let opposingLength: CGFloat? = opposingDimensionLength.value
-//
-//    if isHorizontalEdge {
-//      return FrameDimensions(
-//        width: opposingLength,
-//        height: fixedLength
-//      )
-//
-//    } else if isVerticalEdge {
-//      return FrameDimensions(
-//        width: fixedLength,
-//        height: opposingLength
-//      )
-//
-//    } else if isCorner {
-//      return corners.shouldIncludeCorners
-//        ? FrameDimensions(
-//          width: fixedLength,
-//          height: fixedLength
-//        )
-//        : FrameDimensions(
-//          width: .zero,
-//          height: .zero
-//        )
-//    } else {
-//      return FrameDimensions(
-//        width: .zero,
-//        height: .zero
-//      )
-//    }
-//  }

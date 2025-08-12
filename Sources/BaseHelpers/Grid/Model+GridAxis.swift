@@ -91,7 +91,7 @@ public enum GridAxis: String, GridBase, CaseIterable, Identifiable {
     }
   }
 
-  public func cellNumberSpacing(
+  public func cellNumberPositioning(
     _ cellIndex: Int,
     cellSize: CGSize
   ) -> CGPoint {
@@ -111,9 +111,8 @@ public enum GridAxis: String, GridBase, CaseIterable, Identifiable {
   }
 
   public func axisOffset(
-    canvasFrameInViewport: CGRect?,
+    frameInViewport frame: CGRect,
   ) -> CGSize {
-    guard let frame = canvasFrameInViewport else { return .zero }
     return switch self {
       case .column:
         CGSize(

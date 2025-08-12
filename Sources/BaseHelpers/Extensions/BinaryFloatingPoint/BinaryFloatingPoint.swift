@@ -65,7 +65,9 @@ extension BinaryFloatingPoint {
 
   public func toPercentString(within range: ClosedRange<Self>) -> String {
     let normalised: Double = Double(self.normalised(from: range))
-    return String(normalised.formatted(.percent.precision(.fractionLength(0))))
+    let percent = normalised * 100
+    return String(percent.displayString(.fractionLength(0)) + "%")
+//    return String(percent.formatted(.percent.precision(.fractionLength(0))))
   }
 
   /// E.g. converting `0.8` to `0.2`

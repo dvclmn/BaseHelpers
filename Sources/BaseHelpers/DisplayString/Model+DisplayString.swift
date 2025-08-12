@@ -11,21 +11,17 @@ public typealias DecimalPlaces = FloatingPointFormatStyle<Double>.Configuration.
 public typealias Grouping = FloatingPointFormatStyle<Double>.Configuration.Grouping
 
 // MARK: - Single Values
-/// This unifies types that have a pair of values
-/// that can be formatted for display as a String
+
+/// This is the single-value counterpart to `DisplayPair`.
+/// `DisplayPair` uses the below `displayString`
+/// method to drive it's *own* pair-focused equivalent method.
 public protocol SingleValueStringable {
 
-  /// This can be further constrained via extensions, I guess?
-  //  associatedtype Value: BinaryFloatingPoint
   var value: Double { get }
   var displayString: String { get }
 
-  /// I should get more clarity on what types I'm targeeting
-  /// via the above `associatedtype Value`, to better
-  /// constrain the below (e.g. grouping may be meaingless
-  /// if not a numeric value).
   func displayString(
-    places: DecimalPlaces,
+    _ places: DecimalPlaces,
     grouping: Grouping
   ) -> String
 }
@@ -44,7 +40,7 @@ extension SingleValueStringable {
   /// so I've chosen not to abstract over it, but use it directly, to
   /// express the decimal/integer places.
   public func displayString(
-    places: DecimalPlaces = .fractionLength(2),
+    _ places: DecimalPlaces = .fractionLength(2),
     grouping: Grouping = .automatic
   ) -> String {
 
