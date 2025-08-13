@@ -15,18 +15,28 @@ public struct DebugTextOverlayModifier: ViewModifier {
     content
       .overlay(alignment: alignment) {
         Text(value)
-          .font(.callout)
-          .foregroundStyle(.primary.opacity(0.8))
-          .monospacedDigit()
-          .padding(.horizontal, 6)
-          .padding(.vertical, 4)
-          .background(.regularMaterial)
-          .background(.black.lowOpacity)
-          .clipShape(.rect(cornerRadius: 3))
-          .padding()
+          .modifier(DebugTextStyleModifier())
       }
   }
 }
+import SwiftUI
+
+public struct DebugTextStyleModifier: ViewModifier {
+  
+  public func body(content: Content) -> some View {
+    content
+      .font(.callout)
+      .foregroundStyle(.primary.opacity(0.8))
+      .monospacedDigit()
+      .padding(.horizontal, 6)
+      .padding(.vertical, 4)
+      .background(.regularMaterial)
+      .background(.black.lowOpacity)
+      .clipShape(.rect(cornerRadius: 3))
+      .padding()
+  }
+}
+
 extension View {
   public func debugTextOverlay(
     _ value: String,

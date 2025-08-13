@@ -36,7 +36,7 @@ extension Character {
 }
 
 // https://gist.github.com/john-mueller/cb5fe3d39afe47ad7c94a84a6670e010
-extension Character: Codable {
+extension Character: @retroactive Codable {
   public func encode(to encoder: Encoder) throws {
     var container = encoder.singleValueContainer()
     try container.encode(String(self))
