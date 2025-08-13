@@ -86,18 +86,16 @@ extension CGSize {
     )
     return CGSize(width: clampedWidth, height: clampedHeight)
   }
-  
+
   public func clamped(
     max maxValue: CGFloat,
     min minValue: CGFloat
   ) -> CGSize {
     let maxSize = CGSize(fromLength: maxValue)
     let minSize = CGSize(fromLength: minValue)
-    
+
     return self.clamped(max: maxSize, min: minSize)
   }
-  
-  
 
   /// Returns the centre point of the size
   public var midpoint: CGPoint {
@@ -152,6 +150,24 @@ extension CGSize {
 
   public var widthOrHeightIsZero: Bool {
     self.width.isZero || self.height.isZero
+  }
+
+  public static func calculateMonospacedMetrics(for font: CTFont) -> CGSize {
+    let spaceChar = " " as CFString
+    var glyphRect = CGRect.zero
+    let glyph = CTFontGetGlyphWithName(font, spaceChar)
+    CTFontGetBoundingRectsForGlyphs(
+      font,
+      .horizontal,
+      [glyph],
+      &glyphRect,
+      1
+    )
+
+    let advance = CTFontGetAdvancesForGlyphs(font, .horizontal, [glyph], nil, 1)
+    let lineHeight = CTFontGetAscent(font) + CTFontGetDescent(font)
+
+    return CGSize(width: CGFloat(advance), height: lineHeight)
   }
 
   // MARK: - Zoom

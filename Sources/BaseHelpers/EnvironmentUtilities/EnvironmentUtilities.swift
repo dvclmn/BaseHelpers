@@ -18,4 +18,6 @@ extension EnvironmentValues {
   /// not including any native components like Toolbar or Inspector.
   @Entry public var viewportSize: CGSize? = nil
   
+  @Entry public var isDebugMode: Bool = false
+  
 }
