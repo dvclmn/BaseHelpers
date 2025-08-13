@@ -10,7 +10,7 @@ import SwiftUI
 /// A Viewport is considered to be a single, self-contained View,
 /// not including any native components like Toolbar or Inspector.
 public struct ViewportSizeModifier: ViewModifier {
-  @Environment(\.isDebugMode) private var isDebugMode
+//  @Environment(\.isDebugMode) private var isDebugMode
   @State private var viewportSize: CGSize?
 
   public func body(content: Content) -> some View {
@@ -19,6 +19,7 @@ public struct ViewportSizeModifier: ViewModifier {
         self.viewportSize = size
       }
       .environment(\.viewportSize, viewportSize)
+      .debugTextEntry(["`ViewportSizeModifier` viewportSize: \(viewportSize.displayIfAvailable)"])
   }
 }
 extension View {

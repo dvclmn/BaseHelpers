@@ -9,35 +9,39 @@ import SwiftUI
 
 public typealias DebugTextList = [String]
 public struct DebugTextKey: PreferenceKey {
-  
-  public static let defaultValue: DebugTextList = []
-  
+
+  public static let defaultValue: DebugTextList = ["No debug items"]
+
   public static func reduce(value: inout DebugTextList, nextValue: () -> DebugTextList) {
-    let new = nextValue()
-//    guard !new.isEmpty, !value.contains(new) else { return }
-//    value.insert(new)
+    for item in nextValue() where !value.contains(item) {
+      value.append(item)
+    }
   }
 }
 
 extension View {
-  public func addDebugText(_ debugText: String...) -> some View {
+  public func debugTextEntry(_ debugText: DebugTextList) -> some View {
+    //  public func debugTextEntry(_ debugText: String...) -> some View {
     return self.preference(key: DebugTextKey.self, value: debugText)
   }
 }
 
 public struct DebugText: View {
-  
+
   @State private var textList: DebugTextList = []
+  public init() {}
   public var body: some View {
-    VStack {
-      ForEach(textList) { item in
+    VStack(alignment: .leading) {
+      ForEach(textList, id: \.self) { item in
         Text(item)
       }
     }
     .modifier(DebugTextStyleModifier())
+    .padding()
     .onPreferenceChange(DebugTextKey.self) { newItems in
-      updateIfChanged(newItems, into: &text)
+      //      textList = newItems
+      updateIfChanged(newItems, into: &textList)
     }
-    
+
   }
 }
