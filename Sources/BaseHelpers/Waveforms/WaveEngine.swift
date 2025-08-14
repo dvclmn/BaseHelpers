@@ -5,6 +5,8 @@
 //  Created by Dave Coleman on 15/8/2025.
 //
 
+import SwiftUI
+
 // MARK: - WaveEngine
 /// Drives a phase-continuous waveform with parameter smoothing.
 /// - Integrates phase using `displayedFrequency` so phase never resets.
@@ -12,6 +14,9 @@
 @MainActor
 @Observable
 final class WaveEngine {
+  
+  var isPaused: Bool = false
+  
   /// Public, user-controlled targets
   /// Hz (temporal)
   var targetFrequency: CGFloat = 1.2
