@@ -13,7 +13,7 @@ import SwiftUI
 public struct WaveView: View {
 
   @State private var engine = WaveEngine()
-//  @Bindable var engine: WaveEngine
+  //  @Bindable var engine: WaveEngine
 
   let strokeWidth: CGFloat
   let sampleCount: Int
@@ -60,7 +60,7 @@ public struct WaveView: View {
       .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
 
       .task(id: context.date.timeIntervalSinceReferenceDate) {
-        // Drive the engine from TimelineView's clock
+        /// Drive the engine from TimelineView's clock
         engine.tick(now: context.date.timeIntervalSinceReferenceDate)
       }
     }

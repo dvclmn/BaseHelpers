@@ -70,10 +70,22 @@ extension WaveEngine {
       displayedCyclesAcross = targetCyclesAcross
     }
 
-    phase += (2 * .pi) * displayedFrequency * dt
-    /// Wrap into a reasonable range (e.g. 0…2π) to avoid float blow-up
-    if phase > .pi * 4 || phase < -.pi * 4 {
-      phase.formTruncatingRemainder(dividingBy: 2 * .pi)
-    }
+    /// 2) Integrate phase for continuity (`φ += 2π f dt`)
+    phase += twoPi * displayedFrequency * dt
+    /// keep phase in a safe range to avoid float blow-up
+    phase = wrapPhase(phase)
+    
+//    phase += (2 * .pi) * displayedFrequency * dt
+//    /// Wrap into a reasonable range (e.g. 0…2π) to avoid float blow-up
+//    if phase > .pi * 4 || phase < -.pi * 4 {
+//      phase.formTruncatingRemainder(dividingBy: 2 * .pi)
+//    }
+  }
+  
+  /// Angle helper
+  private func wrapPhase(_ phase: CGFloat) -> CGFloat {
+    var r = phase.truncatingRemainder(dividingBy: twoPi)
+    if r < 0 { r += twoPi } // keep in [0, 2π)
+    return r
   }
 }

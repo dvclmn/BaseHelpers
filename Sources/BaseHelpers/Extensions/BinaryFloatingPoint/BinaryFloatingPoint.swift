@@ -7,6 +7,8 @@
 
 import Foundation
 
+public var twoPi: CGFloat { .pi * 2 }
+
 /// Looking for `clamp` methods? See `Extrensions/Comparable`
 extension BinaryFloatingPoint {
 
@@ -39,6 +41,8 @@ extension BinaryFloatingPoint {
   public var toFloat: Float {
     return Float(self)
   }
+  
+  
   
   /// Map distance to a scaled distance using atan
   public func scaledDistance(
