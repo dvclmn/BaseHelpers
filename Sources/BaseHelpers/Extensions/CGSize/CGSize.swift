@@ -9,7 +9,12 @@ import Foundation
 import SwiftUI
 
 extension CGSize {
-
+  
+  /// Euclidean magnitude of the vector?
+  public var length: CGFloat { sqrt(width * width + height * height) }
+  public var normalisedLength: CGSize {
+    return length > 0 ? self / length : .zero
+  }
   // MARK: - Initialisers
 
   public init(fromLength length: CGFloat) {
@@ -169,7 +174,67 @@ extension CGSize {
 
     return CGSize(width: CGFloat(advance), height: lineHeight)
   }
-
+  
+  /// Applies a non-linear "elastic" tension, where `self` is a raw drag offset
+  /// - Parameters:
+  ///   - radius: The maximum effective drag distance (beyond this, movement flattens out).
+  ///   - tension: Controls the softness of the pull. Larger = softer.
+  /// - Returns: A new offset, scaled to feel like it's tethered by an elastic band.
+  public func applyTension(
+    radius: CGFloat,
+    tension: CGFloat,
+    linearZone: CGFloat = 0.3
+  ) -> CGSize {
+    let distance = self.length
+    guard distance > 0 else { return .zero }
+    
+    let scaled = distance.scaledDistance(
+      radius: radius,
+      tension: tension,
+      linearZone: linearZone
+    )
+    return self.normalisedLength * scaled
+  }
+  
+  /// Applies a non-linear "elastic" tension, with independent X and Y radii.
+  /// - Parameters:
+  ///   - radii: Maximum effective drag distances for X and Y before flattening.
+  ///   - tension: Controls the softness of the pull. Larger = softer.
+  public func applyTension(
+    radii: CGSize,
+    tension: CGFloat,
+    linearZone: CGFloat = 0.3
+  ) -> CGSize {
+    guard self != .zero else { return .zero }
+    
+    func scaledAxis(_ value: CGFloat, radius: CGFloat) -> CGFloat {
+      guard value != 0 else { return 0 }
+      let absVal = abs(value)
+      
+      let scaled = absVal.scaledDistance(
+        radius: radius,
+        tension: tension,
+        linearZone: linearZone
+      )
+      return value.sign == .minus ? -scaled : scaled
+    }
+    
+    return CGSize(
+      width: scaledAxis(width, radius: radii.width),
+      height: scaledAxis(height, radius: radii.height)
+    )
+  }
+  
+  /// Map distance to a scaled distance using atan
+//  private func scaledDistance(
+//    _ value: CGFloat,
+//    radius: CGFloat,
+//    withTension tension: CGFloat,
+//  ) -> CGFloat {
+//    return radius * (atan(value / tension) / (.pi / 2))
+//  }
+  
+  
   // MARK: - Zoom
 
   public func addingZoom(_ zoom: CGFloat) -> CGSize {

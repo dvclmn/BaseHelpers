@@ -50,4 +50,17 @@ extension View {
       )
     )
   }
+  
+  public func debugTextOverlay(
+    _ value: String...,
+    alignment: Alignment = .topLeading
+  ) -> some View {
+    self.modifier(
+      DebugTextOverlayModifier(
+        value: value.joined(separator: "\n"),
+//        value: value.flatMap().joined(separator: "\n"),
+        alignment: alignment
+      )
+    )
+  }
 }
