@@ -40,25 +40,14 @@ extension BinaryFloatingPoint {
     return Float(self)
   }
   
+  /// Map distance to a scaled distance using atan
   public func scaledDistance(
     radius: Self,
-    tension: Self = 80,
-    linearZone: Self = 0.3 // fraction of radius with pure 1:1 mapping
+    tension: Self,
   ) -> Self {
-    let linearLimit = radius * linearZone
-    if self <= linearLimit {
-      return self // no tension in the inner zone
-    }
-    
-    // Distance beyond the linear zone
-    let excess = self - linearLimit
-    let excessRadius = radius - linearLimit
-    
-    // Apply atan scaling to the excess only
-    let atanThingy = atan(Double(excess / tension))
-    let piHalved = Double.pi / 2
-    let scaledExcess = Double(excessRadius) * (atanThingy / piHalved)
-    return linearLimit + Self(scaledExcess)
+    let tensionVaue = Double(self / tension)
+    let halfPi = Double.pi / 2
+    return radius * Self(atan(tensionVaue / halfPi))
   }
 
   /// Maps `self` (e.g. a size) into a derived value (e.g. corner radius or padding),

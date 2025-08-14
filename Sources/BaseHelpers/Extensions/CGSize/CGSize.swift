@@ -183,7 +183,6 @@ extension CGSize {
   public func applyTension(
     radius: CGFloat,
     tension: CGFloat,
-    linearZone: CGFloat = 0.3
   ) -> CGSize {
     let distance = self.length
     guard distance > 0 else { return .zero }
@@ -191,7 +190,6 @@ extension CGSize {
     let scaled = distance.scaledDistance(
       radius: radius,
       tension: tension,
-      linearZone: linearZone
     )
     return self.normalisedLength * scaled
   }
@@ -203,7 +201,6 @@ extension CGSize {
   public func applyTension(
     radii: CGSize,
     tension: CGFloat,
-    linearZone: CGFloat = 0.3
   ) -> CGSize {
     guard self != .zero else { return .zero }
     
@@ -214,7 +211,6 @@ extension CGSize {
       let scaled = absVal.scaledDistance(
         radius: radius,
         tension: tension,
-        linearZone: linearZone
       )
       return value.sign == .minus ? -scaled : scaled
     }
@@ -224,17 +220,7 @@ extension CGSize {
       height: scaledAxis(height, radius: radii.height)
     )
   }
-  
-  /// Map distance to a scaled distance using atan
-//  private func scaledDistance(
-//    _ value: CGFloat,
-//    radius: CGFloat,
-//    withTension tension: CGFloat,
-//  ) -> CGFloat {
-//    return radius * (atan(value / tension) / (.pi / 2))
-//  }
-  
-  
+
   // MARK: - Zoom
 
   public func addingZoom(_ zoom: CGFloat) -> CGSize {
