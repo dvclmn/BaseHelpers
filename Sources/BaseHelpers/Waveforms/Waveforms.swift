@@ -5,9 +5,9 @@
 //  Created by Dave Coleman on 15/8/2025.
 //
 
-import SwiftUI
 import Combine
 import QuartzCore
+import SwiftUI
 
 // MARK: - WaveEngine
 /// Drives a phase-continuous waveform with parameter smoothing.
@@ -16,53 +16,53 @@ import QuartzCore
 @MainActor
 final class WaveEngine: ObservableObject {
   // Public, user-controlled targets (bind these to sliders)
-  @Published var targetFrequency: CGFloat = 1.2      // Hz (temporal)
-  @Published var targetAmplitude: CGFloat = 40        // px
-  @Published var targetBaseline: CGFloat  = 0         // px vertical offset
-  @Published var targetCyclesAcross: CGFloat = 1.5    // cycles across view width (spatial)
-  
+  @Published var targetFrequency: CGFloat = 1.2  // Hz (temporal)
+  @Published var targetAmplitude: CGFloat = 40  // px
+  @Published var targetBaseline: CGFloat = 0  // px vertical offset
+  @Published var targetCyclesAcross: CGFloat = 1.5  // cycles across view width (spatial)
+
   // Smoothed/displayed values (what the renderer uses)
   @Published private(set) var displayedFrequency: CGFloat = 1.2
   @Published private(set) var displayedAmplitude: CGFloat = 40
-  @Published private(set) var displayedBaseline:  CGFloat = 0
+  @Published private(set) var displayedBaseline: CGFloat = 0
   @Published private(set) var displayedCyclesAcross: CGFloat = 1.5
-  
+
   // Phase accumulator (radians)
   private(set) var phase: CGFloat = 0
-  
+
   // Tuning: smaller = snappier, larger = smoother. (seconds)
   var smoothingTimeConstant: CGFloat = 0.12
-  
+
   // Internal timekeeping
   private var lastTime: CFTimeInterval?
-  
+
   func tick(now: CFTimeInterval) {
     // Compute dt
     let dt: CGFloat
-    if let last = lastTime { dt = max(0, CGFloat(now - last)) } else { dt = 0; }
+    if let last = lastTime { dt = max(0, CGFloat(now - last)) } else { dt = 0 }
     lastTime = now
-    
+
     // 1) Exponential smoothing for parameters
     //    displayed += (target - displayed) * (1 - e^{-dt/τ})
     if dt > 0 {
       let alpha = 1 - exp(-dt / max(0.0001, smoothingTimeConstant))
-      displayedFrequency += (targetFrequency     - displayedFrequency) * alpha
-      displayedAmplitude += (targetAmplitude     - displayedAmplitude) * alpha
-      displayedBaseline  += (targetBaseline      - displayedBaseline)  * alpha
+      displayedFrequency += (targetFrequency - displayedFrequency) * alpha
+      displayedAmplitude += (targetAmplitude - displayedAmplitude) * alpha
+      displayedBaseline += (targetBaseline - displayedBaseline) * alpha
       displayedCyclesAcross += (targetCyclesAcross - displayedCyclesAcross) * alpha
     } else {
       // First frame: snap
       displayedFrequency = targetFrequency
       displayedAmplitude = targetAmplitude
-      displayedBaseline  = targetBaseline
+      displayedBaseline = targetBaseline
       displayedCyclesAcross = targetCyclesAcross
     }
-    
-//    // 2) Integrate phase for continuity (φ += 2π f dt)
-//    phase &+= (2 * .pi) * displayedFrequency * dt
-//    // keep φ in a safe range to avoid float blow-up
-//    if phase > 1_000_000 { phase.formTruncatingRemainder(dividingBy: 2 * .pi) }
-    
+
+    //    // 2) Integrate phase for continuity (φ += 2π f dt)
+    //    phase &+= (2 * .pi) * displayedFrequency * dt
+    //    // keep φ in a safe range to avoid float blow-up
+    //    if phase > 1_000_000 { phase.formTruncatingRemainder(dividingBy: 2 * .pi) }
+
     phase += (2 * .pi) * displayedFrequency * dt
     // Wrap into a reasonable range (e.g. 0…2π) to avoid float blow-up
     if phase > .pi * 4 || phase < -.pi * 4 {
@@ -73,20 +73,20 @@ final class WaveEngine: ObservableObject {
 
 // MARK: - WaveShape
 struct WaveShape: Shape {
-  var phase: CGFloat            // temporal phase (radians)
-  var amplitude: CGFloat        // px
-  var baseline: CGFloat         // px
-  var cyclesAcross: CGFloat     // cycles across rect.width
+  var phase: CGFloat  // temporal phase (radians)
+  var amplitude: CGFloat  // px
+  var baseline: CGFloat  // px
+  var cyclesAcross: CGFloat  // cycles across rect.width
   var sampleCount: Int = 600
-  
+
   func path(in rect: CGRect) -> Path {
     var p = Path()
     guard rect.width > 1, sampleCount > 1 else { return p }
-    
+
     let midY = rect.midY + baseline
     let kx = (2 * .pi * cyclesAcross) / rect.width
     let step = rect.width / CGFloat(sampleCount - 1)
-    
+
     var x: CGFloat = rect.minX
     var first = true
     for _ in 0..<sampleCount {
@@ -108,16 +108,16 @@ struct WaveView: View {
   @ObservedObject var engine: WaveEngine
   var strokeWidth: CGFloat = 2
   var sampleCount: Int = 800
-  
+
   var body: some View {
     TimelineView(.animation) { context in
-      
+
       Canvas { g, size in
         let rect = CGRect(origin: .zero, size: size)
-        
+
         // Grid (nice for intuition)
         drawMinorGrid(in: rect, into: &g)
-        
+
         // Wave
         let wave = WaveShape(
           phase: engine.phase,
@@ -127,10 +127,10 @@ struct WaveView: View {
           sampleCount: sampleCount
         )
         let path = wave.path(in: rect)
-        
+
         // Stroke
         g.stroke(path, with: .color(.accentColor), lineWidth: strokeWidth)
-        
+
         // Baseline
         let midY = rect.midY + engine.displayedBaseline
         let baselinePath = Path { p in
@@ -141,14 +141,14 @@ struct WaveView: View {
       }
       .background(.ultraThinMaterial)
       .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
-      
+
       .task(id: context.date.timeIntervalSinceReferenceDate) {
         // Drive the engine from TimelineView's clock
         engine.tick(now: context.date.timeIntervalSinceReferenceDate)
       }
     }
   }
-  
+
   private func drawMinorGrid(in rect: CGRect, into g: inout GraphicsContext) {
     let cols = 8
     let rows = 4
@@ -170,11 +170,13 @@ struct WaveView: View {
 }
 
 // MARK: - Playground Shell
-struct WavePlaygroundView: View {
+public struct WavePlaygroundView: View {
   @StateObject private var engine = WaveEngine()
   @State private var emoji: String = "🫧"
-  
-  var body: some View {
+
+  public init() {}
+
+  public var body: some View {
     VStack(spacing: 16) {
       // Emoji viewport
       ZStack {
@@ -185,7 +187,7 @@ struct WavePlaygroundView: View {
           .shadow(radius: 3)
       }
       .frame(height: 180)
-      
+
       // Waves
       WaveView(engine: engine, strokeWidth: 2, sampleCount: 900)
         .frame(height: 180)
@@ -193,14 +195,14 @@ struct WavePlaygroundView: View {
           legend
             .padding(8)
         }
-      
+
       // Inspector
       inspector
     }
     .padding(20)
-    .animation(.default, value: engine.targetCyclesAcross) // cosmetic
+    .animation(.default, value: engine.targetCyclesAcross)  // cosmetic
   }
-  
+
   private var legend: some View {
     VStack(alignment: .leading, spacing: 6) {
       Label(String(format: "f: %.2f Hz", engine.displayedFrequency), systemImage: "metronome")
@@ -211,7 +213,7 @@ struct WavePlaygroundView: View {
     .padding(6)
     .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 8, style: .continuous))
   }
-  
+
   private var inspector: some View {
     VStack(spacing: 12) {
       HStack {
@@ -244,10 +246,11 @@ struct WavePlaygroundView: View {
       }
       HStack {
         Text("Smoothing τ")
-        Slider(value: Binding(
-          get: { engine.smoothingTimeConstant },
-          set: { engine.smoothingTimeConstant = max(0.016, $0) }
-        ), in: 0.02...0.40)
+        Slider(
+          value: Binding(
+            get: { engine.smoothingTimeConstant },
+            set: { engine.smoothingTimeConstant = max(0.016, $0) }
+          ), in: 0.02...0.40)
         Text(String(format: "%.0f ms", engine.smoothingTimeConstant * 1000))
           .font(.caption.monospaced())
           .frame(width: 80, alignment: .trailing)
@@ -269,8 +272,7 @@ struct WavePlaygroundView: View {
     WavePlaygroundView()
       .preferredColorScheme(.dark)
   }
-//  .previewLayout(.sizeThatFits)
+  //  .previewLayout(.sizeThatFits)
   .frame(width: 760)
 }
 #endif
-
