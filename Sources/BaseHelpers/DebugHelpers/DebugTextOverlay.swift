@@ -16,6 +16,7 @@ public struct DebugTextOverlayModifier: ViewModifier {
       .overlay(alignment: alignment) {
         Text(value)
           .modifier(DebugTextStyleModifier())
+          .allowsHitTesting(false)
       }
   }
 }

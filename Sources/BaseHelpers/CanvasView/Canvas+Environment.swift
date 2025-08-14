@@ -12,12 +12,9 @@ extension EnvironmentValues {
   
   @Entry public var canvasZoom: CGFloat = 1.0
   @Entry public var canvasZoomRange: ClosedRange<CGFloat>? = nil
-
   @Entry public var canvasPan: CGSize = .zero
   @Entry public var canvasSize: CGSize = .zero
-  
   @Entry public var isResizingCanvas: Bool = false
-
   @Entry public var isHoverEnabled: Bool = true
   @Entry public var isDragEnabled: Bool = true
   @Entry public var shouldRenderDragRect: Bool = true
@@ -35,19 +32,5 @@ extension View {
   }
   public func setShouldRenderDragRect(_ shouldRender: Bool) -> some View {
     self.environment(\.shouldRenderDragRect, shouldRender)
-  }
-  
-  // MARK: - Canvas Zoom, Pan, Size
-  public func setZoomLevel(_ zoom: CGFloat) -> some View {
-    self.environment(\.canvasZoom, zoom)
-  }
-  public func setZoomRange(_ range: ClosedRange<CGFloat>) -> some View {
-    self.environment(\.canvasZoomRange, range)
-  }
-  public func setPanOffset(_ pan: CGSize) -> some View {
-    self.environment(\.canvasPan, pan)
-  }
-  public func setCanvasSize(_ size: CGSize) -> some View {
-    self.environment(\.canvasSize, size)
   }
 }
