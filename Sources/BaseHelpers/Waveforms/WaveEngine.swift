@@ -12,8 +12,9 @@ import SwiftUI
 /// - Integrates phase using `displayedFrequency` so phase never resets.
 /// - Smooths parameter changes (frequency, amplitude, vertical offset) with a time constant.
 @MainActor
-@Observable
-final class WaveEngine {
+//@Observable
+//final class WaveEngine {
+public struct WaveEngine {
   
   var isPaused: Bool = false
   
@@ -37,22 +38,30 @@ final class WaveEngine {
   private(set) var displayedCyclesAcross: CGFloat = 1.5
 
   /// Phase accumulator (radians)
-  @ObservationIgnored private(set) var phase: CGFloat = 0
+//  @ObservationIgnored
+  private(set) var phase: CGFloat = 0
 
   /// Tuning: smaller = snappier, larger = smoother. (seconds)
-  @ObservationIgnored var smoothingTimeConstant: CGFloat = 0.12
+//  @ObservationIgnored
+  var smoothingTimeConstant: CGFloat = 0.12
 
   /// Internal timekeeping
-  @ObservationIgnored private var lastTime: CFTimeInterval?
+//  @ObservationIgnored
+//  private var lastTime: CFTimeInterval?
+  
+  public init() {}
 
 }
 
 extension WaveEngine {
-  func tick(now: CFTimeInterval) {
+  public mutating func tick(
+    deltaTime dt: CGFloat,
+//    now: CFTimeInterval
+  ) {
     /// Compute dt
-    let dt: CGFloat
-    if let last = lastTime { dt = max(0, CGFloat(now - last)) } else { dt = 0 }
-    lastTime = now
+//    let dt: CGFloat
+//    if let last = lastTime { dt = max(0, CGFloat(now - last)) } else { dt = 0 }
+//    lastTime = now
 
     /// 1) Exponential smoothing for parameters
     ///    `displayed += (target - displayed) * (1 - e^{-dt/τ})`
