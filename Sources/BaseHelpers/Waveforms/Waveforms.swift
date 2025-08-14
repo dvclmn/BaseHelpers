@@ -9,68 +9,6 @@ import Combine
 import QuartzCore
 import SwiftUI
 
-// MARK: - WaveEngine
-/// Drives a phase-continuous waveform with parameter smoothing.
-/// - Integrates phase using `displayedFrequency` so phase never resets.
-/// - Smooths parameter changes (frequency, amplitude, vertical offset) with a time constant.
-@MainActor
-final class WaveEngine: ObservableObject {
-  // Public, user-controlled targets (bind these to sliders)
-  @Published var targetFrequency: CGFloat = 1.2  // Hz (temporal)
-  @Published var targetAmplitude: CGFloat = 40  // px
-  @Published var targetBaseline: CGFloat = 0  // px vertical offset
-  @Published var targetCyclesAcross: CGFloat = 1.5  // cycles across view width (spatial)
-
-  // Smoothed/displayed values (what the renderer uses)
-  @Published private(set) var displayedFrequency: CGFloat = 1.2
-  @Published private(set) var displayedAmplitude: CGFloat = 40
-  @Published private(set) var displayedBaseline: CGFloat = 0
-  @Published private(set) var displayedCyclesAcross: CGFloat = 1.5
-
-  // Phase accumulator (radians)
-  private(set) var phase: CGFloat = 0
-
-  // Tuning: smaller = snappier, larger = smoother. (seconds)
-  var smoothingTimeConstant: CGFloat = 0.12
-
-  // Internal timekeeping
-  private var lastTime: CFTimeInterval?
-
-  func tick(now: CFTimeInterval) {
-    // Compute dt
-    let dt: CGFloat
-    if let last = lastTime { dt = max(0, CGFloat(now - last)) } else { dt = 0 }
-    lastTime = now
-
-    // 1) Exponential smoothing for parameters
-    //    displayed += (target - displayed) * (1 - e^{-dt/τ})
-    if dt > 0 {
-      let alpha = 1 - exp(-dt / max(0.0001, smoothingTimeConstant))
-      displayedFrequency += (targetFrequency - displayedFrequency) * alpha
-      displayedAmplitude += (targetAmplitude - displayedAmplitude) * alpha
-      displayedBaseline += (targetBaseline - displayedBaseline) * alpha
-      displayedCyclesAcross += (targetCyclesAcross - displayedCyclesAcross) * alpha
-    } else {
-      // First frame: snap
-      displayedFrequency = targetFrequency
-      displayedAmplitude = targetAmplitude
-      displayedBaseline = targetBaseline
-      displayedCyclesAcross = targetCyclesAcross
-    }
-
-    //    // 2) Integrate phase for continuity (φ += 2π f dt)
-    //    phase &+= (2 * .pi) * displayedFrequency * dt
-    //    // keep φ in a safe range to avoid float blow-up
-    //    if phase > 1_000_000 { phase.formTruncatingRemainder(dividingBy: 2 * .pi) }
-
-    phase += (2 * .pi) * displayedFrequency * dt
-    // Wrap into a reasonable range (e.g. 0…2π) to avoid float blow-up
-    if phase > .pi * 4 || phase < -.pi * 4 {
-      phase.formTruncatingRemainder(dividingBy: 2 * .pi)
-    }
-  }
-}
-
 // MARK: - WaveShape
 struct WaveShape: Shape {
   var phase: CGFloat  // temporal phase (radians)
