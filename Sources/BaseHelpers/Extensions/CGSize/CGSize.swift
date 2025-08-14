@@ -50,6 +50,10 @@ extension CGSize {
       case .vertical: height
     }
   }
+  
+  public func point(for unitPoint: UnitPoint) -> CGPoint {
+    unitPoint.toCGPoint(in: self)
+  }
 
   /// Returns the offset needed to centre a child of the given size within this container.
   public func centeringOffset(forChild childSize: CGSize) -> CGSize {
