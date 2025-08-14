@@ -14,7 +14,7 @@ public struct DoubleTapModifier: ViewModifier {
   
   private let action: () -> Void
   
-  // For backwards compatibility
+  /// For backwards compatibility
   public init(value: Binding<Double>, defaultValue: Double?) {
     self.action = {
       if let defaultValue {
