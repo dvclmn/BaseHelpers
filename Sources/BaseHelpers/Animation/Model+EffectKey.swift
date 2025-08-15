@@ -5,88 +5,84 @@
 //  Created by Dave Coleman on 29/10/2024.
 //
 
-import SwiftUI
 import BaseStyles
-
+import SwiftUI
 
 public struct EffectKey: Documentable {
   public let effect: AnimatedEffect
-  public let dimension: AnimatedEffect.Dimension
-  
+  public let dimension: EffectDimension
+
   public init(
     effect: AnimatedEffect,
-    dimension: AnimatedEffect.Dimension
+    dimension: EffectDimension
   ) {
     self.effect = effect
     self.dimension = dimension
   }
-//  let defaultValue: Double
+  //  let defaultValue: Double
 }
 
 extension EffectKey {
-  
-  struct Rotation: EffectGroup {
-    static let effect: AnimatedEffect = .rotation
-    static let degrees = EffectKey(effect: effect, dimension: .degrees)
-  }
-  
-  struct Offset: EffectGroup {
-    static let effect: AnimatedEffect = .offset
-    static let horizontal = EffectKey(effect: effect, dimension: .horizontal)
-    static let vertical = EffectKey(effect: effect, dimension: .vertical)
+
+  public struct Rotation: EffectGroup {
+    public static let effect: AnimatedEffect = .rotation
+    public static let degrees = EffectKey(effect: effect, dimension: .degrees)
   }
 
-  struct Skew: EffectGroup {
-    static let effect: AnimatedEffect = .skew
-    static let horizontal = EffectKey(effect: effect, dimension: .horizontal)
-    static let vertical = EffectKey(effect: effect, dimension: .vertical)
-  }
-  
-  struct WaveDistort: EffectGroup {
-    static let effect: AnimatedEffect = .waveDistort
-    static let count = EffectKey(effect: effect, dimension: .count)
-    static let speed = EffectKey(effect: effect, dimension: .speed)
-    static let strength = EffectKey(effect: effect, dimension: .strength)
-  }
-  
-  struct Hue: EffectGroup {
-    static let effect: AnimatedEffect = .hue
-    static let degrees = EffectKey(effect: effect, dimension: .degrees)
+  public struct Offset: EffectGroup {
+    public static let effect: AnimatedEffect = .offset
+    public static let horizontal = EffectKey(effect: effect, dimension: .horizontal)
+    public static let vertical = EffectKey(effect: effect, dimension: .vertical)
   }
 
-  
-  struct Scale: EffectGroup {
-    static let effect: AnimatedEffect = .scale
-    static let horizontal = EffectKey(effect: effect, dimension: .horizontal)
-    static let vertical = EffectKey(effect: effect, dimension: .vertical)
+  public struct Skew: EffectGroup {
+    public static let effect: AnimatedEffect = .skew
+    public static let horizontal = EffectKey(effect: effect, dimension: .horizontal)
+    public static let vertical = EffectKey(effect: effect, dimension: .vertical)
   }
 
-  struct Blur: EffectGroup {
-    static let effect: AnimatedEffect = .blur
-    static let strength = EffectKey(effect: effect, dimension: .strength)
+  public struct WaveDistort: EffectGroup {
+    public static let effect: AnimatedEffect = .waveDistort
+    public static let count = EffectKey(effect: effect, dimension: .count)
+    public static let speed = EffectKey(effect: effect, dimension: .speed)
+    public static let strength = EffectKey(effect: effect, dimension: .strength)
   }
-  struct Opacity: EffectGroup {
-    static let effect: AnimatedEffect = .opacity
-    static let strength = EffectKey(effect: effect, dimension: .strength)
+
+  public struct Hue: EffectGroup {
+    public static let effect: AnimatedEffect = .hue
+    public static let degrees = EffectKey(effect: effect, dimension: .degrees)
   }
-  
-  struct Brightness: EffectGroup {
-    static let effect: AnimatedEffect = .brightness
-    static let strength = EffectKey(effect: effect, dimension: .strength)
+
+  public struct Scale: EffectGroup {
+    public static let effect: AnimatedEffect = .scale
+    public static let horizontal = EffectKey(effect: effect, dimension: .horizontal)
+    public static let vertical = EffectKey(effect: effect, dimension: .vertical)
   }
-  
+
+  public struct Blur: EffectGroup {
+    public static let effect: AnimatedEffect = .blur
+    public static let strength = EffectKey(effect: effect, dimension: .strength)
+  }
+  public struct Opacity: EffectGroup {
+    public static let effect: AnimatedEffect = .opacity
+    public static let strength = EffectKey(effect: effect, dimension: .strength)
+  }
+
+  public struct Brightness: EffectGroup {
+    public static let effect: AnimatedEffect = .brightness
+    public static let strength = EffectKey(effect: effect, dimension: .strength)
+  }
+
 }
 
-
 extension EffectKey {
-  
+
   /// Add a way to get all keys for a specific effect
   static func allKeys(for effect: AnimatedEffect) -> Set<EffectKey> {
     effect.allKeys
   }
-  
-}
 
+}
 
 extension EffectKey: CustomStringConvertible {
   public var description: String {
@@ -94,12 +90,11 @@ extension EffectKey: CustomStringConvertible {
   }
 }
 
-
 extension AnimatedEffect {
   func keys() -> [EffectKey] {
     dimensions.map { EffectKey(effect: self, dimension: $0) }
   }
-  
+
   static var allKeys: [EffectKey] {
     Self.allCases.flatMap { effect in
       effect.dimensions.map { dimension in
@@ -121,10 +116,10 @@ extension AnimatedEffect {
   /// ```
   ///
   var allKeys: Set<EffectKey> {
-    Set(dimensions.map { dimension in
-      EffectKey(effect: self, dimension: dimension)
-    })
+    Set(
+      dimensions.map { dimension in
+        EffectKey(effect: self, dimension: dimension)
+      })
   }
-  
-}
 
+}

@@ -12,22 +12,25 @@ import SwiftUI
 /// Phase-continuous waveform drawn by Canvas
 public struct WaveView: View {
 
-  @State private var engine = WaveEngine()
+//  @State private var engine = WaveEngine()
   //  @Bindable var engine: WaveEngine
+  @Binding var engine: WaveEngine
 
   let strokeWidth: CGFloat
   let sampleCount: Int
 
   public init(
+    engine: Binding<WaveEngine>,
     strokeWidth: CGFloat = 2,
     sampleCount: Int = 200,
   ) {
+    self._engine = engine
     self.strokeWidth = strokeWidth
     self.sampleCount = sampleCount
   }
 
   public var body: some View {
-    TimelineView(.animation) { context in
+//    TimelineView(.animation) { context in
 
       Canvas { g, size in
         let rect = CGRect(origin: .zero, size: size)
@@ -59,13 +62,17 @@ public struct WaveView: View {
       .background(.ultraThinMaterial)
       .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
 
-      .task(id: context.date.timeIntervalSinceReferenceDate) {
+//      .task(id: context.date.timeIntervalSinceReferenceDate) {
         /// Drive the engine from TimelineView's clock
-        engine.tick(now: context.date.timeIntervalSinceReferenceDate)
-      }
-    }
+//        engine.tick(now: context.date.timeIntervalSinceReferenceDate)
+//      }
+//    }
   }
 
+  
+}
+
+extension WaveView {
   private func drawMinorGrid(in rect: CGRect, into g: inout GraphicsContext) {
     let cols = 8
     let rows = 4

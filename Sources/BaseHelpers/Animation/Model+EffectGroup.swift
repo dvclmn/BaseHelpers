@@ -46,24 +46,24 @@ extension EffectGroup {
 //  
 //  /// Generic custom values method. Previous solution was:
 //  /// ```
-//  /// static func customConfigs(configs: [AnimatedEffect.Dimension: WaveConfiguration]) -> Configs {
+//  /// static func customConfigs(configs: [EffectDimension: WaveConfiguration]) -> Configs {
 //  ///   allKeys.reduce(into: [:]) { result, key in
 //  ///     result[key] = configs[key.dimension] ?? .default
 //  ///   }
 //  /// }
 //  /// ```
-//  static func customValues<T: EffectDictionary>(values: [AnimatedEffect.Dimension: T]) -> [EffectKey: T] {
+//  static func customValues<T: EffectDictionary>(values: [EffectDimension: T]) -> [EffectKey: T] {
 //    allKeys.reduce(into: [:]) { result, key in
 //      result[key] = values[key.dimension] ?? T.defaultValue()
 //    }
 //  }
 //  
 //  // Type-specific versions for convenience
-//  static func customConfigs(configs: [AnimatedEffect.Dimension: WaveConfiguration]) -> [EffectKey: WaveConfiguration] {
+//  static func customConfigs(configs: [EffectDimension: WaveConfiguration]) -> [EffectKey: WaveConfiguration] {
 //    customValues(values: configs)
 //  }
 //  
-//  static func customStates(states: [AnimatedEffect.Dimension: WaveState]) -> [EffectKey: WaveState] {
+//  static func customStates(states: [EffectDimension: WaveState]) -> [EffectKey: WaveState] {
 //    customValues(values: states)
 //  }
 //  
