@@ -5,10 +5,9 @@
 //  Created by Dave Coleman on 22/11/2024.
 //
 
-import BaseStyles
 import SwiftUI
 
-enum AnimatedEffect: String, CaseIterable, Identifiable, Documentable {
+public enum AnimatedEffect: String, CaseIterable, Identifiable, Documentable {
   case rotation
   case offset
   case scale
@@ -19,7 +18,7 @@ enum AnimatedEffect: String, CaseIterable, Identifiable, Documentable {
   case opacity
   case brightness
 
-  var id: String {
+  public var id: String {
     self.rawValue
   }
 
@@ -63,16 +62,6 @@ enum AnimatedEffect: String, CaseIterable, Identifiable, Documentable {
       case .blur: .peach30
       case .opacity: .brown40
       case .brightness: .teal30
-    //      case .rotation: .greenAqua
-    //      case .offset: .blueSky
-    //      case .scale: .purpleEggplant
-    //      case .skew: .yellowLemon
-    //      case .waveDistort: .redMuted
-    //      case .hue: .purpleHazy
-    //      case .blur: .peach
-    //      case .opacity: .brownHazel
-    //      case .brightness: .greenSpearmint
-
     }
   }
 
@@ -117,31 +106,6 @@ enum AnimatedEffect: String, CaseIterable, Identifiable, Documentable {
       case .brightness: ".brightness"
     }
   }
-
-  //  var codeOutput: String {
-  //    switch self {
-  //      case .offset: ""
-  //      case .rotation: ""
-  //      case .scale: ""
-  //      case .skew: ""
-  //      case .waveDistort: """
-  //      .visualEffect { [engine.value] (content, proxy) in
-  //          content
-  //            .distortionEffect(ShaderLibrary.complexWave(
-  //              .float(time.timeIntervalSinceReferenceDate),
-  //              .float2(proxy.size),
-  //              .float(value(.waveDistortSpeed)),
-  //              .float(value(.waveDistortStrength)),
-  //              .float(value(.waveDistortCount))
-  //            ), maxSampleOffset: proxy.size, isEnabled: isDistortionEnabled)
-  //
-  //        }
-  //      """
-  //      case .hue: ""
-  //      case .blur: ""
-  //      case .opacity: ""
-  //    }
-  //  }
 
 }
 

@@ -7,7 +7,6 @@
 
 import SwiftUI
 import BaseStyles
-import BaseHelpers
 
 
 public struct EffectKey: Documentable {
@@ -90,7 +89,7 @@ extension EffectKey {
 
 
 extension EffectKey: CustomStringConvertible {
-  var description: String {
+  public var description: String {
     "EffectKey(Effect: \(effect.name), Dimension: \(dimension.name))"
   }
 }
