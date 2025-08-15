@@ -12,13 +12,10 @@ import SwiftUI
 /// - Integrates phase using `displayedFrequency` so phase never resets.
 /// - Smooths parameter changes (frequency, amplitude, vertical offset) with a time constant.
 @MainActor
-//@Observable
-//final public class WaveEngine {
 public struct WaveEngine {
-  
+
   var isPaused: Bool = false
-  
-  /// Public, user-controlled targets
+
   /// Hz (temporal)
   var targetFrequency: CGFloat = 1.2
 
@@ -38,55 +35,89 @@ public struct WaveEngine {
   private(set) var displayedCyclesAcross: CGFloat = 1.5
 
   /// Phase accumulator (radians)
-//  @ObservationIgnored
+  //  @ObservationIgnored
   private(set) var phase: CGFloat = 0
 
   /// Tuning: smaller = snappier, larger = smoother. (seconds)
-//  @ObservationIgnored
+  //  @ObservationIgnored
   var smoothingTimeConstant: CGFloat = 0.12
 
   /// Internal timekeeping
   @ObservationIgnored
   private var lastTime: CFTimeInterval?
-  
+
   public init() {}
 
 }
 
 extension WaveEngine {
-  
+
   public mutating func tick(now: CFTimeInterval) {
-    // Compute dt
-    let dt: CGFloat
-    if let last = lastTime { dt = max(0, CGFloat(now - last)) } else { dt = 0; }
+    let dt = computeDeltaTime(now)
     lastTime = now
-    
-    // 1) Exponential smoothing for parameters
-    //    displayed += (target - displayed) * (1 - e^{-dt/τ})
+
     if dt > 0 {
-      let alpha = 1 - exp(-dt / max(0.0001, smoothingTimeConstant))
-      displayedFrequency += (targetFrequency     - displayedFrequency) * alpha
-      displayedAmplitude += (targetAmplitude     - displayedAmplitude) * alpha
-      displayedBaseline  += (targetBaseline      - displayedBaseline)  * alpha
-      displayedCyclesAcross += (targetCyclesAcross - displayedCyclesAcross) * alpha
+      displayedFrequency = displayedFrequency.smoothed(
+        towards: targetFrequency, dt: dt, timeConstant: smoothingTimeConstant)
+      displayedAmplitude = displayedAmplitude.smoothed(
+        towards: targetAmplitude, dt: dt, timeConstant: smoothingTimeConstant)
+      displayedBaseline = displayedBaseline.smoothed(
+        towards: targetBaseline, dt: dt, timeConstant: smoothingTimeConstant)
+      displayedCyclesAcross = displayedCyclesAcross.smoothed(
+        towards: targetCyclesAcross, dt: dt, timeConstant: smoothingTimeConstant)
     } else {
-      // First frame: snap
       displayedFrequency = targetFrequency
       displayedAmplitude = targetAmplitude
-      displayedBaseline  = targetBaseline
+      displayedBaseline = targetBaseline
       displayedCyclesAcross = targetCyclesAcross
     }
-    
-    // 2) Integrate phase for continuity (φ += 2π f dt)
+
     phase += twoPi * displayedFrequency * dt
-    // keep φ in a safe range to avoid float blow-up
     phase = wrapPhase(phase)
   }
-  
+
+  //  public mutating func tick(now: CFTimeInterval) {
+  //
+  //    let dt = computeDeltaTime(now)
+  //    lastTime = now
+  //
+  //    /// 1) Exponential smoothing for parameters
+  //    if dt > 0 {
+  //      /// `alpha` is the per-tick smoothing factor that decides how much of the gap
+  //      /// between the current value and the target value we close on this frame.
+  //      ///
+  //      /// Important: alpha helps make this smoothing time dependant,
+  //      /// not frame-rate dependant
+  //      let alpha = 1 - exp(-dt / max(0.0001, smoothingTimeConstant))
+  //      displayedFrequency += (targetFrequency - displayedFrequency) * alpha
+  //      displayedAmplitude += (targetAmplitude - displayedAmplitude) * alpha
+  //      displayedBaseline += (targetBaseline - displayedBaseline) * alpha
+  //      displayedCyclesAcross += (targetCyclesAcross - displayedCyclesAcross) * alpha
+  //    } else {
+  //      /// First frame: snap
+  //      displayedFrequency = targetFrequency
+  //      displayedAmplitude = targetAmplitude
+  //      displayedBaseline = targetBaseline
+  //      displayedCyclesAcross = targetCyclesAcross
+  //    }
+  //
+  //    /// 2) Integrate phase for continuity (`phase += 2π f dt`)
+  //    phase += twoPi * displayedFrequency * dt
+  //    /// keep `phase` in a safe range to avoid float blow-up
+  //    phase = wrapPhase(phase)
+  //  }
+
+  private func computeDeltaTime(_ now: CFTimeInterval) -> CGFloat {
+    guard let lastTime else {
+      return .zero
+    }
+    return max(0, CGFloat(now - lastTime))
+  }
+
   /// Angle helper
   private func wrapPhase(_ phase: CGFloat) -> CGFloat {
     var r = phase.truncatingRemainder(dividingBy: twoPi)
-    if r < 0 { r += twoPi } // keep in [0, 2π)
+    if r < 0 { r += twoPi }  // keep in [0, 2π)
     return r
   }
 }

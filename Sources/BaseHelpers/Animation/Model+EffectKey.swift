@@ -21,9 +21,8 @@ public struct EffectKey: Documentable {
   //  let defaultValue: Double
 }
 
-
 extension EffectKey {
-  
+
   /// Add a way to get all keys for a specific effect
   public static func allKeys(for effect: AnimatedEffect) -> Set<EffectKey> {
     effect.allKeys
@@ -79,7 +78,6 @@ extension EffectKey {
   }
 
 }
-
 
 extension EffectKey: CustomStringConvertible {
   public var description: String {
