@@ -14,12 +14,14 @@ public struct WaveView: View {
 
   //  @State private var engine = WaveEngine()
   //  @Bindable var engine: WaveEngine
+//  @Bindable var engine: WaveEngine
   @Binding var engine: WaveEngine
 
   let strokeWidth: CGFloat
   let sampleCount: Int
 
   public init(
+//    engine: WaveEngine,
     engine: Binding<WaveEngine>,
     strokeWidth: CGFloat = 2,
     sampleCount: Int = 200,

@@ -13,7 +13,7 @@ import SwiftUI
 /// - Smooths parameter changes (frequency, amplitude, vertical offset) with a time constant.
 @MainActor
 //@Observable
-//final class WaveEngine {
+//final public class WaveEngine {
 public struct WaveEngine {
   
   var isPaused: Bool = false
@@ -46,49 +46,41 @@ public struct WaveEngine {
   var smoothingTimeConstant: CGFloat = 0.12
 
   /// Internal timekeeping
-//  @ObservationIgnored
-//  private var lastTime: CFTimeInterval?
+  @ObservationIgnored
+  private var lastTime: CFTimeInterval?
   
   public init() {}
 
 }
 
 extension WaveEngine {
-  public mutating func tick(
-    deltaTime dt: CGFloat,
-//    now: CFTimeInterval
-  ) {
-    /// Compute dt
-//    let dt: CGFloat
-//    if let last = lastTime { dt = max(0, CGFloat(now - last)) } else { dt = 0 }
-//    lastTime = now
-
-    /// 1) Exponential smoothing for parameters
-    ///    `displayed += (target - displayed) * (1 - e^{-dt/τ})`
+  
+  public mutating func tick(now: CFTimeInterval) {
+    // Compute dt
+    let dt: CGFloat
+    if let last = lastTime { dt = max(0, CGFloat(now - last)) } else { dt = 0; }
+    lastTime = now
+    
+    // 1) Exponential smoothing for parameters
+    //    displayed += (target - displayed) * (1 - e^{-dt/τ})
     if dt > 0 {
       let alpha = 1 - exp(-dt / max(0.0001, smoothingTimeConstant))
-      displayedFrequency += (targetFrequency - displayedFrequency) * alpha
-      displayedAmplitude += (targetAmplitude - displayedAmplitude) * alpha
-      displayedBaseline += (targetBaseline - displayedBaseline) * alpha
+      displayedFrequency += (targetFrequency     - displayedFrequency) * alpha
+      displayedAmplitude += (targetAmplitude     - displayedAmplitude) * alpha
+      displayedBaseline  += (targetBaseline      - displayedBaseline)  * alpha
       displayedCyclesAcross += (targetCyclesAcross - displayedCyclesAcross) * alpha
     } else {
-      /// First frame: snap
+      // First frame: snap
       displayedFrequency = targetFrequency
       displayedAmplitude = targetAmplitude
-      displayedBaseline = targetBaseline
+      displayedBaseline  = targetBaseline
       displayedCyclesAcross = targetCyclesAcross
     }
-
-    /// 2) Integrate phase for continuity (`φ += 2π f dt`)
-    phase += twoPi * displayedFrequency * dt
-    /// keep phase in a safe range to avoid float blow-up
-    phase = wrapPhase(phase)
     
-//    phase += (2 * .pi) * displayedFrequency * dt
-//    /// Wrap into a reasonable range (e.g. 0…2π) to avoid float blow-up
-//    if phase > .pi * 4 || phase < -.pi * 4 {
-//      phase.formTruncatingRemainder(dividingBy: 2 * .pi)
-//    }
+    // 2) Integrate phase for continuity (φ += 2π f dt)
+    phase += twoPi * displayedFrequency * dt
+    // keep φ in a safe range to avoid float blow-up
+    phase = wrapPhase(phase)
   }
   
   /// Angle helper
