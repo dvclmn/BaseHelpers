@@ -22,7 +22,7 @@ public enum AnimatedEffect: String, CaseIterable, Identifiable, Documentable {
     self.rawValue
   }
 
-  var name: String {
+  public var name: String {
     switch self {
       case .rotation: "Rotation"
       case .offset: "Offset"
@@ -36,7 +36,7 @@ public enum AnimatedEffect: String, CaseIterable, Identifiable, Documentable {
     }
   }
 
-  var icon: String {
+  public var icon: String {
     switch self {
       case .rotation: "angle"
       case .offset: "arrow.up.and.down.and.arrow.left.and.right"  // angle
@@ -50,7 +50,7 @@ public enum AnimatedEffect: String, CaseIterable, Identifiable, Documentable {
     }
   }
 
-  var swatch: Swatch {
+  public var swatch: Swatch {
     switch self {
 
       case .rotation: .green20
@@ -65,7 +65,7 @@ public enum AnimatedEffect: String, CaseIterable, Identifiable, Documentable {
     }
   }
 
-  var dimensions: Set<EffectDimension> {
+  public var dimensions: Set<EffectDimension> {
     switch self {
       case .rotation: [.degrees]
       case .offset: [.horizontal, .vertical]
@@ -79,7 +79,7 @@ public enum AnimatedEffect: String, CaseIterable, Identifiable, Documentable {
     }
   }
 
-  var amplificationStrategy: AmplificationStrategy {
+  public var amplificationStrategy: AmplificationStrategy {
     switch self {
       case .rotation: .rotation
       case .offset: .basic
@@ -93,7 +93,7 @@ public enum AnimatedEffect: String, CaseIterable, Identifiable, Documentable {
     }
   }
 
-  var modifierString: String {
+  public var modifierString: String {
     switch self {
       case .rotation: ".rotationEffect"
       case .offset: ".offset"
@@ -109,12 +109,12 @@ public enum AnimatedEffect: String, CaseIterable, Identifiable, Documentable {
 
 }
 
-enum AmplificationStrategy {
+public enum AmplificationStrategy {
   case basic
   case scale
   case rotation
 
-  func calculateAmplitude(_ value: Double, strength: Double = 1.0) -> Double {
+  public func calculateAmplitude(_ value: Double, strength: Double = 1.0) -> Double {
     switch self {
       case .basic:
         value * strength

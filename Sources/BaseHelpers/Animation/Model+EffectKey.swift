@@ -5,7 +5,6 @@
 //  Created by Dave Coleman on 29/10/2024.
 //
 
-import BaseStyles
 import SwiftUI
 
 public struct EffectKey: Documentable {
@@ -22,7 +21,13 @@ public struct EffectKey: Documentable {
   //  let defaultValue: Double
 }
 
+
 extension EffectKey {
+  
+  /// Add a way to get all keys for a specific effect
+  public static func allKeys(for effect: AnimatedEffect) -> Set<EffectKey> {
+    effect.allKeys
+  }
 
   public struct Rotation: EffectGroup {
     public static let effect: AnimatedEffect = .rotation
@@ -75,14 +80,6 @@ extension EffectKey {
 
 }
 
-extension EffectKey {
-
-  /// Add a way to get all keys for a specific effect
-  static func allKeys(for effect: AnimatedEffect) -> Set<EffectKey> {
-    effect.allKeys
-  }
-
-}
 
 extension EffectKey: CustomStringConvertible {
   public var description: String {
@@ -91,11 +88,11 @@ extension EffectKey: CustomStringConvertible {
 }
 
 extension AnimatedEffect {
-  func keys() -> [EffectKey] {
+  public func keys() -> [EffectKey] {
     dimensions.map { EffectKey(effect: self, dimension: $0) }
   }
 
-  static var allKeys: [EffectKey] {
+  public static var allKeys: [EffectKey] {
     Self.allCases.flatMap { effect in
       effect.dimensions.map { dimension in
         EffectKey(effect: effect, dimension: dimension)
@@ -115,7 +112,7 @@ extension AnimatedEffect {
   /// }
   /// ```
   ///
-  var allKeys: Set<EffectKey> {
+  public var allKeys: Set<EffectKey> {
     Set(
       dimensions.map { dimension in
         EffectKey(effect: self, dimension: dimension)

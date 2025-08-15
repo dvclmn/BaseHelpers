@@ -19,11 +19,11 @@ public enum EffectDimension: String, Identifiable, Documentable {
     self.rawValue
   }
 
-  var name: String {
+  public var name: String {
     self.rawValue.capitalized
   }
 
-  var icon: String {
+ public var icon: String {
     switch self {
       case .degrees: "angle"
       case .horizontal: "arrow.left.and.right"  // "arrow.left.and.right.square"

@@ -12,7 +12,7 @@ import SwiftUI
 /// Phase-continuous waveform drawn by Canvas
 public struct WaveView: View {
 
-//  @State private var engine = WaveEngine()
+  //  @State private var engine = WaveEngine()
   //  @Bindable var engine: WaveEngine
   @Binding var engine: WaveEngine
 
@@ -30,46 +30,45 @@ public struct WaveView: View {
   }
 
   public var body: some View {
-//    TimelineView(.animation) { context in
+    //    TimelineView(.animation) { context in
 
-      Canvas { g, size in
-        let rect = CGRect(origin: .zero, size: size)
+    Canvas { g, size in
+      let rect = CGRect(origin: .zero, size: size)
 
-        // Grid (nice for intuition)
-        drawMinorGrid(in: rect, into: &g)
+      // Grid (nice for intuition)
+      drawMinorGrid(in: rect, into: &g)
 
-        // Wave
-        let wave = WaveShape(
-          phase: engine.phase,
-          amplitude: engine.displayedAmplitude,
-          baseline: engine.displayedBaseline,
-          cyclesAcross: engine.displayedCyclesAcross,
-          sampleCount: sampleCount
-        )
-        let path = wave.path(in: rect)
+      // Wave
+      let wave = WaveShape(
+        phase: engine.phase,
+        amplitude: engine.displayedAmplitude,
+        baseline: engine.displayedBaseline,
+        cyclesAcross: engine.displayedCyclesAcross,
+        sampleCount: sampleCount
+      )
+      let path = wave.path(in: rect)
 
-        // Stroke
-        g.stroke(path, with: .color(.accentColor), lineWidth: strokeWidth)
+      // Stroke
+      g.stroke(path, with: .color(.accentColor), lineWidth: strokeWidth)
 
-        // Baseline
-        let midY = rect.midY + engine.displayedBaseline
-        let baselinePath = Path { p in
-          p.move(to: CGPoint(x: rect.minX, y: midY))
-          p.addLine(to: CGPoint(x: rect.maxX, y: midY))
-        }
-        g.stroke(baselinePath, with: .color(.secondary), lineWidth: 1)
+      // Baseline
+      let midY = rect.midY + engine.displayedBaseline
+      let baselinePath = Path { p in
+        p.move(to: CGPoint(x: rect.minX, y: midY))
+        p.addLine(to: CGPoint(x: rect.maxX, y: midY))
       }
-      .background(.ultraThinMaterial)
-      .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+      g.stroke(baselinePath, with: .color(.secondary), lineWidth: 1)
+    }
+    .background(.ultraThinMaterial)
+    .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
 
-//      .task(id: context.date.timeIntervalSinceReferenceDate) {
-        /// Drive the engine from TimelineView's clock
-//        engine.tick(now: context.date.timeIntervalSinceReferenceDate)
-//      }
-//    }
+    //      .task(id: context.date.timeIntervalSinceReferenceDate) {
+    /// Drive the engine from TimelineView's clock
+    //        engine.tick(now: context.date.timeIntervalSinceReferenceDate)
+    //      }
+    //    }
   }
 
-  
 }
 
 extension WaveView {
