@@ -20,23 +20,43 @@ public final class WaveEngine {
   var properties = WaveProperties()
 
   /// Phase accumulator (radians)
-  //  @ObservationIgnored
+  @ObservationIgnored
   private(set) var phase: CGFloat = 0
 
   /// Tuning: smaller = snappier, larger = smoother. (seconds)
   public var smoothingTimeConstant: CGFloat = 0.12
 
   /// Internal timekeeping
-  //  @ObservationIgnored
+  @ObservationIgnored
   private var lastTime: CFTimeInterval?
 
-  public init() {
-
-  }
+  public init() {}
 
 }
 
 extension WaveEngine {
+
+  public func value<T>(for property: WaveDrivenProperty<T>) -> T {
+    property.evaluate(with: self.value)  // self.value = canonical wave output
+  }
+
+  //  public func drive<T>(_ driven: WaveDriven<T>) -> T {
+  //    switch driven {
+  //      case .linear(let multiplier, let offset, let transform):
+  //        let raw = value * multiplier + offset
+  //        return transform(raw)
+  //    }
+  //  }
+
+  public var value: CGFloat {
+    let base = sin(phase * properties.displayedCyclesAcross)
+    let noisy = base + (properties.displayedNoise * randomNoise())
+    return properties.displayedAmplitude * noisy
+  }
+
+  private func randomNoise() -> CGFloat {
+    .random(in: -1...1)
+  }
 
   public func propertyBinding(_ property: WaveProperty) -> Binding<CGFloat> {
     return Binding<CGFloat> {
@@ -66,42 +86,19 @@ extension WaveEngine {
     lastTime = now
 
     if dt > 0 {
-      let alpha = 1 - exp(-dt / max(0.0001, smoothingTimeConstant))
+      let alphaValue = 1 - exp(-dt / max(0.0001, smoothingTimeConstant))
       for prop in WaveProperty.allCases {
-        properties.computePropertyThing(prop, alpha: alpha)
+        properties.updateProperty(
+          prop,
+          with: .alpha(alphaValue)
+        )
       }
-      //      displayedFrequency += (targetFrequency - displayedFrequency) * alpha
-      //      displayedAmplitude += (targetAmplitude - displayedAmplitude) * alpha
-      //      displayedCyclesAcross += (targetCyclesAcross - displayedCyclesAcross) * alpha
-      //      displayedNoise += (targetNoise - displayedNoise) * alpha
     } else {
-      // First frame: snap
+      /// First frame: snap
       for prop in WaveProperty.allCases {
-        properties.computeSnap(prop)
-        //        computePropertyThing(prop, alpha: alpha)
+        properties.updateProperty(prop, with: .snap)
       }
-      //      displayedFrequency = targetFrequency
-      //      displayedAmplitude = targetAmplitude
-      //      displayedCyclesAcross = targetCyclesAcross
-      //      displayedNoise = targetNoise
     }
-
-    //    if dt > 0 {
-    //      for property in WaveProperty.allCases {
-    //        self[keyPath: property.displayedKeyPath] =
-    //          self[keyPath: property.displayedKeyPath].smoothed(
-    //            towards: self[keyPath: property.targetKeyPath],
-    //            dt: dt,
-    //            timeConstant: smoothingTimeConstant
-    //          )
-    //      }
-    //    } else {
-    //      // First frame: snap everything
-    //      for property in WaveProperty.allCases {
-    //        self[keyPath: property.displayedKeyPath] =
-    //          self[keyPath: property.targetKeyPath]
-    //      }
-    //    }
 
     /// Update phase
     phase += twoPi * properties.displayedFrequency * dt

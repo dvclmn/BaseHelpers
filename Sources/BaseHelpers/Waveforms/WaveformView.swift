@@ -11,15 +11,17 @@ import SwiftUI
 ///
 /// Note: it's expected that this View will be embedded in a `TimelineView`
 public struct WaveView: View {
-  @Environment(WaveEngine.self) private var engine
-
+  
+  @Bindable var engine: WaveEngine
   let strokeWidth: CGFloat
   let sampleCount: Int
 
   public init(
+    engine: WaveEngine,
     strokeWidth: CGFloat = 2,
     sampleCount: Int = 200,
   ) {
+    self.engine = engine
     self.strokeWidth = strokeWidth
     self.sampleCount = sampleCount
   }
@@ -57,12 +59,13 @@ public struct WaveView: View {
     }
     .background(.black.lowOpacity)
     
-    .task(id: engine.properties) {
-      /// Aiming to still see changes to the waveform, even when paused
-      if engine.isPaused {
-        engine.tick(now: Date.now.timeIntervalSinceReferenceDate)
-      }
-    }
+    #warning("Figure out how to see changes even when paused")
+//    .task(id: engine.properties) {
+//      /// Aiming to still see changes to the waveform, even when paused
+//      if engine.isPaused {
+//        engine.tick(now: Date.now.timeIntervalSinceReferenceDate)
+//      }
+//    }
 
     //    Legend()
 
