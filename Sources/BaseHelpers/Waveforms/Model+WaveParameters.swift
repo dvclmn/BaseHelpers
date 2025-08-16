@@ -6,9 +6,6 @@
 //
 
 import Foundation
-import BaseComponents
-import BaseHelpers
-
 
 /// Note: at first glance (to me) it seemed redundant having both
 /// `struct WaveParameters` *and* `enum WaveParameter`.
@@ -21,55 +18,62 @@ import BaseHelpers
 /// for each parameter.
 ///
 
-enum WaveParameter: CaseIterable, Identifiable {
-  
+enum WaveProperty: CaseIterable, Identifiable {
+
   /// How visually apparent is the oscillation effect. Aka strength
   case amplitude
-  
+
   /// How rapidly does the oscillation occur. Aka speed
   case frequency
-  
+
   /// When in time is the 'start point' located (can help to offset against other effects)
   case phase
-  
+
+  case baseline
+
+  case cyclesAcross
+
   /// How much irregularity is introduced into the overall wave / movement
   case noise
-  
-  static var activeParameters: [WaveParameter] {
-    [.amplitude, .frequency, .phase]
-  }
-  
+
+//  static var activeParameters: [WaveParameter] {
+//    [.amplitude, .frequency, .phase]
+//  }
+
   var id: String {
-    self.name
+    self.name.abbreviated
   }
 
-  var name: String {
+  var name: (full: String, abbreviated: String) {
     switch self {
-      case .amplitude: "Amplitude"
-      case .frequency: "Frequency"
-      case .phase: "Phase"
-      case .noise: "Noise"
+      case .amplitude: ("Amplitude", "Amp")
+      case .frequency: ("Frequency", "Freq")
+      case .cyclesAcross: ("Cycles Across", "Cycles")
+      case .baseline: ("Baseline", "Base")
+      case .phase: ("Phase", "Phase")
+      case .noise: ("Noise", "Noise")
     }
   }
-  
-  var abbreviatedName: String {
+
+  var defaultValue: Double {
     switch self {
-      case .amplitude: "Amp"
-      case .frequency: "Freq"
-      case .phase: "Phase"
-      case .noise: "Noise"
+      case .amplitude: 1.0
+      case .frequency: 1.0
+      case .phase: 0.0
+      case .baseline: 0.0
+      case .cyclesAcross: 2.0
     }
   }
-  
+
   var icon: String {
     switch self {
-      case .amplitude: return "cellularbars" // lines.measurement.horizontal, speaker.wave.2
+      case .amplitude: return "cellularbars"  // lines.measurement.horizontal, speaker.wave.2
       case .frequency: return "waveform.path.ecg"
       case .phase: return "point.forward.to.point.capsulepath"
-      case .noise: return "dice" // glowplug, scribble
+      case .noise: return "dice"  // glowplug, scribble
     }
   }
-  
+
   var keyPath: WritableKeyPath<WaveConfiguration, Double> {
     switch self {
       case .amplitude: \.amplitude
@@ -78,30 +82,31 @@ enum WaveParameter: CaseIterable, Identifiable {
       case .noise: \.noise.finalValue
     }
   }
-  
+
   var range: ClosedRange<Double> {
     switch self {
-      case .amplitude: 0.01...1
+      case .amplitude: 0.01...5
       case .frequency: 0.01...20
+      case .baseline: -1.0...1.0
+      case .cyclesAcross: 0.1...10.0
       case .phase: 0...2 * Double.pi
       case .noise: 0...4
     }
   }
 
-//  var unitOfMeasurement: ValueUnits {
-//    switch self {
-//        /// Typically 0.0-1.0
-//      case .amplitude: .normalised
-//        
-//        /// Cycles per second
-//      case .frequency: .hertz
-//        
-//        /// Angular position in wave cycle
-//      case .phase: .radians
-//        
-//        /// Noise magnitude typically `0.0-1.0`
-//      case .noise: .normalised
-//    }
-//  }
+  //  var unitOfMeasurement: ValueUnits {
+  //    switch self {
+  //        /// Typically 0.0-1.0
+  //      case .amplitude: .normalised
+  //
+  //        /// Cycles per second
+  //      case .frequency: .hertz
+  //
+  //        /// Angular position in wave cycle
+  //      case .phase: .radians
+  //
+  //        /// Noise magnitude typically `0.0-1.0`
+  //      case .noise: .normalised
+  //    }
+  //  }
 }
-

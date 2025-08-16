@@ -36,7 +36,7 @@ extension WaveConfiguration {
     noise: SmoothNoiseEngine()
   )
 
-  func value(for parameter: WaveParameter) -> Double {
+  func value(for parameter: WaveProperty) -> Double {
     self[keyPath: parameter.keyPath]
   }
 }
