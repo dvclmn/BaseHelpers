@@ -33,13 +33,16 @@ public struct WaveDrivenProperty<T> {
   }
 }
 
-extension WaveDrivenProperty where T == BinaryFloatingPoint {
-  public static func scalar(scale: CGFloat = 1, offset: CGFloat = 0) -> Self {
-    .init(scale: scale, offset: offset) { $0 }
+extension WaveDrivenProperty where T: BinaryFloatingPoint {
+  public static func scalar(scale: T = 1, offset: T = 0) -> Self {
+    .init(scale: CGFloat(scale), offset: CGFloat(offset)) { T($0) }
   }
 
-  public static func scale(around base: CGFloat = 1, amount: CGFloat) -> Self {
-    .init(scale: amount, offset: base) { $0 }
+  public static func scale(
+    around base: T = 1,
+    amount: T
+  ) -> Self {
+    .init(scale: CGFloat(amount), offset: CGFloat(base)) { T($0) }
   }
 }
 

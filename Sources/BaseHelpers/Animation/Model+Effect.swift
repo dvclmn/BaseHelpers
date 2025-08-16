@@ -7,15 +7,74 @@
 
 import SwiftUI
 
-public struct ScalarEffect {
-  let effect: AnimatedEffect
-  let amount: CGFloat
+struct AnimatedEffect {
+  let kind: AnimatedEffectKind
+  
 }
+
+//protocol Effect {
+//  
+//}
+//
+//
+//public struct ScalarEffect {
+//  let effect: AnimatedEffect
+//  let amount: CGFloat
+//}
+
+
+//  public func drivenProperty() -> AnyAnimatedEffect {
+//    switch self {
+//      case .rotation(let maxDegrees):
+//        return AnyAnimatedEffect(
+//          WaveDrivenProperty(scale: maxDegrees) { Angle.degrees(Double($0)) }
+//        )
+//
+//      case .offset(let x, let y):
+//        return AnyAnimatedEffect(
+//          WaveDrivenProperty(scale: 1) { value in
+//            CGSize(width: value * x, height: value * y)
+//          }
+//        )
+//
+//      case .scale(let base, let amount):
+//        return AnyAnimatedEffect(
+//          WaveDrivenProperty(scale: amount, offset: base) { $0 }
+//        )
+//
+//      case .skew(let x, let y):
+//        return AnyAnimatedEffect(
+//          WaveDrivenProperty(scale: 1) { value in
+//            CGSize(width: value * x, height: value * y)
+//          }
+//        )
+//
+//      case .hue(let maxDegrees):
+//        return AnyAnimatedEffect(
+//          WaveDrivenProperty(scale: maxDegrees) { Angle.degrees(Double($0)) }
+//        )
+//
+//      case .blur(let max):
+//        return AnyAnimatedEffect(
+//          WaveDrivenProperty(scale: max) { $0 }
+//        )
+//
+//      case .opacity(let base, let amount):
+//        return AnyAnimatedEffect(
+//          WaveDrivenProperty(scale: amount, offset: base) { $0 }
+//        )
+//
+//      case .brightness(let max):
+//        return AnyAnimatedEffect(
+//          WaveDrivenProperty(scale: max) { $0 }
+//        )
+//    }
+//  }
 
 //public enum AnimatedEffect {
 //}
 
-public enum AnimatedEffect: CaseIterable, Identifiable, Documentable {
+public enum AnimatedEffectKind: CaseIterable, Identifiable, Documentable {
 
 //  public static let allCases: [AnimatedEffect] = [
 //    .rotation(),
@@ -37,11 +96,11 @@ public enum AnimatedEffect: CaseIterable, Identifiable, Documentable {
 //  case opacity(base: CGFloat = 1, amount: CGFloat = 0.5)
 //  case brightness(max: CGFloat = 0.5)
 
+  
     case rotation
     case offset
     case scale
     case skew
-    case waveDistort
     case hue
     case blur
     case opacity
