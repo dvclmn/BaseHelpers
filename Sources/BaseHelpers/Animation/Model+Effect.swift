@@ -12,12 +12,16 @@ extension CGFloat: EffectValue {}
 extension CGSize: EffectValue {}
 extension Angle: EffectValue {}
 
+
 public protocol AnimatableEffect: Documentable {
   associatedtype Value: EffectValue
   static var kind: EffectKind { get }
-  var zero: Self { get }
+  static var zero: Self { get }
   func evaluate(withWaveValue value: CGFloat) -> Value
 }
+//extension AnimatableEffect where Value == CGSize {
+//  public static var zero: Self { Self }
+//}
 
 // MARK: - Offset
 public struct OffsetEffect: AnimatableEffect {
@@ -30,8 +34,8 @@ public struct OffsetEffect: AnimatableEffect {
     self.height = height
   }
 
-  public var value: CGSize { CGSize(width: width, height: height) }
   public static let kind = EffectKind.offset
+  public var value: CGSize { CGSize(width: width, height: height) }
   public static let zero = Self(w: .zero, h: .zero)
 
   public func evaluate(withWaveValue value: CGFloat) -> CGSize {
@@ -40,27 +44,26 @@ public struct OffsetEffect: AnimatableEffect {
 }
 
 // MARK: - Scale
-public struct ScaleEffect: AnimatableEffect, SizeEffect {
+public struct ScaleEffect: AnimatableEffect {
   
   let width: CGFloat
   let height: CGFloat
-  
   
   public init(w width: CGFloat, h height: CGFloat) {
     self.width = width
     self.height = height
   }
   
-  public var value: CGFloat { amount }
-  public static let kind = EffectKind.scale
-  public static let zero = Self(.zero)
+  public static let kind = EffectKind.
+  public var value: CGSize { CGSize(width: width, height: height) }
+  public static let zero = Self(w: .zero, h: .zero)
   
-  public func evaluate(withWaveValue value: CGFloat) -> CGFloat {
-    return CGFloat(value * amount)
+  public func evaluate(withWaveValue value: CGFloat) -> CGSize {
+    return CGSize(width: value * width, height: value * height)
   }
 }
 
-public struct BlurEffect: AnimatableEffect, ScalarEffect {
+public struct BlurEffect: AnimatableEffect {
   
   let amount: CGFloat
   
