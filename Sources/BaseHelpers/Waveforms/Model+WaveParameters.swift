@@ -28,7 +28,7 @@ public enum WaveProperty: CaseIterable, Identifiable {
     self.name.abbreviated
   }
 
-  var name: (full: String, abbreviated: String) {
+  public var name: (full: String, abbreviated: String) {
     switch self {
       case .amplitude: ("Amplitude", "Amp")
       case .frequency: ("Frequency", "Freq")
@@ -37,16 +37,16 @@ public enum WaveProperty: CaseIterable, Identifiable {
     }
   }
 
-  var defaultValue: Double {
+  public var defaultValue: Double {
     switch self {
-      case .amplitude: 1.0
+      case .amplitude: 20
       case .frequency: 1.0
       case .cyclesAcross: 2.0
       case .noise: 0.0
     }
   }
 
-  var icon: String {
+  public var icon: String {
     switch self {
       case .amplitude: "cellularbars"  // lines.measurement.horizontal, speaker.wave.2
       case .frequency: "waveform.path.ecg"
@@ -65,31 +65,31 @@ public enum WaveProperty: CaseIterable, Identifiable {
   //    }
   //  }
 
-  // Key paths for *displayed* values
-  //  var displayedKeyPath: WritableKeyPath<WaveEngine, CGFloat> {
-  //    switch self {
-  //      case .frequency: \.displayedFrequency
-  //      case .amplitude: \.displayedAmplitude
-  //      case .baseline: \.displayedBaseline
-  //      case .cyclesAcross: \.displayedCyclesAcross
-  //      case .noise: \.displayedNoise
-  //    }
-  //  }
-  //
-  //  // Key paths for *target* values
-  //  var targetKeyPath: WritableKeyPath<WaveEngine, CGFloat> {
-  //    switch self {
-  //      case .frequency: \.targetFrequency
-  //      case .amplitude: \.targetAmplitude
-  //      case .baseline: \.targetBaseline
-  //      case .cyclesAcross: \.targetCyclesAcross
-  //      case .noise: \.targetNoise
-  //    }
-  //  }
-
-  var range: ClosedRange<Double> {
+  @MainActor
+//  public var displayedKeyPath: ReferenceWritableKeyPath<WaveEngine, CGFloat> {
+  public var displayedKeyPath: WritableKeyPath<WaveProperties, CGFloat> {
     switch self {
-      case .amplitude: 0.01...5
+      case .frequency: \.displayedFrequency
+      case .amplitude: \.displayedAmplitude
+      case .cyclesAcross: \.displayedCyclesAcross
+      case .noise: \.displayedNoise
+    }
+  }
+
+  @MainActor
+//  public var targetKeyPath: ReferenceWritableKeyPath<WaveEngine, CGFloat> {
+  public var targetKeyPath: WritableKeyPath<WaveProperties, CGFloat> {
+    switch self {
+      case .frequency: \.targetFrequency
+      case .amplitude: \.targetAmplitude
+      case .cyclesAcross: \.targetCyclesAcross
+      case .noise: \.targetNoise
+    }
+  }
+
+  public var range: ClosedRange<Double> {
+    switch self {
+      case .amplitude: 0.01...60
       case .frequency: 0.01...20
       case .cyclesAcross: 0.1...10.0
       case .noise: 0...4

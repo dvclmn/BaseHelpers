@@ -7,17 +7,24 @@
 
 import SwiftUI
 
-public extension StrokeStyle {
-  static var simple01: StrokeStyle {
+extension StrokeStyle {
+  public static var simple01: StrokeStyle {
     .init(lineWidth: 1)
   }
-  static var simple02: StrokeStyle {
+  public static var simple02: StrokeStyle {
     .init(lineWidth: 2)
   }
-  static var simple03: StrokeStyle {
+  public static var simple03: StrokeStyle {
     .init(lineWidth: 3)
   }
-  static var simple04: StrokeStyle {
+  public static var simple04: StrokeStyle {
     .init(lineWidth: 4)
+  }
+  public static func dashed(strokeWidth: CGFloat, gap: CGFloat = 3) -> StrokeStyle {
+    StrokeStyle(
+      lineWidth: strokeWidth,
+      dash: [strokeWidth, strokeWidth * gap],
+      dashPhase: strokeWidth
+    )
   }
 }
