@@ -17,28 +17,28 @@ import SwiftUI
 //public typealias WaveOutput<T: WaveGenerated> = (CGFloat) -> T
 
 //public struct WaveDrivenProperty<T> where T: WaveGenerated {
-public struct WaveDrivenProperty<T> {
-  /// Note: Without `transform`, `WaveDrivenProperty` would only
-  /// ever output `CGFloat`. That’s too limiting — we want Angle, CGSize,
-  /// even Color, etc...
-  let transform: (CGFloat) -> T
-  let scale: CGFloat
-  let offset: CGFloat
-
-  public init(
-    scale: CGFloat = 1,
-    offset: CGFloat = 0,
-    transform: @escaping (CGFloat) -> T
-  ) {
-    self.scale = scale
-    self.offset = offset
-    self.transform = transform
-  }
-
-  public func evaluate(withWaveValue waveValue: CGFloat) -> T {
-    transform(waveValue * scale + offset)
-  }
-}
+//public struct WaveDrivenProperty<T> {
+//  /// Note: Without `transform`, `WaveDrivenProperty` would only
+//  /// ever output `CGFloat`. That’s too limiting — we want Angle, CGSize,
+//  /// even Color, etc...
+//  let transform: (CGFloat) -> T
+////  let scale: CGFloat
+////  let offset: CGFloat
+//
+//  public init(
+////    scale: CGFloat = 1,
+////    offset: CGFloat = 0,
+//    transform: @escaping (CGFloat) -> T
+//  ) {
+////    self.scale = scale
+////    self.offset = offset
+//    self.transform = transform
+//  }
+//
+//  public func evaluate(withWaveValue waveValue: CGFloat) -> T {
+//    transform(waveValue * scale + offset)
+//  }
+//}
 
 //extension WaveDrivenProperty where T: BinaryFloatingPoint {
 ////  public static func scalar(scale: T = 1, offset: T = 0) -> Self {

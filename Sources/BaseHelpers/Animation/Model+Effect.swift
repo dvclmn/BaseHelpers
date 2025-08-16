@@ -9,81 +9,96 @@ import SwiftUI
 
 public protocol AnimatableEffect: Documentable {
   associatedtype Value
+  static var kind: EffectKind { get }
   static var zero: Self { get }
-  func waveDrivenProperty() -> WaveDrivenProperty<Value>
+  func evaluate(withWaveValue value: CGFloat) -> Value
 }
 
-public enum EffectValue {
-  case scalar(CGFloat)
-  case angle(Angle)
-  case size(CGSize)
+public protocol ScalarEffect {
+  var value: CGFloat { get }
+}
+
+public protocol SizeEffect {
+  var value: CGSize { get }
+}
+
+public protocol AngleEffect {
+  var value: Angle { get }
 }
 
 // MARK: - Offset
-public struct OffsetEffect: AnimatableEffect {
+public struct OffsetEffect: AnimatableEffect, SizeEffect {
 
-  let x: CGFloat
-  let y: CGFloat
+  let width: CGFloat
+  let height: CGFloat
 
-  public init(x: CGFloat, y: CGFloat) {
-    self.x = x
-    self.y = y
+  public init(w width: CGFloat, h height: CGFloat) {
+    self.width = width
+    self.height = height
   }
 
-  public static let zero = OffsetEffect(x: .zero, y: .zero)
+  public var value: CGSize { CGSize(width: width, height: height) }
+  public static let kind = EffectKind.offset
+  public static let zero = Self(w: .zero, h: .zero)
 
-  public func waveDrivenProperty() -> WaveDrivenProperty<CGSize> {
-    WaveDrivenProperty(scale: 1) { value in
-      CGSize(width: value * x, height: value * y)
-    }
-  }
-}
-
-// MARK: - Rotation
-public struct RotationEffect: AnimatableEffect {
-  let angle: Angle
-
-  public init(_ angle: Angle) {
-    self.angle = angle
-  }
-
-  public static let zero = RotationEffect(.zero)
-
-  var degrees: CGFloat { angle.degrees }
-
-  public func waveDrivenProperty() -> WaveDrivenProperty<Angle> {
-    WaveDrivenProperty(scale: angle.degrees) { .degrees(Double($0)) }
+  public func evaluate(withWaveValue value: CGFloat) -> CGSize {
+    return CGSize(width: value * width, height: value * height)
   }
 }
 
 // MARK: - Scale
-public struct ScaleEffect: AnimatableEffect {
+public struct ScaleEffect: AnimatableEffect, ScalarEffect {
+  
   let amount: CGFloat
-
-  public static let zero = ScaleEffect(.zero)
-
+  
   public init(_ amount: CGFloat) {
     self.amount = amount
   }
-  public func waveDrivenProperty() -> WaveDrivenProperty<CGFloat> {
-    WaveDrivenProperty(scale: amount, offset: 1) { $0 }
+  
+  public var value: CGFloat { amount }
+  public static let kind = EffectKind.scale
+  public static let zero = Self(.zero)
+  
+  public func evaluate(withWaveValue value: CGFloat) -> CGFloat {
+    return CGFloat(value * amount)
   }
 }
 
-// MARK: - Blur
-public struct BlurEffect: AnimatableEffect {
-  let amount: CGFloat
+//// MARK: - Rotation
+//public struct RotationEffect: AnimatableEffect, AngleEffect {
+//  let angle: Angle
+//
+//  public var value: Angle { angle }
+//
+//  public init(_ angle: Angle) {
+//    self.angle = angle
+//  }
+//
+//  public static let zero = RotationEffect(.zero)
+//
+//  var degrees: CGFloat { angle.degrees }
+//
+//  public func waveDrivenProperty() -> WaveDrivenProperty<Angle> {
+//    WaveDrivenProperty(scale: angle.degrees) { .degrees(Double($0)) }
+//  }
+//}
+//
 
-  public init(_ amount: CGFloat) {
-    self.amount = amount
-  }
-
-  public static let zero = BlurEffect(.zero)
-
-  public func waveDrivenProperty() -> WaveDrivenProperty<CGFloat> {
-    WaveDrivenProperty(scale: amount) { $0 }
-  }
-}
+//// MARK: - Blur
+//public struct BlurEffect: AnimatableEffect, ScalarEffect {
+//  let amount: CGFloat
+//
+//  public init(_ amount: CGFloat) {
+//    self.amount = amount
+//  }
+//
+//  public var value: CGFloat { amount }
+//  public static let zero = BlurEffect(.zero)
+//
+//  public func waveDrivenProperty() -> WaveDrivenProperty<CGFloat> {
+//    WaveDrivenProperty(scale: amount) { $0 }
+//  }
+//}
 
 //extension RotationEffect {
 //

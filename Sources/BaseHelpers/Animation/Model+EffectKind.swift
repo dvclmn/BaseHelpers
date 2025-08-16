@@ -12,68 +12,79 @@ import Foundation
 //  case
 //}
 
-public enum EffectKind: CaseIterable, Identifiable, Documentable {
+public enum EffectKind: String, CaseIterable, Identifiable, Documentable {
   
-  case rotation
+//  case rotation
   case offset
   case scale
-  case skew
-  case hue
-  case blur
-  case opacity
-  case brightness
+//  case blur
+//  case skew
+//  case hue
+//  case opacity
+//  case brightness
+  
+  public init?(fromAnyEffect effect: AnyEffect) {
+    let kind: EffectKind? = switch effect {
+//      case .rotation(_): .rotation
+      case .offset(_): .offset
+      case .scale(_): .scale
+//      case .blur(_): .blur
+    }
+    guard let kind else { return nil }
+    self = kind
+  }
   
   public var id: String {
     self.name
   }
   
-  public var hasImplementation: Bool {
-    switch self {
-      case .rotation, .offset, .scale: true
-      default: false
-    }
-  }
+//  public var hasImplementation: Bool {
+//    switch self {
+//      case .rotation, .offset, .scale: true
+//      default: false
+//    }
+//  }
   
   public var name: String {
     switch self {
-      case .rotation: "Rotation"
+//      case .rotation: "Rotation"
       case .offset: "Offset"
       case .scale: "Scale"
-      case .skew: "Skew"
-        //      case .waveDistort: "Wave Distort"
-      case .hue: "Hue Shift"
-      case .blur: "Blur"
-      case .opacity: "Opacity"
-      case .brightness: "Brightness"
+//      case .blur: "Blur"
+//      case .skew: "Skew"
+//        //      case .waveDistort: "Wave Distort"
+//      case .hue: "Hue Shift"
+//      case .opacity: "Opacity"
+//      case .brightness: "Brightness"
     }
   }
   
   public var icon: String {
     switch self {
-      case .rotation: "angle"
+//      case .rotation: "angle"
       case .offset: "arrow.up.and.down.and.arrow.left.and.right"  // angle
       case .scale: "inset.filled.bottomleading.rectangle"
-      case .skew: "skew"
-        //      case .waveDistort: "water.waves"
-      case .hue: "rainbow"
-      case .blur: "drop"  // circle.dotted
-      case .opacity: "circle.dotted.and.circle"
-      case .brightness: "sun.max.fill"
+//      case .blur: "drop"  // circle.dotted
+//      case .skew: "skew"
+//        //      case .waveDistort: "water.waves"
+//      case .hue: "rainbow"
+//      case .opacity: "circle.dotted.and.circle"
+//      case .brightness: "sun.max.fill"
     }
   }
   
   public var swatch: Swatch {
     switch self {
         
-      case .rotation: .green20
+//      case .rotation: .green20
       case .offset: .blue30
       case .scale: .purple40
-      case .skew: .yellow40
-        //      case .waveDistort: .red50
-      case .hue: .purple70
-      case .blur: .peach30
-      case .opacity: .brown40
-      case .brightness: .teal30
+//      case .blur: .peach30
+//      case .skew: .yellow40
+//        //      case .waveDistort: .red50
+//      case .hue: .purple70
+//      case .opacity: .brown40
+//      case .brightness: .teal30
     }
   }
   
