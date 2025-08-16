@@ -11,6 +11,8 @@ import SwiftUI
 /// The adapter pattern between “wave = CGFloat” and “typed animation property”
 public struct WaveDrivenProperty<T> {
 
+//  let kind: EffectKind
+
   /// Note: Without `transform`, `WaveDrivenProperty` would only
   /// ever output `CGFloat`. That’s too limiting — we want Angle, CGSize,
   /// even Color, etc...
@@ -19,6 +21,7 @@ public struct WaveDrivenProperty<T> {
   let offset: CGFloat
 
   public init(
+//    kind: EffectKind,
     scale: CGFloat = 1,
     offset: CGFloat = 0,
     transform: @escaping (CGFloat) -> T
@@ -35,20 +38,29 @@ public struct WaveDrivenProperty<T> {
 
 extension WaveDrivenProperty where T: BinaryFloatingPoint {
   public static func scalar(scale: T = 1, offset: T = 0) -> Self {
-    .init(scale: CGFloat(scale), offset: CGFloat(offset)) { T($0) }
+    .init(
+//      kind: .
+      scale: CGFloat(scale),
+      offset: CGFloat(offset)
+    ) { T($0) }
   }
 
   public static func scale(
     around base: T = 1,
     amount: T
   ) -> Self {
-    .init(scale: CGFloat(amount), offset: CGFloat(base)) { T($0) }
+    .init(
+      scale: CGFloat(amount),
+      offset: CGFloat(base)
+    ) { T($0) }
   }
 }
 
 extension WaveDrivenProperty where T == CGSize {
   public static func offsetX(scale: CGFloat = 1) -> Self {
-    .init(scale: scale) { CGSize(width: $0, height: 0) }
+    .init(
+      scale: scale
+    ) { CGSize(width: $0, height: 0) }
   }
 
   public static func offsetY(scale: CGFloat = 1) -> Self {
@@ -58,6 +70,8 @@ extension WaveDrivenProperty where T == CGSize {
 
 extension WaveDrivenProperty where T == Angle {
   public static func rotation(degrees scale: CGFloat = 1) -> Self {
-    .init(scale: scale) { .degrees(Double($0)) }
+    .init(
+      scale: scale
+    ) { .degrees(Double($0)) }
   }
 }
