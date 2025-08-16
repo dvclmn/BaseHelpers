@@ -7,23 +7,46 @@
 
 import SwiftUI
 
-public struct OffsetEffect {
-  var kind: EffectKind { .offset }
+public struct OffsetEffect: Documentable {
   let x: CGFloat
   let y: CGFloat
 }
-public struct RotationEffect {
-  var kind: EffectKind { .rotation }
+public struct RotationEffect: Documentable {
   let angle: Angle
   var degrees: CGFloat { angle.degrees }
 }
-public struct ScaleEffect {
+public struct ScaleEffect: Documentable {
   let amount: CGFloat
 }
-public struct BlurEffect {
+public struct BlurEffect: Documentable {
   let amount: CGFloat
 }
 
+extension RotationEffect {
+  func waveValue() -> WaveDrivenProperty<Angle> {
+    WaveDrivenProperty(scale: angle.degrees) { .degrees(Double($0)) }
+  }
+}
+
+extension OffsetEffect {
+  func waveValue() -> WaveDrivenProperty<CGSize> {
+    WaveDrivenProperty(scale: 1) { value in
+      CGSize(width: value * x, height: value * y)
+    }
+  }
+}
+
+extension ScaleEffect {
+  func waveValue() -> WaveDrivenProperty<CGFloat> {
+    WaveDrivenProperty(scale: amount, offset: 1) { $0 }
+  }
+}
+
+extension BlurEffect {
+  func waveValue() -> WaveDrivenProperty<CGFloat> {
+    WaveDrivenProperty(scale: amount) { $0 }
+  }
+}
 
 //public struct AnimatedEffect<T> {
 //  public let kind: EffectKind
