@@ -10,7 +10,7 @@ import SwiftUI
 /// Aka: given a scalar wave, here’s how to turn it into something else
 /// The adapter pattern between “wave = CGFloat” and “typed animation property”
 public struct WaveDrivenProperty<T> {
-  
+
   /// Note: Without `transform`, `WaveDrivenProperty` would only
   /// ever output `CGFloat`. That’s too limiting — we want Angle, CGSize,
   /// even Color, etc...
@@ -33,7 +33,7 @@ public struct WaveDrivenProperty<T> {
   }
 }
 
-extension WaveDrivenProperty where T == CGFloat {
+extension WaveDrivenProperty where T == BinaryFloatingPoint {
   public static func scalar(scale: CGFloat = 1, offset: CGFloat = 0) -> Self {
     .init(scale: scale, offset: offset) { $0 }
   }

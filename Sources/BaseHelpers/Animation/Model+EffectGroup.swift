@@ -7,14 +7,14 @@
 
 import Foundation
 
-protocol EffectGroup {
-  static var effect: AnimatedEffect { get }
-}
-
-extension EffectGroup {
-  #warning("Temporary placeholder")
-  static var effect: AnimatedEffect { .hue }
-}
+//protocol EffectGroup {
+//  static var effect: AnimatedEffect { get }
+//}
+//
+//extension EffectGroup {
+//  #warning("Temporary placeholder")
+//  static var effect: AnimatedEffect { .hue }
+//}
 
 //extension EffectGroup {
 //  static var allKeys: Set<EffectKey> {
