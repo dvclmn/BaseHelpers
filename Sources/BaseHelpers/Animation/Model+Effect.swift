@@ -7,13 +7,43 @@
 
 import SwiftUI
 
-//struct AnimatedEffect {
-//  
-//  
+public struct OffsetEffect {
+  var kind: EffectKind { .offset }
+  let x: CGFloat
+  let y: CGFloat
+}
+public struct RotationEffect {
+  var kind: EffectKind { .rotation }
+  let angle: Angle
+  var degrees: CGFloat { angle.degrees }
+}
+public struct ScaleEffect {
+  let amount: CGFloat
+}
+public struct BlurEffect {
+  let amount: CGFloat
+}
+
+
+//public struct AnimatedEffect<T> {
+//  public let kind: EffectKind
+//  public let waveValue: WaveDrivenProperty<T>
+//
+//  public init(
+//    _ kind: EffectKind,
+//    scale: CGFloat = 1,
+//    offset: CGFloat = 0,
+//  ) {
+//    self.kind = kind
+//    self.waveValue = WaveDrivenProperty(
+//      scale: scale,
+//      offset: offset,
+//    )
+//  }
 //}
 
 //protocol Effect {
-//  
+//
 //}
 //
 //
@@ -31,23 +61,29 @@ import SwiftUI
 //  case opacity(base: CGFloat = 1, amount: CGFloat = 0.5)
 //  case brightness(max: CGFloat = 0.5)
 
-
 //public enum AnimatedEffect {
 //}
 
 public enum EffectKind: CaseIterable, Identifiable, Documentable {
 
-    case rotation
-    case offset
-    case scale
-    case skew
-    case hue
-    case blur
-    case opacity
-    case brightness
+  case rotation
+  case offset
+  case scale
+  case skew
+  case hue
+  case blur
+  case opacity
+  case brightness
 
   public var id: String {
     self.name
+  }
+
+  public var hasImplementation: Bool {
+    switch self {
+      case .rotation, .offset, .scale: true
+      default: false
+    }
   }
 
   public var name: String {
@@ -93,7 +129,6 @@ public enum EffectKind: CaseIterable, Identifiable, Documentable {
     }
   }
 
-
   //  public static let allCases: [AnimatedEffect] = [
   //    .rotation(),
   //    .offset(),
@@ -104,10 +139,7 @@ public enum EffectKind: CaseIterable, Identifiable, Documentable {
   //    .opacity(),
   //    .brightness(),
   //  ]
-  
-  
-  
-  
+
   //  public var dimensions: Set<EffectDimension> {
   //    switch self {
   //      case .rotation: [.degrees]
