@@ -12,15 +12,15 @@ public enum AnyEffect: Codable, Equatable, Identifiable {
   case offset(OffsetEffect)
   case scale(ScaleEffect)
   case blur(BlurEffect)
-  
-//  public init(fromKind kind: EffectKind) {
-//    self = switch kind {
-//      case .rotation: .rotation
-//      case .offset:
-//        
-//      default: fatalError("EffectKind[\(kind)] not yet supported for AnyEffect")
-//    }
-//  }
+
+  //  public init(fromKind kind: EffectKind) {
+  //    self = switch kind {
+  //      case .rotation: .rotation
+  //      case .offset:
+  //
+  //      default: fatalError("EffectKind[\(kind)] not yet supported for AnyEffect")
+  //    }
+  //  }
 
   public var id: EffectKind {
     switch self {
