@@ -37,16 +37,9 @@ public final class WaveEngine {
 extension WaveEngine {
 
   public func value<T>(for property: WaveDrivenProperty<T>) -> T {
-    property.evaluate(with: self.value)  // self.value = canonical wave output
+    /// self.value = canonical wave output
+    property.evaluate(with: self.value)
   }
-
-  //  public func drive<T>(_ driven: WaveDriven<T>) -> T {
-  //    switch driven {
-  //      case .linear(let multiplier, let offset, let transform):
-  //        let raw = value * multiplier + offset
-  //        return transform(raw)
-  //    }
-  //  }
 
   public var value: CGFloat {
     let base = sin(phase * properties.displayedCyclesAcross)
