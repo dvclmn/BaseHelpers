@@ -17,6 +17,8 @@ public final class WaveEngine {
 
   var isPaused: Bool = false
 
+  /// Interally supported properties of a wave. These can then be
+  /// used to tweak the nature of the wave, to drive properties in the UI
   var properties = WaveProperties()
 
   /// Phase accumulator (radians)
@@ -40,6 +42,11 @@ extension WaveEngine {
     /// self.value = canonical wave output
     property.evaluate(with: self.value)
   }
+  
+//  public func value(for effect: AnimatedEffect) -> Any {
+//    let driven = effect.drivenProperty()
+//    return driven.evaluate(with: self.value)
+//  }
 
   public var value: CGFloat {
     let base = sin(phase * properties.displayedCyclesAcross)

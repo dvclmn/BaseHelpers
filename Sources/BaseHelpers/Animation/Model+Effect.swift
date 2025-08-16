@@ -17,35 +17,35 @@ public struct ScalarEffect {
 
 public enum AnimatedEffect: CaseIterable, Identifiable, Documentable {
 
-  public static let allCases: [AnimatedEffect] = [
-    .rotation(),
-    .offset(),
-    .scale(),
-    .skew(),
-    .hue(),
-    .blur(),
-    .opacity(),
-    .brightness(),
-  ]
+//  public static let allCases: [AnimatedEffect] = [
+//    .rotation(),
+//    .offset(),
+//    .scale(),
+//    .skew(),
+//    .hue(),
+//    .blur(),
+//    .opacity(),
+//    .brightness(),
+//  ]
 
-  case rotation(maxDegrees: CGFloat = 45)
-  case offset(x: CGFloat = 0, y: CGFloat = 50)
-  case scale(base: CGFloat = 1, amount: CGFloat = 0.2)
-  case skew(x: CGFloat = 0, y: CGFloat = 0)
-  case hue(maxDegrees: CGFloat = 180)
-  case blur(max: CGFloat = 10)
-  case opacity(base: CGFloat = 1, amount: CGFloat = 0.5)
-  case brightness(max: CGFloat = 0.5)
+//  case rotation(maxDegrees: CGFloat = 45)
+//  case offset(x: CGFloat = 0, y: CGFloat = 50)
+//  case scale(base: CGFloat = 1, amount: CGFloat = 0.2)
+//  case skew(x: CGFloat = 0, y: CGFloat = 0)
+//  case hue(maxDegrees: CGFloat = 180)
+//  case blur(max: CGFloat = 10)
+//  case opacity(base: CGFloat = 1, amount: CGFloat = 0.5)
+//  case brightness(max: CGFloat = 0.5)
 
-  //  case rotation
-  //  case offset
-  //  case scale
-  //  case skew
-  //  case waveDistort
-  //  case hue
-  //  case blur
-  //  case opacity
-  //  case brightness
+    case rotation
+    case offset
+    case scale
+    case skew
+    case waveDistort
+    case hue
+    case blur
+    case opacity
+    case brightness
 
   public var id: String {
     self.name
@@ -93,6 +93,7 @@ public enum AnimatedEffect: CaseIterable, Identifiable, Documentable {
       case .brightness: .teal30
     }
   }
+
 
   //  public var dimensions: Set<EffectDimension> {
   //    switch self {
