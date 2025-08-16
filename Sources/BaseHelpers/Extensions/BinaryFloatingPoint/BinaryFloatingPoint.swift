@@ -153,14 +153,14 @@ extension BinaryFloatingPoint {
   public func smoothed(
     towards target: Self,
     dt: Self,
-    timeConstant τ: Self
+    timeConstant: Self
   ) -> Self {
     guard dt > 0 else { return target } // snap on first frame
     
     // Prevent division by zero and ensure numerical stability
     // Very small time constants would cause erratic behavior
     let minimumTimeConstant: Self = 0.0001
-    let safeTimeConstant = max(minimumTimeConstant, τ)
+    let safeTimeConstant = max(minimumTimeConstant, timeConstant)
     
     // Calculate the ratio of elapsed time to time constant
     // This determines how much "decay" should occur

@@ -87,26 +87,26 @@ enum WaveProperty: CaseIterable, Identifiable {
   //  }
 
   // Key paths for *displayed* values
-  var displayedKeyPath: WritableKeyPath<WaveEngine, CGFloat> {
-    switch self {
-      case .frequency: \.displayedFrequency
-      case .amplitude: \.displayedAmplitude
-      case .baseline: \.displayedBaseline
-      case .cyclesAcross: \.displayedCyclesAcross
-      case .noise: \.displayedNoise
-    }
-  }
-
-  // Key paths for *target* values
-  var targetKeyPath: WritableKeyPath<WaveEngine, CGFloat> {
-    switch self {
-      case .frequency: \.targetFrequency
-      case .amplitude: \.targetAmplitude
-      case .baseline: \.targetBaseline
-      case .cyclesAcross: \.targetCyclesAcross
-      case .noise: \.targetNoise
-    }
-  }
+//  var displayedKeyPath: WritableKeyPath<WaveEngine, CGFloat> {
+//    switch self {
+//      case .frequency: \.displayedFrequency
+//      case .amplitude: \.displayedAmplitude
+//      case .baseline: \.displayedBaseline
+//      case .cyclesAcross: \.displayedCyclesAcross
+//      case .noise: \.displayedNoise
+//    }
+//  }
+//
+//  // Key paths for *target* values
+//  var targetKeyPath: WritableKeyPath<WaveEngine, CGFloat> {
+//    switch self {
+//      case .frequency: \.targetFrequency
+//      case .amplitude: \.targetAmplitude
+//      case .baseline: \.targetBaseline
+//      case .cyclesAcross: \.targetCyclesAcross
+//      case .noise: \.targetNoise
+//    }
+//  }
 
   var range: ClosedRange<Double> {
     switch self {
