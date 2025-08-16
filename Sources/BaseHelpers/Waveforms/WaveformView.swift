@@ -11,64 +11,60 @@ import SwiftUI
 
 /// Phase-continuous waveform drawn by Canvas
 public struct WaveView: View {
-
-  //  @State private var engine = WaveEngine()
+  @Environment(WaveEngine.self) private var engine
   //  @Bindable var engine: WaveEngine
-  @Bindable var engine: WaveEngine
-//  @Binding var engine: WaveEngine
 
   let strokeWidth: CGFloat
   let sampleCount: Int
 
   public init(
-    engine: WaveEngine,
-//    engine: Binding<WaveEngine>,
+//    engine: WaveEngine,
     strokeWidth: CGFloat = 2,
     sampleCount: Int = 200,
   ) {
-    self.engine = engine
+//    self.engine = engine
     self.strokeWidth = strokeWidth
     self.sampleCount = sampleCount
   }
 
   public var body: some View {
-    //    TimelineView(.animation) { context in
+//    TimelineView(.animation) { context in
 
-    Canvas { g, size in
-      let rect = CGRect(origin: .zero, size: size)
+      Canvas { g, size in
+        let rect = CGRect(origin: .zero, size: size)
 
-      // Grid (nice for intuition)
-      drawMinorGrid(in: rect, into: &g)
+        // Grid (nice for intuition)
+        drawMinorGrid(in: rect, into: &g)
 
-      // Wave
-      let wave = WaveShape(
-        phase: engine.phase,
-        amplitude: engine.displayedAmplitude,
-        baseline: engine.displayedBaseline,
-        cyclesAcross: engine.displayedCyclesAcross,
-        sampleCount: sampleCount
-      )
-      let path = wave.path(in: rect)
+        // Wave
+        let wave = WaveShape(
+          phase: engine.phase,
+          amplitude: engine.displayedAmplitude,
+          baseline: engine.displayedBaseline,
+          cyclesAcross: engine.displayedCyclesAcross,
+          sampleCount: sampleCount
+        )
+        let path = wave.path(in: rect)
 
-      // Stroke
-      g.stroke(path, with: .color(.accentColor), lineWidth: strokeWidth)
+        // Stroke
+        g.stroke(path, with: .color(.accentColor), lineWidth: strokeWidth)
 
-      // Baseline
-      let midY = rect.midY + engine.displayedBaseline
-      let baselinePath = Path { p in
-        p.move(to: CGPoint(x: rect.minX, y: midY))
-        p.addLine(to: CGPoint(x: rect.maxX, y: midY))
+        // Baseline
+        let midY = rect.midY + engine.displayedBaseline
+        let baselinePath = Path { p in
+          p.move(to: CGPoint(x: rect.minX, y: midY))
+          p.addLine(to: CGPoint(x: rect.maxX, y: midY))
+        }
+        g.stroke(baselinePath, with: .color(.secondary), lineWidth: 1)
       }
-      g.stroke(baselinePath, with: .color(.secondary), lineWidth: 1)
-    }
-    .background(.ultraThinMaterial)
-    .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+      .background(.ultraThinMaterial)
+      .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
 
-    //      .task(id: context.date.timeIntervalSinceReferenceDate) {
-    /// Drive the engine from TimelineView's clock
-    //        engine.tick(now: context.date.timeIntervalSinceReferenceDate)
-    //      }
-    //    }
+//      .task(id: context.date.timeIntervalSinceReferenceDate) {
+//
+//        engine.tick(now: context.date.timeIntervalSinceReferenceDate)
+//      }
+//    }
   }
 
 }
@@ -140,7 +136,7 @@ extension WaveView {
 //  }
 //
 //  private var inspector: some View {
-//    
+//
 //    .frame(maxWidth: .infinity)
 //    .padding(14)
 //    .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
