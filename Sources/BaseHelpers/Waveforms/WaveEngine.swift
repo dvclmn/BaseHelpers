@@ -16,27 +16,42 @@ public struct WaveEngine {
 
   var isPaused: Bool = false
 
-//  /// Hz (temporal)
-//  var targetFrequency: CGFloat = 1.2
-//
-//  /// px
-//  var targetAmplitude: CGFloat = 40
-//
-//  /// px vertical offset
-//  var targetBaseline: CGFloat = 0
-//
-//  /// cycles across view width (spatial)
-//  var targetCyclesAcross: CGFloat = 1.5
+  // Stored values
+  var targetFrequency: CGFloat = 1.0
+  var displayedFrequency: CGFloat = 1.0
 
-//  /// Smoothed/displayed values (what the renderer uses)
-//  private(set) var displayedFrequency: CGFloat = 1.2
-//  private(set) var displayedAmplitude: CGFloat = 40
-//  private(set) var displayedBaseline: CGFloat = 0
-//  private(set) var displayedCyclesAcross: CGFloat = 1.5
-//  
-  var target: [WaveProperty: CGFloat] = [:]
-  var displayed: [WaveProperty: CGFloat] = [:]
+  var targetAmplitude: CGFloat = 1.0
+  var displayedAmplitude: CGFloat = 1.0
 
+  var targetBaseline: CGFloat = 0.0
+  var displayedBaseline: CGFloat = 0.0
+
+  var targetCyclesAcross: CGFloat = 2.0
+  var displayedCyclesAcross: CGFloat = 2.0
+
+  var targetNoise: CGFloat = 2.0
+  var displayedNoise: CGFloat = 2.0
+
+  //  /// Hz (temporal)
+  //  var targetFrequency: CGFloat = 1.2
+  //
+  //  /// px
+  //  var targetAmplitude: CGFloat = 40
+  //
+  //  /// px vertical offset
+  //  var targetBaseline: CGFloat = 0
+  //
+  //  /// cycles across view width (spatial)
+  //  var targetCyclesAcross: CGFloat = 1.5
+
+  //  /// Smoothed/displayed values (what the renderer uses)
+  //  private(set) var displayedFrequency: CGFloat = 1.2
+  //  private(set) var displayedAmplitude: CGFloat = 40
+  //  private(set) var displayedBaseline: CGFloat = 0
+  //  private(set) var displayedCyclesAcross: CGFloat = 1.5
+  //
+  //  var target: [WaveProperty: CGFloat] = [:]
+  //  var displayed: [WaveProperty: CGFloat] = [:]
 
   /// Phase accumulator (radians)
   //  @ObservationIgnored
@@ -50,65 +65,91 @@ public struct WaveEngine {
   @ObservationIgnored
   private var lastTime: CFTimeInterval?
 
-//  public init() {}
+  //  public init() {}
   public init() {
-    for property in WaveProperty.allCases {
-      target[property] = property.defaultValue
-      displayed[property] = property.defaultValue
-    }
+//    for property in WaveProperty.allCases {
+//      target[property] = property.defaultValue
+//      displayed[property] = property.defaultValue
+//    }
   }
 
 }
 
 extension WaveEngine {
 
-  public mutating func tick(now: CFTimeInterval) {
+  mutating func tick(now: CFTimeInterval) {
     let dt = computeDeltaTime(now)
     lastTime = now
-    
+
     if dt > 0 {
       for property in WaveProperty.allCases {
-        displayed[property] = displayed[property]!.smoothed(
-          towards: target[property]!,
-          dt: dt,
-          timeConstant: smoothingTimeConstant
-        )
+        self[keyPath: property.displayedKeyPath] =
+          self[keyPath: property.displayedKeyPath].smoothed(
+            towards: self[keyPath: property.targetKeyPath],
+            dt: dt,
+            timeConstant: smoothingTimeConstant
+          )
       }
     } else {
-      // First frame: snap
-      displayed = target
+      // First frame: snap everything
+      for property in WaveProperty.allCases {
+        self[keyPath: property.displayedKeyPath] =
+          self[keyPath: property.targetKeyPath]
+      }
     }
-    
-    // You’d still update your phase here
-    if let freq = displayed[.frequency] {
-      phase += twoPi * freq * dt
-      phase = wrapPhase(phase)
-    }
+
+    /// Update phase
+    phase += twoPi * displayedFrequency * dt
+    phase = wrapPhase(phase)
   }
-  
-//  public mutating func tick(now: CFTimeInterval) {
-//    let dt = computeDeltaTime(now)
-//    lastTime = now
-//
-//    if dt > 0 {
-//      displayedFrequency = displayedFrequency.smoothed(
-//        towards: targetFrequency, dt: dt, timeConstant: smoothingTimeConstant)
-//      displayedAmplitude = displayedAmplitude.smoothed(
-//        towards: targetAmplitude, dt: dt, timeConstant: smoothingTimeConstant)
-//      displayedBaseline = displayedBaseline.smoothed(
-//        towards: targetBaseline, dt: dt, timeConstant: smoothingTimeConstant)
-//      displayedCyclesAcross = displayedCyclesAcross.smoothed(
-//        towards: targetCyclesAcross, dt: dt, timeConstant: smoothingTimeConstant)
-//    } else {
-//      displayedFrequency = targetFrequency
-//      displayedAmplitude = targetAmplitude
-//      displayedBaseline = targetBaseline
-//      displayedCyclesAcross = targetCyclesAcross
-//    }
-//
-//    phase += twoPi * displayedFrequency * dt
-//    phase = wrapPhase(phase)
-//  }
+
+  //  public mutating func tick(now: CFTimeInterval) {
+  //    let dt = computeDeltaTime(now)
+  //    lastTime = now
+  //
+  //    if dt > 0 {
+  //      for property in WaveProperty.allCases {
+  //        displayed[property] = displayed[property]!.smoothed(
+  //          towards: target[property]!,
+  //          dt: dt,
+  //          timeConstant: smoothingTimeConstant
+  //        )
+  //      }
+  //    } else {
+  //      // First frame: snap
+  //      displayed = target
+  //    }
+  //
+  //    // You’d still update your phase here
+  //    if let freq = displayed[.frequency] {
+  //      phase += twoPi * freq * dt
+  //      phase = wrapPhase(phase)
+  //    }
+  //  }
+
+  //  public mutating func tick(now: CFTimeInterval) {
+  //    let dt = computeDeltaTime(now)
+  //    lastTime = now
+  //
+  //    if dt > 0 {
+  //      displayedFrequency = displayedFrequency.smoothed(
+  //        towards: targetFrequency, dt: dt, timeConstant: smoothingTimeConstant)
+  //      displayedAmplitude = displayedAmplitude.smoothed(
+  //        towards: targetAmplitude, dt: dt, timeConstant: smoothingTimeConstant)
+  //      displayedBaseline = displayedBaseline.smoothed(
+  //        towards: targetBaseline, dt: dt, timeConstant: smoothingTimeConstant)
+  //      displayedCyclesAcross = displayedCyclesAcross.smoothed(
+  //        towards: targetCyclesAcross, dt: dt, timeConstant: smoothingTimeConstant)
+  //    } else {
+  //      displayedFrequency = targetFrequency
+  //      displayedAmplitude = targetAmplitude
+  //      displayedBaseline = targetBaseline
+  //      displayedCyclesAcross = targetCyclesAcross
+  //    }
+  //
+  //    phase += twoPi * displayedFrequency * dt
+  //    phase = wrapPhase(phase)
+  //  }
 
   //  public mutating func tick(now: CFTimeInterval) {
   //

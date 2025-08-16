@@ -7,8 +7,6 @@
 
 import SwiftUI
 import BaseStyles
-import BaseComponents
-import BaseHelpers
 
 struct WaveAppearance: Documentable {
   var line: LineStyle = .init()
