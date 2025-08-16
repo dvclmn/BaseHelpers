@@ -12,6 +12,15 @@ public enum AnyEffect: Codable, Equatable, Identifiable {
   case offset(OffsetEffect)
   case scale(ScaleEffect)
   case blur(BlurEffect)
+  
+//  public init(fromKind kind: EffectKind) {
+//    self = switch kind {
+//      case .rotation: .rotation
+//      case .offset:
+//        
+//      default: fatalError("EffectKind[\(kind)] not yet supported for AnyEffect")
+//    }
+//  }
 
   public var id: EffectKind {
     switch self {
@@ -27,13 +36,13 @@ extension AnyEffect {
   public func evaluate(with raw: CGFloat) -> Any {
     switch self {
       case .rotation(let effect):
-        return effect.drivenProperty().evaluate(with: raw)
+        return effect.waveValue().evaluate(with: raw)
       case .offset(let effect):
-        return effect.drivenProperty().evaluate(with: raw)
+        return effect.waveValue().evaluate(with: raw)
       case .scale(let effect):
-        return effect.drivenProperty().evaluate(with: raw)
+        return effect.waveValue().evaluate(with: raw)
       case .blur(let effect):
-        return effect.drivenProperty().evaluate(with: raw)
+        return effect.waveValue().evaluate(with: raw)
     }
   }
 }
