@@ -7,27 +7,20 @@
 
 import SwiftUI
 
+public protocol EffectValue {}
+extension CGFloat: EffectValue {}
+extension CGSize: EffectValue {}
+extension Angle: EffectValue {}
+
 public protocol AnimatableEffect: Documentable {
-  associatedtype Value
+  associatedtype Value: EffectValue
   static var kind: EffectKind { get }
-  static var zero: Self { get }
+  var zero: Self { get }
   func evaluate(withWaveValue value: CGFloat) -> Value
 }
 
-public protocol ScalarEffect {
-  var value: CGFloat { get }
-}
-
-public protocol SizeEffect {
-  var value: CGSize { get }
-}
-
-public protocol AngleEffect {
-  var value: Angle { get }
-}
-
 // MARK: - Offset
-public struct OffsetEffect: AnimatableEffect, SizeEffect {
+public struct OffsetEffect: AnimatableEffect {
 
   let width: CGFloat
   let height: CGFloat
@@ -47,7 +40,27 @@ public struct OffsetEffect: AnimatableEffect, SizeEffect {
 }
 
 // MARK: - Scale
-public struct ScaleEffect: AnimatableEffect, ScalarEffect {
+public struct ScaleEffect: AnimatableEffect, SizeEffect {
+  
+  let width: CGFloat
+  let height: CGFloat
+  
+  
+  public init(w width: CGFloat, h height: CGFloat) {
+    self.width = width
+    self.height = height
+  }
+  
+  public var value: CGFloat { amount }
+  public static let kind = EffectKind.scale
+  public static let zero = Self(.zero)
+  
+  public func evaluate(withWaveValue value: CGFloat) -> CGFloat {
+    return CGFloat(value * amount)
+  }
+}
+
+public struct BlurEffect: AnimatableEffect, ScalarEffect {
   
   let amount: CGFloat
   
@@ -63,6 +76,24 @@ public struct ScaleEffect: AnimatableEffect, ScalarEffect {
     return CGFloat(value * amount)
   }
 }
+
+
+/// Below three protocols added complexity without clear benefit
+//public protocol ScalarEffect: EffectOutput {
+//  var value: CGFloat { get }
+//  init(_ amount: CGFloat)
+//}
+//
+//public protocol SizeEffect: EffectOutput {
+//  var value: CGSize { get }
+//  init(w width: CGFloat, h height: CGFloat)
+//}
+//
+//public protocol AngleEffect: EffectOutput {
+//  var value: Angle { get }
+//  init(_ angle: Angle)
+//}
+
 
 //// MARK: - Rotation
 //public struct RotationEffect: AnimatableEffect, AngleEffect {

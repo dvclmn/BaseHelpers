@@ -7,17 +7,18 @@
 
 import Foundation
 
-//public enum EffectOutputType {
-//  case scalar
-//  case
-//}
+public enum EffectOutputType {
+  case scalar
+  case size
+  case angle
+}
 
 public enum EffectKind: String, CaseIterable, Identifiable, Documentable {
   
 //  case rotation
   case offset
-  case scale
-//  case blur
+//  case scale
+  case blur
 //  case skew
 //  case hue
 //  case opacity
@@ -27,8 +28,8 @@ public enum EffectKind: String, CaseIterable, Identifiable, Documentable {
     let kind: EffectKind? = switch effect {
 //      case .rotation(_): .rotation
       case .offset(_): .offset
-      case .scale(_): .scale
-//      case .blur(_): .blur
+//      case .scale(_): .scale
+      case .blur(_): .blur
     }
     guard let kind else { return nil }
     self = kind
@@ -38,7 +39,13 @@ public enum EffectKind: String, CaseIterable, Identifiable, Documentable {
     self.name
   }
   
-  
+  public var outputType: EffectOutputType {
+    switch self {
+      case .offset: .size
+//      case .scale: .size
+      case .blur: .scalar
+    }
+  }
   
 //  public var hasImplementation: Bool {
 //    switch self {
@@ -51,8 +58,8 @@ public enum EffectKind: String, CaseIterable, Identifiable, Documentable {
     switch self {
 //      case .rotation: "Rotation"
       case .offset: "Offset"
-      case .scale: "Scale"
-//      case .blur: "Blur"
+//      case .scale: "Scale"
+      case .blur: "Blur"
 //      case .skew: "Skew"
 //        //      case .waveDistort: "Wave Distort"
 //      case .hue: "Hue Shift"
@@ -65,8 +72,8 @@ public enum EffectKind: String, CaseIterable, Identifiable, Documentable {
     switch self {
 //      case .rotation: "angle"
       case .offset: "arrow.up.and.down.and.arrow.left.and.right"  // angle
-      case .scale: "inset.filled.bottomleading.rectangle"
-//      case .blur: "drop"  // circle.dotted
+//      case .scale: "inset.filled.bottomleading.rectangle"
+      case .blur: "drop"  // circle.dotted
 //      case .skew: "skew"
 //        //      case .waveDistort: "water.waves"
 //      case .hue: "rainbow"
@@ -80,8 +87,8 @@ public enum EffectKind: String, CaseIterable, Identifiable, Documentable {
         
 //      case .rotation: .green20
       case .offset: .blue30
-      case .scale: .purple40
-//      case .blur: .peach30
+//      case .scale: .purple40
+      case .blur: .peach30
 //      case .skew: .yellow40
 //        //      case .waveDistort: .red50
 //      case .hue: .purple70
