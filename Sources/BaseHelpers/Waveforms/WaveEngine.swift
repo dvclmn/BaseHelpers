@@ -12,25 +12,27 @@ import SwiftUI
 /// - Integrates phase using `displayedFrequency` so phase never resets.
 /// - Smooths parameter changes (frequency, amplitude, vertical offset) with a time constant.
 @MainActor
-public struct WaveEngine {
+@Observable
+public final class WaveEngine {
+//public struct WaveEngine {
 
   var isPaused: Bool = false
 
   // Stored values
-  var targetFrequency: CGFloat = 1.0
-  var displayedFrequency: CGFloat = 1.0
+  public var targetFrequency: CGFloat = 1.0
+  public var displayedFrequency: CGFloat = 1.0
 
-  var targetAmplitude: CGFloat = 1.0
-  var displayedAmplitude: CGFloat = 1.0
+  public var targetAmplitude: CGFloat = 1.0
+  public var displayedAmplitude: CGFloat = 1.0
 
-  var targetBaseline: CGFloat = 0.0
-  var displayedBaseline: CGFloat = 0.0
+  public var targetBaseline: CGFloat = 0.0
+  public var displayedBaseline: CGFloat = 0.0
 
-  var targetCyclesAcross: CGFloat = 2.0
-  var displayedCyclesAcross: CGFloat = 2.0
+  public var targetCyclesAcross: CGFloat = 2.0
+  public var displayedCyclesAcross: CGFloat = 2.0
 
-  var targetNoise: CGFloat = 2.0
-  var displayedNoise: CGFloat = 2.0
+  public var targetNoise: CGFloat = 2.0
+  public var displayedNoise: CGFloat = 2.0
 
   //  /// Hz (temporal)
   //  var targetFrequency: CGFloat = 1.2
@@ -59,7 +61,7 @@ public struct WaveEngine {
 
   /// Tuning: smaller = snappier, larger = smoother. (seconds)
   //  @ObservationIgnored
-  var smoothingTimeConstant: CGFloat = 0.12
+  public var smoothingTimeConstant: CGFloat = 0.12
 
   /// Internal timekeeping
   @ObservationIgnored
@@ -77,7 +79,7 @@ public struct WaveEngine {
 
 extension WaveEngine {
 
-  mutating func tick(now: CFTimeInterval) {
+  public func tick(now: CFTimeInterval) {
     let dt = computeDeltaTime(now)
     lastTime = now
 

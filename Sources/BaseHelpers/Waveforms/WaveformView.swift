@@ -140,47 +140,7 @@ extension WaveView {
 //  }
 //
 //  private var inspector: some View {
-//    VStack(spacing: 12) {
-//      HStack {
-//        Text("Frequency")
-//        Slider(value: $engine.targetFrequency, in: 0.05...6.0)
-//        Text(String(format: "%.2f Hz", engine.targetFrequency))
-//          .font(.caption.monospaced())
-//          .frame(width: 80, alignment: .trailing)
-//      }
-//      HStack {
-//        Text("Amplitude")
-//        Slider(value: $engine.targetAmplitude, in: 0...120)
-//        Text(String(format: "%.0f px", engine.targetAmplitude))
-//          .font(.caption.monospaced())
-//          .frame(width: 80, alignment: .trailing)
-//      }
-//      HStack {
-//        Text("Baseline")
-//        Slider(value: $engine.targetBaseline, in: -80...80)
-//        Text(String(format: "%+.0f px", engine.targetBaseline))
-//          .font(.caption.monospaced())
-//          .frame(width: 80, alignment: .trailing)
-//      }
-//      HStack {
-//        Text("Cycles Across")
-//        Slider(value: $engine.targetCyclesAcross, in: 0.2...8.0)
-//        Text(String(format: "%.2f", engine.targetCyclesAcross))
-//          .font(.caption.monospaced())
-//          .frame(width: 80, alignment: .trailing)
-//      }
-//      HStack {
-//        Text("Smoothing τ")
-//        Slider(
-//          value: Binding(
-//            get: { engine.smoothingTimeConstant },
-//            set: { engine.smoothingTimeConstant = max(0.016, $0) }
-//          ), in: 0.02...0.40)
-//        Text(String(format: "%.0f ms", engine.smoothingTimeConstant * 1000))
-//          .font(.caption.monospaced())
-//          .frame(width: 80, alignment: .trailing)
-//      }
-//    }
+//    
 //    .frame(maxWidth: .infinity)
 //    .padding(14)
 //    .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 12, style: .continuous))

@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import BaseStyles
 
 struct WaveAppearance: Documentable {
   var line: LineStyle = .init()
