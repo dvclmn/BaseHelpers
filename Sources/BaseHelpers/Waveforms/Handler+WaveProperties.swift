@@ -26,6 +26,7 @@ public struct WaveProperties: Sendable, Equatable {
 }
 
 extension WaveProperties {
+  
   mutating func updateProperty(
     _ property: WaveProperty,
     with updateType: PropertyUpdateType,

@@ -18,9 +18,6 @@ import SwiftUI
 
 //public struct WaveDrivenProperty<T> where T: WaveGenerated {
 public struct WaveDrivenProperty<T> {
-
-//  let kind: EffectKind
-
   /// Note: Without `transform`, `WaveDrivenProperty` would only
   /// ever output `CGFloat`. That’s too limiting — we want Angle, CGSize,
   /// even Color, etc...
@@ -29,19 +26,17 @@ public struct WaveDrivenProperty<T> {
   let offset: CGFloat
 
   public init(
-//    kind: EffectKind,
     scale: CGFloat = 1,
     offset: CGFloat = 0,
     transform: @escaping (CGFloat) -> T
   ) {
-//    self.kind = kind
     self.scale = scale
     self.offset = offset
     self.transform = transform
   }
 
-  func evaluate(with rawValue: CGFloat) -> T {
-    transform(rawValue * scale + offset)
+  public func evaluate(withWaveValue waveValue: CGFloat) -> T {
+    transform(waveValue * scale + offset)
   }
 }
 

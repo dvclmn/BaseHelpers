@@ -7,6 +7,11 @@
 
 import Foundation
 
+//public enum EffectOutputType {
+//  case scalar
+//  case
+//}
+
 public enum EffectKind: CaseIterable, Identifiable, Documentable {
   
   case rotation

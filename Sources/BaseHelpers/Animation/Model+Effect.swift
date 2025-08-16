@@ -10,7 +10,13 @@ import SwiftUI
 public protocol AnimatableEffect: Documentable {
   associatedtype Value
   static var zero: Self { get }
-  func waveValue() -> WaveDrivenProperty<Value>
+  func waveDrivenProperty() -> WaveDrivenProperty<Value>
+}
+
+public enum EffectValue {
+  case scalar(CGFloat)
+  case angle(Angle)
+  case size(CGSize)
 }
 
 // MARK: - Offset
@@ -26,7 +32,7 @@ public struct OffsetEffect: AnimatableEffect {
 
   public static let zero = OffsetEffect(x: .zero, y: .zero)
 
-  public func waveValue() -> WaveDrivenProperty<CGSize> {
+  public func waveDrivenProperty() -> WaveDrivenProperty<CGSize> {
     WaveDrivenProperty(scale: 1) { value in
       CGSize(width: value * x, height: value * y)
     }
@@ -45,7 +51,7 @@ public struct RotationEffect: AnimatableEffect {
 
   var degrees: CGFloat { angle.degrees }
 
-  public func waveValue() -> WaveDrivenProperty<Angle> {
+  public func waveDrivenProperty() -> WaveDrivenProperty<Angle> {
     WaveDrivenProperty(scale: angle.degrees) { .degrees(Double($0)) }
   }
 }
@@ -59,7 +65,7 @@ public struct ScaleEffect: AnimatableEffect {
   public init(_ amount: CGFloat) {
     self.amount = amount
   }
-  public func waveValue() -> WaveDrivenProperty<CGFloat> {
+  public func waveDrivenProperty() -> WaveDrivenProperty<CGFloat> {
     WaveDrivenProperty(scale: amount, offset: 1) { $0 }
   }
 }
@@ -74,7 +80,7 @@ public struct BlurEffect: AnimatableEffect {
 
   public static let zero = BlurEffect(.zero)
 
-  public func waveValue() -> WaveDrivenProperty<CGFloat> {
+  public func waveDrivenProperty() -> WaveDrivenProperty<CGFloat> {
     WaveDrivenProperty(scale: amount) { $0 }
   }
 }

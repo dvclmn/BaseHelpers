@@ -33,16 +33,16 @@ public enum AnyEffect: Codable, Equatable, Identifiable {
 }
 
 extension AnyEffect {
-  public func evaluate(with raw: CGFloat) -> Any {
+  public func evaluate(withWaveValue waveValue: CGFloat) -> Any {
     switch self {
       case .rotation(let effect):
-        return effect.waveValue().evaluate(with: raw)
+        return effect.waveDrivenProperty().evaluate(withWaveValue: waveValue)
       case .offset(let effect):
-        return effect.waveValue().evaluate(with: raw)
+        return effect.waveDrivenProperty().evaluate(withWaveValue: waveValue)
       case .scale(let effect):
-        return effect.waveValue().evaluate(with: raw)
+        return effect.waveDrivenProperty().evaluate(withWaveValue: waveValue)
       case .blur(let effect):
-        return effect.waveValue().evaluate(with: raw)
+        return effect.waveDrivenProperty().evaluate(withWaveValue: waveValue)
     }
   }
 }
