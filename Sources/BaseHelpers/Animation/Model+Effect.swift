@@ -65,33 +65,35 @@ public enum AnimatedEffect: String, CaseIterable, Identifiable, Documentable {
     }
   }
 
-  public var dimensions: Set<EffectDimension> {
-    switch self {
-      case .rotation: [.degrees]
-      case .offset: [.horizontal, .vertical]
-      case .scale: [.horizontal, .vertical]
-      case .skew: [.horizontal, .vertical]
-      case .waveDistort: [.count, .speed, .strength]
-      case .hue: [.degrees]
-      case .blur: [.strength]
-      case .opacity: [.strength]
-      case .brightness: [.strength]
-    }
-  }
+//  public var dimensions: Set<EffectDimension> {
+//    switch self {
+//      case .rotation: [.degrees]
+//      case .offset: [.horizontal, .vertical]
+//      case .scale: [.horizontal, .vertical]
+//      case .skew: [.horizontal, .vertical]
+//      case .waveDistort: [.count, .speed, .strength]
+//      case .hue: [.degrees]
+//      case .blur: [.strength]
+//      case .opacity: [.strength]
+//      case .brightness: [.strength]
+//    }
+//  }
 
-  public var amplificationStrategy: AmplificationStrategy {
-    switch self {
-      case .rotation: .rotation
-      case .offset: .basic
-      case .scale: .scale
-      case .skew: .basic
-      case .waveDistort: .basic
-      case .hue: .rotation
-      case .blur: .basic
-      case .opacity: .scale
-      case .brightness: .basic
-    }
-  }
+  /// `AmplificationStrategy` overlaps with `WaveDrivenProperty`'s
+  /// scale/offset/transform — has been retired in favour of that cleaner mechanism.
+//  public var amplificationStrategy: AmplificationStrategy {
+//    switch self {
+//      case .rotation: .rotation
+//      case .offset: .basic
+//      case .scale: .scale
+//      case .skew: .basic
+//      case .waveDistort: .basic
+//      case .hue: .rotation
+//      case .blur: .basic
+//      case .opacity: .scale
+//      case .brightness: .basic
+//    }
+//  }
 
   public var modifierString: String {
     switch self {

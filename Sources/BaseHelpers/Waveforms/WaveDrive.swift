@@ -8,6 +8,7 @@
 import SwiftUI
 
 /// Aka: given a scalar wave, here’s how to turn it into something else
+/// The adapter pattern between “wave = CGFloat” and “typed animation property”
 public struct WaveDrivenProperty<T> {
   
   /// Note: Without `transform`, `WaveDrivenProperty` would only
