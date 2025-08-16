@@ -21,13 +21,11 @@ public final class WaveEngine {
   // Public, user-controlled targets (bind these to sliders)
   public var targetFrequency: CGFloat = 1.2      // Hz (temporal)
   public var targetAmplitude: CGFloat = 40        // px
-  public var targetBaseline: CGFloat  = 0         // px vertical offset
   public var targetCyclesAcross: CGFloat = 1.5    // cycles across view width (spatial)
   
   // Smoothed/displayed values (what the renderer uses)
   private(set) var displayedFrequency: CGFloat = 1.2
   private(set) var displayedAmplitude: CGFloat = 40
-  private(set) var displayedBaseline:  CGFloat = 0
   private(set) var displayedCyclesAcross: CGFloat = 1.5
 
   /// Phase accumulator (radians)
@@ -59,13 +57,13 @@ extension WaveEngine {
       let alpha = 1 - exp(-dt / max(0.0001, smoothingTimeConstant))
       displayedFrequency += (targetFrequency     - displayedFrequency) * alpha
       displayedAmplitude += (targetAmplitude     - displayedAmplitude) * alpha
-      displayedBaseline  += (targetBaseline      - displayedBaseline)  * alpha
+//      displayedBaseline  += (targetBaseline      - displayedBaseline)  * alpha
       displayedCyclesAcross += (targetCyclesAcross - displayedCyclesAcross) * alpha
     } else {
       // First frame: snap
       displayedFrequency = targetFrequency
       displayedAmplitude = targetAmplitude
-      displayedBaseline  = targetBaseline
+//      displayedBaseline  = targetBaseline
       displayedCyclesAcross = targetCyclesAcross
     }
     

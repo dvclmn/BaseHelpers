@@ -10,66 +10,71 @@ import QuartzCore
 import SwiftUI
 
 /// Phase-continuous waveform drawn by Canvas
+///
+/// Note: it's expected that this View will be embedded in a `TimelineView`
 public struct WaveView: View {
   @Environment(WaveEngine.self) private var engine
-  //  @Bindable var engine: WaveEngine
 
   let strokeWidth: CGFloat
   let sampleCount: Int
 
   public init(
-//    engine: WaveEngine,
     strokeWidth: CGFloat = 2,
     sampleCount: Int = 200,
   ) {
-//    self.engine = engine
     self.strokeWidth = strokeWidth
     self.sampleCount = sampleCount
   }
 
   public var body: some View {
-//    TimelineView(.animation) { context in
 
-      Canvas { g, size in
-        let rect = CGRect(origin: .zero, size: size)
+    Canvas { g, size in
+      let rect = CGRect(origin: .zero, size: size)
 
-        // Grid (nice for intuition)
-        drawMinorGrid(in: rect, into: &g)
+      drawMinorGrid(in: rect, into: &g)
 
-        // Wave
-        let wave = WaveShape(
-          phase: engine.phase,
-          amplitude: engine.displayedAmplitude,
-          baseline: engine.displayedBaseline,
-          cyclesAcross: engine.displayedCyclesAcross,
-          sampleCount: sampleCount
-        )
-        let path = wave.path(in: rect)
+      /// Wave
+      let wave = WaveShape(
+        phase: engine.phase,
+        amplitude: engine.displayedAmplitude,
+//        baseline: engine.displayedBaseline,
+        cyclesAcross: engine.displayedCyclesAcross,
+        sampleCount: sampleCount
+      )
+      let path = wave.path(in: rect)
 
-        // Stroke
-        g.stroke(path, with: .color(.accentColor), lineWidth: strokeWidth)
+      /// Stroke
+      g.stroke(path, with: .color(.accentColor), lineWidth: strokeWidth)
 
-        // Baseline
-        let midY = rect.midY + engine.displayedBaseline
-        let baselinePath = Path { p in
-          p.move(to: CGPoint(x: rect.minX, y: midY))
-          p.addLine(to: CGPoint(x: rect.maxX, y: midY))
-        }
-        g.stroke(baselinePath, with: .color(.secondary), lineWidth: 1)
-      }
-      .background(.ultraThinMaterial)
-      .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+      // Baseline
+      //      let midY = rect.midY + engine.displayedBaseline
+      //      let baselinePath = Path { p in
+      //        p.move(to: CGPoint(x: rect.minX, y: midY))
+      //        p.addLine(to: CGPoint(x: rect.maxX, y: midY))
+      //      }
+      //      g.stroke(baselinePath, with: .color(.secondary), lineWidth: 1)
+    }
+    
+    Legend()
 
-//      .task(id: context.date.timeIntervalSinceReferenceDate) {
-//
-//        engine.tick(now: context.date.timeIntervalSinceReferenceDate)
-//      }
-//    }
   }
 
 }
 
 extension WaveView {
+  @ViewBuilder
+  func Legend() -> some View {
+    VStack(alignment: .leading, spacing: 6) {
+      Label(String(format: "f: %.2f Hz", engine.displayedFrequency), systemImage: "metronome")
+      Label(String(format: "A: %.0f px", engine.displayedAmplitude), systemImage: "arrow.up.and.down")
+      Label(String(format: "cycles: %.2f / width", engine.displayedCyclesAcross), systemImage: "waveform")
+    }
+    .font(.caption2.monospaced())
+    .padding(6)
+    .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 8, style: .continuous))
+
+  }
+
   private func drawMinorGrid(in rect: CGRect, into g: inout GraphicsContext) {
     let cols = 8
     let rows = 4
@@ -124,16 +129,7 @@ extension WaveView {
 //    .animation(.default, value: engine.targetCyclesAcross)  // cosmetic
 //  }
 //
-//  private var legend: some View {
-//    VStack(alignment: .leading, spacing: 6) {
-//      Label(String(format: "f: %.2f Hz", engine.displayedFrequency), systemImage: "metronome")
-//      Label(String(format: "A: %.0f px", engine.displayedAmplitude), systemImage: "arrow.up.and.down")
-//      Label(String(format: "cycles: %.2f / width", engine.displayedCyclesAcross), systemImage: "waveform")
-//    }
-//    .font(.caption2.monospaced())
-//    .padding(6)
-//    .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 8, style: .continuous))
-//  }
+
 //
 //  private var inspector: some View {
 //

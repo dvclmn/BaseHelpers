@@ -15,7 +15,7 @@ struct WaveShape: Shape {
   var amplitude: CGFloat
 
   /// px
-  var baseline: CGFloat
+//  var baseline: CGFloat
 
   /// cycles across rect.width
   var cyclesAcross: CGFloat
@@ -26,7 +26,8 @@ struct WaveShape: Shape {
     var p = Path()
     guard rect.width > 1, sampleCount > 1 else { return p }
 
-    let midY = rect.midY + baseline
+    let midY = rect.midY
+//    let midY = rect.midY + baseline
     let kx = (2 * .pi * cyclesAcross) / rect.width
     let step = rect.width / CGFloat(sampleCount - 1)
 
