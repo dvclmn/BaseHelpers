@@ -56,8 +56,8 @@ public struct WaveView: View {
       )
     }
     .background(.black.lowOpacity)
+    
     .task(id: engine.properties) {
-      
       /// Aiming to still see changes to the waveform, even when paused
       if engine.isPaused {
         engine.tick(now: Date.now.timeIntervalSinceReferenceDate)
