@@ -38,6 +38,8 @@ public enum EffectKind: String, CaseIterable, Identifiable, Documentable {
     self.name
   }
   
+  
+  
 //  public var hasImplementation: Bool {
 //    switch self {
 //      case .rotation, .offset, .scale: true

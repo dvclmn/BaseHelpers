@@ -38,10 +38,10 @@ public final class WaveEngine {
 
 extension WaveEngine {
 
-  public func value<T>(for property: WaveDrivenProperty<T>) -> T {
-    /// self.value = canonical wave output
-    property.evaluate(withWaveValue: self.value)
-  }
+//  public func value<T>(for property: WaveDrivenProperty<T>) -> T {
+//    /// self.value = canonical wave output
+//    property.evaluate(withWaveValue: self.value)
+//  }
   
 //  public func value(for effect: AnimatedEffect) -> Any {
 //    let driven = effect.drivenProperty()
