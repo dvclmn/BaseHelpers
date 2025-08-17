@@ -20,36 +20,6 @@ public enum AnyEffectOutput: Equatable, Hashable {
   case size(CGSize = .zero)
   case angle(Angle = .zero)
 
-  //  public init(
-  //    fromKind kind: EffectKind,
-  //    scalar value: CGFloat
-  //  ) {
-  //    self =
-  //      switch kind {
-  //        case .blur: .scalar(value)
-  //        case .offset, .scale: fatalError("Wrong thing")
-  //      }
-  //  }
-  //  public init(
-  //    fromKind kind: EffectKind,
-  //    size value: CGSize
-  //  ) {
-  //    self =
-  //      switch kind {
-  //        case .offset, .scale: .size(value)
-  //        case .blur: fatalError("Wrong thing")
-  //      }
-  //  }
-  //  public init(
-  //    fromKind kind: EffectKind,
-  //    angle value: Angle
-  //  ) {
-  //    self =
-  //      switch kind {
-  //        case .blur, .offset, .scale: fatalError("No Angle effects yet supported")
-  //      }
-  //  }
-
   public static func create(fromAny value: Any) -> Self {
     if let result = value as? CGFloat {
       return Self.create(fromScalar: result)

@@ -161,29 +161,33 @@ public enum AnyEffect: Documentable, Identifiable {
     }
   }
 
-  public var value: Any {
-    //    precondition(self.kind.outputType == .scalar, "Cannot get scalar value for non-scalar effect.")
-    //    guard let output = effect.value as? CGFloat else { return .zero }
-    return effect.value
-  }
+//  public var value: Any {
+//    //    precondition(self.kind.outputType == .scalar, "Cannot get scalar value for non-scalar effect.")
+//    //    guard let output = effect.value as? CGFloat else { return .zero }
+//    return effect.value
+//  }
 
-//  public var scalarValue: CGFloat {
-//    precondition(self.kind.outputType == .scalar(), "Cannot get scalar value for non-scalar effect.")
-//    guard let output = effect.value as? CGFloat else { return .zero }
-//    return output
-//  }
-//
-//  public var sizeValue: CGSize {
-//    precondition(self.kind.outputType == .size(), "Cannot get size value for non-size effect.")
-//    guard let output = effect.value as? CGSize else { return .zero }
-//    return output
-//  }
-//
-//  public var angleValue: Angle {
-//    precondition(self.kind.outputType == .size(), "Cannot get angle value for non-angle effect.")
-//    guard let output = effect.value as? Angle else { return .zero }
-//    return output
-//  }
+  public var scalar: CGFloat {
+    guard let result = self.effect.value as? CGFloat else {
+      fatalError("Cannot obtain a scalar value from non-scalar Effect")
+    }
+    return result
+  }
+  
+  public var size: CGSize {
+    guard let result = self.effect.value as? CGSize else {
+      fatalError("Cannot obtain a size value from non-size Effect")
+    }
+    return result
+  }
+  public var angle: Angle {
+    guard let result = self.effect.value as? Angle else {
+      fatalError("Cannot obtain a angle value from non-angle Effect")
+    }
+    return result
+  }
+  
+  
 
   public func evaluate(withWaveValue waveValue: CGFloat) -> Any {
     return effect.evaluate(withWaveValue: waveValue)

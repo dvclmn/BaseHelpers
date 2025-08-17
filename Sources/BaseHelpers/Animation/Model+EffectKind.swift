@@ -51,6 +51,14 @@ public enum EffectKind: String, CaseIterable, Identifiable, Documentable {
   //    }
   //  }
 
+  public func createBlankValue() -> AnyEffectOutput {
+    switch self {
+      case .offset: AnyEffectOutput.create(fromSize: .zero)
+      case .scale: AnyEffectOutput.create(fromSize: CGSize(width: 1.0, height: 1.0))
+      case .blur: AnyEffectOutput.create(fromAngle: .zero)
+    }
+  }
+  
   public var outputKind: EffectOutputKind {
     switch self {
       case .offset: .size
