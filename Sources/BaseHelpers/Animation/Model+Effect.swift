@@ -12,10 +12,10 @@ extension CGFloat: EffectValue {}
 extension CGSize: EffectValue {}
 extension Angle: EffectValue {}
 
-
 public protocol AnimatableEffect: Documentable {
   associatedtype Value: EffectValue
-  static var kind: EffectKind { get }
+  var value: Value { get }
+  var kind: EffectKind { get }
   static var zero: Self { get }
   func evaluate(withWaveValue value: CGFloat) -> Value
 }
@@ -33,8 +33,12 @@ public struct OffsetEffect: AnimatableEffect {
     self.width = width
     self.height = height
   }
+  public init(_ size: CGSize) {
+    self.width = size.width
+    self.height = size.height
+  }
 
-  public static let kind = EffectKind.offset
+  public var kind: EffectKind { .offset }
   public var value: CGSize { CGSize(width: width, height: height) }
   public static let zero = Self(w: .zero, h: .zero)
 
@@ -45,41 +49,46 @@ public struct OffsetEffect: AnimatableEffect {
 
 // MARK: - Scale
 public struct ScaleEffect: AnimatableEffect {
-  
+
   let width: CGFloat
   let height: CGFloat
-  
+
   public init(w width: CGFloat, h height: CGFloat) {
     self.width = width
     self.height = height
   }
-  
-  public static let kind = EffectKind.
+  public init(_ size: CGSize) {
+    self.width = size.width
+    self.height = size.height
+  }
+
+  public var kind: EffectKind { .scale }
+//  public static let kind = EffectKind.scale
   public var value: CGSize { CGSize(width: width, height: height) }
   public static let zero = Self(w: .zero, h: .zero)
-  
+
   public func evaluate(withWaveValue value: CGFloat) -> CGSize {
     return CGSize(width: value * width, height: value * height)
   }
 }
 
 public struct BlurEffect: AnimatableEffect {
-  
+
   let amount: CGFloat
-  
+
   public init(_ amount: CGFloat) {
     self.amount = amount
   }
-  
+
   public var value: CGFloat { amount }
-  public static let kind = EffectKind.scale
+  public var kind: EffectKind { .blur }
+//  public static let kind = EffectKind.scale
   public static let zero = Self(.zero)
-  
+
   public func evaluate(withWaveValue value: CGFloat) -> CGFloat {
     return CGFloat(value * amount)
   }
 }
-
 
 /// Below three protocols added complexity without clear benefit
 //public protocol ScalarEffect: EffectOutput {
@@ -96,7 +105,6 @@ public struct BlurEffect: AnimatableEffect {
 //  var value: Angle { get }
 //  init(_ angle: Angle)
 //}
-
 
 //// MARK: - Rotation
 //public struct RotationEffect: AnimatableEffect, AngleEffect {

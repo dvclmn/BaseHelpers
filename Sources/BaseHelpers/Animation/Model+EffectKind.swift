@@ -24,16 +24,15 @@ public enum EffectKind: String, CaseIterable, Identifiable, Documentable {
   //  case opacity
   //  case brightness
 
-  public init?(fromAnyEffect effect: AnyEffect) {
-    let kind: EffectKind? =
-      switch effect {
+  public init(fromAnyEffect effect: AnyEffect) {
+    self = switch effect {
         //      case .rotation(_): .rotation
         case .offset(_): .offset
         case .scale(_): .scale
         case .blur(_): .blur
       }
-    guard let kind else { return nil }
-    self = kind
+//    guard let kind else { return nil }
+//    self = kind
   }
 
   public var id: String {
@@ -48,6 +47,10 @@ public enum EffectKind: String, CaseIterable, Identifiable, Documentable {
     }
   }
 
+  public var scalarRange: ClosedRange<CGFloat> {
+    return 0...100
+  }
+  
   //  public var hasImplementation: Bool {
   //    switch self {
   //      case .rotation, .offset, .scale: true
