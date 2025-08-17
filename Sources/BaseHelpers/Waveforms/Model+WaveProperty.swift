@@ -7,15 +7,37 @@
 
 import Foundation
 
-public enum WaveProperty: CaseIterable, Identifiable {
+public enum WaveShapeProperty: String, CaseIterable, Identifiable {
+  case cyclesAcross
+  
+  public var id: Self { rawValue }
+  
+  public var defaultValue: CGFloat {
+    switch self {
+      case .cyclesAcross: 2.0
+    }
+  }
+  
+  var targetKeyPath: WritableKeyPath<WaveProperties.Shape, CGFloat> {
+    switch self {
+      case .cyclesAcross: \.targetCyclesAcross
+    }
+  }
+  
+  var displayedKeyPath: WritableKeyPath<WaveProperties.Shape, CGFloat> {
+    switch self {
+      case .cyclesAcross: \.displayedCyclesAcross
+    }
+  }
+}
+
+public enum WaveEngineProperty: CaseIterable, Identifiable {
 
   /// How visually apparent is the oscillation effect. Aka strength
   case amplitude
 
   /// How rapidly does the oscillation occur. Aka speed
   case frequency
-
-  case cyclesAcross
 
   /// How much irregularity is introduced into the overall wave / movement
   case noise
@@ -32,7 +54,7 @@ public enum WaveProperty: CaseIterable, Identifiable {
     switch self {
       case .amplitude: ("Amplitude", "Amp")
       case .frequency: ("Frequency", "Freq")
-      case .cyclesAcross: ("Cycles Across", "Cycles")
+//      case .cyclesAcross: ("Cycles Across", "Cycles")
       case .noise: ("Noise", "Noise")
     }
   }
@@ -41,7 +63,7 @@ public enum WaveProperty: CaseIterable, Identifiable {
     switch self {
       case .amplitude: 20
       case .frequency: 1.0
-      case .cyclesAcross: 2.0
+//      case .cyclesAcross: 2.0
       case .noise: 0.0
     }
   }
@@ -52,7 +74,7 @@ public enum WaveProperty: CaseIterable, Identifiable {
       case .frequency: "waveform.path.ecg"
       //      case .phase: "point.forward.to.point.capsulepath"
       case .noise: "dice"  // glowplug, scribble
-      case .cyclesAcross: "eye"
+//      case .cyclesAcross: "eye"
     }
   }
 
@@ -66,23 +88,23 @@ public enum WaveProperty: CaseIterable, Identifiable {
   //  }
 
   @MainActor
-//  public var displayedKeyPath: ReferenceWritableKeyPath<WaveEngine, CGFloat> {
+  //  public var displayedKeyPath: ReferenceWritableKeyPath<WaveEngine, CGFloat> {
   public var displayedKeyPath: WritableKeyPath<WaveProperties, CGFloat> {
     switch self {
       case .frequency: \.displayedFrequency
       case .amplitude: \.displayedAmplitude
-      case .cyclesAcross: \.displayedCyclesAcross
+//      case .cyclesAcross: \.displayedCyclesAcross
       case .noise: \.displayedNoise
     }
   }
 
   @MainActor
-//  public var targetKeyPath: ReferenceWritableKeyPath<WaveEngine, CGFloat> {
+  //  public var targetKeyPath: ReferenceWritableKeyPath<WaveEngine, CGFloat> {
   public var targetKeyPath: WritableKeyPath<WaveProperties, CGFloat> {
     switch self {
       case .frequency: \.targetFrequency
       case .amplitude: \.targetAmplitude
-      case .cyclesAcross: \.targetCyclesAcross
+//      case .cyclesAcross: \.targetCyclesAcross
       case .noise: \.targetNoise
     }
   }
@@ -91,7 +113,7 @@ public enum WaveProperty: CaseIterable, Identifiable {
     switch self {
       case .amplitude: 0.01...60
       case .frequency: 0.01...20
-      case .cyclesAcross: 0.1...10.0
+//      case .cyclesAcross: 0.1...10.0
       case .noise: 0...4
     }
   }

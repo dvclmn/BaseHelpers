@@ -13,6 +13,7 @@ struct WaveShape: Shape {
 
   /// temporal phase (radians)
   var phase: CGFloat
+  var cyclesAcross: CGFloat
   var sampleCount: Int
 
   func path(in rect: CGRect) -> Path {

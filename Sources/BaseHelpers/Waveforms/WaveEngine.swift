@@ -38,18 +38,9 @@ public final class WaveEngine {
 
 extension WaveEngine {
 
-//  public func value<T>(for property: WaveDrivenProperty<T>) -> T {
-//    /// self.value = canonical wave output
-//    property.evaluate(withWaveValue: self.value)
-//  }
-  
-//  public func value(for effect: AnimatedEffect) -> Any {
-//    let driven = effect.drivenProperty()
-//    return driven.evaluate(with: self.value)
-//  }
-
   public var value: CGFloat {
-    let base = sin(phase * properties.displayedCyclesAcross)
+    let base = sin(phase)
+//    let base = sin(phase * properties.displayedCyclesAcross)
     let noisy = base + (properties.displayedNoise * randomNoise())
     return properties.displayedAmplitude * noisy
   }
