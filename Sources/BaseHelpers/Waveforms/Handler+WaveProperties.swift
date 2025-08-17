@@ -9,26 +9,28 @@ import SwiftUI
 
 @MainActor
 public struct WaveProperties: Sendable, Equatable {
-  
+
   // MARK: - Engine domain
   /// The oscillating CGFloat wave value
+  @MainActor
   public struct Engine: Sendable, Equatable {
     public var targetAmplitude: CGFloat = WaveEngineProperty.amplitude.defaultValue
     public var targetFrequency: CGFloat = WaveEngineProperty.frequency.defaultValue
     public var targetNoise: CGFloat = WaveEngineProperty.noise.defaultValue
-    
+
     public var displayedAmplitude: CGFloat = .zero
     public var displayedFrequency: CGFloat = .zero
     public var displayedNoise: CGFloat = .zero
   }
-  
+
   // MARK: - Shape domain
   /// How the wave is drawn (Canvas, Shape)
+  @MainActor
   public struct Shape: Sendable, Equatable {
     public var targetCyclesAcross: CGFloat = WaveShapeProperty.cyclesAcross.defaultValue
     public var displayedCyclesAcross: CGFloat = .zero
   }
-  
+
   public var engine = Engine()
   public var shape = Shape()
 }
@@ -42,12 +44,12 @@ public struct WaveProperties: Sendable, Equatable {
 //    public var displayedFrequency: CGFloat = .zero
 //    public var displayedNoise: CGFloat = .zero
 //  }
-//  
+//
 //  public struct Shape: Equatable {
 //    public var targetCyclesAcross: CGFloat = 2
 //    public var displayedCyclesAcross: CGFloat = .zero
 //  }
-//  
+//
 //  public var engine = Engine()
 //  public var shape = Shape()
 //}
@@ -71,21 +73,43 @@ public struct WaveProperties: Sendable, Equatable {
 //  public init() {}
 //}
 
-extension WaveProperties {
+extension WaveProperties.Engine {
 
-  mutating func updateProperty(
-    _ property: WaveProperty,
-    with updateType: PropertyUpdateType,
-  ) {
+  mutating func updateProperty(_ property: WaveEngineProperty, with updateType: PropertyUpdateType) {
     switch updateType {
       case .alpha(let alphaValue):
         let delta = self[keyPath: property.targetKeyPath] - self[keyPath: property.displayedKeyPath]
         self[keyPath: property.displayedKeyPath] += delta * alphaValue
-
       case .snap:
         self[keyPath: property.displayedKeyPath] = self[keyPath: property.targetKeyPath]
     }
+  }
 
+  //  mutating func updateProperty(
+  //    _ property: WaveProperty,
+  //    with updateType: PropertyUpdateType,
+  //  ) {
+  //    switch updateType {
+  //      case .alpha(let alphaValue):
+  //        let delta = self[keyPath: property.targetKeyPath] - self[keyPath: property.displayedKeyPath]
+  //        self[keyPath: property.displayedKeyPath] += delta * alphaValue
+  //
+  //      case .snap:
+  //        self[keyPath: property.displayedKeyPath] = self[keyPath: property.targetKeyPath]
+  //    }
+  //
+  //  }
+}
+
+extension WaveProperties.Shape {
+  mutating func updateProperty(_ property: WaveShapeProperty, with updateType: PropertyUpdateType) {
+    switch updateType {
+      case .alpha(let alphaValue):
+        let delta = self[keyPath: property.targetKeyPath] - self[keyPath: property.displayedKeyPath]
+        self[keyPath: property.displayedKeyPath] += delta * alphaValue
+      case .snap:
+        self[keyPath: property.displayedKeyPath] = self[keyPath: property.targetKeyPath]
+    }
   }
 }
 

@@ -40,28 +40,28 @@ extension WaveEngine {
 
   public var value: CGFloat {
     let base = sin(phase)
-//    let base = sin(phase * properties.displayedCyclesAcross)
-    let noisy = base + (properties.displayedNoise * randomNoise())
-    return properties.displayedAmplitude * noisy
+    //    let base = sin(phase * properties.displayedCyclesAcross)
+    let noisy = base + (properties.engine.displayedNoise * randomNoise())
+    return properties.engine.displayedAmplitude * noisy
   }
 
   private func randomNoise() -> CGFloat {
     .random(in: -1...1)
   }
 
-  public func propertyBinding(_ property: WaveProperty) -> Binding<CGFloat> {
+  public func engineBinding(_ property: WaveEngineProperty) -> Binding<CGFloat> {
     return Binding<CGFloat> {
-      self.properties[keyPath: property.targetKeyPath]
+      self.properties.engine[keyPath: property.targetKeyPath]
     } set: { newValue in
-      self.setProperty(property, to: newValue)
+      self.setEngineProperty(property, to: newValue)
     }
   }
 
-  public func setProperty(
-    _ property: WaveProperty,
+  public func setEngineProperty(
+    _ property: WaveEngineProperty,
     to value: CGFloat
   ) {
-    self.properties[keyPath: property.targetKeyPath] = value
+    self.properties.engine[keyPath: property.targetKeyPath] = value
   }
 
   public func smoothingBinding() -> Binding<CGFloat> {
@@ -76,23 +76,38 @@ extension WaveEngine {
     let dt = computeDeltaTime(now)
     lastTime = now
 
-    if dt > 0 {
-      let alphaValue = 1 - exp(-dt / max(0.0001, smoothingTimeConstant))
-      for prop in WaveProperty.allCases {
-        properties.updateProperty(
-          prop,
-          with: .alpha(alphaValue)
-        )
-      }
-    } else {
-      /// First frame: snap
-      for prop in WaveProperty.allCases {
-        properties.updateProperty(prop, with: .snap)
-      }
+    let updateType: PropertyUpdateType =
+      (dt > 0)
+      ? .alpha(1 - exp(-dt / max(0.0001, smoothingTimeConstant)))
+      : .snap
+
+    // Update engine domain
+    for prop in WaveEngineProperty.allCases {
+      properties.engine.updateProperty(prop, with: updateType)
     }
 
+    // Update shape domain
+    for prop in WaveShapeProperty.allCases {
+      properties.shape.updateProperty(prop, with: updateType)
+    }
+
+    //    if dt > 0 {
+    //      let alphaValue = 1 - exp(-dt / max(0.0001, smoothingTimeConstant))
+    //      for prop in WaveProperty.allCases {
+    //        properties.updateProperty(
+    //          prop,
+    //          with: .alpha(alphaValue)
+    //        )
+    //      }
+    //    } else {
+    //      /// First frame: snap
+    //      for prop in WaveProperty.allCases {
+    //        properties.updateProperty(prop, with: .snap)
+    //      }
+    //    }
+
     /// Update phase
-    phase += twoPi * properties.displayedFrequency * dt
+    phase += twoPi * properties.engine.displayedFrequency * dt
     phase = wrapPhase(phase)
   }
 

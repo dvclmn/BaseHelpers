@@ -37,7 +37,6 @@ public struct WaveView: View {
       let wave = WaveShape(
         properties: engine.properties,
         phase: engine.phase,
-        cyclesAcross: engine.,
         sampleCount: sampleCount
       )
       let path = wave.path(in: rect)
