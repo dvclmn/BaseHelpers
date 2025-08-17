@@ -22,45 +22,46 @@ public enum AnyEffect: Documentable, Identifiable {
 
   public init(
     fromKind effectKind: EffectKind,
-    withValue value: Any
+    withValue effectOutput: AnyEffectOutput
+      //    withValue value: Any
   ) {
 
     switch effectKind {
       case .offset:
-        guard let result = value as? CGSize else {
+        guard let result = effectOutput.value as? CGSize else {
           fatalError("Value for \(effectKind) must be \(effectKind.outputType.type)")
         }
         self = .offset(OffsetEffect(fromValue: result))
 
       case .scale:
-        guard let result = value as? CGSize else {
+        guard let result = effectOutput.value as? CGSize else {
           fatalError("Value for \(effectKind) must be \(effectKind.outputType.type)")
         }
         self = .scale(ScaleEffect(fromValue: result))
 
       case .blur:
-        guard let result = value as? CGFloat else {
+        guard let result = effectOutput.value as? CGFloat else {
           fatalError("Value for \(effectKind) must be \(effectKind.outputType.type)")
         }
         self = .blur(BlurEffect(fromValue: result))
 
     }
 
-//    if let result = value as? CGFloat {
-//      /// Scalar
-//    } else if let result = value as? CGSize {
-//
-//    } else if let result = value as? Angle {
-//
-//    }
-//
-//    let effect: any AnimatableEffect =
-//      switch effectKind {
-//        case .offset: OffsetEffect(fromValue: value)
-//        case .scale: ScaleEffect(fromValue: value)
-//        case .blur: BlurEffect(fromValue: value)
-//      }
-//    self = AnyEffect(fromEffect: effect)
+    //    if let result = value as? CGFloat {
+    //      /// Scalar
+    //    } else if let result = value as? CGSize {
+    //
+    //    } else if let result = value as? Angle {
+    //
+    //    }
+    //
+    //    let effect: any AnimatableEffect =
+    //      switch effectKind {
+    //        case .offset: OffsetEffect(fromValue: value)
+    //        case .scale: ScaleEffect(fromValue: value)
+    //        case .blur: BlurEffect(fromValue: value)
+    //      }
+    //    self = AnyEffect(fromEffect: effect)
   }
 
   public init<T: AnimatableEffect>(

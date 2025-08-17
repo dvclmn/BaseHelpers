@@ -54,8 +54,8 @@ extension AnimatableEffect {
 
 // MARK: - Offset
 public struct OffsetEffect: AnimatableEffect {
-  
-//  public typealias Value = CGSize
+
+  //  public typealias Value = CGSize
 
   let width: CGFloat
   let height: CGFloat

@@ -62,7 +62,7 @@ public enum EffectKind: String, CaseIterable, Identifiable, Documentable {
   //      default: false
   //    }
   //  }
-
+  
   public var name: String {
     switch self {
       //      case .rotation: "Rotation"
