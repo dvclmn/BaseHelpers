@@ -11,6 +11,21 @@ public enum RectCorner {
   case topLeading, topTrailing, bottomLeading, bottomTrailing
 }
 
+/// ```
+///
+/// minX,minY ┌─────────────────┐ maxX,minY
+///           │                 │
+///           │                 │
+///           │      CGRect     │
+///           │                 │
+///           │                 │
+/// minX,maxY └─────────────────┘ maxX,maxY
+///
+///
+/// ```
+
+
+
 extension CGRect {
 
   public func point(for corner: RectCorner) -> CGPoint {
@@ -22,15 +37,15 @@ extension CGRect {
     }
   }
 
-  public func edgePoints(for edge: RectEdge) -> (start: CGPoint, end: CGPoint) {
+  public func edgePoints(for edge: Edge) -> (start: CGPoint, end: CGPoint) {
     switch edge {
       case .top:
         return (CGPoint(x: minX, y: minY), CGPoint(x: maxX, y: minY))
       case .bottom:
         return (CGPoint(x: minX, y: maxY), CGPoint(x: maxX, y: maxY))
-      case .left:
+      case .leading:
         return (CGPoint(x: minX, y: minY), CGPoint(x: minX, y: maxY))
-      case .right:
+      case .trailing:
         return (CGPoint(x: maxX, y: minY), CGPoint(x: maxX, y: maxY))
     }
   }

@@ -47,6 +47,7 @@ public enum WaveEngineProperty: String, CaseIterable, Identifiable {
 
   /// How much irregularity is introduced into the overall wave / movement
   case noise
+  case phaseOffset
 
   public var id: String { rawValue }
 
@@ -55,6 +56,7 @@ public enum WaveEngineProperty: String, CaseIterable, Identifiable {
       case .amplitude: ("Amplitude", "Amp")
       case .frequency: ("Frequency", "Freq")
       case .noise: ("Noise", "Noise")
+      case .phaseOffset: ("Phase Offset", "Phase")
     }
   }
 
@@ -63,6 +65,7 @@ public enum WaveEngineProperty: String, CaseIterable, Identifiable {
       case .amplitude: 20
       case .frequency: 1.0
       case .noise: 0.0
+      case .phaseOffset: 0.0
     }
   }
 
@@ -72,6 +75,7 @@ public enum WaveEngineProperty: String, CaseIterable, Identifiable {
       case .frequency: "waveform.path.ecg"
       //      case .phase: "point.forward.to.point.capsulepath"
       case .noise: "dice"  // glowplug, scribble
+      case .phaseOffset: "eye"  // glowplug, scribble
     //      case .cyclesAcross: "eye"
     }
   }
@@ -91,6 +95,7 @@ public enum WaveEngineProperty: String, CaseIterable, Identifiable {
       case .frequency: \.displayedFrequency
       case .amplitude: \.displayedAmplitude
       case .noise: \.displayedNoise
+      case .phaseOffset: \.displayedPhaseOffset
     }
   }
 
@@ -100,6 +105,7 @@ public enum WaveEngineProperty: String, CaseIterable, Identifiable {
       case .frequency: \.targetFrequency
       case .amplitude: \.targetAmplitude
       case .noise: \.targetNoise
+      case .phaseOffset: \.targetPhaseOffset
     }
   }
 
@@ -109,6 +115,7 @@ public enum WaveEngineProperty: String, CaseIterable, Identifiable {
       case .frequency: 0.01...20
       //      case .cyclesAcross: 0.1...10.0
       case .noise: 0...4
+      case .phaseOffset: 0...twoPi
     }
   }
 

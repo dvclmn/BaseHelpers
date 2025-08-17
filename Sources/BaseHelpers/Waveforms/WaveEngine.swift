@@ -39,7 +39,7 @@ public final class WaveEngine {
 extension WaveEngine {
 
   public var value: CGFloat {
-    let base = sin(phase)
+    let base = sin(phase + properties.engine.displayedPhaseOffset)
     //    let base = sin(phase * properties.displayedCyclesAcross)
     let noisy = base + (properties.engine.displayedNoise * randomNoise())
     return properties.engine.displayedAmplitude * noisy

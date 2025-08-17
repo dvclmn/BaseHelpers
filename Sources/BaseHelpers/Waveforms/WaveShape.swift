@@ -13,11 +13,12 @@ struct WaveShape: Shape {
 
   /// temporal phase (radians)
   var phase: CGFloat
-//  var cyclesAcross: CGFloat
   var sampleCount: Int
 
   func path(in rect: CGRect) -> Path {
     var p = Path()
+    /// If the container rect isn't wide enough, or the sample count too low,
+    /// just return an empty Path
     guard rect.width > 1, sampleCount > 1 else { return p }
 
     let midY = rect.midY
@@ -27,7 +28,7 @@ struct WaveShape: Shape {
     var x: CGFloat = rect.minX
     var first = true
     for _ in 0..<sampleCount {
-      let y = midY + properties.engine.displayedAmplitude * sin(phase + kx * (x - rect.minX))
+      let y = midY + properties.engine.displayedAmplitude * sin(phase + properties.engine.displayedPhaseOffset + kx * (x - rect.minX))
       if first {
         p.move(to: CGPoint(x: x, y: y))
         first = false

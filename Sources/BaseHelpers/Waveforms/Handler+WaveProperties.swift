@@ -17,10 +17,12 @@ public struct WaveProperties: Sendable, Equatable {
     public var targetAmplitude: CGFloat = WaveEngineProperty.amplitude.defaultValue
     public var targetFrequency: CGFloat = WaveEngineProperty.frequency.defaultValue
     public var targetNoise: CGFloat = WaveEngineProperty.noise.defaultValue
+    public var targetPhaseOffset: CGFloat = WaveEngineProperty.phaseOffset.defaultValue
 
     public var displayedAmplitude: CGFloat = .zero
     public var displayedFrequency: CGFloat = .zero
     public var displayedNoise: CGFloat = .zero
+    public var displayedPhaseOffset: CGFloat = .zero
   }
 
   // MARK: - Shape domain
@@ -35,47 +37,12 @@ public struct WaveProperties: Sendable, Equatable {
   public var shape = Shape()
 }
 
-//public struct WaveProperties: Sendable, Equatable {
-//  public struct Engine: Equatable {
-//    public var targetAmplitude: CGFloat = 20
-//    public var targetFrequency: CGFloat = 1
-//    public var targetNoise: CGFloat = 0
-//    public var displayedAmplitude: CGFloat = .zero
-//    public var displayedFrequency: CGFloat = .zero
-//    public var displayedNoise: CGFloat = .zero
-//  }
-//
-//  public struct Shape: Equatable {
-//    public var targetCyclesAcross: CGFloat = 2
-//    public var displayedCyclesAcross: CGFloat = .zero
-//  }
-//
-//  public var engine = Engine()
-//  public var shape = Shape()
-//}
-//
-//
-//@MainActor
-//public struct WaveProperties: Sendable, Equatable {
-//
-//  /// Public, user-controlled targets (bind these to sliders)
-//  public var targetAmplitude: CGFloat = WaveProperty.amplitude.defaultValue
-//  public var targetFrequency: CGFloat = WaveProperty.frequency.defaultValue
-////  public var targetCyclesAcross: CGFloat = WaveProperty.cyclesAcross.defaultValue
-//  public var targetNoise: CGFloat = WaveProperty.noise.defaultValue
-//
-//  /// Smoothed/displayed values (what the renderer uses)
-//  public var displayedAmplitude: CGFloat = .zero
-//  public var displayedFrequency: CGFloat = .zero
-////  public var displayedCyclesAcross: CGFloat = .zero
-//  public var displayedNoise: CGFloat = .zero
-//
-//  public init() {}
-//}
-
 extension WaveProperties.Engine {
 
-  mutating func updateProperty(_ property: WaveEngineProperty, with updateType: PropertyUpdateType) {
+  mutating func updateProperty(
+    _ property: WaveEngineProperty,
+    with updateType: PropertyUpdateType
+  ) {
     switch updateType {
       case .alpha(let alphaValue):
         let delta = self[keyPath: property.targetKeyPath] - self[keyPath: property.displayedKeyPath]
@@ -84,25 +51,13 @@ extension WaveProperties.Engine {
         self[keyPath: property.displayedKeyPath] = self[keyPath: property.targetKeyPath]
     }
   }
-
-  //  mutating func updateProperty(
-  //    _ property: WaveProperty,
-  //    with updateType: PropertyUpdateType,
-  //  ) {
-  //    switch updateType {
-  //      case .alpha(let alphaValue):
-  //        let delta = self[keyPath: property.targetKeyPath] - self[keyPath: property.displayedKeyPath]
-  //        self[keyPath: property.displayedKeyPath] += delta * alphaValue
-  //
-  //      case .snap:
-  //        self[keyPath: property.displayedKeyPath] = self[keyPath: property.targetKeyPath]
-  //    }
-  //
-  //  }
 }
 
 extension WaveProperties.Shape {
-  mutating func updateProperty(_ property: WaveShapeProperty, with updateType: PropertyUpdateType) {
+  mutating func updateProperty(
+    _ property: WaveShapeProperty,
+    with updateType: PropertyUpdateType
+  ) {
     switch updateType {
       case .alpha(let alphaValue):
         let delta = self[keyPath: property.targetKeyPath] - self[keyPath: property.displayedKeyPath]

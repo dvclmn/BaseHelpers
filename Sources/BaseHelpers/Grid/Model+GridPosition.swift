@@ -5,7 +5,7 @@
 //  Created by Dave Coleman on 3/7/2025.
 //
 
-import Foundation
+import SwiftUI
 
 /// Represents a position in a 2D Grid (rows and columns).
 public struct GridPosition: GridBase {
@@ -134,7 +134,7 @@ extension GridPosition {
     )
   }
 
-  public func neighbour(at edge: RectEdge) -> GridPosition {
+  public func neighbour(at edge: Edge) -> GridPosition {
     let delta = edge.directionVector
     return GridPosition(
       column: max(0, column + delta.column),
