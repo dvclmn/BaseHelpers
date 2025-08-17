@@ -5,13 +5,8 @@
 //  Created by Dave Coleman on 16/8/2025.
 //
 
-import Foundation
+import SwiftUI
 
-public enum EffectOutputType {
-  case scalar
-  case size
-  case angle
-}
 
 public enum EffectKind: String, CaseIterable, Identifiable, Documentable {
 
@@ -25,20 +20,30 @@ public enum EffectKind: String, CaseIterable, Identifiable, Documentable {
   //  case brightness
 
   public init(fromAnyEffect effect: AnyEffect) {
-    self = switch effect {
+    self =
+      switch effect {
         //      case .rotation(_): .rotation
         case .offset(_): .offset
         case .scale(_): .scale
         case .blur(_): .blur
       }
-//    guard let kind else { return nil }
-//    self = kind
+    //    guard let kind else { return nil }
+    //    self = kind
   }
 
   public var id: String {
     self.name
   }
 
+//  public var type: any EffectValue.Type {
+//    self.outputType.type
+////    switch self {
+////      case .offset: CGSize.self
+////      case .scale: CGSize.self
+////      case .blur: CGFloat.self
+////    }
+//  }
+//  
   public var outputType: EffectOutputType {
     switch self {
       case .offset: .size
@@ -50,7 +55,7 @@ public enum EffectKind: String, CaseIterable, Identifiable, Documentable {
   public var scalarRange: ClosedRange<CGFloat> {
     return 0...100
   }
-  
+
   //  public var hasImplementation: Bool {
   //    switch self {
   //      case .rotation, .offset, .scale: true

@@ -8,55 +8,75 @@
 import SwiftUI
 
 public enum AnyEffect: Documentable, Identifiable {
-  //  case rotation(RotationEffect)
   case offset(OffsetEffect)
   case scale(ScaleEffect)
   case blur(BlurEffect)
 
   public var id: EffectKind {
     switch self {
-      //      case .rotation: return .rotation
       case .offset: return .offset
       case .scale: return .scale
       case .blur: return .blur
     }
   }
-  
-  public init(fromEffect effect: any AnimatableEffect) {
-    
-    self = if let result = effect as? OffsetEffect {
-      AnyEffect.offset(result)
-    } else if let result = effect as? ScaleEffect {
-      AnyEffect.scale(result)
-    } else if let result = effect as? BlurEffect {
-      AnyEffect.blur(result)
-    } else {
-      fatalError("Undefined effect")
-    }
-    
-//    guard let result = effect as? BlurEffect else { fatalError("Unexpected blur effect")
-//    }
-//    AnyEffect.blur(result)
-//    
-//    let effectResult = switch effect.kind {
-//      case .blur:
-//        guard let result = effect as? BlurEffect else { fatalError("Unexpected blur effect")
-//        }
-//        AnyEffect.blur(result)
-//        
-//      case .offset:
-//        guard let result = effect as? OffsetEffect else { fatalError("Unexpected blur effect")
-//        }
-//        AnyEffect.blur(result)
-//        
-//      case .scale:
-//        guard let result = effect as? ScaleEffect else { fatalError("Unexpected blur effect")
-//        }
-//        AnyEffect.blur(result)
-//    }
-//    switch effect as? 
-    
+
+  public init<T: EffectValue>(
+    fromKind effectKind: EffectKind,
+    withValue value: T
+  ) {
+    let effect: any AnimatableEffect =
+      switch effectKind {
+        case .offset: OffsetEffect(fromValue: value)
+        case .scale: ScaleEffect(fromValue: value)
+        case .blur: BlurEffect(fromValue: value)
+      }
+    self = AnyEffect(fromEffect: effect)
   }
+  
+  public init<T: AnimatableEffect>(
+    effect: T,
+//    fromKind effectKind: EffectKind,
+    withValue value: T.Value
+  ) {
+//    let effect: any AnimatableEffect =
+//    switch effectKind {
+//      case .offset: OffsetEffect(fromValue: value)
+//      case .scale: ScaleEffect(fromValue: value)
+//      case .blur: BlurEffect(fromValue: value)
+//    }
+    self = AnyEffect(fromEffect: effect)
+  }
+
+  public init(fromEffect effect: any AnimatableEffect) {
+
+    self =
+      if let result = effect as? OffsetEffect {
+        AnyEffect.offset(result)
+      } else if let result = effect as? ScaleEffect {
+        AnyEffect.scale(result)
+      } else if let result = effect as? BlurEffect {
+        AnyEffect.blur(result)
+      } else {
+        fatalError("Undefined effect")
+      }
+  }
+
+  //  public init(
+  //    fromValue value: EffectValue,
+  //    kind: EffectKind
+  //  ) {
+  //    /// Scalar
+  //    if let result = value as? CGFloat {
+  //
+  //      AnyEffect.offset(result)
+  //    } else if let result = value as? CGSize {
+  //      AnyEffect.scale(result)
+  //    } else if let result = value as? Angle {
+  //      AnyEffect.blur(result)
+  //    } else {
+  //      fatalError("Undefined effect")
+  //    }
+  //  }
 
   //  public var base: any AnimatableEffect {
   //    switch self {
@@ -70,10 +90,10 @@ public enum AnyEffect: Documentable, Identifiable {
   public var kind: EffectKind {
     return EffectKind(fromAnyEffect: self)
   }
-  
-//  public static func createScalar(_ amount: CGFloat) -> Self {
-//    
-//  }
+
+  //  public static func createScalar(_ amount: CGFloat) -> Self {
+  //
+  //  }
 
   //  public func updateEffect() -> Self {
   //
