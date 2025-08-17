@@ -7,41 +7,98 @@
 
 import SwiftUI
 
-public enum AnyEffectOutput: Equatable, Hashable {
+public enum EffectOutputKind: String, CaseIterable, Identifiable {
+  case scalar
+  case size
+  case angle
 
-  
+  public var id: String { rawValue }
+}
+
+public enum AnyEffectOutput: Equatable, Hashable {
   case scalar(CGFloat = .zero)
   case size(CGSize = .zero)
   case angle(Angle = .zero)
 
-  public init(
-    fromKind kind: EffectKind,
-    withScalar scalar: CGFloat
-  ) {
-    self = switch kind {
-      case .blur: .scalar(scalar)
-      case .offset, .scale: fatalError("Wrong thing")
+  //  public init(
+  //    fromKind kind: EffectKind,
+  //    scalar value: CGFloat
+  //  ) {
+  //    self =
+  //      switch kind {
+  //        case .blur: .scalar(value)
+  //        case .offset, .scale: fatalError("Wrong thing")
+  //      }
+  //  }
+  //  public init(
+  //    fromKind kind: EffectKind,
+  //    size value: CGSize
+  //  ) {
+  //    self =
+  //      switch kind {
+  //        case .offset, .scale: .size(value)
+  //        case .blur: fatalError("Wrong thing")
+  //      }
+  //  }
+  //  public init(
+  //    fromKind kind: EffectKind,
+  //    angle value: Angle
+  //  ) {
+  //    self =
+  //      switch kind {
+  //        case .blur, .offset, .scale: fatalError("No Angle effects yet supported")
+  //      }
+  //  }
+
+  public static func create(fromAny value: Any) -> Self {
+    if let result = value as? CGFloat {
+      return Self.create(fromScalar: result)
+    } else if let result = value as? CGSize {
+      return Self.create(fromSize: result)
+    } else if let result = value as? Angle {
+      return Self.create(fromAngle: result)
+    } else {
+      fatalError("Unsupported type for EffectOutput")
     }
   }
-  public init(
-    fromKind kind: EffectKind,
-    withSize size: CGSize
-  ) {
-    self = switch kind {
-      case .offset, .scale: .size(size)
-      case .blur: fatalError("Wrong thing")
+
+  public static func create(fromScalar value: CGFloat) -> Self {
+    return .scalar(value)
+  }
+  public static func create(fromSize value: CGSize) -> Self {
+    return .size(value)
+  }
+  public static func create(fromAngle value: Angle) -> Self {
+    return .angle(value)
+  }
+
+  public var scalar: CGFloat {
+    guard let result = self.value as? CGFloat else {
+      fatalError("Cannot obtain a scalar value from non-scalar EffectOutput")
+    }
+    return result
+  }
+  public var size: CGSize {
+    guard let result = self.value as? CGSize else {
+      fatalError("Cannot obtain a size value from non-size EffectOutput")
+    }
+    return result
+  }
+  public var angle: Angle {
+    guard let result = self.value as? Angle else {
+      fatalError("Cannot obtain a angle value from non-angle EffectOutput")
+    }
+    return result
+  }
+
+  public var outputKind: EffectOutputKind {
+    switch self {
+      case .scalar: .scalar
+      case .size: .size
+      case .angle: .angle
     }
   }
-  public init(
-    fromKind kind: EffectKind,
-    withAngle angle: Angle
-  ) {
-    self = switch kind {
-      case .blur, .offset, .scale: fatalError("Wrong thing")
-//      case .offset, .scale: fatalError("Wrong thing")
-    }
-  }
-  
+
   public var value: Any {
     switch self {
       case .scalar(let output): output
@@ -49,21 +106,20 @@ public enum AnyEffectOutput: Equatable, Hashable {
       case .angle(let output): output
     }
   }
-  
-  public var type: Any.Type {
-    switch self {
-      case .scalar: CGFloat.self
-      case .size: CGSize.self
-      case .angle: Angle.self
-    }
-  }
-  
-  
-  public var effectKinds: [EffectKind] {
-    switch self {
-      case .scalar: [.blur]
-      case .size: [.offset, .scale]
-      case .angle: []
-    }
-  }
+
+  //  public var type: Any.Type {
+  //    switch self {
+  //      case .scalar: CGFloat.self
+  //      case .size: CGSize.self
+  //      case .angle: Angle.self
+  //    }
+  //  }
+
+  //  public var effectKinds: [EffectKind] {
+  //    switch self {
+  //      case .scalar: [.blur]
+  //      case .size: [.offset, .scale]
+  //      case .angle: []
+  //    }
+  //  }
 }

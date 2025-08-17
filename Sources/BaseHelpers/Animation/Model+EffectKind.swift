@@ -7,7 +7,6 @@
 
 import SwiftUI
 
-
 public enum EffectKind: String, CaseIterable, Identifiable, Documentable {
 
   //  case rotation
@@ -35,20 +34,28 @@ public enum EffectKind: String, CaseIterable, Identifiable, Documentable {
     self.name
   }
 
-//  public var type: any EffectValue.Type {
-//    self.outputType.type
-////    switch self {
-////      case .offset: CGSize.self
-////      case .scale: CGSize.self
-////      case .blur: CGFloat.self
-////    }
-//  }
-//  
-  public var outputType: AnyEffectOutput {
+  //  public var type: any EffectValue.Type {
+  //    self.outputType.type
+  ////    switch self {
+  ////      case .offset: CGSize.self
+  ////      case .scale: CGSize.self
+  ////      case .blur: CGFloat.self
+  ////    }
+  //  }
+  //
+  //  public var outputType: AnyEffectOutput {
+  //    switch self {
+  //      case .offset: .size()
+  //      case .scale: .size()
+  //      case .blur: .scalar()
+  //    }
+  //  }
+
+  public var outputKind: EffectOutputKind {
     switch self {
-      case .offset: .size()
-      case .scale: .size()
-      case .blur: .scalar()
+      case .offset: .size
+      case .scale: .size
+      case .blur: .scalar
     }
   }
 
@@ -62,7 +69,7 @@ public enum EffectKind: String, CaseIterable, Identifiable, Documentable {
   //      default: false
   //    }
   //  }
-  
+
   public var name: String {
     switch self {
       //      case .rotation: "Rotation"

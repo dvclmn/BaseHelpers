@@ -23,29 +23,44 @@ public enum AnyEffect: Documentable, Identifiable {
   public init(
     fromKind effectKind: EffectKind,
     withValue effectOutput: AnyEffectOutput
-      //    withValue value: Any
   ) {
 
     switch effectKind {
       case .offset:
-        guard let result = effectOutput.value as? CGSize else {
-          fatalError("Value for \(effectKind) must be \(effectKind.outputType.type)")
-        }
-        self = .offset(OffsetEffect(fromValue: result))
+        let value = effectOutput.size
+        let effect = OffsetEffect(fromValue: value)
+        self = AnyEffect.offset(effect)
 
       case .scale:
-        guard let result = effectOutput.value as? CGSize else {
-          fatalError("Value for \(effectKind) must be \(effectKind.outputType.type)")
-        }
-        self = .scale(ScaleEffect(fromValue: result))
+        let value = effectOutput.size
+        let effect = ScaleEffect(fromValue: value)
+        self = AnyEffect.scale(effect)
 
       case .blur:
-        guard let result = effectOutput.value as? CGFloat else {
-          fatalError("Value for \(effectKind) must be \(effectKind.outputType.type)")
-        }
-        self = .blur(BlurEffect(fromValue: result))
-
+        let value = effectOutput.scalar
+        let effect = BlurEffect(fromValue: value)
+        self = AnyEffect.blur(effect)
     }
+    //    switch effectKind {
+    //      case .offset:
+    //        guard let result = effectOutput.value as? CGSize else {
+    //          fatalError("Value for \(effectKind) must be \(effectKind.outputType.type)")
+    //        }
+    //        self = .offset(OffsetEffect(fromValue: result))
+    //
+    //      case .scale:
+    //        guard let result = effectOutput.value as? CGSize else {
+    //          fatalError("Value for \(effectKind) must be \(effectKind.outputType.type)")
+    //        }
+    //        self = .scale(ScaleEffect(fromValue: result))
+    //
+    //      case .blur:
+    //        guard let result = effectOutput.value as? CGFloat else {
+    //          fatalError("Value for \(effectKind) must be \(effectKind.outputType.type)")
+    //        }
+    //        self = .blur(BlurEffect(fromValue: result))
+    //
+    //    }
 
     //    if let result = value as? CGFloat {
     //      /// Scalar
@@ -64,19 +79,19 @@ public enum AnyEffect: Documentable, Identifiable {
     //    self = AnyEffect(fromEffect: effect)
   }
 
-  public init<T: AnimatableEffect>(
-    effect: T,
-    //    fromKind effectKind: EffectKind,
-    withValue value: T.Value
-  ) {
-    //    let effect: any AnimatableEffect =
-    //    switch effectKind {
-    //      case .offset: OffsetEffect(fromValue: value)
-    //      case .scale: ScaleEffect(fromValue: value)
-    //      case .blur: BlurEffect(fromValue: value)
-    //    }
-    self = AnyEffect(fromEffect: effect)
-  }
+  //  public init<T: AnimatableEffect>(
+  //    effect: T,
+  //    //    fromKind effectKind: EffectKind,
+  //    withValue value: T.Value
+  //  ) {
+  //    //    let effect: any AnimatableEffect =
+  //    //    switch effectKind {
+  //    //      case .offset: OffsetEffect(fromValue: value)
+  //    //      case .scale: ScaleEffect(fromValue: value)
+  //    //      case .blur: BlurEffect(fromValue: value)
+  //    //    }
+  //    self = AnyEffect(fromEffect: effect)
+  //  }
 
   public init(fromEffect effect: any AnimatableEffect) {
 
@@ -138,29 +153,37 @@ public enum AnyEffect: Documentable, Identifiable {
     }
   }
 
+  public var effectOutput: AnyEffectOutput {
+    switch self {
+      case .offset(let effect): AnyEffectOutput.size(effect.value)
+      case .scale(let effect): AnyEffectOutput.size(effect.value)
+      case .blur(let effect): AnyEffectOutput.scalar(effect.value)
+    }
+  }
+
   public var value: Any {
     //    precondition(self.kind.outputType == .scalar, "Cannot get scalar value for non-scalar effect.")
     //    guard let output = effect.value as? CGFloat else { return .zero }
     return effect.value
   }
 
-  public var scalarValue: CGFloat {
-    precondition(self.kind.outputType == .scalar(), "Cannot get scalar value for non-scalar effect.")
-    guard let output = effect.value as? CGFloat else { return .zero }
-    return output
-  }
-
-  public var sizeValue: CGSize {
-    precondition(self.kind.outputType == .size(), "Cannot get size value for non-size effect.")
-    guard let output = effect.value as? CGSize else { return .zero }
-    return output
-  }
-
-  public var angleValue: Angle {
-    precondition(self.kind.outputType == .size(), "Cannot get angle value for non-angle effect.")
-    guard let output = effect.value as? Angle else { return .zero }
-    return output
-  }
+//  public var scalarValue: CGFloat {
+//    precondition(self.kind.outputType == .scalar(), "Cannot get scalar value for non-scalar effect.")
+//    guard let output = effect.value as? CGFloat else { return .zero }
+//    return output
+//  }
+//
+//  public var sizeValue: CGSize {
+//    precondition(self.kind.outputType == .size(), "Cannot get size value for non-size effect.")
+//    guard let output = effect.value as? CGSize else { return .zero }
+//    return output
+//  }
+//
+//  public var angleValue: Angle {
+//    precondition(self.kind.outputType == .size(), "Cannot get angle value for non-angle effect.")
+//    guard let output = effect.value as? Angle else { return .zero }
+//    return output
+//  }
 
   public func evaluate(withWaveValue waveValue: CGFloat) -> Any {
     return effect.evaluate(withWaveValue: waveValue)
