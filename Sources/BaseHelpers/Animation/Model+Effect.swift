@@ -7,22 +7,19 @@
 
 import SwiftUI
 
-public protocol EffectValue {
-  static var zero: Self { get }
-}
-extension CGFloat: EffectValue {
-}
-extension CGSize: EffectValue {
-}
-extension Angle: EffectValue {
-}
+//public protocol EffectValue {
+//  static var zero: Self { get }
+//}
+//extension CGFloat: EffectValue {}
+//extension CGSize: EffectValue {}
+//extension Angle: EffectValue {}
 
 public protocol AnimatableEffect: Documentable {
-  associatedtype Value: EffectValue
+  associatedtype Value
   var value: Value { get }
   static var kind: EffectKind { get }
   func evaluate(withWaveValue value: CGFloat) -> Value
-  init(fromValue value: EffectValue)
+  init(fromValue value: Value)
 }
 extension AnimatableEffect {
   //  public static var typeName: String {  }
@@ -57,23 +54,28 @@ extension AnimatableEffect {
 
 // MARK: - Offset
 public struct OffsetEffect: AnimatableEffect {
+  
+//  public typealias Value = CGSize
 
   let width: CGFloat
   let height: CGFloat
 
-  public init(w width: CGFloat, h height: CGFloat) {
+  public init(
+    w width: CGFloat = .zero,
+    h height: CGFloat = .zero
+  ) {
     self.width = width
     self.height = height
   }
-  public init(_ size: CGSize) {
-    self.width = size.width
-    self.height = size.height
-  }
-  public init(fromValue value: EffectValue) {
-    guard let result = value as? CGSize else {
-      fatalError("Unsupported Value for \(Self.kind)")
-    }
-    self.init(result)
+  //  public init(_ size: CGSize) {
+  //    self.width = size.width
+  //    self.height = size.height
+  //  }
+  public init(fromValue value: CGSize) {
+    //    guard let result = value as? CGSize else {
+    //      fatalError("Unsupported Value for \(Self.kind)")
+    //    }
+    self.init(w: value.width, h: value.height)
   }
 
   public static var kind: EffectKind { .offset }
@@ -91,19 +93,22 @@ public struct ScaleEffect: AnimatableEffect {
   let width: CGFloat
   let height: CGFloat
 
-  public init(w width: CGFloat, h height: CGFloat) {
+  public init(
+    w width: CGFloat = 1,
+    h height: CGFloat = 1
+  ) {
     self.width = width
     self.height = height
   }
-  public init(_ size: CGSize) {
-    self.width = size.width
-    self.height = size.height
-  }
-  public init(fromValue value: EffectValue) {
-    guard let result = value as? CGSize else {
-      fatalError("Unsupported Value for \(Self.kind)")
-    }
-    self.init(result)
+  //  public init(_ size: CGSize) {
+  //    self.width = size.width
+  //    self.height = size.height
+  //  }
+  public init(fromValue value: CGSize) {
+    //    guard let result = value as? CGSize else {
+    //      fatalError("Unsupported Value for \(Self.kind)")
+    //    }
+    self.init(w: value.width, h: value.height)
   }
 
   public static var kind: EffectKind { .scale }
@@ -120,14 +125,14 @@ public struct BlurEffect: AnimatableEffect {
 
   let amount: CGFloat
 
-  public init(_ amount: CGFloat) {
+  public init(_ amount: CGFloat = .zero) {
     self.amount = amount
   }
-  public init(fromValue value: EffectValue) {
-    guard let result = value as? CGFloat else {
-      fatalError("Unsupported Value for \(Self.kind)")
-    }
-    self.init(result)
+  public init(fromValue value: CGFloat) {
+    //    guard let result = value as? CGSize else {
+    //      fatalError("Unsupported Value for \(Self.kind)")
+    //    }
+    self.init(value)
   }
 
   public var value: CGFloat { amount }

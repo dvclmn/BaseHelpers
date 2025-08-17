@@ -44,11 +44,11 @@ public enum EffectKind: String, CaseIterable, Identifiable, Documentable {
 ////    }
 //  }
 //  
-  public var outputType: EffectOutputType {
+  public var outputType: AnyEffectOutput {
     switch self {
-      case .offset: .size
-      case .scale: .size
-      case .blur: .scalar
+      case .offset: .size()
+      case .scale: .size()
+      case .blur: .scalar()
     }
   }
 
