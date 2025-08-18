@@ -40,46 +40,49 @@ extension WaveProperties {
 }
 
 extension WaveProperties.Engine {
-
   mutating func updateProperty(
     _ property: WaveEngineProperty,
-    with updateType: PropertyUpdateType
+    dt: CGFloat,
+    timeConstant: CGFloat
   ) {
-    switch updateType {
-      case .alpha(let alphaValue):
-        let delta = self[keyPath: property.targetKeyPath] - self[keyPath: property.displayedKeyPath]
-        self[keyPath: property.displayedKeyPath] += delta * alphaValue
-      case .snap:
-        self[keyPath: property.displayedKeyPath] = self[keyPath: property.targetKeyPath]
-    }
+    let currentValue = self[keyPath: property.displayedKeyPath]
+    let targetValue = self[keyPath: property.targetKeyPath]
+    
+    self[keyPath: property.displayedKeyPath] = currentValue.smoothed(
+      towards: targetValue,
+      dt: dt,
+      timeConstant: timeConstant
+    )
   }
 }
 
 extension WaveProperties.Shape {
   mutating func updateProperty(
     _ property: WaveShapeProperty,
-    with updateType: PropertyUpdateType
+    dt: CGFloat,
+    timeConstant: CGFloat
   ) {
-    switch updateType {
-      case .alpha(let alphaValue):
-        let delta = self[keyPath: property.targetKeyPath] - self[keyPath: property.displayedKeyPath]
-        self[keyPath: property.displayedKeyPath] += delta * alphaValue
-      case .snap:
-        self[keyPath: property.displayedKeyPath] = self[keyPath: property.targetKeyPath]
-    }
+    let currentValue = self[keyPath: property.displayedKeyPath]
+    let targetValue = self[keyPath: property.targetKeyPath]
+    
+    self[keyPath: property.displayedKeyPath] = currentValue.smoothed(
+      towards: targetValue,
+      dt: dt,
+      timeConstant: timeConstant
+    )
   }
 }
 
-enum PropertyUpdateType {
-  case alpha(CGFloat)
-  case snap
-
-  init(fromDeltaTime deltaTime: TimeInterval, smoothingTimeConstant: TimeInterval) {
-    if deltaTime > 0 {
-      let thing: CGFloat = 1 - exp(-deltaTime / max(0.0001, smoothingTimeConstant))
-      self = .alpha(thing)
-    } else {
-      self = .snap
-    }
-  }
-}
+//enum PropertyUpdateType {
+//  case alpha(CGFloat)
+//  case snap
+//
+//  init(fromDeltaTime deltaTime: TimeInterval, smoothingTimeConstant: TimeInterval) {
+//    if deltaTime > 0 {
+//      let thing: CGFloat = 1 - exp(-deltaTime / max(0.0001, smoothingTimeConstant))
+//      self = .alpha(thing)
+//    } else {
+//      self = .snap
+//    }
+//  }
+//}

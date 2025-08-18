@@ -66,38 +66,17 @@ extension WaveEngine {
   public func tick(now: CFTimeInterval) {
     let dt = computeDeltaTime(now)
     lastTime = now
-
-    let updateType: PropertyUpdateType =
-      (dt > 0)
-      ? .alpha(1 - exp(-dt / max(0.0001, smoothingTimeConstant)))
-      : .snap
-
-    // Update engine domain
+    
+    /// Update engine domain
     for prop in WaveEngineProperty.allCases {
-      properties.engine.updateProperty(prop, with: updateType)
+      properties.engine.updateProperty(prop, dt: CGFloat(dt), timeConstant: smoothingTimeConstant)
     }
-
-    // Update shape domain
+    
+    /// Update shape domain
     for prop in WaveShapeProperty.allCases {
-      properties.shape.updateProperty(prop, with: updateType)
+      properties.shape.updateProperty(prop, dt: CGFloat(dt), timeConstant: smoothingTimeConstant)
     }
-
-    //    if dt > 0 {
-    //      let alphaValue = 1 - exp(-dt / max(0.0001, smoothingTimeConstant))
-    //      for prop in WaveProperty.allCases {
-    //        properties.updateProperty(
-    //          prop,
-    //          with: .alpha(alphaValue)
-    //        )
-    //      }
-    //    } else {
-    //      /// First frame: snap
-    //      for prop in WaveProperty.allCases {
-    //        properties.updateProperty(prop, with: .snap)
-    //      }
-    //    }
-
-    /// Update phase
+    
     phase += twoPi * properties.engine.displayedFrequency * dt
     phase = wrapPhase(phase)
   }
@@ -118,5 +97,28 @@ extension WaveEngine {
     var r = phase.truncatingRemainder(dividingBy: twoPi)
     if r < 0 { r += twoPi }  // keep in [0, 2π)
     return r
+  }
+}
+
+extension WaveEngine {
+  /// Evaluates the wave at a given position
+  /// - Parameter position: Normalized position (0.0 to 1.0 across the wave)
+  /// - Returns: Wave amplitude at that position
+  public func evaluateWave(at position: CGFloat) -> CGFloat {
+    let phaseAtPosition = phase +
+    properties.engine.displayedPhaseOffset +
+    (2 * .pi * properties.shape.displayedCyclesAcross * position)
+    
+    var waveValue = sin(phaseAtPosition)
+    
+    // Apply noise if present
+    if properties.engine.displayedNoise > 0 {
+      // You could use a noise function here, or simple random variation
+      // This is a placeholder - replace with your actual noise implementation
+      let noiseValue = sin(phaseAtPosition * 7.3) * 0.3 + cos(phaseAtPosition * 13.7) * 0.2
+      waveValue += noiseValue * properties.engine.displayedNoise
+    }
+    
+    return properties.engine.displayedAmplitude * waveValue
   }
 }
