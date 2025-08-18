@@ -8,13 +8,13 @@
 import SwiftUI
 
 extension Path {
-  
+
   public init(fromSize size: CGSize) {
     self.init { path in
       path.addRect(CGRect(origin: .zero, size: size))
     }
   }
-  
+
   public static func createGrid(
     columns: Int,
     rows: Int,
@@ -28,7 +28,7 @@ extension Path {
         p.move(to: CGPoint(x: 0, y: y))
         p.addLine(to: CGPoint(x: containerSize.width, y: y))
       }
-      
+
       /// Vertical lines
       for column in 0...columns {
         let x = min(CGFloat(column) * cellSize.width, containerSize.width)
@@ -65,23 +65,6 @@ extension Path {
     }
   }
 
-  //  private func drawLinesForGrid(
-  //    path p: inout Path,
-  //    axis: Axis,
-  //    count: Int,
-  //    cellSize: CGSize,
-  //    containerSize: CGSize
-  //  ) {
-  //    let cellLength = axis.length(size: cellSize)
-  //    let containerLength = axis.length(size: containerSize)
-  //
-  //    for segment in 0...count {
-  //      let dimension = CGFloat(segment) * cellLength
-  //      p.move(to: CGPoint(x: x, y: 0))
-  //      p.addLine(to: CGPoint(x: x, y: containerSize.height))
-  //    }
-  //  }
-  
   // MARK: - Draw Waveform
   public static func generateWaveform(
     in rect: CGRect,
@@ -89,19 +72,19 @@ extension Path {
     renderer: any WaveRenderer
   ) -> Path {
     var path = Path()
-    
+
     guard rect.width > 1, sampleCount > 1 else { return path }
-    
+
     let midY = rect.midY
     let step = rect.width / CGFloat(sampleCount - 1)
     var x: CGFloat = rect.minX
     var first = true
-    
+
     for i in 0..<sampleCount {
       let normalizedPosition = CGFloat(i) / CGFloat(sampleCount - 1)
       let waveValue = renderer.evaluateWave(at: normalizedPosition)
       let y = midY + waveValue
-      
+
       if first {
         path.move(to: CGPoint(x: x, y: y))
         first = false
@@ -110,7 +93,7 @@ extension Path {
       }
       x += step
     }
-    
+
     return path
   }
 
