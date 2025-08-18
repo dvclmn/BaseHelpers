@@ -14,7 +14,6 @@ public struct Wave: Documentable, Identifiable {
   public var phaseOffset: SmoothedProperty
   public var noise: SmoothedProperty
 
-  
   public func value(
     at phase: CGFloat
       //    at time: TimeInterval
@@ -23,7 +22,6 @@ public struct Wave: Documentable, Identifiable {
     let noisy = base + (noise.displayed * CGFloat.randomNoise())
     return amplitude.displayed * noisy
   }
-
 }
 
 public enum WaveBlendMode: Documentable {
@@ -49,7 +47,7 @@ public struct WaveComposition: Documentable {
 
   func value(at time: TimeInterval, from library: [Wave.ID: Wave]) -> CGFloat {
     let values = waves.compactMap { library[$0]?.value(at: time) }
-    
+
     #warning("Not actually sure how to implement this")
     return values.reduce(0, +)
     // reduce according to mode

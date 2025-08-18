@@ -186,8 +186,6 @@ public enum AnyEffect: Documentable, Identifiable {
     }
     return result
   }
-  
-  
 
   public func evaluate(withWaveValue waveValue: CGFloat) -> Any {
     return effect.evaluate(withWaveValue: waveValue)

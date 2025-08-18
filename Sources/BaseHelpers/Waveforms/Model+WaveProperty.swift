@@ -64,7 +64,7 @@ public enum WaveEngineProperty: String, WavePropertyBase {
     }
   }
 
-  public var defaultValue: Double {
+  public var defaultValue: CGFloat {
     switch self {
       case .amplitude: 20
       case .frequency: 1.0
