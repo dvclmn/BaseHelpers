@@ -14,6 +14,20 @@ public struct Wave: Documentable, Identifiable {
   public var phaseOffset: SmoothedProperty
   public var noise: SmoothedProperty
 
+  public init(
+    id: UUID = UUID(),
+    frequency: SmoothedProperty = .init(6),
+    amplitude: SmoothedProperty = .init(30),
+    phaseOffset: SmoothedProperty = .init(.zero),
+    noise: SmoothedProperty = .init(.zero)
+  ) {
+    self.id = id
+    self.frequency = frequency
+    self.amplitude = amplitude
+    self.phaseOffset = phaseOffset
+    self.noise = noise
+  }
+  
   public func value(
     at phase: CGFloat
       //    at time: TimeInterval
@@ -45,8 +59,11 @@ public struct WaveComposition: Documentable {
     self.mode = mode
   }
 
-  func value(at time: TimeInterval, from library: [Wave.ID: Wave]) -> CGFloat {
-    let values = waves.compactMap { library[$0]?.value(at: time) }
+  public func value(
+    at phase: CGFloat,
+    from library: [Wave.ID: Wave]
+  ) -> CGFloat {
+    let values = waves.compactMap { library[$0]?.value(at: phase) }
 
     #warning("Not actually sure how to implement this")
     return values.reduce(0, +)
