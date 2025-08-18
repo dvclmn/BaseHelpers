@@ -7,7 +7,10 @@
 
 import Foundation
 
-public enum WaveShapeProperty: String, CaseIterable, Identifiable {
+protocol WavePropertyBase: Sendable, CaseIterable, Equatable, Identifiable {}
+
+// MARK: - Shape Properties
+public enum WaveShapeProperty: String, WavePropertyBase {
   case cyclesAcross
 
   public var id: String { rawValue }
@@ -37,7 +40,8 @@ public enum WaveShapeProperty: String, CaseIterable, Identifiable {
   }
 }
 
-public enum WaveEngineProperty: String, CaseIterable, Identifiable {
+// MARK: - Engine Properties
+public enum WaveEngineProperty: String, WavePropertyBase {
 
   /// How visually apparent is the oscillation effect. Aka strength
   case amplitude
@@ -80,16 +84,7 @@ public enum WaveEngineProperty: String, CaseIterable, Identifiable {
     }
   }
 
-  //  var keyPath: WritableKeyPath<WaveConfiguration, Double> {
-  //    switch self {
-  //      case .amplitude: \.amplitude
-  //      case .frequency: \.frequency
-  //      case .phase: \.phase
-  //      case .noise: \.noise.finalValue
-  //    }
-  //  }
-
-  @MainActor
+//  @MainActor
   public var displayedKeyPath: WritableKeyPath<WaveProperties.Engine, CGFloat> {
     switch self {
       case .frequency: \.displayedFrequency
@@ -99,7 +94,7 @@ public enum WaveEngineProperty: String, CaseIterable, Identifiable {
     }
   }
 
-  @MainActor
+//  @MainActor
   public var targetKeyPath: WritableKeyPath<WaveProperties.Engine, CGFloat> {
     switch self {
       case .frequency: \.targetFrequency

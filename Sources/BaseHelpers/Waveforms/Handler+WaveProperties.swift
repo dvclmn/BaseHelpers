@@ -16,7 +16,7 @@ public struct WaveProperties: Sendable, Equatable {
 extension WaveProperties {
   // MARK: - Engine domain
   /// The oscillating CGFloat wave value, used to drive animated effects
-  @MainActor
+//  @MainActor
   public struct Engine: Sendable, Equatable {
     public var targetAmplitude: CGFloat = WaveEngineProperty.amplitude.defaultValue
     public var targetFrequency: CGFloat = WaveEngineProperty.frequency.defaultValue
@@ -31,7 +31,7 @@ extension WaveProperties {
 
   // MARK: - Shape domain
   /// How the wave is drawn to the Canvas, for visualisation in the UI
-  @MainActor
+//  @MainActor
   public struct Shape: Sendable, Equatable {
     public var targetCyclesAcross: CGFloat = WaveShapeProperty.cyclesAcross.defaultValue
     public var displayedCyclesAcross: CGFloat = .zero

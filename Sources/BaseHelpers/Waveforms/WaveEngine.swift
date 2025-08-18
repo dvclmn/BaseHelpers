@@ -7,13 +7,17 @@
 
 import SwiftUI
 
+protocol WaveRenderer {
+  func generatePath(in rect: CGRect, sampleCount: Int) -> Path
+}
+
 // MARK: - WaveEngine
 /// Drives a phase-continuous waveform with parameter smoothing.
 /// - Integrates phase using `displayedFrequency` so phase never resets.
 /// - Smooths parameter changes (frequency, amplitude, vertical offset) with a time constant.
-@MainActor
+//@MainActor
 @Observable
-public final class WaveEngine {
+public final class WaveEngine: WaveRenderer {
 
   var isPaused: Bool = false
   var properties = WaveProperties()
@@ -101,6 +105,35 @@ extension WaveEngine {
 }
 
 extension WaveEngine {
+  
+  func generatePath(in rect: CGRect, sampleCount: Int) -> Path {
+    var path = Path()
+    
+    guard rect.width > 1, sampleCount > 1 else { return path }
+    
+    let midY = rect.midY
+    let step = rect.width / CGFloat(sampleCount - 1)
+    var x: CGFloat = rect.minX
+    var first = true
+    
+    for i in 0..<sampleCount {
+      let normalizedPosition = CGFloat(i) / CGFloat(sampleCount - 1)
+      let waveValue = evaluateWave(at: normalizedPosition)
+      let y = midY + waveValue
+      
+      if first {
+        path.move(to: CGPoint(x: x, y: y))
+        first = false
+      } else {
+        path.addLine(to: CGPoint(x: x, y: y))
+      }
+      x += step
+    }
+    
+    return path
+  }
+  
+  
   /// Evaluates the wave at a given position
   /// - Parameter position: Normalized position (0.0 to 1.0 across the wave)
   /// - Returns: Wave amplitude at that position
