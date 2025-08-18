@@ -7,12 +7,22 @@
 
 import SwiftUI
 
+public protocol WaveRenderer {
+  func evaluateWave(at position: CGFloat) -> CGFloat
+//  func generatePath(in rect: CGRect, sampleCount: Int) -> Path
+}
+
 struct WaveShape: Shape {
   var engine: WaveEngine
   var sampleCount: Int
   
   func path(in rect: CGRect) -> Path {
-    return engine.generatePath(in: rect, sampleCount: sampleCount)
+    return Path.generateWaveform(
+      in: rect,
+      sampleCount: sampleCount,
+      renderer: engine
+    )
+//    return engine.generatePath(in: rect, sampleCount: sampleCount)
   }
 }
 

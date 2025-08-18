@@ -7,26 +7,27 @@
 
 import SwiftUI
 
-protocol WaveRenderer {
-  func generatePath(in rect: CGRect, sampleCount: Int) -> Path
-}
+
 
 // MARK: - WaveEngine
 /// Drives a phase-continuous waveform with parameter smoothing.
 /// - Integrates phase using `displayedFrequency` so phase never resets.
 /// - Smooths parameter changes (frequency, amplitude, vertical offset) with a time constant.
 //@MainActor
-@Observable
-public final class WaveEngine: WaveRenderer {
+//@Observable
+public struct WaveEngine: Sendable, WaveRenderer {
+  //public final class WaveEngine: WaveRenderer {
 
   var isPaused: Bool = false
-  var properties = WaveProperties()
+  public var properties = WaveProperties()
 
   /// Phase accumulator (radians)
-  @ObservationIgnored private(set) var phase: CGFloat = 0
+  //  @ObservationIgnored
+  private(set) var phase: CGFloat = 0
 
   /// Internal timekeeping
-  @ObservationIgnored private var lastTime: CFTimeInterval?
+  //  @ObservationIgnored
+  private var lastTime: CFTimeInterval?
 
   /// Tuning: smaller = snappier, larger = smoother. (seconds)
   public var smoothingTimeConstant: CGFloat = 0.12
@@ -36,57 +37,58 @@ public final class WaveEngine: WaveRenderer {
 
 extension WaveEngine {
 
-  public var value: CGFloat {
+  public var waveValue: CGFloat {
     let base = sin(phase + properties.engine.displayedPhaseOffset)
     let noisy = base + (properties.engine.displayedNoise * randomNoise())
     return properties.engine.displayedAmplitude * noisy
   }
-
   
-
-  public func engineBinding(_ property: WaveEngineProperty) -> Binding<CGFloat> {
-    return Binding<CGFloat> {
-      self.properties.engine[keyPath: property.targetKeyPath]
-    } set: { newValue in
-      self.setEngineProperty(property, to: newValue)
+  /// Evaluates the wave at a given position
+  /// - Parameter position: Normalized position (0.0 to 1.0 across the wave)
+  /// - Returns: Wave amplitude at that position
+  public func evaluateWave(at position: CGFloat) -> CGFloat {
+    let phaseAtPosition =
+    phase + properties.engine.displayedPhaseOffset + (2 * .pi * properties.shape.displayedCyclesAcross * position)
+    
+    var waveValue = sin(phaseAtPosition)
+    
+    /// Apply noise if present
+    if properties.engine.displayedNoise > 0 {
+      let noiseValue = randomNoise()
+      waveValue += noiseValue * properties.engine.displayedNoise
     }
+    
+    return properties.engine.displayedAmplitude * waveValue
   }
 
-  public func setEngineProperty(
+  public mutating func setEngineProperty(
     _ property: WaveEngineProperty,
     to value: CGFloat
   ) {
     self.properties.engine[keyPath: property.targetKeyPath] = value
   }
 
-  public func smoothingBinding() -> Binding<CGFloat> {
-    return Binding {
-      self.smoothingTimeConstant
-    } set: { newValue in
-      self.smoothingTimeConstant = max(0.016, newValue)
-    }
-  }
-
-  public func tick(now: CFTimeInterval) {
+  public mutating func tick(now: CFTimeInterval) {
     let dt = computeDeltaTime(now)
     lastTime = now
-    
+
     /// Update engine domain
     for prop in WaveEngineProperty.allCases {
       properties.engine.updateProperty(prop, dt: CGFloat(dt), timeConstant: smoothingTimeConstant)
     }
-    
+
     /// Update shape domain
     for prop in WaveShapeProperty.allCases {
       properties.shape.updateProperty(prop, dt: CGFloat(dt), timeConstant: smoothingTimeConstant)
     }
-    
+
     phase += twoPi * properties.engine.displayedFrequency * dt
     phase = wrapPhase(phase)
   }
-  
-  private func randomNoise() -> CGFloat {
-    .random(in: -1...1)
+
+  private func randomNoise(_ phaseAtPosition: CGFloat = 0) -> CGFloat {
+    sin(phaseAtPosition * 7.3) * 0.3 + cos(phaseAtPosition * 13.7) * 0.2
+//    .random(in: -1...1)
   }
 
   private func computeDeltaTime(_ now: CFTimeInterval) -> CGFloat {
@@ -105,53 +107,8 @@ extension WaveEngine {
 }
 
 extension WaveEngine {
+
   
-  func generatePath(in rect: CGRect, sampleCount: Int) -> Path {
-    var path = Path()
-    
-    guard rect.width > 1, sampleCount > 1 else { return path }
-    
-    let midY = rect.midY
-    let step = rect.width / CGFloat(sampleCount - 1)
-    var x: CGFloat = rect.minX
-    var first = true
-    
-    for i in 0..<sampleCount {
-      let normalizedPosition = CGFloat(i) / CGFloat(sampleCount - 1)
-      let waveValue = evaluateWave(at: normalizedPosition)
-      let y = midY + waveValue
-      
-      if first {
-        path.move(to: CGPoint(x: x, y: y))
-        first = false
-      } else {
-        path.addLine(to: CGPoint(x: x, y: y))
-      }
-      x += step
-    }
-    
-    return path
-  }
-  
-  
-  /// Evaluates the wave at a given position
-  /// - Parameter position: Normalized position (0.0 to 1.0 across the wave)
-  /// - Returns: Wave amplitude at that position
-  public func evaluateWave(at position: CGFloat) -> CGFloat {
-    let phaseAtPosition = phase +
-    properties.engine.displayedPhaseOffset +
-    (2 * .pi * properties.shape.displayedCyclesAcross * position)
-    
-    var waveValue = sin(phaseAtPosition)
-    
-    // Apply noise if present
-    if properties.engine.displayedNoise > 0 {
-      // You could use a noise function here, or simple random variation
-      // This is a placeholder - replace with your actual noise implementation
-      let noiseValue = sin(phaseAtPosition * 7.3) * 0.3 + cos(phaseAtPosition * 13.7) * 0.2
-      waveValue += noiseValue * properties.engine.displayedNoise
-    }
-    
-    return properties.engine.displayedAmplitude * waveValue
-  }
+
+
 }
