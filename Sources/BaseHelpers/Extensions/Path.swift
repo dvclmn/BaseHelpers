@@ -65,36 +65,36 @@ extension Path {
     }
   }
 
-  // MARK: - Draw Waveform
-  public static func generateWaveform(
-    in rect: CGRect,
-    sampleCount: Int,
-    renderer: any WaveRenderer
-  ) -> Path {
-    var path = Path()
-
-    guard rect.width > 1, sampleCount > 1 else { return path }
-
-    let midY = rect.midY
-    let step = rect.width / CGFloat(sampleCount - 1)
-    var x: CGFloat = rect.minX
-    var first = true
-
-    for i in 0..<sampleCount {
-      let normalizedPosition = CGFloat(i) / CGFloat(sampleCount - 1)
-      let waveValue = renderer.evaluateWave(at: normalizedPosition)
-      let y = midY + waveValue
-
-      if first {
-        path.move(to: CGPoint(x: x, y: y))
-        first = false
-      } else {
-        path.addLine(to: CGPoint(x: x, y: y))
-      }
-      x += step
-    }
-
-    return path
-  }
+//  // MARK: - Draw Waveform
+//  public static func generateWaveform(
+//    in rect: CGRect,
+//    sampleCount: Int,
+//    renderer: any WaveRenderer
+//  ) -> Path {
+//    var path = Path()
+//
+//    guard rect.width > 1, sampleCount > 1 else { return path }
+//
+//    let midY = rect.midY
+//    let step = rect.width / CGFloat(sampleCount - 1)
+//    var x: CGFloat = rect.minX
+//    var first = true
+//
+//    for i in 0..<sampleCount {
+//      let normalizedPosition = CGFloat(i) / CGFloat(sampleCount - 1)
+//      let waveValue = renderer.evaluateWave(at: normalizedPosition)
+//      let y = midY + waveValue
+//
+//      if first {
+//        path.move(to: CGPoint(x: x, y: y))
+//        first = false
+//      } else {
+//        path.addLine(to: CGPoint(x: x, y: y))
+//      }
+//      x += step
+//    }
+//
+//    return path
+//  }
 
 }

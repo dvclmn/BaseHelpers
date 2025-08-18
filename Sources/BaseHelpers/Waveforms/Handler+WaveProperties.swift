@@ -7,10 +7,12 @@
 
 import SwiftUI
 
-@MainActor
+//@MainActor
 public struct WaveProperties: Sendable, Equatable {
   public var engine = Engine()
   public var shape = Shape()
+
+  public init() {}
 }
 
 extension WaveProperties {
@@ -39,7 +41,7 @@ extension WaveProperties {
 }
 
 extension WaveProperties.Engine {
-  mutating func updateProperty(
+ public mutating func updateProperty(
     _ property: WaveEngineProperty,
     dt: CGFloat,
     timeConstant: CGFloat
@@ -56,7 +58,7 @@ extension WaveProperties.Engine {
 }
 
 extension WaveProperties.Shape {
-  mutating func updateProperty(
+  public mutating func updateProperty(
     _ property: WaveShapeProperty,
     dt: CGFloat,
     timeConstant: CGFloat

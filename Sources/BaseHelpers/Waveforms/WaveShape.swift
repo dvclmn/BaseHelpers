@@ -7,27 +7,95 @@
 
 import SwiftUI
 
-public protocol WaveRenderer {
+public protocol WaveRenderer: Sendable {
   func evaluateWave(at position: CGFloat) -> CGFloat
 }
 
 public struct WaveShape: Shape {
-  var engine: WaveEngine
-  var sampleCount: Int
-  
+  let phase: CGFloat  // temporal phase (radians)
+  let amplitude: CGFloat  // px
+  let cyclesAcross: CGFloat  // cycles across rect.width
+  let sampleCount: Int
+
   public init(
-    engine: WaveEngine,
-    sampleCount: Int
-  ){
-    self.engine = engine
+    phase: CGFloat,
+    amplitude: CGFloat,
+    cyclesAcross: CGFloat,
+    sampleCount: Int,
+  ) {
+    self.phase = phase
+    self.amplitude = amplitude
+    self.cyclesAcross = cyclesAcross
     self.sampleCount = sampleCount
   }
 
   public func path(in rect: CGRect) -> Path {
-    return Path.generateWaveform(
-      in: rect,
-      sampleCount: sampleCount,
-      renderer: engine
-    )
+    var p = Path()
+    guard rect.width > 1, sampleCount > 1 else { return p }
+
+    let midY = rect.midY
+    let kx = (2 * .pi * cyclesAcross) / rect.width
+    let step = rect.width / CGFloat(sampleCount - 1)
+
+    var x: CGFloat = rect.minX
+    var first = true
+    for _ in 0..<sampleCount {
+      let y = midY + amplitude * sin(phase + kx * (x - rect.minX))
+      if first {
+        p.move(to: CGPoint(x: x, y: y))
+        first = false
+      } else {
+        p.addLine(to: CGPoint(x: x, y: y))
+      }
+      x += step
+    }
+    return p
   }
 }
+
+//public struct WaveShape<T: WaveRenderer>: Shape {
+//  var engine: T
+////  var engine: WaveEngine
+//  var sampleCount: Int
+//
+//  public init(
+//    engine: any WaveRenderer,
+//    sampleCount: Int
+//  ){
+//    self.engine = engine
+//    self.sampleCount = sampleCount
+//  }
+//
+//  public func path(in rect: CGRect) -> Path {
+//
+//    var path = Path()
+//
+//    guard rect.width > 1, sampleCount > 1 else { return path }
+//
+//    let midY = rect.midY
+//    let step = rect.width / CGFloat(sampleCount - 1)
+//    var x: CGFloat = rect.minX
+//    var first = true
+//
+//    for i in 0..<sampleCount {
+//      let normalizedPosition = CGFloat(i) / CGFloat(sampleCount - 1)
+//      let waveValue = renderer.evaluateWave(at: normalizedPosition)
+//      let y = midY + waveValue
+//
+//      if first {
+//        path.move(to: CGPoint(x: x, y: y))
+//        first = false
+//      } else {
+//        path.addLine(to: CGPoint(x: x, y: y))
+//      }
+//      x += step
+//    }
+//
+//    return path
+////    return Path.generateWaveform(
+////      in: rect,
+////      sampleCount: sampleCount,
+////      renderer: engine
+////    )
+//  }
+//}
