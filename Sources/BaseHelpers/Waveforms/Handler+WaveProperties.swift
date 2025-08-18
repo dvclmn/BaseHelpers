@@ -16,7 +16,7 @@ public struct WaveProperties: Sendable, Equatable {
 extension WaveProperties {
   // MARK: - Engine domain
   /// The oscillating CGFloat wave value, used to drive animated effects
-//  @MainActor
+  //  @MainActor
   public struct Engine: Sendable, Equatable {
     public var targetAmplitude: CGFloat = WaveEngineProperty.amplitude.defaultValue
     public var targetFrequency: CGFloat = WaveEngineProperty.frequency.defaultValue
@@ -31,12 +31,11 @@ extension WaveProperties {
 
   // MARK: - Shape domain
   /// How the wave is drawn to the Canvas, for visualisation in the UI
-//  @MainActor
+  //  @MainActor
   public struct Shape: Sendable, Equatable {
     public var targetCyclesAcross: CGFloat = WaveShapeProperty.cyclesAcross.defaultValue
     public var displayedCyclesAcross: CGFloat = .zero
   }
-
 }
 
 extension WaveProperties.Engine {
@@ -47,7 +46,7 @@ extension WaveProperties.Engine {
   ) {
     let currentValue = self[keyPath: property.displayedKeyPath]
     let targetValue = self[keyPath: property.targetKeyPath]
-    
+
     self[keyPath: property.displayedKeyPath] = currentValue.smoothed(
       towards: targetValue,
       dt: dt,
@@ -64,7 +63,7 @@ extension WaveProperties.Shape {
   ) {
     let currentValue = self[keyPath: property.displayedKeyPath]
     let targetValue = self[keyPath: property.targetKeyPath]
-    
+
     self[keyPath: property.displayedKeyPath] = currentValue.smoothed(
       towards: targetValue,
       dt: dt,
@@ -72,17 +71,3 @@ extension WaveProperties.Shape {
     )
   }
 }
-
-//enum PropertyUpdateType {
-//  case alpha(CGFloat)
-//  case snap
-//
-//  init(fromDeltaTime deltaTime: TimeInterval, smoothingTimeConstant: TimeInterval) {
-//    if deltaTime > 0 {
-//      let thing: CGFloat = 1 - exp(-deltaTime / max(0.0001, smoothingTimeConstant))
-//      self = .alpha(thing)
-//    } else {
-//      self = .snap
-//    }
-//  }
-//}

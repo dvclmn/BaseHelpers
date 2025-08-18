@@ -152,6 +152,27 @@ extension GraphicsContext {
       lineWidth: strokeThickness
     )
   }
+  
+  public func drawHorizonLine(
+    in size: CGSize,
+    colour: Color = .gray,
+    strokeStyle: StrokeStyle? = nil,
+    strokeWidth: CGFloat = 2
+  ) {
+    
+    let stroke = strokeStyle ?? StrokeStyle.dashed(strokeWidth: strokeWidth)
+    let rect = CGRect(origin: .zero, size: size)
+    let midY = rect.midY
+    let baselinePath = Path { p in
+      p.move(to: CGPoint(x: rect.minX, y: midY))
+      p.addLine(to: CGPoint(x: rect.maxX, y: midY))
+    }
+    self.stroke(
+      baselinePath,
+      with: .color(colour),
+      style: stroke
+    )
+  }
 
   // MARK: - Patterns
   public func drawPattern(

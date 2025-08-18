@@ -11,11 +11,19 @@ public protocol WaveRenderer {
   func evaluateWave(at position: CGFloat) -> CGFloat
 }
 
-struct WaveShape: Shape {
+public struct WaveShape: Shape {
   var engine: WaveEngine
   var sampleCount: Int
+  
+  public init(
+    engine: WaveEngine,
+    sampleCount: Int
+  ){
+    self.engine = engine
+    self.sampleCount = sampleCount
+  }
 
-  func path(in rect: CGRect) -> Path {
+  public func path(in rect: CGRect) -> Path {
     return Path.generateWaveform(
       in: rect,
       sampleCount: sampleCount,
