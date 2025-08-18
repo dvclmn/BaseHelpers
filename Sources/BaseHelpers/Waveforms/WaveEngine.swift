@@ -16,24 +16,18 @@ import SwiftUI
 public final class WaveEngine {
 
   var isPaused: Bool = false
-
-  /// Interally supported properties of a wave. These can then be
-  /// used to tweak the nature of the wave, to drive properties in the UI
   var properties = WaveProperties()
 
   /// Phase accumulator (radians)
-  @ObservationIgnored
-  private(set) var phase: CGFloat = 0
+  @ObservationIgnored private(set) var phase: CGFloat = 0
+
+  /// Internal timekeeping
+  @ObservationIgnored private var lastTime: CFTimeInterval?
 
   /// Tuning: smaller = snappier, larger = smoother. (seconds)
   public var smoothingTimeConstant: CGFloat = 0.12
 
-  /// Internal timekeeping
-  @ObservationIgnored
-  private var lastTime: CFTimeInterval?
-
   public init() {}
-
 }
 
 extension WaveEngine {
@@ -44,9 +38,7 @@ extension WaveEngine {
     return properties.engine.displayedAmplitude * noisy
   }
 
-  private func randomNoise() -> CGFloat {
-    .random(in: -1...1)
-  }
+  
 
   public func engineBinding(_ property: WaveEngineProperty) -> Binding<CGFloat> {
     return Binding<CGFloat> {
@@ -108,6 +100,10 @@ extension WaveEngine {
     /// Update phase
     phase += twoPi * properties.engine.displayedFrequency * dt
     phase = wrapPhase(phase)
+  }
+  
+  private func randomNoise() -> CGFloat {
+    .random(in: -1...1)
   }
 
   private func computeDeltaTime(_ now: CFTimeInterval) -> CGFloat {

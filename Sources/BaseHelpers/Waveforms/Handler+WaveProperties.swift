@@ -9,9 +9,13 @@ import SwiftUI
 
 @MainActor
 public struct WaveProperties: Sendable, Equatable {
+  public var engine = Engine()
+  public var shape = Shape()
+}
 
+extension WaveProperties {
   // MARK: - Engine domain
-  /// The oscillating CGFloat wave value
+  /// The oscillating CGFloat wave value, used to drive animated effects
   @MainActor
   public struct Engine: Sendable, Equatable {
     public var targetAmplitude: CGFloat = WaveEngineProperty.amplitude.defaultValue
@@ -26,15 +30,13 @@ public struct WaveProperties: Sendable, Equatable {
   }
 
   // MARK: - Shape domain
-  /// How the wave is drawn (Canvas, Shape)
+  /// How the wave is drawn to the Canvas, for visualisation in the UI
   @MainActor
   public struct Shape: Sendable, Equatable {
     public var targetCyclesAcross: CGFloat = WaveShapeProperty.cyclesAcross.defaultValue
     public var displayedCyclesAcross: CGFloat = .zero
   }
 
-  public var engine = Engine()
-  public var shape = Shape()
 }
 
 extension WaveProperties.Engine {
@@ -71,4 +73,13 @@ extension WaveProperties.Shape {
 enum PropertyUpdateType {
   case alpha(CGFloat)
   case snap
+
+  init(fromDeltaTime deltaTime: TimeInterval, smoothingTimeConstant: TimeInterval) {
+    if deltaTime > 0 {
+      let thing: CGFloat = 1 - exp(-deltaTime / max(0.0001, smoothingTimeConstant))
+      self = .alpha(thing)
+    } else {
+      self = .snap
+    }
+  }
 }
