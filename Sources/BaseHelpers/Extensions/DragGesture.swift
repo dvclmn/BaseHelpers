@@ -12,7 +12,7 @@ extension DragGesture.Value {
   public var toRect: CGRect {
     let origin = startLocation
     let currentLocation = location
-    let newRect = CGRect.reversible(
+    let newRect = CGRect.boundingRect(
       from: origin,
       to: currentLocation
     )

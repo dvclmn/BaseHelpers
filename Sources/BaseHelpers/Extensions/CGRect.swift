@@ -12,21 +12,44 @@ public enum RectCorner {
 }
 
 /// ```
+/// ● = origin
 ///
-/// minX,minY ┌─────────────────┐ maxX,minY
+///                   midX
+///                    |
+/// minX,minY ● ───────|────────┐ maxX,minY
 ///           │                 │
 ///           │                 │
-///           │      CGRect     │
+///           │                 │
+///    midY --—      CGRect     --- midY
 ///           │                 │
 ///           │                 │
-/// minX,maxY └─────────────────┘ maxX,maxY
+///           │                 │
+/// minX,maxY └────────|────────┘ maxX,maxY
+///                    |
+///                   midX
 ///
+/// ```
+///
+/// `UnitPoint` maps nicely to `CGRect`'s coordinate methods:
+///
+/// ```
+/// minX, minY → topLeading
+/// maxX, minY → topTrailing
+/// minX, maxY → bottomLeading
+/// maxX, maxY → bottomTrailing
+/// midX, minY → top
+/// minX, midY → leading
+/// maxX, midY → trailing
+/// midX, maxY → bottom
+/// midX, midY → center
 ///
 /// ```
 
-
-
 extension CGRect {
+
+  public var path: Path {
+    Path(self)
+  }
 
   public func point(for corner: RectCorner) -> CGPoint {
     switch corner {
@@ -37,48 +60,35 @@ extension CGRect {
     }
   }
 
+  /// Get a CGPoint at the specified UnitPoint within this rect
+  public func point(at unitPoint: UnitPoint) -> CGPoint {
+    return CGPoint(
+      x: minX + (unitPoint.x * width),
+      y: minY + (unitPoint.y * height)
+    )
+  }
+
   public func edgePoints(for edge: Edge) -> (start: CGPoint, end: CGPoint) {
     switch edge {
-      case .top:
-        return (CGPoint(x: minX, y: minY), CGPoint(x: maxX, y: minY))
-      case .bottom:
-        return (CGPoint(x: minX, y: maxY), CGPoint(x: maxX, y: maxY))
-      case .leading:
-        return (CGPoint(x: minX, y: minY), CGPoint(x: minX, y: maxY))
-      case .trailing:
-        return (CGPoint(x: maxX, y: minY), CGPoint(x: maxX, y: maxY))
+      case .top: (CGPoint(x: minX, y: minY), CGPoint(x: maxX, y: minY))
+      case .bottom: (CGPoint(x: minX, y: maxY), CGPoint(x: maxX, y: maxY))
+      case .leading: (CGPoint(x: minX, y: minY), CGPoint(x: minX, y: maxY))
+      case .trailing: (CGPoint(x: maxX, y: minY), CGPoint(x: maxX, y: maxY))
     }
   }
 
-  //  public var minXminY: CGPoint { CGPoint(x: minX, y: minY) }
-  //  public var maxXminY: CGPoint { CGPoint(x: maxX, y: minY) }
-  //  public var minXmaxY: CGPoint { CGPoint(x: minX, y: maxY) }
-  //  public var maxXmaxY: CGPoint { CGPoint(x: maxX, y: maxY) }
-  //
-  //  /// Important: Below methods assume origin is top-left
-  //  public var topLeadingCorner: CGPoint { CGPoint(x: minX, y: minY) }
-  //  public var topTrailingCorner: CGPoint { CGPoint(x: maxX, y: minY) }
-  //  public var bottomLeadingCorner: CGPoint { CGPoint(x: minX, y: maxY) }
-  //  public var bottomTrailingCorner: CGPoint { CGPoint(x: maxX, y: maxY) }
-  //  public var center: CGPoint { CGPoint(x: midX, y: midY) }
-
-  public var path: Path {
-    Path(self)
+  /// Get a UnitPoint representing where a CGPoint falls within this rect
+  /// - Parameter point: The CGPoint to convert
+  /// - Returns: The normalized UnitPoint (may be outside 0.0-1.0 if point is outside rect)
+  public func unitPoint(for point: CGPoint) -> UnitPoint {
+    return UnitPoint(
+      x: width > 0 ? (point.x - minX) / width : 0,
+      y: height > 0 ? (point.y - minY) / height : 0
+    )
   }
 
   /// Returns the centre point of this rectangle
-  public var midpoint: CGPoint {
-    CGPoint(x: midX, y: midY)
-  }
-
-  /// Returns a new rect with the same size, but positioned so it's centred in the given size
-  //  public func centred(in container: CGSize) -> CGRect {
-  //    let origin = CGPoint(
-  //      x: (container.width - width) / 2,
-  //      y: (container.height - height) / 2
-  //    )
-  //    return CGRect(origin: origin, size: size)
-  //  }
+  public var midpoint: CGPoint { center }
 
   /// Positions this rect inside the container, aligned according to the given UnitPoint.
   ///
@@ -90,50 +100,11 @@ extension CGRect {
     to anchor: UnitPoint = .center
   ) -> CGRect {
     let origin = CGPoint(
-      x: (container.width - self.width) * anchor.x,
-      y: (container.height - self.height) * anchor.y
+      x: (container.width - width) * anchor.x,
+      y: (container.height - height) * anchor.y
     )
-    return CGRect(origin: origin, size: self.size)
+    return CGRect(origin: origin, size: size)
   }
-
-  /// Returns the point you'd pass to `.position()` to centre this rect within the given size
-  /// (i.e. the centre of the centred rect)
-  //  public func centrePosition(in container: CGSize) -> CGPoint {
-  //    centred(in: container).midpoint
-  //  }
-
-  //  /// This can be made better, but got this because SwiftUI's `.position()`
-  //  /// modifier places the *centre* of the view at the origin. If the origin is
-  //  /// meant to be the top leading corner, then this can help compensate for that.
-  //  public func centeredIn(size: CGSize) -> CGRect {
-  //
-  //    let viewMid = size.midpoint
-  //    let selfMid = self.size.midpoint
-  //
-  //    let newOrigin = CGPoint(
-  //      x: viewMid.x - selfMid.x,
-  //      y: viewMid.y - selfMid.y
-  //    )
-  //
-  //    return CGRect(
-  //      x: newOrigin.x,
-  //      y: newOrigin.y,
-  //      width: self.width,
-  //      height: self.height
-  //    )
-  //  }
-  //
-  //  public func reallyCentredIn(size: CGSize) -> CGPoint {
-  //    self.centeredIn(size: size).center
-  //  }
-  //
-  //  public func centred(in containerSize: CGSize) -> CGRect {
-  //    let origin = CGPoint(
-  //      x: (containerSize.width - self.width) / 2,
-  //      y: (containerSize.height - self.height) / 2
-  //    )
-  //    return CGRect(origin: origin, size: self.size)
-  //  }
 
   public var toCGSize: CGSize {
     CGSize(width: width, height: height)
@@ -156,85 +127,101 @@ extension CGRect {
   /// -  The dimensions (`width` and `height`) are used in conjunction with the
   /// `origin` to determine the rectangle's boundaries (`maxX` and `maxY`).
 
+
+  // MARK: - Common UnitPoint Positions as CGPoints
+
+  /// Top-left corner (minX, minY)
+  public var topLeading: CGPoint { point(at: .topLeading) }
+
+  /// Top-center (midX, minY)
+  public var top: CGPoint { point(at: .top) }
+
+  /// Top-right corner (maxX, minY)
+  public var topTrailing: CGPoint { point(at: .topTrailing) }
+
+  /// Center-left (minX, midY)
+  public var leading: CGPoint { point(at: .leading) }
+
+  /// Dead center (midX, midY)
+  public var center: CGPoint { point(at: .center) }
+
+  /// Center-right (maxX, midY)
+  public var trailing: CGPoint { point(at: .trailing) }
+
+  /// Bottom-left corner (minX, maxY)
+  public var bottomLeading: CGPoint { point(at: .bottomLeading) }
+
+  /// Bottom-center (midX, maxY)
+  public var bottom: CGPoint { point(at: .bottom) }
+
+  /// Bottom-right corner (maxX, maxY)
+  public var bottomTrailing: CGPoint { point(at: .bottomTrailing) }
+
   // Edges
   public var leadingEdge: CGFloat { minX }
   public var trailingEdge: CGFloat { maxX }
   public var topEdge: CGFloat { minY }
   public var bottomEdge: CGFloat { maxY }
 
+  
   // Dimensions
   public var horizontal: ClosedRange<CGFloat> { minX...maxX }
   public var vertical: ClosedRange<CGFloat> { minY...maxY }
 
   // Initialization helpers
-  public static func between(point1: CGPoint, point2: CGPoint) -> CGRect {
-    let minX = min(point1.x, point2.x)
-    let minY = min(point1.y, point2.y)
-    let maxX = max(point1.x, point2.x)
-    let maxY = max(point1.y, point2.y)
+//  public static func between(point1: CGPoint, point2: CGPoint) -> CGRect {
+//    let minX = min(point1.x, point2.x)
+//    let minY = min(point1.y, point2.y)
+//    let maxX = max(point1.x, point2.x)
+//    let maxY = max(point1.y, point2.y)
+//
+//    return CGRect(
+//      x: minX,
+//      y: minY,
+//      width: maxX - minX,
+//      height: maxY - minY
+//    )
+//  }
 
-    return CGRect(
-      x: minX,
-      y: minY,
-      width: maxX - minX,
-      height: maxY - minY
-    )
-  }
-
-  // Useful for selection operations
+  /// Returns a rectangle that encompasses both this rectangle and the provided rectangle
   public func expanded(toInclude rect: CGRect) -> CGRect {
-    let newMinX = min(minX, rect.minX)
-    let newMinY = min(minY, rect.minY)
-    let newMaxX = max(maxX, rect.maxX)
-    let newMaxY = max(maxY, rect.maxY)
-
-    return CGRect(
-      x: newMinX,
-      y: newMinY,
-      width: newMaxX - newMinX,
-      height: newMaxY - newMinY
-    )
-  }
-
-  public static func reversible(
-    from start: CGPoint,
-    to current: CGPoint
-  ) -> CGRect {
-    let origin = CGPoint(
-      x: min(start.x, current.x),
-      y: min(start.y, current.y)
-    )
-    let size = CGSize(
-      width: abs(current.x - start.x),
-      height: abs(current.y - start.y)
-    )
-    return CGRect(origin: origin, size: size)
-  }
-
-  public static func fromPoints(_ a: CGPoint, _ b: CGPoint) -> CGRect {
-    CGRect(
-      x: min(a.x, b.x),
-      y: min(a.y, b.y),
-      width: abs(a.x - b.x),
-      height: abs(a.y - b.y)
-    )
-  }
-
-  /// Useful for a CGRect that needs to be centered within a View
-  public init(size: CGSize, centeredIn containerSize: CGSize) {
-    let x = (containerSize.width - size.width) / 2
-    let y = (containerSize.height - size.height) / 2
-    self.init(x: x, y: y, width: size.width, height: size.height)
+    return union(rect)  // Use built-in union method
   }
   
-  /// Useful for occasions where origin and size properties
-  /// are already defined, just need to be plugged in,
-  /// and an extra-quick init is helpful
-  public init(_ origin: CGPoint,_ size: CGSize) {
+  /// Creates a rectangle from two points, ensuring positive width and height
+  /// Useful for drag operations like marquee selection where the drag direction is unknown
+  ///
+  /// Note: previous methods `reversible`, `fromPoints(_:_:)`,
+  /// `between(point1:point2:)`
+  public static func boundingRect(
+    from start: CGPoint,
+    to end: CGPoint
+  ) -> CGRect {
+    return CGRect(
+      x: min(start.x, end.x),
+      y: min(start.y, end.y),
+      width: abs(end.x - start.x),
+      height: abs(end.y - start.y)
+    )
+  }
+
+  /// Creates a rectangle with the given size, centered within the container size
+  public init(size: CGSize, centeredIn containerSize: CGSize) {
+    let origin = CGPoint(
+      x: (containerSize.width - size.width) / 2,
+      y: (containerSize.height - size.height) / 2
+    )
     self.init(origin: origin, size: size)
   }
 
-  public static let example01 = CGRect(
+  /// Useful for occasions where origin and size properties
+  /// are already defined, just need to be plugged in,
+  /// and an extra-quick init is helpful
+  public init(_ origin: CGPoint, _ size: CGSize) {
+    self.init(origin: origin, size: size)
+  }
+
+  public static let exampleZeroOrigin100x100 = CGRect(
     x: 0,
     y: 0,
     width: 100,
