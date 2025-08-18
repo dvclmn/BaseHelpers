@@ -17,6 +17,9 @@ import SwiftUI
 public protocol AnimatableEffect: Documentable {
   associatedtype Value
   var value: Value { get }
+  
+  /// Add WaveComposition to support multiple waves per effect.
+  var composition: WaveComposition { get set }
   static var kind: EffectKind { get }
   func evaluate(withWaveValue value: CGFloat) -> Value
   init(fromValue value: Value)
@@ -59,7 +62,8 @@ public struct OffsetEffect: AnimatableEffect {
 
   let width: CGFloat
   let height: CGFloat
-
+  public var composition: WaveComposition = .init()
+  
   public init(
     w width: CGFloat = .zero,
     h height: CGFloat = .zero
@@ -92,6 +96,7 @@ public struct ScaleEffect: AnimatableEffect {
 
   let width: CGFloat
   let height: CGFloat
+  public var composition: WaveComposition = .init()
 
   public init(
     w width: CGFloat = 1,
@@ -124,6 +129,7 @@ public struct ScaleEffect: AnimatableEffect {
 public struct BlurEffect: AnimatableEffect {
 
   let amount: CGFloat
+  public var composition: WaveComposition = .init()
 
   public init(_ amount: CGFloat = .zero) {
     self.amount = amount

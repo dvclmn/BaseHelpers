@@ -27,17 +27,17 @@ public enum WaveShapeProperty: String, WavePropertyBase {
     }
   }
 
-  var targetKeyPath: WritableKeyPath<WaveProperties.Shape, CGFloat> {
-    switch self {
-      case .cyclesAcross: \.targetCyclesAcross
-    }
-  }
-
-  var displayedKeyPath: WritableKeyPath<WaveProperties.Shape, CGFloat> {
-    switch self {
-      case .cyclesAcross: \.displayedCyclesAcross
-    }
-  }
+//  var targetKeyPath: WritableKeyPath<WaveProperties.Shape, CGFloat> {
+//    switch self {
+//      case .cyclesAcross: \.targetCyclesAcross
+//    }
+//  }
+//
+//  var displayedKeyPath: WritableKeyPath<WaveProperties.Shape, CGFloat> {
+//    switch self {
+//      case .cyclesAcross: \.displayedCyclesAcross
+//    }
+//  }
 }
 
 // MARK: - Engine Properties
@@ -85,24 +85,24 @@ public enum WaveEngineProperty: String, WavePropertyBase {
   }
 
 //  @MainActor
-  public var displayedKeyPath: WritableKeyPath<WaveProperties.Engine, CGFloat> {
-    switch self {
-      case .frequency: \.displayedFrequency
-      case .amplitude: \.displayedAmplitude
-      case .noise: \.displayedNoise
-      case .phaseOffset: \.displayedPhaseOffset
-    }
-  }
-
-//  @MainActor
-  public var targetKeyPath: WritableKeyPath<WaveProperties.Engine, CGFloat> {
-    switch self {
-      case .frequency: \.targetFrequency
-      case .amplitude: \.targetAmplitude
-      case .noise: \.targetNoise
-      case .phaseOffset: \.targetPhaseOffset
-    }
-  }
+//  public var displayedKeyPath: WritableKeyPath<WaveProperties.Engine, CGFloat> {
+//    switch self {
+//      case .frequency: \.displayedFrequency
+//      case .amplitude: \.displayedAmplitude
+//      case .noise: \.displayedNoise
+//      case .phaseOffset: \.displayedPhaseOffset
+//    }
+//  }
+//
+////  @MainActor
+//  public var targetKeyPath: WritableKeyPath<WaveProperties.Engine, CGFloat> {
+//    switch self {
+//      case .frequency: \.targetFrequency
+//      case .amplitude: \.targetAmplitude
+//      case .noise: \.targetNoise
+//      case .phaseOffset: \.targetPhaseOffset
+//    }
+//  }
 
   public var range: ClosedRange<Double> {
     switch self {

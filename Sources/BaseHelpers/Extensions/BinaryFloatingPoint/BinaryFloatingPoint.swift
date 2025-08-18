@@ -141,6 +141,12 @@ extension BinaryFloatingPoint {
 
     return abs(delta)
   }
+  
+  public static func randomNoise(
+    _ phaseAtPosition: CGFloat = 0
+  ) -> CGFloat {
+    sin(phaseAtPosition * 7.3) * 0.3 + cos(phaseAtPosition * 13.7) * 0.2
+  }
 
   /// Smoothly approaches `target` using exponential smoothing
   /// - Parameters:

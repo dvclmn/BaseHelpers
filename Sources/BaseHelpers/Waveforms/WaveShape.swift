@@ -7,9 +7,9 @@
 
 import SwiftUI
 
-public protocol WaveRenderer: Sendable {
-  func evaluateWave(at position: CGFloat) -> CGFloat
-}
+//public protocol WaveRenderer: Sendable {
+//  func evaluateWave(at position: CGFloat) -> CGFloat
+//}
 
 public struct WaveShape: Shape {
   let phase: CGFloat  // temporal phase (radians)
@@ -20,12 +20,12 @@ public struct WaveShape: Shape {
   public init(
     phase: CGFloat,
     amplitude: CGFloat,
-    cyclesAcross: CGFloat,
+    cyclesAcross: Int,
     sampleCount: Int,
   ) {
     self.phase = phase
     self.amplitude = amplitude
-    self.cyclesAcross = cyclesAcross
+    self.cyclesAcross = CGFloat(cyclesAcross)
     self.sampleCount = sampleCount
   }
 
