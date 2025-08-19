@@ -7,13 +7,15 @@
 
 import Foundation
 
+
 public struct BlurEffect: AnimatableEffect {
-  public static var `default`: Self { Self(.zero) }
+  public static var defaultIntensity: CGFloat { CGFloat.zero }
   
   public static var kind: EffectKind { .blur }
   
-  public let intensity: CGFloat
-
+  public var intensity: CGFloat
+  public var isEnabled: Bool = false
+  
   public init(_ intensity: CGFloat) {
     self.intensity = intensity
   }

@@ -10,14 +10,16 @@ import SwiftUI
 /// List of Effects for possible future support
 // MARK: - Protocols
 public protocol AnimatableEffect: Documentable {
-  associatedtype Value: EffectIntensity
+  associatedtype Intensity: EffectIntensity
   static var kind: EffectKind { get }
-  static var `default`: Self { get }
+  static var defaultIntensity: Intensity { get }
+  static var empty: Self { get }
   /// How strong should the final Wave-driven effect be?
   /// This will be multiplied by the `WaveComposition`'s value
-  var intensity: Value { get }
-  
-  init(withIntensity value: Value)
+  var intensity: Intensity { get set }
+  var isEnabled: Bool { get set }
+  init(withIntensity value: Intensity)
+  init(fromKind kind: EffectKind, value: Intensity?)
 
   /// `WaveComposition` allows support for multiple Waves per Effect,
   /// and produces a final float wave value, to use to generate
@@ -48,6 +50,15 @@ extension Angle: EffectIntensity {}
 /// Main extension
 extension AnimatableEffect {
 
+  
+  public static var empty: Self { Self(withIntensity: Self.defaultIntensity) }
+  
+//  public init(withIntensity value: Value = Self.defaultIntensity) {
+//    self.intensity = value
+//  }
+//  public init(withIntensity value: Self.Value = Self.default.intensity) {
+//    self.intensity = value
+//  }
   //  public init(fromAnyEffect effect: AnyEffect) {
   //    switch effect {
   //

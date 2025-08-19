@@ -12,9 +12,18 @@ public protocol EffectContainer {
 }
 
 public struct Effects: Documentable {
-  public var offset: OffsetEffect = .default
-  public var scale: ScaleEffect = .default
-  public var blur: BlurEffect = .default
+  
+  public var all: [any AnimatableEffect] {
+    [offset, scale, blur]
+  }
+  
+  public var enabled: [any AnimatableEffect] {
+    all.filter { $0.isEnabled }
+  }
+  
+  public var offset: OffsetEffect = .empty
+  public var scale: ScaleEffect = .empty
+  public var blur: BlurEffect = .empty
   
   public init() {}
 }
@@ -63,27 +72,27 @@ public enum EffectKind: String, CaseIterable, Identifiable, Documentable {
 //    return T.default
 //  }
   
-  public func createEffect<T: AnimatableEffect>(
-    withIntensity value: T.Value? = nil
-  ) -> T {
-    let newValue = value ?? T.default.intensity
-//    guard let newValue = value else {  }
-    return T.init(withIntensity: newValue)
-//    switch self {
-//      case .offset:
-//        OffsetEffect(withValue: value)
-//      case .scale:
-//        <#code#>
-//      case .blur:
-//        <#code#>
-//    }
-//    return T.default
-    //    switch self {
-    //      case .offset: OffsetEffect()
-    //      case .scale: ScaleEffect()
-    //      case .blur: BlurEffect()
-    //    }
-  }
+//  public func createEffect<T: AnimatableEffect>(
+//    withIntensity value: T.Value? = nil
+//  ) -> T {
+//    let newValue = value ?? T.empty.intensity
+////    guard let newValue = value else {  }
+//    return T.init(withIntensity: newValue)
+////    switch self {
+////      case .offset:
+////        OffsetEffect(withValue: value)
+////      case .scale:
+////        <#code#>
+////      case .blur:
+////        <#code#>
+////    }
+////    return T.default
+//    //    switch self {
+//    //      case .offset: OffsetEffect()
+//    //      case .scale: ScaleEffect()
+//    //      case .blur: BlurEffect()
+//    //    }
+//  }
   
   public var effectType: any AnimatableEffect.Type {
     switch self {

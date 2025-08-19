@@ -8,24 +8,34 @@
 import SwiftUI
 
 public struct OffsetEffect: AnimatableEffect {
-  public static var `default`: Self { Self(w: .zero, h: .zero) }
+  
+  public typealias Intensity = CGSize
+  public static var defaultIntensity: Intensity { Intensity.zero }
+  
+//  public static var `default`: Self { Self(withIntensity: CGSize.zero) }
   public static var kind: EffectKind { .offset }
 
-  let width: CGFloat
-  let height: CGFloat
+//  public var width: CGFloat
+//  public var height: CGFloat
+  public var intensity: Intensity
+  public var isEnabled: Bool = false
   
   public var waveComposition: WaveComposition = .empty
 
-  public init(
-    w width: CGFloat = .zero,
-    h height: CGFloat = .zero
-  ) {
-    self.width = width
-    self.height = height
+//  public init(
+//    w width: CGFloat = .zero,
+//    h height: CGFloat = .zero
+//  ) {
+//    self.intensity = CGSize(width: width, height: height)
+//  }
+  
+  public init(withIntensity value: Intensity) {
+    self.intensity = value
   }
-  public init(withIntensity value: CGSize) {
-    self.init(w: value.width, h: value.height)
+  
+  public init(fromKind kind: EffectKind, value: Intensity?) {
+    self.intensity = value
   }
 
-  public var intensity: CGSize { CGSize(width: width, height: height) }
+//  public var intensity: CGSize { CGSize(width: width, height: height) }
 }
