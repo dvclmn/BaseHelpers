@@ -15,10 +15,9 @@ public struct OffsetEffect: AnimatableEffect {
   let height: CGFloat
 
   public var waveComposition: WaveComposition = .empty
-
+  public var intensity: CGSize { CGSize(width: width, height: height) }
 }
 
 extension OffsetEffect {
-  
-}
 
+}

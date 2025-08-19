@@ -53,19 +53,27 @@ extension AnimatableEffect where Self.Value == CGSize {
     self.init(w: value.width, h: value.height)
   }
 
-  public var intensity: CGSize { CGSize(width: width, height: height) }
+}
 
-  //  public func output(elapsed: CGFloat, waveLibrary: [Wave]) -> CGSize {
-  //    let waveValue: CGFloat = waveComposition.value(
-  //      elapsed: elapsed,
-  //      waveLibrary: waveLibrary
-  //    )
-  //    let result = CGSize(
-  //      width: width * waveValue,
-  //      height: height * waveValue
-  //    )
-  //    return result
-  //  }
+extension AnimatableEffect where Self.Value == CGFloat {
+  public init(_ intensity: CGFloat) {
+    self.intensity = intensity
+  }
+  public init(fromValue value: CGFloat) {
+    self.init(value)
+  }
+}
+
+extension AnimatableEffect where Self.Value == Angle {
+  public init(_ rotation: CGFloat) {
+    //    self.width = width
+    self.rotation = rotation
+  }
+  public init(fromValue value: Angle) {
+    self.init(value)
+  }
+
+  //  public var intensity: Angle {  }
 }
 
 public protocol EffectValue {
@@ -79,6 +87,10 @@ extension CGSize: EffectValue {
   public static var outputKind: EffectOutputKind { .size }
 }
 extension Angle: EffectValue {
+  public static func * (lhs: Angle, rhs: CGFloat) -> Angle {
+    lhs.radians * Angle(degrees: Double(rhs)).radians
+  }
+
   public static var outputKind: EffectOutputKind { .angle }
 }
 

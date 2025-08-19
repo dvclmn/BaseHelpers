@@ -5,12 +5,20 @@
 //  Created by Dave Coleman on 19/8/2025.
 //
 
+import Foundation
+
 public struct BlurEffect: AnimatableEffect {
-  
+  public typealias Value = CGFloat
   public static var kind: EffectKind { .blur }
   
-  let intensity: CGFloat
-//  let height: CGFloat
+  public let intensity: CGFloat
+
+  public init(_ intensity: CGFloat) {
+    self.intensity = intensity
+  }
+  public init(fromValue value: CGFloat) {
+    self.init(value)
+  }
   
   public var waveComposition: WaveComposition = .empty
   

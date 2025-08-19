@@ -21,44 +21,26 @@ public enum EffectKind: String, CaseIterable, Identifiable, Documentable {
   public init(fromAnyEffect effect: AnyEffect) {
     self =
       switch effect {
-        //      case .rotation(_): .rotation
         case .offset(_): .offset
         case .scale(_): .scale
         case .blur(_): .blur
       }
-    //    guard let kind else { return nil }
-    //    self = kind
+
   }
 
   public var id: String {
     self.name
   }
 
-  //  public var type: any EffectValue.Type {
-  //    self.outputType.type
-  ////    switch self {
-  ////      case .offset: CGSize.self
-  ////      case .scale: CGSize.self
-  ////      case .blur: CGFloat.self
-  ////    }
-  //  }
-  //
-  //  public var outputType: AnyEffectOutput {
+  
+  //  public func createBlankValue() -> AnyEffectOutput {
   //    switch self {
-  //      case .offset: .size()
-  //      case .scale: .size()
-  //      case .blur: .scalar()
+  //      case .offset: AnyEffectOutput.create(fromSize: .zero)
+  //      case .scale: AnyEffectOutput.create(fromSize: CGSize(width: 1.0, height: 1.0))
+  //      case .blur: AnyEffectOutput.create(fromAngle: .zero)
   //    }
   //  }
 
-  public func createBlankValue() -> AnyEffectOutput {
-    switch self {
-      case .offset: AnyEffectOutput.create(fromSize: .zero)
-      case .scale: AnyEffectOutput.create(fromSize: CGSize(width: 1.0, height: 1.0))
-      case .blur: AnyEffectOutput.create(fromAngle: .zero)
-    }
-  }
-  
   public var outputKind: EffectOutputKind {
     switch self {
       case .offset: .size
@@ -70,13 +52,6 @@ public enum EffectKind: String, CaseIterable, Identifiable, Documentable {
   public var scalarRange: ClosedRange<CGFloat> {
     return 0...100
   }
-
-  //  public var hasImplementation: Bool {
-  //    switch self {
-  //      case .rotation, .offset, .scale: true
-  //      default: false
-  //    }
-  //  }
 
   public var name: String {
     switch self {
@@ -120,60 +95,5 @@ public enum EffectKind: String, CaseIterable, Identifiable, Documentable {
     //      case .brightness: .teal30
     }
   }
-
-  //  public static let allCases: [AnimatedEffect] = [
-  //    .rotation(),
-  //    .offset(),
-  //    .scale(),
-  //    .skew(),
-  //    .hue(),
-  //    .blur(),
-  //    .opacity(),
-  //    .brightness(),
-  //  ]
-
-  //  public var dimensions: Set<EffectDimension> {
-  //    switch self {
-  //      case .rotation: [.degrees]
-  //      case .offset: [.horizontal, .vertical]
-  //      case .scale: [.horizontal, .vertical]
-  //      case .skew: [.horizontal, .vertical]
-  //      case .waveDistort: [.count, .speed, .strength]
-  //      case .hue: [.degrees]
-  //      case .blur: [.strength]
-  //      case .opacity: [.strength]
-  //      case .brightness: [.strength]
-  //    }
-  //  }
-
-  /// `AmplificationStrategy` overlaps with `WaveDrivenProperty`'s
-  /// scale/offset/transform — has been retired in favour of that cleaner mechanism.
-  //  public var amplificationStrategy: AmplificationStrategy {
-  //    switch self {
-  //      case .rotation: .rotation
-  //      case .offset: .basic
-  //      case .scale: .scale
-  //      case .skew: .basic
-  //      case .waveDistort: .basic
-  //      case .hue: .rotation
-  //      case .blur: .basic
-  //      case .opacity: .scale
-  //      case .brightness: .basic
-  //    }
-  //  }
-
-  //  public var modifierString: String {
-  //    switch self {
-  //      case .rotation: ".rotationEffect"
-  //      case .offset: ".offset"
-  //      case .scale: ".scaleEffect"
-  //      case .skew: ""
-  ////      case .waveDistort: ""
-  //      case .hue: ".hue"
-  //      case .blur: ".blur"
-  //      case .opacity: ".opacity"
-  //      case .brightness: ".brightness"
-  //    }
-  //  }
 
 }

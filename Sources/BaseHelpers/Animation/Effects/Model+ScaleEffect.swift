@@ -15,6 +15,8 @@ public struct ScaleEffect: AnimatableEffect {
   let height: CGFloat
   public var waveComposition: WaveComposition = .empty
   
+  public var intensity: CGSize { CGSize(width: width, height: height) }
+  
 }
 
 //public struct ScaleEffect: AnimatableEffect {
