@@ -154,6 +154,12 @@ extension BinaryFloatingPoint {
   ///   - dt: Time since last update (seconds)
   ///   - timeConstant: Smoothing time constant τ (seconds) - time to reach ~63% of target
   /// - Returns: Updated value
+  ///
+  /// Notes:
+  /// `timeConstant` controls how quickly the smoothing converges toward the target value
+  ///
+  /// Read more in Bear:
+  /// bear://x-callback-url/open-note?id=65D4914D-3835-4F79-B8D0-4820B68B7F1B
   public func smoothed(
     towards target: Self,
     dt: Self,
@@ -170,8 +176,8 @@ extension BinaryFloatingPoint {
 
     /// Calculate exponential decay factor
     /// exp(-timeRatio) represents how much of the OLD value to retain
-    /// When timeRatio is small (dt << τ), decay ≈ 1 (keep most of old value)
-    /// When timeRatio is large (dt >> τ), decay ≈ 0 (discard old value)
+    /// When timeRatio is small (`dt << τ`), decay ≈ 1 (keep most of old value)
+    /// When timeRatio is large (`dt >> τ`), decay ≈ 0 (discard old value)
     let exponentialDecay = Self(exp(Double(-timeRatio)))
 
     /// Calculate the smoothing factor (learning rate)
@@ -180,7 +186,8 @@ extension BinaryFloatingPoint {
     let alpha = 1 - exponentialDecay
 
     /// Interpolate between current value and target
-    /// self + (target - self) * alpha is equivalent to: self * (1 - alpha) + target * alpha
+    /// `self + (target - self) * alpha` is equivalent to:
+    /// `self * (1 - alpha) + target * alpha`
     let difference = target - self
     let adjustment = difference * alpha
 
