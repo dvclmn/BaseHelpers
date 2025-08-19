@@ -11,24 +11,26 @@ public struct WaveAppearance: Documentable {
   let path: PathConfiguration
   let points: PointStyle
   let cyclesAcross: CGFloat
+  
   static let windowOptions: [CGFloat] = [1, 2, 4, 8, 12, 24, 30]
   static let timeRange: ClosedRange<CGFloat> = 1...30
 //  let timeWindow: TimeWindow = .init()
   
   public init(
-    path: PathConfiguration = .,
-    points: PointStyle,
-    cyclesAcross: CGFloat =
+    path: PathConfiguration = .init(),
+    points: PointStyle = .init(),
+    cyclesAcross: CGFloat = 2
   ) {
     self.path = path
     self.points = points
-    self.timeWindow = timeWindow
+    self.cyclesAcross = cyclesAcross
   }
 }
 
 public struct PathConfiguration: Documentable {
   let strokeStyle: StrokeStyle
   let smoothing: PathSmoothing
+  
   public init(
     strokeStyle: StrokeStyle = .simple01,
     smoothing: PathSmoothing = .linear
@@ -37,3 +39,9 @@ public struct PathConfiguration: Documentable {
     self.smoothing = smoothing
   }
 }
+
+//extension StrokeStyle: @retroactive Hashable {
+//  public func hash(into hasher: inout Hasher) {
+//    <#code#>
+//  }
+//}

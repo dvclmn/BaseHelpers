@@ -7,17 +7,17 @@
 
 import SwiftUI
 
-struct PointStyle: Documentable {
-  var size: CGFloat = 4
-  var shape: Shape = .circle
-  var colour: Swatch = .green50
+public struct PointStyle: Documentable {
+  let diameter: CGFloat
+  let shape: Shape
+  let colour: Swatch
 
   public init(
-    size: CGFloat,
-    shape: Shape,
-    colour: Swatch,
+    diameter: CGFloat = 4,
+    shape: Shape = .circle,
+    colour: Swatch = .green50,
   ) {
-    self.size = size
+    self.diameter = diameter
     self.shape = shape
     self.colour = colour
   }
@@ -26,16 +26,16 @@ struct PointStyle: Documentable {
   /// something that relates to performance
   //  var count: Double = 100
 
-  static let sizeRange: ClosedRange<Double> = 1...120
-  static let swatches: [Swatch] = [.yellow30, .purple20, .brown40]
+  public static let sizeRange: ClosedRange<Double> = 1...120
+  public static let swatches: [Swatch] = [.yellow30, .purple20, .brown40]
 
-  enum Shape: Documentable, CaseIterable {
+  public enum Shape: Documentable, CaseIterable {
     case none
     case circle
     case square
     case diamond
 
-    var value: AnyShape? {
+    public var value: AnyShape? {
       switch self {
         case .none: nil
         case .circle: AnyShape(.circle)
@@ -44,7 +44,7 @@ struct PointStyle: Documentable {
       }
     }
 
-    var name: String {
+    public var name: String {
       switch self {
         case .none: "None"
         case .circle: "Circle"
@@ -53,7 +53,7 @@ struct PointStyle: Documentable {
       }
     }
 
-    var icon: String {
+    public var icon: String {
       switch self {
         case .none: "circle.slash"
         case .circle: "circle.fill"
