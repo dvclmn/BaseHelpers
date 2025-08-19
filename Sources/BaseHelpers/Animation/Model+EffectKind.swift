@@ -49,6 +49,23 @@ public enum EffectKind: String, CaseIterable, Identifiable, Documentable {
   //
   //  }
 
+//  static func create<T: AnimatableEffect>(
+//    kind: EffectKind,
+//    effectType: T.Type,
+//    value: T.Intensity? = nil,
+//    isEnabled: Bool = false
+//  ) -> T {
+//    switch kind {
+//      case .offset:
+//        OffsetEffect(withIntensity: value, isEnabled: isEnabled)
+//      case .scale:
+//        ScaleEffect(withIntensity: value, isEnabled: isEnabled)
+//      case .blur:
+//        BlurEffect(withIntensity: value, isEnabled: isEnabled)
+//    }
+//  }
+
+  
 //  public var effectType: (any AnimatableEffect).Type {
 //    
 //  }
@@ -56,6 +73,8 @@ public enum EffectKind: String, CaseIterable, Identifiable, Documentable {
   public var id: String {
     self.name
   }
+  
+  
   
 //  public var keyPath: WritableKeyPath<any EffectContainer, any AnimatableEffect> {
 ////  public func keyPath<T: AnimatableEffect>() -> WritableKeyPath<any EffectContainer, T> {

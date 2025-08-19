@@ -24,11 +24,11 @@ public protocol AnimatableEffect: Documentable {
     withIntensity value: Intensity?,
     isEnabled: Bool
   )
-  init(
-    fromKind kind: EffectKind,
-    value: Intensity?,
-    isEnabled: Bool
-  )
+//  static func create(
+//    fromKind kind: EffectKind,
+//    value: Intensity?,
+//    isEnabled: Bool
+//  ) -> Self
 
   /// `WaveComposition` allows support for multiple Waves per Effect,
   /// and produces a final float wave value, to use to generate

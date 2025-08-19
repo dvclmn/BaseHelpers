@@ -54,7 +54,7 @@ public struct Wave: Documentable, Identifiable {
     return result
   }
   
-  private func calculatePhase(_ elapsed: CGFloat) -> CGFloat {
+  public func calculatePhase(_ elapsed: CGFloat) -> CGFloat {
     let phase = 2 * .pi * frequency.displayed * elapsed + phaseOffset.displayed
     return sin(phase)
   }
