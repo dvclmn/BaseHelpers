@@ -18,23 +18,31 @@ public protocol AnimatableEffect: Documentable {
   /// This will be multiplied by the `WaveComposition`'s value
   var intensity: Intensity { get set }
   var isEnabled: Bool { get set }
-  init(withIntensity value: Intensity)
-  init(fromKind kind: EffectKind, value: Intensity?)
+  var waveComposition: WaveComposition { get set }
+  
+  init(
+    withIntensity value: Intensity?,
+    isEnabled: Bool
+  )
+  init(
+    fromKind kind: EffectKind,
+    value: Intensity?,
+    isEnabled: Bool
+  )
 
   /// `WaveComposition` allows support for multiple Waves per Effect,
   /// and produces a final float wave value, to use to generate
   /// the below `output` value
-  var waveComposition: WaveComposition { get set }
 
   /// This is the output after transformation using the wave value
-  func output(elapsed: CGFloat, waveLibrary: [Wave]) -> Value
+  func output(elapsed: CGFloat, waveLibrary: [Wave]) -> Intensity
 
 }
 
 public protocol EffectIntensity {
-  
-//  static var outputKind: EffectOutputKind { get }
-//  init(_ value: Any)
+
+  //  static var outputKind: EffectOutputKind { get }
+  //  init(_ value: Any)
   /// The below two are kind the same; tho tbf `evaluateIntensity()`
   /// does make use of the static `*` operator
   func evaluateIntensity(waveValue: CGFloat) -> Self
@@ -50,15 +58,20 @@ extension Angle: EffectIntensity {}
 /// Main extension
 extension AnimatableEffect {
 
-  
-  public static var empty: Self { Self(withIntensity: Self.defaultIntensity) }
-  
-//  public init(withIntensity value: Value = Self.defaultIntensity) {
-//    self.intensity = value
+//  public var waveComposition: WaveComposition {
+//    WaveComposition()
 //  }
-//  public init(withIntensity value: Self.Value = Self.default.intensity) {
-//    self.intensity = value
-//  }
+
+  
+
+  public static var empty: Self { Self(withIntensity: Self.defaultIntensity, isEnabled: true) }
+
+  //  public init(withIntensity value: Value = Self.defaultIntensity) {
+  //    self.intensity = value
+  //  }
+  //  public init(withIntensity value: Self.Value = Self.default.intensity) {
+  //    self.intensity = value
+  //  }
   //  public init(fromAnyEffect effect: AnyEffect) {
   //    switch effect {
   //
@@ -69,7 +82,7 @@ extension AnimatableEffect {
   public func output(
     elapsed: CGFloat,
     waveLibrary: [Wave]
-  ) -> Self.Value {
+  ) -> Self.Intensity {
     let waveValue = waveComposition.value(elapsed: elapsed, waveLibrary: waveLibrary)
     let result = intensity.evaluateIntensity(waveValue: waveValue)
     return result
@@ -77,21 +90,17 @@ extension AnimatableEffect {
 }
 
 /// `AnimatableEffect` for `CGSize`
-extension AnimatableEffect where Self.Value == CGSize {
-
-  //  public init(withIntensity value: CGSize) {
-  //    self.init(w: value.width, h: value.height)
-  //  }
+extension AnimatableEffect where Self.Intensity == CGSize {
 
 }
 
 /// `AnimatableEffect` for `CGFloat`
-extension AnimatableEffect where Self.Value == CGFloat {
+extension AnimatableEffect where Self.Intensity == CGFloat {
 
 }
 
 /// `AnimatableEffect` for `Angle`
-extension AnimatableEffect where Self.Value == Angle {
+extension AnimatableEffect where Self.Intensity == Angle {
   //  public init(_ rotation: CGFloat) {
   //    //    self.width = width
   //    self.rotation = rotation

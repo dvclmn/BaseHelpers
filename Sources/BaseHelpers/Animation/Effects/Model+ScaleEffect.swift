@@ -8,25 +8,37 @@
 import Foundation
 
 public struct ScaleEffect: AnimatableEffect {
-  public static var defaultIntensity: CGSize { CGSize(fromLength: 1.0) }
+  public typealias Intensity = CGSize
+  
+  public static var defaultIntensity: Intensity { Intensity(fromLength: 1.0) }
   public static var kind: EffectKind { .scale }
   
-//  public var width: CGFloat
-//  public var height: CGFloat
-  public var intensity: CGSize
-  public var isEnabled: Bool = false
+  public var intensity: Intensity
+  public var isEnabled: Bool
   
   public var waveComposition: WaveComposition = .empty
-  
-//  public init(
-//    w width: CGFloat,
-//    h height: CGFloat
-//  ) {
-//    self.intensity = CGSize(width: width, height: height)
-//  }
-  public init(withIntensity value: CGSize) {
-    self.intensity = value
+
+  public init(
+    fromKind kind: EffectKind,
+    value: Intensity? = nil,
+    isEnabled: Bool = false
+  ) {
+    self.init(
+      withIntensity: value,
+      isEnabled: isEnabled
+    )
   }
+  
+  public init(
+    withIntensity value: Intensity?,
+    isEnabled: Bool
+  ) {
+    self.intensity = value ?? Self.defaultIntensity
+    self.isEnabled = isEnabled
+  }
+//  public init(withIntensity value: CGSize) {
+//    self.intensity = value
+//  }
   
   
 }
