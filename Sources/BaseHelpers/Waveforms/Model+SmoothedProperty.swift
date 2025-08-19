@@ -22,7 +22,7 @@ public struct SmoothedProperty: Documentable {
 
   public mutating func update(
     dt: CGFloat,
-    timeConstant: CGFloat
+    smoothing timeConstant: CGFloat
   ) {
     displayed = displayed.smoothed(
       towards: target,

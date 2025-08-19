@@ -1,0 +1,97 @@
+//
+//  Model+Wave.swift
+//  BaseHelpers
+//
+//  Created by Dave Coleman on 19/8/2025.
+//
+
+import Foundation
+
+/// The advantages of this “elapsed-only” engine:
+/// - Waves are fully self-contained: frequency, amplitude,
+///   and phase offset are all local.
+/// - No need for global phase wrapping: just pass elapsed time forward.
+/// - Flexibility: if you later add modulation (e.g. frequency envelopes),
+///   it’s easy because each wave already computes its own phase internally.
+public struct Wave: Documentable, Identifiable {
+  public let id: UUID
+  public var frequency: SmoothedProperty
+  public var amplitude: SmoothedProperty
+  public var phaseOffset: SmoothedProperty
+  public var noise: SmoothedProperty
+  
+  /// Aka a bit like a Wave 'zoom level'. How much of the
+  /// Wave we see in a View's width. Does not effect
+  /// the outputted wave `value` at all.
+  ///
+  /// The user has the choice to either specify a per-Wave
+  /// cycles value here, or there is also a global setting
+  /// if they are happy to keep it the same for all Waves.
+  public var cyclesAcross: CGFloat?
+  
+  public init(
+    id: UUID = UUID(),
+    frequency: SmoothedProperty = .init(6),
+    amplitude: SmoothedProperty = .init(30),
+    phaseOffset: SmoothedProperty = .init(.zero),
+    noise: SmoothedProperty = .init(.zero),
+    cyclesAcross: CGFloat? = nil
+  ) {
+    self.id = id
+    self.frequency = frequency
+    self.amplitude = amplitude
+    self.phaseOffset = phaseOffset
+    self.noise = noise
+    self.cyclesAcross = cyclesAcross
+  }
+  
+  public func value(elapsed: CGFloat) -> CGFloat {
+    /// frequency is `Hz`, so multiply by `2πf * t`
+    let base = calculatePhase(elapsed)
+    let noisy = addNoise(to: base)
+    let result = amplitude.displayed * noisy
+    precondition(result.isWithin(Self.validRange), "Wave output is not between -1 and 1.")
+    return result
+  }
+  
+  private func calculatePhase(_ elapsed: CGFloat) -> CGFloat {
+    let phase = 2 * .pi * frequency.displayed * elapsed + phaseOffset.displayed
+    return sin(phase)
+  }
+  
+  private func addNoise(to base: CGFloat) -> CGFloat {
+    return base + (noise.displayed * CGFloat.randomNoise())
+  }
+  
+  private static let validRange: ClosedRange<CGFloat> = -1...1
+  
+  /// Important: phase is now handled externally via a single `WaveEngine`.
+  /// A `Wave` only holds onto a phase offset, which is *added* to the base phase.
+  ///
+  /// This `value` just produces a float between `-1` and `1`
+  //  public func value(at elapsed: TimeInterval) -> CGFloat {
+  //    let θ = 2 * .pi * frequency.displayed * elapsed + phaseOffset.displayed
+  //    let base = sin(θ)
+  //    let noisy = base + (noise.displayed * CGFloat.randomNoise())
+  //    return amplitude.displayed * noisy
+  //  }
+  //  public func value(
+  //    globalPhase: CGFloat
+  ////    at phase: CGFloat
+  //      //    at time: TimeInterval
+  //  ) -> CGFloat {
+  //    // per-wave frequency still scales the *global phase*
+  //    let θ = globalPhase * frequency.displayed + phaseOffset.displayed
+  //    let base = sin(θ)
+  //    let noisy = base + (noise.displayed * CGFloat.randomNoise())
+  //    return amplitude.displayed * noisy
+  //
+  ////    let base = sin(phase + phaseOffset.displayed)
+  ////    let noisy = base + (noise.displayed * CGFloat.randomNoise())
+  ////    let result = amplitude.displayed * noisy
+  ////    precondition(result.isWithin(Self.validRange), "Wave output is not between -1 and 1.")
+  ////    return result
+  //  }
+  
+  
+}
