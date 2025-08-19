@@ -29,6 +29,44 @@ public protocol AnimatableEffect: Documentable {
 
 }
 
+extension AnimatableEffect {
+  /// Uses `EffectValue`'s `*` operator to simplify
+  /// implementation for generating final output
+  public func output(
+    elapsed: CGFloat,
+    waveLibrary: [Wave]
+  ) -> CGSize {
+    let waveValue = waveComposition.value(elapsed: elapsed, waveLibrary: waveLibrary)
+    return intensity * waveValue
+  }
+}
+
+extension AnimatableEffect where Self.Value == CGSize {
+  public init(
+    w width: CGFloat = .zero,
+    h height: CGFloat = .zero
+  ) {
+    self.width = width
+    self.height = height
+  }
+  public init(fromValue value: CGSize) {
+    self.init(w: value.width, h: value.height)
+  }
+
+  public var intensity: CGSize { CGSize(width: width, height: height) }
+
+  //  public func output(elapsed: CGFloat, waveLibrary: [Wave]) -> CGSize {
+  //    let waveValue: CGFloat = waveComposition.value(
+  //      elapsed: elapsed,
+  //      waveLibrary: waveLibrary
+  //    )
+  //    let result = CGSize(
+  //      width: width * waveValue,
+  //      height: height * waveValue
+  //    )
+  //    return result
+  //  }
+}
 
 public protocol EffectValue {
   static var outputKind: EffectOutputKind { get }

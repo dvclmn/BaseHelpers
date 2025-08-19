@@ -13,7 +13,7 @@ import Foundation
 public struct WaveComposition: Documentable {
   var waves: [Wave.ID]
   var mode: WaveBlendMode
-
+  
   public init(
     waves: [Wave.ID] = [],
     mode: WaveBlendMode = .add
@@ -21,6 +21,11 @@ public struct WaveComposition: Documentable {
     self.waves = waves
     self.mode = mode
   }
+}
+
+extension WaveComposition {
+  
+  public static let empty: WaveComposition = .init()
 
   public func wavesForEffect(from library: [Wave]) -> [Wave] {
     let waveLibrary = Dictionary(uniqueKeysWithValues: library.map { ($0.id, $0) })
