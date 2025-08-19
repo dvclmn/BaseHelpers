@@ -10,13 +10,13 @@ import SwiftUI
 /// List of Effects for possible future support
 // MARK: - Protocols
 public protocol AnimatableEffect: Documentable {
-  /// This is simple. Can just be one of `CGSize`, `CGFloat`, or `Angle`
   associatedtype Value: EffectIntensity
-
   static var kind: EffectKind { get }
 
-  /// How strong should the Wave-driven effect be?
+  /// How strong should the final Wave-driven effect be?
+  /// This will be multiplied by the `WaveComposition`'s value
   var intensity: Value { get }
+  
   init(withIntensity value: Value)
 
   /// `WaveComposition` allows support for multiple Waves per Effect,
@@ -30,8 +30,9 @@ public protocol AnimatableEffect: Documentable {
 }
 
 public protocol EffectIntensity {
-  static var outputKind: EffectOutputKind { get }
   
+//  static var outputKind: EffectOutputKind { get }
+//  init(_ value: Any)
   /// The below two are kind the same; tho tbf `evaluateIntensity()`
   /// does make use of the static `*` operator
   func evaluateIntensity(waveValue: CGFloat) -> Self
@@ -39,6 +40,11 @@ public protocol EffectIntensity {
 }
 
 // MARK: - Protocol Extensions
+
+extension CGFloat: EffectIntensity {}
+extension CGSize: EffectIntensity {}
+extension Angle: EffectIntensity {}
+
 /// Main extension
 extension AnimatableEffect {
 
@@ -62,9 +68,9 @@ extension AnimatableEffect {
 /// `AnimatableEffect` for `CGSize`
 extension AnimatableEffect where Self.Value == CGSize {
 
-//  public init(withIntensity value: CGSize) {
-//    self.init(w: value.width, h: value.height)
-//  }
+  //  public init(withIntensity value: CGSize) {
+  //    self.init(w: value.width, h: value.height)
+  //  }
 
 }
 
@@ -75,13 +81,13 @@ extension AnimatableEffect where Self.Value == CGFloat {
 
 /// `AnimatableEffect` for `Angle`
 extension AnimatableEffect where Self.Value == Angle {
-//  public init(_ rotation: CGFloat) {
-//    //    self.width = width
-//    self.rotation = rotation
-//  }
-//  public init(withIntensity value: Angle) {
-//    self.init(value)
-//  }
+  //  public init(_ rotation: CGFloat) {
+  //    //    self.width = width
+  //    self.rotation = rotation
+  //  }
+  //  public init(withIntensity value: Angle) {
+  //    self.init(value)
+  //  }
 
   //  public var intensity: Angle {  }
 }
@@ -90,19 +96,26 @@ extension EffectIntensity {
   public func evaluateIntensity(waveValue: CGFloat) -> Self {
     self * waveValue
   }
+  
+  
 }
 
-extension CGFloat: EffectIntensity {
-  public static var outputKind: EffectOutputKind { .scalar }
-}
+extension CGFloat: EffectIntensity {}
+extension CGSize: EffectIntensity {}
+extension Angle: EffectIntensity {}
 
-extension CGSize: EffectIntensity {
-  public static var outputKind: EffectOutputKind { .size }
-}
 
-extension Angle: EffectIntensity {
-  public static var outputKind: EffectOutputKind { .angle }
-}
+//extension CGFloat: EffectIntensity {
+//  public static var outputKind: EffectOutputKind { .scalar }
+//}
+//
+//extension CGSize: EffectIntensity {
+//  public static var outputKind: EffectOutputKind { .size }
+//}
+//
+//extension Angle: EffectIntensity {
+//  public static var outputKind: EffectOutputKind { .angle }
+//}
 
 /// Below three protocols added complexity without clear benefit
 //public protocol ScalarEffect: EffectOutput {

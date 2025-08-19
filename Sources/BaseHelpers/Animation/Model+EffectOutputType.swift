@@ -7,13 +7,13 @@
 
 import SwiftUI
 
-public enum EffectOutputKind: String, CaseIterable, Identifiable {
-  case scalar
-  case size
-  case angle
-
-  public var id: String { rawValue }
-}
+//public enum EffectOutputKind: String, CaseIterable, Identifiable {
+//  case scalar // CGFloat
+//  case size // CGSize
+//  case angle // Angle
+//
+//  public var id: String { rawValue }
+//}
 
 //public enum AnyEffectOutput: Equatable, Hashable {
 //  case scalar(CGFloat = .zero)

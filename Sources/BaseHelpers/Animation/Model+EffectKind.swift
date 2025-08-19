@@ -41,13 +41,13 @@ public enum EffectKind: String, CaseIterable, Identifiable, Documentable {
   //    }
   //  }
 
-  public var outputKind: EffectOutputKind {
-    switch self {
-      case .offset: .size
-      case .scale: .size
-      case .blur: .scalar
-    }
-  }
+//  public var outputKind: EffectOutputKind {
+//    switch self {
+//      case .offset: .size
+//      case .scale: .size
+//      case .blur: .scalar
+//    }
+//  }
 
   public var scalarRange: ClosedRange<CGFloat> {
     return 0...100

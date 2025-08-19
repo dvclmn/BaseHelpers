@@ -13,7 +13,7 @@ import Foundation
 public struct WaveComposition: Documentable {
   var waves: [Wave.ID]
   var mode: WaveBlendMode
-  
+
   public init(
     waves: [Wave.ID] = [],
     mode: WaveBlendMode = .add
@@ -24,7 +24,7 @@ public struct WaveComposition: Documentable {
 }
 
 extension WaveComposition {
-  
+
   public static let empty: WaveComposition = .init()
 
   public func wavesForEffect(from library: [Wave]) -> [Wave] {
@@ -59,17 +59,17 @@ extension WaveComposition {
       case .min:
         return waveValues.min() ?? 0
 
-//      case .weighted(let weights):
-//        /// zip values and weights, multiply, then sum
-//        let pairs = zip(waveValues, weights)
-//        let weightedSum = pairs.reduce(0) { acc, pair in
-//          let (val, weight) = pair
-//          return acc + (val * weight)
-//        }
-//        /// normalise by sum of weights if that’s desired,
-//        /// or leave raw if you want scaling behaviour
-//        let totalWeight = weights.prefix(waveValues.count).reduce(0, +)
-//        return totalWeight > 0 ? weightedSum / totalWeight : 0
+    //      case .weighted(let weights):
+    //        /// zip values and weights, multiply, then sum
+    //        let pairs = zip(waveValues, weights)
+    //        let weightedSum = pairs.reduce(0) { acc, pair in
+    //          let (val, weight) = pair
+    //          return acc + (val * weight)
+    //        }
+    //        /// normalise by sum of weights if that’s desired,
+    //        /// or leave raw if you want scaling behaviour
+    //        let totalWeight = weights.prefix(waveValues.count).reduce(0, +)
+    //        return totalWeight > 0 ? weightedSum / totalWeight : 0
     }
   }
 }
@@ -79,5 +79,5 @@ public enum WaveBlendMode: Documentable {
   case multiply
   case max
   case min
-//  case weighted([CGFloat])  // optional weights
+  //  case weighted([CGFloat])  // optional weights
 }
