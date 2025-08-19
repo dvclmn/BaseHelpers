@@ -8,16 +8,16 @@
 import SwiftUI
 
 /// List of Effects for possible future support
-
+// MARK: - Protocols
 public protocol AnimatableEffect: Documentable {
   /// This is simple. Can just be one of `CGSize`, `CGFloat`, or `Angle`
-  associatedtype Value: EffectValue
+  associatedtype Value: EffectIntensity
 
   static var kind: EffectKind { get }
 
   /// How strong should the Wave-driven effect be?
   var intensity: Value { get }
-  init(fromValue value: Value)
+  init(withIntensity value: Value)
 
   /// `WaveComposition` allows support for multiple Waves per Effect,
   /// and produces a final float wave value, to use to generate
@@ -29,68 +29,78 @@ public protocol AnimatableEffect: Documentable {
 
 }
 
+public protocol EffectIntensity {
+  static var outputKind: EffectOutputKind { get }
+  
+  /// The below two are kind the same; tho tbf `evaluateIntensity()`
+  /// does make use of the static `*` operator
+  func evaluateIntensity(waveValue: CGFloat) -> Self
+  static func * (lhs: Self, rhs: CGFloat) -> Self
+}
+
+// MARK: - Protocol Extensions
+/// Main extension
 extension AnimatableEffect {
-  /// Uses `EffectValue`'s `*` operator to simplify
+
+  //  public init(fromAnyEffect effect: AnyEffect) {
+  //    switch effect {
+  //
+  //    }
+  //  }
+  /// Uses `EffectIntensity`'s `*` operator to simplify
   /// implementation for generating final output
   public func output(
     elapsed: CGFloat,
     waveLibrary: [Wave]
-  ) -> CGSize {
+  ) -> Self.Value {
     let waveValue = waveComposition.value(elapsed: elapsed, waveLibrary: waveLibrary)
-    return intensity * waveValue
+    let result = intensity.evaluateIntensity(waveValue: waveValue)
+    return result
   }
 }
 
+/// `AnimatableEffect` for `CGSize`
 extension AnimatableEffect where Self.Value == CGSize {
-  public init(
-    w width: CGFloat = .zero,
-    h height: CGFloat = .zero
-  ) {
-    self.width = width
-    self.height = height
-  }
-  public init(fromValue value: CGSize) {
-    self.init(w: value.width, h: value.height)
-  }
+
+//  public init(withIntensity value: CGSize) {
+//    self.init(w: value.width, h: value.height)
+//  }
 
 }
 
+/// `AnimatableEffect` for `CGFloat`
 extension AnimatableEffect where Self.Value == CGFloat {
-  public init(_ intensity: CGFloat) {
-    self.intensity = intensity
-  }
-  public init(fromValue value: CGFloat) {
-    self.init(value)
-  }
+
 }
 
+/// `AnimatableEffect` for `Angle`
 extension AnimatableEffect where Self.Value == Angle {
-  public init(_ rotation: CGFloat) {
-    //    self.width = width
-    self.rotation = rotation
-  }
-  public init(fromValue value: Angle) {
-    self.init(value)
-  }
+//  public init(_ rotation: CGFloat) {
+//    //    self.width = width
+//    self.rotation = rotation
+//  }
+//  public init(withIntensity value: Angle) {
+//    self.init(value)
+//  }
 
   //  public var intensity: Angle {  }
 }
 
-public protocol EffectValue {
-  static var outputKind: EffectOutputKind { get }
-  static func * (lhs: Self, rhs: CGFloat) -> Self
+extension EffectIntensity {
+  public func evaluateIntensity(waveValue: CGFloat) -> Self {
+    self * waveValue
+  }
 }
-extension CGFloat: EffectValue {
+
+extension CGFloat: EffectIntensity {
   public static var outputKind: EffectOutputKind { .scalar }
 }
-extension CGSize: EffectValue {
+
+extension CGSize: EffectIntensity {
   public static var outputKind: EffectOutputKind { .size }
 }
-extension Angle: EffectValue {
-  public static func * (lhs: Angle, rhs: CGFloat) -> Angle {
-    lhs.radians * Angle(degrees: Double(rhs)).radians
-  }
 
+extension Angle: EffectIntensity {
   public static var outputKind: EffectOutputKind { .angle }
 }
 

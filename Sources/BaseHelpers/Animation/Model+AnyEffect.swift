@@ -12,33 +12,23 @@ public enum AnyEffect: Documentable, Identifiable {
   case scale(ScaleEffect)
   case blur(BlurEffect)
 
-  public var id: EffectKind {
-    switch self {
-      case .offset: return .offset
-      case .scale: return .scale
-      case .blur: return .blur
-    }
-  }
+  public var id: EffectKind { self.kind }
 
   public init(
     fromKind effectKind: EffectKind,
-    withValue effectOutput: AnyEffectOutput
+    intensity: any EffectIntensity
   ) {
-
     switch effectKind {
       case .offset:
-        let value = effectOutput.size
-        let effect = OffsetEffect(fromValue: value)
+        let effect = OffsetEffect(withIntensity: intensity)
         self = AnyEffect.offset(effect)
 
       case .scale:
-        let value = effectOutput.size
-        let effect = ScaleEffect(fromValue: value)
+        let effect = ScaleEffect(withIntensity: intensity)
         self = AnyEffect.scale(effect)
 
       case .blur:
-        let value = effectOutput.scalar
-        let effect = BlurEffect(fromValue: value)
+        let effect = BlurEffect(withIntensity: intensity)
         self = AnyEffect.blur(effect)
     }
   }
@@ -58,8 +48,16 @@ public enum AnyEffect: Documentable, Identifiable {
   }
 
   public var kind: EffectKind {
-    return EffectKind(fromAnyEffect: self)
+    switch self {
+      case .offset: return .offset
+      case .scale: return .scale
+      case .blur: return .blur
+    }
   }
+
+  //  public var kind: EffectKind {
+  //    return EffectKind(fromAnyEffect: self)
+  //  }
 
   public var effect: any AnimatableEffect {
     switch self {
@@ -69,31 +67,31 @@ public enum AnyEffect: Documentable, Identifiable {
     }
   }
 
-  public var effectOutput: AnyEffectOutput {
-    switch self {
-      case .offset(let effect): AnyEffectOutput.size(effect.value)
-      case .scale(let effect): AnyEffectOutput.size(effect.value)
-      case .blur(let effect): AnyEffectOutput.scalar(effect.value)
-    }
-  }
+  //  public var effectOutput: AnyEffectOutput {
+  //    switch self {
+  //      case .offset(let effect): AnyEffectOutput.size(effect.value)
+  //      case .scale(let effect): AnyEffectOutput.size(effect.value)
+  //      case .blur(let effect): AnyEffectOutput.scalar(effect.value)
+  //    }
+  //  }
 
-  public var scalar: CGFloat {
-    guard let result = self.effect.value as? CGFloat else {
-      fatalError("Cannot obtain a scalar value from non-scalar Effect")
-    }
-    return result
-  }
-
-  public var size: CGSize {
-    guard let result = self.effect.value as? CGSize else {
-      fatalError("Cannot obtain a size value from non-size Effect")
-    }
-    return result
-  }
-  public var angle: Angle {
-    guard let result = self.effect.value as? Angle else {
-      fatalError("Cannot obtain a angle value from non-angle Effect")
-    }
-    return result
-  }
+  //  public var scalar: CGFloat {
+  //    guard let result = self.effect.value as? CGFloat else {
+  //      fatalError("Cannot obtain a scalar value from non-scalar Effect")
+  //    }
+  //    return result
+  //  }
+  //
+  //  public var size: CGSize {
+  //    guard let result = self.effect.value as? CGSize else {
+  //      fatalError("Cannot obtain a size value from non-size Effect")
+  //    }
+  //    return result
+  //  }
+  //  public var angle: Angle {
+  //    guard let result = self.effect.value as? Angle else {
+  //      fatalError("Cannot obtain a angle value from non-angle Effect")
+  //    }
+  //    return result
+  //  }
 }

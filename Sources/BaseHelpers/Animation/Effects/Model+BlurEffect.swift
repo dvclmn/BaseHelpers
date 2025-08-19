@@ -16,7 +16,7 @@ public struct BlurEffect: AnimatableEffect {
   public init(_ intensity: CGFloat) {
     self.intensity = intensity
   }
-  public init(fromValue value: CGFloat) {
+  public init(withIntensity value: CGFloat) {
     self.init(value)
   }
   

@@ -13,11 +13,18 @@ public struct OffsetEffect: AnimatableEffect {
 
   let width: CGFloat
   let height: CGFloat
-
   public var waveComposition: WaveComposition = .empty
+
+  public init(
+    w width: CGFloat = .zero,
+    h height: CGFloat = .zero
+  ) {
+    self.width = width
+    self.height = height
+  }
+  public init(withIntensity value: CGSize) {
+    self.init(w: value.width, h: value.height)
+  }
+
   public var intensity: CGSize { CGSize(width: width, height: height) }
-}
-
-extension OffsetEffect {
-
 }

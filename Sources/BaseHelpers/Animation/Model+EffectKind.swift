@@ -18,15 +18,15 @@ public enum EffectKind: String, CaseIterable, Identifiable, Documentable {
   //  case opacity
   //  case brightness
 
-  public init(fromAnyEffect effect: AnyEffect) {
-    self =
-      switch effect {
-        case .offset(_): .offset
-        case .scale(_): .scale
-        case .blur(_): .blur
-      }
-
-  }
+//  public init(fromAnyEffect effect: AnyEffect) {
+//    self =
+//      switch effect {
+//        case .offset(_): .offset
+//        case .scale(_): .scale
+//        case .blur(_): .blur
+//      }
+//
+//  }
 
   public var id: String {
     self.name
