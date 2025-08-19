@@ -8,11 +8,12 @@
 import SwiftUI
 
 public struct OffsetEffect: AnimatableEffect {
-
+  public static var `default`: Self { Self(w: .zero, h: .zero) }
   public static var kind: EffectKind { .offset }
 
   let width: CGFloat
   let height: CGFloat
+  
   public var waveComposition: WaveComposition = .empty
 
   public init(

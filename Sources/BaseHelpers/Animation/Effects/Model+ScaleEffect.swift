@@ -8,7 +8,7 @@
 import Foundation
 
 public struct ScaleEffect: AnimatableEffect {
-  
+  public static var `default`: Self { Self(w: 1.0, h: 1.0) }
   public static var kind: EffectKind { .scale }
   
   let width: CGFloat

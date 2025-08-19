@@ -8,7 +8,8 @@
 import Foundation
 
 public struct BlurEffect: AnimatableEffect {
-  public typealias Value = CGFloat
+  public static var `default`: Self { Self(.zero) }
+  
   public static var kind: EffectKind { .blur }
   
   public let intensity: CGFloat

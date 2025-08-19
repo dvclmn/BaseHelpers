@@ -12,7 +12,7 @@ import SwiftUI
 public protocol AnimatableEffect: Documentable {
   associatedtype Value: EffectIntensity
   static var kind: EffectKind { get }
-
+  static var `default`: Self { get }
   /// How strong should the final Wave-driven effect be?
   /// This will be multiplied by the `WaveComposition`'s value
   var intensity: Value { get }
@@ -96,14 +96,7 @@ extension EffectIntensity {
   public func evaluateIntensity(waveValue: CGFloat) -> Self {
     self * waveValue
   }
-  
-  
 }
-
-extension CGFloat: EffectIntensity {}
-extension CGSize: EffectIntensity {}
-extension Angle: EffectIntensity {}
-
 
 //extension CGFloat: EffectIntensity {
 //  public static var outputKind: EffectOutputKind { .scalar }

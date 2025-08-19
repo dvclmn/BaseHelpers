@@ -7,6 +7,18 @@
 
 import SwiftUI
 
+public protocol EffectContainer {
+  var effects: Effects { get set }
+}
+
+public struct Effects: Documentable {
+  public var offset: OffsetEffect = .default
+  public var scale: ScaleEffect = .default
+  public var blur: BlurEffect = .default
+  
+  public init() {}
+}
+
 public enum EffectKind: String, CaseIterable, Identifiable, Documentable {
 
   //  case rotation
@@ -18,21 +30,69 @@ public enum EffectKind: String, CaseIterable, Identifiable, Documentable {
   //  case opacity
   //  case brightness
 
-//  public init(fromAnyEffect effect: AnyEffect) {
-//    self =
-//      switch effect {
-//        case .offset(_): .offset
-//        case .scale(_): .scale
-//        case .blur(_): .blur
-//      }
-//
-//  }
+  //  public init(fromAnyEffect effect: AnyEffect) {
+  //    self =
+  //      switch effect {
+  //        case .offset(_): .offset
+  //        case .scale(_): .scale
+  //        case .blur(_): .blur
+  //      }
+  //
+  //  }
 
+//  public var effectType: (any AnimatableEffect).Type {
+//    
+//  }
+  
   public var id: String {
     self.name
   }
-
   
+//  public var keyPath: WritableKeyPath<any EffectContainer, any AnimatableEffect> {
+////  public func keyPath<T: AnimatableEffect>() -> WritableKeyPath<any EffectContainer, T> {
+////  public func keyPath<C: EffectContainer, T: AnimatableEffect>() -> WritableKeyPath<C, T> {
+//    switch self {
+//      case .offset: \.effects.offset
+//      case .scale: \.effects.scale
+//      case .blur: \.effects.blur
+//    }
+//  }
+//  public var keyPath:
+  
+//  public func createEmptyEffect<T: AnimatableEffect>() -> T {
+//    return T.default
+//  }
+  
+  public func createEffect<T: AnimatableEffect>(
+    withIntensity value: T.Value? = nil
+  ) -> T {
+    let newValue = value ?? T.default.intensity
+//    guard let newValue = value else {  }
+    return T.init(withIntensity: newValue)
+//    switch self {
+//      case .offset:
+//        OffsetEffect(withValue: value)
+//      case .scale:
+//        <#code#>
+//      case .blur:
+//        <#code#>
+//    }
+//    return T.default
+    //    switch self {
+    //      case .offset: OffsetEffect()
+    //      case .scale: ScaleEffect()
+    //      case .blur: BlurEffect()
+    //    }
+  }
+  
+  public var effectType: any AnimatableEffect.Type {
+    switch self {
+      case .offset: OffsetEffect.self
+      case .scale: ScaleEffect.self
+      case .blur: BlurEffect.self
+    }
+  }
+
   //  public func createBlankValue() -> AnyEffectOutput {
   //    switch self {
   //      case .offset: AnyEffectOutput.create(fromSize: .zero)
@@ -41,13 +101,13 @@ public enum EffectKind: String, CaseIterable, Identifiable, Documentable {
   //    }
   //  }
 
-//  public var outputKind: EffectOutputKind {
-//    switch self {
-//      case .offset: .size
-//      case .scale: .size
-//      case .blur: .scalar
-//    }
-//  }
+  //  public var outputKind: EffectOutputKind {
+  //    switch self {
+  //      case .offset: .size
+  //      case .scale: .size
+  //      case .blur: .scalar
+  //    }
+  //  }
 
   public var scalarRange: ClosedRange<CGFloat> {
     return 0...100
