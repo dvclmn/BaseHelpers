@@ -7,9 +7,13 @@
 
 import SwiftUI
 
-public protocol WaveSource: Documentable {
-  func value(elapsed: TimeInterval) -> CGFloat
-}
+/// For simplicity, I've decided to require that `WaveDrivenProperty`
+/// recieve it's wave vlaue from a `WaveComposition`.
+/// Even though later on, it might be nice to support getting from
+/// either a single `Wave` or a composition
+//public protocol WaveSource: Documentable {
+//  func value(elapsed: TimeInterval) -> CGFloat
+//}
 
 /// List of Effects for possible future support
 // MARK: - Protocols

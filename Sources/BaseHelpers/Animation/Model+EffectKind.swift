@@ -21,9 +21,13 @@ public struct Effects: Documentable {
     all.filter { $0.isEnabled }
   }
   
-  public var offset: OffsetEffect = .empty
-  public var scale: ScaleEffect = .empty
-  public var blur: BlurEffect = .empty
+  public var offset: WaveDrivenProperty<CGSize> = .empty
+  public var scale: WaveDrivenProperty<CGSize> = .empty
+  public var blur: WaveDrivenProperty<CGFloat> = .empty
+  
+//  public var offset: OffsetEffect = .empty
+//  public var scale: ScaleEffect = .empty
+//  public var blur: BlurEffect = .empty
   
   public init() {}
 }

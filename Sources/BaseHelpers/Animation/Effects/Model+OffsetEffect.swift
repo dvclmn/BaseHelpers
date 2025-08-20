@@ -20,10 +20,11 @@ public protocol WaveOutput: Sendable, Equatable {}
 public typealias WaveTransform<T> = @Sendable (CGFloat, CGFloat) -> T
 
 /// A generic property whose value is driven by a Wave.
-struct WaveDrivenProperty<T: WaveOutput>: Documentable {
+public struct WaveDrivenProperty<T: WaveOutput>: Documentable {
   /// The base wave value is always a scalar between -1...1
 //  var wave: Wave
-  var wave: any WaveSource
+//  public var wave: S
+  public var waveComposition: WaveComposition
   
   /// How to transform the wave’s scalar output into the effect’s Value.
   private var transform: WaveTransform<T>
@@ -34,22 +35,22 @@ struct WaveDrivenProperty<T: WaveOutput>: Documentable {
   
   enum CodingKeys: String, CodingKey {
 //    case base
-    case wave
+    case waveComposition
   }
   
-  init(
+  public init(
 //    base: T,
-    wave: any WaveSource,
+    waveComposition: WaveComposition,
     transform: @escaping WaveTransform<T>
   ) {
 //    self.base = base
-    self.wave = wave
+    self.waveComposition = waveComposition
     self.transform = transform
   }
   
   /// Returns the current value given a normalised wave position (0...1)
-  func value(at time: TimeInterval) -> T {
-    let waveScalar = wave.value(at: time) // CGFloat -1...1
+  public func value(elapsed: CGFloat) -> T {
+    let waveScalar = wave.value(elapsed: elapsed) // CGFloat -1...1
     return transform(waveScalar)
   }
   
@@ -58,7 +59,7 @@ struct WaveDrivenProperty<T: WaveOutput>: Documentable {
 //    base = newBase
 //  }
   
-  mutating func updateWave(_ newWave: Wave) {
+  public mutating func updateWave(_ newWave: Wave) {
     wave = newWave
   }
 }
@@ -68,7 +69,7 @@ extension CGSize: WaveOutput {}
 extension Angle: WaveOutput {}
 
 extension WaveDrivenProperty where T == CGFloat {
-  static func scalar(amplitude: CGFloat, wave: Wave) -> Self {
+  public static func scalar(amplitude: CGFloat, wave: Wave) -> Self {
     Self(wave: wave) { scalar in
       scalar * amplitude
     }
@@ -76,7 +77,7 @@ extension WaveDrivenProperty where T == CGFloat {
 }
 
 extension WaveDrivenProperty where T == CGSize {
-  static func size(amplitude: CGSize, wave: Wave) -> Self {
+  public static func size(amplitude: CGSize, wave: Wave) -> Self {
     Self(wave: wave) { scalar in
       CGSize(
         width: scalar * amplitude.width,
@@ -87,7 +88,7 @@ extension WaveDrivenProperty where T == CGSize {
 }
 
 extension WaveDrivenProperty where T == Angle {
-  static func angle(amplitude: Angle, wave: Wave) -> Self {
+  public static func angle(amplitude: Angle, wave: Wave) -> Self {
     Self(wave: wave) { scalar in
       Angle(degrees: scalar * amplitude.degrees)
     }
