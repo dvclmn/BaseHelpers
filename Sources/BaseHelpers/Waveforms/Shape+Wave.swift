@@ -12,35 +12,30 @@ import SwiftUI
 //}
 
 public struct WaveShape: Shape {
-  let phase: CGFloat  // temporal phase (radians)
-  let amplitude: CGFloat  // px
-  let cyclesAcross: CGFloat  // cycles across rect.width
+  let wave: Wave
+  let elapsed: CGFloat
   let sampleCount: Int
-
-  public init(
-    phase: CGFloat,
-    amplitude: CGFloat,
-    cyclesAcross: CGFloat,
-    sampleCount: Int,
-  ) {
-    self.phase = phase
-    self.amplitude = amplitude
-    self.cyclesAcross = cyclesAcross
+  
+  public init(wave: Wave, elapsed: CGFloat, sampleCount: Int) {
+    self.wave = wave
+    self.elapsed = elapsed
     self.sampleCount = sampleCount
   }
-
+  
   public func path(in rect: CGRect) -> Path {
     var p = Path()
     guard rect.width > 1, sampleCount > 1 else { return p }
-
-    let midY = rect.midY
-    let kx = (2 * .pi * cyclesAcross) / rect.width
+    
     let step = rect.width / CGFloat(sampleCount - 1)
-
-    var x: CGFloat = rect.minX
+    var x = rect.minX
     var first = true
+    
     for _ in 0..<sampleCount {
-      let y = midY + amplitude * sin(phase + kx * (x - rect.minX))
+      let y = rect.midY + wave.valueAt(
+        x: x,
+        in: rect,
+        elapsed: elapsed
+      )
       if first {
         p.move(to: CGPoint(x: x, y: y))
         first = false
@@ -52,6 +47,48 @@ public struct WaveShape: Shape {
     return p
   }
 }
+
+//public struct WaveShape: Shape {
+//  let phase: CGFloat  // temporal phase (radians)
+//  let amplitude: CGFloat  // px
+//  let cyclesAcross: CGFloat  // cycles across rect.width
+//  let sampleCount: Int
+//
+//  public init(
+//    phase: CGFloat,
+//    amplitude: CGFloat,
+//    cyclesAcross: CGFloat,
+//    sampleCount: Int,
+//  ) {
+//    self.phase = phase
+//    self.amplitude = amplitude
+//    self.cyclesAcross = cyclesAcross
+//    self.sampleCount = sampleCount
+//  }
+//
+//  public func path(in rect: CGRect) -> Path {
+//    var p = Path()
+//    guard rect.width > 1, sampleCount > 1 else { return p }
+//
+//    let midY = rect.midY
+//    let kx = (2 * .pi * cyclesAcross) / rect.width
+//    let step = rect.width / CGFloat(sampleCount - 1)
+//
+//    var x: CGFloat = rect.minX
+//    var first = true
+//    for _ in 0..<sampleCount {
+//      let y = midY + amplitude * sin(phase + kx * (x - rect.minX))
+//      if first {
+//        p.move(to: CGPoint(x: x, y: y))
+//        first = false
+//      } else {
+//        p.addLine(to: CGPoint(x: x, y: y))
+//      }
+//      x += step
+//    }
+//    return p
+//  }
+//}
 
 //public struct WaveShape<T: WaveRenderer>: Shape {
 //  var engine: T
