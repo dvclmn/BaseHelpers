@@ -22,3 +22,18 @@ extension Double: RandomGeneratable {
     return Double.random(in: range, using: &generator)
   }
 }
+
+extension CGFloat: RandomGeneratable {
+  public typealias Value = CGFloat
+  
+  public static func generate(
+    count: Int,
+    using generator: inout RandomNumberGenerator,
+    parameters: RandomisationParameters
+  ) -> CGFloat {
+    guard let range = parameters.ranges.first else {
+      return 0
+    }
+    return CGFloat.random(in: range.toCGFloatRange, using: &generator)
+  }
+}

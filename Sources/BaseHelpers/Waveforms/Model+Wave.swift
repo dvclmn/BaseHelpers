@@ -30,6 +30,8 @@ public struct Wave: Documentable, Identifiable {
   public var cyclesAcross: CGFloat
   public var colour: Swatch
 
+  private let noiseSeed: UInt64
+
   public init(
     id: UUID = UUID(),
     frequency: CGFloat,
@@ -46,6 +48,12 @@ public struct Wave: Documentable, Identifiable {
     self.noise = SmoothedProperty(noise)
     self.cyclesAcross = cyclesAcross
     self.colour = colour
+
+    let hashValue = id.hashValue
+    print("Hash value: \(hashValue)")
+    print("Abs Hash value: \(abs(hashValue))")
+
+    self.noiseSeed = UInt64(abs(hashValue))  // Use UUID hash as seed
   }
 }
 
@@ -79,27 +87,49 @@ extension Wave {
     return amplitude.displayed * noisy
   }
 
+  //  private func noiseContribution(elapsed: CGFloat) -> CGFloat {
+  //    guard noise.displayed != 0 else { return 0 }
+  //
+  //    // Use a combination of sine waves at different frequencies for pseudo-random noise
+  //    let noiseFreq1 = 13.7 // Prime numbers work well for pseudo-randomness
+  //    let noiseFreq2 = 37.3
+  //    let noiseFreq3 = 71.1
+  //
+  //    let noise1 = elapsed * noiseFreq1
+  //    let noise2 = elapsed * noiseFreq2 * 0.5
+  //    let noise3 = elapsed * noiseFreq3 * 0.25
+  //
+  //    let combinedNoise = (noise1 + noise2 + noise3) / 1.75 // Normalize roughly to [-1, 1]
+  //
+  //    return combinedNoise * noise.displayed
+  //  }
+
   private func noiseContribution(elapsed: CGFloat) -> CGFloat {
     guard noise.displayed != 0 else { return 0 }
+
+    let seed = noiseSeed &+ UInt64(elapsed * 100)
+    //    var generator = RandomNumberGenerator()
+    //    var generator = RandomValueGenerator<CGFloat>(seed: seed)
+    ////    var generator = SystemRandomNumberGenerator()
+    ////    generator.
+    //    generator.seed = seed
+
+    let generator = SeededGenerator(seed: seed)
+    let randomValue = CGFloat(generator.next())
     
-    // Use a combination of sine waves at different frequencies for pseudo-random noise
-    let noiseFreq1 = 13.7 // Prime numbers work well for pseudo-randomness
-    let noiseFreq2 = 37.3
-    let noiseFreq3 = 71.1
-    
-    let noise1 = sin(elapsed * noiseFreq1)
-    let noise2 = sin(elapsed * noiseFreq2) * 0.5
-    let noise3 = sin(elapsed * noiseFreq3) * 0.25
-    
-    let combinedNoise = (noise1 + noise2 + noise3) / 1.75 // Normalize roughly to [-1, 1]
-    
-    return combinedNoise * noise.displayed
+    //
+    //    let randomValue = CGFloat.generate(
+    //      count: 1,
+    //      using: &generator
+    //    )
+    ////    let randomValue = CGFloat.random(in: -1...1, using: &generator)
+    return randomValue * noise.displayed
   }
-  
-//  private func noiseContribution() -> CGFloat {
-//    guard noise.displayed != 0 else { return 0 }
-//    return (CGFloat.random(in: -1...1) * noise.displayed)
-//  }
+
+  //  private func noiseContribution(elapsed: CGFloat) -> CGFloat {
+  //    guard noise.displayed != 0 else { return 0 }
+  //    return (CGFloat.random(in: -1...1) * noise.displayed)
+  //  }
 
   private static let validRange: ClosedRange<CGFloat> = -1...1
 
