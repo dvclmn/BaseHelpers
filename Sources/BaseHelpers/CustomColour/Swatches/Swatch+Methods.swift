@@ -47,6 +47,11 @@ extension Swatch {
 //    return HSVColour(fromRGB: rgb)
 //  }
 
+  public var nativeColour: Color {
+    Color("swatch/\(rawValue)", bundle: .module)
+  }
+  
+  @available(*, deprecated, renamed: "nativeColour", message: "Favour clearer naming.")
   public var colour: Color {
     Color("swatch/\(rawValue)", bundle: .module)
   }

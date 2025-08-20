@@ -5,7 +5,7 @@
 //  Created by Dave Coleman on 19/8/2025.
 //
 
-import Foundation
+import SwiftUI
 
 /// The advantages of this “elapsed-only” engine:
 /// - Waves are fully self-contained: frequency, amplitude,
@@ -27,7 +27,8 @@ public struct Wave: Documentable, Identifiable {
   /// The user has the choice to either specify a per-Wave
   /// cycles value here, or there is also a global setting
   /// if they are happy to keep it the same for all Waves.
-  public var cyclesAcross: CGFloat?
+  public var cyclesAcross: CGFloat
+  public var colour: Swatch
   
   public init(
     id: UUID = UUID(),
@@ -39,7 +40,8 @@ public struct Wave: Documentable, Identifiable {
     //    amplitude: SmoothedProperty = .init(30),
     //    phaseOffset: SmoothedProperty = .init(.zero),
     //    noise: SmoothedProperty = .init(.zero),
-    cyclesAcross: CGFloat? = nil
+    cyclesAcross: CGFloat = 2,
+    colour: Swatch = .blue20
   ) {
     self.id = id
     self.frequency = SmoothedProperty(frequency)
@@ -47,6 +49,7 @@ public struct Wave: Documentable, Identifiable {
     self.phaseOffset = SmoothedProperty(phaseOffset)
     self.noise = SmoothedProperty(noise)
     self.cyclesAcross = cyclesAcross
+    self.colour = colour
   }
 }
 
@@ -88,6 +91,18 @@ extension Wave {
   private func noiseContribution() -> CGFloat {
     guard noise.displayed != 0 else { return 0 }
     return (CGFloat.random(in: -1...1) * noise.displayed)
+  }
+  
+  public func somethingCyclesInWidth(
+    elapsed: CGFloat,
+    x: CGFloat,
+    in rect: CGRect
+  ) -> CGFloat {
+    let phase = calculatePhase(elapsed)
+    let midY = rect.midY
+//    let x: CGFloat = rect.minX
+    let kx = (2 * .pi * cyclesAcross) / rect.width
+    return midY + amplitude.displayed * sin(phase + kx * (x - rect.minX))
   }
   
 //  private func addNoise(to base: CGFloat) -> CGFloat {

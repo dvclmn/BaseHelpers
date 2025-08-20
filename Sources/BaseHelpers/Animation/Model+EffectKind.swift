@@ -14,6 +14,7 @@ public protocol EffectContainer {
 public struct Effects: Sendable, Codable {
 
   
+  
   public var all: [EffectKind] {
     [.offset, .scale, .blur]
   }
