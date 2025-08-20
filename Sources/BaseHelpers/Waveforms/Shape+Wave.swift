@@ -14,19 +14,18 @@ import SwiftUI
 public struct WaveShape: Shape {
   let phase: CGFloat  // temporal phase (radians)
   let amplitude: CGFloat  // px
-  let somethingWidth: CGFloat
-//  let cyclesAcross: CGFloat  // cycles across rect.width
+  let cyclesAcross: CGFloat  // cycles across rect.width
   let sampleCount: Int
 
   public init(
     phase: CGFloat,
     amplitude: CGFloat,
-    somethingWidth: CGFloat,
+    cyclesAcross: CGFloat,
     sampleCount: Int,
   ) {
     self.phase = phase
     self.amplitude = amplitude
-    self.somethingWidth = somethingWidth
+    self.cyclesAcross = cyclesAcross
     self.sampleCount = sampleCount
   }
 
@@ -34,18 +33,14 @@ public struct WaveShape: Shape {
     var p = Path()
     guard rect.width > 1, sampleCount > 1 else { return p }
 
-//    let midY = rect.midY
-    
+    let midY = rect.midY
+    let kx = (2 * .pi * cyclesAcross) / rect.width
     let step = rect.width / CGFloat(sampleCount - 1)
 
     var x: CGFloat = rect.minX
-    let y = somethingWidth
-//    let y = wave.somethingCyclesInWidth(in: rect)
-    
-    
-    
     var first = true
     for _ in 0..<sampleCount {
+      let y = midY + amplitude * sin(phase + kx * (x - rect.minX))
       if first {
         p.move(to: CGPoint(x: x, y: y))
         first = false
