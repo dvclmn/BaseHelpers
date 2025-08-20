@@ -7,6 +7,10 @@
 
 import SwiftUI
 
+public protocol WaveSource: Documentable {
+  func value(elapsed: TimeInterval) -> CGFloat
+}
+
 /// List of Effects for possible future support
 // MARK: - Protocols
 public protocol AnimatableEffect: Documentable {
@@ -14,6 +18,7 @@ public protocol AnimatableEffect: Documentable {
   static var kind: EffectKind { get }
   static var defaultIntensity: Intensity { get }
   static var empty: Self { get }
+  
   /// How strong should the final Wave-driven effect be?
   /// This will be multiplied by the `WaveComposition`'s value
   var intensity: Intensity { get set }

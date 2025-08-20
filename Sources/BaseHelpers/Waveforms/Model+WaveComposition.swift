@@ -28,7 +28,8 @@ extension WaveComposition {
   public static let empty: WaveComposition = .init()
 
   public func wavesForEffect(from library: [Wave]) -> [Wave] {
-    let waveLibrary = Dictionary(uniqueKeysWithValues: library.map { ($0.id, $0) })
+    let ws = waves.compactMap { id in library.first { $0.id == id } }
+//    let waveLibrary = Dictionary(uniqueKeysWithValues: library.map { ($0.id, $0) })
     return waves.compactMap { waveLibrary[$0] }
   }
 
@@ -37,10 +38,13 @@ extension WaveComposition {
     waveLibrary library: [Wave]
   ) -> CGFloat {
 
-    let wavesForEffect = wavesForEffect(from: library)
-    let waveValues: [CGFloat] = wavesForEffect.map { wave in
-      wave.value(elapsed: elapsed)
-    }
+//    let wavesForEffect = wavesForEffect(from: library)
+//    let waveValues: [CGFloat] = wavesForEffect.map { wave in
+//      wave.value(elapsed: elapsed)
+//    }
+    
+    let ws = waves.compactMap { id in library.first { $0.id == id } }
+    let waveValues = ws.map { $0.value(elapsed: elapsed) }
 
     /// Handle empty case
     guard !waveValues.isEmpty else { return 0 }

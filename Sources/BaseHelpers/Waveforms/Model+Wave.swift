@@ -31,37 +31,68 @@ public struct Wave: Documentable, Identifiable {
   
   public init(
     id: UUID = UUID(),
-    frequency: SmoothedProperty = .init(6),
-    amplitude: SmoothedProperty = .init(30),
-    phaseOffset: SmoothedProperty = .init(.zero),
-    noise: SmoothedProperty = .init(.zero),
+    frequency: CGFloat,
+    amplitude: CGFloat,
+    phaseOffset: CGFloat = 0,
+    noise: CGFloat = 0,
+    //    frequency: SmoothedProperty = .init(6),
+    //    amplitude: SmoothedProperty = .init(30),
+    //    phaseOffset: SmoothedProperty = .init(.zero),
+    //    noise: SmoothedProperty = .init(.zero),
     cyclesAcross: CGFloat? = nil
   ) {
     self.id = id
-    self.frequency = frequency
-    self.amplitude = amplitude
-    self.phaseOffset = phaseOffset
-    self.noise = noise
+    self.frequency = SmoothedProperty(frequency)
+    self.amplitude = SmoothedProperty(amplitude)
+    self.phaseOffset = SmoothedProperty(phaseOffset)
+    self.noise = SmoothedProperty(noise)
     self.cyclesAcross = cyclesAcross
   }
+}
+
+extension Wave {
   
+  /// Smooth parameters towards target each tick
+  public mutating func update(dt: CGFloat, smoothing: CGFloat) {
+    frequency.update(dt: dt, smoothing: smoothing)
+    amplitude.update(dt: dt, smoothing: smoothing)
+    phaseOffset.update(dt: dt, smoothing: smoothing)
+    noise.update(dt: dt, smoothing: smoothing)
+  }
+  
+  /// Evaluate wave value at given elapsed time (seconds since start)
   public func value(elapsed: CGFloat) -> CGFloat {
-    /// frequency is `Hz`, so multiply by `2πf * t`
-    let base = calculatePhase(elapsed)
-    let noisy = addNoise(to: base)
-    let result = amplitude.displayed * noisy
-    precondition(result.isWithin(Self.validRange), "Wave output is not between -1 and 1.")
-    return result
+    let omega = frequency.displayed * 2 * .pi
+    let phase = omega * elapsed + phaseOffset.displayed
+    let raw = sin(phase)
+    let noisy = raw + noiseContribution()
+    return amplitude.displayed * noisy
   }
   
+//  public func value(elapsed: CGFloat) -> CGFloat {
+//    /// frequency is `Hz`, so multiply by `2πf * t`
+//    let base = calculatePhase(elapsed)
+//    let noisy = addNoise(to: base)
+//    let result = amplitude.displayed * noisy
+//    precondition(result.isWithin(Self.validRange), "Wave output is not between -1 and 1.")
+//    return result
+//  }
+//  
   public func calculatePhase(_ elapsed: CGFloat) -> CGFloat {
-    let phase = 2 * .pi * frequency.displayed * elapsed + phaseOffset.displayed
-    return sin(phase)
+    let omega = frequency.displayed * 2 * .pi
+    let phase = omega * elapsed + phaseOffset.displayed
+//    let phase = 2 * .pi * frequency.displayed * elapsed + phaseOffset.displayed
+    return amplitude.displayed * sin(phase)
   }
   
-  private func addNoise(to base: CGFloat) -> CGFloat {
-    return base + (noise.displayed * CGFloat.randomNoise())
+  private func noiseContribution() -> CGFloat {
+    guard noise.displayed != 0 else { return 0 }
+    return (CGFloat.random(in: -1...1) * noise.displayed)
   }
+  
+//  private func addNoise(to base: CGFloat) -> CGFloat {
+//    return base + (noise.displayed * CGFloat.randomNoise())
+//  }
   
   private static let validRange: ClosedRange<CGFloat> = -1...1
   

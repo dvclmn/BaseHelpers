@@ -104,6 +104,12 @@ extension BinaryFloatingPoint {
     let bounded = min(max(self, 0.0), 1.0)
     return 1.0 - bounded
   }
+  
+  public func wrapPhase(_ phase: CGFloat) -> CGFloat {
+    var r = phase.truncatingRemainder(dividingBy: twoPi)
+    if r < 0 { r += twoPi }  // keep in [0, 2π)
+    return r
+  }
 
   public var bump: Self {
     let nextFib = self * 1.618
