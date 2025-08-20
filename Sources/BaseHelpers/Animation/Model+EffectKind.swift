@@ -78,6 +78,13 @@ public enum EffectKind: String, CaseIterable, Identifiable, Documentable {
     self.name
   }
   
+//  public var defaultValue: any WaveOutput {
+//    switch self {
+//      case .offset:
+//      case .scale:
+//      case .blur:
+//    }
+//  }
   
   
 //  public var keyPath: WritableKeyPath<any EffectContainer, any AnimatableEffect> {

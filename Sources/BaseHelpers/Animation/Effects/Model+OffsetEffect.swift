@@ -16,29 +16,27 @@ import SwiftUI
 //}
 
 public protocol WaveOutput: Sendable, Codable, Equatable {
-  static func defaultValue(for): Self { get }
+  static func defaultValue(forKind kind: EffectKind) -> Self
 }
 
 public typealias WaveTransform<T> = @Sendable (CGFloat, CGFloat) -> T
 
 /// A generic property whose value is driven by a Wave.
 public struct Effect<T: WaveOutput>: Documentable {
-  
-  public static var kind: EffectKind
+
+  public let kind: EffectKind
+  /// Optional: base value around which the wave oscillates.
+  public let intensity: T
+
   /// The base wave value is always a scalar between -1...1
-  //  var wave: Wave
-  //  public var wave: S
-  public var waveComposition: WaveComposition
+  public let waveComposition: WaveComposition
 
   /// How to transform the wave’s scalar output into the effect’s Value.
-  private var transform: WaveTransform<T> = { _, _ in return T.defaultValue}
-  //  private var transform: (CGFloat) -> Value
-
-  /// Optional: base value around which the wave oscillates.
-    var intensity: T
+  private var transform: WaveTransform<T>?
 
   enum CodingKeys: String, CodingKey {
-        case base
+    case kind
+    case base
     case waveComposition
   }
 
@@ -56,7 +54,7 @@ public struct Effect<T: WaveOutput>: Documentable {
 
   /// Returns the current value given a normalised wave position (0...1)
   public func value(elapsed: CGFloat) -> T {
-    let waveScalar = wave.value(elapsed: elapsed)  // CGFloat -1...1
+    let waveScalar = wave.value(elapsed: elapsed)
     return transform(waveScalar)
   }
 
@@ -71,12 +69,31 @@ public struct Effect<T: WaveOutput>: Documentable {
 }
 
 extension CGFloat: WaveOutput {
-  static var defaultValue: CGFloat
+  public static func defaultValue(forKind kind: EffectKind) -> Self {
+    switch kind {
+      case .offset, .scale: CGFloat.zero  // N/A
+      case .blur: CGFloat.zero
+    }
+  }
 }
-extension CGSize: WaveOutput {}
-extension Angle: WaveOutput {}
+extension CGSize: WaveOutput {
+  public static func defaultValue(forKind kind: EffectKind) -> Self {
+    switch kind {
+      case .offset: CGSize.zero
+      case .scale: CGSize(fromLength: 1.0)
+      case .blur: CGSize.zero  // N/A
+    }
+  }
+}
+extension Angle: WaveOutput {
+  public static func defaultValue(forKind kind: EffectKind) -> Self {
+    switch kind {
+      case .offset, .scale, .blur: Angle.zero  // N/A
+    }
+  }
+}
 
-extension WaveDrivenProperty where T == CGFloat {
+extension Effect where T == CGFloat {
   public static func scalar(
     kind: EffectKind,
     intensity: CGFloat,
@@ -87,13 +104,13 @@ extension WaveDrivenProperty where T == CGFloat {
       kind: kind,
       intensity: intensity,
       waveComposition: waveComposition
-      ) { axisA, axisB in
+    ) { axisA, axisB in
       scalar * amplitude
     }
   }
 }
 
-extension WaveDrivenProperty where T == CGSize {
+extension Effect where T == CGSize {
   public static func size(
     kind: EffectKind,
     intensity: CGSize,
@@ -113,7 +130,7 @@ extension WaveDrivenProperty where T == CGSize {
   }
 }
 
-extension WaveDrivenProperty where T == Angle {
+extension Effect where T == Angle {
   public static func angle(
     kind: EffectKind,
     intensity: Angle,
