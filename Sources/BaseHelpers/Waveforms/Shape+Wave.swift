@@ -7,16 +7,14 @@
 
 import SwiftUI
 
-//public protocol WaveRenderer: Sendable {
-//  func evaluateWave(at position: CGFloat) -> CGFloat
-//}
-
 public struct WaveShape: Shape {
   let wave: Wave
   let elapsed: CGFloat
   let sampleCount: Int
   let shouldOffsetPhase: Bool
   
+  
+
   public init(
     wave: Wave,
     elapsed: CGFloat,
@@ -28,27 +26,52 @@ public struct WaveShape: Shape {
     self.sampleCount = sampleCount
     self.shouldOffsetPhase = shouldOffsetPhase
   }
-  
+
   public func path(in rect: CGRect) -> Path {
     var p = Path()
     guard rect.width > 1, sampleCount > 1 else { return p }
-    
+
     let step = rect.width / CGFloat(sampleCount - 1)
+
     var x = rect.minX
     var first = true
-    
+    var lastPoint: CGPoint?
+
     for _ in 0..<sampleCount {
-      let y = rect.midY + wave.valueAt(
+      let waveY = wave.valueAt(
         x: x,
         in: rect,
         elapsed: elapsed,
         shouldOffsetPhase: shouldOffsetPhase
       )
+      let y = rect.midY + waveY
+      
+      let point = CGPoint(x: x, y: y)
+      
       if first {
-        p.move(to: CGPoint(x: x, y: y))
+        p.move(to: point)
         first = false
       } else {
-        p.addLine(to: CGPoint(x: x, y: y))
+//        p.addLine(to: point)
+        if lastPoint == nil {
+          lastPoint = point
+        }
+        
+        if let last = lastPoint {
+          p.addLine(to: last)
+        } 
+//        p.addCurve(
+//          to: point,
+//          control1: point.shifted(dx: waveY * 0.4 * x, dy: waveY),
+//          control2: point.shifted(
+//            dx: -6,
+//            dy: -90
+//          )
+//        )
+        
+        /// This looks really cool
+//        p.addQuadCurve(to: point, control: .zero)
+//        p.addDot(at: point, radius: 16, using: .controlBezier)
       }
       x += step
     }

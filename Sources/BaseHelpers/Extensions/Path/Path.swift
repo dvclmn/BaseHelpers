@@ -38,7 +38,11 @@ extension Path {
     }
   }
 
-  public mutating func addDot(at point: CGPoint, radius: CGFloat, using type: DebugPathElement) {
+  public mutating func addDot(
+    at point: CGPoint,
+    radius: CGFloat,
+    using type: DebugPathElement
+  ) {
     let rect = CGRect(
       x: point.x - radius / 2,
       y: point.y - radius / 2,
