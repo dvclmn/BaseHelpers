@@ -23,7 +23,7 @@ public struct Wave: Documentable, Identifiable {
   /// Aka a bit like a Wave 'zoom level'. How much of the
   /// Wave we see in a View's width. Does not effect
   /// the outputted wave `value` at all.
-  ///
+  //
   /// The user has the choice to either specify a per-Wave
   /// cycles value here, or there is also a global setting
   /// if they are happy to keep it the same for all Waves.
@@ -64,7 +64,7 @@ extension Wave {
     let omega = frequency.displayed * 2 * .pi
     let phase = omega * elapsed + phaseOffset.displayed
     let raw = sin(phase)
-    let noisy = raw + noiseContribution()
+    let noisy = raw + noiseContribution(elapsed: elapsed)
     return amplitude.displayed * noisy
   }
 
@@ -75,14 +75,31 @@ extension Wave {
     let kx = (2 * .pi * cyclesAcross) / rect.width
     let spatialPhase = kx * (x - rect.minX)
     let raw = sin(temporalPhase + spatialPhase)
-    let noisy = raw + noiseContribution()
+    let noisy = raw + noiseContribution(elapsed: elapsed)
     return amplitude.displayed * noisy
   }
 
-  private func noiseContribution() -> CGFloat {
+  private func noiseContribution(elapsed: CGFloat) -> CGFloat {
     guard noise.displayed != 0 else { return 0 }
-    return (CGFloat.random(in: -1...1) * noise.displayed)
+    
+    // Use a combination of sine waves at different frequencies for pseudo-random noise
+    let noiseFreq1 = 13.7 // Prime numbers work well for pseudo-randomness
+    let noiseFreq2 = 37.3
+    let noiseFreq3 = 71.1
+    
+    let noise1 = sin(elapsed * noiseFreq1)
+    let noise2 = sin(elapsed * noiseFreq2) * 0.5
+    let noise3 = sin(elapsed * noiseFreq3) * 0.25
+    
+    let combinedNoise = (noise1 + noise2 + noise3) / 1.75 // Normalize roughly to [-1, 1]
+    
+    return combinedNoise * noise.displayed
   }
+  
+//  private func noiseContribution() -> CGFloat {
+//    guard noise.displayed != 0 else { return 0 }
+//    return (CGFloat.random(in: -1...1) * noise.displayed)
+//  }
 
   private static let validRange: ClosedRange<CGFloat> = -1...1
 
