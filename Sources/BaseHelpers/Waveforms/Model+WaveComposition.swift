@@ -28,8 +28,11 @@ extension WaveComposition {
   public static let empty: WaveComposition = .init()
 
   public func wavesForEffect(from library: [Wave]) -> [Wave] {
-    let ws = waves.compactMap { id in library.first { $0.id == id } }
+//    let ws = waves.compactMap { id in library.first { $0.id == id } }
 //    let waveLibrary = Dictionary(uniqueKeysWithValues: library.map { ($0.id, $0) })
+//    return waves.compactMap { ws[$0] }
+    
+    let waveLibrary = Dictionary(uniqueKeysWithValues: library.map { ($0.id, $0) })
     return waves.compactMap { waveLibrary[$0] }
   }
 

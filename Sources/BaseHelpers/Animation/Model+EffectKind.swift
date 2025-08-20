@@ -11,25 +11,39 @@ public protocol EffectContainer {
   var effects: Effects { get set }
 }
 
-public struct Effects: Documentable {
+public struct Effects: Sendable, Codable {
+
   
-  public var all: [any AnimatableEffect] {
-    [offset, scale, blur]
+  public var all: [EffectKind] {
+    [.offset, .scale, .blur]
   }
-  
-  public var enabled: [any AnimatableEffect] {
-    all.filter { $0.isEnabled }
+  public var active: [EffectKind: Bool] = [
+    .offset: true,
+    .scale: true,
+    .blur: false,
+  ]
+
+  //  public var enabled: [any AnimatableEffect] {
+  //    all.filter { $0.isEnabled }
+  //  }
+
+  public var offset: Effect<CGSize>
+  public var scale: Effect<CGSize>
+  public var blur: Effect<CGFloat>
+
+  //  public var offset: OffsetEffect = .empty
+  //  public var scale: ScaleEffect = .empty
+  //  public var blur: BlurEffect = .empty
+
+  public init(
+    offset: Effect<CGSize> = .defaultOffset,
+    scale: Effect<CGSize> = .defaultScale,
+    blur: Effect<CGFloat> = .defaultBlur,
+  ) {
+    self.offset = offset
+    self.scale = scale
+    self.blur = blur
   }
-  
-  public var offset: WaveDrivenProperty<CGSize> = .empty
-  public var scale: WaveDrivenProperty<CGSize> = .empty
-  public var blur: WaveDrivenProperty<CGFloat> = .empty
-  
-//  public var offset: OffsetEffect = .empty
-//  public var scale: ScaleEffect = .empty
-//  public var blur: BlurEffect = .empty
-  
-  public init() {}
 }
 
 public enum EffectKind: String, CaseIterable, Identifiable, Documentable {
@@ -53,84 +67,82 @@ public enum EffectKind: String, CaseIterable, Identifiable, Documentable {
   //
   //  }
 
-//  static func create<T: AnimatableEffect>(
-//    kind: EffectKind,
-//    effectType: T.Type,
-//    value: T.Intensity? = nil,
-//    isEnabled: Bool = false
-//  ) -> T {
-//    switch kind {
-//      case .offset:
-//        OffsetEffect(withIntensity: value, isEnabled: isEnabled)
-//      case .scale:
-//        ScaleEffect(withIntensity: value, isEnabled: isEnabled)
-//      case .blur:
-//        BlurEffect(withIntensity: value, isEnabled: isEnabled)
-//    }
-//  }
+  //  static func create<T: AnimatableEffect>(
+  //    kind: EffectKind,
+  //    effectType: T.Type,
+  //    value: T.Intensity? = nil,
+  //    isEnabled: Bool = false
+  //  ) -> T {
+  //    switch kind {
+  //      case .offset:
+  //        OffsetEffect(withIntensity: value, isEnabled: isEnabled)
+  //      case .scale:
+  //        ScaleEffect(withIntensity: value, isEnabled: isEnabled)
+  //      case .blur:
+  //        BlurEffect(withIntensity: value, isEnabled: isEnabled)
+  //    }
+  //  }
 
-  
-//  public var effectType: (any AnimatableEffect).Type {
-//    
-//  }
-  
+  //  public var effectType: (any AnimatableEffect).Type {
+  //
+  //  }
+
   public var id: String {
     self.name
   }
-  
-//  public var defaultValue: any WaveOutput {
-//    switch self {
-//      case .offset:
-//      case .scale:
-//      case .blur:
-//    }
-//  }
-  
-  
-//  public var keyPath: WritableKeyPath<any EffectContainer, any AnimatableEffect> {
-////  public func keyPath<T: AnimatableEffect>() -> WritableKeyPath<any EffectContainer, T> {
-////  public func keyPath<C: EffectContainer, T: AnimatableEffect>() -> WritableKeyPath<C, T> {
-//    switch self {
-//      case .offset: \.effects.offset
-//      case .scale: \.effects.scale
-//      case .blur: \.effects.blur
-//    }
-//  }
-//  public var keyPath:
-  
-//  public func createEmptyEffect<T: AnimatableEffect>() -> T {
-//    return T.default
-//  }
-  
-//  public func createEffect<T: AnimatableEffect>(
-//    withIntensity value: T.Value? = nil
-//  ) -> T {
-//    let newValue = value ?? T.empty.intensity
-////    guard let newValue = value else {  }
-//    return T.init(withIntensity: newValue)
-////    switch self {
-////      case .offset:
-////        OffsetEffect(withValue: value)
-////      case .scale:
-////        <#code#>
-////      case .blur:
-////        <#code#>
-////    }
-////    return T.default
-//    //    switch self {
-//    //      case .offset: OffsetEffect()
-//    //      case .scale: ScaleEffect()
-//    //      case .blur: BlurEffect()
-//    //    }
-//  }
-  
-  public var effectType: any AnimatableEffect.Type {
-    switch self {
-      case .offset: OffsetEffect.self
-      case .scale: ScaleEffect.self
-      case .blur: BlurEffect.self
-    }
-  }
+
+  //  public var defaultValue: any WaveOutput {
+  //    switch self {
+  //      case .offset:
+  //      case .scale:
+  //      case .blur:
+  //    }
+  //  }
+
+  //  public var keyPath: WritableKeyPath<any EffectContainer, any AnimatableEffect> {
+  ////  public func keyPath<T: AnimatableEffect>() -> WritableKeyPath<any EffectContainer, T> {
+  ////  public func keyPath<C: EffectContainer, T: AnimatableEffect>() -> WritableKeyPath<C, T> {
+  //    switch self {
+  //      case .offset: \.effects.offset
+  //      case .scale: \.effects.scale
+  //      case .blur: \.effects.blur
+  //    }
+  //  }
+  //  public var keyPath:
+
+  //  public func createEmptyEffect<T: AnimatableEffect>() -> T {
+  //    return T.default
+  //  }
+
+  //  public func createEffect<T: AnimatableEffect>(
+  //    withIntensity value: T.Value? = nil
+  //  ) -> T {
+  //    let newValue = value ?? T.empty.intensity
+  ////    guard let newValue = value else {  }
+  //    return T.init(withIntensity: newValue)
+  ////    switch self {
+  ////      case .offset:
+  ////        OffsetEffect(withValue: value)
+  ////      case .scale:
+  ////        <#code#>
+  ////      case .blur:
+  ////        <#code#>
+  ////    }
+  ////    return T.default
+  //    //    switch self {
+  //    //      case .offset: OffsetEffect()
+  //    //      case .scale: ScaleEffect()
+  //    //      case .blur: BlurEffect()
+  //    //    }
+  //  }
+
+  //  public var effectType: any AnimatableEffect.Type {
+  //    switch self {
+  //      case .offset: OffsetEffect.self
+  //      case .scale: ScaleEffect.self
+  //      case .blur: BlurEffect.self
+  //    }
+  //  }
 
   //  public func createBlankValue() -> AnyEffectOutput {
   //    switch self {

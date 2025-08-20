@@ -15,28 +15,29 @@ import SwiftUI
 //
 //}
 
-public protocol WaveOutput: Sendable, Codable, Equatable {
+public protocol WaveOutput: Documentable {
   static func defaultValue(forKind kind: EffectKind) -> Self
 }
 
-public typealias WaveTransform<T> = @Sendable (CGFloat, CGFloat) -> T
+public typealias WaveTransform<T> = @Sendable (CGFloat) -> T
+//public typealias WaveTransform<T> = @Sendable (CGFloat, CGFloat) -> T
 
 /// A generic property whose value is driven by a Wave.
-public struct Effect<T: WaveOutput>: Documentable {
+public struct Effect<T: WaveOutput>: Sendable, Codable {
 
   public let kind: EffectKind
   /// Optional: base value around which the wave oscillates.
-  public let intensity: T
+  public var intensity: T
 
   /// The base wave value is always a scalar between -1...1
-  public let waveComposition: WaveComposition
+  public var waveComposition: WaveComposition
 
   /// How to transform the wave’s scalar output into the effect’s Value.
-  private var transform: WaveTransform<T>?
+  private var transform: WaveTransform<T>? = nil
 
   enum CodingKeys: String, CodingKey {
     case kind
-    case base
+    case intensity
     case waveComposition
   }
 
@@ -44,7 +45,7 @@ public struct Effect<T: WaveOutput>: Documentable {
     kind: EffectKind,
     intensity: T,
     waveComposition: WaveComposition,
-    transform: @escaping WaveTransform<T>
+    transform: WaveTransform<T>? = nil
   ) {
     self.kind = kind
     self.intensity = intensity
@@ -53,9 +54,12 @@ public struct Effect<T: WaveOutput>: Documentable {
   }
 
   /// Returns the current value given a normalised wave position (0...1)
-  public func value(elapsed: CGFloat) -> T {
-    let waveScalar = wave.value(elapsed: elapsed)
-    return transform(waveScalar)
+  public func value(
+    elapsed: CGFloat,
+    waveLibrary: [Wave]
+  ) -> T {
+    let waveScalar = waveComposition.value(elapsed: elapsed, waveLibrary: waveLibrary)
+    return transform?(waveScalar) ?? T.defaultValue(forKind: self.kind)
   }
 
   // Mutating helpers for bindings
@@ -63,8 +67,8 @@ public struct Effect<T: WaveOutput>: Documentable {
   //    base = newBase
   //  }
 
-  public mutating func updateWave(_ newWave: Wave) {
-    wave = newWave
+  public mutating func updateWaveComposition(_ new: WaveComposition) {
+    waveComposition = new
   }
 }
 
@@ -76,6 +80,7 @@ extension CGFloat: WaveOutput {
     }
   }
 }
+//@available(macOS 15.0, *)
 extension CGSize: WaveOutput {
   public static func defaultValue(forKind kind: EffectKind) -> Self {
     switch kind {
@@ -94,6 +99,15 @@ extension Angle: WaveOutput {
 }
 
 extension Effect where T == CGFloat {
+
+  public static var defaultBlur: Self {
+    Self(
+      kind: .blur,
+      intensity: 8,
+      waveComposition: WaveComposition(),
+    )
+  }
+
   public static func scalar(
     kind: EffectKind,
     intensity: CGFloat,
@@ -104,13 +118,30 @@ extension Effect where T == CGFloat {
       kind: kind,
       intensity: intensity,
       waveComposition: waveComposition
-    ) { axisA, axisB in
+    ) { scalar in
       scalar * amplitude
     }
   }
 }
 
 extension Effect where T == CGSize {
+
+  public static var defaultOffset: Self {
+    Self(
+      kind: .offset,
+      intensity: CGSize(fromLength: 20),
+      waveComposition: WaveComposition(),
+    )
+  }
+
+  public static var defaultScale: Self {
+    Self(
+      kind: .scale,
+      intensity: CGSize(fromLength: 10),
+      waveComposition: WaveComposition(),
+    )
+  }
+
   public static func size(
     kind: EffectKind,
     intensity: CGSize,
@@ -121,10 +152,10 @@ extension Effect where T == CGSize {
       kind: kind,
       intensity: intensity,
       waveComposition: waveComposition
-    ) { axisA, axisB in
+    ) { scalar in
       CGSize(
-        width: intensity + axisA * amplitude.width,
-        height: intensity + axisB * amplitude.height
+        width: intensity.width + scalar * amplitude.width,
+        height: intensity.height + scalar * amplitude.height
       )
     }
   }
@@ -141,8 +172,8 @@ extension Effect where T == Angle {
       kind: kind,
       intensity: intensity,
       waveComposition: waveComposition
-    ) { axisA, axisB in
-      Angle(degrees: intensity + axisA * amplitude.degrees)
+    ) { scalar in
+      Angle(degrees: intensity.degrees + scalar * amplitude.degrees)
     }
   }
 }
