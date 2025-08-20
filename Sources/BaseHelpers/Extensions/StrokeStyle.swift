@@ -20,7 +20,10 @@ extension StrokeStyle {
   public static var simple04: StrokeStyle {
     .init(lineWidth: 4)
   }
-  public static func dashed(strokeWidth: CGFloat, gap: CGFloat = 3) -> StrokeStyle {
+  public static func dashed(
+    strokeWidth: CGFloat,
+    gap: CGFloat = 3
+  ) -> StrokeStyle {
     StrokeStyle(
       lineWidth: strokeWidth,
       dash: [strokeWidth, strokeWidth * gap],

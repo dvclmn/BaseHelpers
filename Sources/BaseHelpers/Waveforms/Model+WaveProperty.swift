@@ -42,6 +42,8 @@ protocol WavePropertyBase: Sendable, CaseIterable, Equatable, Identifiable {}
 
 // MARK: - Engine Properties
 public enum WaveProperty: String, WavePropertyBase {
+  
+  public static let allCases: [WaveProperty] = [.amplitude, .frequency, .phaseOffset]
 
   /// How visually apparent is the oscillation effect. Aka strength
   case amplitude
@@ -85,25 +87,35 @@ public enum WaveProperty: String, WavePropertyBase {
     }
   }
 
-//  @MainActor
-//  public var displayedKeyPath: WritableKeyPath<WaveProperties.Engine, CGFloat> {
-//    switch self {
-//      case .frequency: \.displayedFrequency
-//      case .amplitude: \.displayedAmplitude
-//      case .noise: \.displayedNoise
-//      case .phaseOffset: \.displayedPhaseOffset
-//    }
-//  }
-//
-////  @MainActor
-//  public var targetKeyPath: WritableKeyPath<WaveProperties.Engine, CGFloat> {
-//    switch self {
-//      case .frequency: \.targetFrequency
-//      case .amplitude: \.targetAmplitude
-//      case .noise: \.targetNoise
-//      case .phaseOffset: \.targetPhaseOffset
-//    }
-//  }
+  public var keyPath: WritableKeyPath<Wave, SmoothedProperty> {
+    switch self {
+      case .amplitude: \.amplitude
+      case .frequency: \.frequency
+      case .phaseOffset: \.phaseOffset
+      case .noise: \.noise
+
+    }
+  }
+
+  //  @MainActor
+  //  public var displayedKeyPath: WritableKeyPath<WaveProperties.Engine, CGFloat> {
+  //    switch self {
+  //      case .frequency: \.displayedFrequency
+  //      case .amplitude: \.displayedAmplitude
+  //      case .noise: \.displayedNoise
+  //      case .phaseOffset: \.displayedPhaseOffset
+  //    }
+  //  }
+  //
+  ////  @MainActor
+  //  public var targetKeyPath: WritableKeyPath<WaveProperties.Engine, CGFloat> {
+  //    switch self {
+  //      case .frequency: \.targetFrequency
+  //      case .amplitude: \.targetAmplitude
+  //      case .noise: \.targetNoise
+  //      case .phaseOffset: \.targetPhaseOffset
+  //    }
+  //  }
 
   public var range: ClosedRange<Double> {
     switch self {

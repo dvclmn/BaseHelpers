@@ -15,11 +15,18 @@ public struct WaveShape: Shape {
   let wave: Wave
   let elapsed: CGFloat
   let sampleCount: Int
+  let shouldOffsetPhase: Bool
   
-  public init(wave: Wave, elapsed: CGFloat, sampleCount: Int) {
+  public init(
+    wave: Wave,
+    elapsed: CGFloat,
+    sampleCount: Int,
+    shouldOffsetPhase: Bool
+  ) {
     self.wave = wave
     self.elapsed = elapsed
     self.sampleCount = sampleCount
+    self.shouldOffsetPhase = shouldOffsetPhase
   }
   
   public func path(in rect: CGRect) -> Path {
@@ -34,7 +41,8 @@ public struct WaveShape: Shape {
       let y = rect.midY + wave.valueAt(
         x: x,
         in: rect,
-        elapsed: elapsed
+        elapsed: elapsed,
+        shouldOffsetPhase: shouldOffsetPhase
       )
       if first {
         p.move(to: CGPoint(x: x, y: y))

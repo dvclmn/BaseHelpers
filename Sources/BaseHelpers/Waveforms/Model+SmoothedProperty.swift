@@ -20,6 +20,14 @@ public struct SmoothedProperty: Documentable {
     self.displayed = initial
   }
 
+  public mutating func setTarget(_ newValue: CGFloat) {
+    self.target = newValue
+  }
+  
+  public mutating func snapUpdate(_ newValue: CGFloat) {
+    self.update(dt: 0, smoothing: 0)
+  }
+  
   public mutating func update(
     dt: CGFloat,
     smoothing timeConstant: CGFloat
