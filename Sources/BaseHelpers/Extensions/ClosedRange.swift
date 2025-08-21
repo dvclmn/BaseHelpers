@@ -9,14 +9,20 @@ import Foundation
 
 extension ClosedRange where Bound == CGFloat {
   public var toDoubleRange: ClosedRange<Double> {
-    Double(self.lowerBound) ... Double(self.upperBound)
+    Double(self.lowerBound)...Double(self.upperBound)
   }
 }
 extension ClosedRange where Bound == Double {
-  
- 
   public var toCGFloatRange: ClosedRange<CGFloat> {
-    CGFloat(self.lowerBound) ... CGFloat(self.upperBound)
+    CGFloat(self.lowerBound)...CGFloat(self.upperBound)
+  }
+}
+extension ClosedRange where Bound == Int {
+  public var toDoubleRange: ClosedRange<Double> {
+    Double(self.lowerBound)...CGFloat(self.upperBound)
+  }
+  public var toCGFloatRange: ClosedRange<CGFloat> {
+    CGFloat(self.lowerBound)...CGFloat(self.upperBound)
   }
 }
 
@@ -46,5 +52,5 @@ extension ClosedRange where Bound: BinaryFloatingPoint {
   public func value(atPercent percent: Self.Bound) -> Self.Bound {
     lowerBound + (upperBound - lowerBound) * percent
   }
-  
+
 }
