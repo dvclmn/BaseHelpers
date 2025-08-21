@@ -45,53 +45,50 @@ public struct WaveView: View {
       context,
       size in
 
-      // Ensure we have valid data before proceeding
-      guard size.width > 0 && size.height > 0 && sampleCount > 0 else { return }
+      /// Ensure valid data before proceeding
+      guard dataIsValid(size: size) else { return }
 
-      // Recompute static geometry only if needed
-      let needsRecomputation =
-        xPositions.count != sampleCount || spatialPhases.count != sampleCount || lastComputedSize != size
-        || lastComputedSampleCount != sampleCount
-
-      if needsRecomputation {
+      /// Recompute static geometry only if needed
+      if needsRecomputation(size: size) {
         Task { @MainActor in
           recomputeStatic(for: size)
         }
       }
 
-      // Safety check: ensure arrays are properly initialized
-      guard xPositions.count == sampleCount && spatialPhases.count == sampleCount else {
-        return
-      }
+      /// Safety check: ensure arrays are properly initialized
+      guard
+        xPositions.count == sampleCount
+          && spatialPhases.count == sampleCount
+      else { return }
 
-      // Precompute frame-specific dynamic parts
+      /// Precompute frame-specific dynamic parts
       let omega = wave.frequency.displayed * 2 * .pi
       let amp = wave.amplitude.displayed
       let phaseMain = omega * elapsed + wave.phaseOffset.displayed
 
-      // Generate main wave points
+      /// Generate main wave points
       let mainPoints = generateWavePoints(
         amp: amp,
         phase: phaseMain,
         size: size
       )
 
-      // Main wave line
+      /// Main wave line
       if components.contains(.line) {
         drawWaveLine(context: context, points: mainPoints)
       }
 
-      // Points
+      /// Points
       if components.contains(.points) {
         drawWavePoints(context: context, points: mainPoints)
       }
 
-      // Ghost line
+      /// Ghost line
       if wave.phaseOffset.displayed > 0, components.contains(.phaseGhost) {
         drawGhostWave(context: context, mainPoints: mainPoints, size: size)
       }
 
-      // Horizon
+      /// Horizon
       context.stroke(horizonPath, with: .color(.gray.lowOpacity))
 
     }  // END canvas
@@ -115,6 +112,19 @@ public struct WaveView: View {
 }
 extension WaveView {
 
+  private func dataIsValid(size: CGSize) -> Bool {
+    return size.width > 0
+      && size.height > 0
+      && sampleCount > 0
+  }
+
+  private func needsRecomputation(size: CGSize) -> Bool {
+    return xPositions.count != sampleCount
+      || spatialPhases.count != sampleCount
+      || lastComputedSize != size
+      || lastComputedSampleCount != sampleCount
+  }
+
   private func recomputeStatic(for size: CGSize) {
     guard sampleCount > 1 else {
       xPositions = []
@@ -122,26 +132,30 @@ extension WaveView {
       return
     }
 
-    // X positions - ensure we don't divide by zero
+    /// X positions - ensure we don't divide by zero
     let step = size.width / CGFloat(sampleCount - 1)
     xPositions = (0..<sampleCount).map { CGFloat($0) * step }
 
-    // Spatial phases
+    /// Spatial phases
     let kx = size.width > 0 ? (2 * .pi * wave.cyclesAcross) / size.width : 0
     spatialPhases = xPositions.map { kx * $0 }
 
-    // Horizon path
+    /// Horizon path
     horizonPath = Path { p in
       p.move(to: CGPoint(x: 0, y: size.height / 2))
       p.addLine(to: CGPoint(x: size.width, y: size.height / 2))
     }
 
-    // Update tracking variables
+    /// Update tracking variables
     lastComputedSize = size
     lastComputedSampleCount = sampleCount
   }
 
-  private func generateWavePoints(amp: CGFloat, phase: CGFloat, size: CGSize) -> [CGPoint] {
+  private func generateWavePoints(
+    amp: CGFloat,
+    phase: CGFloat,
+    size: CGSize
+  ) -> [CGPoint] {
     guard spatialPhases.count == sampleCount && xPositions.count == sampleCount else {
       return []
     }
@@ -152,7 +166,7 @@ extension WaveView {
     let centerY = size.height / 2
 
     for i in 0..<sampleCount {
-      // Safe array access - this should never fail now, but keeping for extra safety
+      /// Safe array access - this should never fail, but keeping for extra safety
       guard i < xPositions.count && i < spatialPhases.count else {
         break
       }
@@ -261,9 +275,4 @@ extension WaveView {
         return maxHeight
     }
   }
-}
-
-public enum WaveViewStyle: Equatable {
-  case standard
-  case preview(maxHeight: CGFloat = 50)
 }

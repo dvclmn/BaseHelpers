@@ -19,3 +19,8 @@ public struct WaveComponents: OptionSet, Sendable {
   public static let phaseGhost = Self(rawValue: 1 << 2)
   public static let all: Self = [.line, .points, .labels, phaseGhost]
 }
+
+public enum WaveViewStyle: Equatable {
+  case standard
+  case preview(maxHeight: CGFloat = 50)
+}
