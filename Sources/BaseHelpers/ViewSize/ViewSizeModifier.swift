@@ -10,7 +10,7 @@ import SwiftUI
 public typealias ViewSizeOutput = (CGSize) -> Void
 
 public struct ViewSizeModifier: ViewModifier {
-  
+
   @State private var debouncer: AsyncDebouncer?
   let valueOutput: ViewSizeOutput
 
@@ -46,12 +46,11 @@ public struct ViewSizeModifier: ViewModifier {
 }
 
 extension View {
-  
+
   /// Previously had default value for `debounceMode`, but this felt
   /// too risky for domains that may be tripped up by immediate vs debounced
   public func viewSize(
     mode debounceMode: DebounceMode,
-//    mode debounceMode: DebounceMode = .debounce(0.1),
     valueOutput: @escaping ViewSizeOutput,
   ) -> some View {
     self.modifier(

@@ -11,15 +11,18 @@ import SwiftUI
 /// not including any native components like Toolbar or Inspector.
 public struct ViewportSizeModifier: ViewModifier {
   @State private var viewportSize: CGSize?
+  
+  let mode: DebounceMode
   let didUpdateSize: ViewSizeOutput?
-  public init(
-    didUpdateSize: ViewSizeOutput?
-  ) {
-    self.didUpdateSize = didUpdateSize
-  }
+  
+//  public init(
+//    didUpdateSize: ViewSizeOutput?
+//  ) {
+//    self.didUpdateSize = didUpdateSize
+//  }
   public func body(content: Content) -> some View {
     content
-      .viewSize { size in
+      .viewSize(mode: mode) { size in
         self.viewportSize = size
         didUpdateSize?(size)
       }
@@ -28,10 +31,12 @@ public struct ViewportSizeModifier: ViewModifier {
 }
 extension View {
   public func readViewportSize(
+    mode debounceMode: DebounceMode,
     didUpdateSize: ViewSizeOutput? = nil
   ) -> some View {
     self.modifier(
       ViewportSizeModifier(
+        mode: debounceMode,
         didUpdateSize: didUpdateSize
       )
     )
