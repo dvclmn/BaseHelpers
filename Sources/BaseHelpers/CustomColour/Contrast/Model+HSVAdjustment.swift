@@ -80,7 +80,4 @@ extension HSVAdjustment {
     return adjusted
   }
 
-  //  public func adjustComponent(
-  //
-  //  )
 }

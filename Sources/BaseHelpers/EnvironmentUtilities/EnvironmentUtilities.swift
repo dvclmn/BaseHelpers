@@ -17,7 +17,9 @@ extension EnvironmentValues {
   /// This is expected to represent be a single, self-contained View,
   /// not including any native components like Toolbar or Inspector.
   @Entry public var viewportSize: CGSize? = nil
-  
   @Entry public var isDebugMode: Bool = false
+  
+  @Entry public var isEmphasised: Bool = false
+  @Entry public var isCompactMode: Bool = false
   
 }

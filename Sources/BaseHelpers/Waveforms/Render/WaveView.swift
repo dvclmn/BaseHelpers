@@ -9,6 +9,7 @@ import SwiftUI
 
 /// Note: it's expected that this View will be embedded in a `TimelineView`
 public struct WaveView: View {
+  @Environment(\.isEmphasised) private var isEmphasised
 
   @State private var xPositions: [CGFloat] = []
   @State private var spatialPhases: [CGFloat] = []
@@ -96,18 +97,29 @@ public struct WaveView: View {
     }  // END canvas
     .frame(minHeight: minHeight, maxHeight: .infinity)
 
-    .debugTextOverlay(
-      """
-        Elapsed: \(elapsed.displayString)
-
-        Wave:
-        Freq: \(wave.frequency.displayed.displayString)
-        Amp: \(wave.amplitude.displayed.displayString)
-        Noise: \(wave.noise.displayed.displayString)
-        Phase Offset: \(wave.phaseOffset.displayed.displayString)
-      """
-      //      padding: (.top, Styles.toolbarHeightPrimary)
-    )
+    .overlay(alignment: .topLeading) {
+      if isEmphasised {
+        Text("Editing")
+          .padding(.horizontal, Styles.)
+          .background {
+            Capsule()
+              .fill(.indigo)
+          }
+          .padding()
+      }
+    }
+    //    .debugTextOverlay(
+    //      """
+    //        Elapsed: \(elapsed.displayString)
+    //
+    //        Wave:
+    //        Freq: \(wave.frequency.displayed.displayString)
+    //        Amp: \(wave.amplitude.displayed.displayString)
+    //        Noise: \(wave.noise.displayed.displayString)
+    //        Phase Offset: \(wave.phaseOffset.displayed.displayString)
+    //      """
+    //      //      padding: (.top, Styles.toolbarHeightPrimary)
+    //    )
     //    .background(.black.lowOpacity)
 
   }
