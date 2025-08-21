@@ -16,5 +16,6 @@ public struct WaveComponents: OptionSet, Sendable {
   public static let line = Self(rawValue: 1 << 0)
   public static let points = Self(rawValue: 1 << 1)
   public static let labels = Self(rawValue: 1 << 2)
-  public static let all: Self = [.line, .points, .labels]
+  public static let phaseGhost = Self(rawValue: 1 << 2)
+  public static let all: Self = [.line, .points, .labels, phaseGhost]
 }

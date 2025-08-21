@@ -14,22 +14,24 @@ import SwiftUI
 /// - No need for global phase wrapping: just pass elapsed time forward.
 /// - Flexibility: if you later add modulation (e.g. frequency envelopes),
 ///   it’s easy because each wave already computes its own phase internally.
+///
+/// `cyclesAcross` is a bit like a Wave 'zoom level'. How much
+/// of the Wave we see in a View's width. Does not effect
+/// the outputted wave `value` at all.
+//
+/// The user has the choice to either specify a per-Wave
+/// cycles value here, or there is also a global setting
+/// if they are happy to keep it the same for all Waves.
 public struct Wave: Documentable, Identifiable {
   public let id: UUID
   public var frequency: SmoothedProperty
   public var amplitude: SmoothedProperty
   public var phaseOffset: SmoothedProperty
   public var noise: SmoothedProperty
-
-  /// Aka a bit like a Wave 'zoom level'. How much of the
-  /// Wave we see in a View's width. Does not effect
-  /// the outputted wave `value` at all.
-  //
-  /// The user has the choice to either specify a per-Wave
-  /// cycles value here, or there is also a global setting
-  /// if they are happy to keep it the same for all Waves.
   public var cyclesAcross: CGFloat
   public var colour: Swatch
+  
+  
 
 //  private let noiseSeed: UInt64
 

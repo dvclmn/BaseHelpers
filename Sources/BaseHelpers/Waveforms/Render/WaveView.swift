@@ -25,12 +25,14 @@ public struct WaveView: View {
     elapsed: CGFloat,
     strokeWidth: CGFloat = 2,
     sampleCount: Int = 80,
-    waveViewStyle: WaveViewStyle = .standard
+    components: WaveComponents,
+    waveViewStyle: WaveViewStyle = .standard,
   ) {
     self.wave = wave
     self.elapsed = elapsed
     self.strokeWidth = strokeWidth
     self.sampleCount = sampleCount
+    self.components = components
     self.waveViewStyle = waveViewStyle
   }
 
@@ -47,25 +49,63 @@ public struct WaveView: View {
         }
       }
 
+      let rect = CGRect(origin: .zero, size: size)
       /// Per tick: compute Y values
-      let points = xPositions.map { x -> CGPoint in
+//      let points = xPositions.map { x -> CGPoint in
+//        let y = wave.valueAt(
+//          x: x,
+//          in: ,
+//          elapsed: elapsed,
+//          shouldOffsetPhase: true
+//        )
+//        return CGPoint(x: x, y: size.height / 2 + y)
+//      }
+      
+      let points: [CGPoint] = xPositions.map { x -> CGPoint in
         let y = wave.valueAt(
           x: x,
-          in: CGRect(origin: .zero, size: size),
+          in: rect,
           elapsed: elapsed,
           shouldOffsetPhase: true
         )
-        return CGPoint(x: x, y: size.height / 2 + y)
+        return CGPoint(x: x, y: rect.midY + y)
+      }
+      
+      // Lines
+      if components.contains(.line) {
+        var path = Path()
+        path.addLines(points)
+        context.stroke(path, with: .color(wave.colour.nativeColour), lineWidth: strokeWidth)
+      }
+      
+      // Points
+      if components.contains(.points) {
+        let dotPath = Path(ellipseIn: CGRect(x: -2.5, y: -2.5, width: 5, height: 5))
+        for p in points {
+          context.translateBy(x: p.x, y: p.y)
+          context.fill(dotPath, with: .color(.brown))
+          context.translateBy(x: -p.x, y: -p.y)
+        }
       }
 
-      // Draw line
-      var linePath = Path()
-      
-      
-      p.addDot(at: point, radius: 5, using: .controlBezier)
-      linePath.addLines(points)
+      if components.contains(.phaseGhost) {
+        context.stroke(
+          linePath,
+          with: .color(wave.colour.nativeColour.lowOpacity),
+          style: .dashed(strokeWidth: strokeWidth, gap: strokeWidth / 2)
+        )
+      }
 
-      context.stroke(linePath, with: .color(wave.colour.nativeColour), lineWidth: strokeWidth)
+//      // Draw line
+//      var linePath = Path()
+//
+//      if components.contains(.points) {
+//        linePath.addDot(at: point, radius: 5, using: .controlBezier)
+//      } else {
+//        linePath.addLines(points)
+//      }
+
+//      context.stroke(linePath, with: .color(wave.colour.nativeColour), lineWidth: strokeWidth)
 
       // MARK: - Dots
       //      let dots = WaveShape(
@@ -78,8 +118,9 @@ public struct WaveView: View {
       //            context.fill(linePath, with: .color(.brown))
 
       // MARK: - Phase offset ghost
-      if wave.phaseOffset.displayed > 0 {
+//      if wave.phaseOffset.displayed > 0 {
 
+     
         //        let phaseGhost = WaveShape(
         //          wave: wave,
         //          elapsed: elapsed,
@@ -88,12 +129,9 @@ public struct WaveView: View {
         //          isDotStyle: false
         //        )
         //        let ghostPath = phaseGhost.path(in: rect)
-        context.stroke(
-          linePath,
-          with: .color(wave.colour.nativeColour.lowOpacity),
-          style: .dashed(strokeWidth: strokeWidth, gap: strokeWidth / 2)
-        )
-      }
+//      }
+      
+      
 
       // MARK: - Base line
       context.stroke(horizonPath, with: .color(.gray.lowOpacity))
@@ -150,12 +188,12 @@ extension WaveView {
     }
   }
 
-  private func waveRect(in size: CGSize) -> CGRect {
-    let rectHeight = size.height.clamped(minHeight ?? 10, CGFloat.infinity)
-    let rectSize = CGSize(width: size.width, height: rectHeight)
-    let rect = CGRect(origin: .zero, size: rectSize)
-    return rect
-  }
+//  private func waveRect(in size: CGSize) -> CGRect {
+//    let rectHeight = size.height.clamped(minHeight ?? 10, CGFloat.infinity)
+//    let rectSize = CGSize(width: size.width, height: rectHeight)
+//    let rect = CGRect(origin: .zero, size: rectSize)
+//    return rect
+//  }
 
   private var minHeight: CGFloat? {
     switch waveViewStyle {
