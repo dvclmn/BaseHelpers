@@ -14,12 +14,6 @@ public struct HSVAdjustment: Sendable {
   public var saturation: Double
   public var brightness: Double
 
-  public static let zero = HSVAdjustment(
-    hue: 0,
-    saturation: 0,
-    brightness: 0
-  )
-
   public init(
     hue: Double,
     saturation: Double,
@@ -39,7 +33,13 @@ public struct HSVAdjustment: Sendable {
 }
 
 extension HSVAdjustment {
-  
+
+  public static let zero = HSVAdjustment(
+    hue: 0,
+    saturation: 0,
+    brightness: 0
+  )
+
   static func + (lhs: HSVAdjustment, rhs: HSVAdjustment) -> HSVAdjustment {
     HSVAdjustment(
       hue: lhs.hue + rhs.hue,
@@ -47,7 +47,7 @@ extension HSVAdjustment {
       brightness: lhs.brightness + rhs.brightness
     )
   }
-  
+
   func scaled(by factor: Double) -> HSVAdjustment {
     HSVAdjustment(
       hue: hue * factor,
@@ -55,7 +55,7 @@ extension HSVAdjustment {
       brightness: brightness * factor
     )
   }
-  
+
   /// Now with this, `HSVAdjustment` knows how to go from
   /// one instance of itself, to another, linearly interpolating.
   ///
@@ -71,7 +71,7 @@ extension HSVAdjustment {
   ) -> HSVAdjustment {
     let current = self
     let new = other
-    
+
     let adjusted = HSVAdjustment(
       hue: lerp(from: current.hue, to: new.hue, strength),
       saturation: lerp(from: current.saturation, to: new.saturation, strength),
@@ -79,8 +79,8 @@ extension HSVAdjustment {
     )
     return adjusted
   }
-  
-//  public func adjustComponent(
-//
-//  )
+
+  //  public func adjustComponent(
+  //
+  //  )
 }

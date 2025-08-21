@@ -10,7 +10,40 @@ import NSUI
 import SwiftUI
 
 extension Color {
-  
+
+  public func contrastColour(
+    strength: ModificationStrengthPreset,
+    purpose: ColourPurpose = .legibility,
+    chroma: ColourChroma = .standard,
+    environment: EnvironmentValues
+  ) -> Color {
+
+    let hsvColour = HSVColour(colour: self, environment: environment)
+
+    let adjustment: HSVAdjustment = {
+      let contributors: [any HSVModifier] = [
+        LuminanceLevelAdjustment(level: hsvColour.luminanceLevel),
+        ColourPurposeAdjustment(purpose: purpose),
+        ChromaAdjustment(chroma: chroma),
+      ]
+
+      let allAdjustments: [HSVAdjustment] = contributors.map { modifier in
+        modifier.adjustment
+      }
+
+      let combinedAdjustment: HSVAdjustment = allAdjustments.reduce(.zero) { partialResult, adjustment in
+        partialResult + .zero.interpolated(towards: adjustment, strength: strength.adjustmentStrength)
+      }
+
+      return combinedAdjustment
+
+    }()
+    let adjustedHSV = hsvColour.applying(adjustment: adjustment)
+    
+    return adjustedHSV.nativeColour
+//    return adjustedHSV.toRGB
+  }
+
   public var faintOpacity: Color {
     self.opacity(0.1)
   }
@@ -39,99 +72,14 @@ extension Color {
     )
   }
 
-
   public var toShapeStyle: AnyShapeStyle {
     AnyShapeStyle(self)
-  }
-}
-
-extension Array where Element == Color {
-  public static let rainbow: [Color] = [
-    .red, .orange, .yellow, .green, .blue, .indigo, .purple, .pink, .red,
-  ]
-}
-
-#if canImport(AppKit)
-extension Color {
-
-  public func blend(with other: Color, percentage: Double) -> Color {
-    //    Color(nsColor: NSColor(self).blend(with: NSColor(other), percentage: percentage))
-    Color(nsColor: NSUIColor(self).blend(with: NSUIColor(other), percentage: percentage))
-  }
-}
-
-extension NSUIColor {
-  public func blend(with other: NSUIColor, percentage: Double) -> NSUIColor {
-    let percentage = max(min(percentage, 1), 0)
-    switch percentage {
-      case 0: return self
-      case 1: return other
-      default:
-        guard
-          let selfRGB = self.usingColorSpace(.sRGB),
-          let otherRGB = other.usingColorSpace(.sRGB)
-        else { return self }
-
-        var (r1, g1, b1, a1): (CGFloat, CGFloat, CGFloat, CGFloat) = (0, 0, 0, 0)
-        var (r2, g2, b2, a2): (CGFloat, CGFloat, CGFloat, CGFloat) = (0, 0, 0, 0)
-
-        selfRGB.getRed(&r1, green: &g1, blue: &b1, alpha: &a1)
-        otherRGB.getRed(&r2, green: &g2, blue: &b2, alpha: &a2)
-
-        return NSColor(
-          red: r1 + (r2 - r1) * percentage,
-          green: g1 + (g2 - g1) * percentage,
-          blue: b1 + (b2 - b1) * percentage,
-          alpha: a1 + (a2 - a1) * percentage
-        )
-    }
-  }
-}
-#endif
-
-/// This extension allows you to create a `Color` instance from a hex string in SwiftUI. It supports the following formats:
-
-/// 1. 3-digit hex (RGB)
-/// 2. 6-digit hex (RGB)
-/// 3. 8-digit hex (ARGB)
-///
-/// // 6-digit hex (RGB)
-/// let redColor = Color(hex: "FE6057")
-///
-/// // 3-digit hex (RGB)
-/// let blueColor = Color(hex: "00F")
-///
-/// // 8-digit hex (ARGB)
-/// let transparentGreen = Color(hex: "8000FF00")
-///
-/// // In a SwiftUI View
-/// struct ContentView: View {
-///     var body: some View {
-///         VStack {
-///             Rectangle()
-///                 .fill(Color(hex: "FE6057"))
-///                 .frame(width: 100, height: 100)
-///
-///             Text("Hello, World!")
-///                 .foregroundColor(Color(hex: "00F"))
-///         }
-///     }
-/// }
-
-//#if canImport(AppKit)
-//
-//import AppKit
-
-extension Color {
-  public var nsColour: NSUIColor {
-    NSUIColor(self)
   }
 }
 
 //#endif
 
 extension Color {
-
   public static func random(randomOpacity: Bool = false) -> Color {
     Color(
       red: .random(in: 0...1),
@@ -141,31 +89,25 @@ extension Color {
     )
   }
 
-
-}
-
-
-// MARK: - Random colour
-extension ShapeStyle where Self == Color {
-  public static var random: Color {
-    Color(
-      red: .random(in: 0...1),
-      green: .random(in: 0...1),
-      blue: .random(in: 0...1)
-    )
-  }
-  public static var fadedBlack: Color {
-    .black.opacity(0.2)
-  }
-  public static var fadedBlackDarker: Color {
-    .black.opacity(0.4)
+  public var toNSColour: NSUIColor {
+    NSUIColor(self)
   }
 
-}
+  /// Create a `Color` instance from a hex string in SwiftUI.
+  /// Supports the following formats:
 
-
-extension Color {
-
+  /// 1. 3-digit hex (RGB)
+  /// 2. 6-digit hex (RGB)
+  /// 3. 8-digit hex (ARGB)
+  ///
+  /// 6-digit hex (RGB)
+  /// `let redColor = Color(hex: "FE6057")`
+  ///
+  /// 3-digit hex (RGB)
+  /// `let blueColor = Color(hex: "00F")`
+  ///
+  /// 8-digit hex (ARGB)
+  /// `let transparentGreen = Color(hex: "8000FF00")`
   public init?(hex: String) {
     var hexSanitized = hex.trimmingCharacters(in: .whitespacesAndNewlines)
     hexSanitized = hexSanitized.replacingOccurrences(of: "#", with: "")
@@ -199,49 +141,9 @@ extension Color {
     self.init(red: r, green: g, blue: b, opacity: a)
   }
 
-  //  init(hex: String) {
-  //    let hex = hex.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
-  //    var int: UInt64 = 0
-  //    Scanner(string: hex).scanHexInt64(&int)
-  //    let a, r, g, b: UInt64
-  //    switch hex.count {
-  //      case 3: // RGB (12-bit)
-  //        (a, r, g, b) = (255, (int >> 8) * 17, (int >> 4 & 0xF) * 17, (int & 0xF) * 17)
-  //      case 6: // RGB (24-bit)
-  //        (a, r, g, b) = (255, int >> 16, int >> 8 & 0xFF, int & 0xFF)
-  //      case 8: // ARGB (32-bit)
-  //        (a, r, g, b) = (int >> 24, int >> 16 & 0xFF, int >> 8 & 0xFF, int & 0xFF)
-  //      default:
-  //        (a, r, g, b) = (1, 1, 1, 0)
-  //    }
-  //
-  //    self.init(
-  //      .sRGB,
-  //      red: Double(r) / 255,
-  //      green: Double(g) / 255,
-  //      blue:  Double(b) / 255,
-  //      opacity: Double(a) / 255
-  //    )
-  //  }
-
-  // Helper function to get a more readable color description
-  //  var info: String {
-  //    if let sRGBColor = self.usingColorSpace(.sRGB) {
-  //      let red = Int(sRGBColor.redComponent * 255)
-  //      let green = Int(sRGBColor.greenComponent * 255)
-  //      let blue = Int(sRGBColor.blueComponent * 255)
-  //      let alpha = Int(sRGBColor.alphaComponent * 100)
-  //      return "RGB(\(red), \(green), \(blue), \(alpha)%)"
-  //    } else {
-  //      return color.description
-  //    }
-  //  }
-
 }
 
-
 public struct TrafficLightsModifier: ViewModifier {
-
 
   public func body(content: Content) -> some View {
     content
@@ -269,6 +171,30 @@ extension View {
   public func trafficLightsPreview() -> some View {
     self.modifier(TrafficLightsModifier())
   }
+}
+
+extension Array where Element == Color {
+  public static let rainbow: [Color] = [
+    .red, .orange, .yellow, .green, .blue, .indigo, .purple, .pink, .red,
+  ]
+}
+
+// MARK: - Random colour
+extension ShapeStyle where Self == Color {
+  public static var random: Color {
+    Color(
+      red: .random(in: 0...1),
+      green: .random(in: 0...1),
+      blue: .random(in: 0...1)
+    )
+  }
+  public static var fadedBlack: Color {
+    .black.opacity(0.2)
+  }
+  public static var fadedBlackDarker: Color {
+    .black.opacity(0.4)
+  }
+
 }
 
 /// This is cool and all, but there already exists a `NSColor.colorNameComponent` 🥲

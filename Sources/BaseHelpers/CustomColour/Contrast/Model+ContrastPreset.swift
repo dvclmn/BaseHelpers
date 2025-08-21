@@ -10,7 +10,7 @@ import Foundation
 /// Describes discrete steps from 0–1 for Colour modifications
 public enum ModificationStrengthPreset: CaseIterable, Identifiable, Sendable {
 
-  public static let allCases: [ModificationStrengthPreset] = [
+  public static let allCases: [Self] = [
     .none,
     .subtle,
     .moderate,
