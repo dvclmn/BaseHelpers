@@ -18,18 +18,12 @@ extension Comparable {
 
   /// `min` == `lowerBound`
   /// `max` == `upperBound`
-//  public func clamped(_ min: Self, _ max: Self) -> Self {
-//    return Swift.min(max, Swift.max(min, self))
-//  }
-
-  public func clamped(
-    _ min: Self,
-    _ max: Self? = nil
-  ) -> Self {
-    guard let max else {
-      return Swift.max(min, self)
-    }
+  public func clamped(_ min: Self, _ max: Self) -> Self {
     return Swift.min(max, Swift.max(min, self))
+  }
+
+  public func clamped(_ min: Self) -> Self {
+    return Swift.max(min, self)
   }
 
 }
