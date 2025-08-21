@@ -64,12 +64,14 @@ public struct WaveView: View {
       /// Precompute frame-specific dynamic parts
       let omega = wave.frequency.displayed * 2 * .pi
       let amp = wave.amplitude.displayed
-      let phaseMain = omega * elapsed + wave.phaseOffset.displayed
+      let phaseGhost = omega * elapsed
+      let phaseMain = phaseGhost + wave.phaseOffset.displayed
 
       /// Generate main wave points
-      let mainPoints = generateWavePoints(
+      let (mainPoints, ghostPoints) = generateWavePoints(
+        normalPhase: phaseMain,
+        ghostPhase: phaseGhost,
         amp: amp,
-        phase: phaseMain,
         size: size
       )
 
@@ -84,8 +86,8 @@ public struct WaveView: View {
       }
 
       /// Ghost line
-      if wave.phaseOffset.displayed > 0, components.contains(.phaseGhost) {
-        drawGhostWave(context: context, mainPoints: mainPoints, size: size)
+      if wave.phaseOffset.displayed > 0, components.contains(.phaseGhost), let points = ghostPoints {
+        drawGhostWave(context: context, points: points, size: size)
       }
 
       /// Horizon
@@ -151,37 +153,10 @@ extension WaveView {
     lastComputedSampleCount = sampleCount
   }
 
-  private func generateWavePoints(
-    amp: CGFloat,
-    phase: CGFloat,
-    size: CGSize
-  ) -> [CGPoint] {
-    guard spatialPhases.count == sampleCount && xPositions.count == sampleCount else {
-      return []
-    }
-
-    var points: [CGPoint] = []
-    points.reserveCapacity(sampleCount)
-
-    let centerY = size.height / 2
-
-    for i in 0..<sampleCount {
-      /// Safe array access - this should never fail, but keeping for extra safety
-      guard i < xPositions.count && i < spatialPhases.count else {
-        break
-      }
-
-      let x = xPositions[i]
-      let spatialPhase = spatialPhases[i]
-      let y = centerY + amp * sin(phase + spatialPhase)
-
-      points.append(CGPoint(x: x, y: y))
-    }
-
-    return points
-  }
-
-  private func drawWaveLine(context: GraphicsContext, points: [CGPoint]) {
+  private func drawWaveLine(
+    context: GraphicsContext,
+    points: [CGPoint]
+  ) {
     guard points.count > 1 else { return }
 
     var linePath = Path()
@@ -193,7 +168,10 @@ extension WaveView {
     )
   }
 
-  private func drawWavePoints(context: GraphicsContext, points: [CGPoint]) {
+  private func drawWavePoints(
+    context: GraphicsContext,
+    points: [CGPoint]
+  ) {
     let dotRadius: CGFloat = 2.5
     let dot = Path(
       ellipseIn: CGRect(
@@ -210,20 +188,16 @@ extension WaveView {
     }
   }
 
-  private func drawGhostWave(context: GraphicsContext, mainPoints: [CGPoint], size: CGSize) {
-    let omega = wave.frequency.displayed * 2 * .pi
-    let phaseGhost = omega * elapsed  // ghost has no phase offset
+  private func drawGhostWave(
+    context: GraphicsContext,
+    points: [CGPoint],
+    size: CGSize
+  ) {
 
-    let ghostPoints = generateGhostPoints(
-      from: mainPoints,
-      phase: phaseGhost,
-      size: size
-    )
-
-    guard ghostPoints.count > 1 else { return }
+    guard points.count > 1 else { return }
 
     var ghostPath = Path()
-    ghostPath.addLines(ghostPoints)
+    ghostPath.addLines(points)
     context.stroke(
       ghostPath,
       with: .color(wave.colour.nativeColour.lowOpacity),
@@ -236,36 +210,156 @@ extension WaveView {
     )
   }
 
-  private func generateGhostPoints(
-    from mainPoints: [CGPoint],
-    phase: CGFloat,
+  /// Generates both normal and ghost points in a single pass
+  private func generateWavePoints(
+    normalPhase: CGFloat,
+    ghostPhase: CGFloat?,
+    amp: CGFloat,
     size: CGSize
-  ) -> [CGPoint] {
-    guard !mainPoints.isEmpty,
-      spatialPhases.count == mainPoints.count
+  ) -> (normal: [CGPoint], ghost: [CGPoint]?) {
+    guard spatialPhases.count == sampleCount,
+      xPositions.count == sampleCount
     else {
-      return []
+      return ([], nil)
     }
-
-    var ghostPoints: [CGPoint] = []
-    ghostPoints.reserveCapacity(mainPoints.count)
 
     let centerY = size.height / 2
-    let amp = wave.amplitude.displayed
+    var normalPoints: [CGPoint] = []
+    normalPoints.reserveCapacity(sampleCount)
 
-    for i in 0..<mainPoints.count {
-      // Safe access with bounds checking
-      guard i < spatialPhases.count else { break }
+    // Only allocate ghost array if needed
+    var ghostPoints: [CGPoint]? = ghostPhase != nil ? [] : nil
+    ghostPoints?.reserveCapacity(sampleCount)
 
-      let mainPoint = mainPoints[i]
+    for i in 0..<sampleCount {
+      let x = xPositions[i]
       let spatialPhase = spatialPhases[i]
-      let ghostY = centerY + amp * sin(phase + spatialPhase)
 
-      ghostPoints.append(CGPoint(x: mainPoint.x, y: ghostY))
+      let yNormal = centerY + amp * sin(normalPhase + spatialPhase)
+      normalPoints.append(CGPoint(x: x, y: yNormal))
+
+      if let gPhase = ghostPhase {
+        let yGhost = centerY + amp * sin(gPhase + spatialPhase)
+        ghostPoints?.append(CGPoint(x: x, y: yGhost))
+      }
     }
 
-    return ghostPoints
+    return (normalPoints, ghostPoints)
   }
+
+  //  func generateWaveYPositions(
+  //    phase: CGFloat,
+  //    amp: CGFloat,
+  //    centerY: CGFloat
+  //  ) -> [CGFloat] {
+  //    var yPositions: [CGFloat] = []
+  //    yPositions.reserveCapacity(spatialPhases.count)
+  //
+  //    for spatialPhase in spatialPhases {
+  //      yPositions.append(centerY + amp * sin(phase + spatialPhase))
+  //    }
+  //    return yPositions
+  //  }
+
+  //  private func generateWavePoints(
+  //    mode: WavePointMode,
+  //    phase: CGFloat,
+  //    size: CGSize
+  //  ) -> [CGPoint] {
+  //    let centerY = size.height / 2
+  //
+  //    // Pre-resolve amplitude and X source array
+  //    let amp: CGFloat
+  //    let xSource: [CGFloat]
+  //
+  //    switch mode {
+  //      case .normal(let inputAmp):
+  //        guard spatialPhases.count == sampleCount,
+  //              xPositions.count == sampleCount else { return [] }
+  //        amp = inputAmp
+  //        xSource = xPositions
+  //
+  //      case .ghost(let mainPoints):
+  //        guard !mainPoints.isEmpty,
+  //              spatialPhases.count == mainPoints.count else { return [] }
+  //        amp = wave.amplitude.displayed
+  //        xSource = mainPoints.map(\.x)
+  //    }
+  //
+  //    // Loop once for all cases
+  //    var points: [CGPoint] = []
+  //    points.reserveCapacity(xSource.count)
+  //
+  //    for i in 0..<xSource.count {
+  //      guard i < spatialPhases.count else { break }
+  //      let x = xSource[i]
+  //      let y = centerY + amp * sin(phase + spatialPhases[i])
+  //      points.append(CGPoint(x: x, y: y))
+  //    }
+  //
+  //    return points
+  //  }
+
+  //  private func generateWavePoints(
+  //    amp: CGFloat,
+  //    phase: CGFloat,
+  //    size: CGSize
+  //  ) -> [CGPoint] {
+  //    guard spatialPhases.count == sampleCount && xPositions.count == sampleCount else {
+  //      return []
+  //    }
+  //
+  //    var points: [CGPoint] = []
+  //    points.reserveCapacity(sampleCount)
+  //
+  //    let centerY = size.height / 2
+  //
+  //    for i in 0..<sampleCount {
+  //      /// Safe array access - this should never fail, but keeping for extra safety
+  //      guard i < xPositions.count && i < spatialPhases.count else {
+  //        break
+  //      }
+  //
+  //      let x = xPositions[i]
+  //      let spatialPhase = spatialPhases[i]
+  //      let y = centerY + amp * sin(phase + spatialPhase)
+  //
+  //      points.append(CGPoint(x: x, y: y))
+  //    }
+  //
+  //    return points
+  //  }
+  //
+  //  private func generateGhostPoints(
+  //    from mainPoints: [CGPoint],
+  //    phase: CGFloat,
+  //    size: CGSize
+  //  ) -> [CGPoint] {
+  //    guard !mainPoints.isEmpty,
+  //      spatialPhases.count == mainPoints.count
+  //    else {
+  //      return []
+  //    }
+  //
+  //    var ghostPoints: [CGPoint] = []
+  //    ghostPoints.reserveCapacity(mainPoints.count)
+  //
+  //    let centerY = size.height / 2
+  //    let amp = wave.amplitude.displayed
+  //
+  //    for i in 0..<mainPoints.count {
+  //      // Safe access with bounds checking
+  //      guard i < spatialPhases.count else { break }
+  //
+  //      let mainPoint = mainPoints[i]
+  //      let spatialPhase = spatialPhases[i]
+  //      let ghostY = centerY + amp * sin(phase + spatialPhase)
+  //
+  //      ghostPoints.append(CGPoint(x: mainPoint.x, y: ghostY))
+  //    }
+  //
+  //    return ghostPoints
+  //  }
 
   private var minHeight: CGFloat? {
     switch waveViewStyle {
@@ -275,4 +369,9 @@ extension WaveView {
         return maxHeight
     }
   }
+}
+
+private enum WavePointMode {
+  case normal(amp: CGFloat)
+  case ghost(from: [CGPoint])
 }

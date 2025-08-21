@@ -52,8 +52,13 @@ public struct Wave: Documentable, Identifiable {
 
 extension Wave {
 
+  private var omega: CGFloat { frequency.displayed * 2 * .pi }
+  private func phase(elapsed: CGFloat) -> CGFloat {
+    omega * elapsed + phaseOffset.displayed
+  }
+
   /// Smooth parameters towards target each tick
-  public mutating func updatePropertiesTiming(dt: CGFloat, smoothing: CGFloat) {
+  public mutating func updateProperties(dt: CGFloat, smoothing: CGFloat) {
     frequency.update(dt: dt, smoothing: smoothing)
     amplitude.update(dt: dt, smoothing: smoothing)
     phaseOffset.update(dt: dt, smoothing: smoothing)
@@ -61,27 +66,26 @@ extension Wave {
 
   /// Evaluate wave value at given elapsed time (seconds since start)
   public func value(elapsed: CGFloat) -> CGFloat {
-    let omega = frequency.displayed * 2 * .pi
-    let phase = omega * elapsed + phaseOffset.displayed
-    let raw = sin(phase)
-    return amplitude.displayed * raw
+    let phase = self.phase(elapsed: elapsed)
+    let sinPhase = sin(phase)
+    return amplitude.displayed * sinPhase
   }
 
   /// For WaveShape
-  func valueAt(
-    x: CGFloat,
-    in rect: CGRect,
-    elapsed: CGFloat,
-    shouldOffsetPhase: Bool = true,
-  ) -> CGFloat {
-    let omega = frequency.displayed * 2 * .pi
-    let offset: CGFloat = shouldOffsetPhase ? phaseOffset.displayed : 0
-    let temporalPhase = omega * elapsed + offset
-    let kx = (2 * .pi * cyclesAcross) / rect.width
-    let spatialPhase = kx * (x - rect.minX)
-    let raw = sin(temporalPhase + spatialPhase)
-    return amplitude.displayed * raw
-  }
+  //  func valueAt(
+  //    x: CGFloat,
+  //    in rect: CGRect,
+  //    elapsed: CGFloat,
+  //    shouldOffsetPhase: Bool = true,
+  //  ) -> CGFloat {
+  //    let omega = frequency.displayed * 2 * .pi
+  //    let offset: CGFloat = shouldOffsetPhase ? phaseOffset.displayed : 0
+  //    let temporalPhase = omega * elapsed + offset
+  //    let kx = (2 * .pi * cyclesAcross) / rect.width
+  //    let spatialPhase = kx * (x - rect.minX)
+  //    let raw = sin(temporalPhase + spatialPhase)
+  //    return amplitude.displayed * raw
+  //  }
 
   private static let validRange: ClosedRange<CGFloat> = -1...1
 
