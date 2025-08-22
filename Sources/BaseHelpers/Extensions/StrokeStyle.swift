@@ -20,14 +20,18 @@ extension StrokeStyle {
   public static var simple04: StrokeStyle {
     .init(lineWidth: 4)
   }
+  
+  // MARK: - Dashed Stroke
   public static func dashed(
     strokeWidth: CGFloat,
-    gap: CGFloat = 3
+    style: StrokeDashStyle = .dots,
+    gap: CGFloat = 3,
   ) -> StrokeStyle {
     StrokeStyle(
       lineWidth: strokeWidth,
-      dash: [strokeWidth, strokeWidth * gap],
-      dashPhase: strokeWidth
+      lineCap: .round,
+      lineJoin: .round,
+      dash: [style.dashLength, strokeWidth * gap]
     )
   }
 }
@@ -48,7 +52,7 @@ extension StrokeStyle: @retroactive Hashable {
 extension StrokeStyle: @retroactive Decodable {}
 extension StrokeStyle: @retroactive Encodable {}
 extension StrokeStyle {
-  
+
   enum CodingKeys: String, CodingKey {
     case lineWidth
     case lineCap
@@ -57,10 +61,10 @@ extension StrokeStyle {
     case dash
     case dashPhase
   }
-  
+
   public func encode(to encoder: any Encoder) throws {
     var container = encoder.container(keyedBy: CodingKeys.self)
-    
+
     try container.encode(lineWidth, forKey: .lineWidth)
     try container.encode(lineCap.rawValue, forKey: .lineCap)
     try container.encode(lineJoin.rawValue, forKey: .lineJoin)
@@ -68,17 +72,17 @@ extension StrokeStyle {
     try container.encode(dash, forKey: .dash)
     try container.encode(dashPhase, forKey: .dashPhase)
   }
-  
+
   public init(from decoder: any Decoder) throws {
     let container = try decoder.container(keyedBy: CodingKeys.self)
-    
+
     let lineWidth = try container.decode(CGFloat.self, forKey: .lineWidth)
     let lineCapRawValue = try container.decode(Int32.self, forKey: .lineCap)
     let lineJoinRawValue = try container.decode(Int32.self, forKey: .lineJoin)
     let miterLimit = try container.decode(CGFloat.self, forKey: .miterLimit)
     let dash = try container.decode([CGFloat].self, forKey: .dash)
     let dashPhase = try container.decode(CGFloat.self, forKey: .dashPhase)
-    
+
     guard let lineCap = CGLineCap(rawValue: lineCapRawValue) else {
       throw DecodingError.dataCorrupted(
         DecodingError.Context(
@@ -87,7 +91,7 @@ extension StrokeStyle {
         )
       )
     }
-    
+
     guard let lineJoin = CGLineJoin(rawValue: lineJoinRawValue) else {
       throw DecodingError.dataCorrupted(
         DecodingError.Context(
@@ -96,7 +100,7 @@ extension StrokeStyle {
         )
       )
     }
-    
+
     self.init(
       lineWidth: lineWidth,
       lineCap: lineCap,
@@ -106,6 +110,5 @@ extension StrokeStyle {
       dashPhase: dashPhase
     )
   }
-  
-  
+
 }

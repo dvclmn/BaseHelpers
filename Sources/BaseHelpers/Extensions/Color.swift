@@ -39,9 +39,13 @@ extension Color {
 
     }()
     let adjustedHSV = hsvColour.applying(adjustment: adjustment)
-    
+
     return adjustedHSV.nativeColour
-//    return adjustedHSV.toRGB
+    //    return adjustedHSV.toRGB
+  }
+
+  public var barelyThereOpacity: Color {
+    self.opacity(0.03)
   }
 
   public var faintOpacity: Color {

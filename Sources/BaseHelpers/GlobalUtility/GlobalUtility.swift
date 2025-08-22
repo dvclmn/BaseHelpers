@@ -8,28 +8,70 @@
 import Foundation
 
 @discardableResult
-public func updateIfChanged<T: Equatable>(_ newValue: T, into target: inout T) -> Bool {
+public func updateIfChanged<T: Equatable>(
+  _ target: inout T,
+  to newValue: T
+) -> Bool {
   guard target != newValue else { return false }
   target = newValue
   return true
 }
 
-public func updateOptionalIfChanged<T: Equatable>(_ value: T, into target: inout T?) -> Bool {
-  guard target != value else { return false }
-  target = value
+@discardableResult
+public func updateIfChanged<T: Equatable>(
+  _ target: inout T?,
+  to newValue: T
+) -> Bool {
+  guard target != newValue else { return false }
+  target = newValue
   return true
 }
 
 @discardableResult
 public func updateIfChanged<Root, Value: Equatable>(
-  _ newValue: Value,
-  on object: inout Root,
-  keyPath: WritableKeyPath<Root, Value>
+  _ object: inout Root,
+  at keyPath: WritableKeyPath<Root, Value>,
+  to newValue: Value
 ) -> Bool {
   guard object[keyPath: keyPath] != newValue else { return false }
   object[keyPath: keyPath] = newValue
   return true
 }
+
+@discardableResult
+public func updateIfChanged<Root, Value: Equatable>(
+  _ object: inout Root,
+  at keyPath: WritableKeyPath<Root, Value?>,
+  to newValue: Value
+) -> Bool {
+  guard object[keyPath: keyPath] != newValue else { return false }
+  object[keyPath: keyPath] = newValue
+  return true
+}
+
+//@discardableResult
+//public func updateIfChanged<T: Equatable>(_ newValue: T, into target: inout T) -> Bool {
+//  guard target != newValue else { return false }
+//  target = newValue
+//  return true
+//}
+//
+//public func updateOptionalIfChanged<T: Equatable>(_ value: T, into target: inout T?) -> Bool {
+//  guard target != value else { return false }
+//  target = value
+//  return true
+//}
+//
+//@discardableResult
+//public func updateIfChanged<Root, Value: Equatable>(
+//  _ newValue: Value,
+//  on object: inout Root,
+//  keyPath: WritableKeyPath<Root, Value>
+//) -> Bool {
+//  guard object[keyPath: keyPath] != newValue else { return false }
+//  object[keyPath: keyPath] = newValue
+//  return true
+//}
 
 @discardableResult
 public func updateIfChangedWithOptionalRoot<Root, Value: Equatable>(

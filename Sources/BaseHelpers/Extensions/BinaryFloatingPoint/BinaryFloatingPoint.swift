@@ -11,6 +11,10 @@ public var twoPi: CGFloat { .pi * 2 }
 
 /// Looking for `clamp` methods? See `Extrensions/Comparable`
 extension BinaryFloatingPoint {
+  
+  public static func omega(frequency: Self) -> Self {
+    return .pi * 2 * frequency
+  }
 
   public func incrementing(by amount: Self, in range: ClosedRange<Self>? = nil) -> Self {
     var result = self + amount

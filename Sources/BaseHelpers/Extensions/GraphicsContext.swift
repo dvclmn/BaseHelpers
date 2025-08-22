@@ -41,7 +41,7 @@ public struct GridLineConfiguration {
   let cellSize: CGSize
   let colour: Color
   let strokeThickness: CGFloat
-  
+
   public init(
     columnCount: Int,
     rowCount: Int,
@@ -56,7 +56,6 @@ public struct GridLineConfiguration {
     self.strokeThickness = strokeThickness
   }
 }
-
 
 extension GraphicsContext {
 
@@ -141,7 +140,6 @@ extension GraphicsContext {
     strokeColour: Color = .indigo,
     strokeThickness: CGFloat = 1
   ) {
-
     self.fill(
       path,
       with: .color(fillColour)
@@ -152,14 +150,14 @@ extension GraphicsContext {
       lineWidth: strokeThickness
     )
   }
-  
+
   public func drawHorizonLine(
     in size: CGSize,
     colour: Color = .gray,
     strokeStyle: StrokeStyle? = nil,
     strokeWidth: CGFloat = 2
   ) {
-    
+
     let stroke = strokeStyle ?? StrokeStyle.dashed(strokeWidth: strokeWidth)
     let rect = CGRect(origin: .zero, size: size)
     let midY = rect.midY
@@ -213,6 +211,33 @@ extension GraphicsContext {
     }
   }
 
+  // MARK: - Dashed Stroke
+  public func dashedStroke(
+    _ path: Path,
+    colour: Color,
+    strokeWidth: CGFloat,
+    style: StrokeDashStyle = .dots,
+    gap: CGFloat = 3,
+  ) {
+    self.stroke(
+      path,
+      with: .color(colour),
+      style: StrokeStyle.dashed(strokeWidth: strokeWidth, style: style, gap: gap)
+    )
+  }
+}
+
+public enum StrokeDashStyle {
+  case dots
+  case dashes(length: CGFloat)
+
+  public var dashLength: CGFloat {
+    switch self {
+        /// Zero allows correct behaviour for `dash: [CGFloat]`
+      case .dots: .zero
+      case .dashes(let length): length
+    }
+  }
 }
 
 public struct GraphicContextPresetsView: View {

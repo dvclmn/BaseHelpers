@@ -84,7 +84,7 @@ extension UnitPoint {
   func hitAreaPadding(_ amount: CGFloat) -> EdgeInsets {
     switch self {
       case .top, .bottom:
-        return EdgeInsets(leading: amount, trailing: amount)
+        return EdgeInsets(horizontal: amount)
 
       case .leading, .trailing:
         return EdgeInsets(top: amount, bottom: amount)
