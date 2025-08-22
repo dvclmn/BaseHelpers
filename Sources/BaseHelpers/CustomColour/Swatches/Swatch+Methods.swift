@@ -10,47 +10,47 @@ import SwiftUI
 extension Swatch {
 
   public var id: String { rawValue }
-  
+
   public func toRGB(_ environment: EnvironmentValues) -> RGBColour {
-    let rgb = RGBColour(colour: self.colour, environment: environment)
+    let rgb = RGBColour(colour: self.nativeColour, environment: environment)
     return rgb
   }
-//  public func toRGB(
-//    _ environment: EnvironmentValues,
-//    withPreset preset: ContrastPreset? = nil,
-//    purpose: ContrastPurpose = .legibility,
-//    isMonochrome: Bool = false
-//  ) -> RGBColour {
-//    let rgb = RGBColour(colour: self.colour, environment: environment)
-//    if let preset {
-//      return rgb.contrastColour(
-//        withPreset: preset,
-//        purpose: purpose,
-//        isMonochrome: isMonochrome,
-//      )
-//    } else {
-//      return rgb
-//    }
-//  }
-//  public func toHSV(
-//    _ environment: EnvironmentValues,
-//    withPreset preset: ContrastPreset? = nil,
-//    purpose: ContrastPurpose,
-//    isMonochrome: Bool = false
-//  ) -> HSVColour {
-//    let rgb = self.toRGB(
-//      environment,
-//      withPreset: preset,
-//      purpose: purpose,
-//      isMonochrome: isMonochrome
-//    )
-//    return HSVColour(fromRGB: rgb)
-//  }
+  //  public func toRGB(
+  //    _ environment: EnvironmentValues,
+  //    withPreset preset: ContrastPreset? = nil,
+  //    purpose: ContrastPurpose = .legibility,
+  //    isMonochrome: Bool = false
+  //  ) -> RGBColour {
+  //    let rgb = RGBColour(colour: self.colour, environment: environment)
+  //    if let preset {
+  //      return rgb.contrastColour(
+  //        withPreset: preset,
+  //        purpose: purpose,
+  //        isMonochrome: isMonochrome,
+  //      )
+  //    } else {
+  //      return rgb
+  //    }
+  //  }
+  //  public func toHSV(
+  //    _ environment: EnvironmentValues,
+  //    withPreset preset: ContrastPreset? = nil,
+  //    purpose: ContrastPurpose,
+  //    isMonochrome: Bool = false
+  //  ) -> HSVColour {
+  //    let rgb = self.toRGB(
+  //      environment,
+  //      withPreset: preset,
+  //      purpose: purpose,
+  //      isMonochrome: isMonochrome
+  //    )
+  //    return HSVColour(fromRGB: rgb)
+  //  }
 
   public var nativeColour: Color {
     Color("swatch/\(rawValue)", bundle: .module)
   }
-  
+
   @available(*, deprecated, renamed: "nativeColour", message: "Favour clearer naming.")
   public var colour: Color {
     Color("swatch/\(rawValue)", bundle: .module)
@@ -99,7 +99,7 @@ extension Swatch {
     let grouped = Dictionary(grouping: swatches) { $0.groupName }
     return grouped
   }
-  
+
   /// May need to revert back to returning an optional, without the default of `red`
   public var primitiveColour: PrimitiveColour {
     return PrimitiveColour.allCases.first(where: { $0.swatches.contains(self) }) ?? .red
@@ -110,8 +110,13 @@ extension Swatch {
   }
 
   // MARK: - Older
+  @available(
+    *, deprecated,
+    message:
+      "Because `brightness` returns `some View`, prefer to use it as it's own modifier in the View. Find alternative way to adjust brightness to return a `Color` instead."
+  )
   public func colour(_ brightnessAdjustment: BrightnessAdjustment, amount: CGFloat) -> some View {
-    let newColour = colour.brightness(brightnessAdjustment.adjustment(with: amount))
+    let newColour = nativeColour.brightness(brightnessAdjustment.adjustment(with: amount))
     return newColour
   }
 

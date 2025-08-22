@@ -26,23 +26,3 @@ extension ColourModel {
   
   public var colourSpace: Color.RGBColorSpace { .sRGB }
 }
-
-//public enum ColourSpace: String, CaseIterable {
-//  case sRGB
-//  case sRGBLinear
-//  case displayP3
-//  
-//  var nativeColorSpace: Color.RGBColorSpace {
-//    switch self {
-//      case .sRGB: return .sRGB
-//      case .sRGBLinear: return .sRGBLinear
-//      case .displayP3: return .displayP3
-//    }
-//  }
-//}
-
-//public enum ColourModelType: String {
-//  case rgb
-//  case hsv
-//}
-
