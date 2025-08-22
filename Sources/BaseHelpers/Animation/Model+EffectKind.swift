@@ -193,19 +193,19 @@ public enum EffectKind: String, CaseIterable, Identifiable, Documentable {
     }
   }
 
-  public var swatch: Swatch {
-    switch self {
-
-      //      case .rotation: .green20
-      case .offset: .blue30
-      case .scale: .purple40
-      case .blur: .peach30
-    //      case .skew: .yellow40
-    //        //      case .waveDistort: .red50
-    //      case .hue: .purple70
-    //      case .opacity: .brown40
-    //      case .brightness: .teal30
-    }
-  }
+//  public var swatch: Swatch {
+//    switch self {
+//
+//      //      case .rotation: .green20
+//      case .offset: .blue30
+//      case .scale: .purple40
+//      case .blur: .peach30
+//    //      case .skew: .yellow40
+//    //        //      case .waveDistort: .red50
+//    //      case .hue: .purple70
+//    //      case .opacity: .brown40
+//    //      case .brightness: .teal30
+//    }
+//  }
 
 }

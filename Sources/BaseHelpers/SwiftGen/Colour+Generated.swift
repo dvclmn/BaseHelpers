@@ -1,6 +1,7 @@
 // swiftlint:disable all
 // Generated using SwiftGen — https://github.com/SwiftGen/SwiftGen
 
+
 #if os(macOS)
   import AppKit
 #elseif os(iOS)
@@ -12,17 +13,17 @@
   import SwiftUI
 #endif
 
-// Deprecated typealiases
-@available(*, deprecated, renamed: "ColorAsset.Color", message: "This typealias will be removed in SwiftGen 7.0")
-public typealias AssetColorTypeAlias = ColorAsset.Color
-
 // swiftlint:disable superfluous_disable_command file_length implicit_return
 
 // MARK: - Asset Catalogs
 
+
+
 // swiftlint:disable identifier_name line_length nesting type_body_length type_name
+
 public enum Asset: Sendable {
-  public enum Swatch {
+  @MainActor
+  public enum Swatch: Sendable {
     public static let asciiBlack = ColorAsset(name: "swatch/asciiBlack")
     public static let asciiBlue = ColorAsset(name: "swatch/asciiBlue")
     public static let asciiBrown = ColorAsset(name: "swatch/asciiBrown")
@@ -105,6 +106,7 @@ public enum Asset: Sendable {
 
 // MARK: - Implementation Details
 
+@MainActor
 public final class ColorAsset {
   public fileprivate(set) var name: String
 
@@ -147,6 +149,7 @@ public final class ColorAsset {
 
 public extension ColorAsset.Color {
   @available(iOS 11.0, tvOS 11.0, watchOS 4.0, macOS 10.13, *)
+  @MainActor
   convenience init?(asset: ColorAsset) {
     let bundle = BundleToken.bundle
     #if os(iOS) || os(tvOS)
@@ -162,6 +165,7 @@ public extension ColorAsset.Color {
 #if canImport(SwiftUI)
 @available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *)
 public extension SwiftUI.Color {
+  @MainActor
   init(asset: ColorAsset) {
     let bundle = BundleToken.bundle
     self.init(asset.name, bundle: bundle)
