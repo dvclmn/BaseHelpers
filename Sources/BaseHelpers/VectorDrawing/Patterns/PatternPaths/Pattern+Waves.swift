@@ -29,7 +29,7 @@ extension GraphicsContext {
         )
       }
 
-      self.stroke(path, with: .color(config.primaryColour.nativeColour), lineWidth: config.gap)
+      self.stroke(path, with: .color(config.primaryColour.swiftUIColor), lineWidth: config.gap)
 
       /// Second wave, offset
       path = Path()
@@ -42,7 +42,7 @@ extension GraphicsContext {
         )
       }
 
-      self.stroke(path, with: .color(config.secondaryColour.nativeColour), lineWidth: config.gap)
+      self.stroke(path, with: .color(config.secondaryColour.swiftUIColor), lineWidth: config.gap)
     }
   }
 }

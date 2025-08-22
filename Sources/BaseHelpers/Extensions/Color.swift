@@ -40,7 +40,7 @@ extension Color {
     }()
     let adjustedHSV = hsvColour.applying(adjustment: adjustment)
 
-    return adjustedHSV.nativeColour
+    return adjustedHSV.swiftUIColor
     //    return adjustedHSV.toRGB
   }
 

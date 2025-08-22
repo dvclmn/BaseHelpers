@@ -52,11 +52,11 @@ public enum HSVComponent: String, ColourComponent {
     switch self {
       case .hue: Array<Color>.rainbow
       case .saturation:
-        [.gray, colour.nativeColour]
+        [.gray, colour.swiftUIColor]
       case .brightness:
         [.black, .white]
       case .alpha:
-        [.clear, colour.nativeColour]
+        [.clear, colour.swiftUIColor]
     }
   }
 

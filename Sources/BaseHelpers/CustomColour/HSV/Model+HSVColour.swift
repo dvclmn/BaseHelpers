@@ -22,7 +22,7 @@ public struct HSVColour: Equatable, Sendable, ColourModel {
   public var brightness: Double
   public var alpha: Double
 
-  public var nativeColour: Color {
+  public var swiftUIColor: Color {
     Color(
       hue: hue,
       saturation: saturation,

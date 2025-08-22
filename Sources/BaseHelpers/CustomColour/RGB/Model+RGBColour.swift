@@ -14,8 +14,6 @@ public struct RGBColour: Identifiable, Equatable, Hashable, Sendable, Codable, C
   public var blue: Double
   public var alpha: Double
 
-  /// Thinking of trying storing a resolved colour, so I don't have to get Env values if not needed?
-
   public init(
     colour: Color,
     environment: EnvironmentValues,
@@ -26,22 +24,15 @@ public struct RGBColour: Identifiable, Equatable, Hashable, Sendable, Codable, C
     )
   }
 
-  public var nativeColour: Color {
-    Color(
-      colourSpace,
-      red: red,
-      green: green,
-      blue: blue,
-      opacity: alpha
-    )
-  }
-
   public init(
     resolved: Color.Resolved,
   ) {
     self.init(
-      red: resolved.red.toDouble, green: resolved.green.toDouble, blue: resolved.blue.toDouble,
-      alpha: resolved.opacity.toDouble)
+      red: resolved.red.toDouble,
+      green: resolved.green.toDouble,
+      blue: resolved.blue.toDouble,
+      alpha: resolved.opacity.toDouble
+    )
   }
 
   public init(
@@ -56,18 +47,6 @@ public struct RGBColour: Identifiable, Equatable, Hashable, Sendable, Codable, C
     self.blue = blue
     self.alpha = alpha
   }
-
-  //  public init(
-  //    fromSwatch swatch: Swatch,
-  //    environment: EnvironmentValues
-  //  ) {
-  //    self.init(
-  //      colour: swatch.colour,
-  //      environment: environment
-  //    )
-  //    self.originalSwatch = swatch
-  //  }
-
 }
 
 extension RGBColour {
@@ -75,6 +54,18 @@ extension RGBColour {
   public var toHSV: HSVColour {
     HSVColour(fromRGB: self)
   }
+  
+  
+  public var swiftUIColor: Color {
+    Color(
+      colourSpace,
+      red: red,
+      green: green,
+      blue: blue,
+      opacity: alpha
+    )
+  }
+
 
   public func contrastColour(
     strength: ModificationStrengthPreset,
@@ -152,7 +143,6 @@ extension RGBColour {
       alpha: alpha
     )
   }
-
 }
 
 extension RGBColour: CustomStringConvertible {
