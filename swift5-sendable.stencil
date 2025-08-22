@@ -58,7 +58,9 @@
 
 
   {% elif asset.items and ( forceNamespaces == "true" or asset.isNamespaced == "true" ) %}
-  {{accessModifier}} enum {{asset.name|swiftIdentifier:"pretty"|escapeReservedKeywords}}: Sendable {
+
+    {# Important: This is the actual `Swatch` enum #}
+  {{accessModifier}} enum {{asset.name|swiftIdentifier:"pretty"|escapeReservedKeywords}}: String, Codable, CaseIterable, Identifiable, Sendable, Hashable, Equatable {
     {% filter indent:2," ",true %}{% call casesBlock asset.items %}{% endfilter %}
   }
   {% elif asset.items %}
@@ -81,10 +83,12 @@
   {% endfor %}
 {% endmacro %}
 // swiftlint:disable identifier_name line_length nesting type_body_length type_name
-{{accessModifier}} enum {{enumName}}: String, Codable, CaseIterable, Identifiable, Sendable, Hashable, Equatable {
+
+{# Important: This is the top-level `Asset` enum #}
+{{accessModifier}} enum {{enumName}}: Sendable {
   {% if catalogs.count > 1 or param.forceFileNameEnum %}
   {% for catalog in catalogs %}
-  {{accessModifier}} enum {{catalog.name|swiftIdentifier:"pretty"|escapeReservedKeywords}} {
+  {{accessModifier}} enum {{catalog.name|swiftIdentifier:"pretty"|escapeReservedKeywords}}: Butts01 {
     {% if catalog.assets %}
     {% filter indent:2," ",true %}{% call enumBlock catalog.assets %}{% endfilter %}
     {% endif %}

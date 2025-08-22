@@ -12,8 +12,9 @@ import SwiftUI
 public typealias Swatch = Asset.Swatch
 
 extension Swatch {
+  
 
-//  public var id: String { rawValue }
+  public var id: String { rawValue }
 
 //  public func toRGB(_ environment: EnvironmentValues) -> RGBColour {
 //    let rgb = RGBColour(colour: self.swiftUIColor, environment: environment)
@@ -51,10 +52,9 @@ extension Swatch {
   //    return HSVColour(fromRGB: rgb)
   //  }
 
-//  public var swiftUIColor: Color {
-//    self.swiftUIColor
-//    Color("swatch/\(rawValue)", bundle: .module)
-//  }
+  public var swiftUIColor: Color {
+    Color("swatch/\(rawValue)", bundle: .module)
+  }
 
 //  @available(*, deprecated, renamed: "swiftUIColor", message: "Favour clearer naming.")
 //  public var colour: Color {

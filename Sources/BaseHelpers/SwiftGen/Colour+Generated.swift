@@ -20,8 +20,10 @@
 
 
 // swiftlint:disable identifier_name line_length nesting type_body_length type_name
-public enum Asset: String, Codable, CaseIterable, Identifiable, Sendable, Hashable, Equatable {
-  public enum Swatch: Sendable {
+
+public enum Asset: Sendable {
+
+  public enum Swatch: String, Codable, CaseIterable, Identifiable, Sendable, Hashable, Equatable {
       case asciiBlack
       case asciiBlue
       case asciiBrown

@@ -13,6 +13,6 @@ xcassets:
   outputs:
     - templatePath: swift5-sendable.stencil
       params:
-        forceProvidesNamespaces: true
+        forceProvidesNamespaces: false
         publicAccess: true
       output: SwiftGen/Colour+Generated.swift
