@@ -7,6 +7,9 @@
 
 import SwiftUI
 
+//extension ColorAsset: @unchecked Sendable {}
+public typealias Swatch = Asset.Swatch
+
 extension Swatch {
 
   public var id: String { rawValue }

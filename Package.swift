@@ -33,7 +33,7 @@ let package = Package(
         .product(name: "NSUI", package: "nsui"),
         .product(name: "IfritStatic", package: "Ifrit"),
       ],
-      resources: [.copy("Assets.xcassets")],
+      resources: [.copy("Assets/Assets.xcassets")],
     ),
   ],
 )
