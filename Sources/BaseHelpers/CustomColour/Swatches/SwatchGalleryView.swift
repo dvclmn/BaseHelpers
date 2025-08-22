@@ -17,7 +17,6 @@ public struct SwatchGalleryView: View {
       columns: .quickAdaptiveColumns(min: 20),
       alignment: .center,
       spacing: 20,
-      pinnedViews: <#T##PinnedScrollableViews#>,
     ) {
       ForEach(Swatch.allCases) { swatch in
         RoundedRectangle(cornerRadius: 6)

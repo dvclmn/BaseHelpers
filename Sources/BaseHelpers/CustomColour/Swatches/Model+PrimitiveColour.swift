@@ -7,32 +7,32 @@
 
 import Foundation
 
-//public enum PrimitiveColour: String, Identifiable, CaseIterable, Sendable, Comparable {
-//  public static func < (lhs: PrimitiveColour, rhs: PrimitiveColour) -> Bool {
-//    lhs.sortIndex < rhs.sortIndex
+public enum PrimitiveColour: String, Identifiable, CaseIterable, Sendable, Comparable {
+  public static func < (lhs: PrimitiveColour, rhs: PrimitiveColour) -> Bool {
+    lhs.sortIndex < rhs.sortIndex
+  }
+  
+  case red
+  case orange
+  case yellow
+  case green
+  case blue
+  case purple
+  case brown
+  case monochrome
+  
+  public var id: String {
+    rawValue
+  }
+  
+//  public var sortString: String {
+//
 //  }
-//  
-//  case red
-//  case orange
-//  case yellow
-//  case green
-//  case blue
-//  case purple
-//  case brown
-//  case monochrome
-//  
-//  public var id: String {
-//    rawValue
-//  }
-//  
-////  public var sortString: String {
-////
-////  }
-//  
-//  public var sortIndex: Int {
-//    PrimitiveColour.allCases.firstIndex(of: self) ?? 0
-//  }
-//  
+  
+  public var sortIndex: Int {
+    PrimitiveColour.allCases.firstIndex(of: self) ?? 0
+  }
+  
 //  public var swatches: [Swatch] {
 //    //      let allSwatches: [Swatch] = Swatch.allCases
 //    switch self {
@@ -147,4 +147,4 @@ import Foundation
 //        
 //    }
 //  }
-//}
+}

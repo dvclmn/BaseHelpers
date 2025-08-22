@@ -16,41 +16,10 @@ extension Swatch {
 
   public var id: String { rawValue }
 
-//  public func toRGB(_ environment: EnvironmentValues) -> RGBColour {
-//    let rgb = RGBColour(colour: self.swiftUIColor, environment: environment)
-//    return rgb
-//  }
-  //  public func toRGB(
-  //    _ environment: EnvironmentValues,
-  //    withPreset preset: ContrastPreset? = nil,
-  //    purpose: ContrastPurpose = .legibility,
-  //    isMonochrome: Bool = false
-  //  ) -> RGBColour {
-  //    let rgb = RGBColour(colour: self.colour, environment: environment)
-  //    if let preset {
-  //      return rgb.contrastColour(
-  //        withPreset: preset,
-  //        purpose: purpose,
-  //        isMonochrome: isMonochrome,
-  //      )
-  //    } else {
-  //      return rgb
-  //    }
-  //  }
-  //  public func toHSV(
-  //    _ environment: EnvironmentValues,
-  //    withPreset preset: ContrastPreset? = nil,
-  //    purpose: ContrastPurpose,
-  //    isMonochrome: Bool = false
-  //  ) -> HSVColour {
-  //    let rgb = self.toRGB(
-  //      environment,
-  //      withPreset: preset,
-  //      purpose: purpose,
-  //      isMonochrome: isMonochrome
-  //    )
-  //    return HSVColour(fromRGB: rgb)
-  //  }
+  public func toRGB(_ environment: EnvironmentValues) -> RGBColour {
+    let rgb = RGBColour(colour: self.swiftUIColor, environment: environment)
+    return rgb
+  }
 
   public var swiftUIColor: Color {
     Color("swatch/\(rawValue)", bundle: .module)
@@ -61,59 +30,59 @@ extension Swatch {
 //    Color(named: "swatch/\(name)", bundle: .module)
 //  }
 
-//  public var name: String {
-//    guard let number = colourShadeNumber else {
-//      return rawValue.capitalized
-//    }
-//    return self.groupName + String(number) + (isVibrant ? "V" : "")
-//  }
+  public var name: String {
+    guard let number = colourShadeNumber else {
+      return rawValue.capitalized
+    }
+    return self.groupName + String(number) + (isVibrant ? "V" : "")
+  }
 
-//  public var type: SwatchType {
-//    switch true {
-//      case name.hasPrefix("white"): return .shade(.white)
-//      case name.hasPrefix("black"): return .shade(.black)
-//      case name.hasPrefix("ascii"): return .ascii
-//      case name.hasPrefix("neon"): return .neon
-//      default: return .base
-//    }
-//  }
+  public var type: SwatchType {
+    switch true {
+      case rawValue.hasPrefix("white"): return .shade(.white)
+      case rawValue.hasPrefix("black"): return .shade(.black)
+      case rawValue.hasPrefix("ascii"): return .ascii
+      case rawValue.hasPrefix("neon"): return .neon
+      default: return .base
+    }
+  }
 
   // MARK: - Grouping
-//  public var colourShadeNumber: Int? {
-//    let digits = rawValue.filter { $0.isNumber }
-//    return Int(digits)
-//  }
-//  public var groupName: String {
-//    switch self.type {
-//      case .base:
-//        return rawValue.prefix(while: { $0.isLetter }).lowercased()
-//      default:
-//        return self.type.name
-//    }
-//  }
+  public var colourShadeNumber: Int? {
+    let digits = rawValue.filter { $0.isNumber }
+    return Int(digits)
+  }
+  public var groupName: String {
+    switch self.type {
+      case .base:
+        return rawValue.prefix(while: { $0.isLetter }).lowercased()
+      default:
+        return self.type.name
+    }
+  }
 
-//  public static func grouped(includesAscii: Bool = false) -> [String: [Self]] {
-//    let swatches: [Swatch]
-//    if includesAscii {
-//      swatches = Self.allCases
-//    } else {
-//      swatches = Self.allCases.filter { swatch in
-//        !swatch.rawValue.contains("ascii")
-//      }
-//    }
-//    let grouped = Dictionary(grouping: swatches) { $0.groupName }
-//    return grouped
-//  }
+  public static func grouped(includesAscii: Bool = false) -> [String: [Self]] {
+    let swatches: [Swatch]
+    if includesAscii {
+      swatches = Self.allCases
+    } else {
+      swatches = Self.allCases.filter { swatch in
+        !swatch.rawValue.contains("ascii")
+      }
+    }
+    let grouped = Dictionary(grouping: swatches) { $0.groupName }
+    return grouped
+  }
 
   /// May need to revert back to returning an optional, without the default of `red`
 //  public var primitiveColour: PrimitiveColour {
 //    return PrimitiveColour.allCases.first(where: { $0.swatches.contains(self) }) ?? .red
 //  }
 
-//  public var isVibrant: Bool {
-//    return name.hasSuffix("V")
-//  }
-//
+  public var isVibrant: Bool {
+    return name.hasSuffix("V")
+  }
+
 //  // MARK: - Older
 //  @available(
 //    *, deprecated,
