@@ -11,6 +11,7 @@
     {%- endif -%}
   {%- endfor -%}
 {% endmacro %}
+
 {% set enumName %}{{param.enumName|default:"Asset"}}{% endset %}
 {% set arResourceGroupType %}{{param.arResourceGroupTypeName|default:"ARResourceGroupAsset"}}{% endset %}
 {% set colorType %}{{param.colorTypeName|default:"ColorAsset"}}{% endset %}
@@ -38,20 +39,12 @@
   import SwiftUI
 #endif
 
-// Deprecated typealiases
-{% if hasColor %}
-@available(*, deprecated, renamed: "{{colorType}}.Color", message: "This typealias will be removed in SwiftGen 7.0")
-{{accessModifier}} typealias {{param.colorAliasName|default:"AssetColorTypeAlias"}} = {{colorType}}.Color
-{% endif %}
-{% if hasImage %}
-@available(*, deprecated, renamed: "{{imageType}}.Image", message: "This typealias will be removed in SwiftGen 7.0")
-{{accessModifier}} typealias {{param.imageAliasName|default:"AssetImageTypeAlias"}} = {{imageType}}.Image
-{% endif %}
-
+{# (Dave) Have removed the deprecation messages #}
 // swiftlint:disable superfluous_disable_command file_length implicit_return
 
 // MARK: - Asset Catalogs
 
+// (Dave) - A list of other deprecations, about `allColors`, `allDataAssets`, etc
 {% macro enumBlock assets %}
   {% call casesBlock assets %}
   {% if param.allValues %}
@@ -95,6 +88,8 @@
   // swiftlint:enable trailing_comma
   {% endif %}
 {% endmacro %}
+
+
 {% macro casesBlock assets %}
   {% for asset in assets %}
   {% if asset.type == "arresourcegroup" %}
