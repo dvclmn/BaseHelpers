@@ -11,7 +11,7 @@ public var twoPi: CGFloat { .pi * 2 }
 
 /// Looking for `clamp` methods? See `Extrensions/Comparable`
 extension BinaryFloatingPoint {
-  
+
   public static func omega(frequency: Self) -> Self {
     return .pi * 2 * frequency
   }
@@ -32,14 +32,14 @@ extension BinaryFloatingPoint {
   public var isValid: Bool {
     return self.isFinite && !self.isNaN
   }
-  
+
   /// Returns `true` if this value falls within the specified closed range (inclusive of bounds).
   /// - Parameter range: The closed range to check against
   /// - Returns: `true` if the value is within the range, `false` otherwise
   public func isWithin(_ range: ClosedRange<Self>) -> Bool {
     return range.contains(self)
   }
-  
+
   /// Returns `true` if this value falls within the specified bounds (inclusive).
   /// - Parameters:
   ///   - lowerBound: The lower bound (inclusive)
@@ -72,18 +72,18 @@ extension BinaryFloatingPoint {
     return radius * Self(atan(tensionVaue / halfPi))
   }
 
-  /// Maps `self` (e.g. a size) into a derived value (e.g. corner radius or padding),
+  /// Maps `self`  into a derived value (e.g. corner radius or padding),
   /// favouring non-linear mapping via a curve.
   ///
   /// - Parameters:
+  ///   - inputRange: The expected bounds of the input.
   ///   - outputRange: The target range for the derived value.
-  ///   - inputRange: The expected bounds of the size input.
   ///   - curve: A non-linear adjustment function, like `.squareRoot()`, or a custom easing.
   ///   - clamped: Whether to clamp input to the input range.
   /// - Returns: A derived value smoothly mapped from size.
   public func mappedNonLinearly(
-    to outputRange: ClosedRange<Self>,
     from inputRange: ClosedRange<Self> = 0...CGFloat.infinity,
+    to outputRange: ClosedRange<Self>,
     using curve: (Self) -> Self = { $0 },
     clamped: Bool = true
   ) -> Self {
@@ -99,7 +99,6 @@ extension BinaryFloatingPoint {
     let normalised: Double = Double(self.normalised(from: range))
     let percent = normalised * 100
     return String(percent.displayString(.fractionLength(0)) + "%")
-    //    return String(percent.formatted(.percent.precision(.fractionLength(0))))
   }
 
   /// E.g. converting `0.8` to `0.2`
@@ -108,7 +107,7 @@ extension BinaryFloatingPoint {
     let bounded = min(max(self, 0.0), 1.0)
     return 1.0 - bounded
   }
-  
+
   public func wrapPhase(_ phase: CGFloat) -> CGFloat {
     var r = phase.truncatingRemainder(dividingBy: twoPi)
     if r < 0 { r += twoPi }  // keep in [0, 2π)
@@ -127,16 +126,15 @@ extension BinaryFloatingPoint {
     return (self + prevFib) / 2/// Midpoint between current and previous
   }
 
-  public var halved: Self {
-    self / 2
-  }
+  public var halved: Self { self / 2 }
 
   public var clampedToPositive: Self {
     clamped(.zero, .infinity)
   }
 
-  public var constrainedOpacity: Self {
-    return min(1.0, max(0.0, self))
+  public var clampedZeroToOne: Self {
+    return self.clamped(0, 1)
+//    return min(1.0, max(0.0, self))
   }
 
   public var isGreaterThanZero: Bool { self > 0 }
@@ -149,13 +147,9 @@ extension BinaryFloatingPoint {
     return self / aspectRatio
   }
 
-  public var degreesToRadians: Self {
-    self * .pi / 180
-  }
+  public var degreesToRadians: Self { self * .pi / 180 }
 
-  public var radiansToDegrees: Self {
-    self * 180 / .pi
-  }
+  public var radiansToDegrees: Self { self * 180 / .pi }
 
   /// Returns the shortest angular distance between two angles
   public static func angleDelta(_ angle1: Self, _ angle2: Self) -> Self {
@@ -167,7 +161,7 @@ extension BinaryFloatingPoint {
 
     return abs(delta)
   }
-  
+
   public static func randomNoise(
     _ phaseAtPosition: CGFloat = 0
   ) -> CGFloat {

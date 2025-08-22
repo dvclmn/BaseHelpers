@@ -7,12 +7,9 @@
 
 import SwiftUI
 
-//extension ColorAsset: @unchecked Sendable {}
-//public typealias Swatch = ColorAsset
 public typealias Swatch = Asset.Swatch
 
 extension Swatch {
-  
 
   public var id: String { rawValue }
 
@@ -25,10 +22,6 @@ extension Swatch {
     Color("swatch/\(rawValue)", bundle: .module)
   }
 
-//  @available(*, deprecated, renamed: "swiftUIColor", message: "Favour clearer naming.")
-//  public var colour: Color {
-//    Color(named: "swatch/\(name)", bundle: .module)
-//  }
 
   public var name: String {
     guard let number = colourShadeNumber else {
@@ -75,41 +68,41 @@ extension Swatch {
   }
 
   /// May need to revert back to returning an optional, without the default of `red`
-//  public var primitiveColour: PrimitiveColour {
-//    return PrimitiveColour.allCases.first(where: { $0.swatches.contains(self) }) ?? .red
-//  }
+  //  public var primitiveColour: PrimitiveColour {
+  //    return PrimitiveColour.allCases.first(where: { $0.swatches.contains(self) }) ?? .red
+  //  }
 
   public var isVibrant: Bool {
     return name.hasSuffix("V")
   }
 
-//  // MARK: - Older
-//  @available(
-//    *, deprecated,
-//    message:
-//      "Because `brightness` returns `some View`, prefer to use it as it's own modifier in the View. Find alternative way to adjust brightness to return a `Color` instead."
-//  )
-//  public func colour(_ brightnessAdjustment: BrightnessAdjustment, amount: CGFloat) -> some View {
-//    let newColour = swiftUIColor.brightness(brightnessAdjustment.adjustment(with: amount))
-//    return newColour
-//  }
-//
-//  public static func swatchesFromIndices(
-//    _ indices: [Int],
-//    swatchList: [Swatch]
-//  ) -> [Swatch] {
-//    indices.compactMap { index in
-//      guard index >= 0 && index < swatchList.count else {
-//        return nil  // Skip invalid indices
-//      }
-//      return swatchList[index]
-//    }
-//  }
+  //  // MARK: - Older
+  //  @available(
+  //    *, deprecated,
+  //    message:
+  //      "Because `brightness` returns `some View`, prefer to use it as it's own modifier in the View. Find alternative way to adjust brightness to return a `Color` instead."
+  //  )
+  //  public func colour(_ brightnessAdjustment: BrightnessAdjustment, amount: CGFloat) -> some View {
+  //    let newColour = swiftUIColor.brightness(brightnessAdjustment.adjustment(with: amount))
+  //    return newColour
+  //  }
+  //
+  //  public static func swatchesFromIndices(
+  //    _ indices: [Int],
+  //    swatchList: [Swatch]
+  //  ) -> [Swatch] {
+  //    indices.compactMap { index in
+  //      guard index >= 0 && index < swatchList.count else {
+  //        return nil  // Skip invalid indices
+  //      }
+  //      return swatchList[index]
+  //    }
+  //  }
 
-//  public static func printSwatchNames(_ list: [Swatch]) -> String {
-//    let names = list.map { $0.rawValue }
-//    return names.joined(separator: ", ")
-//  }
+  //  public static func printSwatchNames(_ list: [Swatch]) -> String {
+  //    let names = list.map { $0.rawValue }
+  //    return names.joined(separator: ", ")
+  //  }
 
 }
 
