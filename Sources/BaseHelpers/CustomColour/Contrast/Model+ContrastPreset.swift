@@ -48,15 +48,4 @@ public enum ModificationStrengthPreset: CaseIterable, Identifiable, Sendable {
       case .custom(let strength): strength
     }
   }
-
-  //  public func adjustment(
-  //    for level: LuminanceLevel,
-  //    purpose: ContrastPurpose
-  //  ) -> HSVAdjustment {
-  //    HSVAdjustment.adjustment(
-  //      forLumaLevel: level,
-  //      contrastAmount: self.adjustmentStrength,
-  //      purpose: purpose
-  //    )
-  //  }
 }

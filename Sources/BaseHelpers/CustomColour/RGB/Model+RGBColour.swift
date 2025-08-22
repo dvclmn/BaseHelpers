@@ -84,20 +84,12 @@ extension RGBColour {
 
     let hsvColour = HSVColour(fromRGB: self)
 
-    //    let modification = ColourModification(
-    //      strength: strength,
-    //      purpose: purpose,
-    //      chroma: chroma
-    //    )
-
     let adjustment: HSVAdjustment = {
       let contributors: [any HSVModifier] = [
         LuminanceLevelAdjustment(level: self.luminanceLevel),
         ColourPurposeAdjustment(purpose: purpose),
         ChromaAdjustment(chroma: chroma),
       ]
-
-      //    var adjustment: HSVAdjustment {
 
       let allAdjustments: [HSVAdjustment] = contributors.map { modifier in
         modifier.adjustment
@@ -111,14 +103,6 @@ extension RGBColour {
 
     }()
 
-    //    let modification = ColourModification(
-    //      luminanceLevel: hsvColour.luminanceLevel,
-    ////      colour: hsvColour,
-    //      strength: strength,
-    //      purpose: purpose,
-    //      chroma: chroma
-    //    )
-    //    print("HSVModification is: \(modification)")
     let adjustedHSV = hsvColour.applying(adjustment: adjustment)
     return adjustedHSV.toRGB
   }
@@ -132,22 +116,6 @@ extension RGBColour {
       chroma: modification.chroma
     )
   }
-
-  //  public func contrastColour(
-  //    withPreset preset: ContrastPreset,
-  //    purpose: ContrastPurpose = .legibility,
-  //    isMonochrome: Bool = false
-  //  ) -> RGBColour {
-  //
-  //    let hsvColour = HSVColour(fromRGB: self)
-  //    let adjustmentToApply = preset.adjustment(
-  //      for: self.luminanceLevel,
-  //      purpose: purpose
-  //    )
-  //
-  //    let newHSV: HSVColour = hsvColour.applying(adjustment: adjustmentToApply)
-  //    return RGBColour(fromHSV: newHSV)
-  //  }
 
   public var luminanceLevel: LuminanceLevel {
     return LuminanceLevel(from: self)

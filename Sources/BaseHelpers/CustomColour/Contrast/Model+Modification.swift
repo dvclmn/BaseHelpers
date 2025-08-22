@@ -5,7 +5,12 @@
 //  Created by Dave Coleman on 1/7/2025.
 //
 
-import Foundation
+import SwiftUI
+
+extension EnvironmentValues {
+  @Entry public var colourModification: ColourModification? = nil
+}
+
 
 public protocol HSVModifier {
   var adjustment: HSVAdjustment { get }
