@@ -7,8 +7,6 @@
 
 import SwiftUI
 
-public typealias Swatch = Asset.Swatch
-
 extension Swatch {
 
   public var id: String { rawValue }

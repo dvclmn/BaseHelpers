@@ -12,7 +12,6 @@
   {%- endfor -%}
 {% endmacro %}
 
-{% set enumName %}{{param.enumName|default:"Asset"}}{% endset %}
 {% set arResourceGroupType %}{{param.arResourceGroupTypeName|default:"ARResourceGroupAsset"}}{% endset %}
 {% set colorType %}{{param.colorTypeName|default:"ColorAsset"}}{% endset %}
 {% set dataType %}{{param.dataTypeName|default:"DataAsset"}}{% endset %}
@@ -39,15 +38,9 @@
   import SwiftUI
 #endif
 
-{# (Dave) Have removed the deprecations  #}
-// swiftlint:disable superfluous_disable_command file_length implicit_return
-
-// MARK: - Asset Catalogs
-
 {# (Dave) - A list of other deprecations, about `allColors`, `allDataAssets`, etc #}
 {% macro enumBlock assets %}
   {% call casesBlock assets %}
-  
 {% endmacro %}
 
 
@@ -55,7 +48,6 @@
   {% for asset in assets %}
   {% if asset.type == "color" %}
     case {{asset.name|swiftIdentifier:"pretty"|lowerFirstWord|escapeReservedKeywords}}
-
 
   {% elif asset.items and ( forceNamespaces == "true" or asset.isNamespaced == "true" ) %}
 
@@ -82,13 +74,11 @@
   {% endif %}
   {% endfor %}
 {% endmacro %}
-// swiftlint:disable identifier_name line_length nesting type_body_length type_name
 
-{# Important: This is the top-level `Asset` enum #}
-{{accessModifier}} enum {{enumName}}: Sendable {
+
   {% if catalogs.count > 1 or param.forceFileNameEnum %}
   {% for catalog in catalogs %}
-  {{accessModifier}} enum {{catalog.name|swiftIdentifier:"pretty"|escapeReservedKeywords}}: Butts01 {
+  {{accessModifier}} enum {{catalog.name|swiftIdentifier:"pretty"|escapeReservedKeywords}} {
     {% if catalog.assets %}
     {% filter indent:2," ",true %}{% call enumBlock catalog.assets %}{% endfilter %}
     {% endif %}
@@ -97,25 +87,7 @@
   {% else %}
   {% call enumBlock catalogs.first.assets %}
   {% endif %}
-}
-// swiftlint:enable identifier_name line_length nesting type_body_length type_name
 
-// MARK: - Implementation Details
-
-{% if not param.bundle %}
-
-// swiftlint:disable convenience_type
-private final class BundleToken {
-  static let bundle: Bundle = {
-    #if SWIFT_PACKAGE
-    return Bundle.module
-    #else
-    return Bundle(for: BundleToken.self)
-    #endif
-  }()
-}
-// swiftlint:enable convenience_type
-{% endif %}
 {% else %}
 // No assets found
 {% endif %}

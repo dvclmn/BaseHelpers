@@ -13,7 +13,10 @@
   import SwiftUI
 #endif
 
-public enum Asset: Sendable {
+
+
+
+
 
   public enum Swatch: String, Codable, CaseIterable, Identifiable, Sendable, Hashable, Equatable {
       case asciiBlack
@@ -76,7 +79,6 @@ public enum Asset: Sendable {
       case purple40
       case purple50
       case purple70
-      case red50
       case red50V
       case slate30
       case slate40
@@ -87,6 +89,10 @@ public enum Asset: Sendable {
       case slate90
       case teal30
       case teal50
+      case terracotta30
+      case terracotta40
+      case terracotta50
+      case terracotta60
       case whiteBone
       case whiteOff
       case whiteTrue
@@ -94,4 +100,4 @@ public enum Asset: Sendable {
       case yellow40
   }
 
-}
+
