@@ -21,7 +21,7 @@ public typealias AssetColorTypeAlias = ColorAsset.Color
 // MARK: - Asset Catalogs
 
 // swiftlint:disable identifier_name line_length nesting type_body_length type_name
-public enum Asset {
+public enum Asset: Sendable {
   public enum Swatch {
     public static let asciiBlack = ColorAsset(name: "swatch/asciiBlack")
     public static let asciiBlue = ColorAsset(name: "swatch/asciiBlue")

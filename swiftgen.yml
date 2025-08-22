@@ -11,8 +11,8 @@ xcassets:
   inputs:
     - Assets.xcassets
   outputs:
-    - templateName: swift5
+    - templatePath: swift5-sendable.stencil
       params:
         forceProvidesNamespaces: true
         publicAccess: true
-      output: CustomColour/Colour+Generated.swift
+      output: SwiftGen/Colour+Generated.swift
