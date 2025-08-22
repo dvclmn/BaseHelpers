@@ -15,4 +15,4 @@ xcassets:
       params:
         forceProvidesNamespaces: false
         publicAccess: true
-      output: SwiftGen/Colour+Generated.swift
+      output: CustomColour/Swatch+Generated.swift
