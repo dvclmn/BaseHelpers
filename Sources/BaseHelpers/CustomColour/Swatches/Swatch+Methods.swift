@@ -20,36 +20,27 @@ extension Swatch {
     Color("swatch/\(rawValue)", bundle: .module)
   }
 
+  public var name: String { rawValue }
+//    return "I'm a name"
+    //    guard let number = colourShadeNumber else {
+    //      return rawValue.capitalized
+    //    }
+    //    return self.groupName + String(shadeNumber) + (isVibrant ? "V" : "")
+//  }
 
-  public var name: String {
-    guard let number = colourShadeNumber else {
-      return rawValue.capitalized
-    }
-    return self.groupName + String(number) + (isVibrant ? "V" : "")
-  }
+  public var type: SwatchType { SwatchType(fromRawString: self.rawValue, fallbackType: "Base") }
 
-  public var type: SwatchType {
-    switch true {
-      case rawValue.hasPrefix("white"): return .shade(.white)
-      case rawValue.hasPrefix("black"): return .shade(.black)
-      case rawValue.hasPrefix("ascii"): return .ascii
-      case rawValue.hasPrefix("neon"): return .neon
-      default: return .base
-    }
+  public func typeName(fallBackType: String? = nil) -> String {
+    return SwatchType(fromRawString: rawValue, fallbackType: fallBackType).name
   }
 
   // MARK: - Grouping
-  public var colourShadeNumber: Int? {
-    let digits = rawValue.filter { $0.isNumber }
-    return Int(digits)
-  }
-  public var groupName: String {
-    switch self.type {
-      case .base:
-        return rawValue.prefix(while: { $0.isLetter }).lowercased()
-      default:
-        return self.type.name
-    }
+  public var shadeNumber: String {
+    /// This should return the part of the Swatch case name
+    /// that is a number, if present
+    let digits: String = rawValue.filter { $0.isWholeNumber }
+    print("Looking for numbers in \(rawValue), found \(digits)")
+    return digits
   }
 
   public static func grouped(includesAscii: Bool = false) -> [String: [Self]] {
@@ -61,7 +52,7 @@ extension Swatch {
         !swatch.rawValue.contains("ascii")
       }
     }
-    let grouped = Dictionary(grouping: swatches) { $0.groupName }
+    let grouped = Dictionary(grouping: swatches) { $0.typeName() }
     return grouped
   }
 

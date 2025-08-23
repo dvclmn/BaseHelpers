@@ -11,7 +11,27 @@ public enum SwatchType {
   case ascii
   case shade(SwatchShade)
   case neon
-  case base
+  case other(String?) // Can provide custom name
+
+  public init(
+    fromRawString raw: String,
+    fallbackType: String? = nil
+  ) {
+    let lower = raw.lowercased()
+    
+    if lower.hasPrefix("ascii") {
+      self = .ascii
+    }
+    else if let shade = SwatchShade(rawValue: lower) {
+      self = .shade(shade)
+    }
+    else if lower.hasPrefix("neon") {
+      self = .neon
+    }
+    else {
+      self = .other(fallbackType)
+    }
+  }
   
   public var name: String {
     switch self {
@@ -21,8 +41,8 @@ public enum SwatchType {
         shade.rawValue.capitalized
       case .neon:
         "Neon"
-      case .base:
-        "Base"
+      case .other(let name):
+        name ?? "Unknown"
     }
   }
 }
@@ -30,5 +50,5 @@ public enum SwatchType {
 public enum SwatchShade: String {
   case white
   case black
+  case grey
 }
-
