@@ -13,7 +13,7 @@ public enum PrimitiveColour: String, Identifiable, CaseIterable, Sendable, Compa
   public static func < (lhs: PrimitiveColour, rhs: PrimitiveColour) -> Bool {
     lhs.sortIndex < rhs.sortIndex
   }
-  
+
   case red
   case orange
   case yellow
@@ -22,12 +22,19 @@ public enum PrimitiveColour: String, Identifiable, CaseIterable, Sendable, Compa
   case purple
   case pink
   case brown
-  case monochrome
-  
-  public init(fromSwatch swatch: Swatch) {
-    
+  case grey
+  case black
+  case white
+
+  public init?(fromSwatch swatch: Swatch) {
+    let lower = swatch.rawValue.lowercased()
+
+    guard let match = PrimitiveColour.allCases.first(where: { lower.contains($0.rawValue) }) else {
+      return nil
+    }
+    self = match
   }
-  
+
   public var id: String { rawValue }
 
   public var sortIndex: Int {

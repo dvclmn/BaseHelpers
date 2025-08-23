@@ -45,10 +45,11 @@ extension Sequence {
       comparator(a[keyPath: keyPath], b[keyPath: keyPath])
     }
   }
-  
-//  public func grouping(by keyPath: KeyPath<Element, T>) -> Dictionary<Self> {
-//    
-//  }
-//  public func grouping(by keyPath: KeyPath<Element, Int>) ->
+
+  public func groupedDictionary<K: Hashable>(
+    by keyPath: KeyPath<Element, K>
+  ) -> [K: [Element]] {
+    Dictionary(grouping: self, by: { $0[keyPath: keyPath] })
+  }
 
 }

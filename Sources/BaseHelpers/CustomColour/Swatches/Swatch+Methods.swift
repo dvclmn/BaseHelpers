@@ -21,12 +21,12 @@ extension Swatch {
   }
 
   public var name: String { rawValue }
-//    return "I'm a name"
-    //    guard let number = colourShadeNumber else {
-    //      return rawValue.capitalized
-    //    }
-    //    return self.groupName + String(shadeNumber) + (isVibrant ? "V" : "")
-//  }
+  //    return "I'm a name"
+  //    guard let number = colourShadeNumber else {
+  //      return rawValue.capitalized
+  //    }
+  //    return self.groupName + String(shadeNumber) + (isVibrant ? "V" : "")
+  //  }
 
   public var type: SwatchType { SwatchType(fromRawString: self.rawValue, fallbackType: "Base") }
 
@@ -56,10 +56,14 @@ extension Swatch {
     return grouped
   }
 
-  /// May need to revert back to returning an optional, without the default of `red`
-  //  public var primitiveColour: PrimitiveColour {
-  //    return PrimitiveColour.allCases.first(where: { $0.swatches.contains(self) }) ?? .red
-  //  }
+  public var primitiveColour: PrimitiveColour? {
+    PrimitiveColour(fromSwatch: self)
+//    return PrimitiveColour.allCases.first(where: { $0.swatches.contains(self) }) ?? .red
+  }
+  
+  public var primitiveColourName: String {
+    return primitiveColour?.rawValue ?? "Unknown"
+  }
 
   public var isVibrant: Bool {
     return name.hasSuffix("V")
