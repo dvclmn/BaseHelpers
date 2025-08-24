@@ -126,17 +126,6 @@ public enum CurveFunction: String, CaseIterable, Identifiable, Sendable {
   }
 }
 
-/// Behavioural wrappers for applying curves
-//public enum EasingType: Sendable {
-//  case easeIn
-//  case easeOut
-//  case easeInOut
-//}
-//public struct Easing {
-//  var type: EasingType
-//  var curve: CurveFunction
-//}
-
 public enum Ease: String, CaseIterable, Identifiable, Sendable {
   case `in`
   case out
@@ -146,22 +135,25 @@ public enum Ease: String, CaseIterable, Identifiable, Sendable {
   public var id: String { rawValue }
 
   public func apply(
-    using curve: (Double) -> Double,
+    using curve: CurveFunction,
+//    using curve: (Double) -> Double,
     to x: Double
   ) -> Double {
     let clamped = max(0, min(1, x))
     switch self {
       case .none:
-        return curve(clamped)
+        return curve.apply(to: clamped)
+        
       case .in:
-        return curve(clamped)
+        return curve.apply(to: clamped)
+        
       case .out:
-        return 1 - curve(1 - clamped)
+        return 1 - curve.apply(to: (1 - clamped))
       case .inOut:
         guard clamped < 0.5 else {
-          return 0.5 + 0.5 * (1 - curve((1 - clamped) * 2))
+          return 0.5 + 0.5 * (1 - curve.apply(to: (1 - clamped) * 2))
         }
-        return 0.5 * curve(clamped * 2)
+        return 0.5 * curve.apply(to: clamped * 2)
     }
   }
 }
