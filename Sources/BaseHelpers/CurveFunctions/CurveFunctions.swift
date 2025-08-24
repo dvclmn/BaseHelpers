@@ -47,12 +47,7 @@ import Foundation
 /// - Useful for compressing wide ranges into smaller scales.
 /// - Models diminishing returns or gradual slow-downs.
 ///
-/// ## Sine
-/// Periodic wave function.
-/// `y = sin(x)`
-/// - Oscillates smoothly between -1 and 1.
-/// - Provides a natural ease-in/ease-out curve when using a portion of the wave.
-/// - Used for looping motion, wave simulation, and smooth periodic changes.
+
 
 public enum CurveFunction: String, CaseIterable, Identifiable, Sendable {
   case linear
@@ -60,7 +55,6 @@ public enum CurveFunction: String, CaseIterable, Identifiable, Sendable {
   case cubic
   case exponential
   case logarithmic
-  case sine
 
   public var id: String { self.rawValue }
 
@@ -71,7 +65,6 @@ public enum CurveFunction: String, CaseIterable, Identifiable, Sendable {
       case .cubic: "Cubic"
       case .exponential: "Exponential"
       case .logarithmic: "Logarithmic"
-      case .sine: "Sine"
     }
   }
 
@@ -102,9 +95,9 @@ public enum CurveFunction: String, CaseIterable, Identifiable, Sendable {
         let base = 10.0
         return log(1 + (base - 1) * clamped) / log(base)
 
-      case .sine:
-        /// Half sine wave from 0 to 1
-        return 0.5 - 0.5 * cos(clamped * .pi)
+//      case .sine:
+//        /// Half sine wave from 0 to 1
+//        return 0.5 - 0.5 * cos(clamped * .pi)
     }
   }
 
@@ -123,6 +116,24 @@ public enum CurveFunction: String, CaseIterable, Identifiable, Sendable {
     }
 
     return mapped
+  }
+}
+
+public enum CurveType: Identifiable, Sendable {
+  case shaped(CurveFunction, Ease)  // Composable curves
+  case preset(PresetCurve)
+//  case sine
+//  case elastic
+//  case bounce
+  
+  public var id: String {
+    switch self {
+      case .shaped(let curve, let ease): return "\(curve.rawValue)_\(ease.rawValue)"
+      case .preset(let preset): return preset.rawValue
+//      case sine:
+//      case elastic:
+//      case bounce:
+    }
   }
 }
 
