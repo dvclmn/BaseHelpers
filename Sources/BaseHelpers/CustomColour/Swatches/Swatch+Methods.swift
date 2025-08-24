@@ -35,11 +35,12 @@ extension Swatch {
   }
 
   // MARK: - Grouping
-  public var shadeNumber: String {
+  public var shadeNumber: String? {
     /// This should return the part of the Swatch case name
     /// that is a number, if present
-    let digits: String = rawValue.filter { $0.isWholeNumber }
-    print("Looking for numbers in \(rawValue), found \(digits)")
+    let digits = rawValue.filter { $0.isWholeNumber }
+    guard !digits.isEmpty else { return nil }
+//    print("Looking for numbers in \(rawValue), found \(digits)")
     return digits
   }
 

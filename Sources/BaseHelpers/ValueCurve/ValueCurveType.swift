@@ -7,6 +7,50 @@
 
 import Foundation
 
+/// A list of pure mathematical curves
+///
+/// ## Linear
+/// A relationship where change is proportional to input.
+/// `y = mx + b`
+/// - The graph is a straight line
+/// - Each step increases by exactly the same amount.
+///
+/// ## Quadratic
+/// Second-degree polynomial.
+/// `y = ax^2 + bx + c`
+/// - The graph is a parabola (U-shaped curve).
+/// - Useful for accelerations or decelerations
+/// - Common in projectile motion in physics
+enum CurveFunction {
+  case linear
+  case quadratic
+  case cubic
+  case exponential
+  case logarithmic
+  case sine
+}
+
+/// Behavioural wrappers for applying curves
+enum EasingType {
+  case easeIn
+  case easeOut
+  case easeInOut
+}
+struct Easing {
+  var type: EasingType
+  var curve: CurveFunction
+}
+
+/// Discrete scaling system used in design
+struct ModularScale {
+  var base: Double
+  var ratio: Double
+  func value(forStep step: Int) -> Double {
+    base * pow(ratio, Double(step))
+  }
+}
+
+
 public struct ValueCurve {
   public let apply: (Double) -> Double
 }
