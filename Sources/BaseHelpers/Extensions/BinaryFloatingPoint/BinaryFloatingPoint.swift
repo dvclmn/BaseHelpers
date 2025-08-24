@@ -81,18 +81,43 @@ extension BinaryFloatingPoint {
   ///   - curve: A non-linear adjustment function, like `.squareRoot()`, or a custom easing.
   ///   - clamped: Whether to clamp input to the input range.
   /// - Returns: A derived value smoothly mapped from size.
+  ///
+  /// E.g.:
+  /// ```
+  /// let scaled = value.mappedNonLinearly(
+  ///   from: 0...100,
+  ///   to: 10...50,
+  ///   curve: .exponential,
+  ///   ease: .inOut
+  /// )
+  /// ```
+//  public func mappedNonLinearly(
+//    from inputRange: ClosedRange<Self> = 0...CGFloat.infinity,
+//    to outputRange: ClosedRange<Self>,
+//    using curve: (Self) -> Self = { $0 },
+//    clamped: Bool = true
+//  ) -> Self {
+//    let clampedSelf = clamped ? self.clamped(to: inputRange) : self
+//    let inputSpan = inputRange.upperBound - inputRange.lowerBound
+//    let normalised = (clampedSelf - inputRange.lowerBound) / inputSpan
+//    let curved = curve(normalised)
+//    let outputSpan = outputRange.upperBound - outputRange.lowerBound
+//    return outputRange.lowerBound + curved * outputSpan
+//  }
+  
   public func mappedNonLinearly(
-    from inputRange: ClosedRange<Self> = 0...CGFloat.infinity,
+    from inputRange: ClosedRange<Self> = 0...1,
     to outputRange: ClosedRange<Self>,
-    using curve: (Self) -> Self = { $0 },
+    curve: CurveFunction = .linear,
+    ease: Ease = .none,
     clamped: Bool = true
   ) -> Self {
     let clampedSelf = clamped ? self.clamped(to: inputRange) : self
     let inputSpan = inputRange.upperBound - inputRange.lowerBound
     let normalised = (clampedSelf - inputRange.lowerBound) / inputSpan
-    let curved = curve(normalised)
+    let curved = ease.apply(using: curve.apply, to: Double(normalised))
     let outputSpan = outputRange.upperBound - outputRange.lowerBound
-    return outputRange.lowerBound + curved * outputSpan
+    return outputRange.lowerBound + Self(curved) * outputSpan
   }
 
   public func toPercentString(within range: ClosedRange<Self>) -> String {
