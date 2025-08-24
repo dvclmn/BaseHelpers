@@ -37,8 +37,9 @@ extension Sequence {
       }
   }
 
+  /// Non-native key path based sorting
   public func sorted<T: Comparable>(
-    by keyPath: KeyPath<Element, T>,
+    byKeyPath keyPath: KeyPath<Element, T>,
     using comparator: (T, T) -> Bool = (<)
   ) -> [Element] {
     sorted { a, b in

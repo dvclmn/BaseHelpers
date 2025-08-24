@@ -8,9 +8,9 @@
 import Foundation
 
 extension Dictionary {
-  
+  /// Non-native key path based sorting for Dictionary
   public func sorted<T: Comparable>(
-    by keyPath: KeyPath<Element, T>,
+    byKeyPath keyPath: KeyPath<Element, T>,
     using comparator: (T, T) -> Bool = (<)
   ) -> [Element] {
     sorted { a, b in
@@ -33,7 +33,7 @@ extension Dictionary {
   ) where Value == [S.Element] {
     self.init(grouping: values, by: { $0[keyPath: keyPath] })
   }
-  
+
 }
 
 extension Dictionary where Value: Sequence {
@@ -41,6 +41,6 @@ extension Dictionary where Value: Sequence {
   public func sortedGrouped<T: Comparable>(
     by keyPath: KeyPath<Value.Element, T>
   ) -> [Value.Element] {
-    self.flatMap(\.value).sorted(by: keyPath)
+    self.flatMap(\.value).sorted(byKeyPath: keyPath)
   }
 }
