@@ -48,7 +48,6 @@ import Foundation
 /// - Models diminishing returns or gradual slow-downs.
 ///
 
-
 public enum CurveFunction: String, CaseIterable, Identifiable, Sendable {
   case linear
   case quadratic
@@ -95,9 +94,9 @@ public enum CurveFunction: String, CaseIterable, Identifiable, Sendable {
         let base = 10.0
         return log(1 + (base - 1) * clamped) / log(base)
 
-//      case .sine:
-//        /// Half sine wave from 0 to 1
-//        return 0.5 - 0.5 * cos(clamped * .pi)
+    //      case .sine:
+    //        /// Half sine wave from 0 to 1
+    //        return 0.5 - 0.5 * cos(clamped * .pi)
     }
   }
 
@@ -122,17 +121,17 @@ public enum CurveFunction: String, CaseIterable, Identifiable, Sendable {
 public enum CurveType: Identifiable, Sendable {
   case shaped(CurveFunction, Ease)  // Composable curves
   case preset(PresetCurve)
-//  case sine
-//  case elastic
-//  case bounce
-  
+  //  case sine
+  //  case elastic
+  //  case bounce
+
   public var id: String {
     switch self {
       case .shaped(let curve, let ease): return "\(curve.rawValue)_\(ease.rawValue)"
       case .preset(let preset): return preset.rawValue
-//      case sine:
-//      case elastic:
-//      case bounce:
+    //      case sine:
+    //      case elastic:
+    //      case bounce:
     }
   }
 }
@@ -147,17 +146,17 @@ public enum Ease: String, CaseIterable, Identifiable, Sendable {
 
   public func apply(
     using curve: CurveFunction,
-//    using curve: (Double) -> Double,
+    //    using curve: (Double) -> Double,
     to x: Double
   ) -> Double {
     let clamped = max(0, min(1, x))
     switch self {
       case .none:
         return curve.apply(to: clamped)
-        
+
       case .in:
         return curve.apply(to: clamped)
-        
+
       case .out:
         return 1 - curve.apply(to: (1 - clamped))
       case .inOut:

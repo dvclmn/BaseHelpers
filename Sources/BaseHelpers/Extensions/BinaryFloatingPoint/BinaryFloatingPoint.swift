@@ -91,20 +91,33 @@ extension BinaryFloatingPoint {
   ///   ease: .inOut
   /// )
   /// ```
-  //  public func mappedNonLinearly(
-  //    from inputRange: ClosedRange<Self> = 0...CGFloat.infinity,
-  //    to outputRange: ClosedRange<Self>,
-  //    using curve: (Self) -> Self = { $0 },
-  //    clamped: Bool = true
-  //  ) -> Self {
-  //    let clampedSelf = clamped ? self.clamped(to: inputRange) : self
-  //    let inputSpan = inputRange.upperBound - inputRange.lowerBound
-  //    let normalised = (clampedSelf - inputRange.lowerBound) / inputSpan
-  //    let curved = curve(normalised)
-  //    let outputSpan = outputRange.upperBound - outputRange.lowerBound
-  //    return outputRange.lowerBound + curved * outputSpan
-  //  }
-
+  ///
+  /// Input range = the domain: “What numbers are we feeding into the curve?”
+  /// Output range = the codomain: “What numbers do we want back out?”
+  ///
+  /// Example 1: mapping scroll position to opacity
+  /// ```
+  /// inputRange  = 100...300   // scroll distance in points
+  /// outputRange = 0...1       // opacity
+  /// curve       = exponential
+  /// ease        = inOut
+  /// ```
+  ///
+  /// Example 2: mapping time to y-position
+  /// ```
+  /// inputRange  = 0…2       // seconds
+  /// outputRange = 200…800   // pixel position
+  /// curve       = sine
+  /// ease        = none
+  /// ```
+  ///
+  /// For playing with a `strength` factor:
+  /// ```
+  /// let curved = ease.apply(
+  ///   using: curve,
+  ///   to: Double(normalised)
+  /// ) * strength
+  /// ```
   public func mappedNonLinearly(
     from inputRange: ClosedRange<Self> = 0...1,
     to outputRange: ClosedRange<Self>,
