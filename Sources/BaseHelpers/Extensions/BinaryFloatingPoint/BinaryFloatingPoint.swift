@@ -121,8 +121,9 @@ extension BinaryFloatingPoint {
   public func mappedNonLinearly(
     from inputRange: ClosedRange<Self> = 0...1,
     to outputRange: ClosedRange<Self>,
-    curve: CurveFunction = .linear,
-    ease: Ease = .none,
+    curve: CurveType = .shaped(.logar, .inOut),
+//    curve: CurveFunction = .linear,
+//    ease: Ease = .none,
     clampedToInputRange clamped: Bool = true
   ) -> Self {
     

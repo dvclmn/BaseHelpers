@@ -121,17 +121,11 @@ public enum CurveFunction: String, CaseIterable, Identifiable, Sendable {
 public enum CurveType: Identifiable, Sendable {
   case shaped(CurveFunction, Ease)  // Composable curves
   case preset(PresetCurve)
-  //  case sine
-  //  case elastic
-  //  case bounce
 
   public var id: String {
     switch self {
       case .shaped(let curve, let ease): return "\(curve.rawValue)_\(ease.rawValue)"
       case .preset(let preset): return preset.rawValue
-    //      case sine:
-    //      case elastic:
-    //      case bounce:
     }
   }
 }
