@@ -15,45 +15,45 @@ public enum EasingDirection: String, CaseIterable, Identifiable, Sendable {
 
   public var id: String { rawValue }
 
-//  public func apply(
-//    using curve: CurveFunction,
-//    //    using curve: (Double) -> Double,
-//    to x: Double
-//  ) -> Double {
-//    let clamped = max(0, min(1, x))
-//    switch self {
-//      case .none:
-//        return curve.apply(to: clamped)
-//
-//      case .in:
-//        return curve.apply(to: clamped)
-//
-//      case .out:
-//        return 1 - curve.apply(to: (1 - clamped))
-//
-//      case .inOut:
-//        guard clamped < 0.5 else {
-//          return 0.5 + 0.5 * (1 - curve.apply(to: (1 - clamped) * 2))
-//        }
-//        return 0.5 * curve.apply(to: clamped * 2)
-//    }
-//  }
-//
-//  public func apply(to x: Double, with curve: CurveFunction) -> Double {
-//    switch self {
-//      case .none:
-//        return x
-//      case .in:
-//        return x * x  // quadratic in, for example
-//      case .out:
-//        return 1 - pow(1 - x, 2)  // quadratic out
-//      case .inOut:
-//        guard x < 0.5 else {
-//          return 1 - pow(-2 * x + 2, 2) / 2
-//        }
-//        return 2 * x * x
-//    }
-//  }
+  //  public func apply(
+  //    using curve: CurveFunction,
+  //    //    using curve: (Double) -> Double,
+  //    to x: Double
+  //  ) -> Double {
+  //    let clamped = max(0, min(1, x))
+  //    switch self {
+  //      case .none:
+  //        return curve.apply(to: clamped)
+  //
+  //      case .in:
+  //        return curve.apply(to: clamped)
+  //
+  //      case .out:
+  //        return 1 - curve.apply(to: (1 - clamped))
+  //
+  //      case .inOut:
+  //        guard clamped < 0.5 else {
+  //          return 0.5 + 0.5 * (1 - curve.apply(to: (1 - clamped) * 2))
+  //        }
+  //        return 0.5 * curve.apply(to: clamped * 2)
+  //    }
+  //  }
+  //
+  //  public func apply(to x: Double, with curve: CurveFunction) -> Double {
+  //    switch self {
+  //      case .none:
+  //        return x
+  //      case .in:
+  //        return x * x  // quadratic in, for example
+  //      case .out:
+  //        return 1 - pow(1 - x, 2)  // quadratic out
+  //      case .inOut:
+  //        guard x < 0.5 else {
+  //          return 1 - pow(-2 * x + 2, 2) / 2
+  //        }
+  //        return 2 * x * x
+  //    }
+  //  }
 }
 
 public struct EasingFunction: Hashable, Identifiable, Sendable {
@@ -140,18 +140,18 @@ extension EasingFunction {
 
       // MARK: - Bounce (Simulating a bounce)
       case (.bounce, .out):
-        return Double.bounceOut(t)
+        return bounceOut(t)
 
       case (.bounce, .in):
-        return Double.bounceIn(t)
-        
-//        return 1 - EasingFunction(curve: .bounce, direction: .out).value(for: 1 - t)
+        return bounceIn(t)
+
+      //        return 1 - EasingFunction(curve: .bounce, direction: .out).value(for: 1 - t)
       case (.bounce, .inOut):
         // easeInOut is a combination of in and out
-        return Double.bounceInOut(t)
-//        return t < 0.5
-//          ? (1 - EasingFunction(curve: .bounce, direction: .out).value(for: 1 - 2 * t)) / 2
-//          : (1 + EasingFunction(curve: .bounce, direction: .out).value(for: 2 * t - 1)) / 2
+        return bounceInOut(t)
+      //        return t < 0.5
+      //          ? (1 - EasingFunction(curve: .bounce, direction: .out).value(for: 1 - 2 * t)) / 2
+      //          : (1 + EasingFunction(curve: .bounce, direction: .out).value(for: 2 * t - 1)) / 2
 
       // ... Implement all other curve types (elastic, back, etc.) here.
       default:
@@ -160,32 +160,32 @@ extension EasingFunction {
         return t
     }
   }
-  
+
   // MARK: - Usage Examples
-  
+
   /// Quick test to visualize the curves
-  public static func testCurves() {
-    let testPoints = stride(from: 0.0, through: 1.0, by: 0.1)
-    
-    print("Bounce curve:")
-    for t in testPoints {
-      let value = PresetCurve.bounce.apply(to: t)
-      print("t: \(String(format: "%.1f", t)) -> \(String(format: "%.3f", value))")
-    }
-    
-    print("\nElastic curve:")
-    for t in testPoints {
-      let value = PresetCurve.elastic.apply(to: t)
-      print("t: \(String(format: "%.1f", t)) -> \(String(format: "%.3f", value))")
-    }
-  }
+//  public static func testCurves() {
+//    let testPoints = stride(from: 0.0, through: 1.0, by: 0.1)
+//
+//    print("Bounce curve:")
+//    for t in testPoints {
+//      let value = PresetCurve.bounce.apply(to: t)
+//      print("t: \(String(format: "%.1f", t)) -> \(String(format: "%.3f", value))")
+//    }
+//
+//    print("\nElastic curve:")
+//    for t in testPoints {
+//      let value = PresetCurve.elastic.apply(to: t)
+//      print("t: \(String(format: "%.1f", t)) -> \(String(format: "%.3f", value))")
+//    }
+//  }
 }
 
-extension BinaryFloatingPoint {
-  
+extension EasingFunction {
+
   // MARK: - Bounce Implementation
 
-  public static func bounceOut(_ t: Self) -> Self {
+  private func bounceOut(_ t: Double) -> Double {
     let n1 = 7.5625
     let d1 = 2.75
 
@@ -203,22 +203,22 @@ extension BinaryFloatingPoint {
     }
   }
 
-  public static func bounceIn(_ t: Self) -> Self {
+  private func bounceIn(_ t: Double) -> Double {
     // easeIn is just 1 - easeOut(1 - t)
     return 1 - bounceOut(1 - t)
   }
 
-  public static func bounceInOut(_ t: Self) -> Self {
+  private func bounceInOut(_ t: Double) -> Double {
     return t < 0.5
       ? (1 - bounceOut(1 - 2 * t)) / 2
       : (1 + bounceOut(2 * t - 1)) / 2
   }
 
   // MARK: - Elastic Implementation
-  
-  public static func elasticOut(_ t: Self) -> Self {
-    let c4 = (2 * Self.pi) / 3
-    
+
+  private func elasticOut(_ t: Double) -> Double {
+    let c4 = (2 * Double.pi) / 3
+
     if t == 0 {
       return 0
     } else if t == 1 {
@@ -227,10 +227,10 @@ extension BinaryFloatingPoint {
       return pow(2, -10 * t) * sin((t * 10 - 0.75) * c4) + 1
     }
   }
-  
-  public static func elasticIn(_ t: Self) -> Self {
-    let c4 = (2 * Self.pi) / 3
-    
+
+  private func elasticIn(_ t: Double) -> Double {
+    let c4 = (2 * Double.pi) / 3
+
     if t == 0 {
       return 0
     } else if t == 1 {
@@ -239,10 +239,10 @@ extension BinaryFloatingPoint {
       return -pow(2, 10 * (t - 1)) * sin((t * 10 - 10.75) * c4)
     }
   }
-  
-  public static func elasticInOut(_ t: Self) -> Self {
-    let c5 = (2 * Self.pi) / 4.5
-    
+
+  private func elasticInOut(_ t: Double) -> Double {
+    let c5 = (2 * Double.pi) / 4.5
+
     if t == 0 {
       return 0
     } else if t == 1 {

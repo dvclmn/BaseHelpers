@@ -7,31 +7,31 @@
 
 import Foundation
 
-public enum PresetCurve: String, CaseIterable, Identifiable, Sendable {
-  case sine
-  case bounce
-  case elastic
-  
-  public var id: String { rawValue }
-  
-  public func apply(to x: Double) -> Double {
-    let clamped = max(0, min(1, x))
-    switch self {
-      case .sine:
-        return 0.5 - 0.5 * cos(clamped * .pi)
-        
-      case .bounce:
-        return bounceOut(clamped)
-        
-      case .elastic:
-        return elasticOut(clamped)
-    }
-  }
-  
-  
-  
-
-}
+//public enum PresetCurve: String, CaseIterable, Identifiable, Sendable {
+//  case sine
+//  case bounce
+//  case elastic
+//  
+//  public var id: String { rawValue }
+//  
+//  public func apply(to x: Double) -> Double {
+//    let clamped = max(0, min(1, x))
+//    switch self {
+//      case .sine:
+//        return 0.5 - 0.5 * cos(clamped * .pi)
+//        
+//      case .bounce:
+//        return bounceOut(clamped)
+//        
+//      case .elastic:
+//        return elasticOut(clamped)
+//    }
+//  }
+//  
+//  
+//  
+//
+//}
 
 // MARK: - Extended PresetCurve with Easing Variants
 

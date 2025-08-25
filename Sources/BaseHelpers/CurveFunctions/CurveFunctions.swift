@@ -11,78 +11,23 @@ public protocol CurveApplicable {
   func apply(to x: Double) -> Double
 }
 
-/// A list of pure mathematical curves.
-///
-/// All functions here are intended to operate on **normalised values**,
-/// where the input `x` is in the range `0...1`, and the output is also
-/// scaled to `0...1` for practical use in animation, design, or UI contexts.
-///
-/// ## Linear
-/// A relationship where change is proportional to input.
-/// `y = mx + b`
-/// - The graph is a straight line.
-/// - Each step increases by exactly the same amount.
-///
-/// ## Quadratic
-/// Second-degree polynomial.
-/// `y = ax² + bx + c`
-/// - The graph is a parabola (U-shaped curve).
-/// - Useful for accelerations or decelerations.
-/// - Common in projectile motion in physics.
-///
-/// ## Cubic
-/// Third-degree polynomial.
-/// `y = ax³ + bx² + cx + d`
-/// - Can produce sharper curvature than quadratic functions.
-/// - Often used for smooth acceleration/deceleration in animation.
-/// - Basis for cubic Bézier curves, common in easing functions.
-///
-/// ## Exponential
-/// Growth or decay proportional to the current value.
-/// `y = a · bˣ`
-/// - Steeper change than polynomial functions.
-/// - Models rapid growth or rapid fade.
-/// - Used in animation for fast acceleration, and in audio for volume changes.
-///
-/// ## Logarithmic
-/// Inverse of the exponential function.
-/// `y = log_b(x)`
-/// - Starts steep and flattens out over time.
-/// - Useful for compressing wide ranges into smaller scales.
-/// - Models diminishing returns or gradual slow-downs.
-///
-
 public enum CurveFunction: String, CaseIterable, Identifiable, Sendable {
   case linear
   case quadratic
   case cubic
+  case quartic
+  case quintic
+  case sine
+  case circular
   case exponential
   case logarithmic
-  
-  
-//  case linear
-//  case quadratic
-//  case cubic
-//  case quartic
-//  case quintic
-//  case sine
-//  case circular
-//  case exponential
-//  case elastic
-//  case back
-//  case bounce
+  case elastic
+  case back
+  case bounce
 
-  public var id: String { self.rawValue }
+  public var id: String { rawValue }
 
-  public var name: String {
-    switch self {
-      case .linear: "Linear"
-      case .quadratic: "Quadratic"
-      case .cubic: "Cubic"
-      case .exponential: "Exponential"
-      case .logarithmic: "Logarithmic"
-    }
-  }
+  public var name: String { rawValue.capitalized }
 
   /// Applies the curve to a normalised input in the range `0...1`,
   /// returning a normalised output in `0...1`.
@@ -111,6 +56,8 @@ public enum CurveFunction: String, CaseIterable, Identifiable, Sendable {
         let base = 10.0
         return log(1 + (base - 1) * clamped) / log(base)
 
+      default:
+        fatalError("\(self.name) Not yet implemented.")
     //      case .sine:
     //        /// Half sine wave from 0 to 1
     //        return 0.5 - 0.5 * cos(clamped * .pi)
@@ -135,34 +82,32 @@ public enum CurveFunction: String, CaseIterable, Identifiable, Sendable {
   }
 }
 
-public enum CurveType: Identifiable, Sendable {
-  case shaped(CurveFunction, Ease)  // Composable curves
-  case preset(PresetCurve)
-
-  public var id: String {
-    switch self {
-      case .shaped(let curve, let ease): return "\(curve.rawValue)_\(ease.rawValue)"
-      case .preset(let preset): return preset.rawValue
-    }
-  }
-}
-
-
+//public enum CurveType: Identifiable, Sendable {
+//  case shaped(CurveFunction, Ease)  // Composable curves
+//  case preset(PresetCurve)
+//
+//  public var id: String {
+//    switch self {
+//      case .shaped(let curve, let ease): return "\(curve.rawValue)_\(ease.rawValue)"
+//      case .preset(let preset): return preset.rawValue
+//    }
+//  }
+//}
 
 /// Discrete scaling system used in design
-public struct ModularScale {
-  var base: Double
-  var ratio: Double
-
-  public init(base: Double, ratio: Double) {
-    self.base = base
-    self.ratio = ratio
-  }
-
-  public func value(forStep step: Int) -> Double {
-    base * pow(ratio, Double(step))
-  }
-}
+//public struct ModularScale {
+//  var base: Double
+//  var ratio: Double
+//
+//  public init(base: Double, ratio: Double) {
+//    self.base = base
+//    self.ratio = ratio
+//  }
+//
+//  public func value(forStep step: Int) -> Double {
+//    base * pow(ratio, Double(step))
+//  }
+//}
 
 //public struct ValueCurve {
 //  public let apply: (Double) -> Double

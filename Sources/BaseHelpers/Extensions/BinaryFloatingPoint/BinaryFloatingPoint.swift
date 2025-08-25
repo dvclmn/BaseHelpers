@@ -121,7 +121,8 @@ extension BinaryFloatingPoint {
   public func mappedNonLinearly(
     from inputRange: ClosedRange<Self> = 0...1,
     to outputRange: ClosedRange<Self>,
-    curve: CurveType = .shaped(.logar, .inOut),
+    curve: EasingFunction = .easeInQuad,
+//    curve: CurveType = .shaped(.logar, .inOut),
 //    curve: CurveFunction = .linear,
 //    ease: Ease = .none,
     clampedToInputRange clamped: Bool = true
@@ -156,7 +157,8 @@ extension BinaryFloatingPoint {
     let inputSpan = inputRange.upperBound - inputRange.lowerBound
     let normalised = (clampedSelf - inputRange.lowerBound) / inputSpan
     
-    let curved = ease.apply(using: curve, to: Double(normalised))
+    let curved = curve.value(for: Double(normalised))
+//    let curved = ease.apply(using: curve, to: Double(normalised))
     let outputSpan = outputRange.upperBound - outputRange.lowerBound
     return outputRange.lowerBound + Self(curved) * outputSpan
   }
