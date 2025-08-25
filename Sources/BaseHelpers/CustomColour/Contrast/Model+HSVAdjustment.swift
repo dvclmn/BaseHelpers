@@ -88,5 +88,13 @@ extension HSVAdjustment {
     )
     return adjusted
   }
+  
+  func withModifiers(_ modifiers: [any HSVModifier]) -> HSVAdjustment {
+    let contributors: [any HSVModifier] = [
+      LuminanceModifier(level: self.luminanceThreshold),
+      ColourPurposeModifier(purpose: purpose),
+      ChromaModifier(chroma: chroma),
+    ]
+  }
 
 }

@@ -64,12 +64,12 @@ extension HSVColour {
     RGBColour(fromHSV: self)
   }
 
-  public var luminance: Double {
-    RGBColour(fromHSV: self).luminance
+  public func luminance(using method: LuminanceMethod = .wcag) -> Double {
+    RGBColour(fromHSV: self).luminance(using: method)
   }
   
-  public var luminanceLevel: LuminanceLevel {
-    RGBColour(fromHSV: self).luminanceLevel
+  public var luminanceThreshold: LuminanceThreshold {
+    RGBColour(fromHSV: self).luminanceThreshold
   }
 
   public static func gray(_ brightness: Double, alpha: Double = 1.0) -> HSVColour {
