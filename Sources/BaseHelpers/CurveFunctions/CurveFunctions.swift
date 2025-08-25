@@ -7,6 +7,10 @@
 
 import Foundation
 
+public protocol CurveApplicable {
+  func apply(to x: Double) -> Double
+}
+
 /// A list of pure mathematical curves.
 ///
 /// All functions here are intended to operate on **normalised values**,
@@ -54,6 +58,19 @@ public enum CurveFunction: String, CaseIterable, Identifiable, Sendable {
   case cubic
   case exponential
   case logarithmic
+  
+  
+//  case linear
+//  case quadratic
+//  case cubic
+//  case quartic
+//  case quintic
+//  case sine
+//  case circular
+//  case exponential
+//  case elastic
+//  case back
+//  case bounce
 
   public var id: String { self.rawValue }
 
@@ -130,37 +147,7 @@ public enum CurveType: Identifiable, Sendable {
   }
 }
 
-public enum Ease: String, CaseIterable, Identifiable, Sendable {
-  case `in`
-  case out
-  case inOut
-  case none
 
-  public var id: String { rawValue }
-
-  public func apply(
-    using curve: CurveFunction,
-    //    using curve: (Double) -> Double,
-    to x: Double
-  ) -> Double {
-    let clamped = max(0, min(1, x))
-    switch self {
-      case .none:
-        return curve.apply(to: clamped)
-
-      case .in:
-        return curve.apply(to: clamped)
-
-      case .out:
-        return 1 - curve.apply(to: (1 - clamped))
-      case .inOut:
-        guard clamped < 0.5 else {
-          return 0.5 + 0.5 * (1 - curve.apply(to: (1 - clamped) * 2))
-        }
-        return 0.5 * curve.apply(to: clamped * 2)
-    }
-  }
-}
 
 /// Discrete scaling system used in design
 public struct ModularScale {
