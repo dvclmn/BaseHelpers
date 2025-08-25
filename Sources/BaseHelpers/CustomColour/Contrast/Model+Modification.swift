@@ -56,7 +56,8 @@ struct ChromaAdjustment: HSVModifier {
   let chroma: ColourChroma
   var adjustment: HSVAdjustment {
     switch chroma {
-      case .saturated: HSVAdjustment(0, 0.75, 0)
+      case .vibrant: HSVAdjustment(0, 0.8, 0)
+      case .saturated: HSVAdjustment(0, 0.55, 0)
       case .standard: .zero
       case .monochrome: HSVAdjustment(0, -1.0, 0)
     }
@@ -78,7 +79,9 @@ public enum ColourPurpose {
 }
 
 public enum ColourChroma {
+  case vibrant
   case saturated
+//  case saturated(CGFloat = 0.75)
   case standard
   case monochrome
 }

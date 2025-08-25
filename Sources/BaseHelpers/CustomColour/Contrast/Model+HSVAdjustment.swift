@@ -48,12 +48,21 @@ extension HSVAdjustment {
     )
   }
 
-  func scaled(by factor: Double) -> HSVAdjustment {
+  func scaleAll(by factor: Double) -> HSVAdjustment {
     HSVAdjustment(
       hue: hue * factor,
       saturation: saturation * factor,
       brightness: brightness * factor
     )
+  }
+  
+  func scale(
+    _ keyPath: WritableKeyPath<HSVAdjustment, Double>,
+    by factor: Double
+  ) -> HSVAdjustment {
+    var result = self
+    result[keyPath: keyPath] *= factor
+    return result
   }
 
   /// Now with this, `HSVAdjustment` knows how to go from
