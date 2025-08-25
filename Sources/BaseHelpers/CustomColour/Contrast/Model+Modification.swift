@@ -20,14 +20,14 @@ extension Array where Element == HSVAdjustment {
     let combinedAdjustment: HSVAdjustment = self.reduce(.zero) {
       partialResult,
       adjustment in
-      
+
       partialResult
-      + .zero.interpolated(
-        towards: adjustment,
-        strength: strength
-//        strength: strength.adjustmentStrength
-      )
+        + .zero.interpolated(
+          towards: adjustment,
+          strength: strength
+        )
     }
+    return combinedAdjustment
   }
 }
 
@@ -66,8 +66,8 @@ public enum LuminanceThreshold {
   case dark
   case light
 
-  public init(from colour: any ColourModel) {
-    self = colour.luminance() > 0.4 ? .light : .dark
+  public init(from colour: any ColourModel, using method: LuminanceMethod = .wcag) {
+    self = colour.luminance(using: method) > 0.4 ? .light : .dark
   }
   var adjustment: HSVAdjustment {
     switch self {
@@ -75,13 +75,13 @@ public enum LuminanceThreshold {
       case .light: HSVAdjustment(-16, 0.35, -0.75)
     }
   }
-  
+
 }
 
 public enum ColourPurpose {
   case legibility
   case complimentary
-  
+
   var adjustment: HSVAdjustment {
     switch self {
       case .legibility: HSVAdjustment(-6, -0.01, 0.1)

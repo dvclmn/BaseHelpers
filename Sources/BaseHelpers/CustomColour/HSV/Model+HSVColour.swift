@@ -68,9 +68,9 @@ extension HSVColour {
     RGBColour(fromHSV: self).luminance(using: method)
   }
   
-//  public var luminanceThreshold: LuminanceThreshold {
-//    RGBColour(fromHSV: self).luminanceThreshold
-//  }
+  public func luminanceThreshold(using method: LuminanceMethod) -> LuminanceThreshold {
+    RGBColour(fromHSV: self).luminanceThreshold(using: method)
+  }
 
   public static func gray(_ brightness: Double, alpha: Double = 1.0) -> HSVColour {
     return HSVColour(hue: 0, saturation: 0, brightness: brightness, alpha: alpha)

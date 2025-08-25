@@ -34,7 +34,7 @@ public struct HSVAdjustment: Sendable {
 
 extension HSVAdjustment {
 
-  public func adjustments(from modifiers: [any HSVModifier]) -> [Self] {
+  public static func adjustments(from modifiers: [any HSVModifier]) -> [Self] {
     let adjustments: [HSVAdjustment] = modifiers.map {
       $0.adjustment
     }
@@ -115,7 +115,7 @@ extension HSVAdjustment {
       ChromaModifier(chroma: chroma),
     ]
     
-    let adjustments = self.adjustments(from: contributors)
+    let adjustments = adjustments(from: contributors)
     
     let combined = adjustments.combined(with: strength.adjustmentStrength)
     

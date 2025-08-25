@@ -93,9 +93,7 @@ extension RGBColour {
     )
   }
 
-//  public var luminanceThreshold: LuminanceThreshold {
-//    return LuminanceThreshold(from: self)
-//  }
+
 
   public init(
     r: Double,

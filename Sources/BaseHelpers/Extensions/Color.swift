@@ -19,29 +19,16 @@ extension Color {
   ) -> Color {
 
     let hsvColour = HSVColour(colour: self, environment: environment)
+    let adjustment = HSVAdjustment.applyingModifiers(
+      for: hsvColour,
+      strength: strength,
+      purpose: purpose,
+      chroma: chroma
+    )
 
-    let adjustment: HSVAdjustment = {
-      let contributors: [any HSVModifier] = [
-        LuminanceLevelAdjustment(level: hsvColour.luminanceLevel),
-        ColourPurposeAdjustment(purpose: purpose),
-        ChromaAdjustment(chroma: chroma),
-      ]
-
-      let allAdjustments: [HSVAdjustment] = contributors.map { modifier in
-        modifier.adjustment
-      }
-
-      let combinedAdjustment: HSVAdjustment = allAdjustments.reduce(.zero) { partialResult, adjustment in
-        partialResult + .zero.interpolated(towards: adjustment, strength: strength.adjustmentStrength)
-      }
-
-      return combinedAdjustment
-
-    }()
     let adjustedHSV = hsvColour.applying(adjustment: adjustment)
 
     return adjustedHSV.swiftUIColor
-    //    return adjustedHSV.toRGB
   }
 
   public var barelyThereOpacity: Color {
