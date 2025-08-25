@@ -34,6 +34,13 @@ public struct HSVAdjustment: Sendable {
 
 extension HSVAdjustment {
 
+  public func adjustments(from modifiers: [any HSVModifier]) -> [Self] {
+    let adjustments: [HSVAdjustment] = modifiers.map {
+      $0.adjustment
+    }
+    return adjustments
+  }
+
   public static let zero = HSVAdjustment(
     hue: 0,
     saturation: 0,
@@ -55,7 +62,7 @@ extension HSVAdjustment {
       brightness: brightness * factor
     )
   }
-  
+
   func scale(
     _ keyPath: WritableKeyPath<HSVAdjustment, Double>,
     by factor: Double
@@ -88,13 +95,41 @@ extension HSVAdjustment {
     )
     return adjusted
   }
-  
-  func withModifiers(_ modifiers: [any HSVModifier]) -> HSVAdjustment {
+
+  static func applyingModifiers(
+    for colour: any ColourModel,
+    strength: ModificationStrengthPreset,
+    purpose: ColourPurpose = .legibility,
+    chroma: ColourChroma = .standard
+  ) -> Self {
+    //  func applyingModifiers(_ modifiers: [any HSVModifier]) -> HSVAdjustment {
+
+    /// We don't handle `strength` just yet; first we gather
+    /// the modifiers together for processing.
+    ///
+    /// What role does `LuminanceModifier` play here? Not sure.
+    let lumThreshold: LuminanceThreshold = .init(from: colour)
     let contributors: [any HSVModifier] = [
-      LuminanceModifier(level: self.luminanceThreshold),
+      LuminanceModifier(threshold: lumThreshold),
       ColourPurposeModifier(purpose: purpose),
       ChromaModifier(chroma: chroma),
     ]
+    
+    let adjustments = self.adjustments(from: contributors)
+    
+    let combined = adjustments.combined(with: strength.adjustmentStrength)
+    
+    return combined
+    
+
   }
+
+  //  private var defaultModifiers: [any HSVModifier] {
+  //    return [
+  //      LuminanceModifier(threshold: self.luminanceThreshold),
+  //      ColourPurposeModifier(purpose: purpose),
+  //      ChromaModifier(chroma: chroma),
+  //    ]
+  //  }
 
 }

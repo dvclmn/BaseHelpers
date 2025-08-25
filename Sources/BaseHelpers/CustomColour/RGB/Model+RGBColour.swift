@@ -54,8 +54,7 @@ extension RGBColour {
   public var toHSV: HSVColour {
     HSVColour(fromRGB: self)
   }
-  
-  
+
   public var swiftUIColor: Color {
     Color(
       colourSpace,
@@ -66,7 +65,6 @@ extension RGBColour {
     )
   }
 
-
   public func contrastColour(
     strength: ModificationStrengthPreset,
     purpose: ColourPurpose = .legibility,
@@ -74,30 +72,12 @@ extension RGBColour {
   ) -> RGBColour {
 
     let hsvColour = HSVColour(fromRGB: self)
-
-    let adjustment: HSVAdjustment = {
-//      let contributors: [any HSVModifier] = [
-//        LuminanceModifier(level: self.luminanceLevel),
-//        ColourPurposeModifier(purpose: purpose),
-//        ChromaModifier(chroma: chroma),
-//      ]
-
-      let allAdjustments: [HSVAdjustment] = contributors.map { modifier in
-        modifier.adjustment
-      }
-
-      let combinedAdjustment: HSVAdjustment = allAdjustments.reduce(.zero) {
-        partialResult,
-        adjustment in
-        partialResult + .zero.interpolated(
-          towards: adjustment,
-          strength: strength.adjustmentStrength
-        )
-      }
-
-      return combinedAdjustment
-
-    }()
+    let adjustment = HSVAdjustment.applyingModifiers(
+      for: self,
+      strength: strength,
+      purpose: purpose,
+      chroma: chroma
+    )
 
     let adjustedHSV = hsvColour.applying(adjustment: adjustment)
     return adjustedHSV.toRGB
@@ -113,9 +93,9 @@ extension RGBColour {
     )
   }
 
-  public var luminanceThreshold: LuminanceThreshold {
-    return LuminanceThreshold(from: self)
-  }
+//  public var luminanceThreshold: LuminanceThreshold {
+//    return LuminanceThreshold(from: self)
+//  }
 
   public init(
     r: Double,
@@ -126,18 +106,18 @@ extension RGBColour {
     self.init(red: r, green: g, blue: b, alpha: a)
   }
 
-//  func linearised(_ channel: Double) -> Double {
-//    return channel <= 0.04045
-//      ? channel / 12.92
-//      : pow((channel + 0.055) / 1.055, 2.4)
-//  }
-//
-//  public var luminance: Double {
-//    let r = linearised(red)
-//    let g = linearised(green)
-//    let b = linearised(blue)
-//    return (0.2126 * r + 0.7152 * g + 0.0722 * b).clamped(to: 0...1)
-//  }
+  //  func linearised(_ channel: Double) -> Double {
+  //    return channel <= 0.04045
+  //      ? channel / 12.92
+  //      : pow((channel + 0.055) / 1.055, 2.4)
+  //  }
+  //
+  //  public var luminance: Double {
+  //    let r = linearised(red)
+  //    let g = linearised(green)
+  //    let b = linearised(blue)
+  //    return (0.2126 * r + 0.7152 * g + 0.0722 * b).clamped(to: 0...1)
+  //  }
 
   /// Create a color with specified brightness (0.0 to 1.0)
   public static func gray(_ brightness: Double, alpha: Double = 1.0) -> RGBColour {
