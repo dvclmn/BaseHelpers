@@ -78,9 +78,11 @@ public enum LuminanceThreshold {
 
 }
 
-public enum ColourPurpose {
+public enum ColourPurpose: String, CaseIterable, Identifiable {
   case legibility
   case complimentary
+  
+  public var id: String { rawValue }
 
   var adjustment: HSVAdjustment {
     switch self {

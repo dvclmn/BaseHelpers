@@ -611,13 +611,17 @@ public enum PathType {
 
 extension Array where Element == CGPoint {
 
-  public func toPath(type: PathType = .line) -> Path {
+  public func toPath(
+    type: PathType = .line,
+    shouldDropFirst: Bool = true
+  ) -> Path {
     switch type {
       case .line:
         return Path { path in
           guard let firstPoint = self.first else { return }
+          let lines = shouldDropFirst ? Array(self.dropFirst()) : self
           path.move(to: firstPoint)
-          path.addLines(Array(self.dropFirst()))
+          path.addLines(lines)
         }
 
       case .smooth:

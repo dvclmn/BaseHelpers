@@ -8,6 +8,14 @@
 import SwiftUI
 
 extension Path {
+  
+  public init(
+    fromPoints points: [CGPoint],
+    type: PathType = .line,
+    shouldDropFirst: Bool = true
+  ) {
+    self = points.toPath(type: type, shouldDropFirst: shouldDropFirst)
+  }
 
   public init(fromSize size: CGSize) {
     self.init { path in

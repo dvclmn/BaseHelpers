@@ -165,21 +165,6 @@ extension BinaryFloatingPoint {
     return outputRange.lowerBound + Self(curved) * outputSpan
   }
 
-  //  public func mappedNonLinearly(
-  //    from input: Self,
-  //    to output: Self,
-  //    curve: CurveFunction = .linear,
-  //    ease: Ease = .none,
-  ////    clampedToInputRange clamped: Bool = true
-  //  ) -> Self {
-  ////    let clampedSelf = clamped ? self.clamped(to: inputRange) : self
-  ////    let inputSpan = inputRange.upperBound - inputRange.lowerBound
-  //    let normalised = (clampedSelf - inputRange.lowerBound) / inputSpan
-  //    let curved = ease.apply(using: curve, to: Double(normalised))
-  //    let outputSpan = outputRange.upperBound - outputRange.lowerBound
-  //    return outputRange.lowerBound + Self(curved) * outputSpan
-  //  }
-
   public func toPercentString(within range: ClosedRange<Self>) -> String {
     let normalised: Double = Double(self.normalised(from: range))
     let percent = normalised * 100
