@@ -64,17 +64,6 @@ extension HSVColour {
 
   public var hueDegrees: Double { hue * 360.0 }
 
-  public var complementary: HSVColour {
-    let adjustment = HSVAdjustment(self.hue, self.saturation, self.brightness)
-    var newHue = hue + 0.5
-    if newHue > 1.0 { newHue -= 1.0 }  // wrap around
-    return HSVColour(
-      hue: newHue,
-      saturation: saturation,
-      brightness: brightness,
-      alpha: alpha)
-  }
-
   public var toRGB: RGBColour {
     RGBColour(fromHSV: self)
   }

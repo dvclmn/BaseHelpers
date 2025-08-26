@@ -52,8 +52,10 @@ extension HSVColour {
 extension RGBColour {
 
   public init(fromHSV hsv: HSVColour) {
-    /// Normalize hue to [0, 1) range, handling negative values
-    let h = hsv.hue - floor(hsv.hue)
+    /// Normalize hue to `[0, 1]` range, handling negative values
+    /// Older version, not sure which is better:
+    /// `let h = hsv.hue - floor(hsv.hue)`
+    let h = hsv.hue.truncatingRemainder(dividingBy: 1.0)
     let s = hsv.saturation
     let v = hsv.brightness
 

@@ -116,5 +116,4 @@ extension HSVAdjustment {
     return combined
   }
 
-
 }
