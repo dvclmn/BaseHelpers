@@ -11,6 +11,55 @@ extension ClosedRange where Bound == CGFloat {
   public var toDoubleRange: ClosedRange<Double> {
     Double(self.lowerBound)...Double(self.upperBound)
   }
+  
+  
+  /// Returns `count` evenly spaced values from lowerBound to upperBound, inclusive.
+  ///
+  /// Usage:
+  /// ```
+  /// let values = (0.0...1.0).split(into: 5)
+  /// // [0.0, 0.25, 0.5, 0.75, 1.0]
+  /// ```
+  
+  /// Returns `count` evenly spaced values from lowerBound to upperBound, inclusive.
+  /// Returns `count` evenly spaced values from lowerBound to upperBound, inclusive.
+  public func split(into count: Int) -> [Bound] {
+    guard count > 1 else { return [lowerBound] }
+    let stepSize = (upperBound - lowerBound) / Bound(count - 1)
+    return Array(
+      stride(
+        from: lowerBound,
+        through: upperBound,
+        by: stepSize
+      )
+    )
+  }
+  //  func split(into count: Int) -> [Bound] {
+  //    guard count > 1 else { return [lowerBound] }
+  //    let stepSize = (upperBound - lowerBound) / Bound(count - 1)
+  //    return Array(
+  //      stride(
+  //        from: lowerBound,
+  //        through: upperBound,
+  //        by: Bound.Stride(stepSize)
+  //      ).map { Bound($0) }
+  //    )
+  //  }
+  
+  /// Returns values starting at lowerBound, incremented by stepSize, up to upperBound.
+  public func split(by stepSize: Bound) -> [Bound] {
+    Array(stride(from: lowerBound, through: upperBound, by: stepSize))
+  }
+  //  func split(by stepSize: Bound) -> [Bound] {
+  //    Array(
+  //      stride(
+  //        from: lowerBound,
+  //        through: upperBound,
+  //        by: Bound.Stride(stepSize)
+  //      ).map { Bound($0) }
+  //    )
+  //  }
+
 }
 extension ClosedRange where Bound == Double {
   public var toCGFloatRange: ClosedRange<CGFloat> {
@@ -27,7 +76,6 @@ extension ClosedRange where Bound == Int {
 }
 
 extension ClosedRange where Bound: BinaryFloatingPoint {
-
   /// Returns the fractional position of the given value within the range.
   /// The inverse operation of the above `value(atPercent:)`
   /// "How far through the zoom range is 8.08?"
@@ -54,3 +102,5 @@ extension ClosedRange where Bound: BinaryFloatingPoint {
   }
 
 }
+
+
