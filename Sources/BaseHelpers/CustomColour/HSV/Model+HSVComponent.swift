@@ -33,7 +33,7 @@ public enum HSVComponent: String, ColourComponent {
       case .alpha: \.alpha
     }
   }
-  
+
   public var hsvAdjustmentPath: KeyPath<HSVAdjustment, Double?> {
     switch self {
       case .hue:

@@ -18,7 +18,7 @@ extension HSVColour {
     let maxV: CGFloat = max(rd, max(gd, bd))
     let minV: CGFloat = min(rd, min(gd, bd))
     let delta: CGFloat = maxV - minV
-    
+
     var h: CGFloat = 0
     var s: CGFloat = 0
     let b: CGFloat = maxV
@@ -56,25 +56,25 @@ extension RGBColour {
     let h = hsv.hue - floor(hsv.hue)
     let s = hsv.saturation
     let v = hsv.brightness
-    
+
     /// Early exit for grayscale (no saturation)
     guard s > 0 else {
       self.init(red: v, green: v, blue: v, alpha: hsv.alpha)
       return
     }
-    
+
     /// Calculate hue segment and fractional part
     let hueScaled = h * 6
     let hueSegment = Int(hueScaled) % 6  // Ensures 0-5 range
     let f = hueScaled - floor(hueScaled)
-    
+
     /// Calculate intermediate values
     let p = v * (1 - s)
     let q = v * (1 - f * s)
     let t = v * (1 - (1 - f) * s)
-    
+
     let (r, g, b): (Double, Double, Double)
-    
+
     switch hueSegment {
       case 0: (r, g, b) = (v, t, p)  // Red to Yellow
       case 1: (r, g, b) = (q, v, p)  // Yellow to Green
@@ -84,7 +84,7 @@ extension RGBColour {
       case 5: (r, g, b) = (v, p, q)  // Magenta to Red
       default: (r, g, b) = (v, v, v)  // Fallback (shouldn't occur)
     }
-    
+
     self.init(
       red: r.clamped(to: 0...1),
       green: g.clamped(to: 0...1),

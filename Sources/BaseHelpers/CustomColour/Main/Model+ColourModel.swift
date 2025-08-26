@@ -20,10 +20,6 @@ public protocol ColourModel {
 
 // MARK: - Extension methods
 extension ColourModel {
-  
-//  public func luminance(using method: LuminanceMethod) -> Double {
-//    
-//  }
 
   public mutating func opacity(_ opacity: Double) {
     self.alpha = opacity

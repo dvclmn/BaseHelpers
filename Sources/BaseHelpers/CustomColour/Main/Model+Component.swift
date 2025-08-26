@@ -19,7 +19,6 @@ public protocol ColourComponent: Identifiable, Sendable, CaseIterable, RawRepres
   var name: String { get }
   var keyPath: WritableKeyPath<Model, Double> { get }
 
-//  func getValue(from model: Model) -> Double
   func sliderTrackGradient(
     colour: Model
   ) -> LinearGradient
@@ -28,8 +27,4 @@ public protocol ColourComponent: Identifiable, Sendable, CaseIterable, RawRepres
 extension ColourComponent {
   public var id: String { self.name }
   public var name: String { rawValue.capitalized }
-
-//  public func getValue(from model: Model) -> Double {
-//    return model[keyPath: keyPath]
-//  }
 }
