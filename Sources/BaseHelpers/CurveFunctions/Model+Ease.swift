@@ -149,11 +149,7 @@ extension EasingFunction {
       case (.bounce, .inOut):
         // easeInOut is a combination of in and out
         return bounceInOut(t)
-      //        return t < 0.5
-      //          ? (1 - EasingFunction(curve: .bounce, direction: .out).value(for: 1 - 2 * t)) / 2
-      //          : (1 + EasingFunction(curve: .bounce, direction: .out).value(for: 2 * t - 1)) / 2
 
-      // ... Implement all other curve types (elastic, back, etc.) here.
       default:
         // Fallback for unimplemented functions
         print("Easing function \(id) not yet implemented. Returning linear.")
@@ -204,7 +200,7 @@ extension EasingFunction {
   }
 
   private func bounceIn(_ t: Double) -> Double {
-    // easeIn is just 1 - easeOut(1 - t)
+    /// easeIn is just `1 - easeOut(1 - t)`
     return 1 - bounceOut(1 - t)
   }
 

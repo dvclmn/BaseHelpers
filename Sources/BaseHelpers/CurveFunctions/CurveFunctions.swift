@@ -31,37 +31,42 @@ public enum CurveFunction: String, CaseIterable, Identifiable, Sendable {
 
   /// Applies the curve to a normalised input in the range `0...1`,
   /// returning a normalised output in `0...1`.
-  public func apply(to x: Double) -> Double {
-    let clamped = max(0, min(1, x))
-    switch self {
-      case .linear:
-        return clamped
-
-      case .quadratic:
-        /// Simple ease-in: y = x²
-        return clamped * clamped
-
-      case .cubic:
-        /// Simple ease-in: y = x³
-        return clamped * clamped * clamped
-
-      case .exponential:
-        /// Normalised exponential (ease-in style)
-        /// Adjust exponent for desired steepness
-        let exponent = 5.0
-        return (pow(2, exponent * clamped) - 1) / (pow(2, exponent) - 1)
-
-      case .logarithmic:
-        /// Normalised log (inverse of exponential)
-        let base = 10.0
-        return log(1 + (base - 1) * clamped) / log(base)
-
-      default:
-        fatalError("\(self.name) Not yet implemented.")
-    //      case .sine:
-    //        /// Half sine wave from 0 to 1
-    //        return 0.5 - 0.5 * cos(clamped * .pi)
-    }
+  public func apply(to x: Double, easing: EasingDirection = .in) -> Double {
+    let function = EasingFunction(
+      curve: self,
+      direction: easing
+    )
+    return function.value(for: x)
+//    let clamped = max(0, min(1, x))
+//    switch self {
+//      case .linear:
+//        return clamped
+//
+//      case .quadratic:
+//        /// Simple ease-in: y = x²
+//        return clamped * clamped
+//
+//      case .cubic:
+//        /// Simple ease-in: y = x³
+//        return clamped * clamped * clamped
+//
+//      case .exponential:
+//        /// Normalised exponential (ease-in style)
+//        /// Adjust exponent for desired steepness
+//        let exponent = 5.0
+//        return (pow(2, exponent * clamped) - 1) / (pow(2, exponent) - 1)
+//
+//      case .logarithmic:
+//        /// Normalised log (inverse of exponential)
+//        let base = 10.0
+//        return log(1 + (base - 1) * clamped) / log(base)
+//
+//      default:
+//        fatalError("\(self.name) Not yet implemented.")
+//    //      case .sine:
+//    //        /// Half sine wave from 0 to 1
+//    //        return 0.5 - 0.5 * cos(clamped * .pi)
+//    }
   }
 
   public func value(
