@@ -38,7 +38,7 @@ extension EasingFunction {
   /// Calculates the interpolated value for a given time.
   /// - Parameter x: A value between 0.0 (start) and 1.0 (end).
   /// - Returns: The interpolated value, often but not always between 0.0 and 1.0 (e.g., `back` can overshoot).
-  public func value(for x: Double) -> Double {
+  public func value(for x: Double, overshoot: Double = 1.70158) -> Double {
     /// Ensure input is within the standard `[0, 1]` range
     let t = max(0, min(1, x))
 
@@ -88,8 +88,10 @@ extension EasingFunction {
       // MARK: - Quintic
       case (.quintic, .in):
         return pow(t, 5)
+
       case (.quintic, .out):
         return 1 - pow(1 - t, 5)
+
       case (.quintic, .inOut):
         return t < 0.5 ? 16 * pow(t, 5) : 1 - pow(-2 * t + 2, 5) / 2
 
@@ -115,29 +117,97 @@ extension EasingFunction {
         if t == 1 { return 1 }
         return t < 0.5 ? pow(2, 20 * t - 10) / 2 : (2 - pow(2, -20 * t + 10)) / 2
 
-        // MARK: - Circular
+      // MARK: - Circular
       case (.circular, .in):
         return 1 - sqrt(1 - pow(t, 2))
-        
+
       case (.circular, .out):
         return sqrt(1 - pow(t - 1, 2))
-        
+
       case (.circular, .inOut):
         return t < 0.5
-        ? (1 - sqrt(1 - pow(2 * t, 2))) / 2
-        : (sqrt(1 - pow(-2 * t + 2, 2)) + 1) / 2
+          ? (1 - sqrt(1 - pow(2 * t, 2))) / 2
+          : (sqrt(1 - pow(-2 * t + 2, 2)) + 1) / 2
+
+      // MARK: - Logarithmic
+      case (.logarithmic, .in):
+        return t == 0 ? 0 : pow(2, 10 * (t - 1))
         
+      case (.logarithmic, .out):
+        return t == 1 ? 1 : 1 - pow(2, -10 * t)
         
-      default:
-        // Fallback for unimplemented functions
-        print("Easing function \(id) not yet implemented. Returning linear.")
-        return t
+      case (.logarithmic, .inOut):
+        if t == 0 { return 0 }
+        if t == 1 { return 1 }
+        return t < 0.5
+          ? pow(2, 20 * t - 10) / 2
+          : (2 - pow(2, -20 * t + 10)) / 2
+
+      // MARK: - Back
+      case (.back, .in):
+        let c3 = overshoot + 1
+        return c3 * t * t * t - overshoot * t * t
+
+      case (.back, .out):
+        let c3 = overshoot + 1
+        return 1 + c3 * pow(t - 1, 3) + overshoot * pow(t - 1, 2)
+
+      case (.back, .inOut):
+        let c2 = overshoot * 1.525
+        return t < 0.5
+          ? (pow(2 * t, 2) * ((c2 + 1) * 2 * t - c2)) / 2
+          : (pow(2 * t - 2, 2) * ((c2 + 1) * (t * 2 - 2) + c2) + 2) / 2
+
+      case (.smoothStep, .in):
+        // smoothstep (S-curve)
+        return t * t * (3 - 2 * t)
+      case (.smoothStep, .out):
+        let invertedT = 1 - t
+        return 1 - (invertedT * invertedT * (3 - 2 * invertedT))
+      case (.smoothStep, .inOut):
+        // smootherstep (even smoother S-curve)
+        return t * t * t * (t * (t * 6 - 15) + 10)
+
+      case (.elastic, .in):
+        return elastic(t, direction: .in)
+
+      case (.elastic, .out):
+        return elastic(t, direction: .out)
+
+      case (.elastic, .inOut):
+        return elastic(t, direction: .inOut)
+
+    //      case (.bump, .out):
+    //        // Creates a small bump that goes above 1.0 and comes back
+    //        let bumpHeight = 0.2
+    //        let bumpPosition = 0.8
+    //        if t <= bumpPosition {
+    //          // Use a standard easeOut to the peak
+    //          let normalizedT = t / bumpPosition
+    //          let progressToPeak = 1 - (1 - normalizedT) * (1 - normalizedT) // easeOutQuad
+    //          return progressToPeak
+    //        } else {
+    //          // After the peak, fall back down to 1.0
+    //          let fallDistance = (1 + bumpHeight) - 1.0
+    //          let normalizedT = (t - bumpPosition) / (1 - bumpPosition) // t from 0 to 1 for the fall
+    //          let easeOutFall = 1 - (1 - normalizedT) * (1 - normalizedT) // easeOutQuad for the fall
+    //          return (1 + bumpHeight) - fallDistance * easeOutFall
+    //        }
+    //      case (.bump, .in):
+    //        // For consistency, an easeInBump could start below 0
+    //        // This is a simpler, less common implementation
+    //        let invertedT = 1 - t
+    //        return 1 - Self.easeOutBump.progress(for: invertedT)
+
+    //      default:
+    //        // Fallback for unimplemented functions
+    //        print("Easing function \(id) not yet implemented. Returning linear.")
+    //        return t
     }
   }
 }
 
 extension EasingFunction {
-
 
   // MARK: - Bounce Implementation
 

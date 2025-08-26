@@ -18,12 +18,14 @@ public enum CurveFunction: String, CaseIterable, Identifiable, Sendable {
   case cubic
   case quartic
   case quintic
-  case circular
   case exponential
+  case circular
   case logarithmic
-  case elastic
   case back
+  case elastic
   case bounce
+  case smoothStep
+//  case bump
 
   public var id: String { rawValue }
 
