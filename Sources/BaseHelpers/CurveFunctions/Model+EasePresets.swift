@@ -83,23 +83,23 @@ enum EasingPreset: String, CaseIterable, Identifiable {
 
 extension EasingFunction {
   /// Convenience static properties for common easing functions
-  public static let linear = EasingFunction(curve: .linear, direction: .in)
+  public static let linear = EasingFunction(.linear, .in)
 
-  public static let easeInSine = EasingFunction(curve: .sine, direction: .in)
-  public static let easeOutSine = EasingFunction(curve: .sine, direction: .out)
-  public static let easeInOutSine = EasingFunction(curve: .sine, direction: .inOut)
+  public static let easeInSine = EasingFunction(.sine, .in)
+  public static let easeOutSine = EasingFunction(.sine, .out)
+  public static let easeInOutSine = EasingFunction(.sine, .inOut)
 
-  public static let easeInQuad = EasingFunction(curve: .quadratic, direction: .in)
-  public static let easeOutQuad = EasingFunction(curve: .quadratic, direction: .out)
-  public static let easeInOutQuad = EasingFunction(curve: .quadratic, direction: .inOut)
+  public static let easeInQuad = EasingFunction(.quadratic, .in)
+  public static let easeOutQuad = EasingFunction(.quadratic, .out)
+  public static let easeInOutQuad = EasingFunction(.quadratic, .inOut)
 
-  public static let easeInCubic = EasingFunction(curve: .cubic, direction: .in)
-  public static let easeOutCubic = EasingFunction(curve: .cubic, direction: .out)
-  public static let easeInOutCubic = EasingFunction(curve: .cubic, direction: .inOut)
+  public static let easeInCubic = EasingFunction(.cubic, .in)
+  public static let easeOutCubic = EasingFunction(.cubic, .out)
+  public static let easeInOutCubic = EasingFunction(.cubic, .inOut)
 
-  public static let easeInBounce = EasingFunction(curve: .bounce, direction: .in)
-  public static let easeOutBounce = EasingFunction(curve: .bounce, direction: .out)
-  public static let easeInOutBounce = EasingFunction(curve: .bounce, direction: .inOut)
+  public static let easeInBounce = EasingFunction(.bounce, .in)
+  public static let easeOutBounce = EasingFunction(.bounce, .out)
+  public static let easeInOutBounce = EasingFunction(.bounce, .inOut)
 }
 
 
@@ -162,14 +162,14 @@ extension EasingPreset {
         return t < 0.5 ? 16 * pow(t, 5) : 1 - pow(-2 * t + 2, 5) / 2
         
         // MARK: - Exponential
-      case .easeInExpo:
-        return t == 0 ? 0 : pow(2, 10 * t - 10)
-      case .easeOutExpo:
-        return t == 1 ? 1 : 1 - pow(2, -10 * t)
-      case .easeInOutExpo:
-        if t == 0 { return 0 }
-        if t == 1 { return 1 }
-        return t < 0.5 ? pow(2, 20 * t - 10) / 2 : (2 - pow(2, -20 * t + 10)) / 2
+//      case .easeInExpo:
+//        return t == 0 ? 0 : pow(2, 10 * t - 10)
+//      case .easeOutExpo:
+//        return t == 1 ? 1 : 1 - pow(2, -10 * t)
+//      case .easeInOutExpo:
+//        if t == 0 { return 0 }
+//        if t == 1 { return 1 }
+//        return t < 0.5 ? pow(2, 20 * t - 10) / 2 : (2 - pow(2, -20 * t + 10)) / 2
         
         // MARK: - Circular
       case .easeInCirc:
@@ -194,28 +194,28 @@ extension EasingPreset {
         ? (pow(2 * t, 2) * ((c2 + 1) * 2 * t - c2)) / 2
         : (pow(2 * t - 2, 2) * ((c2 + 1) * (t * 2 - 2) + c2) + 2) / 2
         
-        // MARK: - Elastic
-      case .easeInElastic:
-        if t == 0 { return 0 }
-        if t == 1 { return 1 }
-        let period = 0.3
-        let c4 = (2 * .pi) / period
-        return -pow(2, 10 * t - 10) * sin((t * 10 - 10.75) * c4)
-      case .easeOutElastic:
-        if t == 0 { return 0 }
-        if t == 1 { return 1 }
-        let period = 0.3
-        let c4 = (2 * .pi) / period
-        return pow(2, -10 * t) * sin((t * 10 - 0.75) * c4) + 1
-      case .easeInOutElastic:
-        if t == 0 { return 0 }
-        if t == 1 { return 1 }
-        let period = 0.3 * 1.5
-        let c5 = (2 * .pi) / period
-        return t < 0.5
-        ? -(pow(2, 20 * t - 10) * sin((20 * t - 11.125) * c5)) / 2
-        : (pow(2, -20 * t + 10) * sin((20 * t - 11.125) * c5)) / 2 + 1
-        
+//        // MARK: - Elastic
+//      case .easeInElastic:
+//        if t == 0 { return 0 }
+//        if t == 1 { return 1 }
+//        let period = 0.3
+//        let c4 = (2 * .pi) / period
+//        return -pow(2, 10 * t - 10) * sin((t * 10 - 10.75) * c4)
+//      case .easeOutElastic:
+//        if t == 0 { return 0 }
+//        if t == 1 { return 1 }
+//        let period = 0.3
+//        let c4 = (2 * .pi) / period
+//        return pow(2, -10 * t) * sin((t * 10 - 0.75) * c4) + 1
+//      case .easeInOutElastic:
+//        if t == 0 { return 0 }
+//        if t == 1 { return 1 }
+//        let period = 0.3 * 1.5
+//        let c5 = (2 * .pi) / period
+//        return t < 0.5
+//        ? -(pow(2, 20 * t - 10) * sin((20 * t - 11.125) * c5)) / 2
+//        : (pow(2, -20 * t + 10) * sin((20 * t - 11.125) * c5)) / 2 + 1
+//        
         // MARK: - Bounce
       case .easeInBounce:
         return 1 - Self.easeOutBounce.progress(for: 1 - t)

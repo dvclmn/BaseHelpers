@@ -19,7 +19,7 @@ public struct EasingFunction: Hashable, Identifiable, Sendable {
   public var curve: CurveFunction
   public var direction: EasingDirection
 
-  public init(curve: CurveFunction, direction: EasingDirection) {
+  public init(_ curve: CurveFunction, _ direction: EasingDirection) {
     self.curve = curve
     self.direction = direction
   }
@@ -104,9 +104,7 @@ extension EasingFunction {
       case (.bounce, .in):
         return bounceIn(t)
 
-      //        return 1 - EasingFunction(curve: .bounce, direction: .out).value(for: 1 - t)
       case (.bounce, .inOut):
-        // easeInOut is a combination of in and out
         return bounceInOut(t)
 
       default:
@@ -138,6 +136,21 @@ extension EasingFunction {
 
 extension EasingFunction {
 
+  // MARK: - Expo
+  private func expoIn(_ t: Double) -> Double {
+    return t == 0 ? 0 : pow(2, 10 * t - 10)
+  }
+
+  private func expoOut(_ t: Double) -> Double {
+    return t == 1 ? 1 : 1 - pow(2, -10 * t)
+  }
+
+  private func expoInOut(_ t: Double) -> Double {
+    if t == 0 { return 0 }
+    if t == 1 { return 1 }
+    return t < 0.5 ? pow(2, 20 * t - 10) / 2 : (2 - pow(2, -20 * t + 10)) / 2
+  }
+
   // MARK: - Bounce Implementation
 
   private func bounceOut(_ t: Double) -> Double {
@@ -159,7 +172,6 @@ extension EasingFunction {
   }
 
   private func bounceIn(_ t: Double) -> Double {
-    /// easeIn is just `1 - easeOut(1 - t)`
     return 1 - bounceOut(1 - t)
   }
 
