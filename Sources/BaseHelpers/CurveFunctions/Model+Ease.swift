@@ -11,49 +11,8 @@ public enum EasingDirection: String, CaseIterable, Identifiable, Sendable {
   case `in`
   case out
   case inOut
-  //  case none
 
   public var id: String { rawValue }
-
-  //  public func apply(
-  //    using curve: CurveFunction,
-  //    //    using curve: (Double) -> Double,
-  //    to x: Double
-  //  ) -> Double {
-  //    let clamped = max(0, min(1, x))
-  //    switch self {
-  //      case .none:
-  //        return curve.apply(to: clamped)
-  //
-  //      case .in:
-  //        return curve.apply(to: clamped)
-  //
-  //      case .out:
-  //        return 1 - curve.apply(to: (1 - clamped))
-  //
-  //      case .inOut:
-  //        guard clamped < 0.5 else {
-  //          return 0.5 + 0.5 * (1 - curve.apply(to: (1 - clamped) * 2))
-  //        }
-  //        return 0.5 * curve.apply(to: clamped * 2)
-  //    }
-  //  }
-  //
-  //  public func apply(to x: Double, with curve: CurveFunction) -> Double {
-  //    switch self {
-  //      case .none:
-  //        return x
-  //      case .in:
-  //        return x * x  // quadratic in, for example
-  //      case .out:
-  //        return 1 - pow(1 - x, 2)  // quadratic out
-  //      case .inOut:
-  //        guard x < 0.5 else {
-  //          return 1 - pow(-2 * x + 2, 2) / 2
-  //        }
-  //        return 2 * x * x
-  //    }
-  //  }
 }
 
 public struct EasingFunction: Hashable, Identifiable, Sendable {
