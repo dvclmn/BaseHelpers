@@ -114,13 +114,12 @@ extension HSVAdjustment {
       ColourPurposeModifier(purpose: purpose),
       ChromaModifier(chroma: chroma),
     ]
-    
+
     let adjustments = adjustments(from: contributors)
-    
+
     let combined = adjustments.combined(with: strength.adjustmentStrength)
-    
+
     return combined
-    
 
   }
 

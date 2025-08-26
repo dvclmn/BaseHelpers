@@ -69,7 +69,7 @@ extension Path {
     }
   }
   
-  public func catmullRomPath(
+  public static func catmullRomPath(
     points: [CGPoint],
     tension: CGFloat = 0.5,
     closed: Bool = false,

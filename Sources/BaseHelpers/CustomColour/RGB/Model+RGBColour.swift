@@ -93,8 +93,6 @@ extension RGBColour {
     )
   }
 
-
-
   public init(
     r: Double,
     g: Double,

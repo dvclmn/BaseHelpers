@@ -17,6 +17,8 @@ import SwiftUI
 ///   based on human perception.
 public struct HSVColour: Equatable, Sendable, ColourModel {
 
+  /// Kept normalised `1...0` internally.
+  /// Trivially convertable to degrees (0-360) for UI as needed
   public var hue: Double
   public var saturation: Double
   public var brightness: Double
@@ -59,7 +61,20 @@ public struct HSVColour: Equatable, Sendable, ColourModel {
 }
 
 extension HSVColour {
-  
+
+  public var hueDegrees: Double { hue * 360.0 }
+
+  public var complementary: HSVColour {
+    let adjustment = HSVAdjustment(self.hue, self.saturation, self.brightness)
+    var newHue = hue + 0.5
+    if newHue > 1.0 { newHue -= 1.0 }  // wrap around
+    return HSVColour(
+      hue: newHue,
+      saturation: saturation,
+      brightness: brightness,
+      alpha: alpha)
+  }
+
   public var toRGB: RGBColour {
     RGBColour(fromHSV: self)
   }
@@ -67,7 +82,7 @@ extension HSVColour {
   public func luminance(using method: LuminanceMethod = .wcag) -> Double {
     RGBColour(fromHSV: self).luminance(using: method)
   }
-  
+
   public func luminanceThreshold(using method: LuminanceMethod) -> LuminanceThreshold {
     RGBColour(fromHSV: self).luminanceThreshold(using: method)
   }
