@@ -10,23 +10,37 @@ import Foundation
 /// Represents a *delta* adjustment in HSV space
 /// Does not set hsb values to these, but adds to them
 public struct HSVAdjustment: Sendable {
-  public var hue: Double
-  public var saturation: Double
-  public var brightness: Double
-
+  
+  public var hue: Double?        // nil = keep as is, otherwise additive degrees or absolute
+  public var saturation: Double? // nil = keep as is
+  public var brightness: Double? // nil = keep as is
+  
   public init(
-    hue: Double,
-    saturation: Double,
-    brightness: Double,
+    hue: Double? = nil,
+    saturation: Double? = nil,
+    brightness: Double? = nil
   ) {
     self.hue = hue
     self.saturation = saturation
     self.brightness = brightness
   }
+//  public var hue: Double
+//  public var saturation: Double
+//  public var brightness: Double
+//
+//  public init(
+//    hue: Double,
+//    saturation: Double,
+//    brightness: Double,
+//  ) {
+//    self.hue = hue
+//    self.saturation = saturation
+//    self.brightness = brightness
+//  }
   public init(
-    _ hue: Double,
-    _ saturation: Double,
-    _ brightness: Double,
+    _ hue: Double? = nil,
+    _ saturation: Double? = nil,
+    _ brightness: Double? = nil,
   ) {
     self.init(hue: hue, saturation: saturation, brightness: brightness)
   }

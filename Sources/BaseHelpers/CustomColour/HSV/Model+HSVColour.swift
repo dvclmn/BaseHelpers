@@ -103,18 +103,48 @@ extension HSVColour {
   ////    return result * 100
   //  }
 
+//  func applying(adjustment: HSVAdjustment) -> HSVColour {
+//    let adjustedHue: Double = (hue + adjustment.hue / 360.0).hueWrapped()
+//
+//    let newSaturation = (saturation + adjustment.saturation).clamped(to: 0...1)
+//    let newBrightness = (brightness + adjustment.brightness).clamped(to: 0...1)
+//
+//    return HSVColour(
+//      hue: adjustedHue,
+//      saturation: newSaturation,
+//      brightness: newBrightness,
+//      alpha: alpha
+//    )
+//  }
+  
   func applying(adjustment: HSVAdjustment) -> HSVColour {
-    let adjustedHue: Double = (hue + adjustment.hue / 360.0).hueWrapped()
-
-    let newSaturation = (saturation + adjustment.saturation).clamped(to: 0...1)
-    let newBrightness = (brightness + adjustment.brightness).clamped(to: 0...1)
-
+    let adjustedHue: Double
+    if let hueAdj = adjustment.hue {
+      // Treat hueAdj as additive degrees
+      adjustedHue = (hue + hueAdj / 360.0).hueWrapped()
+    } else {
+      adjustedHue = hue
+    }
+    
+    let adjustedSaturation = adjustment.saturation.map {
+      (saturation + $0).clamped(to: 0...1)
+    } ?? saturation
+    
+    let adjustedBrightness = adjustment.brightness.map {
+      (brightness + $0).clamped(to: 0...1)
+    } ?? brightness
+    
     return HSVColour(
       hue: adjustedHue,
-      saturation: newSaturation,
-      brightness: newBrightness,
+      saturation: adjustedSaturation,
+      brightness: adjustedBrightness,
       alpha: alpha
     )
   }
 
+  
+  public static func + (lhs: HSVColour, rhs: HSVAdjustment) -> HSVColour {
+    lhs.applying(adjustment: rhs)
+  }
 }
+
