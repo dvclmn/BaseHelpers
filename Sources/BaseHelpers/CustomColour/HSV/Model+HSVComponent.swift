@@ -34,7 +34,7 @@ public enum HSVComponent: String, ColourComponent {
     }
   }
   
-  public var hsvAdjustmentPath: KeyPath<HSVAdjustment, Double> {
+  public var hsvAdjustmentPath: KeyPath<HSVAdjustment, Double?> {
     switch self {
       case .hue:
         return \.hue

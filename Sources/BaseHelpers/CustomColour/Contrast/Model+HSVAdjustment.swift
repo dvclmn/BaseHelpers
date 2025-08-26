@@ -11,9 +11,9 @@ import Foundation
 /// Does not set hsb values to these, but adds to them
 public struct HSVAdjustment: Sendable {
   
-  public var hue: Double?        // nil = keep as is, otherwise additive degrees or absolute
-  public var saturation: Double? // nil = keep as is
-  public var brightness: Double? // nil = keep as is
+  public var hue: Double?
+  public var saturation: Double?
+  public var brightness: Double?
   
   public init(
     hue: Double? = nil,
@@ -60,22 +60,44 @@ extension HSVAdjustment {
     saturation: 0,
     brightness: 0
   )
-
+  
   static func + (lhs: HSVAdjustment, rhs: HSVAdjustment) -> HSVAdjustment {
     HSVAdjustment(
-      hue: lhs.hue + rhs.hue,
-      saturation: lhs.saturation + rhs.saturation,
-      brightness: lhs.brightness + rhs.brightness
+      hue: lhs.hue.combined(with: rhs.hue, using: +),
+      saturation: lhs.saturation.combined(with: rhs.saturation, using: +),
+      brightness: lhs.brightness.combined(with: rhs.brightness, using: +)
     )
+//    HSVAdjustment(
+//      hue: combine(lhs.hue, rhs.hue, using: +),
+//      saturation: combine(lhs.saturation, rhs.saturation, using: +),
+//      brightness: combine(lhs.brightness, rhs.brightness, using: +)
+//    )
   }
-
+  
   func scaleAll(by factor: Double) -> HSVAdjustment {
     HSVAdjustment(
-      hue: hue * factor,
-      saturation: saturation * factor,
-      brightness: brightness * factor
+      hue: hue.map { $0 * factor },
+      saturation: saturation.map { $0 * factor },
+      brightness: brightness.map { $0 * factor }
     )
   }
+  
+  
+//  static func + (lhs: HSVAdjustment, rhs: HSVAdjustment) -> HSVAdjustment {
+//    HSVAdjustment(
+//      hue: lhs.hue + rhs.hue,
+//      saturation: lhs.saturation + rhs.saturation,
+//      brightness: lhs.brightness + rhs.brightness
+//    )
+//  }
+//
+//  func scaleAll(by factor: Double) -> HSVAdjustment {
+//    HSVAdjustment(
+//      hue: hue * factor,
+//      saturation: saturation * factor,
+//      brightness: brightness * factor
+//    )
+//  }
 
   func scale(
     _ keyPath: WritableKeyPath<HSVAdjustment, Double>,
@@ -85,9 +107,26 @@ extension HSVAdjustment {
     result[keyPath: keyPath] *= factor
     return result
   }
+  
+  func interpolated(
+    towards other: HSVAdjustment,
+    strength: Double
+  ) -> HSVAdjustment {
+    HSVAdjustment(
+      hue: self.hue.interpolated(towards: other.hue, strength: strength),
+      saturation: self.saturation.interpolated(towards: other.saturation, strength: strength),
+      brightness: self.brightness.interpolated(towards: other.brightness, strength: strength)
+    )
+//    HSVAdjustment(
+//      hue: interpolateOptionals(self.hue, other.hue, strength: strength),
+//      saturation: interpolateOptionals(self.saturation, other.saturation, strength: strength),
+//      brightness: interpolateOptionals(self.brightness, other.brightness, strength: strength)
+//    )
+  }
 
-  /// Now with this, `HSVAdjustment` knows how to go from
-  /// one instance of itself, to another, linearly interpolating.
+
+  /// With `interpolated`, `HSVAdjustment` now knows how to
+  /// go from one instance of itself, to another, linearly interpolating.
   ///
   /// The key here is that a `HSVAdjustment` describes
   /// the properties neccesary to actually *change* a given colour.
@@ -95,20 +134,20 @@ extension HSVAdjustment {
   /// `ColourModification` and `ContrastPreset` etc.
   ///
   /// But here, we can go from one, to another, which is very useful.
-  func interpolated(
-    towards other: HSVAdjustment,
-    strength: Double
-  ) -> HSVAdjustment {
-    let current = self
-    let new = other
-
-    let adjusted = HSVAdjustment(
-      hue: lerp(from: current.hue, to: new.hue, strength),
-      saturation: lerp(from: current.saturation, to: new.saturation, strength),
-      brightness: lerp(from: current.brightness, to: new.brightness, strength)
-    )
-    return adjusted
-  }
+//  func interpolated(
+//    towards other: HSVAdjustment,
+//    strength: Double
+//  ) -> HSVAdjustment {
+//    let current = self
+//    let new = other
+//
+//    let adjusted = HSVAdjustment(
+//      hue: lerp(from: current.hue, to: new.hue, strength),
+//      saturation: lerp(from: current.saturation, to: new.saturation, strength),
+//      brightness: lerp(from: current.brightness, to: new.brightness, strength)
+//    )
+//    return adjusted
+//  }
 
   static func applyingModifiers(
     for colour: any ColourModel,

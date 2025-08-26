@@ -298,4 +298,31 @@ extension BinaryFloatingPoint {
 
     return self + adjustment
   }
+
+}
+
+extension Optional where Wrapped: BinaryFloatingPoint {
+  /// Combines `self` with another optional using the provided operation.
+  /// - If both are `nil`, returns `nil`.
+  /// - If one is `nil`, treats it as zero.
+  public func combined(with other: Wrapped?, using op: (Wrapped, Wrapped) -> Wrapped) -> Wrapped? {
+    switch (self, other) {
+      case (nil, nil): return nil
+      case let (x?, nil): return op(x, 0)
+      case let (nil, y?): return op(0, y)
+      case let (x?, y?): return op(x, y)
+    }
+  }
+  
+  /// Interpolates `self` towards another optional.
+  /// - If both are `nil`, returns `nil`.
+  /// - If one is `nil`, treats it as zero.
+  public func interpolated(towards other: Wrapped?, strength: Wrapped) -> Wrapped? {
+    switch (self, other) {
+      case (nil, nil): return nil
+      case let (x?, nil): return lerp(from: x, to: 0, strength)
+      case let (nil, y?): return lerp(from: 0, to: y, strength)
+      case let (x?, y?): return lerp(from: x, to: y, strength)
+    }
+  }
 }
