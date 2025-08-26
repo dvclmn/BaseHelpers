@@ -122,44 +122,30 @@ extension EasingPreset {
         return t
         
         // MARK: - Sine
-      case .easeInSine:
-        return 1 - cos((t * .pi) / 2)
-      case .easeOutSine:
-        return sin((t * .pi) / 2)
-      case .easeInOutSine:
-        return -(cos(.pi * t) - 1) / 2
+//      case .easeInSine:
+//        return 1 - cos((t * .pi) / 2)
+//      case .easeOutSine:
+//        return sin((t * .pi) / 2)
+//      case .easeInOutSine:
+//        return -(cos(.pi * t) - 1) / 2
         
         // MARK: - Quadratic
-      case .easeInQuad:
-        return t * t
-      case .easeOutQuad:
-        return 1 - (1 - t) * (1 - t)
-      case .easeInOutQuad:
-        return t < 0.5 ? 2 * t * t : 1 - pow(-2 * t + 2, 2) / 2
+//      case .easeInQuad:
+//        return t * t
+//      case .easeOutQuad:
+//        return 1 - (1 - t) * (1 - t)
+//      case .easeInOutQuad:
+//        return t < 0.5 ? 2 * t * t : 1 - pow(-2 * t + 2, 2) / 2
         
         // MARK: - Cubic
-      case .easeInCubic:
-        return t * t * t
-      case .easeOutCubic:
-        return 1 - pow(1 - t, 3)
-      case .easeInOutCubic:
-        return t < 0.5 ? 4 * t * t * t : 1 - pow(-2 * t + 2, 3) / 2
+//      case .easeInCubic:
+//        return t * t * t
+//      case .easeOutCubic:
+//        return 1 - pow(1 - t, 3)
+//      case .easeInOutCubic:
+//        return t < 0.5 ? 4 * t * t * t : 1 - pow(-2 * t + 2, 3) / 2
         
-        // MARK: - Quartic
-      case .easeInQuart:
-        return t * t * t * t
-      case .easeOutQuart:
-        return 1 - pow(1 - t, 4)
-      case .easeInOutQuart:
-        return t < 0.5 ? 8 * pow(t, 4) : 1 - pow(-2 * t + 2, 4) / 2
-        
-        // MARK: - Quintic
-      case .easeInQuint:
-        return pow(t, 5)
-      case .easeOutQuint:
-        return 1 - pow(1 - t, 5)
-      case .easeInOutQuint:
-        return t < 0.5 ? 16 * pow(t, 5) : 1 - pow(-2 * t + 2, 5) / 2
+     
         
         // MARK: - Exponential
 //      case .easeInExpo:
@@ -172,14 +158,7 @@ extension EasingPreset {
 //        return t < 0.5 ? pow(2, 20 * t - 10) / 2 : (2 - pow(2, -20 * t + 10)) / 2
         
         // MARK: - Circular
-      case .easeInCirc:
-        return 1 - sqrt(1 - pow(t, 2))
-      case .easeOutCirc:
-        return sqrt(1 - pow(t - 1, 2))
-      case .easeInOutCirc:
-        return t < 0.5
-        ? (1 - sqrt(1 - pow(2 * t, 2))) / 2
-        : (sqrt(1 - pow(-2 * t + 2, 2)) + 1) / 2
+      
         
         // MARK: - Back (Overshoot)
       case .easeInBack:

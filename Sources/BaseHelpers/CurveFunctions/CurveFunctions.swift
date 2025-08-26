@@ -13,11 +13,11 @@ public protocol CurveApplicable {
 
 public enum CurveFunction: String, CaseIterable, Identifiable, Sendable {
   case linear
+  case sine
   case quadratic
   case cubic
   case quartic
   case quintic
-  case sine
   case circular
   case exponential
   case logarithmic
@@ -32,10 +32,7 @@ public enum CurveFunction: String, CaseIterable, Identifiable, Sendable {
   /// Applies the curve to a normalised input in the range `0...1`,
   /// returning a normalised output in `0...1`.
   public func apply(to x: Double, easing: EasingDirection = .in) -> Double {
-    let function = EasingFunction(
-      curve: self,
-      direction: easing
-    )
+    let function = EasingFunction(self, easing)
     return function.value(for: x)
 //    let clamped = max(0, min(1, x))
 //    switch self {
