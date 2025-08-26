@@ -80,36 +80,9 @@ extension HSVColour {
     return HSVColour(hue: 0, saturation: 0, brightness: brightness, alpha: alpha)
   }
 
-  //  public func componentBarWidth(
-  //    _ component: HSVComponent,
-  //    in range: ClosedRange<Double>
-  ////    in fullWidth: CGFloat
-  //  ) -> CGFloat {
-  //    let value = self[keyPath: component.keyPath]
-  //    let result = value.normalised(from: range)
-  ////    let result = value.normalised(against: fullWidth, isClamped: true)
-  //    return result
-  ////    return result * 100
-  //  }
-
-  //  func applying(adjustment: HSVAdjustment) -> HSVColour {
-  //    let adjustedHue: Double = (hue + adjustment.hue / 360.0).hueWrapped()
-  //
-  //    let newSaturation = (saturation + adjustment.saturation).clamped(to: 0...1)
-  //    let newBrightness = (brightness + adjustment.brightness).clamped(to: 0...1)
-  //
-  //    return HSVColour(
-  //      hue: adjustedHue,
-  //      saturation: newSaturation,
-  //      brightness: newBrightness,
-  //      alpha: alpha
-  //    )
-  //  }
-
   func applying(adjustment: HSVAdjustment) -> HSVColour {
     let adjustedHue: Double
     if let hueAdj = adjustment.hue {
-      // Treat hueAdj as additive degrees
       adjustedHue = (hue + hueAdj / 360.0).hueWrapped()
     } else {
       adjustedHue = hue

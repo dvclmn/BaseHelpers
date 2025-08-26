@@ -11,6 +11,16 @@ import SwiftUI
 
 extension Color {
 
+  public func complementary(
+    strength: Double = 1.0,
+    environment: EnvironmentValues
+  ) -> Color {
+
+    let hsvColour = HSVColour(colour: self, environment: environment)
+    let complementary = hsvColour.complementary(strength: strength)
+    return complementary.swiftUIColor
+  }
+
   public func contrastColour(
     strength: ModificationStrengthPreset,
     purpose: ColourPurpose = .legibility,
