@@ -14,11 +14,16 @@ public protocol ColourModel {
   mutating func opacity(_ opacity: Double)
   static func gray(_ brightness: Double, alpha: Double) -> Self
   func luminance(using method: LuminanceMethod) -> Double
+  func luminanceThreshold(using method: LuminanceMethod) -> LuminanceThreshold
   init(resolved: Color.Resolved)
 }
 
 // MARK: - Extension methods
 extension ColourModel {
+  
+//  public func luminance(using method: LuminanceMethod) -> Double {
+//    
+//  }
 
   public mutating func opacity(_ opacity: Double) {
     self.alpha = opacity

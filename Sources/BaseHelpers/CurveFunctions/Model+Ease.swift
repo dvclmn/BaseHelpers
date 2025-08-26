@@ -164,21 +164,21 @@ extension EasingFunction {
   // MARK: - Usage Examples
 
   /// Quick test to visualize the curves
-//  public static func testCurves() {
-//    let testPoints = stride(from: 0.0, through: 1.0, by: 0.1)
-//
-//    print("Bounce curve:")
-//    for t in testPoints {
-//      let value = PresetCurve.bounce.apply(to: t)
-//      print("t: \(String(format: "%.1f", t)) -> \(String(format: "%.3f", value))")
-//    }
-//
-//    print("\nElastic curve:")
-//    for t in testPoints {
-//      let value = PresetCurve.elastic.apply(to: t)
-//      print("t: \(String(format: "%.1f", t)) -> \(String(format: "%.3f", value))")
-//    }
-//  }
+  //  public static func testCurves() {
+  //    let testPoints = stride(from: 0.0, through: 1.0, by: 0.1)
+  //
+  //    print("Bounce curve:")
+  //    for t in testPoints {
+  //      let value = PresetCurve.bounce.apply(to: t)
+  //      print("t: \(String(format: "%.1f", t)) -> \(String(format: "%.3f", value))")
+  //    }
+  //
+  //    print("\nElastic curve:")
+  //    for t in testPoints {
+  //      let value = PresetCurve.elastic.apply(to: t)
+  //      print("t: \(String(format: "%.1f", t)) -> \(String(format: "%.3f", value))")
+  //    }
+  //  }
 }
 
 extension EasingFunction {
