@@ -75,7 +75,7 @@ import Foundation
 //  public var curve: EasingFunction {
 //    let function = EasingFunction(
 //      curve: <#T##CurveFunction#>,
-//      direction: <#T##EasingDirection#>
+//      direction: <#T##EaseDirection#>
 //    )
 //  }
 //}

@@ -7,19 +7,20 @@
 
 import Foundation
 
-public enum EasingDirection: String, CaseIterable, Identifiable, Sendable {
+public enum EaseDirection: String, CaseIterable, Identifiable, Sendable {
   case `in`
   case out
   case inOut
 
   public var id: String { rawValue }
+  public var name: String { "ease" + rawValue.capitalized }
 }
 
 public struct EasingFunction: Hashable, Identifiable, Sendable {
   public var curve: CurveFunction
-  public var direction: EasingDirection
+  public var direction: EaseDirection
 
-  public init(_ curve: CurveFunction, _ direction: EasingDirection) {
+  public init(_ curve: CurveFunction, _ direction: EaseDirection) {
     self.curve = curve
     self.direction = direction
   }
@@ -243,7 +244,7 @@ extension EasingFunction {
 
   private func elastic(
     _ t: Double,
-    direction: EasingDirection,
+    direction: EaseDirection,
     amplitude: Double = 1,
     period: Double = 0.3
   ) -> Double {

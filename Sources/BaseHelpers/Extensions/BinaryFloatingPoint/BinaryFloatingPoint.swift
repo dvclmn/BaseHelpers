@@ -121,13 +121,14 @@ extension BinaryFloatingPoint {
   public func mappedNonLinearly(
     from inputRange: ClosedRange<Self> = 0...1,
     to outputRange: ClosedRange<Self>,
-    curve: EasingFunction = .easeInQuad,
-//    curve: CurveType = .shaped(.logar, .inOut),
-//    curve: CurveFunction = .linear,
-//    ease: Ease = .none,
+    curve: CurveFunction = .quartic,
+    ease: EaseDirection = .in,
+    //    curve: CurveType = .shaped(.logar, .inOut),
+    //    curve: CurveFunction = .linear,
+    //    ease: Ease = .none,
     clampedToInputRange clamped: Bool = true
   ) -> Self {
-    
+
     /// `clamped` controls whether overshoot is allowed or not.
     ///
     /// Clamped: if value is below `inputRange.lowerBound`,
@@ -142,7 +143,7 @@ extension BinaryFloatingPoint {
     /// Unclamped is useful for effects like elastic overshoot or values
     /// that need to continue beyond the target.
     let clampedSelf = clamped ? self.clamped(to: inputRange) : self
-    
+
     /// A “shift and scale” step to normalise a value.
     /// Subtracting the `lowerBound` shifts the input so the start of the range is at `0`
     /// Dividing by the range width (span) scales it so the end of the range is at `1`
@@ -156,27 +157,28 @@ extension BinaryFloatingPoint {
 
     let inputSpan = inputRange.upperBound - inputRange.lowerBound
     let normalised = (clampedSelf - inputRange.lowerBound) / inputSpan
-    
-    let curved = curve.value(for: Double(normalised))
-//    let curved = ease.apply(using: curve, to: Double(normalised))
+
+    let function = EasingFunction(curve, ease)
+    let curved = function.value(for: Double(normalised))
+    //    let curved = ease.apply(using: curve, to: Double(normalised))
     let outputSpan = outputRange.upperBound - outputRange.lowerBound
     return outputRange.lowerBound + Self(curved) * outputSpan
   }
-  
-//  public func mappedNonLinearly(
-//    from input: Self,
-//    to output: Self,
-//    curve: CurveFunction = .linear,
-//    ease: Ease = .none,
-////    clampedToInputRange clamped: Bool = true
-//  ) -> Self {
-////    let clampedSelf = clamped ? self.clamped(to: inputRange) : self
-////    let inputSpan = inputRange.upperBound - inputRange.lowerBound
-//    let normalised = (clampedSelf - inputRange.lowerBound) / inputSpan
-//    let curved = ease.apply(using: curve, to: Double(normalised))
-//    let outputSpan = outputRange.upperBound - outputRange.lowerBound
-//    return outputRange.lowerBound + Self(curved) * outputSpan
-//  }
+
+  //  public func mappedNonLinearly(
+  //    from input: Self,
+  //    to output: Self,
+  //    curve: CurveFunction = .linear,
+  //    ease: Ease = .none,
+  ////    clampedToInputRange clamped: Bool = true
+  //  ) -> Self {
+  ////    let clampedSelf = clamped ? self.clamped(to: inputRange) : self
+  ////    let inputSpan = inputRange.upperBound - inputRange.lowerBound
+  //    let normalised = (clampedSelf - inputRange.lowerBound) / inputSpan
+  //    let curved = ease.apply(using: curve, to: Double(normalised))
+  //    let outputSpan = outputRange.upperBound - outputRange.lowerBound
+  //    return outputRange.lowerBound + Self(curved) * outputSpan
+  //  }
 
   public func toPercentString(within range: ClosedRange<Self>) -> String {
     let normalised: Double = Double(self.normalised(from: range))
