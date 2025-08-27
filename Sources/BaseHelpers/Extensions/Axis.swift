@@ -7,13 +7,9 @@
 
 import SwiftUI
 
-/// Explicit convention
-/// ```
-/// Axis.horizontal.length(
-///   from: size,
-///   convention: .widthIsHorizontal
-/// )
-/// ```
+/// This exists because there is ambiguity about whether
+/// width should relate to a horizontal axis, or vertical.
+/// And vice versa.
 public enum DimensionToAxisConvention {
   case widthIsHorizontal
   case heightIsHorizontal
@@ -62,7 +58,6 @@ public enum DimensionToAxisConvention {
     verticalLengthStart(edgeInsets)
       + verticalLengthEnd(edgeInsets)
   }
-
 
   // MARK: - CGSize
   public func horizontalLength(size: CGSize) -> CGFloat {
@@ -145,7 +140,6 @@ extension Axis {
     }
   }
 
-
   public func length(
     size: CGSize,
     convention: DimensionToAxisConvention = .widthIsHorizontal
@@ -198,19 +192,19 @@ extension Axis {
     from rect: CGRect,
     convention: DimensionToAxisConvention = .widthIsHorizontal
   ) -> CGFloat {
-    
+
     switch (self, convention) {
       case (.horizontal, .widthIsHorizontal), (.vertical, .widthIsHorizontal):
         return rect.width
       case (.horizontal, .heightIsHorizontal), (.vertical, .heightIsHorizontal):
         return rect.height
     }
-//    switch self {
-//      case .horizontal:
-//        return rect.width
-//      case .vertical:
-//        return rect.height
-//    }
+    //    switch self {
+    //      case .horizontal:
+    //        return rect.width
+    //      case .vertical:
+    //        return rect.height
+    //    }
   }
 
   public func midPoint(from rect: CGRect) -> CGFloat {
@@ -236,7 +230,5 @@ extension Axis {
     case minHeight
     case maxHeight
   }
-
-  
 
 }

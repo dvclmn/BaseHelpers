@@ -28,6 +28,24 @@ public enum CurveFunction: String, CaseIterable, Identifiable, Sendable {
 //  case bump
 
   public var id: String { rawValue }
+  
+  public var swatch: Swatch {
+    switch self {
+      case .linear: Swatch.tealGreen30
+      case .sine: Swatch.blue30
+      case .quadratic: Swatch.brown30
+      case .cubic: Swatch.green50
+      case .quartic: Swatch.limeGreen30
+      case .quintic: Swatch.peachOrange30
+      case .exponential: Swatch.purple30
+      case .circular: Swatch.slateGrey50
+      case .logarithmic: Swatch.yellow40
+      case .back: Swatch.blue10
+      case .elastic: Swatch.oliveGreen40
+      case .bounce: Swatch.whiteBone
+      case .smoothStep: Swatch.plumGrey50
+    }
+  }
 
   public var name: String { rawValue.capitalized }
 
