@@ -40,7 +40,7 @@ extension Swatch {
     /// that is a number, if present
     let digits = rawValue.filter { $0.isWholeNumber }
     guard !digits.isEmpty else { return nil }
-//    print("Looking for numbers in \(rawValue), found \(digits)")
+    //    print("Looking for numbers in \(rawValue), found \(digits)")
     return digits
   }
 
@@ -59,9 +59,9 @@ extension Swatch {
 
   public var primitiveColour: PrimitiveColour? {
     PrimitiveColour(fromSwatch: self)
-//    return PrimitiveColour.allCases.first(where: { $0.swatches.contains(self) }) ?? .red
+    //    return PrimitiveColour.allCases.first(where: { $0.swatches.contains(self) }) ?? .red
   }
-  
+
   public var primitiveColourName: String {
     return primitiveColour?.rawValue ?? "Unknown"
   }
