@@ -22,7 +22,7 @@ extension GraphicsContext {
         let y = CGFloat(row) * config.size + config.offset.height.truncatingRemainder(dividingBy: config.size)
         
         let rect = CGRect(x: x, y: y, width: config.size, height: config.size)
-        let color = (row + col).isMultiple(of: 2) ? config.primaryColour.swiftUIColor : config.secondaryColour.swiftUIColor
+        let color = (row + col).isMultiple(of: 2) ? config.primaryColour.swiftUIColour : config.secondaryColour.swiftUIColour
         self.fill(Path(rect), with: .color(color))
       }
     }

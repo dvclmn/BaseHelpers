@@ -56,7 +56,7 @@ extension GraphicsContext {
       }
       
       /// Draw the path with the specified line width
-      self.stroke(path, with: .color(config.primaryColour.swiftUIColor), lineWidth: lineWidth)
+      self.stroke(path, with: .color(config.primaryColour.swiftUIColour), lineWidth: lineWidth)
     }
   }
 }

@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-public struct RGBColour: Identifiable, Equatable, Hashable, Sendable, Codable, ColourModel {
+public struct RGBColour: Identifiable, Equatable, Hashable, Sendable, Codable, ColourModel, ColourConvertible {
   public let id: UUID
   public var red: Double
   public var green: Double
@@ -59,7 +59,7 @@ extension RGBColour {
     HSVColour(fromRGB: self)
   }
 
-  public var swiftUIColor: Color {
+  public var swiftUIColour: Color {
     Color(
       colourSpace,
       red: red,

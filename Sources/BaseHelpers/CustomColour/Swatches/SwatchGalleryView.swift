@@ -20,7 +20,7 @@
 //    ) {
 //      ForEach(Swatch.allCases) { swatch in
 //        RoundedRectangle(cornerRadius: 6)
-//          .fill(swatch.swiftUIColor)
+//          .fill(swatch.swiftUIColour)
 //      }
 //    }
 //    

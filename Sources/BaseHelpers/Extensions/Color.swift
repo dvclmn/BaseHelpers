@@ -8,6 +8,14 @@
 import NSUI
 import SwiftUI
 
+public protocol ColourConvertible: Sendable {
+  var swiftUIColour: Color { get }
+}
+
+extension Color: ColourConvertible {
+  public var swiftUIColour: Color { self }
+}
+
 /// ```
 /// struct ContentView: View {
 ///   let selectedColor: NamedColour = .indigo
@@ -23,10 +31,11 @@ import SwiftUI
 /// }
 /// ```
 public struct NamedColour: Sendable, CaseIterable, Hashable, Equatable {
-  public let colour: Color
+  public let colour: any ColourConvertible
+//  public let colour: Color
   public let name: String
 
-  private init(colour: Color, name: String) {
+  public init(colour: any ColourConvertible, name: String) {
     self.colour = colour
     self.name = name
   }
@@ -39,24 +48,24 @@ public struct NamedColour: Sendable, CaseIterable, Hashable, Equatable {
     return lhs.name == rhs.name
   }
 
-  public static let red = NamedColour(colour: .red, name: "Red")
-  public static let blue = NamedColour(colour: .blue, name: "Blue")
-  public static let green = NamedColour(colour: .green, name: "Green")
-  public static let orange = NamedColour(colour: .orange, name: "Orange")
-  public static let yellow = NamedColour(colour: .yellow, name: "Yellow")
-  public static let pink = NamedColour(colour: .pink, name: "Pink")
-  public static let purple = NamedColour(colour: .purple, name: "Purple")
-  public static let indigo = NamedColour(colour: .indigo, name: "Indigo")
-  public static let mint = NamedColour(colour: .mint, name: "Mint")
-  public static let cyan = NamedColour(colour: .cyan, name: "Cyan")
-  public static let brown = NamedColour(colour: .brown, name: "Brown")
-  public static let gray = NamedColour(colour: .gray, name: "Gray")
-  public static let black = NamedColour(colour: .black, name: "Black")
-  public static let white = NamedColour(colour: .white, name: "White")
-  public static let clear = NamedColour(colour: .clear, name: "Clear")
-  public static let primary = NamedColour(colour: .primary, name: "Primary")
-  public static let secondary = NamedColour(colour: .secondary, name: "Secondary")
-  public static let accentColor = NamedColour(colour: .accentColor, name: "Accent")
+  public static let red = NamedColour(colour: Color.red, name: "Red")
+  public static let blue = NamedColour(colour: Color.blue, name: "Blue")
+  public static let green = NamedColour(colour: Color.green, name: "Green")
+  public static let orange = NamedColour(colour: Color.orange, name: "Orange")
+  public static let yellow = NamedColour(colour: Color.yellow, name: "Yellow")
+  public static let pink = NamedColour(colour: Color.pink, name: "Pink")
+  public static let purple = NamedColour(colour: Color.purple, name: "Purple")
+  public static let indigo = NamedColour(colour: Color.indigo, name: "Indigo")
+  public static let mint = NamedColour(colour: Color.mint, name: "Mint")
+  public static let cyan = NamedColour(colour: Color.cyan, name: "Cyan")
+  public static let brown = NamedColour(colour: Color.brown, name: "Brown")
+  public static let gray = NamedColour(colour: Color.gray, name: "Gray")
+  public static let black = NamedColour(colour: Color.black, name: "Black")
+  public static let white = NamedColour(colour: Color.white, name: "White")
+  public static let clear = NamedColour(colour: Color.clear, name: "Clear")
+  public static let primary = NamedColour(colour: Color.primary, name: "Primary")
+  public static let secondary = NamedColour(colour: Color.secondary, name: "Secondary")
+  public static let accentColor = NamedColour(colour: Color.accentColor, name: "Accent")
 
   public static var allCases: [NamedColour] {
     [
@@ -69,7 +78,7 @@ public struct NamedColour: Sendable, CaseIterable, Hashable, Equatable {
 extension Color {
 
   public var namedColour: NamedColour? {
-    return NamedColour.allCases.first { $0.colour == self }
+    return NamedColour.allCases.first { $0.colour.swiftUIColour == self }
   }
 
   public func complementary(
@@ -79,7 +88,7 @@ extension Color {
 
     let hsvColour = HSVColour(colour: self, environment: environment)
     let complementary = hsvColour.complementary(strength: strength)
-    return complementary.swiftUIColor
+    return complementary.swiftUIColour
   }
 
   public func contrastColour(
@@ -99,7 +108,7 @@ extension Color {
 
     let adjustedHSV = hsvColour.applying(adjustment: adjustment)
 
-    return adjustedHSV.swiftUIColor
+    return adjustedHSV.swiftUIColour
   }
 
   public var barelyThereOpacity: Color {

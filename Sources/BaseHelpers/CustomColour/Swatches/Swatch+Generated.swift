@@ -18,7 +18,7 @@
 
 
 
-  public enum Swatch: String, Codable, CaseIterable, Identifiable, Sendable, Hashable, Equatable {
+  public enum Swatch: String, Codable, CaseIterable, Identifiable, Sendable, Hashable, Equatable, ColourConvertible {
       case asciiBlack
       case asciiBlue
       case asciiBrown

@@ -9,7 +9,7 @@ import SwiftUI
 
 public protocol ColourModel {
   var colourSpace: Color.RGBColorSpace { get }
-  var swiftUIColor: Color { get }
+  var swiftUIColour: Color { get }
   var alpha: Double { get set }
   mutating func opacity(_ opacity: Double)
   static func gray(_ brightness: Double, alpha: Double) -> Self
