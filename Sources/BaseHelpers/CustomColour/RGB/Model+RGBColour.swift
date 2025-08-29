@@ -13,6 +13,10 @@ public struct RGBColour: Identifiable, Equatable, Hashable, Sendable, Codable, C
   public var green: Double
   public var blue: Double
   public var alpha: Double
+  
+  enum CodingKeys: String, CodingKey {
+    case id, red, green, blue, alpha
+  }
 
   public init(
     colour: Color,

@@ -5,7 +5,7 @@
 //  Created by Dave Coleman on 30/6/2025.
 //
 
-import Foundation
+import SwiftUI
 
 /// This is referring to basic colours like "red" and "green",
 /// as opposed to fancy shades like "peach" or "teal"
@@ -13,7 +13,6 @@ public enum PrimitiveColour: String, Identifiable, CaseIterable, Sendable, Compa
   public static func < (lhs: PrimitiveColour, rhs: PrimitiveColour) -> Bool {
     lhs.sortIndex < rhs.sortIndex
   }
-
   case red
   case orange
   case yellow
@@ -39,5 +38,21 @@ public enum PrimitiveColour: String, Identifiable, CaseIterable, Sendable, Compa
 
   public var sortIndex: Int {
     PrimitiveColour.allCases.firstIndex(of: self) ?? 0
+  }
+  
+  public var namedColour: Color {
+    switch self {
+      case .red: Color.red
+      case .orange: Color.orange
+      case .yellow: Color.yellow
+      case .green: Color.green
+      case .blue: Color.blue
+      case .purple: Color.purple
+      case .pink: Color.pink
+      case .brown: Color.brown
+      case .grey: Color.gray
+      case .black: Color.black
+      case .white: Color.white
+    }
   }
 }

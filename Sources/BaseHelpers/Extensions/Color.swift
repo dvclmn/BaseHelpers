@@ -5,9 +5,46 @@
 //  Created by Dave Coleman on 23/7/2024.
 //
 
-import Foundation
 import NSUI
 import SwiftUI
+
+/// ```
+/// struct ContentView: View {
+///   let selectedColor: NamedColour = .indigo
+///
+///   var body: some View {
+///     VStack {
+///       Rectangle()
+///         .fill(selectedColor.color)
+///         .frame(width: 100, height: 100)
+///       Text("Color: \(selectedColor.name)")
+///     }
+///   }
+/// }
+/// ```
+public struct NamedColour: Sendable {
+  public let colour: Color
+  public let name: String
+
+  public static let red = NamedColour(colour: .red, name: "Red")
+  public static let blue = NamedColour(colour: .blue, name: "Blue")
+  public static let green = NamedColour(colour: .green, name: "Green")
+  public static let orange = NamedColour(colour: .orange, name: "Orange")
+  public static let yellow = NamedColour(colour: .yellow, name: "Yellow")
+  public static let pink = NamedColour(colour: .pink, name: "Pink")
+  public static let purple = NamedColour(colour: .purple, name: "Purple")
+  public static let indigo = NamedColour(colour: .indigo, name: "Indigo")
+  public static let mint = NamedColour(colour: .mint, name: "Mint")
+  public static let cyan = NamedColour(colour: .cyan, name: "Cyan")
+  public static let brown = NamedColour(colour: .brown, name: "Brown")
+  public static let gray = NamedColour(colour: .gray, name: "Gray")
+  public static let black = NamedColour(colour: .black, name: "Black")
+  public static let white = NamedColour(colour: .white, name: "White")
+  public static let clear = NamedColour(colour: .clear, name: "Clear")
+  public static let primary = NamedColour(colour: .primary, name: "Primary")
+  public static let secondary = NamedColour(colour: .secondary, name: "Secondary")
+  public static let accentColor = NamedColour(colour: .accentColor, name: "Accent")
+}
 
 extension Color {
 

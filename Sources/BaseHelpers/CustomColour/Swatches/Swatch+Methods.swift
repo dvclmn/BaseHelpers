@@ -21,14 +21,13 @@ extension Swatch {
   }
 
   public var name: String { rawValue }
-  //    return "I'm a name"
-  //    guard let number = colourShadeNumber else {
-  //      return rawValue.capitalized
-  //    }
-  //    return self.groupName + String(shadeNumber) + (isVibrant ? "V" : "")
-  //  }
 
-  public var type: SwatchType { SwatchType(fromRawString: self.rawValue, fallbackType: "Base") }
+  public var type: SwatchType {
+    SwatchType(
+      fromRawString: self.rawValue,
+      fallbackType: "Base"
+    )
+  }
 
   public func typeName(fallBackType: String? = nil) -> String {
     return SwatchType(fromRawString: rawValue, fallbackType: fallBackType).name
@@ -40,7 +39,6 @@ extension Swatch {
     /// that is a number, if present
     let digits = rawValue.filter { $0.isWholeNumber }
     guard !digits.isEmpty else { return nil }
-    //    print("Looking for numbers in \(rawValue), found \(digits)")
     return digits
   }
 
@@ -59,7 +57,6 @@ extension Swatch {
 
   public var primitiveColour: PrimitiveColour? {
     PrimitiveColour(fromSwatch: self)
-    //    return PrimitiveColour.allCases.first(where: { $0.swatches.contains(self) }) ?? .red
   }
 
   public var primitiveColourName: String {
@@ -70,45 +67,7 @@ extension Swatch {
     return name.hasSuffix("V")
   }
 
-  //  // MARK: - Older
-  //  @available(
-  //    *, deprecated,
-  //    message:
-  //      "Because `brightness` returns `some View`, prefer to use it as it's own modifier in the View. Find alternative way to adjust brightness to return a `Color` instead."
-  //  )
-  //  public func colour(_ brightnessAdjustment: BrightnessAdjustment, amount: CGFloat) -> some View {
-  //    let newColour = swiftUIColor.brightness(brightnessAdjustment.adjustment(with: amount))
-  //    return newColour
-  //  }
-  //
-  //  public static func swatchesFromIndices(
-  //    _ indices: [Int],
-  //    swatchList: [Swatch]
-  //  ) -> [Swatch] {
-  //    indices.compactMap { index in
-  //      guard index >= 0 && index < swatchList.count else {
-  //        return nil  // Skip invalid indices
-  //      }
-  //      return swatchList[index]
-  //    }
-  //  }
-
-  //  public static func printSwatchNames(_ list: [Swatch]) -> String {
-  //    let names = list.map { $0.rawValue }
-  //    return names.joined(separator: ", ")
-  //  }
-
 }
-
-//extension Array where Element == Swatch {
-//  public var printSwatchNames: String {
-//    Swatch.printSwatchNames(self)
-//  }
-//
-//  public func swatchesFromIndices(_ indices: [Int]) -> [Swatch] {
-//    Swatch.swatchesFromIndices(indices, swatchList: self)
-//  }
-//}
 
 public enum BrightnessAdjustment {
   case darker

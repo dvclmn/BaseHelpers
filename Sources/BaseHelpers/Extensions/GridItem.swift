@@ -19,32 +19,20 @@ extension Array where Element == GridItem {
     )
     return result
   }
-  
-  public static func quickAdaptiveColumns(
+
+  /// Adaptive allows not specifying an explicit number of columns.
+  /// Instead allowing the column count to change based on availble width
+  public static func quickAdaptive(
     min: CGFloat,
     max: CGFloat = .infinity,
     spacing: CGFloat? = nil,
+    alignment: Alignment? = nil
   ) -> Self {
     let result = GridItem(
       .adaptive(minimum: min, maximum: max),
-      spacing: spacing
+      spacing: spacing,
+      alignment: alignment
     )
     return [result]
   }
-  
-//  public static func quickAdaptiveColumns(
-//    min: CGFloat = 20,
-//    max: CGFloat = 200,
-//    spacing: CGFloat? = nil,
-//  ) -> GridItem {
-//    let result = GridItem(
-//      .adaptive(minimum: min, maximum: max),
-//      spacing: spacing
-//    )
-//    return result
-//  }
 }
-
-//extension GridItem {
-//
-//}
