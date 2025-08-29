@@ -25,6 +25,35 @@ import SwiftUI
 public struct NamedColour: Sendable {
   public let colour: Color
   public let name: String
+  
+//  public init(
+//    swatch: Swatch
+//  ) {
+//    switch swatch.primitiveColour {
+//      case .red:
+//        <#code#>
+//      case .orange:
+//        <#code#>
+//      case .yellow:
+//        <#code#>
+//      case .green:
+//        <#code#>
+//      case .blue:
+//        <#code#>
+//      case .purple:
+//        <#code#>
+//      case .pink:
+//        <#code#>
+//      case .brown:
+//        <#code#>
+//      case .grey:
+//        <#code#>
+//      case .black:
+//        <#code#>
+//      case .white:
+//        <#code#>
+//    }
+//  }
 
   public static let red = NamedColour(colour: .red, name: "Red")
   public static let blue = NamedColour(colour: .blue, name: "Blue")
@@ -47,6 +76,30 @@ public struct NamedColour: Sendable {
 }
 
 extension Color {
+  
+  public var namedColour: NamedColour? {
+    switch self {
+      case .red: NamedColour.red
+      case .blue: NamedColour.blue
+      case .green: NamedColour.green
+      case .orange: NamedColour.orange
+      case .yellow: NamedColour.yellow
+      case .pink: NamedColour.pink
+      case .purple: NamedColour.purple
+      case .indigo: NamedColour.indigo
+      case .mint: NamedColour.mint
+      case .cyan: NamedColour.cyan
+      case .brown: NamedColour.brown
+      case .gray: NamedColour.gray
+      case .black: NamedColour.black
+      case .white: NamedColour.white
+      case .clear: NamedColour.clear
+      case .primary: NamedColour.primary
+      case .secondary: NamedColour.secondary
+      case .accentColor: NamedColour.accentColor
+      default: nil
+    }
+  }
 
   public func complementary(
     strength: Double = 1.0,
