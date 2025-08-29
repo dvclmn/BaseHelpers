@@ -25,78 +25,79 @@ import SwiftUI
 public struct NamedColour: Sendable {
   public let colour: Color
   public let name: String
-  
-//  public init(
-//    swatch: Swatch
-//  ) {
-//    switch swatch.primitiveColour {
-//      case .red:
-//        <#code#>
-//      case .orange:
-//        <#code#>
-//      case .yellow:
-//        <#code#>
-//      case .green:
-//        <#code#>
-//      case .blue:
-//        <#code#>
-//      case .purple:
-//        <#code#>
-//      case .pink:
-//        <#code#>
-//      case .brown:
-//        <#code#>
-//      case .grey:
-//        <#code#>
-//      case .black:
-//        <#code#>
-//      case .white:
-//        <#code#>
-//    }
-//  }
 
-  public static let red = NamedColour(colour: .red, name: "Red")
-  public static let blue = NamedColour(colour: .blue, name: "Blue")
-  public static let green = NamedColour(colour: .green, name: "Green")
-  public static let orange = NamedColour(colour: .orange, name: "Orange")
-  public static let yellow = NamedColour(colour: .yellow, name: "Yellow")
-  public static let pink = NamedColour(colour: .pink, name: "Pink")
-  public static let purple = NamedColour(colour: .purple, name: "Purple")
-  public static let indigo = NamedColour(colour: .indigo, name: "Indigo")
-  public static let mint = NamedColour(colour: .mint, name: "Mint")
-  public static let cyan = NamedColour(colour: .cyan, name: "Cyan")
-  public static let brown = NamedColour(colour: .brown, name: "Brown")
-  public static let gray = NamedColour(colour: .gray, name: "Gray")
-  public static let black = NamedColour(colour: .black, name: "Black")
-  public static let white = NamedColour(colour: .white, name: "White")
-  public static let clear = NamedColour(colour: .clear, name: "Clear")
-  public static let primary = NamedColour(colour: .primary, name: "Primary")
-  public static let secondary = NamedColour(colour: .secondary, name: "Secondary")
-  public static let accentColor = NamedColour(colour: .accentColor, name: "Accent")
+  
+  //  public init(
+  //    swatch: Swatch
+  //  ) {
+  //    switch swatch.primitiveColour {
+  //      case .red:
+  //        <#code#>
+  //      case .orange:
+  //        <#code#>
+  //      case .yellow:
+  //        <#code#>
+  //      case .green:
+  //        <#code#>
+  //      case .blue:
+  //        <#code#>
+  //      case .purple:
+  //        <#code#>
+  //      case .pink:
+  //        <#code#>
+  //      case .brown:
+  //        <#code#>
+  //      case .grey:
+  //        <#code#>
+  //      case .black:
+  //        <#code#>
+  //      case .white:
+  //        <#code#>
+  //    }
+  //  }
+
+  public static let red = Color.red.namedColour
+  public static let blue = Color.blue.namedColour
+  public static let green = Color.green.namedColour
+  public static let orange = Color.orange.namedColour
+  public static let yellow = Color.yellow.namedColour
+  public static let pink = Color.pink.namedColour
+  public static let purple = Color.purple.namedColour
+  public static let indigo = Color.indigo.namedColour
+  public static let mint = Color.mint.namedColour
+  public static let cyan = Color.cyan.namedColour
+  public static let brown = Color.brown.namedColour
+  public static let gray = Color.gray.namedColour
+  public static let black = Color.black.namedColour
+  public static let white = Color.white.namedColour
+  public static let clear = Color.clear.namedColour
+  public static let primary = Color.primary.namedColour
+  public static let secondary = Color.secondary.namedColour
+  public static let accentColor = Color.accentColor.namedColour
 }
 
 extension Color {
-  
+
   public var namedColour: NamedColour? {
     switch self {
-      case .red: NamedColour.red
-      case .blue: NamedColour.blue
-      case .green: NamedColour.green
-      case .orange: NamedColour.orange
-      case .yellow: NamedColour.yellow
-      case .pink: NamedColour.pink
-      case .purple: NamedColour.purple
-      case .indigo: NamedColour.indigo
-      case .mint: NamedColour.mint
-      case .cyan: NamedColour.cyan
-      case .brown: NamedColour.brown
-      case .gray: NamedColour.gray
-      case .black: NamedColour.black
-      case .white: NamedColour.white
-      case .clear: NamedColour.clear
-      case .primary: NamedColour.primary
-      case .secondary: NamedColour.secondary
-      case .accentColor: NamedColour.accentColor
+      case .red: NamedColour(colour: .red, name: "Red")
+      case .blue: NamedColour(colour: .blue, name: "Blue")
+      case .green: NamedColour(colour: .green, name: "Green")
+      case .orange: NamedColour(colour: .orange, name: "Orange")
+      case .yellow: NamedColour(colour: .yellow, name: "Yellow")
+      case .pink: NamedColour(colour: .pink, name: "Pink")
+      case .purple: NamedColour(colour: .purple, name: "Purple")
+      case .indigo: NamedColour(colour: .indigo, name: "Indigo")
+      case .mint: NamedColour(colour: .mint, name: "Mint")
+      case .cyan: NamedColour(colour: .cyan, name: "Cyan")
+      case .brown: NamedColour(colour: .brown, name: "Brown")
+      case .gray: NamedColour(colour: .gray, name: "Gray")
+      case .black: NamedColour(colour: .black, name: "Black")
+      case .white: NamedColour(colour: .white, name: "White")
+      case .clear: NamedColour(colour: .clear, name: "Clear")
+      case .primary: NamedColour(colour: .primary, name: "Primary")
+      case .secondary: NamedColour(colour: .secondary, name: "Secondary")
+      case .accentColor: NamedColour(colour: .accentColor, name: "Accent")
       default: nil
     }
   }
