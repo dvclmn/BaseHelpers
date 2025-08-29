@@ -24,14 +24,14 @@ extension Swatch {
 
   public var type: SwatchType {
     SwatchType(
-      fromRawString: self.rawValue,
+      fromRawString: rawValue,
       fallbackType: "Base"
     )
   }
 
-  public func typeName(fallBackType: String? = nil) -> String {
-    return SwatchType(fromRawString: rawValue, fallbackType: fallBackType).name
-  }
+//  public func type(fallBackType: String? = nil) -> String {
+//    return SwatchType(fromRawString: rawValue, fallbackType: fallBackType).name
+//  }
 
   // MARK: - Grouping
   public var shadeNumber: String? {
@@ -51,7 +51,7 @@ extension Swatch {
         !swatch.rawValue.contains("ascii")
       }
     }
-    let grouped = Dictionary(grouping: swatches) { $0.typeName() }
+    let grouped = Dictionary(grouping: swatches) { $0.type.name }
     return grouped
   }
 
