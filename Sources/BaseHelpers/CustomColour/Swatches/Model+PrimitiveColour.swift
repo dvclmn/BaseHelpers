@@ -24,6 +24,7 @@ public enum PrimitiveColour: String, Identifiable, CaseIterable, Sendable, Compa
   case grey
   case black
   case white
+  case none
 
   public init?(fromSwatch swatch: Swatch) {
     let lower = swatch.rawValue.lowercased()
@@ -57,6 +58,7 @@ public enum PrimitiveColour: String, Identifiable, CaseIterable, Sendable, Compa
       case .grey: Color.gray
       case .black: Color.black
       case .white: Color.white
+      case .none: Color.clear
     }
   }
 }
