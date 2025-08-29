@@ -20,9 +20,6 @@ let package = Package(
     .package(url: "https://github.com/swiftlang/swift-docc-plugin", from: "1.0.0"),
     .package(url: "https://github.com/mattmassicotte/nsui", from: "1.3.0"),
     .package(url: "https://github.com/ukushu/Ifrit", from: "3.0.0"),
-    /// Important: Hoping to keep BaseHelpers as light on dependancies as possible.
-    /// Especially my own Swift Packages
-//    .package(url: "https://github.com/dvclmn/BaseStyles", branch: "main"),
   ],
   
   targets: [
@@ -33,7 +30,7 @@ let package = Package(
         .product(name: "NSUI", package: "nsui"),
         .product(name: "IfritStatic", package: "Ifrit"),
       ],
-      resources: [.copy("Assets.xcassets")],
+      resources: [.process("Assets.xcassets")],
     ),
   ],
 )
