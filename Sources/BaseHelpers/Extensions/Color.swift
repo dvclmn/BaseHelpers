@@ -18,18 +18,39 @@ public protocol ColourConvertible: Sendable {
   ) -> RGBColour?
 }
 
+extension ColourConvertible where Self == RGBColour {
+  public func contrastColourWithFallback(
+    strength: ModificationStrengthPreset,
+    purpose: ColourPurpose = .legibility,
+    chroma: ColourChroma = .standard,
+    environment: EnvironmentValues? = nil,
+    //    fallbackToNoContrast: Bool = true
+  ) -> RGBColour {
+
+    guard let environment,
+      let contrast = self.contrastColour(
+        strength: strength,
+        purpose: purpose,
+        chroma: chroma,
+        environment: environment
+      )
+    else { return self }
+    return contrast
+  }
+}
+
 extension Color: ColourConvertible {
   public var swiftUIColour: Color { self }
-  
+
   public func contrastColour(
     strength: ModificationStrengthPreset,
     purpose: ColourPurpose = .legibility,
     chroma: ColourChroma = .standard,
     environment: EnvironmentValues? = nil
   ) -> RGBColour? {
-    
+
     guard let environment else { return nil }
-    
+
     return self.contrastColour(
       strength: strength,
       purpose: purpose,
@@ -98,6 +119,15 @@ public struct NamedColour: Sendable, CaseIterable, Hashable, Equatable {
   }
 }
 
+extension Double {
+  public static let barelyThereOpacity: Self = 0.03
+  public static let faintOpacity: Self = 0.1
+  public static let lowOpacity: Self = 0.3
+  public static let midOpacity: Self = 0.6
+  public static let nearOpaque: Self = 0.85
+
+}
+
 extension Color {
 
   public var namedColour: NamedColour? {
@@ -134,21 +164,19 @@ extension Color {
     return adjustedHSV.swiftUIColour
   }
 
-  public var barelyThereOpacity: Color {
-    self.opacity(0.03)
-  }
+  public var barelyThereOpacity: Color { self.opacity(.barelyThereOpacity) }
 
   public var faintOpacity: Color {
-    self.opacity(0.1)
+    self.opacity(.faintOpacity)
   }
   public var lowOpacity: Color {
-    self.opacity(0.3)
+    self.opacity(.lowOpacity)
   }
   public var midOpacity: Color {
-    self.opacity(0.6)
+    self.opacity(.midOpacity)
   }
-  public var almostFullOpacity: Color {
-    self.opacity(0.85)
+  public var nearOpaque: Color {
+    self.opacity(.nearOpaque)
   }
 
   public func mixCompatible(

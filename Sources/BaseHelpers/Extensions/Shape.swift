@@ -9,14 +9,14 @@ import SwiftUI
 
 extension Shape {
   
-  public func stroke(
-    _ content: AnyShapeStyle?,
-    lineWidth: CGFloat?,
-  ) -> some View {
-    let colour = content ?? AnyShapeStyle(Color.white.midOpacity)
-    let strokeWidth = lineWidth ?? 1
-    return self.stroke(colour, lineWidth: strokeWidth)
-  }
+//  public func stroke(
+//    style: AnyShapeStyle?,
+//    lineWidth: CGFloat?,
+//  ) -> some View {
+//    let colour = style ?? AnyShapeStyle(Color.white.midOpacity)
+//    let strokeWidth = lineWidth ?? 1
+//    return self.stroke(colour, lineWidth: strokeWidth)
+//  }
   
 
   public static var triangle: Triangle { Triangle() }
