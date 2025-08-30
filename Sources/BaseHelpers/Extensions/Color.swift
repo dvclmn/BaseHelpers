@@ -15,29 +15,29 @@ public protocol ColourConvertible: Sendable {
     purpose: ColourPurpose,
     chroma: ColourChroma,
     environment: EnvironmentValues?
-  ) -> RGBColour?
+  ) -> Color?
 }
 
-extension ColourConvertible where Self == RGBColour {
-  public func contrastColourWithFallback(
-    strength: ModificationStrengthPreset,
-    purpose: ColourPurpose = .legibility,
-    chroma: ColourChroma = .standard,
-    environment: EnvironmentValues? = nil,
-    //    fallbackToNoContrast: Bool = true
-  ) -> RGBColour {
-
-    guard let environment,
-      let contrast = self.contrastColour(
-        strength: strength,
-        purpose: purpose,
-        chroma: chroma,
-        environment: environment
-      )
-    else { return self }
-    return contrast
-  }
-}
+//extension ColourConvertible where Self == RGBColour {
+//  public func contrastColourWithFallback(
+//    strength: ModificationStrengthPreset,
+//    purpose: ColourPurpose = .legibility,
+//    chroma: ColourChroma = .standard,
+//    environment: EnvironmentValues? = nil,
+//    //    fallbackToNoContrast: Bool = true
+//  ) -> RGBColour {
+//
+//    guard let environment,
+//      let contrast = self.contrastColour(
+//        strength: strength,
+//        purpose: purpose,
+//        chroma: chroma,
+//        environment: environment
+//      )
+//    else { return self }
+//    return contrast
+//  }
+//}
 
 extension Color: ColourConvertible {
   public var swiftUIColour: Color { self }
@@ -47,7 +47,7 @@ extension Color: ColourConvertible {
     purpose: ColourPurpose = .legibility,
     chroma: ColourChroma = .standard,
     environment: EnvironmentValues? = nil
-  ) -> RGBColour? {
+  ) -> Color? {
 
     guard let environment else { return nil }
 
@@ -56,7 +56,7 @@ extension Color: ColourConvertible {
       purpose: purpose,
       chroma: chroma,
       environment: environment
-    )
+    ).swiftUIColour
   }
 }
 

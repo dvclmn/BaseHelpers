@@ -29,9 +29,15 @@ extension Swatch {
     )
   }
 
-//  public func type(fallBackType: String? = nil) -> String {
-//    return SwatchType(fromRawString: rawValue, fallbackType: fallBackType).name
-//  }
+  //  public func type(fallBackType: String? = nil) -> String {
+  //    return SwatchType(fromRawString: rawValue, fallbackType: fallBackType).name
+  //  }
+  
+  public var shade: Int? {
+    let digits = self.rawValue.filter { $0.isWholeNumber }
+    guard let result = Int(digits) else { return nil }
+    return result
+  }
 
   // MARK: - Grouping
   public var shadeNumber: String? {
@@ -66,21 +72,21 @@ extension Swatch {
   public var isVibrant: Bool {
     return name.hasSuffix("V")
   }
-  
+
   public func contrastColour(
     strength: ModificationStrengthPreset,
     purpose: ColourPurpose = .legibility,
     chroma: ColourChroma = .standard,
     environment: EnvironmentValues? = nil
-  ) -> RGBColour? {
-    
+  ) -> Color? {
+
     guard let environment else { return nil }
     let rgb = self.toRGB(environment)
     return rgb.contrastColour(
       strength: strength,
       purpose: purpose,
       chroma: chroma,
-    )
+    ).swiftUIColour
   }
 
 }

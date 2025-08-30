@@ -105,7 +105,7 @@ extension RGBColour {
     purpose: ColourPurpose = .legibility,
     chroma: ColourChroma = .standard,
     environment: EnvironmentValues? = nil
-  ) -> RGBColour? {
+  ) -> Color? {
     
     guard let environment else { return nil }
     
@@ -114,7 +114,7 @@ extension RGBColour {
       purpose: purpose,
       chroma: chroma,
       environment: environment
-    )
+    )?.swiftUIColour
   }
 
   public init(
