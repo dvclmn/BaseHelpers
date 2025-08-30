@@ -10,10 +10,33 @@ import SwiftUI
 
 public protocol ColourConvertible: Sendable {
   var swiftUIColour: Color { get }
+  func contrastColour(
+    strength: ModificationStrengthPreset,
+    purpose: ColourPurpose,
+    chroma: ColourChroma,
+    environment: EnvironmentValues?
+  ) -> RGBColour?
 }
 
 extension Color: ColourConvertible {
   public var swiftUIColour: Color { self }
+  
+  public func contrastColour(
+    strength: ModificationStrengthPreset,
+    purpose: ColourPurpose = .legibility,
+    chroma: ColourChroma = .standard,
+    environment: EnvironmentValues? = nil
+  ) -> RGBColour? {
+    
+    guard let environment else { return nil }
+    
+    return self.contrastColour(
+      strength: strength,
+      purpose: purpose,
+      chroma: chroma,
+      environment: environment
+    )
+  }
 }
 
 /// ```
@@ -32,7 +55,7 @@ extension Color: ColourConvertible {
 /// ```
 public struct NamedColour: Sendable, CaseIterable, Hashable, Equatable {
   public let colour: any ColourConvertible
-//  public let colour: Color
+  //  public let colour: Color
   public let name: String
 
   public init(colour: any ColourConvertible, name: String) {

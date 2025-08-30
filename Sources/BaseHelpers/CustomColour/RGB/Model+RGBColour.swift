@@ -13,7 +13,7 @@ public struct RGBColour: Identifiable, Equatable, Hashable, Sendable, Codable, C
   public var green: Double
   public var blue: Double
   public var alpha: Double
-  
+
   enum CodingKeys: String, CodingKey {
     case id, red, green, blue, alpha
   }
@@ -68,12 +68,11 @@ extension RGBColour {
       opacity: alpha
     )
   }
-  
- 
+
   public func contrastColour(
     strength: ModificationStrengthPreset,
     purpose: ColourPurpose = .legibility,
-    chroma: ColourChroma = .standard
+    chroma: ColourChroma = .standard,
   ) -> RGBColour {
 
     let hsvColour = HSVColour(fromRGB: self)
@@ -87,6 +86,7 @@ extension RGBColour {
     let adjustedHSV = hsvColour.applying(adjustment: adjustment)
     return adjustedHSV.toRGB
   }
+  
 
   public func contrastColour(modification: ColourModification?) -> RGBColour {
     guard let modification else { return self }
@@ -95,6 +95,25 @@ extension RGBColour {
       strength: modification.strength,
       purpose: modification.purpose,
       chroma: modification.chroma
+    )
+  }
+  
+  /// This is only here for `ColourConvertible` conformance,
+  /// there is probably a better approach here
+  public func contrastColour(
+    strength: ModificationStrengthPreset,
+    purpose: ColourPurpose = .legibility,
+    chroma: ColourChroma = .standard,
+    environment: EnvironmentValues? = nil
+  ) -> RGBColour? {
+    
+    guard let environment else { return nil }
+    
+    return self.contrastColour(
+      strength: strength,
+      purpose: purpose,
+      chroma: chroma,
+      environment: environment
     )
   }
 

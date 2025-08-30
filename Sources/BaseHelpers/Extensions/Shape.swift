@@ -9,14 +9,24 @@ import SwiftUI
 
 extension Shape {
   
+  public func stroke(
+    _ content: AnyShapeStyle?,
+    lineWidth: CGFloat?,
+  ) -> some View {
+    let colour = content ?? AnyShapeStyle(Color.white.midOpacity)
+    let strokeWidth = lineWidth ?? 1
+    return self.stroke(colour, lineWidth: strokeWidth)
+  }
+  
+
   public static var triangle: Triangle { Triangle() }
   public static var swiftBird: SwiftBird { SwiftBird() }
-  
+
   /// `let result = shape.analyse(in: rect)`
   public func analyse(in rect: CGRect) -> PathDebugResult {
     self.path(in: rect).analyse()
   }
-  
+
 }
 
 public struct SwiftBird: Shape {
