@@ -8,6 +8,9 @@
 import NSUI
 import SwiftUI
 
+/// The goal here is to unify some common colour-related types,
+/// namely SwiftUI's `Color`, my `RGBColour`,
+/// `NamedColour` and `Swatch`.
 public protocol ColourConvertible: Sendable {
   var swiftUIColour: Color { get }
   func contrastColour(
@@ -17,27 +20,6 @@ public protocol ColourConvertible: Sendable {
     environment: EnvironmentValues?
   ) -> Color?
 }
-
-//extension ColourConvertible where Self == RGBColour {
-//  public func contrastColourWithFallback(
-//    strength: ModificationStrengthPreset,
-//    purpose: ColourPurpose = .legibility,
-//    chroma: ColourChroma = .standard,
-//    environment: EnvironmentValues? = nil,
-//    //    fallbackToNoContrast: Bool = true
-//  ) -> RGBColour {
-//
-//    guard let environment,
-//      let contrast = self.contrastColour(
-//        strength: strength,
-//        purpose: purpose,
-//        chroma: chroma,
-//        environment: environment
-//      )
-//    else { return self }
-//    return contrast
-//  }
-//}
 
 extension Color: ColourConvertible {
   public var swiftUIColour: Color { self }
@@ -60,72 +42,12 @@ extension Color: ColourConvertible {
   }
 }
 
-/// ```
-/// struct ContentView: View {
-///   let selectedColor: NamedColour = .indigo
-///
-///   var body: some View {
-///     VStack {
-///       Rectangle()
-///         .fill(selectedColor.color)
-///         .frame(width: 100, height: 100)
-///       Text("Color: \(selectedColor.name)")
-///     }
-///   }
-/// }
-/// ```
-public struct NamedColour: Sendable, CaseIterable, Hashable, Equatable {
-  public let colour: any ColourConvertible
-  //  public let colour: Color
-  public let name: String
-
-  public init(colour: any ColourConvertible, name: String) {
-    self.colour = colour
-    self.name = name
-  }
-
-  public func hash(into hasher: inout Hasher) {
-    hasher.combine(name)
-  }
-
-  public static func == (lhs: NamedColour, rhs: NamedColour) -> Bool {
-    return lhs.name == rhs.name
-  }
-
-  public static let red = NamedColour(colour: Color.red, name: "Red")
-  public static let blue = NamedColour(colour: Color.blue, name: "Blue")
-  public static let green = NamedColour(colour: Color.green, name: "Green")
-  public static let orange = NamedColour(colour: Color.orange, name: "Orange")
-  public static let yellow = NamedColour(colour: Color.yellow, name: "Yellow")
-  public static let pink = NamedColour(colour: Color.pink, name: "Pink")
-  public static let purple = NamedColour(colour: Color.purple, name: "Purple")
-  public static let indigo = NamedColour(colour: Color.indigo, name: "Indigo")
-  public static let mint = NamedColour(colour: Color.mint, name: "Mint")
-  public static let cyan = NamedColour(colour: Color.cyan, name: "Cyan")
-  public static let brown = NamedColour(colour: Color.brown, name: "Brown")
-  public static let gray = NamedColour(colour: Color.gray, name: "Gray")
-  public static let black = NamedColour(colour: Color.black, name: "Black")
-  public static let white = NamedColour(colour: Color.white, name: "White")
-  public static let clear = NamedColour(colour: Color.clear, name: "Clear")
-  public static let primary = NamedColour(colour: Color.primary, name: "Primary")
-  public static let secondary = NamedColour(colour: Color.secondary, name: "Secondary")
-  public static let accentColor = NamedColour(colour: Color.accentColor, name: "Accent")
-
-  public static var allCases: [NamedColour] {
-    [
-      red, blue, green, orange, yellow, pink, purple, indigo, mint, cyan,
-      brown, gray, black, white, clear, primary, secondary, accentColor,
-    ]
-  }
-}
-
 extension Double {
   public static let barelyThereOpacity: Self = 0.03
   public static let faintOpacity: Self = 0.1
   public static let lowOpacity: Self = 0.3
   public static let midOpacity: Self = 0.6
   public static let nearOpaque: Self = 0.85
-
 }
 
 extension Color {

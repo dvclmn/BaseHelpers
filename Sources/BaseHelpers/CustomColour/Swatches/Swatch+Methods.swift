@@ -32,7 +32,7 @@ extension Swatch {
   //  public func type(fallBackType: String? = nil) -> String {
   //    return SwatchType(fromRawString: rawValue, fallbackType: fallBackType).name
   //  }
-  
+
   public var shade: Int? {
     let digits = self.rawValue.filter { $0.isWholeNumber }
     guard let result = Int(digits) else { return nil }
@@ -57,7 +57,7 @@ extension Swatch {
         !swatch.rawValue.contains("ascii")
       }
     }
-    let grouped = Dictionary(grouping: swatches) { $0.type.name }
+    let grouped = Dictionary(grouping: swatches) { $0.type.name.full }
     return grouped
   }
 

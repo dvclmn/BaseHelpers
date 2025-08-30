@@ -1,8 +1,8 @@
 //
-//  Model+PrimitiveColour.swift
+//  PrimitiveColour.swift
 //  BaseHelpers
 //
-//  Created by Dave Coleman on 30/6/2025.
+//  Created by Dave Coleman on 31/8/2025.
 //
 
 import SwiftUI
@@ -10,9 +10,11 @@ import SwiftUI
 /// This is referring to basic colours like "red" and "green",
 /// as opposed to fancy shades like "peach" or "teal"
 public enum PrimitiveColour: String, Identifiable, CaseIterable, Sendable, Comparable {
+
   public static func < (lhs: PrimitiveColour, rhs: PrimitiveColour) -> Bool {
     lhs.sortIndex < rhs.sortIndex
   }
+
   case red
   case orange
   case yellow
@@ -40,11 +42,13 @@ public enum PrimitiveColour: String, Identifiable, CaseIterable, Sendable, Compa
   public var sortIndex: Int {
     PrimitiveColour.allCases.firstIndex(of: self) ?? 0
   }
-  
+
+  public var name: String { rawValue.capitalized }
+
   public var namedColour: NamedColour? {
     swiftUIColour.namedColour
   }
-  
+
   public var swiftUIColour: Color {
     switch self {
       case .red: Color.red
