@@ -15,14 +15,14 @@ extension AnyShapeStyle {
   public var barelyThereOpacity: Self {
     Self(self.opacity(.barelyThereOpacity))
   }
-  public var faintOpacity: Self {
-    Self(self.opacity(.faintOpacity))
+  public var opacityFaint: Self {
+    Self(self.opacity(.opacityFaint))
   }
-  public var lowOpacity: Self {
-    Self(self.opacity(.lowOpacity))
+  public var opacityLow: Self {
+    Self(self.opacity(.opacityLow))
   }
-  public var midOpacity: Self {
-    Self(self.opacity(.midOpacity))
+  public var opacityMid: Self {
+    Self(self.opacity(.opacityMid))
   }
   public var nearOpaque: Self {
     Self(self.opacity(.nearOpaque))

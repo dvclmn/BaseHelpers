@@ -33,7 +33,7 @@ public struct DebugTextStyleModifier: ViewModifier {
       .padding(.horizontal, 6)
       .padding(.vertical, 4)
       .background(.regularMaterial)
-      .background(.black.lowOpacity)
+      .background(.black.opacityLow)
       .clipShape(.rect(cornerRadius: 3))
       .padding()
   }

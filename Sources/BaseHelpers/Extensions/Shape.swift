@@ -13,7 +13,7 @@ extension Shape {
 //    style: AnyShapeStyle?,
 //    lineWidth: CGFloat?,
 //  ) -> some View {
-//    let colour = style ?? AnyShapeStyle(Color.white.midOpacity)
+//    let colour = style ?? AnyShapeStyle(Color.white.opacityMid)
 //    let strokeWidth = lineWidth ?? 1
 //    return self.stroke(colour, lineWidth: strokeWidth)
 //  }

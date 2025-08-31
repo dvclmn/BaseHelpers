@@ -42,13 +42,14 @@ extension Color: ColourConvertible {
   }
 }
 
-extension Double {
-  public static let barelyThereOpacity: Self = 0.03
-  public static let faintOpacity: Self = 0.1
-  public static let lowOpacity: Self = 0.3
-  public static let midOpacity: Self = 0.6
-  public static let nearOpaque: Self = 0.85
-}
+//extension Double {
+//  public static let opacityBarelyThere: Self = 0.03
+//  public static let opacityFaint: Self = 0.1
+//  public static let opacityLow: Self = 0.3
+//  public static let opacityMid: Self = 0.6
+//  public static let opacityHigh: Self = 0.85
+//  public static let opacityNearOpaque: Self = 0.9
+//}
 
 extension Color {
 
@@ -86,12 +87,6 @@ extension Color {
     return adjustedHSV.swiftUIColour
   }
 
-  public var barelyThereOpacity: Color { opacity(.barelyThereOpacity) }
-  public var faintOpacity: Color { opacity(.faintOpacity) }
-  public var lowOpacity: Color { opacity(.lowOpacity) }
-  public var midOpacity: Color { opacity(.midOpacity) }
-  public var nearOpaque: Color { opacity(.nearOpaque) }
-
   public func mixCompatible(
     with rhs: Color,
     by fraction: Double,
@@ -109,10 +104,30 @@ extension Color {
 
   public var toShapeStyle: AnyShapeStyle { AnyShapeStyle(self) }
 }
+enum OpacityPreset: CGFloat {
+  case opacityBarelyThere = 0.03
+  case opacityFaint = 0.1
+  case opacityLow = 0.3
+  case opacityMid = 0.5
+  case opacityMedium = 0.65
+  case opacityHigh = 0.85
+  case opacityNearOpaque = 0.9
+}
 
 //#endif
 
 extension Color {
+
+  public var opacityBarelyThere: Color { opacity(OpacityPreset.opacityBarelyThere.rawValue) }
+  public var opacityFaint: Color { opacity(OpacityPreset.opacityFaint.rawValue) }
+  public var opacityLow: Color { opacity(OpacityPreset.opacityLow.rawValue) }
+  public var opacityMid: Color { opacity(OpacityPreset.opacityMid.rawValue) }
+  public var opacityMedium: Color { opacity(OpacityPreset.opacityMedium.rawValue) }
+  public var opacityHigh: Color { opacity(OpacityPreset.opacityHigh.rawValue) }
+  public var opacityNearOpaque: Color { opacity(OpacityPreset.opacityNearOpaque.rawValue) }
+
+  public static var random: Color { self.random() }
+  
   public static func random(randomOpacity: Bool = false) -> Color {
     Color(
       red: .random(in: 0...1),
@@ -124,55 +139,7 @@ extension Color {
 
   public var toNSColour: NSUIColor { NSUIColor(self) }
 
-  /// Create a `Color` instance from a hex string in SwiftUI.
-  /// Supports the following formats:
-
-  /// 1. 3-digit hex (RGB)
-  /// 2. 6-digit hex (RGB)
-  /// 3. 8-digit hex (ARGB)
-  ///
-  /// 6-digit hex (RGB)
-  /// `let redColor = Color(hex: "FE6057")`
-  ///
-  /// 3-digit hex (RGB)
-  /// `let blueColor = Color(hex: "00F")`
-  ///
-  /// 8-digit hex (ARGB)
-  /// `let transparentGreen = Color(hex: "8000FF00")`
-  public init?(hex: String) {
-    var hexSanitized = hex.trimmingCharacters(in: .whitespacesAndNewlines)
-    hexSanitized = hexSanitized.replacingOccurrences(of: "#", with: "")
-
-    var rgb: UInt64 = 0
-
-    var r: CGFloat = 0.0
-    var g: CGFloat = 0.0
-    var b: CGFloat = 0.0
-    var a: CGFloat = 1.0
-
-    let length = hexSanitized.count
-
-    guard Scanner(string: hexSanitized).scanHexInt64(&rgb) else { return nil }
-
-    if length == 6 {
-      r = CGFloat((rgb & 0xFF0000) >> 16) / 255.0
-      g = CGFloat((rgb & 0x00FF00) >> 8) / 255.0
-      b = CGFloat(rgb & 0x0000FF) / 255.0
-
-    } else if length == 8 {
-      r = CGFloat((rgb & 0xFF00_0000) >> 24) / 255.0
-      g = CGFloat((rgb & 0x00FF_0000) >> 16) / 255.0
-      b = CGFloat((rgb & 0x0000_FF00) >> 8) / 255.0
-      a = CGFloat(rgb & 0x0000_00FF) / 255.0
-
-    } else {
-      return nil
-    }
-    self.init(red: r, green: g, blue: b, opacity: a)
-  }
 }
-
-
 
 extension Array where Element == Color {
   public static let rainbow: [Color] = [
@@ -182,17 +149,5 @@ extension Array where Element == Color {
 
 // MARK: - Random colour
 extension ShapeStyle where Self == Color {
-  public static var random: Color {
-    Color(
-      red: .random(in: 0...1),
-      green: .random(in: 0...1),
-      blue: .random(in: 0...1)
-    )
-  }
-  public static var fadedBlack: Color {
-    .black.opacity(0.2)
-  }
-  public static var fadedBlackDarker: Color {
-    .black.opacity(0.4)
-  }
+  public static var random: Color { Color.random }
 }
