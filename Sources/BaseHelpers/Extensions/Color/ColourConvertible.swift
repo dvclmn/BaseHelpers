@@ -53,37 +53,12 @@ extension Color: @retroactive Identifiable {
 extension Color: ColourConvertible {
 
   public func rgbColour(_ environment: EnvironmentValues) -> RGBColour {
-    //    guard let environment else { return nil }
     return RGBColour(colour: self, environment: environment)
   }
-  //  public var id: String { self.description }
+  
   public var swiftUIColour: Color { self }
   
-//  public var name: String? { nil }
-  
-  public var colourName: String? {
-    switch self {
-      case .red: "Red"
-      case .blue: "Blue"
-      case .green: "Green"
-      case .orange: "Orange"
-      case .yellow: "Yellow"
-      case .pink: "Pink"
-      case .purple: "Purple"
-      case .indigo: "Indigo"
-      case .mint: "Mint"
-      case .cyan: "Cyan"
-      case .brown: "Brown"
-      case .gray: "Gray"
-      case .black: "Black"
-      case .white: "White"
-      case .clear: "Clear"
-      case .primary: "Primary"
-      case .secondary: "Secondary"
-      case .accentColor: "Accent"
-      default: nil
-    }
-  }
+  public var colourName: String? { SystemColour(colour: self)?.colourName }
   
   public func contrastColour(
     strength: ModificationStrengthPreset,
@@ -192,6 +167,45 @@ extension Swatch: ColourConvertible {
   ) -> Color {
     guard let modification else { return self.swiftUIColour }
 
+    return self.contrastColour(
+      strength: modification.strength,
+      purpose: modification.purpose,
+      chroma: modification.chroma,
+      environment: environment
+    )
+  }
+}
+
+// MARK: - System Colour
+extension SystemColour: ColourConvertible {
+  
+  public func rgbColour(_ environment: EnvironmentValues) -> RGBColour {
+    return self.swiftUIColour.rgbColour(environment)
+  }
+  
+  public var colourName: String? { self.name }
+  
+  public func contrastColour(
+    strength: ModificationStrengthPreset,
+    purpose: ColourPurpose = .default,
+    chroma: ColourChroma = .default,
+    environment: EnvironmentValues? = nil
+  ) -> Color {
+    
+    return swiftUIColour.contrastColour(
+      strength: strength,
+      purpose: purpose,
+      chroma: chroma,
+      environment: environment,
+    ).swiftUIColour
+  }
+  
+  public func contrastColour(
+    modification: ColourModification?,
+    environment: EnvironmentValues?
+  ) -> Color {
+    guard let modification else { return self.swiftUIColour }
+    
     return self.contrastColour(
       strength: modification.strength,
       purpose: modification.purpose,
