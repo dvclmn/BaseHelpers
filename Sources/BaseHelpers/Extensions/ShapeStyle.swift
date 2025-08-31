@@ -7,12 +7,6 @@
 
 import SwiftUI
 
-//public protocol ShapeStyleConvertible {
-//
-//}
-//
-//extension HierarchicalShapeStyle {
-////extension ShapeStyle {
-//
-//}
-
+extension ShapeStyle where Self == Color {
+  public static var random: Color { Color.random }
+}

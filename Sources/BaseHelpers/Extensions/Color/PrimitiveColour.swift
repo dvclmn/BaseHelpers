@@ -45,9 +45,11 @@ public enum PrimitiveColour: String, Identifiable, CaseIterable, Sendable, Compa
 
   public var name: String { rawValue.capitalized }
 
-  public var namedColour: NamedColour? {
-    swiftUIColour.namedColour
-  }
+  /// Realised this seems redundant? Surely I've already got
+  /// access to a name here, so no use for named colour?
+//  public var namedColour: NamedColour? {
+//    swiftUIColour.namedColour
+//  }
 
   public var swiftUIColour: Color {
     switch self {

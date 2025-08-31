@@ -73,22 +73,7 @@ extension Swatch {
     return name.hasSuffix("V")
   }
 
-  public func contrastColour(
-    strength: ModificationStrengthPreset,
-    purpose: ColourPurpose = .legibility,
-    chroma: ColourChroma = .standard,
-    environment: EnvironmentValues? = nil
-  ) -> Color? {
-
-    guard let environment else { return nil }
-    let rgb = self.toRGB(environment)
-    return rgb.contrastColour(
-      strength: strength,
-      purpose: purpose,
-      chroma: chroma,
-    ).swiftUIColour
-  }
-
+  
 }
 
 public enum BrightnessAdjustment {

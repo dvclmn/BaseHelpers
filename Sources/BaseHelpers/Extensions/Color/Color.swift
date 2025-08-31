@@ -8,49 +8,6 @@
 import NSUI
 import SwiftUI
 
-/// The goal here is to unify some common colour-related types,
-/// namely SwiftUI's `Color`, my `RGBColour`,
-/// `NamedColour` and `Swatch`.
-public protocol ColourConvertible: Sendable {
-  var swiftUIColour: Color { get }
-  func contrastColour(
-    strength: ModificationStrengthPreset,
-    purpose: ColourPurpose,
-    chroma: ColourChroma,
-    environment: EnvironmentValues?
-  ) -> Color?
-}
-
-extension Color: ColourConvertible {
-  public var swiftUIColour: Color { self }
-
-  public func contrastColour(
-    strength: ModificationStrengthPreset,
-    purpose: ColourPurpose = .legibility,
-    chroma: ColourChroma = .standard,
-    environment: EnvironmentValues? = nil
-  ) -> Color? {
-
-    guard let environment else { return nil }
-
-    return self.contrastColour(
-      strength: strength,
-      purpose: purpose,
-      chroma: chroma,
-      environment: environment
-    ).swiftUIColour
-  }
-}
-
-//extension Double {
-//  public static let opacityBarelyThere: Self = 0.03
-//  public static let opacityFaint: Self = 0.1
-//  public static let opacityLow: Self = 0.3
-//  public static let opacityMid: Self = 0.6
-//  public static let opacityHigh: Self = 0.85
-//  public static let opacityNearOpaque: Self = 0.9
-//}
-
 extension Color {
 
   public var namedColour: NamedColour? {
@@ -67,25 +24,7 @@ extension Color {
     return complementary.swiftUIColour
   }
 
-  public func contrastColour(
-    strength: ModificationStrengthPreset,
-    purpose: ColourPurpose = .legibility,
-    chroma: ColourChroma = .standard,
-    environment: EnvironmentValues
-  ) -> Color {
 
-    let hsvColour = HSVColour(colour: self, environment: environment)
-    let adjustment = HSVAdjustment.applyingModifiers(
-      for: hsvColour,
-      strength: strength,
-      purpose: purpose,
-      chroma: chroma
-    )
-
-    let adjustedHSV = hsvColour.applying(adjustment: adjustment)
-
-    return adjustedHSV.swiftUIColour
-  }
 
   public func mixCompatible(
     with rhs: Color,
@@ -104,6 +43,7 @@ extension Color {
 
   public var toShapeStyle: AnyShapeStyle { AnyShapeStyle(self) }
 }
+
 enum OpacityPreset: CGFloat {
   case opacityBarelyThere = 0.03
   case opacityFaint = 0.1
@@ -113,8 +53,6 @@ enum OpacityPreset: CGFloat {
   case opacityHigh = 0.85
   case opacityNearOpaque = 0.9
 }
-
-//#endif
 
 extension Color {
 
@@ -127,7 +65,7 @@ extension Color {
   public var opacityNearOpaque: Color { opacity(OpacityPreset.opacityNearOpaque.rawValue) }
 
   public static var random: Color { self.random() }
-  
+
   public static func random(randomOpacity: Bool = false) -> Color {
     Color(
       red: .random(in: 0...1),
@@ -136,18 +74,11 @@ extension Color {
       opacity: randomOpacity ? .random(in: 0...1) : 1
     )
   }
-
   public var toNSColour: NSUIColor { NSUIColor(self) }
-
 }
 
 extension Array where Element == Color {
   public static let rainbow: [Color] = [
     .red, .orange, .yellow, .green, .blue, .indigo, .purple, .pink, .red,
   ]
-}
-
-// MARK: - Random colour
-extension ShapeStyle where Self == Color {
-  public static var random: Color { Color.random }
 }

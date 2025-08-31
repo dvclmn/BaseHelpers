@@ -7,16 +7,16 @@
 
 import SwiftUI
 
-public struct RGBColour: Identifiable, Equatable, Hashable, Sendable, Codable, ColourModel, ColourConvertible {
+public struct RGBColour: Identifiable, Equatable, Hashable, Sendable, Codable, ColourModel {
   public let id: UUID
   public var red: Double
   public var green: Double
   public var blue: Double
   public var alpha: Double
 
-  enum CodingKeys: String, CodingKey {
-    case id, red, green, blue, alpha
-  }
+  //  enum CodingKeys: String, CodingKey {
+  //    case id, red, green, blue, alpha
+  //  }
 
   public init(
     colour: Color,
@@ -86,7 +86,6 @@ extension RGBColour {
     let adjustedHSV = hsvColour.applying(adjustment: adjustment)
     return adjustedHSV.toRGB
   }
-  
 
   public func contrastColour(modification: ColourModification?) -> RGBColour {
     guard let modification else { return self }
@@ -97,25 +96,6 @@ extension RGBColour {
       chroma: modification.chroma
     )
   }
-  
-  /// This is only here for `ColourConvertible` conformance,
-  /// there is probably a better approach here
-  public func contrastColour(
-    strength: ModificationStrengthPreset,
-    purpose: ColourPurpose = .legibility,
-    chroma: ColourChroma = .standard,
-    environment: EnvironmentValues? = nil
-  ) -> Color? {
-    
-    guard let environment else { return nil }
-    
-    return self.contrastColour(
-      strength: strength,
-      purpose: purpose,
-      chroma: chroma,
-      environment: environment
-    )?.swiftUIColour
-  }
 
   public init(
     r: Double,
@@ -125,19 +105,6 @@ extension RGBColour {
   ) {
     self.init(red: r, green: g, blue: b, alpha: a)
   }
-
-  //  func linearised(_ channel: Double) -> Double {
-  //    return channel <= 0.04045
-  //      ? channel / 12.92
-  //      : pow((channel + 0.055) / 1.055, 2.4)
-  //  }
-  //
-  //  public var luminance: Double {
-  //    let r = linearised(red)
-  //    let g = linearised(green)
-  //    let b = linearised(blue)
-  //    return (0.2126 * r + 0.7152 * g + 0.0722 * b).clamped(to: 0...1)
-  //  }
 
   /// Create a color with specified brightness (0.0 to 1.0)
   public static func gray(_ brightness: Double, alpha: Double = 1.0) -> RGBColour {
