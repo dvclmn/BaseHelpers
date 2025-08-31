@@ -26,9 +26,7 @@ let package = Package(
     .target(
       name: "BaseHelpers",
       dependencies: [
-//        .product(name: "BaseStyles", package: "BaseStyles"),
         .product(name: "NSUI", package: "nsui"),
-//        .product(name: "IfritStatic", package: "Ifrit"),
       ],
       resources: [.process("Assets.xcassets")],
     ),
