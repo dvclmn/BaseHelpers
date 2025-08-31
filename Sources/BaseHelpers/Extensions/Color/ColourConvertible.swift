@@ -14,11 +14,14 @@ public protocol ColourConvertible: Sendable {
 
   var swiftUIColour: Color { get }
 
+  /// Includes optional `environment`, as `Color`
+  /// needs this to resolve itself first. If `nil`, `Color`
+  /// will return it's `self`, unmodified.
   func contrastColour(
     strength: ModificationStrengthPreset,
     purpose: ColourPurpose,
     chroma: ColourChroma,
-    //    environment: EnvironmentValues?
+    environment: EnvironmentValues?
   ) -> Color
 }
 
@@ -47,8 +50,13 @@ extension Color: ColourConvertible {
     strength: ModificationStrengthPreset,
     purpose: ColourPurpose = .legibility,
     chroma: ColourChroma = .standard,
-    //    environment: EnvironmentValues
+    environment: EnvironmentValues?
   ) -> Color {
+
+    guard let environment else {
+      print("⚠️ Warning: Contrast colour was returned *unmodified* as no value was provided for `environment`.")
+      return self
+    }
 
     let hsvColour = HSVColour(colour: self, environment: environment)
     let adjustment = HSVAdjustment.applyingModifiers(
@@ -66,7 +74,14 @@ extension Color: ColourConvertible {
 
 // MARK: - RGBColour
 extension RGBColour: ColourConvertible {
-
+  public func contrastColour(
+    strength: ModificationStrengthPreset,
+    purpose: ColourPurpose,
+    chroma: ColourChroma,
+    environment: EnvironmentValues? = nil
+  ) -> Color {
+    return self.contrastColour(strength: strength, purpose: purpose, chroma: chroma).swiftUIColour
+  }
 }
 
 // MARK: - Swatch
@@ -75,15 +90,32 @@ extension Swatch: ColourConvertible {
     strength: ModificationStrengthPreset,
     purpose: ColourPurpose = .legibility,
     chroma: ColourChroma = .standard,
-    //    environment: EnvironmentValues? = nil
+    environment: EnvironmentValues? = nil
   ) -> Color {
 
-    //    guard let environment else { return nil }
     return swiftUIColour.contrastColour(
       strength: strength,
       purpose: purpose,
       chroma: chroma,
+      environment: environment,
     ).swiftUIColour
   }
+}
 
+// MARK: - Primitive Colour
+extension PrimitiveColour: ColourConvertible {
+  public func contrastColour(
+    strength: ModificationStrengthPreset,
+    purpose: ColourPurpose = .legibility,
+    chroma: ColourChroma = .standard,
+    environment: EnvironmentValues? = nil
+  ) -> Color {
+    
+    return swiftUIColour.contrastColour(
+      strength: strength,
+      purpose: purpose,
+      chroma: chroma,
+      environment: environment,
+    ).swiftUIColour
+  }
 }
