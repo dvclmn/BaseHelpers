@@ -24,8 +24,6 @@ extension Color {
     return complementary.swiftUIColour
   }
 
-
-
   public func mixCompatible(
     with rhs: Color,
     by fraction: Double,

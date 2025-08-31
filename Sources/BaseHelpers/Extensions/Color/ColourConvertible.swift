@@ -10,8 +10,9 @@ import SwiftUI
 /// The goal here is to unify some common colour-related types,
 /// namely SwiftUI's `Color`, my `RGBColour`,
 /// `NamedColour` and `Swatch`.
-public protocol ColourConvertible: Sendable {
-
+public protocol ColourConvertible: Sendable, Identifiable {
+  var id: Self.ID { get }
+  var name: String? { get }
   var swiftUIColour: Color { get }
 
   /// Includes optional `environment`, as `Color`
@@ -23,10 +24,22 @@ public protocol ColourConvertible: Sendable {
     chroma: ColourChroma,
     environment: EnvironmentValues?
   ) -> Color
+
+  func contrastColour(
+    modification: ColourModification?,
+    environment: EnvironmentValues?
+  ) -> Color
 }
 
 // MARK: - Color
+extension Color: @retroactive Identifiable {
+  public var id: Int { self.hashValue }
+  public var name: String? { nil }
+}
+
 extension Color: ColourConvertible {
+
+  //  public var id: String { self.description }
   public var swiftUIColour: Color { self }
 
   //  public func contrastColour(
@@ -110,7 +123,7 @@ extension PrimitiveColour: ColourConvertible {
     chroma: ColourChroma = .standard,
     environment: EnvironmentValues? = nil
   ) -> Color {
-    
+
     return swiftUIColour.contrastColour(
       strength: strength,
       purpose: purpose,
