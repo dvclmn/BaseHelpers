@@ -31,14 +31,14 @@ extension Swatch {
   //    return SwatchType(fromRawString: rawValue, fallbackType: fallBackType).name
   //  }
 
-  public var shade: Int? {
+  public var shadeNumber: Int? {
     let digits = self.rawValue.filter { $0.isWholeNumber }
     guard let result = Int(digits) else { return nil }
     return result
   }
 
   // MARK: - Grouping
-  public var shadeNumber: String? {
+  public var shadeString: String? {
     /// This should return the part of the Swatch case name
     /// that is a number, if present
     let digits = rawValue.filter { $0.isWholeNumber }
@@ -68,7 +68,7 @@ extension Swatch {
   }
 
   public var isVibrant: Bool {
-    return name.hasSuffix("V")
+    return rawValue.hasSuffix("V")
   }
 
   

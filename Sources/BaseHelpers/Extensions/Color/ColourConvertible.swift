@@ -9,7 +9,7 @@ import SwiftUI
 
 /// The goal here is to unify some common colour-related types,
 /// namely SwiftUI's `Color`, my `RGBColour`,
-/// `NamedColour` and `Swatch`.
+/// `NamedColour`, `PrimitiveColour` and `Swatch`.
 public protocol ColourConvertible: Sendable, Identifiable {
   var id: Self.ID { get }
   var name: String? { get }
@@ -31,6 +31,16 @@ public protocol ColourConvertible: Sendable, Identifiable {
     environment: EnvironmentValues?
   ) -> Color
 }
+extension ColourConvertible {
+  public var isVibrant: Bool {
+    guard self is Swatch else { return false }
+    return self.isVibrant
+  }
+  public var shadeNumber: Int? {
+    guard self is Swatch else { return nil }
+    return self.shadeNumber
+  }
+}
 
 // MARK: - Color
 extension Color: @retroactive Identifiable {
@@ -40,7 +50,7 @@ extension Color: @retroactive Identifiable {
 extension Color: ColourConvertible {
 
   public func rgbColour(_ environment: EnvironmentValues) -> RGBColour {
-//    guard let environment else { return nil }
+    //    guard let environment else { return nil }
     return RGBColour(colour: self, environment: environment)
   }
   //  public var id: String { self.description }
@@ -126,7 +136,7 @@ extension RGBColour: ColourConvertible {
 extension Swatch: ColourConvertible {
 
   public func rgbColour(_ environment: EnvironmentValues) -> RGBColour {
-//    guard let environment else { return nil }
+    //    guard let environment else { return nil }
     return self.toRGB(environment)
   }
 
@@ -164,11 +174,11 @@ extension Swatch: ColourConvertible {
 
 // MARK: - Primitive Colour
 extension PrimitiveColour: ColourConvertible {
-  
+
   public func rgbColour(_ environment: EnvironmentValues) -> RGBColour {
-//    guard let environment else { return self.swiftUIColour.rgbColour(environment) }
-//    return RGBColour(colour: self, environment: environment)
-    
+    //    guard let environment else { return self.swiftUIColour.rgbColour(environment) }
+    //    return RGBColour(colour: self, environment: environment)
+
     RGBColour(colour: self.swiftUIColour, environment: environment)
   }
   public var name: String? { rawValue.capitalized }
