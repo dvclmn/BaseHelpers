@@ -32,7 +32,8 @@ public enum PrimitiveColour: String, Identifiable, CaseIterable, Sendable, Compa
     }
     self = match
   }
-
+  public var name: String { rawValue.capitalized }
+  
   public var id: String { rawValue }
 
   public var sortIndex: Int {
