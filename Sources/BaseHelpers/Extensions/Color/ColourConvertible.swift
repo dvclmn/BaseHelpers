@@ -7,9 +7,10 @@
 
 import SwiftUI
 
-/// The goal here is to unify some common colour-related types,
-/// namely SwiftUI's `Color`, my `RGBColour`,
-/// `NamedColour`, `PrimitiveColour` and `Swatch`.
+/// The goal here is to unify some common colour-related types:
+/// `Color` (native)
+/// `RGBColour`
+/// `Swatch`
 public protocol ColourConvertible: Sendable, Identifiable {
   var id: Self.ID { get }
   var colourName: String? { get }
@@ -200,43 +201,45 @@ extension Swatch: ColourConvertible {
   }
 }
 
+/// `PrimitiveColour` not neccesary, as it's more a thin
+/// wrapper for a `Color`, which already conforms
 // MARK: - Primitive Colour
-extension PrimitiveColour: ColourConvertible {
-
-  public func rgbColour(_ environment: EnvironmentValues) -> RGBColour {
-    //    guard let environment else { return self.swiftUIColour.rgbColour(environment) }
-    //    return RGBColour(colour: self, environment: environment)
-
-    RGBColour(colour: self.swiftUIColour, environment: environment)
-  }
-  public var colourName: String? { rawValue.capitalized }
-  
-  public func contrastColour(
-    strength: ModificationStrengthPreset,
-    purpose: ColourPurpose = .default,
-    chroma: ColourChroma = .default,
-    environment: EnvironmentValues? = nil
-  ) -> Color {
-
-    return swiftUIColour.contrastColour(
-      strength: strength,
-      purpose: purpose,
-      chroma: chroma,
-      environment: environment,
-    ).swiftUIColour
-  }
-
-  public func contrastColour(
-    modification: ColourModification?,
-    environment: EnvironmentValues?
-  ) -> Color {
-    guard let modification else { return self.swiftUIColour }
-
-    return self.contrastColour(
-      strength: modification.strength,
-      purpose: modification.purpose,
-      chroma: modification.chroma,
-      environment: environment
-    )
-  }
-}
+//extension PrimitiveColour: ColourConvertible {
+//
+//  public func rgbColour(_ environment: EnvironmentValues) -> RGBColour {
+//    //    guard let environment else { return self.swiftUIColour.rgbColour(environment) }
+//    //    return RGBColour(colour: self, environment: environment)
+//
+//    RGBColour(colour: self.swiftUIColour, environment: environment)
+//  }
+//  public var colourName: String? { rawValue.capitalized }
+//  
+//  public func contrastColour(
+//    strength: ModificationStrengthPreset,
+//    purpose: ColourPurpose = .default,
+//    chroma: ColourChroma = .default,
+//    environment: EnvironmentValues? = nil
+//  ) -> Color {
+//
+//    return swiftUIColour.contrastColour(
+//      strength: strength,
+//      purpose: purpose,
+//      chroma: chroma,
+//      environment: environment,
+//    ).swiftUIColour
+//  }
+//
+//  public func contrastColour(
+//    modification: ColourModification?,
+//    environment: EnvironmentValues?
+//  ) -> Color {
+//    guard let modification else { return self.swiftUIColour }
+//
+//    return self.contrastColour(
+//      strength: modification.strength,
+//      purpose: modification.purpose,
+//      chroma: modification.chroma,
+//      environment: environment
+//    )
+//  }
+//}

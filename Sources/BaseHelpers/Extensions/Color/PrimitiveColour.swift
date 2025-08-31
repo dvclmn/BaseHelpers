@@ -9,7 +9,7 @@ import SwiftUI
 
 /// This is referring to basic colours like "red" and "green",
 /// as opposed to fancy shades like "peach" or "teal"
-public enum PrimitiveColour: String, Identifiable, CaseIterable, Sendable, Comparable {
+public enum PrimitiveColour: String, Identifiable, CaseIterable, Sendable {
 
   case red
   case orange
@@ -33,22 +33,8 @@ public enum PrimitiveColour: String, Identifiable, CaseIterable, Sendable, Compa
     self = match
   }
   public var name: String { rawValue.capitalized }
-  
+
   public var id: String { rawValue }
-
-  public var sortIndex: Int {
-    PrimitiveColour.allCases.firstIndex(of: self) ?? 0
-  }
-
-  public static func < (lhs: PrimitiveColour, rhs: PrimitiveColour) -> Bool {
-    lhs.sortIndex < rhs.sortIndex
-  }
-
-  /// Realised this seems redundant? Surely I've already got
-  /// access to a name here, so no use for named colour?
-//  public var namedColour: NamedColour? {
-//    swiftUIColour.namedColour
-//  }
 
   public var swiftUIColour: Color {
     switch self {
@@ -66,4 +52,17 @@ public enum PrimitiveColour: String, Identifiable, CaseIterable, Sendable, Compa
       case .none: Color.clear
     }
   }
+}
+
+/// This drives SwiftUI Table sorting
+extension PrimitiveColour: Comparable {
+
+  public var sortIndex: Int {
+    PrimitiveColour.allCases.firstIndex(of: self) ?? 0
+  }
+
+  public static func < (lhs: PrimitiveColour, rhs: PrimitiveColour) -> Bool {
+    lhs.sortIndex < rhs.sortIndex
+  }
+
 }
