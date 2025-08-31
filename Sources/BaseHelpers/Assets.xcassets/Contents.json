@@ -5,6 +5,6 @@
   },
   "properties" : {
     "compression-type" : "gpu-optimized-best",
-    "generate-swift-asset-symbol-extensions" : "enabled"
+    "generate-swift-asset-symbol-extensions" : "disabled"
   }
 }

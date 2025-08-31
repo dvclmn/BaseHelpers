@@ -37,6 +37,21 @@ public enum ModificationStrengthPreset: CaseIterable, Identifiable, Sendable {
       case .custom(let strength): "Custom (\(strength.displayString))"
     }
   }
+  public var nameAbbreviated: String {
+    switch self {
+      case .none: "—"
+      case .subtle: "Subt."
+      case .moderate: "Mod."
+      case .standard: "Std."
+      case .highContrast: "Hi-Con."
+      case .custom(let strength): "\(strength.displayString)"
+    }
+  }
+  
+  public var percentString: String {
+    let value: CGFloat = adjustmentStrength * 100
+    return value.displayString(.fractionLength(0)) + "%"
+  }
 
   public var adjustmentStrength: Double {
     switch self {

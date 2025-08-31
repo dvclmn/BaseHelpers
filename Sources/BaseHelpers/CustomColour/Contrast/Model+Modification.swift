@@ -11,7 +11,7 @@ extension EnvironmentValues {
   @Entry public var colourModification: ColourModification? = nil
 }
 
-public struct ColourModification {
+public struct ColourModification: Sendable {
   let strength: ModificationStrengthPreset
   let purpose: ColourPurpose
   let chroma: ColourChroma
@@ -24,6 +24,11 @@ public struct ColourModification {
     self.strength = strength
     self.purpose = purpose
     self.chroma = chroma
+  }
+}
+extension ColourModification: CustomStringConvertible {
+  public var description: String {
+    "Strength: **\(strength.name)**\nPurpose: **\(purpose.name)**\nChroma: **\(chroma.name)**"
   }
 }
 
@@ -64,15 +69,22 @@ public enum LuminanceThreshold {
 
 public enum ColourPurpose: String, CaseIterable, Identifiable, Sendable {
   case legibility
-  case complimentary
+  case complementary
 
   public var id: String { rawValue }
+  public var name: String { rawValue.capitalized }
+  public var nameAbbreviated: String {
+    switch self {
+      case .legibility: "Legi"
+      case .complementary: "Comp"
+    }
+  }
   public static let `default`: Self = .legibility
 
   var adjustment: HSVAdjustment {
     switch self {
       case .legibility: HSVAdjustment(-6, -0.01, 0.1)
-      case .complimentary: HSVAdjustment(-3, 0.1, 0.0)
+      case .complementary: HSVAdjustment(-3, 0.1, 0.0)
     }
   }
 }
@@ -84,6 +96,16 @@ public enum ColourChroma: String, Sendable, CaseIterable, Identifiable {
   case monochrome
 
   public var id: String { rawValue }
+  public var name: String { rawValue.capitalized }
+  
+  public var nameAbbreviated: String {
+    switch self {
+      case .vibrant: "Vibr"
+      case .saturated: "Sat"
+      case .standard: "Std"
+      case .monochrome: "Mono"
+    }
+  }
   public static let `default`: Self = .standard
 
   public var adjustment: HSVAdjustment {
