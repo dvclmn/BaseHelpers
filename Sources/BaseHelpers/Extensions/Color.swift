@@ -86,20 +86,11 @@ extension Color {
     return adjustedHSV.swiftUIColour
   }
 
-  public var barelyThereOpacity: Color { self.opacity(.barelyThereOpacity) }
-
-  public var faintOpacity: Color {
-    self.opacity(.faintOpacity)
-  }
-  public var lowOpacity: Color {
-    self.opacity(.lowOpacity)
-  }
-  public var midOpacity: Color {
-    self.opacity(.midOpacity)
-  }
-  public var nearOpaque: Color {
-    self.opacity(.nearOpaque)
-  }
+  public var barelyThereOpacity: Color { opacity(.barelyThereOpacity) }
+  public var faintOpacity: Color { opacity(.faintOpacity) }
+  public var lowOpacity: Color { opacity(.lowOpacity) }
+  public var midOpacity: Color { opacity(.midOpacity) }
+  public var nearOpaque: Color { opacity(.nearOpaque) }
 
   public func mixCompatible(
     with rhs: Color,
@@ -116,9 +107,7 @@ extension Color {
     )
   }
 
-  public var toShapeStyle: AnyShapeStyle {
-    AnyShapeStyle(self)
-  }
+  public var toShapeStyle: AnyShapeStyle { AnyShapeStyle(self) }
 }
 
 //#endif
@@ -133,9 +122,7 @@ extension Color {
     )
   }
 
-  public var toNSColour: NSUIColor {
-    NSUIColor(self)
-  }
+  public var toNSColour: NSUIColor { NSUIColor(self) }
 
   /// Create a `Color` instance from a hex string in SwiftUI.
   /// Supports the following formats:
@@ -181,41 +168,11 @@ extension Color {
     } else {
       return nil
     }
-
     self.init(red: r, green: g, blue: b, opacity: a)
   }
-
 }
 
-public struct TrafficLightsModifier: ViewModifier {
 
-  public func body(content: Content) -> some View {
-    content
-      .overlay(alignment: .topLeading) {
-        if isPreview {
-          HStack {
-
-            Circle()
-              .fill(Color(hex: "FE6057") ?? Color.red)
-
-            Circle()
-              .fill(Color(hex: "FFBC2E") ?? Color.yellow)
-
-            Circle()
-              .fill(Color(hex: "28C840") ?? Color.green)
-
-          }
-          .frame(height: 12)
-          .padding(20)
-        }
-      }
-  }
-}
-extension View {
-  public func trafficLightsPreview() -> some View {
-    self.modifier(TrafficLightsModifier())
-  }
-}
 
 extension Array where Element == Color {
   public static let rainbow: [Color] = [
@@ -238,82 +195,4 @@ extension ShapeStyle where Self == Color {
   public static var fadedBlackDarker: Color {
     .black.opacity(0.4)
   }
-
 }
-
-/// This is cool and all, but there already exists a `NSColor.colorNameComponent` 🥲
-//func namedColorDescription(_ color: NSColor) -> String? {
-//  let namedColors: [(NSColor, String)] = [
-//    (.systemBlue, "systemBlue"),
-//    (.systemBrown, "systemBrown"),
-//    (.systemGray, "systemGray"),
-//    (.systemGreen, "systemGreen"),
-//    (.systemIndigo, "systemIndigo"),
-//    (.systemOrange, "systemOrange"),
-//    (.systemPink, "systemPink"),
-//    (.systemPurple, "systemPurple"),
-//    (.systemRed, "systemRed"),
-//    (.systemTeal, "systemTeal"),
-//    (.systemYellow, "systemYellow"),
-//    (.black, "black"),
-//    (.blue, "blue"),
-//    (.brown, "brown"),
-//    (.clear, "clear"),
-//    (.cyan, "cyan"),
-//    (.darkGray, "darkGray"),
-//    (.gray, "gray"),
-//    (.green, "green"),
-//    (.lightGray, "lightGray"),
-//    (.magenta, "magenta"),
-//    (.orange, "orange"),
-//    (.purple, "purple"),
-//    (.red, "red"),
-//    (.white, "white"),
-//    (.yellow, "yellow")
-//  ]
-//
-//  for (namedColor, name) in namedColors {
-//    if color.isClose(to: namedColor) {
-//      return name
-//    }
-//  }
-//
-//  return nil
-//}
-//
-//func colorDescription(_ color: NSColor) -> String {
-//  if let name = namedColorDescription(color) {
-//    return name
-//  }
-//
-//  if let sRGBColor = color.usingColorSpace(.sRGB) {
-//    let red = Int(sRGBColor.redComponent * 255)
-//    let green = Int(sRGBColor.greenComponent * 255)
-//    let blue = Int(sRGBColor.blueComponent * 255)
-//    let alpha = Int(sRGBColor.alphaComponent * 100)
-//    return "RGB(\(red), \(green), \(blue), \(alpha)%)"
-//  } else {
-//    return color.description
-//  }
-//}
-//
-//public extension NSColor {
-//
-//  var displayName: String {
-//    colorDescription(self)
-//  }
-//
-//  func isClose(to other: NSColor, tolerance: CGFloat = 0.01) -> Bool {
-//    guard let rgb1 = self.usingColorSpace(.sRGB),
-//          let rgb2 = other.usingColorSpace(.sRGB) else {
-//      return false
-//    }
-//
-//    let redDiff = abs(rgb1.redComponent - rgb2.redComponent)
-//    let greenDiff = abs(rgb1.greenComponent - rgb2.greenComponent)
-//    let blueDiff = abs(rgb1.blueComponent - rgb2.blueComponent)
-//    let alphaDiff = abs(rgb1.alphaComponent - rgb2.alphaComponent)
-//
-//    return redDiff <= tolerance && greenDiff <= tolerance && blueDiff <= tolerance && alphaDiff <= tolerance
-//  }
-//}

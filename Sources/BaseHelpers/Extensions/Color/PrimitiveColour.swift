@@ -11,10 +11,6 @@ import SwiftUI
 /// as opposed to fancy shades like "peach" or "teal"
 public enum PrimitiveColour: String, Identifiable, CaseIterable, Sendable, Comparable {
 
-  public static func < (lhs: PrimitiveColour, rhs: PrimitiveColour) -> Bool {
-    lhs.sortIndex < rhs.sortIndex
-  }
-
   case red
   case orange
   case yellow
@@ -41,6 +37,10 @@ public enum PrimitiveColour: String, Identifiable, CaseIterable, Sendable, Compa
 
   public var sortIndex: Int {
     PrimitiveColour.allCases.firstIndex(of: self) ?? 0
+  }
+
+  public static func < (lhs: PrimitiveColour, rhs: PrimitiveColour) -> Bool {
+    lhs.sortIndex < rhs.sortIndex
   }
 
   public var name: String { rawValue.capitalized }
