@@ -11,14 +11,14 @@ import SwiftUI
 /// namely SwiftUI's `Color`, my `RGBColour`,
 /// `NamedColour` and `Swatch`.
 public protocol ColourConvertible: Sendable {
-  
+
   var swiftUIColour: Color { get }
-  
+
   func contrastColour(
     strength: ModificationStrengthPreset,
     purpose: ColourPurpose,
     chroma: ColourChroma,
-//    environment: EnvironmentValues?
+    //    environment: EnvironmentValues?
   ) -> Color
 }
 
@@ -26,30 +26,30 @@ public protocol ColourConvertible: Sendable {
 extension Color: ColourConvertible {
   public var swiftUIColour: Color { self }
 
+  //  public func contrastColour(
+  //    strength: ModificationStrengthPreset,
+  //    purpose: ColourPurpose = .legibility,
+  //    chroma: ColourChroma = .standard,
+  ////    environment: EnvironmentValues? = nil
+  //  ) -> Color {
+  //
+  //    guard let environment else { return nil }
+  //
+  //    return self.contrastColour(
+  //      strength: strength,
+  //      purpose: purpose,
+  //      chroma: chroma,
+  //      environment: environment
+  //    ).swiftUIColour
+  //  }
+
   public func contrastColour(
     strength: ModificationStrengthPreset,
     purpose: ColourPurpose = .legibility,
     chroma: ColourChroma = .standard,
-//    environment: EnvironmentValues? = nil
-  ) -> Color? {
-
-    guard let environment else { return nil }
-
-    return self.contrastColour(
-      strength: strength,
-      purpose: purpose,
-      chroma: chroma,
-      environment: environment
-    ).swiftUIColour
-  }
-  
-  public func contrastColour(
-    strength: ModificationStrengthPreset,
-    purpose: ColourPurpose = .legibility,
-    chroma: ColourChroma = .standard,
-    environment: EnvironmentValues
+    //    environment: EnvironmentValues
   ) -> Color {
-    
+
     let hsvColour = HSVColour(colour: self, environment: environment)
     let adjustment = HSVAdjustment.applyingModifiers(
       for: hsvColour,
@@ -57,9 +57,9 @@ extension Color: ColourConvertible {
       purpose: purpose,
       chroma: chroma
     )
-    
+
     let adjustedHSV = hsvColour.applying(adjustment: adjustment)
-    
+
     return adjustedHSV.swiftUIColour
   }
 }
@@ -67,24 +67,6 @@ extension Color: ColourConvertible {
 // MARK: - RGBColour
 extension RGBColour: ColourConvertible {
 
-  /// This is only here for `ColourConvertible` conformance,
-  /// there is probably a better approach here
-  public func contrastColour(
-    strength: ModificationStrengthPreset,
-    purpose: ColourPurpose = .legibility,
-    chroma: ColourChroma = .standard,
-    environment: EnvironmentValues? = nil
-  ) -> Color? {
-
-    guard let environment else { return nil }
-
-    return self.contrastColour(
-      strength: strength,
-      purpose: purpose,
-      chroma: chroma,
-      environment: environment
-    )?.swiftUIColour
-  }
 }
 
 // MARK: - Swatch
@@ -93,12 +75,11 @@ extension Swatch: ColourConvertible {
     strength: ModificationStrengthPreset,
     purpose: ColourPurpose = .legibility,
     chroma: ColourChroma = .standard,
-    environment: EnvironmentValues? = nil
-  ) -> Color? {
-    
-    guard let environment else { return nil }
-    let rgb = self.toRGB(environment)
-    return rgb.contrastColour(
+    //    environment: EnvironmentValues? = nil
+  ) -> Color {
+
+    //    guard let environment else { return nil }
+    return swiftUIColour.contrastColour(
       strength: strength,
       purpose: purpose,
       chroma: chroma,
