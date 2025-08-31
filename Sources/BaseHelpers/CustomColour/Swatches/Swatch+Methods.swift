@@ -20,8 +20,6 @@ extension Swatch {
     Color("swatch/\(rawValue)", bundle: .module)
   }
 
-  public var name: String { rawValue }
-
   public var type: SwatchType {
     SwatchType(
       fromRawString: rawValue,

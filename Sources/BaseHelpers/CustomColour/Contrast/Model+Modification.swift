@@ -83,6 +83,8 @@ public enum ColourPurpose: String, CaseIterable, Identifiable {
   case complimentary
   
   public var id: String { rawValue }
+  
+  public static let `default`: Self = .legibility
 
   var adjustment: HSVAdjustment {
     switch self {
@@ -98,6 +100,8 @@ public enum ColourChroma {
   //  case saturated(CGFloat = 0.75)
   case standard
   case monochrome
+  
+  public static let `default`: Self = .standard
 
   public var adjustment: HSVAdjustment {
     switch self {

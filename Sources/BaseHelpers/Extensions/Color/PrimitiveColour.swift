@@ -43,8 +43,6 @@ public enum PrimitiveColour: String, Identifiable, CaseIterable, Sendable, Compa
     lhs.sortIndex < rhs.sortIndex
   }
 
-  public var name: String { rawValue.capitalized }
-
   /// Realised this seems redundant? Surely I've already got
   /// access to a name here, so no use for named colour?
 //  public var namedColour: NamedColour? {
