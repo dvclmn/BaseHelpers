@@ -12,7 +12,7 @@ import SwiftUI
 /// `NamedColour`, `PrimitiveColour` and `Swatch`.
 public protocol ColourConvertible: Sendable, Identifiable {
   var id: Self.ID { get }
-  var name: String? { get }
+  var colourName: String? { get }
   var swiftUIColour: Color { get }
 
   func rgbColour(_ environment: EnvironmentValues) -> RGBColour
@@ -60,7 +60,7 @@ extension Color: ColourConvertible {
   
 //  public var name: String? { nil }
   
-  public var name: String? {
+  public var colourName: String? {
     switch self {
       case .red: "Red"
       case .blue: "Blue"
@@ -133,7 +133,7 @@ extension RGBColour: ColourConvertible {
     //    return RGBColour(colour: self, environment: environment)
   }
 
-  public var name: String? { nil }
+  public var colourName: String? { nil }
 
   public func contrastColour(
     strength: ModificationStrengthPreset,
@@ -168,7 +168,7 @@ extension Swatch: ColourConvertible {
     return self.toRGB(environment)
   }
 
-  public var name: String? { rawValue }
+  public var colourName: String? { rawValue }
 
   public func contrastColour(
     strength: ModificationStrengthPreset,
@@ -209,7 +209,8 @@ extension PrimitiveColour: ColourConvertible {
 
     RGBColour(colour: self.swiftUIColour, environment: environment)
   }
-  public var name: String? { rawValue.capitalized }
+  public var colourName: String? { rawValue.capitalized }
+  
   public func contrastColour(
     strength: ModificationStrengthPreset,
     purpose: ColourPurpose = .default,

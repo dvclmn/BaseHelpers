@@ -26,6 +26,8 @@ extension Swatch {
       fallbackType: "Base"
     )
   }
+  
+  public var name: String { rawValue }
 
   //  public func type(fallBackType: String? = nil) -> String {
   //    return SwatchType(fromRawString: rawValue, fallbackType: fallBackType).name

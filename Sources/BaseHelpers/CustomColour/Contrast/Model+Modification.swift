@@ -78,7 +78,7 @@ public enum LuminanceThreshold {
 
 }
 
-public enum ColourPurpose: String, CaseIterable, Identifiable {
+public enum ColourPurpose: String, CaseIterable, Identifiable, Sendable {
   case legibility
   case complimentary
   
@@ -94,7 +94,7 @@ public enum ColourPurpose: String, CaseIterable, Identifiable {
   }
 }
 
-public enum ColourChroma {
+public enum ColourChroma: Sendable {
   case vibrant
   case saturated
   //  case saturated(CGFloat = 0.75)
