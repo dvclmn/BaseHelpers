@@ -10,9 +10,9 @@ import SwiftUI
 
 extension Color {
 
-  public var namedColour: NamedColour? {
-    return NamedColour.allCases.first { $0.colour.swiftUIColour == self }
-  }
+//  public var namedColour: NamedColour? {
+//    return NamedColour.allCases.first { $0.colour.swiftUIColour == self }
+//  }
 
   public func complementary(
     strength: Double = 1.0,

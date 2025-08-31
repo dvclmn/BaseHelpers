@@ -16,6 +16,7 @@ public protocol ColourConvertible: Sendable, Identifiable {
   var swiftUIColour: Color { get }
 
   func rgbColour(_ environment: EnvironmentValues) -> RGBColour
+  
   /// Includes optional `environment`, as `Color`
   /// needs this to resolve itself first. If `nil`, `Color`
   /// will return it's `self`, unmodified.
@@ -30,6 +31,7 @@ public protocol ColourConvertible: Sendable, Identifiable {
     modification: ColourModification?,
     environment: EnvironmentValues?
   ) -> Color
+  
 }
 extension ColourConvertible {
   public var isVibrant: Bool {
@@ -55,7 +57,33 @@ extension Color: ColourConvertible {
   }
   //  public var id: String { self.description }
   public var swiftUIColour: Color { self }
-  public var name: String? { nil }
+  
+//  public var name: String? { nil }
+  
+  public var name: String? {
+    switch self {
+      case .red: "Red"
+      case .blue: "Blue"
+      case .green: "Green"
+      case .orange: "Orange"
+      case .yellow: "Yellow"
+      case .pink: "Pink"
+      case .purple: "Purple"
+      case .indigo: "Indigo"
+      case .mint: "Mint"
+      case .cyan: "Cyan"
+      case .brown: "Brown"
+      case .gray: "Gray"
+      case .black: "Black"
+      case .white: "White"
+      case .clear: "Clear"
+      case .primary: "Primary"
+      case .secondary: "Secondary"
+      case .accentColor: "Accent"
+      default: nil
+    }
+  }
+  
   public func contrastColour(
     strength: ModificationStrengthPreset,
     purpose: ColourPurpose = .default,
