@@ -19,10 +19,10 @@ public struct HSVColour: Equatable, Sendable, ColourModel {
 
   /// Kept normalised `1...0` internally.
   /// Trivially convertable to degrees (0-360) for UI as needed
-  public var hue: Double
-  public var saturation: Double
-  public var brightness: Double
-  public var alpha: Double
+  public var hue: UnitIntervalCyclic
+  public var saturation: UnitInterval
+  public var brightness: UnitInterval
+  public var alpha: UnitInterval
   public var name: String?
 
   public var swiftUIColour: Color {

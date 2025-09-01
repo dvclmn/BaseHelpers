@@ -30,11 +30,6 @@ public struct HSVAdjustment: Sendable {
     s: Double? = nil,
     v: Double? = nil,
   ) {
-    //  public init(
-    //    _ hue: Double? = nil,
-    //    _ saturation: Double? = nil,
-    //    _ brightness: Double? = nil,
-    //  ) {
     self.init(hue: h, saturation: s, brightness: v)
   }
 }

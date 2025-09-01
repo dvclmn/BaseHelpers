@@ -57,6 +57,8 @@ extension BinaryFloatingPoint {
   public var toDouble: Double {
     return Double(self)
   }
+  
+  public var toUnitInterval: UnitInterval { return UnitInterval(self) }
 
   public var toFloat: Float {
     return Float(self)

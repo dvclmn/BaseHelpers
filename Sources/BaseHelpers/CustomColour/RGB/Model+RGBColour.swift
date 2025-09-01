@@ -9,10 +9,10 @@ import SwiftUI
 
 public struct RGBColour: Identifiable, Equatable, Hashable, Sendable, Codable, ColourModel {
   public let id: UUID
-  public var red: Double
-  public var green: Double
-  public var blue: Double
-  public var alpha: Double
+  public var red: UnitInterval
+  public var green: UnitInterval
+  public var blue: UnitInterval
+  public var alpha: UnitInterval
   
   public var name: String?
 
