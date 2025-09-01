@@ -116,6 +116,7 @@ extension RGBColour: ColourConvertible {
   }
 
   public var colourName: String? { name }
+  
   public func contrastColour(
     strength: ModificationStrengthPreset,
     purpose: ColourPurpose = .default,

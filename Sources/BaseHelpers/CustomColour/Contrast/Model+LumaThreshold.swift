@@ -15,14 +15,14 @@ public enum LuminanceThreshold {
     from colour: any ColourModel,
     using method: LuminanceMethod = .wcag
   ) {
-    self = colour.luminance(using: method) > 0.4 ? .light : .dark
+    self = colour.luminance(using: method) > 0.35 ? .light : .dark
   }
   
   /// A basic baseline adjustment based on what suits light vs dark colours
   var adjustment: HSVAdjustment {
     switch self {
-      case .dark: HSVAdjustment(-18, -0.01, 0.75)
-      case .light: HSVAdjustment(-16, 0.35, -0.75)
+      case .dark: HSVAdjustment(h: -18, s: -0.01, v: 0.75)
+      case .light: HSVAdjustment(h: -16, s: 0.35, v: -0.75)
     }
   }
 }

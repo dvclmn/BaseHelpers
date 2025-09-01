@@ -23,8 +23,8 @@ public enum ColourPurpose: String, CaseIterable, Identifiable, Sendable {
   
   var adjustment: HSVAdjustment {
     switch self {
-      case .legibility: HSVAdjustment(-6, -0.01, 0.1)
-      case .complementary: HSVAdjustment(-3, 0.1, 0.0)
+      case .legibility: HSVAdjustment(h: -6, s: -0.01, v: 0.1)
+      case .complementary: HSVAdjustment(h: -3, s: 0.1, v: 0.0)
     }
   }
 }

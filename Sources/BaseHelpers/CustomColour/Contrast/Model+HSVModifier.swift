@@ -16,17 +16,16 @@ extension Array where Element == HSVAdjustment {
     let combinedAdjustment: HSVAdjustment = self.reduce(.zero) {
       partialResult,
       adjustment in
-      
+
       partialResult
-      + .zero.interpolated(
-        towards: adjustment,
-        strength: strength
-      )
+        + .zero.interpolated(
+          towards: adjustment,
+          strength: strength
+        )
     }
     return combinedAdjustment
   }
 }
-
 
 struct LuminanceModifier: HSVModifier {
   let threshold: LuminanceThreshold

@@ -25,11 +25,10 @@ public struct RGBColour: Identifiable, Equatable, Hashable, Sendable, Codable, C
     environment: EnvironmentValues,
     name: String?
   ) {
-    let name = colour.colourName
     let resolved = colour.resolve(in: environment)
     self.init(
       resolved: resolved,
-      name: name
+      name: name ?? colour.colourName
     )
   }
 

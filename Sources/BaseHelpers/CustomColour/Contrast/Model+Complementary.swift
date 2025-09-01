@@ -29,7 +29,8 @@ extension HSVColour {
       hue: newHue,
       saturation: saturation,
       brightness: brightness,
-      alpha: alpha
+      alpha: alpha,
+      name: self.name
     )
   }
 
@@ -80,7 +81,7 @@ extension HSVColour {
           hue: newHue,
           saturation: saturation,
           brightness: brightness,
-          alpha: alpha
+          alpha: alpha,
         ))
     }
 
@@ -141,7 +142,9 @@ extension RGBColour {
   /// Returns a complementary color with adjustable strength
   /// - Parameter strength: How much to shift toward
   ///   complementary (0.0 = no change, 1.0 = full complement)
-  public func complementary(strength: Double = 1.0) -> RGBColour {
+  public func complementary(
+    strength: Double = 1.0
+  ) -> RGBColour {
     let hsvColor = HSVColour(fromRGB: self)
     let complementaryHSV = hsvColor.complementary(strength: strength)
     let complementaryRGB = RGBColour(fromHSV: complementaryHSV)

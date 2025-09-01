@@ -59,7 +59,7 @@ public struct HSVColour: Equatable, Sendable, ColourModel {
 
   public init(
     resolved: Color.Resolved,
-    name: String? = nil
+    name: String?
   ) {
     let rgba = RGBColour(resolved: resolved, name: name)
     self.init(fromRGB: rgba)
@@ -70,7 +70,6 @@ public struct HSVColour: Equatable, Sendable, ColourModel {
 extension HSVColour {
 
   public var hueDegrees: Double { hue * 360.0 }
-
   
   public var toRGB: RGBColour {
     RGBColour(fromHSV: self)
@@ -120,7 +119,8 @@ extension HSVColour {
       hue: adjustedHue,
       saturation: adjustedSaturation,
       brightness: adjustedBrightness,
-      alpha: alpha
+      alpha: alpha,
+      name: self.name
     )
   }
 

@@ -26,11 +26,16 @@ public struct HSVAdjustment: Sendable {
   }
 
   public init(
-    _ hue: Double? = nil,
-    _ saturation: Double? = nil,
-    _ brightness: Double? = nil,
+    h: Double? = nil,
+    s: Double? = nil,
+    v: Double? = nil,
   ) {
-    self.init(hue: hue, saturation: saturation, brightness: brightness)
+    //  public init(
+    //    _ hue: Double? = nil,
+    //    _ saturation: Double? = nil,
+    //    _ brightness: Double? = nil,
+    //  ) {
+    self.init(hue: h, saturation: s, brightness: v)
   }
 }
 
@@ -43,11 +48,7 @@ extension HSVAdjustment {
     return adjustments
   }
 
-  public static let zero = HSVAdjustment(
-    hue: 0,
-    saturation: 0,
-    brightness: 0
-  )
+  public static let zero = HSVAdjustment(h: 0, s: 0, v: 0)
 
   static func + (lhs: HSVAdjustment, rhs: HSVAdjustment) -> HSVAdjustment {
     HSVAdjustment(
@@ -88,9 +89,18 @@ extension HSVAdjustment {
     strength: Double
   ) -> HSVAdjustment {
     HSVAdjustment(
-      hue: self.hue.interpolated(towards: other.hue, strength: strength),
-      saturation: self.saturation.interpolated(towards: other.saturation, strength: strength),
-      brightness: self.brightness.interpolated(towards: other.brightness, strength: strength)
+      hue: self.hue.interpolated(
+        towards: other.hue,
+        strength: strength
+      ),
+      saturation: self.saturation.interpolated(
+        towards: other.saturation,
+        strength: strength
+      ),
+      brightness: self.brightness.interpolated(
+        towards: other.brightness,
+        strength: strength
+      )
     )
   }
 

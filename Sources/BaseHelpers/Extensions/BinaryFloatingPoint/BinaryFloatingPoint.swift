@@ -284,6 +284,11 @@ extension BinaryFloatingPoint {
     return self + adjustment
   }
 
+  func lerpHue(from: Double, to: Double, strength: Double) -> Double {
+    let delta = ((to - from + 540).truncatingRemainder(dividingBy: 360)) - 180
+    return (from + delta * strength).truncatingRemainder(dividingBy: 360)
+  }
+
 }
 
 extension Optional where Wrapped: BinaryFloatingPoint {
@@ -293,21 +298,32 @@ extension Optional where Wrapped: BinaryFloatingPoint {
   public func combined(with other: Wrapped?, using op: (Wrapped, Wrapped) -> Wrapped) -> Wrapped? {
     switch (self, other) {
       case (nil, nil): return nil
-      case let (x?, nil): return op(x, 0)
-      case let (nil, y?): return op(0, y)
-      case let (x?, y?): return op(x, y)
+      case (let x?, nil): return op(x, 0)
+      case (nil, let y?): return op(0, y)
+      case (let x?, let y?): return op(x, y)
     }
   }
-  
+
   /// Interpolates `self` towards another optional.
   /// - If both are `nil`, returns `nil`.
   /// - If one is `nil`, treats it as zero.
   public func interpolated(towards other: Wrapped?, strength: Wrapped) -> Wrapped? {
     switch (self, other) {
       case (nil, nil): return nil
-      case let (x?, nil): return lerp(from: x, to: 0, strength)
-      case let (nil, y?): return lerp(from: 0, to: y, strength)
-      case let (x?, y?): return lerp(from: x, to: y, strength)
+      case (let x?, nil): return lerp(from: x, to: 0, strength)
+      case (nil, let y?): return lerp(from: 0, to: y, strength)
+      case (let x?, let y?): return lerp(from: x, to: y, strength)
+    }
+  }
+
+  public func hueInterpolated(towards other: Wrapped?, strength: Wrapped) -> Wrapped? {
+    switch (self, other) {
+      case (nil, nil): return nil
+      case (let x?, nil): return x
+      case (nil, let y?): return y
+      case (let x?, let y?):
+        let delta = ((y - x + 540).truncatingRemainder(dividingBy: 360)) - 180
+        return (x + delta * strength).truncatingRemainder(dividingBy: 360)
     }
   }
 }

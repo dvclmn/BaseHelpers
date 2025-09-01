@@ -28,10 +28,10 @@ public enum ColourChroma: String, Sendable, CaseIterable, Identifiable {
   
   public var adjustment: HSVAdjustment {
     switch self {
-      case .vibrant: HSVAdjustment(0, 0.7, 0)
-      case .saturated: HSVAdjustment(0, 0.4, 0)
+      case .vibrant: HSVAdjustment(h: 0, s: 0.7, v: 0)
+      case .saturated: HSVAdjustment(h: 0, s: 0.4, v: 0)
       case .standard: .zero
-      case .monochrome: HSVAdjustment(0, -1.0, 0)
+      case .monochrome: HSVAdjustment(h: 0, s: -1.0, v: 0)
     }
   }
 }
