@@ -12,20 +12,35 @@ public protocol HSVModifier {
 }
 
 extension Array where Element == HSVAdjustment {
+  
+  /// Combines adjustments with a strength multiplier
   public func combined(with strength: Double) -> HSVAdjustment {
-    let combinedAdjustment: HSVAdjustment = self.reduce(.zero) {
-      partialResult,
-      adjustment in
-
-      partialResult
-        + .zero.interpolated(
-          towards: adjustment,
-          strength: strength
-        )
+    guard !isEmpty else { return .zero }
+    
+    // Apply strength to each adjustment, then combine them
+    let weightedAdjustments = self.map { adjustment in
+      HSVAdjustment.zero.interpolated(towards: adjustment, strength: strength)
     }
-    return combinedAdjustment
+    
+    return weightedAdjustments.reduce(.zero, +)
   }
 }
+
+//extension Array where Element == HSVAdjustment {
+//  public func combined(with strength: Double) -> HSVAdjustment {
+//    let combinedAdjustment: HSVAdjustment = self.reduce(.zero) {
+//      partialResult,
+//      adjustment in
+//
+//      partialResult
+//        + .zero.interpolated(
+//          towards: adjustment,
+//          strength: strength
+//        )
+//    }
+//    return combinedAdjustment
+//  }
+//}
 
 struct LuminanceModifier: HSVModifier {
   let threshold: LuminanceThreshold

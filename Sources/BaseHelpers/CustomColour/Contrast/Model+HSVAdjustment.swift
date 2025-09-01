@@ -11,7 +11,7 @@ import Foundation
 /// Does not set hsb values to these, but adds to them
 public struct HSVAdjustment: Sendable {
 
-  public var hue: Double?
+  public var hue: UnitIntervalCyclic?
   public var saturation: Double?
   public var brightness: Double?
 
@@ -34,6 +34,7 @@ public struct HSVAdjustment: Sendable {
   }
 }
 
+
 extension HSVAdjustment {
 
   public static func adjustments(from modifiers: [any HSVModifier]) -> [Self] {
@@ -43,19 +44,39 @@ extension HSVAdjustment {
     return adjustments
   }
 
-  public static let zero = HSVAdjustment(h: 0, s: 0, v: 0)
+  public static var zero: HSVAdjustment {
+    HSVAdjustment(hue: nil, saturation: nil, brightness: nil)
+  }
+  
+//  public static let zero = HSVAdjustment(h: 0, s: 0, v: 0)
 
   static func + (lhs: HSVAdjustment, rhs: HSVAdjustment) -> HSVAdjustment {
     HSVAdjustment(
-      hue: lhs.hue.combined(with: rhs.hue, using: +),
+      hue: lhs.hue.combined(with: rhs.hue) { $0.interpolated(towards: $1, strength: 1.0) ?? $0 },
       saturation: lhs.saturation.combined(with: rhs.saturation, using: +),
       brightness: lhs.brightness.combined(with: rhs.brightness, using: +)
     )
   }
+  
+  func interpolated(towards other: HSVAdjustment, strength: Double) -> HSVAdjustment {
+    HSVAdjustment(
+      hue: self.hue.interpolated(towards: other.hue, strength: strength),
+      saturation: self.saturation.interpolated(towards: other.saturation, strength: strength),
+      brightness: self.brightness.interpolated(towards: other.brightness, strength: strength)
+    )
+  }
+  
+//  static func + (lhs: HSVAdjustment, rhs: HSVAdjustment) -> HSVAdjustment {
+//    HSVAdjustment(
+//      hue: lhs.hue.combined(with: rhs.hue, using: +),
+//      saturation: lhs.saturation.combined(with: rhs.saturation, using: +),
+//      brightness: lhs.brightness.combined(with: rhs.brightness, using: +)
+//    )
+//  }
 
   func scaleAll(by factor: Double) -> HSVAdjustment {
     HSVAdjustment(
-      hue: hue.map { $0 * factor },
+      hue: hue.map { $0.value * factor },
       saturation: saturation.map { $0 * factor },
       brightness: brightness.map { $0 * factor }
     )
@@ -79,25 +100,25 @@ extension HSVAdjustment {
   /// `ColourModification` and `ContrastPreset` etc.
   ///
   /// But here, we can go from one, to another, which is very useful.
-  func interpolated(
-    towards other: HSVAdjustment,
-    strength: Double
-  ) -> HSVAdjustment {
-    HSVAdjustment(
-      hue: self.hue.interpolated(
-        towards: other.hue,
-        strength: strength
-      ),
-      saturation: self.saturation.interpolated(
-        towards: other.saturation,
-        strength: strength
-      ),
-      brightness: self.brightness.interpolated(
-        towards: other.brightness,
-        strength: strength
-      )
-    )
-  }
+//  func interpolated(
+//    towards other: HSVAdjustment,
+//    strength: Double
+//  ) -> HSVAdjustment {
+//    HSVAdjustment(
+//      hue: self.hue.interpolated(
+//        towards: other.hue,
+//        strength: strength
+//      ),
+//      saturation: self.saturation.interpolated(
+//        towards: other.saturation,
+//        strength: strength
+//      ),
+//      brightness: self.brightness.interpolated(
+//        towards: other.brightness,
+//        strength: strength
+//      )
+//    )
+//  }
 
   static func applyingModifiers(
     for colour: any ColourModel,
@@ -108,8 +129,6 @@ extension HSVAdjustment {
 
     /// We don't handle `strength` just yet; first we gather
     /// the modifiers together for processing.
-    ///
-    /// What role does `LuminanceModifier` play here? Not sure.
     let lumThreshold: LuminanceThreshold = .init(from: colour)
     let contributors: [any HSVModifier] = [
       LuminanceModifier(threshold: lumThreshold),

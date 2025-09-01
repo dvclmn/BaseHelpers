@@ -17,8 +17,6 @@ import SwiftUI
 ///   based on human perception.
 public struct HSVColour: Equatable, Sendable, ColourModel {
 
-  /// Kept normalised `1...0` internally.
-  /// Trivially convertable to degrees (0-360) for UI as needed
   public var hue: UnitIntervalCyclic
   public var saturation: UnitInterval
   public var brightness: UnitInterval
@@ -41,13 +39,15 @@ public struct HSVColour: Equatable, Sendable, ColourModel {
     alpha: Double = 1.0,
     name: String? = nil
   ) {
-    self.hue = hue.toUnitIntervalCyclic
-    self.saturation = saturation.toUnitInterval
-    self.brightness = brightness.toUnitInterval
-    self.alpha = alpha.toUnitInterval
-    self.name = name
+    self.init(
+      hue: hue.toUnitIntervalCyclic,
+      saturation: saturation.toUnitInterval,
+      brightness: brightness.toUnitInterval,
+      alpha: alpha.toUnitInterval,
+      name: name
+    )
   }
-  
+
   public init(
     hue: UnitIntervalCyclic,
     saturation: UnitInterval,
@@ -55,13 +55,13 @@ public struct HSVColour: Equatable, Sendable, ColourModel {
     alpha: UnitInterval = 1.0,
     name: String? = nil
   ) {
-    self.init(
-      hue: hue.value,
-      saturation: saturation.value,
-      brightness: brightness.value,
-      alpha: alpha.value,
-      name: name
-    )
+
+    self.hue = hue
+    self.saturation = saturation
+    self.brightness = brightness
+    self.alpha = alpha
+    self.name = name
+
   }
 
   public init(
@@ -85,11 +85,9 @@ public struct HSVColour: Equatable, Sendable, ColourModel {
 
 extension HSVColour {
 
-  public var hueDegrees: Double { hue.value * 360.0 }
+  public var hueDegrees: Double { hue.degrees }
 
-  public var toRGB: RGBColour {
-    RGBColour(fromHSV: self)
-  }
+  public var toRGB: RGBColour { RGBColour(fromHSV: self) }
 
   public func luminance(using method: LuminanceMethod = .wcag) -> Double {
     RGBColour(fromHSV: self).luminance(using: method)
@@ -114,7 +112,8 @@ extension HSVColour {
   }
 
   func applying(adjustment: HSVAdjustment) -> HSVColour {
-    let adjustedHue: Double
+    
+    let adjustedHue: UnitIntervalCyclic
     if let hueAdj = adjustment.hue {
       adjustedHue = (hue.value + hueAdj / 360.0).hueWrapped()
     } else {

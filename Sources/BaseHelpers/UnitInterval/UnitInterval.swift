@@ -50,6 +50,17 @@ public struct UnitIntervalCyclic: ExpressibleByFloatLiteral, Sendable {
 //  }
 }
 
+extension UnitInterval: Zeroable {
+  public static var zero: UnitInterval { 0.0 }
+  
+  /// Standard linear interpolation
+  public func interpolated(towards other: UnitInterval, strength: Double) -> UnitInterval {
+    let result = lerp(from: self.value, to: other.value, strength)
+    return UnitInterval(result)
+  }
+}
+
+
 extension UnitIntervalCyclic {
 
   /// Interpolate shortest path around colour wheel
@@ -62,6 +73,20 @@ extension UnitIntervalCyclic {
   public var degrees: Double { value * 360 }
   public init(degrees: Double) { self.init(degrees / 360) }
 }
+
+extension Optional where Wrapped == UnitIntervalCyclic {
+  
+  /// Cyclic interpolation for hue values (shortest path around color wheel)
+  public func interpolated(towards other: UnitIntervalCyclic?, strength: Double) -> UnitIntervalCyclic? {
+    switch (self, other) {
+      case (nil, nil): return nil
+      case (let hue?, nil): return hue // Keep current hue when target is nil
+      case (nil, let target?): return target // Jump to target when current is nil
+      case (let from?, let to?): return from.interpolated(towards: to, strength: strength)
+    }
+  }
+}
+
 
 public func + (lhs: UnitIntervalCyclic, rhs: Double) -> UnitIntervalCyclic {
   return UnitIntervalCyclic(lhs.value + rhs)
