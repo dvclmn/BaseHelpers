@@ -27,10 +27,10 @@ public struct HSVColour: Equatable, Sendable, ColourModel {
 
   public var swiftUIColour: Color {
     Color(
-      hue: hue,
-      saturation: saturation,
-      brightness: brightness,
-      opacity: alpha
+      hue: hue.value,
+      saturation: saturation.value,
+      brightness: brightness.value,
+      opacity: alpha.value
     )
   }
 
@@ -41,11 +41,27 @@ public struct HSVColour: Equatable, Sendable, ColourModel {
     alpha: Double = 1.0,
     name: String? = nil
   ) {
-    self.hue = hue
-    self.saturation = saturation
-    self.brightness = brightness
-    self.alpha = alpha
+    self.hue = hue.toUnitIntervalCyclic
+    self.saturation = saturation.toUnitInterval
+    self.brightness = brightness.toUnitInterval
+    self.alpha = alpha.toUnitInterval
     self.name = name
+  }
+  
+  public init(
+    hue: UnitIntervalCyclic,
+    saturation: UnitInterval,
+    brightness: UnitInterval,
+    alpha: UnitInterval = 1.0,
+    name: String? = nil
+  ) {
+    self.init(
+      hue: hue.value,
+      saturation: saturation.value,
+      brightness: brightness.value,
+      alpha: alpha.value,
+      name: name
+    )
   }
 
   public init(
@@ -69,8 +85,8 @@ public struct HSVColour: Equatable, Sendable, ColourModel {
 
 extension HSVColour {
 
-  public var hueDegrees: Double { hue * 360.0 }
-  
+  public var hueDegrees: Double { hue.value * 360.0 }
+
   public var toRGB: RGBColour {
     RGBColour(fromHSV: self)
   }
@@ -86,7 +102,7 @@ extension HSVColour {
   public static func gray(
     _ brightness: Double,
     alpha: Double = 1.0,
-//    name: String?
+    //    name: String?
   ) -> HSVColour {
     return HSVColour(
       hue: 0,
@@ -100,26 +116,22 @@ extension HSVColour {
   func applying(adjustment: HSVAdjustment) -> HSVColour {
     let adjustedHue: Double
     if let hueAdj = adjustment.hue {
-      adjustedHue = (hue + hueAdj / 360.0).hueWrapped()
+      adjustedHue = (hue.value + hueAdj / 360.0).hueWrapped()
     } else {
-      adjustedHue = hue
+      adjustedHue = hue.value
     }
 
     let adjustedSaturation =
-      adjustment.saturation.map {
-        (saturation + $0).clamped(to: 0...1)
-      } ?? saturation
+      adjustment.saturation.map { saturation + $0 } ?? saturation
 
     let adjustedBrightness =
-      adjustment.brightness.map {
-        (brightness + $0).clamped(to: 0...1)
-      } ?? brightness
+      adjustment.brightness.map { brightness + $0 } ?? brightness
 
     return HSVColour(
       hue: adjustedHue,
       saturation: adjustedSaturation,
       brightness: adjustedBrightness,
-      alpha: alpha,
+      alpha: alpha.value,
       name: self.name
     )
   }

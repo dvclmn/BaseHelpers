@@ -11,7 +11,7 @@ public protocol ColourModel {
   var colourSpace: Color.RGBColorSpace { get }
   var name: String? { get }
   var swiftUIColour: Color { get }
-  var alpha: Double { get set }
+  var alpha: UnitInterval { get set }
   mutating func opacity(_ opacity: Double)
   static func gray(_ brightness: Double, alpha: Double) -> Self
   func luminance(using method: LuminanceMethod) -> Double
@@ -21,6 +21,6 @@ public protocol ColourModel {
 
 // MARK: - Extension methods
 extension ColourModel {
-  public mutating func opacity(_ opacity: Double) { alpha = opacity }
+  public mutating func opacity(_ opacity: Double) { alpha = opacity.toUnitInterval }
   public var colourSpace: Color.RGBColorSpace { .sRGB }
 }

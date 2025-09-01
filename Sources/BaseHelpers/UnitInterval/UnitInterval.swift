@@ -12,7 +12,7 @@ import Foundation
 /// - `0` = minimum value (black, no opacity, zero progress)
 /// - `1` = maximum value (white, fully opaque, complete progress)
 /// - Points in between are valid and finite.
-public struct UnitInterval: ExpressibleByFloatLiteral {
+public struct UnitInterval: ExpressibleByFloatLiteral, Sendable {
   public typealias FloatLiteralType = Double
   
   private(set) var value: Double
@@ -30,7 +30,7 @@ public struct UnitInterval: ExpressibleByFloatLiteral {
 /// Represents a half-open interval unit, `[0, 1)`.
 /// Includes `0` but excludes `1`.
 /// Useful in cyclic domains like Hue where `1` wraps to `0`.
-public struct UnitIntervalCyclic: ExpressibleByFloatLiteral {
+public struct UnitIntervalCyclic: ExpressibleByFloatLiteral, Sendable {
   private(set) var value: Double
 
   public init(floatLiteral value: Double) {
@@ -61,4 +61,24 @@ extension UnitIntervalCyclic {
   /// Useful for Hue
   public var degrees: Double { value * 360 }
   public init(degrees: Double) { self.init(degrees / 360) }
+}
+
+public func + (lhs: UnitIntervalCyclic, rhs: Double) -> UnitIntervalCyclic {
+  return UnitIntervalCyclic(lhs.value + rhs)
+}
+public func + (lhs: UnitIntervalCyclic, rhs: UnitIntervalCyclic) -> UnitIntervalCyclic {
+  return UnitIntervalCyclic(lhs.value + rhs.value)
+}
+public func + (lhs: Double, rhs: UnitIntervalCyclic) -> Double {
+  return Double(lhs + rhs.value)
+}
+
+public func + (lhs: UnitInterval, rhs: Double) -> UnitInterval {
+  return UnitInterval(lhs.value + rhs)
+}
+public func + (lhs: UnitInterval, rhs: UnitInterval) -> UnitInterval {
+  return UnitInterval(lhs.value + rhs.value)
+}
+public func + (lhs: Double, rhs: UnitInterval) -> Double {
+  return Double(lhs + rhs.value)
 }
