@@ -14,6 +14,9 @@ extension EnvironmentValues {
   @Entry public var colourChroma: ColourChroma? = nil
 }
 
+/// Where `HSVAdjustment` models hue, saturation and brightness
+/// levels to add to an `HSVColour`, `ColourModification`
+/// models the *way* these values are added. Strength, saturation presets, etc.
 public struct ColourModification: Sendable {
   public var strength: ModificationStrengthPreset
   public var purpose: ColourPurpose
@@ -28,7 +31,7 @@ public struct ColourModification: Sendable {
     self.purpose = purpose
     self.chroma = chroma
   }
-  
+
   public static let zero: ColourModification = .init(
     strength: .none,
     purpose: .default,
@@ -42,63 +45,38 @@ public struct ColourModification: Sendable {
   )
 }
 
-//extension ColourModification {
-//
-//}
+extension ColourModification {
+  public static func modificationFromOptionals(
+    modification: ColourModification?,
+    strength: ModificationStrengthPreset?,
+    purpose: ColourPurpose?,
+    chroma: ColourChroma?
+  ) -> ColourModification {
+    var newModification: ColourModification = .zero
+    
+    if let modification {
+      newModification = modification
+    }
+    
+    if let strength {
+      newModification.strength = strength
+    }
+    
+    if let purpose {
+      newModification.purpose = purpose
+    }
+    
+    if let chroma {
+      newModification.chroma = chroma
+    }
+    
+    return newModification
+    
+  }
+}
 
 extension ColourModification: CustomStringConvertible {
   public var description: String {
     "Strength: **\(strength.name)**\nPurpose: **\(purpose.name)**\nChroma: **\(chroma.name)**"
-  }
-}
-
-public enum ColourPurpose: String, CaseIterable, Identifiable, Sendable {
-  case legibility
-  case complementary
-
-  public var id: String { rawValue }
-  public var name: String { rawValue.capitalized }
-  public var nameAbbreviated: String {
-    switch self {
-      case .legibility: "Legi"
-      case .complementary: "Comp"
-    }
-  }
-  public static let `default`: Self = .legibility
-
-  var adjustment: HSVAdjustment {
-    switch self {
-      case .legibility: HSVAdjustment(-6, -0.01, 0.1)
-      case .complementary: HSVAdjustment(-3, 0.1, 0.0)
-    }
-  }
-}
-
-public enum ColourChroma: String, Sendable, CaseIterable, Identifiable {
-  case vibrant
-  case saturated
-  case standard
-  case monochrome
-
-  public var id: String { rawValue }
-  public var name: String { rawValue.capitalized }
-
-  public var nameAbbreviated: String {
-    switch self {
-      case .vibrant: "Vibr"
-      case .saturated: "Sat"
-      case .standard: "Std"
-      case .monochrome: "Mono"
-    }
-  }
-  public static let `default`: Self = .standard
-
-  public var adjustment: HSVAdjustment {
-    switch self {
-      case .vibrant: HSVAdjustment(0, 0.7, 0)
-      case .saturated: HSVAdjustment(0, 0.4, 0)
-      case .standard: .zero
-      case .monochrome: HSVAdjustment(0, -1.0, 0)
-    }
   }
 }

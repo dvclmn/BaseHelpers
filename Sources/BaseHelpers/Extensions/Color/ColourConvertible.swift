@@ -15,6 +15,7 @@ public protocol ColourConvertible: Sendable, Identifiable {
   var id: Self.ID { get }
   var colourName: String? { get }
   var swiftUIColour: Color { get }
+//  static var clear: Color { get }
 
   func rgbColour(_ environment: EnvironmentValues) -> RGBColour
   
@@ -35,6 +36,9 @@ public protocol ColourConvertible: Sendable, Identifiable {
   
 }
 extension ColourConvertible {
+  
+//  public static var clear: Color { Color.clear }
+  
   public var isVibrant: Bool {
     guard self is Swatch else { return false }
     return self.isVibrant
@@ -110,7 +114,6 @@ extension RGBColour: ColourConvertible {
   }
 
   public var colourName: String? { nil }
-
   public func contrastColour(
     strength: ModificationStrengthPreset,
     purpose: ColourPurpose = .default,
@@ -145,7 +148,6 @@ extension Swatch: ColourConvertible {
   }
 
   public var colourName: String? { rawValue }
-
   public func contrastColour(
     strength: ModificationStrengthPreset,
     purpose: ColourPurpose = .default,
