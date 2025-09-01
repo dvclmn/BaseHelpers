@@ -23,6 +23,7 @@ public struct HSVColour: Equatable, Sendable, ColourModel {
   public var saturation: Double
   public var brightness: Double
   public var alpha: Double
+  public var name: String?
 
   public var swiftUIColour: Color {
     Color(
@@ -37,24 +38,30 @@ public struct HSVColour: Equatable, Sendable, ColourModel {
     hue: Double,
     saturation: Double,
     brightness: Double,
-    alpha: Double
+    alpha: Double = 1.0,
+    name: String? = nil
   ) {
     self.hue = hue
     self.saturation = saturation
     self.brightness = brightness
     self.alpha = alpha
+    self.name = name
   }
 
   public init(
     colour: Color,
-    environment: EnvironmentValues
+    environment: EnvironmentValues,
+    name: String?
   ) {
     let resolved = colour.resolve(in: environment)
-    self.init(resolved: resolved)
+    self.init(resolved: resolved, name: name ?? colour.colourName)
   }
 
-  public init(resolved: Color.Resolved) {
-    let rgba = RGBColour(resolved: resolved)
+  public init(
+    resolved: Color.Resolved,
+    name: String? = nil
+  ) {
+    let rgba = RGBColour(resolved: resolved, name: name)
     self.init(fromRGB: rgba)
   }
 
@@ -64,6 +71,7 @@ extension HSVColour {
 
   public var hueDegrees: Double { hue * 360.0 }
 
+  
   public var toRGB: RGBColour {
     RGBColour(fromHSV: self)
   }
@@ -76,8 +84,18 @@ extension HSVColour {
     RGBColour(fromHSV: self).luminanceThreshold(using: method)
   }
 
-  public static func gray(_ brightness: Double, alpha: Double = 1.0) -> HSVColour {
-    return HSVColour(hue: 0, saturation: 0, brightness: brightness, alpha: alpha)
+  public static func gray(
+    _ brightness: Double,
+    alpha: Double = 1.0,
+//    name: String?
+  ) -> HSVColour {
+    return HSVColour(
+      hue: 0,
+      saturation: 0,
+      brightness: brightness,
+      alpha: alpha,
+      name: nil
+    )
   }
 
   func applying(adjustment: HSVAdjustment) -> HSVColour {

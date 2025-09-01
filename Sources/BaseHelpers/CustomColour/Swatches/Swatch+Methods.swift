@@ -12,7 +12,11 @@ extension Swatch {
   public var id: String { rawValue }
 
   public func toRGB(_ environment: EnvironmentValues) -> RGBColour {
-    let rgb = RGBColour(colour: self.swiftUIColour, environment: environment)
+    let rgb = RGBColour(
+      colour: self.swiftUIColour,
+      environment: environment,
+      name: self.name
+    )
     return rgb
   }
 

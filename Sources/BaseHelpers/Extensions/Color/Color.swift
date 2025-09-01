@@ -19,7 +19,7 @@ extension Color {
     environment: EnvironmentValues
   ) -> Color {
 
-    let hsvColour = HSVColour(colour: self, environment: environment)
+    let hsvColour = HSVColour(colour: self, environment: environment, name: self.colourName)
     let complementary = hsvColour.complementary(strength: strength)
     return complementary.swiftUIColour
   }

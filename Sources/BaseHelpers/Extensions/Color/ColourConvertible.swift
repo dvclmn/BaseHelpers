@@ -15,10 +15,10 @@ public protocol ColourConvertible: Sendable, Identifiable {
   var id: Self.ID { get }
   var colourName: String? { get }
   var swiftUIColour: Color { get }
-//  static var clear: Color { get }
+  var typeDescription: String { get }
 
   func rgbColour(_ environment: EnvironmentValues) -> RGBColour
-  
+
   /// Includes optional `environment`, as `Color`
   /// needs this to resolve itself first. If `nil`, `Color`
   /// will return it's `self`, unmodified.
@@ -26,19 +26,21 @@ public protocol ColourConvertible: Sendable, Identifiable {
     strength: ModificationStrengthPreset,
     purpose: ColourPurpose,
     chroma: ColourChroma,
-    environment: EnvironmentValues?
-  ) -> Color
+    environment: EnvironmentValues
+  ) -> RGBColour
 
   func contrastColour(
     modification: ColourModification?,
-    environment: EnvironmentValues?
-  ) -> Color
-  
+    environment: EnvironmentValues
+  ) -> RGBColour
+
 }
+
 extension ColourConvertible {
-  
-//  public static var clear: Color { Color.clear }
-  
+  public var typeDescription: String {
+    "ColourConvertible[Type: \(Self.Type.self), Name: \(colourName ?? "nil"), SwiftUI Color: \(swiftUIColour)]"
+  }
+
   public var isVibrant: Bool {
     guard self is Swatch else { return false }
     return self.isVibrant
@@ -57,43 +59,43 @@ extension Color: @retroactive Identifiable {
 extension Color: ColourConvertible {
 
   public func rgbColour(_ environment: EnvironmentValues) -> RGBColour {
-    return RGBColour(colour: self, environment: environment)
+    RGBColour(colour: self, environment: environment, name: self.colourName)
   }
-  
+
   public var swiftUIColour: Color { self }
-  
-  public var colourName: String? { SystemColour(colour: self)?.colourName }
-  
+
+  public var colourName: String? {
+    SystemColour(colour: self)?.colourName
+  }
+
   public func contrastColour(
     strength: ModificationStrengthPreset,
     purpose: ColourPurpose = .default,
     chroma: ColourChroma = .default,
-    environment: EnvironmentValues?
-  ) -> Color {
+    environment: EnvironmentValues
+  ) -> RGBColour {
 
-    guard let environment else {
-      print("⚠️ Warning: Contrast colour was returned *unmodified* as no value was provided for `environment`.")
-      return self
-    }
+//    guard let environment else {
+//      print("⚠️ Warning: Contrast colour was returned *unmodified* as no value was provided for `environment`.")
+//      return self.rgbColour(<#T##environment: EnvironmentValues##EnvironmentValues#>)
+//    }
 
-    let hsvColour = HSVColour(colour: self, environment: environment)
+    let hsvColour = HSVColour(colour: self, environment: environment, name: nil)
     let adjustment = HSVAdjustment.applyingModifiers(
       for: hsvColour,
       strength: strength,
       purpose: purpose,
       chroma: chroma
     )
-
     let adjustedHSV = hsvColour.applying(adjustment: adjustment)
-
-    return adjustedHSV.swiftUIColour
+    return adjustedHSV.toRGB
   }
 
   public func contrastColour(
     modification: ColourModification?,
-    environment: EnvironmentValues?
-  ) -> Color {
-    guard let modification else { return self }
+    environment: EnvironmentValues
+  ) -> RGBColour {
+    guard let modification else { return self.rgbColour(environment) }
 
     return self.contrastColour(
       strength: modification.strength,
@@ -113,21 +115,25 @@ extension RGBColour: ColourConvertible {
     //    return RGBColour(colour: self, environment: environment)
   }
 
-  public var colourName: String? { nil }
+  public var colourName: String? { name }
   public func contrastColour(
     strength: ModificationStrengthPreset,
     purpose: ColourPurpose = .default,
     chroma: ColourChroma = .default,
-    environment: EnvironmentValues? = nil
-  ) -> Color {
-    return self.contrastColour(strength: strength, purpose: purpose, chroma: chroma).swiftUIColour
+    environment: EnvironmentValues
+  ) -> RGBColour {
+    return self.contrastColour(
+      strength: strength,
+      purpose: purpose,
+      chroma: chroma
+    )
   }
 
   public func contrastColour(
     modification: ColourModification?,
-    environment: EnvironmentValues?
-  ) -> Color {
-    guard let modification else { return self.swiftUIColour }
+    environment: EnvironmentValues
+  ) -> RGBColour {
+    guard let modification else { return self }
 
     return self.contrastColour(
       strength: modification.strength,
@@ -152,22 +158,22 @@ extension Swatch: ColourConvertible {
     strength: ModificationStrengthPreset,
     purpose: ColourPurpose = .default,
     chroma: ColourChroma = .default,
-    environment: EnvironmentValues? = nil
-  ) -> Color {
+    environment: EnvironmentValues
+  ) -> RGBColour {
 
     return swiftUIColour.contrastColour(
       strength: strength,
       purpose: purpose,
       chroma: chroma,
       environment: environment,
-    ).swiftUIColour
+    )
   }
 
   public func contrastColour(
     modification: ColourModification?,
-    environment: EnvironmentValues?
-  ) -> Color {
-    guard let modification else { return self.swiftUIColour }
+    environment: EnvironmentValues
+  ) -> RGBColour {
+    guard let modification else { return self.toRGB(environment) }
 
     return self.contrastColour(
       strength: modification.strength,
@@ -180,34 +186,34 @@ extension Swatch: ColourConvertible {
 
 // MARK: - System Colour
 extension SystemColour: ColourConvertible {
-  
+
   public func rgbColour(_ environment: EnvironmentValues) -> RGBColour {
     return self.swiftUIColour.rgbColour(environment)
   }
-  
+
   public var colourName: String? { self.name }
-  
+
   public func contrastColour(
     strength: ModificationStrengthPreset,
     purpose: ColourPurpose = .default,
     chroma: ColourChroma = .default,
-    environment: EnvironmentValues? = nil
-  ) -> Color {
-    
+    environment: EnvironmentValues
+  ) -> RGBColour {
+
     return swiftUIColour.contrastColour(
       strength: strength,
       purpose: purpose,
       chroma: chroma,
       environment: environment,
-    ).swiftUIColour
+    )
   }
-  
+
   public func contrastColour(
     modification: ColourModification?,
-    environment: EnvironmentValues?
-  ) -> Color {
-    guard let modification else { return self.swiftUIColour }
-    
+    environment: EnvironmentValues
+  ) -> RGBColour {
+    guard let modification else { return self.rgbColour(environment) }
+
     return self.contrastColour(
       strength: modification.strength,
       purpose: modification.purpose,
@@ -229,7 +235,7 @@ extension SystemColour: ColourConvertible {
 //    RGBColour(colour: self.swiftUIColour, environment: environment)
 //  }
 //  public var colourName: String? { rawValue.capitalized }
-//  
+//
 //  public func contrastColour(
 //    strength: ModificationStrengthPreset,
 //    purpose: ColourPurpose = .default,

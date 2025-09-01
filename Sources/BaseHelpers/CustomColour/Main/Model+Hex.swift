@@ -11,7 +11,7 @@ import Foundation
 extension RGBColour {
   
   /// Initialize from a hex string (e.g., "#FF0000", "FF0000", "#FF0000FF")
-  public init?(hex: String) {
+  public init?(hex: String, name: String?) {
     let hexString = hex.trimmingCharacters(in: .whitespacesAndNewlines)
       .replacingOccurrences(of: "#", with: "")
     

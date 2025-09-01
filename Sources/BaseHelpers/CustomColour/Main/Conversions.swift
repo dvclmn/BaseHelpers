@@ -9,7 +9,10 @@ import Foundation
 
 extension HSVColour {
 
-  public init(fromRGB rgb: RGBColour) {
+  public init(
+    fromRGB rgb: RGBColour,
+//    name: String?
+  ) {
 
     let rd: CGFloat = rgb.red
     let gd: CGFloat = rgb.green
@@ -43,7 +46,8 @@ extension HSVColour {
       hue: h,
       saturation: s,
       brightness: b,
-      alpha: rgb.alpha
+      alpha: rgb.alpha,
+      name: rgb.name
     )
   }
 
@@ -51,7 +55,10 @@ extension HSVColour {
 
 extension RGBColour {
 
-  public init(fromHSV hsv: HSVColour) {
+  public init(
+    fromHSV hsv: HSVColour,
+//    name: String?
+  ) {
     /// Normalize hue to `[0, 1]` range, handling negative values
     /// Older version, not sure which is better:
     /// `let h = hsv.hue - floor(hsv.hue)`
@@ -61,7 +68,13 @@ extension RGBColour {
 
     /// Early exit for grayscale (no saturation)
     guard s > 0 else {
-      self.init(red: v, green: v, blue: v, alpha: hsv.alpha)
+      self.init(
+        red: v,
+        green: v,
+        blue: v,
+        alpha: hsv.alpha,
+        name: hsv.name
+      )
       return
     }
 
@@ -91,7 +104,8 @@ extension RGBColour {
       red: r.clamped(to: 0...1),
       green: g.clamped(to: 0...1),
       blue: b.clamped(to: 0...1),
-      alpha: hsv.alpha
+      alpha: hsv.alpha,
+      name: hsv.name
     )
   }
 }

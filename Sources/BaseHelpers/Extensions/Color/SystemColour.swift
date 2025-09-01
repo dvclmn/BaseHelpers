@@ -28,6 +28,7 @@ public enum SystemColour: String, CaseIterable, Identifiable, Sendable {
   case accentColor
 
   public init?(colour: Color) {
+    //    print("Attempting to convert native Color `\(colour)` to a `SystemColour`")
     let result: Self? =
       switch colour {
         case .red: SystemColour.red
@@ -50,6 +51,8 @@ public enum SystemColour: String, CaseIterable, Identifiable, Sendable {
         case .accentColor: SystemColour.accentColor
         default: nil
       }
+
+    //    print("Result of `Color.\(colour)` conversion: \(String(describing: result))")
     guard let result else { return nil }
     self = result
   }
@@ -62,7 +65,7 @@ public enum SystemColour: String, CaseIterable, Identifiable, Sendable {
       default: rawValue.capitalized
     }
   }
-  
+
   public var toPrimitiveColour: PrimitiveColour? {
     PrimitiveColour(rawValue: self.rawValue)
   }

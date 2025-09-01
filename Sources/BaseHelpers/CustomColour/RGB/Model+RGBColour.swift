@@ -13,6 +13,8 @@ public struct RGBColour: Identifiable, Equatable, Hashable, Sendable, Codable, C
   public var green: Double
   public var blue: Double
   public var alpha: Double
+  
+  public var name: String?
 
   //  enum CodingKeys: String, CodingKey {
   //    case id, red, green, blue, alpha
@@ -21,21 +23,27 @@ public struct RGBColour: Identifiable, Equatable, Hashable, Sendable, Codable, C
   public init(
     colour: Color,
     environment: EnvironmentValues,
+    name: String?
   ) {
+    let name = colour.colourName
     let resolved = colour.resolve(in: environment)
     self.init(
       resolved: resolved,
+      name: name
     )
   }
 
   public init(
     resolved: Color.Resolved,
+    name: String?
   ) {
     self.init(
       red: resolved.red.toDouble,
       green: resolved.green.toDouble,
       blue: resolved.blue.toDouble,
-      alpha: resolved.opacity.toDouble
+      alpha: resolved.opacity.toDouble,
+      name: name
+      
     )
   }
 
@@ -44,12 +52,14 @@ public struct RGBColour: Identifiable, Equatable, Hashable, Sendable, Codable, C
     green: Double,
     blue: Double,
     alpha: Double = 1.0,
+    name: String? = nil
   ) {
     self.id = UUID()
     self.red = red
     self.green = green
     self.blue = blue
     self.alpha = alpha
+    self.name = name
   }
 }
 
@@ -104,17 +114,23 @@ extension RGBColour {
     g: Double,
     b: Double,
     a: Double = 1.0,
+    name: String?
   ) {
-    self.init(red: r, green: g, blue: b, alpha: a)
+    self.init(red: r, green: g, blue: b, alpha: a, name: name)
   }
 
   /// Create a color with specified brightness (0.0 to 1.0)
-  public static func gray(_ brightness: Double, alpha: Double = 1.0) -> RGBColour {
+  public static func gray(
+    _ brightness: Double,
+    alpha: Double = 1.0,
+//    name: String?
+  ) -> RGBColour {
     return RGBColour(
       red: brightness,
       green: brightness,
       blue: brightness,
-      alpha: alpha
+      alpha: alpha,
+      name: nil
     )
   }
 }
@@ -122,7 +138,7 @@ extension RGBColour {
 extension RGBColour: CustomStringConvertible {
   public var description: String {
     let result = """
-      RGBColour[R: \(self.red), G: \(self.green), B: \(self.blue)]
+      RGBColour[R: \(self.red), G: \(self.green), B: \(self.blue), Name: \(name ?? "nil")]
       """
 
     return result
