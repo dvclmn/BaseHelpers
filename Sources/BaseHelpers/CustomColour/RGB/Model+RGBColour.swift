@@ -75,6 +75,8 @@ extension RGBColour {
     chroma: ColourChroma = .standard,
   ) -> RGBColour {
 
+    guard strength.adjustmentStrength > 0 else { return self }
+    
     let hsvColour = HSVColour(fromRGB: self)
     let adjustment = HSVAdjustment.applyingModifiers(
       for: self,

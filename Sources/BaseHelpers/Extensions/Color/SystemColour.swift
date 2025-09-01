@@ -62,6 +62,10 @@ public enum SystemColour: String, CaseIterable, Identifiable, Sendable {
       default: rawValue.capitalized
     }
   }
+  
+  public var toPrimitiveColour: PrimitiveColour? {
+    PrimitiveColour(rawValue: self.rawValue)
+  }
 
   public var swiftUIColour: Color {
     switch self {

@@ -9,12 +9,15 @@ import SwiftUI
 
 extension EnvironmentValues {
   @Entry public var colourModification: ColourModification? = nil
+  @Entry public var colourModificationStrength: ModificationStrengthPreset? = nil
+  @Entry public var colourPurpose: ColourPurpose? = nil
+  @Entry public var colourChroma: ColourChroma? = nil
 }
 
 public struct ColourModification: Sendable {
-  let strength: ModificationStrengthPreset
-  let purpose: ColourPurpose
-  let chroma: ColourChroma
+  public var strength: ModificationStrengthPreset
+  public var purpose: ColourPurpose
+  public var chroma: ColourChroma
 
   public init(
     strength: ModificationStrengthPreset,
@@ -25,45 +28,27 @@ public struct ColourModification: Sendable {
     self.purpose = purpose
     self.chroma = chroma
   }
+  
+  public static let zero: ColourModification = .init(
+    strength: .none,
+    purpose: .default,
+    chroma: .default
+  )
+
+  public static let `default`: ColourModification = .init(
+    strength: .default,
+    purpose: .default,
+    chroma: .default
+  )
 }
+
+//extension ColourModification {
+//
+//}
+
 extension ColourModification: CustomStringConvertible {
   public var description: String {
     "Strength: **\(strength.name)**\nPurpose: **\(purpose.name)**\nChroma: **\(chroma.name)**"
-  }
-}
-
-struct LuminanceModifier: HSVModifier {
-  let threshold: LuminanceThreshold
-  var adjustment: HSVAdjustment { threshold.adjustment }
-}
-
-struct ColourPurposeModifier: HSVModifier {
-  let purpose: ColourPurpose
-  var adjustment: HSVAdjustment { purpose.adjustment }
-}
-
-struct ChromaModifier: HSVModifier {
-  let chroma: ColourChroma
-  var adjustment: HSVAdjustment { chroma.adjustment }
-}
-
-public enum LuminanceThreshold {
-  case dark
-  case light
-
-  public init(
-    from colour: any ColourModel,
-    using method: LuminanceMethod = .wcag
-  ) {
-    self = colour.luminance(using: method) > 0.4 ? .light : .dark
-  }
-  
-  /// A basic baseline adjustment based on what suits light vs dark colours
-  var adjustment: HSVAdjustment {
-    switch self {
-      case .dark: HSVAdjustment(-18, -0.01, 0.75)
-      case .light: HSVAdjustment(-16, 0.35, -0.75)
-    }
   }
 }
 
@@ -97,7 +82,7 @@ public enum ColourChroma: String, Sendable, CaseIterable, Identifiable {
 
   public var id: String { rawValue }
   public var name: String { rawValue.capitalized }
-  
+
   public var nameAbbreviated: String {
     switch self {
       case .vibrant: "Vibr"

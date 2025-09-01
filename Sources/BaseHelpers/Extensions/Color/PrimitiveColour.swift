@@ -10,7 +10,6 @@ import SwiftUI
 /// This is referring to basic colours like "red" and "green",
 /// as opposed to fancy shades like "peach" or "teal"
 public enum PrimitiveColour: String, Identifiable, CaseIterable, Sendable {
-
   case red
   case orange
   case yellow
@@ -51,6 +50,10 @@ public enum PrimitiveColour: String, Identifiable, CaseIterable, Sendable {
       case .white: Color.white
       case .none: Color.clear
     }
+  }
+  
+  public var toSystemColour: SystemColour? {
+    SystemColour(rawValue: self.rawValue)
   }
 }
 

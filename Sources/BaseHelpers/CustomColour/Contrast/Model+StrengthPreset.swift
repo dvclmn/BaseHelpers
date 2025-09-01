@@ -48,6 +48,8 @@ public enum ModificationStrengthPreset: CaseIterable, Identifiable, Sendable {
     }
   }
   
+  public static let `default`: Self = .standard
+  
   public var percentString: String {
     let value: CGFloat = adjustmentStrength * 100
     return value.displayString(.fractionLength(0)) + "%"
