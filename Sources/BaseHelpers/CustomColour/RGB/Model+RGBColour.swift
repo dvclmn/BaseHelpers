@@ -96,8 +96,6 @@ extension RGBColour {
     )
   }
 
-  
-
   /// Create a color with specified brightness (0.0 to 1.0)
   public static func gray(
     _ brightness: Double,

@@ -28,7 +28,8 @@ extension HSVColour {
     return adjustedHSV
   }
   
-  public func contrastColour(modification: ColourModification?) -> RGBColour {
+  /// This will 'pass through', returning `self` if `modification` is `nil`
+  public func contrastColour(modification: ColourModification?) -> Self {
     guard let modification else { return self }
     
     return self.contrastColour(

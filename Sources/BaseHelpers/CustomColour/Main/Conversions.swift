@@ -9,10 +9,7 @@ import Foundation
 
 extension HSVColour {
 
-  public init(
-    fromRGB rgb: RGBColour,
-    //    name: String?
-  ) {
+  public init(fromRGB rgb: RGBColour) {
 
     let rd: CGFloat = rgb.red.value
     let gd: CGFloat = rgb.green.value
@@ -49,8 +46,7 @@ extension HSVColour {
       alpha: rgb.alpha.value,
       name: rgb.name
     )
-    
-    
+
   }
 
 }
@@ -73,7 +69,7 @@ extension RGBColour {
 
     /// Calculate hue segment and fractional part
     let hueScaled = h * 6
-    
+
     /// Ensures 0-5 range
     let hueSegment = Int(hueScaled) % 6
     let f = hueScaled - floor(hueScaled)
@@ -88,22 +84,22 @@ extension RGBColour {
     switch hueSegment {
       /// Red to Yellow
       case 0: (r, g, b) = (v, t, p)
-        
+
       /// Yellow to Green
       case 1: (r, g, b) = (q, v, p)
-        
+
       /// Green to Cyan
       case 2: (r, g, b) = (p, v, t)
-        
+
       /// Cyan to Blue
       case 3: (r, g, b) = (p, q, v)
-        
+
       /// Blue to Magenta
       case 4: (r, g, b) = (t, p, v)
-        
+
       /// Magenta to Red
       case 5: (r, g, b) = (v, p, q)
-        
+
       /// Fallback (shouldn't occur)
       default: (r, g, b) = (v, v, v)
     }

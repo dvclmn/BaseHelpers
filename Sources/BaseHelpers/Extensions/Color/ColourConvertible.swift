@@ -17,22 +17,23 @@ public protocol ColourConvertible: Sendable, Identifiable {
   var swiftUIColour: Color { get }
   var typeDescription: String { get }
 
-  func rgbColour(_ environment: EnvironmentValues) -> RGBColour
+  func hsv(_ environment: EnvironmentValues) -> HSVColour
+//  func rgb(_ environment: EnvironmentValues) -> RGBColour
 
   /// Includes optional `environment`, as `Color`
   /// needs this to resolve itself first. If `nil`, `Color`
   /// will return it's `self`, unmodified.
-  func contrastColour(
-    strength: ModificationStrengthPreset,
-    purpose: ColourPurpose,
-    chroma: ColourChroma,
-    environment: EnvironmentValues
-  ) -> RGBColour
-
-  func contrastColour(
-    modification: ColourModification?,
-    environment: EnvironmentValues
-  ) -> RGBColour
+//  func contrastColour(
+//    strength: ModificationStrengthPreset,
+//    purpose: ColourPurpose,
+//    chroma: ColourChroma,
+//    environment: EnvironmentValues
+//  ) -> RGBColour
+//
+//  func contrastColour(
+//    modification: ColourModification?,
+//    environment: EnvironmentValues
+//  ) -> RGBColour
 
 }
 
