@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum LuminanceThreshold {
+public enum LuminanceThreshold: HSVModifier {
   case dark
   case light
   
@@ -19,7 +19,7 @@ public enum LuminanceThreshold {
   }
   
   /// A basic baseline adjustment based on what suits light vs dark colours
-  var adjustment: HSVAdjustment {
+  public var adjustment: HSVAdjustment {
     switch self {
       case .dark: HSVAdjustment(h: -18, s: -0.01, v: 0.75)
       case .light: HSVAdjustment(h: -16, s: 0.35, v: -0.75)

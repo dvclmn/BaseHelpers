@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum ColourPurpose: String, CaseIterable, Identifiable, Sendable {
+public enum ColourPurpose: String, CaseIterable, Identifiable, Sendable, HSVModifier {
   case legibility
   case complementary
   
@@ -21,10 +21,12 @@ public enum ColourPurpose: String, CaseIterable, Identifiable, Sendable {
   }
   public static let `default`: Self = .legibility
   
-  var adjustment: HSVAdjustment {
+  public var adjustment: HSVAdjustment {
     switch self {
-      case .legibility: HSVAdjustment(h: -6, s: -0.01, v: 0.1)
-      case .complementary: HSVAdjustment(h: -3, s: 0.1, v: 0.0)
+      case .legibility: HSVAdjustment(h: -0.6, s: -0.01, v: 0.1)
+//      case .legibility: HSVAdjustment(h: -6, s: -0.01, v: 0.1)
+      case .complementary: HSVAdjustment(h: -0.3, s: 0.1, v: 0.0)
+//      case .complementary: HSVAdjustment(h: -3, s: 0.1, v: 0.0)
     }
   }
 }

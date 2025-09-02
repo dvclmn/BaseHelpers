@@ -48,7 +48,9 @@ public struct HSVAdjustment: Sendable {
 
 extension HSVAdjustment {
 
-  public static func adjustments(from modifiers: [any HSVModifier]) -> [Self] {
+  public static func adjustments(
+    from modifiers: [any HSVModifier]
+  ) -> [Self] {
     let adjustments: [HSVAdjustment] = modifiers.map {
       $0.adjustment
     }
@@ -56,7 +58,11 @@ extension HSVAdjustment {
   }
 
   public static var zero: HSVAdjustment {
-    HSVAdjustment(hue: nil, saturation: nil, brightness: nil)
+    HSVAdjustment(
+      hue: nil,
+      saturation: nil,
+      brightness: nil
+    )
   }
   
   public static func + (lhs: HSVAdjustment, rhs: HSVAdjustment) -> HSVAdjustment {
@@ -131,12 +137,14 @@ extension HSVAdjustment {
     /// the modifiers together for processing.
     let lumThreshold: LuminanceThreshold = .init(from: colour)
     let contributors: [any HSVModifier] = [
-      LuminanceModifier(threshold: lumThreshold),
-      ColourPurposeModifier(purpose: purpose),
-      ChromaModifier(chroma: chroma),
+      lumThreshold,
+      purpose,
+      chroma
     ]
     let adjustments = adjustments(from: contributors)
+    
     let combined = adjustments.combined(with: strength.adjustmentStrength)
+    
     return combined
   }
 

@@ -12,31 +12,33 @@ public protocol HSVModifier {
 }
 
 extension Array where Element == HSVAdjustment {
-  
+
   /// Combines adjustments with a strength multiplier
   public func combined(with strength: Double) -> HSVAdjustment {
     guard !isEmpty else { return .zero }
-    
-    // Apply strength to each adjustment, then combine them
+
+    /// Apply strength to each adjustment, then combine them
     let weightedAdjustments = self.map { adjustment in
-      HSVAdjustment.zero.interpolated(towards: adjustment, strength: strength)
+      HSVAdjustment.zero.interpolated(
+        towards: adjustment,
+        strength: strength
+      )
     }
-    
     return weightedAdjustments.reduce(.zero, +)
   }
 }
 
-struct LuminanceModifier: HSVModifier {
-  let threshold: LuminanceThreshold
-  var adjustment: HSVAdjustment { threshold.adjustment }
-}
-
-struct ColourPurposeModifier: HSVModifier {
-  let purpose: ColourPurpose
-  var adjustment: HSVAdjustment { purpose.adjustment }
-}
-
-struct ChromaModifier: HSVModifier {
-  let chroma: ColourChroma
-  var adjustment: HSVAdjustment { chroma.adjustment }
-}
+//struct LuminanceModifier: HSVModifier {
+//  let threshold: LuminanceThreshold
+//  var adjustment: HSVAdjustment { threshold.adjustment }
+//}
+//
+//struct ColourPurposeModifier: HSVModifier {
+//  let purpose: ColourPurpose
+//  var adjustment: HSVAdjustment { purpose.adjustment }
+//}
+//
+//struct ChromaModifier: HSVModifier {
+//  let chroma: ColourChroma
+//  var adjustment: HSVAdjustment { chroma.adjustment }
+//}
