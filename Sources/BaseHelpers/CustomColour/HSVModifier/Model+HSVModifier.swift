@@ -27,18 +27,3 @@ extension Array where Element == HSVAdjustment {
     return weightedAdjustments.reduce(.zero, +)
   }
 }
-
-//struct LuminanceModifier: HSVModifier {
-//  let threshold: LuminanceThreshold
-//  var adjustment: HSVAdjustment { threshold.adjustment }
-//}
-//
-//struct ColourPurposeModifier: HSVModifier {
-//  let purpose: ColourPurpose
-//  var adjustment: HSVAdjustment { purpose.adjustment }
-//}
-//
-//struct ChromaModifier: HSVModifier {
-//  let chroma: ColourChroma
-//  var adjustment: HSVAdjustment { chroma.adjustment }
-//}
