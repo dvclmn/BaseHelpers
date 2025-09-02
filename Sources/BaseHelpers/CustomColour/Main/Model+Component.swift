@@ -19,10 +19,25 @@ public protocol ColourComponent: Identifiable, Sendable, CaseIterable, RawRepres
   var name: String { get }
   var nameInitial: Character { get }
 //  var keyPath: WritableKeyPath<Model, Double> { get }
+  
+  // Instead of a WritableKeyPath, we store closures
+  /// ```
+  /// var hsv = HSVColour(
+  ///   hue: 0.1,
+  ///   saturation: 0.5,
+  ///   brightness: 0.8,
+  ///   alpha: 1.0,
+  ///   name: nil
+  /// )
+  /// let component = HSVComponent.hue
+  ///
+  /// print(component.get(hsv)) // 0.1
+  /// component.set(&hsv, 0.3)
+  /// ```
+  var get: (Model) -> Double { get }
+  var set: (inout Model, Double) -> Void { get }
 
-  func sliderTrackGradient(
-    colour: Model
-  ) -> LinearGradient
+  func sliderTrackGradient(colour: Model) -> LinearGradient
 }
 
 extension ColourComponent {

@@ -25,28 +25,46 @@ public enum HSVComponent: String, ColourComponent {
   case brightness
   case alpha
 
-//  public var keyPath: WritableKeyPath<Model, Double> {
-//    switch self {
-//      case .hue: \.hue
-//      case .saturation: \.saturation
-//      case .brightness: \.brightness
-//      case .alpha: \.alpha
-//    }
-//  }
+  //  public var keyPath: WritableKeyPath<Model, Double> {
+  //    switch self {
+  //      case .hue: \.hue
+  //      case .saturation: \.saturation
+  //      case .brightness: \.brightness
+  //      case .alpha: \.alpha
+  //    }
+  //  }
 
-//  public var hsvAdjustmentPath: KeyPath<HSVAdjustment, Double?> {
-//    switch self {
-//      case .hue:
-//        return \.hue
-//      case .saturation:
-//        return \.saturation
-//      case .brightness:
-//        return \.brightness
-//      case .alpha:
-//        assertionFailure("Alpha not relevant in this context.")
-//        return \.hue
-//    }
-//  }
+  //  public var hsvAdjustmentPath: KeyPath<HSVAdjustment, Double?> {
+  //    switch self {
+  //      case .hue:
+  //        return \.hue
+  //      case .saturation:
+  //        return \.saturation
+  //      case .brightness:
+  //        return \.brightness
+  //      case .alpha:
+  //        assertionFailure("Alpha not relevant in this context.")
+  //        return \.hue
+  //    }
+  //  }
+
+  public var get: (HSVColour) -> Double {
+    switch self {
+      case .hue: { $0.hue.value }
+      case .saturation: { $0.saturation.value }
+      case .brightness: { $0.brightness.value }
+      case .alpha: { $0.alpha.value }
+    }
+  }
+
+  public var set: (inout HSVColour, Double) -> Void {
+    switch self {
+      case .hue: { $0.hue = UnitIntervalCyclic($1) }
+      case .saturation: { $0.saturation = UnitInterval($1) }
+      case .brightness: { $0.brightness = UnitInterval($1) }
+      case .alpha: { $0.alpha = UnitInterval($1) }
+    }
+  }
 
   public var nameInitial: Character {
     switch self {
@@ -56,7 +74,7 @@ public enum HSVComponent: String, ColourComponent {
       case .alpha: "A"
     }
   }
-  
+
   public func gradientColours(_ colour: Model) -> [Color] {
     switch self {
       case .hue: Array<Color>.rainbow

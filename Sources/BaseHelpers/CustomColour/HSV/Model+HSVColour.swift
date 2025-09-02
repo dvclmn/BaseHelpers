@@ -112,14 +112,6 @@ extension HSVColour {
   }
 
   func applying(adjustment: HSVAdjustment) -> HSVColour {
-
-    //    let adjustedHue: UnitIntervalCyclic
-    //    if let hueAdj = adjustment.hue {
-    //      adjustedHue = (hue.value + hueAdj / 360.0).hueWrapped()
-    //    } else {
-    //      adjustedHue = hue.value
-    //    }
-
     let adjustedHue = adjustment.hue.map { hue + $0 } ?? hue
 
     let adjustedSaturation =

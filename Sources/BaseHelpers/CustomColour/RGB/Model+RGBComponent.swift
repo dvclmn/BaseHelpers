@@ -16,6 +16,24 @@ public enum RGBComponent: String, ColourComponent {
   case blue
   case alpha
 
+  public var get: (RGBColour) -> Double {
+    switch self {
+      case .red: { $0.red.value }
+      case .green: { $0.green.value }
+      case .blue: { $0.blue.value }
+      case .alpha: { $0.alpha.value }
+    }
+  }
+  
+  public var set: (inout RGBColour, Double) -> Void {
+    switch self {
+      case .red: { $0.red = UnitInterval($1) }
+      case .green: { $0.green = UnitInterval($1) }
+      case .blue: { $0.blue = UnitInterval($1) }
+      case .alpha: { $0.alpha = UnitInterval($1) }
+    }
+  }
+  
 //  public var keyPath: WritableKeyPath<Model, UnitInterval> {
 //  public var keyPath: WritableKeyPath<Model, Double> {
 //    switch self {
