@@ -16,13 +16,24 @@ public struct HSVAdjustment: Sendable {
   public var brightness: Double?
 
   public init(
+    hueCyclic: UnitIntervalCyclic? = nil,
+    saturation: Double? = nil,
+    brightness: Double? = nil
+  ) {
+    self.hue = hueCyclic
+    self.saturation = saturation
+    self.brightness = brightness
+  }
+  
+  public init(
     hue: Double? = nil,
     saturation: Double? = nil,
     brightness: Double? = nil
   ) {
-    self.hue = hue
-    self.saturation = saturation
-    self.brightness = brightness
+//    self.hue = hue?.toUnitIntervalCyclic
+//    self.saturation = saturation
+//    self.brightness = brightness
+    self.init(hueCyclic: hue?.toUnitIntervalCyclic, saturation: saturation, brightness: brightness)
   }
 
   public init(
@@ -48,32 +59,21 @@ extension HSVAdjustment {
     HSVAdjustment(hue: nil, saturation: nil, brightness: nil)
   }
   
-//  public static let zero = HSVAdjustment(h: 0, s: 0, v: 0)
-
-  static func + (lhs: HSVAdjustment, rhs: HSVAdjustment) -> HSVAdjustment {
+  public static func + (lhs: HSVAdjustment, rhs: HSVAdjustment) -> HSVAdjustment {
     HSVAdjustment(
-      hue: lhs.hue.combined(with: rhs.hue) { $0.interpolated(towards: $1, strength: 1.0) ?? $0 },
+      hueCyclic: lhs.hue.combined(with: rhs.hue) { $0.interpolated(towards: $1, strength: 1.0)},
       saturation: lhs.saturation.combined(with: rhs.saturation, using: +),
       brightness: lhs.brightness.combined(with: rhs.brightness, using: +)
     )
   }
   
-  func interpolated(towards other: HSVAdjustment, strength: Double) -> HSVAdjustment {
+  public func interpolated(towards other: HSVAdjustment, strength: Double) -> HSVAdjustment {
     HSVAdjustment(
-      hue: self.hue.interpolated(towards: other.hue, strength: strength),
+      hueCyclic: self.hue.interpolated(towards: other.hue, strength: strength),
       saturation: self.saturation.interpolated(towards: other.saturation, strength: strength),
       brightness: self.brightness.interpolated(towards: other.brightness, strength: strength)
     )
   }
-  
-//  static func + (lhs: HSVAdjustment, rhs: HSVAdjustment) -> HSVAdjustment {
-//    HSVAdjustment(
-//      hue: lhs.hue.combined(with: rhs.hue, using: +),
-//      saturation: lhs.saturation.combined(with: rhs.saturation, using: +),
-//      brightness: lhs.brightness.combined(with: rhs.brightness, using: +)
-//    )
-//  }
-
   func scaleAll(by factor: Double) -> HSVAdjustment {
     HSVAdjustment(
       hue: hue.map { $0.value * factor },

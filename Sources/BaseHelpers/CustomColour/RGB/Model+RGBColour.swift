@@ -21,6 +21,21 @@ public struct RGBColour: Identifiable, Equatable, Hashable, Sendable, Codable, C
   //  }
 
   public init(
+    red: Double,
+    green: Double,
+    blue: Double,
+    alpha: Double = 1.0,
+    name: String? = nil
+  ) {
+    self.id = UUID()
+    self.red = red.toUnitInterval
+    self.green = green.toUnitInterval
+    self.blue = blue.toUnitInterval
+    self.alpha = alpha.toUnitInterval
+    self.name = name
+  }
+  
+  public init(
     colour: Color,
     environment: EnvironmentValues,
     name: String?
@@ -46,20 +61,7 @@ public struct RGBColour: Identifiable, Equatable, Hashable, Sendable, Codable, C
     )
   }
 
-  public init(
-    red: Double,
-    green: Double,
-    blue: Double,
-    alpha: Double = 1.0,
-    name: String? = nil
-  ) {
-    self.id = UUID()
-    self.red = red
-    self.green = green
-    self.blue = blue
-    self.alpha = alpha
-    self.name = name
-  }
+
 }
 
 extension RGBColour {
@@ -71,10 +73,10 @@ extension RGBColour {
   public var swiftUIColour: Color {
     Color(
       colourSpace,
-      red: red,
-      green: green,
-      blue: blue,
-      opacity: alpha
+      red: red.value,
+      green: green.value,
+      blue: blue.value,
+      opacity: alpha.value
     )
   }
 

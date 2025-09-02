@@ -26,22 +26,6 @@ extension Array where Element == HSVAdjustment {
   }
 }
 
-//extension Array where Element == HSVAdjustment {
-//  public func combined(with strength: Double) -> HSVAdjustment {
-//    let combinedAdjustment: HSVAdjustment = self.reduce(.zero) {
-//      partialResult,
-//      adjustment in
-//
-//      partialResult
-//        + .zero.interpolated(
-//          towards: adjustment,
-//          strength: strength
-//        )
-//    }
-//    return combinedAdjustment
-//  }
-//}
-
 struct LuminanceModifier: HSVModifier {
   let threshold: LuminanceThreshold
   var adjustment: HSVAdjustment { threshold.adjustment }
