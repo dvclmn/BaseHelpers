@@ -17,7 +17,7 @@ public protocol ColourComponent: Identifiable, Sendable, CaseIterable, RawRepres
   associatedtype Model: ColourModel
   var id: String { get }
   var name: String { get }
-  var keyPath: WritableKeyPath<Model, Double> { get }
+//  var keyPath: WritableKeyPath<Model, Double> { get }
 
   func sliderTrackGradient(
     colour: Model

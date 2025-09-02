@@ -40,7 +40,7 @@ public struct HSVColour: Equatable, Sendable, ColourModel {
     name: String? = nil
   ) {
     self.init(
-      hue: hue.toUnitIntervalCyclic,
+      hueCyclic: hue.toUnitIntervalCyclic,
       saturation: saturation.toUnitInterval,
       brightness: brightness.toUnitInterval,
       alpha: alpha.toUnitInterval,
@@ -49,14 +49,14 @@ public struct HSVColour: Equatable, Sendable, ColourModel {
   }
 
   public init(
-    hue: UnitIntervalCyclic,
+    hueCyclic: UnitIntervalCyclic,
     saturation: UnitInterval,
     brightness: UnitInterval,
     alpha: UnitInterval = 1.0,
     name: String? = nil
   ) {
 
-    self.hue = hue
+    self.hue = hueCyclic
     self.saturation = saturation
     self.brightness = brightness
     self.alpha = alpha
@@ -112,13 +112,15 @@ extension HSVColour {
   }
 
   func applying(adjustment: HSVAdjustment) -> HSVColour {
-    
-    let adjustedHue: UnitIntervalCyclic
-    if let hueAdj = adjustment.hue {
-      adjustedHue = (hue.value + hueAdj / 360.0).hueWrapped()
-    } else {
-      adjustedHue = hue.value
-    }
+
+    //    let adjustedHue: UnitIntervalCyclic
+    //    if let hueAdj = adjustment.hue {
+    //      adjustedHue = (hue.value + hueAdj / 360.0).hueWrapped()
+    //    } else {
+    //      adjustedHue = hue.value
+    //    }
+
+    let adjustedHue = adjustment.hue.map { hue + $0 } ?? hue
 
     let adjustedSaturation =
       adjustment.saturation.map { saturation + $0 } ?? saturation
@@ -127,10 +129,10 @@ extension HSVColour {
       adjustment.brightness.map { brightness + $0 } ?? brightness
 
     return HSVColour(
-      hue: adjustedHue,
+      hueCyclic: adjustedHue,
       saturation: adjustedSaturation,
       brightness: adjustedBrightness,
-      alpha: alpha.value,
+      alpha: alpha,
       name: self.name
     )
   }

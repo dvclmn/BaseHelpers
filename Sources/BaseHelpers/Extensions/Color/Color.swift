@@ -14,15 +14,15 @@ extension Color {
 //    return NamedColour.allCases.first { $0.colour.swiftUIColour == self }
 //  }
 
-  public func complementary(
-    strength: Double = 1.0,
-    environment: EnvironmentValues
-  ) -> Color {
-
-    let hsvColour = HSVColour(colour: self, environment: environment, name: self.colourName)
-    let complementary = hsvColour.complementary(strength: strength)
-    return complementary.swiftUIColour
-  }
+//  public func complementary(
+//    strength: Double = 1.0,
+//    environment: EnvironmentValues
+//  ) -> Color {
+//
+//    let hsvColour = HSVColour(colour: self, environment: environment, name: self.colourName)
+//    let complementary = hsvColour.complementary(strength: strength)
+//    return complementary.swiftUIColour
+//  }
 
   public func mixCompatible(
     with rhs: Color,

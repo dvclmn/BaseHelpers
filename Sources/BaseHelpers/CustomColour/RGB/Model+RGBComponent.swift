@@ -16,23 +16,28 @@ public enum RGBComponent: String, ColourComponent {
   case blue
   case alpha
 
-  public var keyPath: WritableKeyPath<Model, Double> {
-    switch self {
-      case .red: \.red
-      case .green: \.green
-      case .blue: \.blue
-      case .alpha: \.alpha
-    }
-  }
+//  public var keyPath: WritableKeyPath<Model, UnitInterval> {
+//  public var keyPath: WritableKeyPath<Model, Double> {
+//    switch self {
+//      case .red: \.red
+//      case .green: \.green
+//      case .blue: \.blue
+//      case .alpha: \.alpha
+//    }
+//  }
 
   public func sliderTrackGradient(colour: RGBColour) -> LinearGradient {
     func makeColour(
-      r: Double,
-      g: Double,
-      b: Double,
-      opacity: Double = 1.0
+      r: UnitInterval,
+      g: UnitInterval,
+      b: UnitInterval,
+      opacity: UnitInterval = 1.0
+//      r: Double,
+//      g: Double,
+//      b: Double,
+//      opacity: Double = 1.0
     ) -> Color {
-      Color(red: r, green: g, blue: b).opacity(opacity)
+      Color(red: r.value, green: g.value, blue: b.value).opacity(opacity.value)
     }
     
     let (start, end): (Color, Color)

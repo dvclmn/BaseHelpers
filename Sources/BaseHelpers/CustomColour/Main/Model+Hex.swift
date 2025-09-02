@@ -52,16 +52,16 @@ extension RGBColour {
   /// Convert to hex string representation
   public var hexString: String {
     // Convert from linear RGB to sRGB for hex representation
-    let sRGBRed = Self.linearToSRGB(red)
-    let sRGBGreen = Self.linearToSRGB(green)
-    let sRGBBlue = Self.linearToSRGB(blue)
+    let sRGBRed = Self.linearToSRGB(red.value)
+    let sRGBGreen = Self.linearToSRGB(green.value)
+    let sRGBBlue = Self.linearToSRGB(blue.value)
     
     let redInt = Int(round(sRGBRed * 255))
     let greenInt = Int(round(sRGBGreen * 255))
     let blueInt = Int(round(sRGBBlue * 255))
     
-    if alpha < 1.0 {
-      let alphaInt = Int(round(alpha * 255))
+    if alpha.value < 1.0 {
+      let alphaInt = Int(round(alpha.value * 255))
       return String(format: "#%02X%02X%02X%02X", redInt, greenInt, blueInt, alphaInt)
     } else {
       return String(format: "#%02X%02X%02X", redInt, greenInt, blueInt)

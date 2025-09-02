@@ -14,9 +14,9 @@ extension HSVColour {
 //    name: String?
   ) {
 
-    let rd: CGFloat = rgb.red
-    let gd: CGFloat = rgb.green
-    let bd: CGFloat = rgb.blue
+    let rd: CGFloat = rgb.red.value
+    let gd: CGFloat = rgb.green.value
+    let bd: CGFloat = rgb.blue.value
 
     let maxV: CGFloat = max(rd, max(gd, bd))
     let minV: CGFloat = min(rd, min(gd, bd))

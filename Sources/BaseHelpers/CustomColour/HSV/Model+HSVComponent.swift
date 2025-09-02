@@ -25,28 +25,28 @@ public enum HSVComponent: String, ColourComponent {
   case brightness
   case alpha
 
-  public var keyPath: WritableKeyPath<Model, Double> {
-    switch self {
-      case .hue: \.hue
-      case .saturation: \.saturation
-      case .brightness: \.brightness
-      case .alpha: \.alpha
-    }
-  }
+//  public var keyPath: WritableKeyPath<Model, Double> {
+//    switch self {
+//      case .hue: \.hue
+//      case .saturation: \.saturation
+//      case .brightness: \.brightness
+//      case .alpha: \.alpha
+//    }
+//  }
 
-  public var hsvAdjustmentPath: KeyPath<HSVAdjustment, Double?> {
-    switch self {
-      case .hue:
-        return \.hue
-      case .saturation:
-        return \.saturation
-      case .brightness:
-        return \.brightness
-      case .alpha:
-        assertionFailure("Alpha not relevant in this context.")
-        return \.hue
-    }
-  }
+//  public var hsvAdjustmentPath: KeyPath<HSVAdjustment, Double?> {
+//    switch self {
+//      case .hue:
+//        return \.hue
+//      case .saturation:
+//        return \.saturation
+//      case .brightness:
+//        return \.brightness
+//      case .alpha:
+//        assertionFailure("Alpha not relevant in this context.")
+//        return \.hue
+//    }
+//  }
 
   public func gradientColours(_ colour: Model) -> [Color] {
     switch self {

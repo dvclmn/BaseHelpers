@@ -10,7 +10,7 @@ import Foundation
 /// Represents a half-open interval unit, `[0, 1)`.
 /// Includes `0` but excludes `1`.
 /// Useful in cyclic domains like Hue where `1` wraps to `0`.
-public struct UnitIntervalCyclic: ExpressibleByFloatLiteral, Sendable, Equatable, Codable {
+public struct UnitIntervalCyclic: ExpressibleByFloatLiteral, Sendable, Equatable, Hashable, Codable {
   private(set) var value: Double
 
   public init(floatLiteral value: Double) {

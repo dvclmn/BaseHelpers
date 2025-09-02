@@ -12,7 +12,7 @@ import Foundation
 /// - `0` = minimum value (black, no opacity, zero progress)
 /// - `1` = maximum value (white, fully opaque, complete progress)
 /// - Points in between are valid and finite.
-public struct UnitInterval: ExpressibleByFloatLiteral, Sendable, Equatable, Codable {
+public struct UnitInterval: ExpressibleByFloatLiteral, Sendable, Equatable, Hashable, Codable {
   public typealias FloatLiteralType = Double
 
   private(set) var value: Double
