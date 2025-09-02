@@ -16,10 +16,6 @@ public struct RGBColour: Identifiable, Equatable, Hashable, Sendable, Codable, C
 
   public var name: String?
 
-  //  enum CodingKeys: String, CodingKey {
-  //    case id, red, green, blue, alpha
-  //  }
-
   public init(
     red: Double,
     green: Double,
@@ -82,17 +78,13 @@ public struct RGBColour: Identifiable, Equatable, Hashable, Sendable, Codable, C
       blue: resolved.blue.toDouble,
       alpha: resolved.opacity.toDouble,
       name: name
-
     )
   }
-
 }
 
 extension RGBColour {
 
-  public var toHSV: HSVColour {
-    HSVColour(fromRGB: self)
-  }
+  public var toHSV: HSVColour { HSVColour(fromRGB: self) }
 
   public var swiftUIColour: Color {
     Color(
@@ -104,35 +96,7 @@ extension RGBColour {
     )
   }
 
-  public func contrastColour(
-    strength: ModificationStrengthPreset,
-    purpose: ColourPurpose = .legibility,
-    chroma: ColourChroma = .standard,
-  ) -> RGBColour {
-
-    guard strength.adjustmentStrength > 0 else { return self }
-
-    let hsvColour = HSVColour(fromRGB: self)
-    let adjustment = HSVAdjustment.applyingModifiers(
-      for: self,
-      strength: strength,
-      purpose: purpose,
-      chroma: chroma
-    )
-
-    let adjustedHSV = hsvColour.applying(adjustment: adjustment)
-    return adjustedHSV.toRGB
-  }
-
-  public func contrastColour(modification: ColourModification?) -> RGBColour {
-    guard let modification else { return self }
-
-    return self.contrastColour(
-      strength: modification.strength,
-      purpose: modification.purpose,
-      chroma: modification.chroma
-    )
-  }
+  
 
   /// Create a color with specified brightness (0.0 to 1.0)
   public static func gray(

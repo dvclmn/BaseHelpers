@@ -16,7 +16,6 @@ import SwiftUI
 /// -  Luminance depends on how the three channels contribute
 ///   based on human perception.
 public struct HSVColour: Equatable, Sendable, ColourModel {
-
   public var hue: UnitIntervalCyclic
   public var saturation: UnitInterval
   public var brightness: UnitInterval
@@ -80,12 +79,9 @@ public struct HSVColour: Equatable, Sendable, ColourModel {
     let rgba = RGBColour(resolved: resolved, name: name)
     self.init(fromRGB: rgba)
   }
-
 }
 
 extension HSVColour {
-
-//  public var hueDegrees: Double { hue.degrees }
 
   public var toRGB: RGBColour { RGBColour(fromHSV: self) }
 

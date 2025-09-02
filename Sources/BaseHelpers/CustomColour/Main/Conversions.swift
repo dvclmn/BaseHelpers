@@ -11,7 +11,7 @@ extension HSVColour {
 
   public init(
     fromRGB rgb: RGBColour,
-//    name: String?
+    //    name: String?
   ) {
 
     let rd: CGFloat = rgb.red.value
@@ -49,16 +49,15 @@ extension HSVColour {
       alpha: rgb.alpha.value,
       name: rgb.name
     )
+    
+    
   }
 
 }
 
 extension RGBColour {
 
-  public init(
-    fromHSV hsv: HSVColour,
-//    name: String?
-  ) {
+  public init(fromHSV hsv: HSVColour) {
     /// Normalize hue to `[0, 1]` range, handling negative values
     /// Older version, not sure which is better:
     /// `let h = hsv.hue - floor(hsv.hue)`
@@ -69,13 +68,14 @@ extension RGBColour {
     /// Early exit for grayscale (no saturation)
     guard s.value > 0 else {
       self.init(red: v, green: v, blue: v, alpha: hsv.alpha.value, name: hsv.name)
-//      self.init(unitInterval: v, v, v, hsv.alpha, name: hsv.name)
       return
     }
 
     /// Calculate hue segment and fractional part
     let hueScaled = h * 6
-    let hueSegment = Int(hueScaled) % 6  // Ensures 0-5 range
+    
+    /// Ensures 0-5 range
+    let hueSegment = Int(hueScaled) % 6
     let f = hueScaled - floor(hueScaled)
 
     /// Calculate intermediate values
@@ -86,21 +86,27 @@ extension RGBColour {
     let (r, g, b): (Double, Double, Double)
 
     switch hueSegment {
-      case 0: (r, g, b) = (v, t, p)  // Red to Yellow
-      case 1: (r, g, b) = (q, v, p)  // Yellow to Green
-      case 2: (r, g, b) = (p, v, t)  // Green to Cyan
-      case 3: (r, g, b) = (p, q, v)  // Cyan to Blue
-      case 4: (r, g, b) = (t, p, v)  // Blue to Magenta
-      case 5: (r, g, b) = (v, p, q)  // Magenta to Red
-      default: (r, g, b) = (v, v, v)  // Fallback (shouldn't occur)
+      /// Red to Yellow
+      case 0: (r, g, b) = (v, t, p)
+        
+      /// Yellow to Green
+      case 1: (r, g, b) = (q, v, p)
+        
+      /// Green to Cyan
+      case 2: (r, g, b) = (p, v, t)
+        
+      /// Cyan to Blue
+      case 3: (r, g, b) = (p, q, v)
+        
+      /// Blue to Magenta
+      case 4: (r, g, b) = (t, p, v)
+        
+      /// Magenta to Red
+      case 5: (r, g, b) = (v, p, q)
+        
+      /// Fallback (shouldn't occur)
+      default: (r, g, b) = (v, v, v)
     }
-
-    self.init(
-      red: r.clamped(to: 0...1),
-      green: g.clamped(to: 0...1),
-      blue: b.clamped(to: 0...1),
-      alpha: hsv.alpha.value,
-      name: hsv.name
-    )
+    self.init(r: r, g: g, b: b, a: hsv.alpha.value, name: hsv.name)
   }
 }
