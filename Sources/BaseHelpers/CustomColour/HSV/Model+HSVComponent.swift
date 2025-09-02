@@ -48,6 +48,15 @@ public enum HSVComponent: String, ColourComponent {
 //    }
 //  }
 
+  public var nameInitial: Character {
+    switch self {
+      case .hue: "H"
+      case .saturation: "S"
+      case .brightness: "B"
+      case .alpha: "A"
+    }
+  }
+  
   public func gradientColours(_ colour: Model) -> [Color] {
     switch self {
       case .hue: Array<Color>.rainbow

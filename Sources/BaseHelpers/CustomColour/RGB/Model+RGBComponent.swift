@@ -26,6 +26,15 @@ public enum RGBComponent: String, ColourComponent {
 //    }
 //  }
 
+  public var nameInitial: Character {
+    switch self {
+      case .red: "R"
+      case .green: "G"
+      case .blue: "B"
+      case .alpha: "A"
+    }
+  }
+  
   public func sliderTrackGradient(colour: RGBColour) -> LinearGradient {
     func makeColour(
       r: UnitInterval,
