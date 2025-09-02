@@ -27,11 +27,26 @@ public struct RGBColour: Identifiable, Equatable, Hashable, Sendable, Codable, C
     alpha: Double = 1.0,
     name: String? = nil
   ) {
+    self.init(
+      unitInterval: red.toUnitInterval,
+      green.toUnitInterval,
+      blue.toUnitInterval,
+      alpha.toUnitInterval,
+      name: name
+    )
+  }
+  public init(
+    unitInterval red: UnitInterval,
+    _ green: UnitInterval,
+    _ blue: UnitInterval,
+    _ alpha: UnitInterval = 1.0,
+    name: String? = nil
+  ) {
     self.id = UUID()
-    self.red = red.toUnitInterval
-    self.green = green.toUnitInterval
-    self.blue = blue.toUnitInterval
-    self.alpha = alpha.toUnitInterval
+    self.red = red
+    self.green = green
+    self.blue = blue
+    self.alpha = alpha
     self.name = name
   }
   

@@ -46,7 +46,7 @@ extension HSVColour {
       hue: h,
       saturation: s,
       brightness: b,
-      alpha: rgb.alpha,
+      alpha: rgb.alpha.value,
       name: rgb.name
     )
   }
@@ -62,19 +62,14 @@ extension RGBColour {
     /// Normalize hue to `[0, 1]` range, handling negative values
     /// Older version, not sure which is better:
     /// `let h = hsv.hue - floor(hsv.hue)`
-    let h = hsv.hue.truncatingRemainder(dividingBy: 1.0)
-    let s = hsv.saturation
-    let v = hsv.brightness
+    let h = hsv.hue.value.truncatingRemainder(dividingBy: 1.0)
+    let s = hsv.saturation.value
+    let v = hsv.brightness.value
 
     /// Early exit for grayscale (no saturation)
-    guard s > 0 else {
-      self.init(
-        red: v,
-        green: v,
-        blue: v,
-        alpha: hsv.alpha,
-        name: hsv.name
-      )
+    guard s.value > 0 else {
+      self.init(red: v, green: v, blue: v, alpha: hsv.alpha.value, name: hsv.name)
+//      self.init(unitInterval: v, v, v, hsv.alpha, name: hsv.name)
       return
     }
 
@@ -104,7 +99,7 @@ extension RGBColour {
       red: r.clamped(to: 0...1),
       green: g.clamped(to: 0...1),
       blue: b.clamped(to: 0...1),
-      alpha: hsv.alpha,
+      alpha: hsv.alpha.value,
       name: hsv.name
     )
   }
