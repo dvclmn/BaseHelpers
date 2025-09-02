@@ -23,4 +23,7 @@ public protocol ColourModel {
 extension ColourModel {
   public mutating func opacity(_ opacity: Double) { alpha = opacity.toUnitInterval }
   public var colourSpace: Color.RGBColorSpace { .sRGB }
+  
+  
+  
 }

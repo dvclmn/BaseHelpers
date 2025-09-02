@@ -14,6 +14,16 @@ public enum LuminanceMethod: Sendable, Codable {
   case cielab  // CIE L* lightness
 }
 
+extension HSVColour {
+  public func luminance(using method: LuminanceMethod = .wcag) -> Double {
+    RGBColour(fromHSV: self).luminance(using: method)
+  }
+  
+  public func luminanceThreshold(using method: LuminanceMethod) -> LuminanceThreshold {
+    RGBColour(fromHSV: self).luminanceThreshold(using: method)
+  }
+}
+
 extension RGBColour {
   public func toXYZ() -> XYZColour {
     // Step 1: Linearise sRGB
@@ -37,7 +47,6 @@ extension RGBColour {
 
   public func luminanceThreshold(using method: LuminanceMethod) -> LuminanceThreshold {
     return LuminanceThreshold(from: self)
-
   }
 
   public func luminance(using method: LuminanceMethod = .wcag) -> Double {

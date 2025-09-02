@@ -85,29 +85,20 @@ public struct HSVColour: Equatable, Sendable, ColourModel {
 
 extension HSVColour {
 
-  public var hueDegrees: Double { hue.degrees }
+//  public var hueDegrees: Double { hue.degrees }
 
   public var toRGB: RGBColour { RGBColour(fromHSV: self) }
-
-  public func luminance(using method: LuminanceMethod = .wcag) -> Double {
-    RGBColour(fromHSV: self).luminance(using: method)
-  }
-
-  public func luminanceThreshold(using method: LuminanceMethod) -> LuminanceThreshold {
-    RGBColour(fromHSV: self).luminanceThreshold(using: method)
-  }
 
   public static func gray(
     _ brightness: Double,
     alpha: Double = 1.0,
-    //    name: String?
   ) -> HSVColour {
     return HSVColour(
       hue: 0,
       saturation: 0,
       brightness: brightness,
       alpha: alpha,
-      name: nil
+      name: "Gray"
     )
   }
 
@@ -129,7 +120,7 @@ extension HSVColour {
     )
   }
 
-  public static func + (lhs: HSVColour, rhs: HSVAdjustment) -> HSVColour {
-    lhs.applying(adjustment: rhs)
-  }
+}
+public func + (lhs: HSVColour, rhs: HSVAdjustment) -> HSVColour {
+  lhs.applying(adjustment: rhs)
 }

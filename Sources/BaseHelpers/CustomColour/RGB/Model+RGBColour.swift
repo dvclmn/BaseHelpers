@@ -13,7 +13,7 @@ public struct RGBColour: Identifiable, Equatable, Hashable, Sendable, Codable, C
   public var green: UnitInterval
   public var blue: UnitInterval
   public var alpha: UnitInterval
-  
+
   public var name: String?
 
   //  enum CodingKeys: String, CodingKey {
@@ -49,7 +49,17 @@ public struct RGBColour: Identifiable, Equatable, Hashable, Sendable, Codable, C
     self.alpha = alpha
     self.name = name
   }
-  
+
+  public init(
+    r: Double,
+    g: Double,
+    b: Double,
+    a: Double = 1.0,
+    name: String?
+  ) {
+    self.init(red: r, green: g, blue: b, alpha: a, name: name)
+  }
+
   public init(
     colour: Color,
     environment: EnvironmentValues,
@@ -72,10 +82,9 @@ public struct RGBColour: Identifiable, Equatable, Hashable, Sendable, Codable, C
       blue: resolved.blue.toDouble,
       alpha: resolved.opacity.toDouble,
       name: name
-      
+
     )
   }
-
 
 }
 
@@ -102,7 +111,7 @@ extension RGBColour {
   ) -> RGBColour {
 
     guard strength.adjustmentStrength > 0 else { return self }
-    
+
     let hsvColour = HSVColour(fromRGB: self)
     let adjustment = HSVAdjustment.applyingModifiers(
       for: self,
@@ -125,28 +134,17 @@ extension RGBColour {
     )
   }
 
-  public init(
-    r: Double,
-    g: Double,
-    b: Double,
-    a: Double = 1.0,
-    name: String?
-  ) {
-    self.init(red: r, green: g, blue: b, alpha: a, name: name)
-  }
-
   /// Create a color with specified brightness (0.0 to 1.0)
   public static func gray(
     _ brightness: Double,
     alpha: Double = 1.0,
-//    name: String?
   ) -> RGBColour {
     return RGBColour(
       red: brightness,
       green: brightness,
       blue: brightness,
       alpha: alpha,
-      name: nil
+      name: "Gray"
     )
   }
 }
