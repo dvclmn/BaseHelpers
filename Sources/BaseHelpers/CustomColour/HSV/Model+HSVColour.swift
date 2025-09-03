@@ -69,7 +69,8 @@ public struct HSVColour: Equatable, Sendable, ColourModel {
     name: String?
   ) {
     let resolved = colour.resolve(in: environment)
-    self.init(resolved: resolved, name: name ?? colour.colourName)
+    self.init(resolved: resolved, name: name)
+//    self.init(resolved: resolved, name: name ?? colour.colourName)
   }
 
   public init(

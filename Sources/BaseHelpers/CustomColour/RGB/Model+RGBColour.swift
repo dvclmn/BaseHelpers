@@ -64,7 +64,8 @@ public struct RGBColour: Identifiable, Equatable, Hashable, Sendable, Codable, C
     let resolved = colour.resolve(in: environment)
     self.init(
       resolved: resolved,
-      name: name ?? colour.colourName
+      name: name
+//      name: name ?? colour.colourName
     )
   }
 
