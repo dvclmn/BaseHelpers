@@ -10,6 +10,10 @@ import SwiftUI
 
 extension Color {
 
+  public func toCodable(_ env: EnvironmentValues?) -> CodableColour {
+    return CodableColour(fromColor: self, env: env)
+  }
+  
 //  public var namedColour: NamedColour? {
 //    return NamedColour.allCases.first { $0.colour.swiftUIColour == self }
 //  }

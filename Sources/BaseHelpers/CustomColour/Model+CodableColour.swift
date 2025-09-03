@@ -31,6 +31,14 @@ public struct CodableColour: Sendable, Codable, Identifiable {
   private static let colourSpace: Color.RGBColorSpace = .sRGB
   
   public init(
+    fromColor color: Color,
+    env: EnvironmentValues?,
+    name: String? = nil
+  ) {
+    self.init(resolved: color.resolve(in: Self.environmentOrDefault(env)), name: name)
+  }
+  
+  public init(
     resolved: Color.Resolved,
     name: String? = nil
   ) {
@@ -86,7 +94,7 @@ extension CodableColour {
     resolved = colour.resolve(in: Self.environmentOrDefault(environment))
   }
   
-  private static func environmentOrDefault(_ env: EnvironmentValues?) -> EnvironmentValues {
+  public static func environmentOrDefault(_ env: EnvironmentValues?) -> EnvironmentValues {
     env ?? EnvironmentValues()
   }
   
@@ -98,6 +106,21 @@ extension CodableColour {
     guard let modification else { return self }
     let modified = toHSV.contrastColour(modification: modification)
     return CodableColour(fromHSV: modified, env: env)
+  }
+  
+  public func contrastColour(
+    strength: ModificationStrengthPreset,
+    purpose: ColourPurpose = .legibility,
+    chroma: ColourChroma = .standard,
+    environment: EnvironmentValues?
+  ) -> Self {
+//    guard let modification else { return self }
+    let modified = toHSV.contrastColour(
+      strength: strength,
+      purpose: purpose,
+      chroma: chroma
+    )
+    return CodableColour(fromHSV: modified, env: environment)
   }
   
 //  func applying(adjustment: HSVAdjustment) -> HSVColour {

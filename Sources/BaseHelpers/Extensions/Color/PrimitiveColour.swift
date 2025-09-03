@@ -52,6 +52,10 @@ public enum PrimitiveColour: String, Identifiable, CaseIterable, Sendable {
     }
   }
   
+  public func codableColour(_ env: EnvironmentValues?) -> CodableColour {
+    return swiftUIColour.toCodable(env)
+  }
+  
   public var toSystemColour: SystemColour? {
     SystemColour(rawValue: self.rawValue)
   }

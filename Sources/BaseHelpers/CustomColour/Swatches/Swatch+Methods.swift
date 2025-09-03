@@ -10,6 +10,13 @@ import SwiftUI
 extension Swatch {
 
   public var id: String { rawValue }
+  
+  public func toCodableColour(_ environment: EnvironmentValues?) -> CodableColour {
+    return CodableColour(
+      resolved: swiftUIColour.resolve(in: CodableColour.environmentOrDefault(environment)),
+      name: name
+    )
+  }
 
   public func toRGB(_ environment: EnvironmentValues) -> RGBColour {
     let rgb = RGBColour(
