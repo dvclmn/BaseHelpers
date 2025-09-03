@@ -9,45 +9,94 @@ import Foundation
 
 extension HSVColour {
 
-  public init(fromRGB rgb: RGBColour) {
-
-    let rd: CGFloat = rgb.red.value
-    let gd: CGFloat = rgb.green.value
-    let bd: CGFloat = rgb.blue.value
-
-    let maxV: CGFloat = max(rd, max(gd, bd))
-    let minV: CGFloat = min(rd, min(gd, bd))
-    let delta: CGFloat = maxV - minV
-
-    var h: CGFloat = 0
-    var s: CGFloat = 0
-    let b: CGFloat = maxV
-
+  public init(fromRGB r: Double, g: Double, b: Double, a: Double, name: String?) {
+    
+    let red: Double = r
+    let green: Double = g
+    let blue: Double = b
+    
+    let maxV: Double = max(red, max(green, blue))
+    let minV: Double = min(red, min(green, blue))
+    let delta: Double = maxV - minV
+    
+    var h: Double = 0
+    var s: Double = 0
+    let b: Double = maxV
+    
     s = (maxV == 0) ? 0 : (delta / maxV)
-
+    
     if maxV == minV {
       h = 0
     } else {
-      if maxV == rd {
-        h = (gd - bd) / delta + (gd < bd ? 6 : 0)
-      } else if maxV == gd {
-        h = (bd - rd) / delta + 2
-      } else if maxV == bd {
-        h = (rd - gd) / delta + 4
+      if maxV == red {
+        h = (green - blue) / delta + (green < blue ? 6 : 0)
+      } else if maxV == green {
+        h = (blue - red) / delta + 2
+      } else if maxV == blue {
+        h = (red - green) / delta + 4
       }
-
+      
       h /= 6
     }
-
+    
     self.init(
       hue: h,
       saturation: s,
       brightness: b,
-      alpha: rgb.alpha.value,
+      alpha: a,
+      name: name
+    )
+    
+  }
+  public init(fromRGB rgb: RGBColour) {
+    self.init(
+      fromRGB: rgb.red.value,
+      g: rgb.green.value,
+      b: rgb.blue.value,
+      a: rgb.alpha.value,
       name: rgb.name
     )
-
   }
+  
+//  public init(fromRGB rgb: RGBColour) {
+//
+//    let rd: CGFloat = rgb.red.value
+//    let gd: CGFloat = rgb.green.value
+//    let bd: CGFloat = rgb.blue.value
+//
+//    let maxV: CGFloat = max(rd, max(gd, bd))
+//    let minV: CGFloat = min(rd, min(gd, bd))
+//    let delta: CGFloat = maxV - minV
+//
+//    var h: CGFloat = 0
+//    var s: CGFloat = 0
+//    let b: CGFloat = maxV
+//
+//    s = (maxV == 0) ? 0 : (delta / maxV)
+//
+//    if maxV == minV {
+//      h = 0
+//    } else {
+//      if maxV == rd {
+//        h = (gd - bd) / delta + (gd < bd ? 6 : 0)
+//      } else if maxV == gd {
+//        h = (bd - rd) / delta + 2
+//      } else if maxV == bd {
+//        h = (rd - gd) / delta + 4
+//      }
+//
+//      h /= 6
+//    }
+//
+//    self.init(
+//      hue: h,
+//      saturation: s,
+//      brightness: b,
+//      alpha: rgb.alpha.value,
+//      name: rgb.name
+//    )
+//
+//  }
 
 }
 

@@ -24,8 +24,8 @@ public struct ColourModification: Sendable {
 
   public init(
     strength: ModificationStrengthPreset,
-    purpose: ColourPurpose,
-    chroma: ColourChroma
+    purpose: ColourPurpose = .default,
+    chroma: ColourChroma = .default
   ) {
     self.strength = strength
     self.purpose = purpose
