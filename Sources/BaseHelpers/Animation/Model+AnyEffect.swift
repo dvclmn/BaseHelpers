@@ -7,7 +7,7 @@
 
 //import SwiftUI
 
-//public enum AnyEffect: Documentable, Identifiable {
+//public enum AnyEffect: Model, Identifiable {
 //  case offset(OffsetEffect)
 //  case scale(ScaleEffect)
 //  case blur(BlurEffect)

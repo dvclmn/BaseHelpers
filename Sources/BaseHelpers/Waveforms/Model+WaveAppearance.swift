@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-public struct WaveAppearance: Documentable {
+public struct WaveAppearance: ModelBase {
   let path: PathConfiguration
   let points: PointStyle
   let cyclesAcross: CGFloat
@@ -26,7 +26,7 @@ public struct WaveAppearance: Documentable {
   }
 }
 
-public struct PathConfiguration: Documentable {
+public struct PathConfiguration: ModelBase {
   let strokeStyle: StrokeStyle
   let smoothing: PathSmoothing
 

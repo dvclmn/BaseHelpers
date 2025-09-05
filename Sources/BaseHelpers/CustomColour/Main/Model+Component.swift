@@ -15,12 +15,11 @@ import SwiftUI
 public protocol ColourComponent: Identifiable, Sendable, CaseIterable, RawRepresentable where RawValue == String {
 
   associatedtype Model: ColourModel
+//  associatedtype ComponentValue: BinaryFloatingPoint
   var id: String { get }
   var name: String { get }
   var nameInitial: Character { get }
-//  var keyPath: WritableKeyPath<Model, Double> { get }
   
-  // Instead of a WritableKeyPath, we store closures
   /// ```
   /// var hsv = HSVColour(
   ///   hue: 0.1,
@@ -34,8 +33,10 @@ public protocol ColourComponent: Identifiable, Sendable, CaseIterable, RawRepres
   /// print(component.get(hsv)) // 0.1
   /// component.set(&hsv, 0.3)
   /// ```
-  var get: (Model) -> Double { get }
-  var set: (inout Model, Double) -> Void { get }
+  var get: (_ model: Model) -> Double { get }
+  var set: (_ model: inout Model, _ newValue: Double) -> Void { get }
+  
+//  func componentBinding(_ component: Self) -> Binding<Double>
 
   func sliderTrackGradient(colour: Model) -> LinearGradient
 }
@@ -43,4 +44,19 @@ public protocol ColourComponent: Identifiable, Sendable, CaseIterable, RawRepres
 extension ColourComponent {
   public var id: String { self.name }
   public var name: String { rawValue.capitalized }
+  
+//  public func componentBinding(
+//    _ component: Self,
+//  ) -> Binding<Double> {
+//    Binding {
+//      component.get(model)
+//    } set: { newValue in
+//      component.set(&model, newValue)
+//    }
+//
+////    .init(
+////      get: { component.get($0) },
+////      set: { component.set(&$0, $1) }
+////    )
+//  }
 }

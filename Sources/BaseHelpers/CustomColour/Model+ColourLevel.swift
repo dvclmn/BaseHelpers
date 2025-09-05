@@ -8,6 +8,14 @@
 import SwiftUI
 //import BaseHelpers
 
+public protocol ColourHandlerProtocol {
+  var foregroundRGB: RGBColour { get set }
+  var backgroundRGB: RGBColour { get set }
+
+  var foreground: Color { get }
+  var background: Color { get }
+}
+
 public enum ColourLevel: String, Sendable, Cyclable {
   
   public static let defaultCase: ColourLevel = .foreground

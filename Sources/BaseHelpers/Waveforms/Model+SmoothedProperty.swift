@@ -11,7 +11,7 @@ import Foundation
 /// directly to a Wave property, like freq, amp, etc.
 ///
 /// But have decided to keep it uncoupled.
-public struct SmoothedProperty: Documentable {
+public struct SmoothedProperty: ModelBase {
   public var target: CGFloat
   public var displayed: CGFloat
 

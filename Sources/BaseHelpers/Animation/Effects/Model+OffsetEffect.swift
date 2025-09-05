@@ -8,14 +8,14 @@
 import SwiftUI
 
 /// Wonder if I merge all effects into a single thing
-//public struct Effect: Documentable {
+//public struct Effect: Model {
 //  var axisA: SmoothedProperty
 //  var axisB: SmoothedProperty
 //
 //
 //}
 
-public protocol WaveOutput: Documentable {
+public protocol WaveOutput: ModelBase {
   static func defaultValue(forKind kind: EffectKind) -> Self
 }
 

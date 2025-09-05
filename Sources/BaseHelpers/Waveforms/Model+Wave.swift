@@ -22,7 +22,7 @@ import SwiftUI
 /// The user has the choice to either specify a per-Wave
 /// cycles value here, or there is also a global setting
 /// if they are happy to keep it the same for all Waves.
-public struct Wave: Documentable, Identifiable {
+public struct Wave: ModelBase, Identifiable {
   public let id: UUID
   public var frequency: SmoothedProperty
   public var amplitude: SmoothedProperty

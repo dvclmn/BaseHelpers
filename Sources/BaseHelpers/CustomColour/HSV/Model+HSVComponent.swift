@@ -50,19 +50,35 @@ public enum HSVComponent: String, ColourComponent {
 
   public var get: (HSVColour) -> Double {
     switch self {
-      case .hue: { $0.hue.value }
-      case .saturation: { $0.saturation.value }
-      case .brightness: { $0.brightness.value }
-      case .alpha: { $0.alpha.value }
+      case .hue: {
+        $0.hue.value
+      }
+      case .saturation: {
+        $0.saturation.value
+      }
+      case .brightness: {
+        $0.brightness.value
+      }
+      case .alpha: {
+        $0.alpha.value
+      }
     }
   }
 
   public var set: (inout HSVColour, Double) -> Void {
     switch self {
-      case .hue: { $0.hue = UnitIntervalCyclic($1) }
-      case .saturation: { $0.saturation = UnitInterval($1) }
-      case .brightness: { $0.brightness = UnitInterval($1) }
-      case .alpha: { $0.alpha = UnitInterval($1) }
+      case .hue: {
+        $0.hue = UnitIntervalCyclic($1)
+      }
+      case .saturation: {
+        $0.saturation = UnitInterval($1)
+      }
+      case .brightness: {
+        $0.brightness = UnitInterval($1)
+      }
+      case .alpha: {
+        $0.alpha = UnitInterval($1)
+      }
     }
   }
 

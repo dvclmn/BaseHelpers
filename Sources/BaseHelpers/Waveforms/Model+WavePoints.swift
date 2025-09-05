@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-public struct PointStyle: Documentable {
+public struct PointStyle: ModelBase {
   let diameter: CGFloat
   let shape: Shape
   let colour: Swatch
@@ -29,7 +29,7 @@ public struct PointStyle: Documentable {
   public static let sizeRange: ClosedRange<Double> = 1...120
   public static let swatches: [Swatch] = [.yellow30, .purple20, .brown40]
 
-  public enum Shape: Documentable, CaseIterable {
+  public enum Shape: ModelBase, CaseIterable {
     case none
     case circle
     case square
@@ -64,7 +64,7 @@ public struct PointStyle: Documentable {
   }
 }
 
-//struct CyclesAcross: Documentable {
+//struct CyclesAcross: Model {
 //  var count: CGFloat = 4
   
 //}

@@ -11,13 +11,13 @@ import SwiftUI
 /// recieve it's wave vlaue from a `WaveComposition`.
 /// Even though later on, it might be nice to support getting from
 /// either a single `Wave` or a composition
-//public protocol WaveSource: Documentable {
+//public protocol WaveSource: Model {
 //  func value(elapsed: TimeInterval) -> CGFloat
 //}
 
 /// List of Effects for possible future support
 // MARK: - Protocols
-public protocol AnimatableEffect: Documentable {
+public protocol AnimatableEffect: ModelBase {
   associatedtype Intensity: EffectIntensity
   static var kind: EffectKind { get }
   static var defaultIntensity: Intensity { get }

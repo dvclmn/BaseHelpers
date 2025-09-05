@@ -19,7 +19,7 @@ public struct UnitInterval: ExpressibleByFloatLiteral, Sendable, Equatable, Hash
 
   public init(floatLiteral value: Double) {
     precondition(value.isFinite, "UnitInterval must be finite")
-    self.value = min(max(value, 0), 1)  // clamp
+    self.value = min(max(value, 0), 1)
   }
 
   public init(_ value: Double) {

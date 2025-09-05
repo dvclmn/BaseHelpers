@@ -22,7 +22,7 @@ import SwiftUI
 //  func environmentOrDefault(_ env: EnvironmentValues?) -> EnvironmentValues
 //}
 
-public struct CodableColour: Sendable, Codable, Identifiable {
+public struct CodableColour: Sendable, Codable, Equatable, Hashable, Identifiable {
   public let id: UUID
   public var resolved: Color.Resolved
   public var name: String?

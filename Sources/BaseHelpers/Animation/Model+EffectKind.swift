@@ -47,7 +47,7 @@ public struct Effects: Sendable, Codable {
   }
 }
 
-public enum EffectKind: String, CaseIterable, Identifiable, Documentable {
+public enum EffectKind: String, CaseIterable, Identifiable, ModelBase {
 
   //  case rotation
   case offset
