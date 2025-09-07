@@ -17,14 +17,14 @@ extension ShapeView {
     )
   }
 
-  public func stroke(
-    style: AnyShapeStyle?,
-    lineWidth: CGFloat?,
-  ) -> some View {
-    let colour = style ?? AnyShapeStyle(Color.white.opacityMid)
-    let strokeWidth = lineWidth ?? 1
-    return self.stroke(colour, lineWidth: strokeWidth)
-  }
+//  public func stroke(
+//    style: AnyShapeStyle?,
+//    lineWidth: CGFloat?,
+//  ) -> some View {
+//    let colour = style ?? AnyShapeStyle(Color.white.opacityMid)
+//    let strokeWidth = lineWidth ?? 1
+//    return self.stroke(colour, lineWidth: strokeWidth)
+//  }
 }
 
 extension ShapeView where Self.Content : InsettableShape {

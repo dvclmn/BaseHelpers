@@ -14,12 +14,17 @@ import Foundation
 /// `let pluralizeWord = { $0 == 1 ? $1 : "\($1)s" }`
 
 public enum CountStrategy {
-  case showCount(
-    /// always: show "1 Game" vs "Game"
-    shouldDisplayForSingle: Bool = false
-  )
+  case showCount(always: Bool = false) // always: show "1 Game" vs "Game"
   case hideCount
 }
+
+//public enum CountStrategy {
+//  case showCount(
+//    /// always: show "1 Game" vs "Game"
+//    shouldDisplayForSingle: Bool = false
+//  )
+//  case hideCount
+//}
 
 public func pluralise(
   _ noun: String,
