@@ -12,8 +12,10 @@ extension RGBColour {
   
   /// Initialize from a hex string (e.g., "#FF0000", "FF0000", "#FF0000FF")
   public init?(hex: String, name: String?) {
+    
     let hexString = hex.trimmingCharacters(in: .whitespacesAndNewlines)
       .replacingOccurrences(of: "#", with: "")
+    print("Hex string without #: \(hexString)")
     
     /// Support both RGB (6 chars) and RGBA (8 chars)
     guard hexString.count == 6 || hexString.count == 8 else {
@@ -23,11 +25,13 @@ extension RGBColour {
     guard let hexValue = UInt64(hexString, radix: 16) else {
       return nil
     }
+    print("Ensured hex value is UInt64 (radix 16): \(hexValue)")
     
     let red, green, blue, alpha: Double
     
     if hexString.count == 8 {
       /// RGBA format
+      
       red = Double((hexValue & 0xFF000000) >> 24) / 255.0
       green = Double((hexValue & 0x00FF0000) >> 16) / 255.0
       blue = Double((hexValue & 0x0000FF00) >> 8) / 255.0
