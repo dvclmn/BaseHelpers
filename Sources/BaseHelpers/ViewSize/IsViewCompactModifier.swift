@@ -18,7 +18,9 @@ public struct IsViewCompactModifier: ViewModifier {
   public func body(content: Content) -> some View {
     content
       .onGeometryChange(for: Bool.self) { proxy in
-        return proxy.size.width < widthThreshold
+        let isCompact = proxy.size.width < widthThreshold
+//        print("View width: \(proxy.size.width). Compact threshold: \(widthThreshold). Is compact?: \(isCompact)")
+        return isCompact
 
       } action: { newValue in
         print("Is View compact?: \(newValue)")
@@ -48,12 +50,10 @@ extension View {
   public func isViewCompact(
     widthThreshold: CGFloat,
     didUpdateCompactStatus: @escaping IsViewCompactHandler,
-    //    allowEnvironmentUpdate: Bool = true
   ) -> some View {
     self.modifier(
       IsViewCompactModifier(
         widthThreshold: widthThreshold,
-        //        allowEnvironmentUpdate: allowEnvironmentUpdate,
         didUpdateCompactStatus: didUpdateCompactStatus
       )
     )

@@ -30,12 +30,12 @@ extension ShapeView {
 extension ShapeView where Self.Content : InsettableShape {
 //  public func strokeBorder<S>(_ content: S = .foreground, lineWidth: CGFloat = 1, antialiased: Bool = true) -> StrokeBorderShapeView<Self.Content, S, Self> where S : ShapeStyle
   
-  public func strokeBorder(
-    style: AnyShapeStyle?,
-    lineWidth: CGFloat?,
-  ) -> some View {
-    let colour = style ?? AnyShapeStyle(Color.white.opacityMid)
-    let strokeWidth = lineWidth ?? 1
-    return self.stroke(colour, lineWidth: strokeWidth)
-  }
+//  public func strokeBorder(
+//    style: AnyShapeStyle?,
+//    lineWidth: CGFloat?,
+//  ) -> some View {
+//    let colour = style ?? AnyShapeStyle(Color.white.opacityMid)
+//    let strokeWidth = lineWidth ?? 1
+//    return self.stroke(colour, lineWidth: strokeWidth)
+//  }
 }

@@ -8,46 +8,16 @@
 import SwiftUI
 
 public protocol RGBAConvertible {
-  //  var r: Double { get }
-  //  var g: Double { get }
-  //  var b: Double { get }
-  //  var a: Double { get }
   init(r: Double, g: Double, b: Double, a: Double)
 }
 
 extension Color: RGBAConvertible {
-  //  public var r: Double { Double(self..red) }
-  //  public var g: Double { Double(self.green) }
-  //  public var b: Double { Double(self.blue) }
-  //  public var a: Double { Double(self.opacity) }
-
   public init(r: Double, g: Double, b: Double, a: Double) {
     self.init(.sRGB, red: r, green: g, blue: b, opacity: a)
   }
 }
 
-//extension Color.Resolved: RGBAConvertible {
-//  public var r: Double { Double(self.red) }
-//  public var g: Double { Double(self.green) }
-//  public var b: Double { Double(self.blue) }
-//  public var a: Double { Double(self.opacity) }
-//
-//  public init(r: Double, g: Double, b: Double, a: Double) {
-//    self.init(
-//      colorSpace: .sRGB,
-//      red: Float(r),
-//      green: Float(g),
-//      blue: Float(b),
-//      opacity: Float(a)
-//    )
-//  }
-//}
 extension RGBColour: RGBAConvertible {
-  //  public var r: Double { Double(self.red.value) }
-  //  public var g: Double { Double(self.green.value) }
-  //  public var b: Double { Double(self.blue.value) }
-  //  public var a: Double { Double(self.alpha.value) }
-
   public init(r: Double, g: Double, b: Double, a: Double) {
     self.init(r: r, g: g, b: b, a: a, name: nil)
   }

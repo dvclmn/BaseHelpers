@@ -97,6 +97,9 @@ public struct Styles {
   public static let animationSmoother: Animation =
     .smooth(duration: 0.8, extraBounce: 0.20)
   
+  public static let animationSmoothest: Animation =
+    .smooth(duration: 1.2, extraBounce: 0.25)
+  
   public static let animationQuickNSmooth: Animation =
     .smooth(duration: 0.25, extraBounce: 0.2)
   
