@@ -7,7 +7,53 @@
 
 import SwiftUI
 
-extension Color {
+public protocol RGBAConvertible {
+  //  var r: Double { get }
+  //  var g: Double { get }
+  //  var b: Double { get }
+  //  var a: Double { get }
+  init(r: Double, g: Double, b: Double, a: Double)
+}
+
+extension Color: RGBAConvertible {
+  //  public var r: Double { Double(self..red) }
+  //  public var g: Double { Double(self.green) }
+  //  public var b: Double { Double(self.blue) }
+  //  public var a: Double { Double(self.opacity) }
+
+  public init(r: Double, g: Double, b: Double, a: Double) {
+    self.init(.sRGB, red: r, green: g, blue: b, opacity: a)
+  }
+}
+
+//extension Color.Resolved: RGBAConvertible {
+//  public var r: Double { Double(self.red) }
+//  public var g: Double { Double(self.green) }
+//  public var b: Double { Double(self.blue) }
+//  public var a: Double { Double(self.opacity) }
+//
+//  public init(r: Double, g: Double, b: Double, a: Double) {
+//    self.init(
+//      colorSpace: .sRGB,
+//      red: Float(r),
+//      green: Float(g),
+//      blue: Float(b),
+//      opacity: Float(a)
+//    )
+//  }
+//}
+extension RGBColour: RGBAConvertible {
+  //  public var r: Double { Double(self.red.value) }
+  //  public var g: Double { Double(self.green.value) }
+  //  public var b: Double { Double(self.blue.value) }
+  //  public var a: Double { Double(self.alpha.value) }
+
+  public init(r: Double, g: Double, b: Double, a: Double) {
+    self.init(r: r, g: g, b: b, a: a, name: nil)
+  }
+}
+
+extension RGBAConvertible {
 
   /// Create a `Color` instance from a hex string in SwiftUI.
   /// Supports the following formats:
@@ -44,7 +90,7 @@ extension Color {
       r = CGFloat((rgb & 0xFF0000) >> 16) / 255.0
       g = CGFloat((rgb & 0x00FF00) >> 8) / 255.0
       b = CGFloat(rgb & 0x0000FF) / 255.0
-      a = 1.0 // Set to default of 1.0 for RGB
+      a = 1.0  // Set to default of 1.0 for RGB
 
     } else if length == 8 {
       r = CGFloat((rgb & 0xFF00_0000) >> 24) / 255.0
@@ -55,7 +101,8 @@ extension Color {
     } else {
       return nil
     }
-    self.init(red: r, green: g, blue: b, opacity: a)
+    self.init(r: r, g: g, b: b, a: a)
+    //    self.init(red: r, green: g, blue: b, opacity: a)
   }
 }
 
@@ -68,30 +115,30 @@ extension String {
     return hexSanitized
   }
 
-//  public var toRGBA: (CGFloat, CGFloat, CGFloat, CGFloat)? {
-//    /// RGBA must be 8 characters long
-//    guard self.count == 8 else { return nil }
-//    var rgb: UInt64 = 0
-//    guard Scanner(string: hexSanitized).scanHexInt64(&rgb) else { return nil }
-//
-//    let red = CGFloat((rgb & 0xFF00_0000) >> 24) / 255.0
-//    let green = CGFloat((rgb & 0x00FF_0000) >> 16) / 255.0
-//    let blue = CGFloat((rgb & 0x0000_FF00) >> 8) / 255.0
-//    let alpha = CGFloat(rgb & 0x0000_00FF) / 255.0
-//
-//    return (red, green, blue, alpha)
-//  }
-//  
-//  public var toRGB: (CGFloat, CGFloat, CGFloat)? {
-//    /// RGBA must be 6 characters long
-//    guard self.count == 6 else { return nil }
-//    var rgb: UInt64 = 0
-//    guard Scanner(string: hexSanitized).scanHexInt64(&rgb) else { return nil }
-//
-//    let red = CGFloat((rgb & 0xFF0000) >> 16) / 255.0
-//    let green = CGFloat((rgb & 0x00FF00) >> 8) / 255.0
-//    let blue = CGFloat(rgb & 0x0000FF) / 255.0
-//    
-//    return (red, green, blue)
-//  }
+  //  public var toRGBA: (CGFloat, CGFloat, CGFloat, CGFloat)? {
+  //    /// RGBA must be 8 characters long
+  //    guard self.count == 8 else { return nil }
+  //    var rgb: UInt64 = 0
+  //    guard Scanner(string: hexSanitized).scanHexInt64(&rgb) else { return nil }
+  //
+  //    let red = CGFloat((rgb & 0xFF00_0000) >> 24) / 255.0
+  //    let green = CGFloat((rgb & 0x00FF_0000) >> 16) / 255.0
+  //    let blue = CGFloat((rgb & 0x0000_FF00) >> 8) / 255.0
+  //    let alpha = CGFloat(rgb & 0x0000_00FF) / 255.0
+  //
+  //    return (red, green, blue, alpha)
+  //  }
+  //
+  //  public var toRGB: (CGFloat, CGFloat, CGFloat)? {
+  //    /// RGBA must be 6 characters long
+  //    guard self.count == 6 else { return nil }
+  //    var rgb: UInt64 = 0
+  //    guard Scanner(string: hexSanitized).scanHexInt64(&rgb) else { return nil }
+  //
+  //    let red = CGFloat((rgb & 0xFF0000) >> 16) / 255.0
+  //    let green = CGFloat((rgb & 0x00FF00) >> 8) / 255.0
+  //    let blue = CGFloat(rgb & 0x0000FF) / 255.0
+  //
+  //    return (red, green, blue)
+  //  }
 }
