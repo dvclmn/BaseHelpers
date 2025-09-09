@@ -7,17 +7,20 @@
 
 import SwiftUI
 
-public typealias ViewSizeOutput = (CGSize) -> Void
+public typealias ViewSizeOutput<T> = (T) -> Void
 
-public struct ViewSizeModifier: ViewModifier {
+public struct ViewSizeModifier<CaptureType: GeometryCapturable>: ViewModifier {
 
   @State private var debouncer: AsyncDebouncer?
-  let valueOutput: ViewSizeOutput
+  
+  let capture: GeometryCapture<CaptureType>
+  let valueOutput: ViewSizeOutput<CaptureType>
 
   // MARK: - Initialiser
   public init(
+    capture: GeometryCapture<CaptureType>,
     mode: DebounceMode,
-    valueOutput: @escaping ViewSizeOutput
+    valueOutput: @escaping ViewSizeOutput<CaptureType>
   ) {
     switch mode {
       case .debounce(let interval):
@@ -25,14 +28,17 @@ public struct ViewSizeModifier: ViewModifier {
       case .noDebounce:
         self._debouncer = State(initialValue: nil)
     }
+    self.capture = capture
     self.valueOutput = valueOutput
   }
 
   // MARK: - View Modifier
   public func body(content: Content) -> some View {
     content
-      .onGeometryChange(for: CGSize.self) { proxy in
-        return proxy.size
+      .onGeometryChange(for: capture.type) { proxy in
+//      .onGeometryChange(for: CGSize.self) { proxy in
+        return capture.transform(proxy)
+//        return proxy.size
       } action: { newValue in
         Task {
           if let debouncer {
@@ -52,12 +58,14 @@ extension View {
 
   /// Previously had default value for `debounceMode`, but this felt
   /// too risky for domains that may be tripped up by immediate vs debounced
-  public func viewSize(
+  public func viewSize<T: GeometryCapturable>(
+    capture: GeometryCapture<T> = .size,
     mode debounceMode: DebounceMode,
-    valueOutput: @escaping ViewSizeOutput,
+    valueOutput: @escaping ViewSizeOutput<T>,
   ) -> some View {
     self.modifier(
       ViewSizeModifier(
+        capture: capture,
         mode: debounceMode,
         valueOutput: valueOutput
       )

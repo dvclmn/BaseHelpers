@@ -16,7 +16,7 @@ public struct ViewportSizeModifier: ViewModifier {
   @State private var viewportSize: CGSize?
   
   let mode: DebounceMode
-  let didUpdateSize: ViewSizeOutput?
+  let didUpdateSize: ViewSizeOutput<CGSize>?
 
   public func body(content: Content) -> some View {
     content
@@ -30,7 +30,7 @@ public struct ViewportSizeModifier: ViewModifier {
 extension View {
   public func readViewportSize(
     mode debounceMode: DebounceMode,
-    didUpdateSize: ViewSizeOutput? = nil
+    didUpdateSize: ViewSizeOutput<CGSize>? = nil
   ) -> some View {
     self.modifier(
       ViewportSizeModifier(
