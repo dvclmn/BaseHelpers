@@ -8,9 +8,26 @@
 import Foundation
 import SwiftUI
 
-public struct FadeSlideIn: ViewModifier {
+public struct FadeSlide: ViewModifier {
   let distance: Double
   let opacity: Double
+  
+  public init(
+    _ direction: Direction.Vertical,
+    distance: Double
+  ) {
+    
+    switch direction {
+      case .up:
+        self.distance = 0
+        self.opacity = 1.0
+      case .down:
+        self.distance = distance
+        self.opacity = 0
+    }
+//    self.distance = distance
+//    self.opacity = opacity
+  }
 
   public func body(content: Content) -> some View {
     content
@@ -19,24 +36,29 @@ public struct FadeSlideIn: ViewModifier {
   }
 }
 
-extension AnyTransition {
-  public static var fadeSlideIn: AnyTransition {
-    .modifier(
-      active: FadeSlideIn(distance: 16, opacity: 0.0),
-      identity: FadeSlideIn(distance: 0, opacity: 1.0)
-    )
-  }
-  public static var fadeSlideOut: AnyTransition {
-    .modifier(
-      active: FadeSlideIn(distance: 0, opacity: 0.0),
-      identity: FadeSlideIn(distance: 12, opacity: 1.0)
-    )
-  }
 
-  public static var fadeSlide: AnyTransition {
+@MainActor
+extension AnyTransition {
+  public static func fadeSlide(
+    _ direction: Direction.Vertical = .up,
+    distance: CGFloat = 12
+  ) -> AnyTransition {
+    .modifier(
+      active: FadeSlide(direction, distance: distance),
+      identity: FadeSlide(direction.opposite, distance: distance)
+    )
+  }
+//  public static func fadeSlideOut: AnyTransition {
+//    .modifier(
+//      active: FadeSlideIn(distance: 0, opacity: 0.0),
+//      identity: FadeSlideIn(distance: 12, opacity: 1.0)
+//    )
+//  }
+
+  public static func fadeSlideAsymmetric(distance: CGFloat = 12) -> AnyTransition {
     .asymmetric(
-      insertion: .fadeSlideIn,
-      removal: .fadeSlideOut
+      insertion: .fadeSlide(.up, distance: distance),
+      removal: .fadeSlide(.down, distance: distance)
     )
   }
 }

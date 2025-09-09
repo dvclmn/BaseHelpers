@@ -8,19 +8,14 @@
 import SwiftUI
 
 public struct MidpointModifier: ViewModifier {
-  
+
   @State private var viewSize: CGSize = .zero
-  
-  let rect: CGRect?
+
   let colour: Color
-  
+
   public func body(content: Content) -> some View {
     content
-      .onGeometryChange(for: CGSize.self) { proxy in
-        return proxy.size
-      } action: { newValue in
-        viewSize = newValue
-      }
+      .viewSize(mode: .debounce()) { viewSize = $0 }
       .overlay {
         Circle()
           .fill(colour.opacity(0.4))
@@ -29,19 +24,10 @@ public struct MidpointModifier: ViewModifier {
       }
   }
 }
-extension MidpointModifier {
-//  var position: CGPoint {
-//    if let rect {
-//      return rect.
-//    }
-//  }
-}
-
-public extension View {
-  func midpointIndicator(
-    rect: CGRect? = nil,
+extension View {
+  public func midpointIndicator(
     colour: Color = .cyan
   ) -> some View {
-    self.modifier(MidpointModifier(rect: rect, colour: colour))
+    self.modifier(MidpointModifier(colour: colour))
   }
 }

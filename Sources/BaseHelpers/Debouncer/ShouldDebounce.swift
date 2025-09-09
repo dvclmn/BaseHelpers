@@ -9,7 +9,7 @@ import Foundation
 
 public enum DebounceMode {
   case noDebounce
-  case debounce(TimeInterval)
+  case debounce(TimeInterval = 0.2)
 
   public var shouldDebounce: Bool {
     switch self {

@@ -9,17 +9,15 @@ import SwiftUI
 
 /// A Viewport is considered to be a single, self-contained View,
 /// not including any native components like Toolbar or Inspector.
+///
+/// This mirrors `ViewSizeModifier` *very* closely, such that
+/// I'm not sure if it's existence is warranted.
 public struct ViewportSizeModifier: ViewModifier {
   @State private var viewportSize: CGSize?
   
   let mode: DebounceMode
   let didUpdateSize: ViewSizeOutput?
-  
-//  public init(
-//    didUpdateSize: ViewSizeOutput?
-//  ) {
-//    self.didUpdateSize = didUpdateSize
-//  }
+
   public func body(content: Content) -> some View {
     content
       .viewSize(mode: mode) { size in

@@ -14,6 +14,7 @@ public struct ViewSizeModifier: ViewModifier {
   @State private var debouncer: AsyncDebouncer?
   let valueOutput: ViewSizeOutput
 
+  // MARK: - Initialiser
   public init(
     mode: DebounceMode,
     valueOutput: @escaping ViewSizeOutput
@@ -27,6 +28,7 @@ public struct ViewSizeModifier: ViewModifier {
     self.valueOutput = valueOutput
   }
 
+  // MARK: - View Modifier
   public func body(content: Content) -> some View {
     content
       .onGeometryChange(for: CGSize.self) { proxy in
@@ -45,6 +47,7 @@ public struct ViewSizeModifier: ViewModifier {
   }
 }
 
+// MARK: - View Extension
 extension View {
 
   /// Previously had default value for `debounceMode`, but this felt

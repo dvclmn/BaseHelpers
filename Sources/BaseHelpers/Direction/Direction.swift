@@ -13,6 +13,15 @@ public enum Direction: String, CaseIterable, Identifiable {
   case down
   case left
   case right
+  
+  public enum Vertical {
+    case up
+    case down
+    
+    public var isUp: Bool { self == .up }
+    public var isDown: Bool { self == .down }
+    public var opposite: Self { self == .up ? .down : .up }
+  }
 
   public var id: String { rawValue }
 
@@ -24,6 +33,8 @@ public enum Direction: String, CaseIterable, Identifiable {
     }
   }
 
+  
+  
   public var axis: Axis {
     switch self {
       case .up, .down: return .vertical
