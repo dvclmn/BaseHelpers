@@ -1,3 +1,4 @@
+
 # Markdown Syntax
 A brief overview of syntax types support by this editor
 
@@ -112,13 +113,13 @@ c. List item 3
 
 ```md
 1. List item 1
-  [x] Nested todo 1
-  [x] Nested todo 2
-  [ ] Nested todo 3
+[x] Nested todo 1
+[x] Nested todo 2
+[ ] Nested todo 3
 2. List item 2
 3. List item 3
-  - Nested item 1
-  - Nested item 2
+- Nested item 1
+- Nested item 2
 ```
 
 - term Layout: Block (single line)
@@ -183,3 +184,24 @@ var count: Int = 0
 
 - term Layout: Block
 - term Syntax: 
+
+
+## Regex
+
+
+The attributed range as described below, pairs with the `ThreePartRegex` above,
+and provides a mechism through which to identify where in the
+`AttributedString` the resulting matches are located.
+
+```
+public typealias AttributedRange = Range<AttributedString.Index>
+```
+
+The first `Substring` is reserved for the full match. The subsequent three can be used
+in whatever way makes sense. E.g. for content surrounded by syntax, such as `*italics*`.
+
+In that example, substrings 2, 3 and 4 would hold the leading asterisk, text content,
+and trailing asterisk respectively.
+
+`public typealias ThreePartRegex = Regex<(Substring, Substring, Substring, Substring)>`
+

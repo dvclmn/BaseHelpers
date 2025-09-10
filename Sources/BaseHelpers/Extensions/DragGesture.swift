@@ -8,14 +8,15 @@
 import SwiftUI
 
 extension DragGesture.Value {
-  
+
   public var toRect: CGRect {
-    let origin = startLocation
-    let currentLocation = location
-    let newRect = CGRect.boundingRect(
-      from: origin,
-      to: currentLocation
-    )
-    return newRect
+    CGRect.boundingRect(from: startLocation, to: location)
+//    let origin = startLocation
+//    let currentLocation = location
+//    let newRect = CGRect.boundingRect(
+//      from: origin,
+//      to: currentLocation
+//    )
+//    return newRect
   }
 }
