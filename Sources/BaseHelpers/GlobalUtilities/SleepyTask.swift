@@ -9,13 +9,12 @@ import Foundation
 
 public func sleepyTask(
   interval: TimeInterval = 1,
-  _ task: @Sendable @escaping () -> Void,
-//  _ task: @Sendable @escaping () -> Void,
+  _ task: @Sendable @escaping () async -> Void,
 ) {
   Task { @MainActor in
     do {
       try await Task.sleep(for: .seconds(interval))
-      task()
+      await task()
     } catch {
       // Wait
     }

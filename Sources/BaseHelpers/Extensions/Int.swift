@@ -8,7 +8,7 @@
 import Foundation
 
 extension Int {
-  
+
   public var toOpacity: Double {
     let newValue: Double
     if self == 0 {
@@ -20,13 +20,25 @@ extension Int {
     }
     return newValue
   }
-  
+
+  /// Convert `self` (a value in seconds) and convert to H, M and S
+  /// ```
+  /// let seconds: Int = 26700
+  /// let (h,m,s) = seconds.toHoursMinutesSeconds
+  /// ```
+  public var toHoursMinutesSeconds: (h: Int, m: Int, s: Int) {
+    let h = self / 3600
+    let m = (self % 3600) / 60
+    let s = (self % 3600) % 60
+    return (h, m, s)
+  }
+
   private static let numberFormatter: NumberFormatter = {
     let formatter = NumberFormatter()
     formatter.numberStyle = .decimal
     return formatter
   }()
-  
+
   public var formattedString: String {
     return Int.numberFormatter.string(from: NSNumber(value: self)) ?? String(self)
   }
@@ -38,10 +50,10 @@ extension Int {
   public var toString: String {
     String(self)
   }
-//  
-//  public var displayString: String {
-//    String(self)
-//  }
+  //
+  //  public var displayString: String {
+  //    String(self)
+  //  }
 
   public var asCGFloat: CGFloat {
     CGFloat(self)
