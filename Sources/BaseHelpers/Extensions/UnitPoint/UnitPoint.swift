@@ -7,6 +7,12 @@
 
 import SwiftUI
 
+/// `UnitPoint` is named after the mathematical concept of the *unit interval*,
+/// and more broadly, the unit square/unit space.
+///
+/// In mathematics, the unit interval is `[0,1]`- the set of all real numbers between
+/// `0` and `1`, inclusive. When you extend this to two dimensions, you get the
+/// unit square `[0,1] x [0,1]`, and this is what `UnitPoint` represents.
 extension UnitPoint: @retroactive Identifiable {
   public var id: String { self.name }
 }
