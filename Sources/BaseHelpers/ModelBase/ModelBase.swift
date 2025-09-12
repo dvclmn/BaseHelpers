@@ -9,7 +9,7 @@ import Foundation
 
 public protocol ModelBase: Sendable, Codable, Equatable, Hashable {}
 
-public protocol ModelWithID: ModelBase, Identifiable where ID: Hashable {
+public protocol ModelBaseWithID: ModelBase, Identifiable where ID: Hashable {
   var id: ID { get }
 }
 

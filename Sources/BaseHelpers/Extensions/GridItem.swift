@@ -24,16 +24,45 @@ extension Array where Element == GridItem {
   /// Adaptive allows not specifying an explicit number of columns.
   /// Instead allowing the column count to change based on availble width
   public static func quickAdaptive(
-    min: CGFloat,
-    max: CGFloat = .infinity,
+    mode: GridFitMode,
     spacing: CGFloat? = nil,
     alignment: Alignment? = nil
   ) -> Self {
+    
     let result = GridItem(
-      .adaptive(minimum: min, maximum: max),
+      .adaptive(minimum: mode.minAndMax.min, maximum: mode.minAndMax.max),
       spacing: spacing,
       alignment: alignment
     )
     return [result]
+  }
+}
+
+public enum GridFitMode: RawRepresentable, ModelBase {
+  case fill(min: CGFloat, max: CGFloat = .infinity)
+  case fixedWidth(width: CGFloat)
+  
+  public init?(rawValue: String) {
+    switch rawValue {
+      case "Fill": self = .fill(min: 100)
+      case "Fixed": self = .fixedWidth(width: 0)
+      default: return nil
+    }
+  }
+  
+  public var rawValue: String {
+    switch self {
+      case .fill: "Fill"
+      case .fixedWidth: "Fixed"
+    }
+  }
+  
+  public var minAndMax: (min: CGFloat, max: CGFloat) {
+    switch self {
+      case .fill(min: let min, max: let max):
+        return (min, max)
+      case .fixedWidth(width: let width):
+        return (width, width)
+    }
   }
 }

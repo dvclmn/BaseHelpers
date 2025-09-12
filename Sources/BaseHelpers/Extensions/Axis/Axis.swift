@@ -83,7 +83,7 @@ extension Axis {
   /// Returns the sum of the two *opposing* inset lengths, for this axis,
   /// interpreting leading/trailing/top/bottom according to the given convention.
     public func length(
-      from edgeInsets: EdgeInsets,
+      fromInsets edgeInsets: EdgeInsets,
       convention: DimensionToAxisConvention = .widthIsHorizontal
     ) -> CGFloat {
       switch self {
