@@ -21,3 +21,30 @@ extension EnvironmentValues {
   @Entry public var isCompactMode: Bool = false
 
 }
+
+public enum CompactReductionStrength: CGFloat {
+  case slight = 0.95
+  case moderate = 0.85
+  case standard = 0.7
+  case something = 0.6
+  case strong = 0.45
+}
+
+extension Bool {
+  public func compacted<T: BinaryFloatingPoint>(
+    _ value: T,
+//    _ isCompact: Bool,
+    strength: CompactReductionStrength
+  ) -> T {
+    return self ? (value * T(strength.rawValue)) : value
+  }
+}
+
+extension BinaryFloatingPoint {
+  public func compacted(
+    _ isCompact: Bool,
+    strength: CompactReductionStrength
+  ) -> Self {
+    return isCompact ? self * Self(strength.rawValue) : self
+  }
+}

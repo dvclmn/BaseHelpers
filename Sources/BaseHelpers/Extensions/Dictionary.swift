@@ -56,6 +56,6 @@ extension Dictionary where Value == Bool {
     let newValue = !(self[key] ?? fallBack)
     self[key] = newValue
     return newValue
-//    self[key] = !(self[key] ?? fallBack)
+    //    self[key] = !(self[key] ?? fallBack)
   }
 }
