@@ -14,7 +14,7 @@ extension EventModifiers {
     let symbol: Character
   }
 
-  private var modifierSymbols: [(EventModifiers, ModifierSymbol)] {
+  private var modifierSymbols: [(modifiers: EventModifiers, symbols: ModifierSymbol)] {
     [
       (.control, .init(name: "Control", symbol: "􀆍")),
       (.shift, .init(name: "Shift", symbol: "􀆝")),
@@ -28,7 +28,7 @@ extension EventModifiers {
   public var activeModifiers: [ModifierSymbol] {
     modifierSymbols
       .filter { self.contains($0.0) }
-      .map(\.1)
+      .map(\.symbols)
   }
 
   public var names: String {

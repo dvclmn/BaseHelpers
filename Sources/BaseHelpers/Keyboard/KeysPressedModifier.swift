@@ -15,7 +15,11 @@ public struct KeysPressedModifier: ViewModifier {
   @State private var heldKeys: Set<KeyEquivalent> = []
 
   let keys: Set<KeyEquivalent>
+  
+  /// Where the returned `Bool` means handled or not
   let onPress: (KeyEquivalent) -> Void
+//  let onPress: (KeyEquivalent) -> Bool
+  
   let isHeld: (Set<KeyEquivalent>) -> Void
 
   public func body(content: Content) -> some View {

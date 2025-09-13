@@ -7,10 +7,30 @@
 
 import SwiftUI
 
+public enum KeyboardDisplayStyle {
+  case name(isAbbreviated: Bool = true) // E.g. Return
+  case symbolLiteral // E.g. 􀅇
+  
+  public var isSymbol: Bool {
+    if case .symbolLiteral = self { return true }
+    return false
+  }
+  
+  public var isAbbreviated: Bool {
+    switch self {
+      case .name(let abbr): return abbr
+      case .symbolLiteral: return false
+    }
+  }
+}
+
 extension KeyboardShortcut {
-  public var displayString: String {
-    let modifiers: String = self.modifiers.symbols
-    let key: String = self.key.symbolLiteral.toString.uppercased()
+  public func displayString(
+    keyStyle: KeyboardDisplayStyle = .symbolLiteral,
+    modifierStyle: KeyboardDisplayStyle = .symbolLiteral,
+  ) -> String {
+    let modifiers: String = modifierStyle.isSymbol ? modifiers.symbols : modifiers.names
+    let key: String = keyStyle.isSymbol ? key.symbolLiteral.toString.uppercased() : key.name(isAbbreviated: keyStyle.isAbbreviated)
     return modifiers + key
   }
 }
