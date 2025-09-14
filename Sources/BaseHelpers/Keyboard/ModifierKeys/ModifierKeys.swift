@@ -26,6 +26,7 @@ import SwiftUI
 /// }
 /// ```
 
+#if canImport(AppKit)
 extension EnvironmentValues {
   @Entry public var modifierKeys: Modifiers = []
 }
@@ -123,7 +124,7 @@ extension EventModifiers {
   }
 }
 
-#if canImport(AppKit)
+
 extension NSEvent.ModifierFlags {
   public var toCompatibleModifier: CompatibleModifierKeys {
     var result: CompatibleModifierKeys = []
@@ -135,7 +136,6 @@ extension NSEvent.ModifierFlags {
     return result
   }
 }
-#endif
 
 public struct ModifierDisplayElement: OptionSet, Sendable {
   public init(rawValue: Int) {
@@ -147,6 +147,7 @@ public struct ModifierDisplayElement: OptionSet, Sendable {
   public static let icon = Self(rawValue: 1 << 1)
   public static let both: Self = [.name, .icon]
 }
+#endif
 
 //public enum CompatibleModifierKey: String, CaseIterable, Identifiable, Hashable, Sendable {
 //  case command

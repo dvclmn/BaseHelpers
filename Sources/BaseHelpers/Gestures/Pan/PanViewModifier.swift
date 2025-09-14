@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+#if canImport(AppKit)
 public struct PanGestureModifier: ViewModifier {
 
   let isEnabled: Bool
@@ -39,3 +40,4 @@ extension View {
     )
   }
 }
+#endif

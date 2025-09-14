@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+#if canImport(AppKit)
 public struct ModifierKeysModifier: ViewModifier {
 
   @State private var modifierKeys = Modifiers()
@@ -47,3 +48,4 @@ extension View {
     #endif
   }
 }
+#endif

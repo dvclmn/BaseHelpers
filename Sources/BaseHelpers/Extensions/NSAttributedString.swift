@@ -5,6 +5,7 @@
 //  Created by Dave Coleman on 6/7/2025.
 //
 
+#if canImport(AppKit)
 import AppKit
 
 public extension NSMutableAttributedString {
@@ -25,3 +26,4 @@ public extension NSMutableAttributedString {
   }
 }
 
+#endif

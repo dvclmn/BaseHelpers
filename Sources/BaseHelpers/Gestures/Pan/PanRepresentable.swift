@@ -5,6 +5,7 @@
 //  Created by Dave Coleman on 24/6/2025.
 //
 
+#if canImport(AppKit)
 import SwiftUI
 
 public typealias PanGestureOutput = (PanPhase) -> Void
@@ -28,3 +29,4 @@ public struct PanGestureView: NSViewRepresentable {
   public func updateNSView(_ nsView: PanTrackingNSView, context: Context) {
   }
 }
+#endif

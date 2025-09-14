@@ -5,6 +5,7 @@
 //  Created by Dave Coleman on 24/6/2025.
 //
 
+#if canImport(AppKit)
 import AppKit
 
 // MARK: - Custom NSView for Pan Tracking
@@ -62,3 +63,4 @@ public class PanTrackingNSView: NSView {
     didUpdatePanGesture(.inactive)
   }
 }
+#endif
