@@ -5,7 +5,6 @@
 //  Created by Dave Coleman on 19/9/2024.
 //
 
-#if canImport(AppKit)
 import SwiftUI
 
 public enum CompatibleFrameResizePosition: Int8, CaseIterable, Sendable {
@@ -43,10 +42,13 @@ public enum CompatiblePointerStyle: Sendable {
   case columnResize
   case rowResize
   
+//#if canImport(AppKit)
   case frameResize(position: CompatibleFrameResizePosition, directions: CompatibleFrameResizeDirection = .all)  //(position: FrameResizePosition, directions: FrameResizeDirection.Set = .all) -> PointerStyle
   case image(Image, hotSpot: UnitPoint)  // (_ image: Image, hotSpot: UnitPoint) -> PointerStyle
+//#endif
 }
 
+#if canImport(AppKit)
 extension CompatibleFrameResizePosition {
   @available(macOS 15, *)
   var toResizePosition: FrameResizePosition {
@@ -72,9 +74,11 @@ extension CompatibleFrameResizeDirection {
     }
   }
 }
+#endif
 
 // MARK: - Private Extension for Conversion
 extension CompatiblePointerStyle {
+#if canImport(AppKit)
   @available(macOS 15, *)
   var toPointerStyle: PointerStyle {
     switch self {
@@ -96,6 +100,6 @@ extension CompatiblePointerStyle {
       case .image(let image, let hotSpot): .image(image, hotSpot: hotSpot)
     }
   }
+#endif
 }
 
-#endif

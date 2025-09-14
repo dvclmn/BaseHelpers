@@ -75,7 +75,7 @@ extension ResizePoint {
     }
   }
 
-#if canImport(AppKit)
+//#if canImport(AppKit)
   public var toCompatPointerStyle: CompatiblePointerStyle {
     let style = CompatiblePointerStyle.frameResize(
       position: self.toCompatFrameResizePosition,
@@ -96,5 +96,5 @@ extension ResizePoint {
       case .bottom: .bottom
     }
   }
-  #endif
+//  #endif
 }
