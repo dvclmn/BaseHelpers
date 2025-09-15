@@ -9,11 +9,11 @@ import SwiftUI
 
 public struct DebouncedHoverViewModifier: ViewModifier {
   @State private var isHovering = false
-  let seconds: TimeInterval
+  let interval: TimeInterval
   let onHoverChange: (Bool) -> Void
 
-  public init(seconds: TimeInterval, onHoverChange: @escaping (Bool) -> Void) {
-    self.seconds = seconds
+  public init(interval: TimeInterval, onHoverChange: @escaping (Bool) -> Void) {
+    self.interval = interval
     self.onHoverChange = onHoverChange
   }
 
@@ -23,7 +23,7 @@ public struct DebouncedHoverViewModifier: ViewModifier {
         isHovering = hovering
         Task {
           do {
-            try await Task.sleep(for: .seconds(seconds))
+            try await Task.sleep(for: .seconds(interval))
             if isHovering == hovering {
               onHoverChange(hovering)
             }
@@ -37,8 +37,8 @@ public struct DebouncedHoverViewModifier: ViewModifier {
 
 extension View {
   public func debouncedHover(
-    seconds: TimeInterval = 0.2, perform action: @escaping (Bool) -> Void
+    interval: TimeInterval = 0.2, perform action: @escaping (Bool) -> Void
   ) -> some View {
-    modifier(DebouncedHoverViewModifier(seconds: seconds, onHoverChange: action))
+    modifier(DebouncedHoverViewModifier(interval: interval, onHoverChange: action))
   }
 }
