@@ -19,8 +19,12 @@ extension EnvironmentValues {
 
   @Entry public var isEmphasised: Bool = false
   @Entry public var isCompactMode: Bool = false
+  @Entry public var isConnectedToInternet: Bool = false
+  
+//  @Entry public var networkMonitor: NetworkMonitor = .init()
 
 }
+
 
 public enum CompactReductionStrength: CGFloat {
   case slight = 0.95

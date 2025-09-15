@@ -7,14 +7,17 @@
 
 import SwiftUI
 
-
-
-
 public func ?? <T: Sendable>(lhs: Binding<T?>, rhs: T) -> Binding<T> {
   Binding(
     get: { lhs.wrappedValue ?? rhs },
     set: { lhs.wrappedValue = $0 }
   )
+}
+
+extension Optional {
+  public var isNil: Bool {
+    self == nil
+  }
 }
 
 extension Optional where Wrapped: DisplayPair {

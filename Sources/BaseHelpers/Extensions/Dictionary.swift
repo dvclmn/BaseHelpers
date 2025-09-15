@@ -7,7 +7,21 @@
 
 import Foundation
 
+extension Dictionary where Key: CustomStringConvertible, Value: CustomStringConvertible {
+
+  public func displayString() -> String {
+    guard !self.isEmpty else { return "nil" }
+
+    let formattedPairs = self.map { key, value in
+      "  | \"\(key)\": \"\(value)\""
+    }
+
+    return "\n" + formattedPairs.joined(separator: "\n")
+  }
+}
+
 extension Dictionary {
+
   /// Non-native key path based sorting for Dictionary
   public func sorted<T: Comparable>(
     byKeyPath keyPath: KeyPath<Element, T>,
