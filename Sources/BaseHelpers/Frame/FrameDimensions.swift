@@ -50,7 +50,7 @@ extension FrameDimensions {
 
 extension FrameDimensions: CustomStringConvertible {
   public var description: String {
-    return "FrameDimensions[W: \(width?.displayString ?? "nil"), H: \(height?.displayString ?? "nil"), Alignment: \(alignment.displayName)]"
+    return "FrameDimensions[W: \(width?.displayString ?? "nil"), H: \(height?.displayString ?? "nil"), Alignment: \(alignment.displayName.abbreviated)]"
   }
 }
 

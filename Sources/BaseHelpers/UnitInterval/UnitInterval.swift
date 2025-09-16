@@ -15,7 +15,7 @@ import Foundation
 public struct UnitInterval: ExpressibleByFloatLiteral, Sendable, Equatable, Hashable, Codable {
   public typealias FloatLiteralType = Double
 
-  private(set) var value: Double
+  public private(set) var value: Double
 
   public init(floatLiteral value: Double) {
     precondition(value.isFinite, "UnitInterval must be finite")

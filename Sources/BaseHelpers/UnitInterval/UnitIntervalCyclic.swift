@@ -11,7 +11,7 @@ import Foundation
 /// Includes `0` but excludes `1`.
 /// Useful in cyclic domains like Hue where `1` wraps to `0`.
 public struct UnitIntervalCyclic: ExpressibleByFloatLiteral, Sendable, Equatable, Hashable, Codable {
-  private(set) var value: Double
+  public private(set) var value: Double
 
   public init(floatLiteral value: Double) {
     precondition(value.isFinite, "UnitIntervalCyclic must be finite")

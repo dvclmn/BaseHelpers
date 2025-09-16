@@ -33,6 +33,54 @@ extension Alignment {
       default: .center
     }
   }
+  
+//  public var isHorizontal: Bool {
+//    switch self {
+//      case .top: 
+//      case .topLeading: false
+//      case .topTrailing: false
+//      case .bottom: false
+//      case .bottomLeading: false
+//      case .bottomTrailing: false
+//      case .center: false
+//      case .centerFirstTextBaseline: false
+//      case .centerLastTextBaseline: false
+//      case .leading: false
+//      case .leadingFirstTextBaseline: false
+//      case .leadingLastTextBaseline: false
+//      case .trailing: false
+//      case .trailingFirstTextBaseline: false
+//      case .trailingLastTextBaseline: false
+//      default: false
+//    }
+//  }
+  
+//  extension HorizontalAlignment {
+//    public var displayName: String {
+//      switch self {
+//        case .leading: "Leading"
+//        case .center: "Center"
+//        case .trailing: "Trailing"
+//        case .listRowSeparatorLeading: "List Row Separator Leading"
+//        case .listRowSeparatorTrailing: "List Row Separator Trailing"
+//          
+//        default: "Unknown"
+//      }
+//    }
+//  }
+//  extension VerticalAlignment {
+//    public var displayName: String {
+//      switch self {
+//        case .bottom: "Bottom"
+//        case .center: "Center"
+//        case .top: "Top"
+//        case .firstTextBaseline: "First Text Baseline"
+//        case .lastTextBaseline: "Last Text Baseline"
+//        default: "Unknown"
+//      }
+//    }
+//  }
+//
 
   public var displayName: (abbreviated: String, standard: String, full: String) {
     switch self {
@@ -40,46 +88,57 @@ extension Alignment {
         return ("Top", "Top", "Top (H: Center + V: Top)")
 
       case .topLeading:
-        return ("T.Leading", "Top Leading", "Top Leading (H: Leading + V: Top)")
+        return ("T.Lead", "Top Leading", "Top Leading (H: Leading + V: Top)")
 
       case .topTrailing:
-        return ("Top Trailing", "Top Trailing", "Top Trailing (H: Trailing + V: Top)")
+        return ("T.Trail", "Top Trailing", "Top Trailing (H: Trailing + V: Top)")
 
       case .bottom:
         return ("Bottom", "Bottom", "Bottom (H: Center + V: Bottom)")
 
       case .bottomLeading:
-        return ("Bottom Leading", "Bottom Leading", "Bottom Leading (H: Leading + V: Bottom)")
+        return ("B.Lead", "Bottom Leading", "Bottom Leading (H: Leading + V: Bottom)")
 
       case .bottomTrailing:
-        return ("Bottom Trailing", "Bottom Trailing", "Bottom Trailing (H: Trailing + V: Bottom)")
+        return ("B.Trail", "Bottom Trailing", "Bottom Trailing (H: Trailing + V: Bottom)")
 
       case .center:
-        return ("Center", "Center", "Center (H: Center + V: Center)")
+        return ("Cent.", "Center", "Center (H: Center + V: Center)")
 
       case .centerFirstTextBaseline:
-        return ("Center First Text Baseline", "Center First Text Baseline", "Center First Text Baseline (H: Center + V: FirstTextBaseline)")
+        return (
+          "Cent.FTB", "Center First Text Baseline", "Center First Text Baseline (H: Center + V: FirstTextBaseline)"
+        )
 
       case .centerLastTextBaseline:
-        return ("Center Last Text Baseline", "Center Last Text Baseline", "Center Last Text Baseline (H: Center + V: LastTextBaseline)")
+        return ("Cent.LTB", "Center Last Text Baseline", "Center Last Text Baseline (H: Center + V: LastTextBaseline)")
 
       case .leading:
-        return ("Leading", "Leading", "Leading (H: Leading + V: Center)")
+        return ("Lead", "Leading", "Leading (H: Leading + V: Center)")
 
       case .leadingFirstTextBaseline:
-        return ("Leading First Text Baseline", "Leading First Text Baseline", "Leading First Text Baseline (H: Leading + V: FirstTextBaseline)")
+        return (
+          "Lead.FTB", "Leading First Text Baseline", "Leading First Text Baseline (H: Leading + V: FirstTextBaseline)"
+        )
 
       case .leadingLastTextBaseline:
-        return ("Leading Last Text Baseline", "Leading Last Text Baseline", "Leading Last Text Baseline (H: Leading + V: LastTextBaseline)")
+        return (
+          "Lead.LTB", "Leading Last Text Baseline", "Leading Last Text Baseline (H: Leading + V: LastTextBaseline)"
+        )
 
       case .trailing:
-        return ("Trailing", "Trailing", "Trailing (H: Trailing + V: Center)")
+        return ("Trail.", "Trailing", "Trailing (H: Trailing + V: Center)")
 
       case .trailingFirstTextBaseline:
-        return ("Trailing First Text Baseline", "Trailing First Text Baseline", "Trailing First Text Baseline (H: Trailing + V: FirstTextBaseline)")
+        return (
+          "Trail.FTB", "Trailing First Text Baseline",
+          "Trailing First Text Baseline (H: Trailing + V: FirstTextBaseline)"
+        )
 
       case .trailingLastTextBaseline:
-        return ("Trailing Last Text Baseline", "Trailing Last Text Baseline", "Trailing Last Text Baseline (H: Trailing + V: LastTextBaseline)")
+        return (
+          "Trail.LTB", "Trailing Last Text Baseline", "Trailing Last Text Baseline (H: Trailing + V: LastTextBaseline)"
+        )
 
       default:
         return ("Unknown", "Unknown", "Unknown")
