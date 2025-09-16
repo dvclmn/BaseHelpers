@@ -9,19 +9,24 @@ import SwiftUI
 
 struct LegibilityDarkenAdjuster {
   static func adjust(
-    saturation: CGFloat,
-    brightness: CGFloat,
-    hue: CGFloat,
+    //    current hsv: HSVColour,
+    hue h: CGFloat = 0.0,
+    saturation s: CGFloat = 1.0,
+    brightness v: CGFloat = 0.0,
     strength: CGFloat,
     hueShift: CGFloat
-  ) -> (saturation: CGFloat, brightness: CGFloat, hue: CGFloat) {
-        let newSaturation = (saturation * (1.0 + 0.2 * strength)).clamped(to: 0...1)
-        let newBrightness = (brightness + -0.1 * strength).clamped(to: 0...1)
-        let newHue = (hue + (hueShift / 360)).truncatingRemainder(dividingBy: 1).toUnitIntervalCyclic
-        return (newSaturation, newBrightness, newHue)
-    }
+      //  ) -> HSVAdjustment {
+      //    let h = hsv.hue
+      //    let s = hsv.saturation
+      //    let v = hsv.brightness
+  ) -> (h: CGFloat, s: CGFloat, v: CGFloat) {
+    let newSaturation: CGFloat = (s * (1.0 + 0.2 * strength)).clamped(to: 0...1)
+    let newBrightness: CGFloat = (v + -0.1 * strength).clamped(to: 0...1)
+    let newHue: CGFloat = (h + (hueShift / 360)).truncatingRemainder(dividingBy: 1).toUnitIntervalCyclic.value
+    //    return HSVAdjustment(h: newHue, s: newSaturation, v: newBrightness)
+    return (newHue, newSaturation, newBrightness)
+  }
 }
-
 
 // MARK: - View Modifier
 public struct LegibilityDarkenModifier: ViewModifier {
@@ -31,27 +36,24 @@ public struct LegibilityDarkenModifier: ViewModifier {
   public func body(content: Content) -> some View {
     ZStack {
       content
-        .saturation(LegibilityDarkenAdjuster.adjust(
-          saturation: 1.0,
-          brightness: 0.0,
-          hue: 0.0,
-          strength: strength,
-          hueShift: hueShift
-        ).saturation)
-        .brightness(LegibilityDarkenAdjuster.adjust(
-          saturation: 1.0,
-          brightness: 0.0,
-          hue: 0.0,
-          strength: strength,
-          hueShift: hueShift
-        ).brightness)
-        .hueRotation(.degrees(LegibilityDarkenAdjuster.adjust(
-          saturation: 1.0,
-          brightness: 0.0,
-          hue: 0.0,
-          strength: strength,
-          hueShift: hueShift
-        ).hue * 360))
+        .saturation(
+          LegibilityDarkenAdjuster.adjust(
+            strength: strength,
+            hueShift: hueShift
+          ).s
+        )
+        .brightness(
+          LegibilityDarkenAdjuster.adjust(
+            strength: strength,
+            hueShift: hueShift
+          ).v
+        )
+        .hueRotation(
+          .degrees(
+            LegibilityDarkenAdjuster.adjust(
+              strength: strength,
+              hueShift: hueShift
+            ).h * 360))
     }
   }
 }
@@ -84,15 +86,15 @@ public struct LegibilityDarkenStyle: ShapeStyle {
 
     /// Adjust values
     let adjusted = LegibilityDarkenAdjuster.adjust(
+      hue: hsv.hue.value,
       saturation: hsv.saturation.value,
       brightness: hsv.brightness.value,
-      hue: hsv.hue.value,
       strength: strength,
       hueShift: hueShift
     )
-    hsv.saturation = adjusted.saturation.toUnitInterval
-    hsv.brightness = adjusted.brightness.toUnitInterval
-    hsv.hue = adjusted.hue.toUnitIntervalCyclic
+    hsv.saturation = adjusted.s.toUnitInterval
+    hsv.brightness = adjusted.v.toUnitInterval
+    hsv.hue = adjusted.h.toUnitIntervalCyclic
 
     /// Make a new Color from HSV
     let adjustedColor = hsv.swiftUIColour
