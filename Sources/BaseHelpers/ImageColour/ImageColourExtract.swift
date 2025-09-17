@@ -82,29 +82,7 @@ class KMeansCalculator: ObservableObject {
   /// distances squared of each pixel color for each centroid.
   var distances: UnsafeMutableBufferPointer<Float>!
   
-  /// The storage and pixel buffer for each red value.
-  let redStorage = UnsafeMutableBufferPointer<Float>.allocate(capacity: dimension * dimension)
-  let redBuffer: vImage.PixelBuffer<vImage.PlanarF>
-  
-  /// The storage and pixel buffer for each green value.
-  let greenStorage = UnsafeMutableBufferPointer<Float>.allocate(capacity: dimension * dimension)
-  let greenBuffer: vImage.PixelBuffer<vImage.PlanarF>
-  
-  /// The storage and pixel buffer for each blue value.
-  let blueStorage = UnsafeMutableBufferPointer<Float>.allocate(capacity: dimension * dimension)
-  let blueBuffer: vImage.PixelBuffer<vImage.PlanarF>
-  
-  /// The storage and pixel buffer for each quantized red value.
-  let redQuantizedStorage = UnsafeMutableBufferPointer<Float>.allocate(capacity: dimension * dimension)
-  let redQuantizedBuffer: vImage.PixelBuffer<vImage.PlanarF>
-  
-  /// The storage and pixel buffer for each quantized green value.
-  let greenQuantizedStorage = UnsafeMutableBufferPointer<Float>.allocate(capacity: dimension * dimension)
-  let greenQuantizedBuffer: vImage.PixelBuffer<vImage.PlanarF>
-  
-  /// The storage and pixel buffer for each quantized blue value.
-  let blueQuantizedStorage = UnsafeMutableBufferPointer<Float>.allocate(capacity: dimension * dimension)
-  let blueQuantizedBuffer: vImage.PixelBuffer<vImage.PlanarF>
+  var storage = ColourValueStorage()
   
   /// The array of `k` centroids.
   var centroids = [Centroid]()
@@ -123,41 +101,7 @@ class KMeansCalculator: ObservableObject {
   
   /// - Tag: initClass
   init() {
-    redBuffer = vImage.PixelBuffer<vImage.PlanarF>(
-      data: redStorage.baseAddress!,
-      width: dimension,
-      height: dimension,
-      byteCountPerRow: dimension * MemoryLayout<Float>.stride)
     
-    greenBuffer = vImage.PixelBuffer<vImage.PlanarF>(
-      data: greenStorage.baseAddress!,
-      width: dimension,
-      height: dimension,
-      byteCountPerRow: dimension * MemoryLayout<Float>.stride)
-    
-    blueBuffer = vImage.PixelBuffer<vImage.PlanarF>(
-      data: blueStorage.baseAddress!,
-      width: dimension,
-      height: dimension,
-      byteCountPerRow: dimension * MemoryLayout<Float>.stride)
-    
-    redQuantizedBuffer = vImage.PixelBuffer<vImage.PlanarF>(
-      data: redQuantizedStorage.baseAddress!,
-      width: dimension,
-      height: dimension,
-      byteCountPerRow: dimension * MemoryLayout<Float>.stride)
-    
-    greenQuantizedBuffer = vImage.PixelBuffer<vImage.PlanarF>(
-      data: greenQuantizedStorage.baseAddress!,
-      width: dimension,
-      height: dimension,
-      byteCountPerRow: dimension * MemoryLayout<Float>.stride)
-    
-    blueQuantizedBuffer = vImage.PixelBuffer<vImage.PlanarF>(
-      data: blueQuantizedStorage.baseAddress!,
-      width: dimension,
-      height: dimension,
-      byteCountPerRow: dimension * MemoryLayout<Float>.stride)
     
     centroidIndicesDescriptor = BNNSNDArrayDescriptor.allocateUninitialized(
       scalarType: Int32.self,
@@ -214,8 +158,8 @@ class KMeansCalculator: ObservableObject {
     isBusy = true
     
     initializeCentroids()
-    populateHistogramPointCloud()
-    updateCentroidNodes()
+//    populateHistogramPointCloud()
+//    updateCentroidNodes()
     
     update()
   }
@@ -240,7 +184,7 @@ class KMeansCalculator: ObservableObject {
           DominantColor($0)
         }
         
-        updateCentroidNodes()
+//        updateCentroidNodes()
         makeQuantizedImage()
         isBusy = false
       }
