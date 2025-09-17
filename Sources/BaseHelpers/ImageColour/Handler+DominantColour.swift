@@ -25,7 +25,7 @@ public final class DominantColourHandler {
   /// Storage for a matrix with `dimension * dimension` columns and `k` rows that stores the
   /// distances squared of each pixel color for each centroid.
   @ObservationIgnored
-  var distances: UnsafeMutableBufferPointer<Float>!
+  var distances: UnsafeMutableBufferPointer<Float>?
 
   /// The number of centroids.
   var k = 5
@@ -38,11 +38,11 @@ public final class DominantColourHandler {
   /// An array of source images.
   //  var sourceImages: [Thumbnail] = []
 
-  var sourceImage = CGImage.emptyCGImage
-  var quantizedImage = CGImage.emptyCGImage
+  var sourceImage: CGImage? = .emptyCGImage
+  var quantizedImage: CGImage? = .emptyCGImage
 
   @ObservationIgnored
-  var rgbImageFormat = vImage_CGImageFormat(
+  var rgbImageFormat: vImage_CGImageFormat? = vImage_CGImageFormat(
     bitsPerComponent: 32,
     bitsPerPixel: 32 * 3,
     colorSpace: CGColorSpaceCreateDeviceRGB(),
@@ -51,7 +51,7 @@ public final class DominantColourHandler {
         | CGBitmapInfo.floatComponents.rawValue
         | CGImageAlphaInfo.none.rawValue
     )
-  )!
+  )
 
   @ObservationIgnored
   var storage: ColourValueStorage
@@ -106,12 +106,17 @@ public final class DominantColourHandler {
     storage.blueQuantizedStorage.deallocate()
 
     centroidIndicesDescriptor.deallocate()
-    distances.deallocate()
+    distances?.deallocate()
   }
 
 }
 
 extension DominantColourHandler {
+
+  func didSetCentroids() {
+    allocateDistancesBuffer()
+    calculateKMeans()
+  }
 
   /// Updates centroids and returns true if pixel counts haven't changed (that is, the solution converged).
   ///
@@ -185,14 +190,35 @@ extension DominantColourHandler {
     self.sourceImage = cgImage
     self.quantizedImage = sourceImage
 
-    guard
+    guard let unwrappedRGBFormat = rgbImageFormat else {
+      print("Failed to get value for `rgbImageFormat`")
+      return
+    }
+
+    var mutableRGBFormat = unwrappedRGBFormat
+
+    guard let sourceImage,
       let rgbSources: [vImage.PixelBuffer<vImage.PlanarF>] = try? vImage.PixelBuffer<vImage.InterleavedFx3>(
         cgImage: sourceImage,
-        cgImageFormat: &rgbImageFormat
+        cgImageFormat: &mutableRGBFormat
       ).planarBuffers()
     else {
       fatalError("Couldn't get rgb sources?")
     }
+
+    //    guard let rgbImageFormat else {
+    //      print("Failed to get value for `rgbImageFormat`")
+    //      return
+    //    }
+    //
+    //    guard
+    //      let rgbSources: [vImage.PixelBuffer<vImage.PlanarF>] = try? vImage.PixelBuffer<vImage.InterleavedFx3>(
+    //        cgImage: sourceImage,
+    //        cgImageFormat: &rgbImageFormat
+    //      ).planarBuffers()
+    //    else {
+    //      fatalError("Couldn't get rgb sources?")
+    //    }
 
     rgbSources[0].scale(destination: storage.redBuffer)
     rgbSources[1].scale(destination: storage.greenBuffer)
@@ -209,7 +235,7 @@ extension DominantColourHandler {
 
   func allocateDistancesBuffer() {
     if distances != nil {
-      distances.deallocate()
+      distances?.deallocate()
     }
     distances = UnsafeMutableBufferPointer<Float>.allocate(capacity: dimension * dimension * k)
   }
@@ -264,35 +290,45 @@ extension DominantColourHandler {
 
     // Use the first row of the `distances` buffer as temporary storage.
     let tmp = UnsafeMutableBufferPointer(
-      start: distances.baseAddress!,
+      start: distances?.baseAddress,
       count: dimension * dimension
     )
+
     for i in 1..<k {
       distanceSquared(
-        x0: storage.greenStorage.baseAddress!, x1: centroids[i - 1].green,
-        y0: storage.blueStorage.baseAddress!, y1: centroids[i - 1].blue,
-        z0: storage.redStorage.baseAddress!, z1: centroids[i - 1].red,
+        x0: storage.greenStorage.baseAddress, x1: centroids[i - 1].green,
+        y0: storage.blueStorage.baseAddress, y1: centroids[i - 1].blue,
+        z0: storage.redStorage.baseAddress, z1: centroids[i - 1].red,
         n: storage.greenStorage.count,
-        result: tmp.baseAddress!)
+        result: tmp.baseAddress)
 
-      let randomIndex = weightedRandomIndex(tmp)
+      guard let weightedRandomIndex = weightedRandomIndex(tmp) else {
+        print("Couldn't create the next centroid.")
+        break
+      }
 
       centroids.append(
         Centroid(
-          red: storage.redStorage[randomIndex],
-          green: storage.greenStorage[randomIndex],
-          blue: storage.blueStorage[randomIndex]))
+          red: storage.redStorage[weightedRandomIndex],
+          green: storage.greenStorage[weightedRandomIndex],
+          blue: storage.blueStorage[weightedRandomIndex]))
     }
   }
 
   func distanceSquared(
-    x0: UnsafePointer<Float>, x1: Float,
-    y0: UnsafePointer<Float>, y1: Float,
-    z0: UnsafePointer<Float>, z1: Float,
+    x0: UnsafePointer<Float>?,
+    x1: Float,
+    y0: UnsafePointer<Float>?,
+    y1: Float,
+    z0: UnsafePointer<Float>?,
+    z1: Float,
     n: Int,
-    result: UnsafeMutablePointer<Float>
+    result: UnsafeMutablePointer<Float>?
   ) {
-
+    guard let x0, let y0, let z0, let result else {
+      print("No value for x0 / y0 / z0 / result in `distanceSquared`")
+      return
+    }
     var x = subtract(a: x0, b: x1, n: n)
     vDSP.square(x, result: &x)
 
@@ -306,18 +342,25 @@ extension DominantColourHandler {
     vDSP_vadd(result, 1, z, 1, result, 1, vDSP_Length(n))
   }
 
-  func subtract(a: UnsafePointer<Float>, b: Float, n: Int) -> [Float] {
-    return [Float](unsafeUninitializedCapacity: n) {
+  func subtract(
+    a: UnsafePointer<Float>,
+    b: Float,
+    n: Int
+  ) -> [Float] {
+    //    guard let address = buff
+    //    return
+    let result = [Float](unsafeUninitializedCapacity: n) {
       buffer, count in
 
-      vDSP_vsub(
-        a, 1,
-        [b], 0,
-        buffer.baseAddress!, 1,
-        vDSP_Length(n))
+      guard let address = buffer.baseAddress else {
+        print("No base address for buffer")
+        return
+      }
+      vDSP_vsub(a, 1, [b], 0, address, 1, vDSP_Length(n))
 
       count = n
     }
+    return result
   }
 
   func saturate<T: FloatingPoint>(_ x: T) -> T {
@@ -329,52 +372,84 @@ extension DominantColourHandler {
   //    }
   //  }
 
-  func weightedRandomIndex(_ weights: UnsafeMutableBufferPointer<Float>) -> Int {
+  func weightedRandomIndex(_ weights: UnsafeMutableBufferPointer<Float>) -> Int? {
     var outputDescriptor = BNNSNDArrayDescriptor.allocateUninitialized(
       scalarType: Float.self,
       shape: .vector(1))
 
-    var probabilities = BNNSNDArrayDescriptor(
-      data: weights,
-      shape: .vector(weights.count))!
+    guard
+      let probabilities = BNNSNDArrayDescriptor(
+        data: weights,
+        shape: .vector(weights.count)
+      )
+    else {
+      print("Failed to create `BNNSNDArrayDescriptor` for probabilities")
+      return nil
+    }
+
+    var mutableProbabilities = probabilities
 
     let randomGenerator = BNNSCreateRandomGenerator(
       BNNSRandomGeneratorMethodAES_CTR,
       nil)
 
     BNNSRandomFillCategoricalFloat(
-      randomGenerator, &outputDescriptor, &probabilities, false)
+      randomGenerator, &outputDescriptor, &mutableProbabilities, false)
 
     defer {
       BNNSDestroyRandomGenerator(randomGenerator)
       outputDescriptor.deallocate()
     }
 
-    return Int(outputDescriptor.makeArray(of: Float.self)!.first!)
+    guard let descriptors = outputDescriptor.makeArray(of: Float.self),
+      let firstDesc = descriptors.first
+    else {
+      return nil
+    }
+
+    return Int(firstDesc)
+
+    //    return !.first!)
   }
 
   func populateDistances() {
+
+    //    guard let distances, let address = distances.baseAddress else {
+    //      print("Couldn't get distances value or base address")
+    //      return
+    //    }
     for centroid in centroids.enumerated() {
+      let result: UnsafeMutablePointer<Float>? = distances?.baseAddress?.advanced(
+        by: dimension * dimension * centroid.offset
+      )
       distanceSquared(
-        x0: storage.greenStorage.baseAddress!,
+        x0: storage.greenStorage.baseAddress,
         x1: centroid.element.green,
-        y0: storage.blueStorage.baseAddress!,
+        y0: storage.blueStorage.baseAddress,
         y1: centroid.element.blue,
-        z0: storage.redStorage.baseAddress!,
+        z0: storage.redStorage.baseAddress,
         z1: centroid.element.red,
         n: storage.greenStorage.count,
-        result: distances.baseAddress!.advanced(
-          by: dimension * dimension * centroid.offset
-        )
+        result: result
       )
     }
   }
 
   /// Returns the index of the closest centroid for each color.
   func makeCentroidIndices() -> [Int32] {
-    let distancesDescriptor = BNNSNDArrayDescriptor(
-      data: distances,
-      shape: .matrixRowMajor(dimension * dimension, k))!
+    guard let distances else {
+      print("No distances value")
+      return []
+    }
+    guard
+      let distancesDescriptor = BNNSNDArrayDescriptor(
+        data: distances,
+        shape: .matrixRowMajor(dimension * dimension, k)
+      )
+    else {
+      print("Couldn't make the ditsnaces thingy")
+      return []
+    }
 
     let reductionLayer = BNNS.ReductionLayer(
       function: .argMin,
@@ -382,12 +457,17 @@ extension DominantColourHandler {
       output: centroidIndicesDescriptor,
       weights: nil)
 
-    try! reductionLayer?.apply(
+    try? reductionLayer?.apply(
       batchSize: 1,
       input: distancesDescriptor,
       output: centroidIndicesDescriptor)
 
-    return centroidIndicesDescriptor.makeArray(of: Int32.self)!
+    guard let result = centroidIndicesDescriptor.makeArray(of: Int32.self) else {
+      print("Couldn't do the  centroidIndicesDescriptor thing")
+      return []
+    }
+
+    return result
   }
 
   /// Updates the centroid SceneKit nodes.
@@ -423,45 +503,7 @@ extension DominantColourHandler {
     let centroidIndices = makeCentroidIndices()
 
     for centroid in centroids.enumerated() {
-      let indices = centroidIndices.enumerated().filter {
-        $0.element == centroid.offset
-      }.map {
-        Int32($0.offset)
-      }
-
-      let indicesDescriptor = BNNSNDArrayDescriptor.allocate(
-        initializingFrom: indices,
-        shape: .vector(indices.count))
-
-      defer {
-        indicesDescriptor.deallocate()
-      }
-
-      scatter(value: centroid.element.red, to: storage.redQuantizedStorage)
-      scatter(value: centroid.element.green, to: storage.greenQuantizedStorage)
-      scatter(value: centroid.element.blue, to: storage.blueQuantizedStorage)
-
-      /// Scatters the repeated `value` to the `destination` using the `indicesDescriptor`.
-      func scatter(
-        value: Float,
-        to destination: UnsafeMutableBufferPointer<Float>
-      ) {
-        let srcDescriptor = BNNSNDArrayDescriptor.allocate(
-          repeating: value,
-          shape: .vector(indices.count))
-        let dstDescriptor = BNNSNDArrayDescriptor(
-          data: destination,
-          shape: .vector(dimension * dimension))!
-
-        try! BNNS.scatter(
-          input: srcDescriptor,
-          indices: indicesDescriptor,
-          output: dstDescriptor,
-          axis: 0,
-          reductionFunction: .sum)
-
-        srcDescriptor.deallocate()
-      }
+      something(centroid, indices: centroidIndices)
     }
 
     let interleaved = vImage.PixelBuffer<vImage.InterleavedFx3>(planarBuffers: [
@@ -470,25 +512,91 @@ extension DominantColourHandler {
       storage.blueQuantizedBuffer,
     ])
 
-    quantizedImage = interleaved.makeCGImage(cgImageFormat: rgbImageFormat)!
+    if let rgbImageFormat, let image = interleaved.makeCGImage(cgImageFormat: rgbImageFormat) {
+      quantizedImage = image
+    }
   }
+
+  private func something(
+    //    _ centroid: Int32,
+    _ centroid: (offset: Int, element: Centroid),
+    indices centroidIndices: [Int32]
+  ) {
+    let indices = centroidIndices.enumerated().filter {
+      $0.element == centroid.offset
+    }.map {
+      Int32($0.offset)
+    }
+
+    let indicesDescriptor = BNNSNDArrayDescriptor.allocate(
+      initializingFrom: indices,
+      shape: .vector(indices.count)
+    )
+
+    defer {
+      indicesDescriptor.deallocate()
+    }
+
+    scatter(value: centroid.element.red, to: storage.redQuantizedStorage)
+    scatter(value: centroid.element.green, to: storage.greenQuantizedStorage)
+    scatter(value: centroid.element.blue, to: storage.blueQuantizedStorage)
+
+    /// Scatters the repeated `value` to the `destination` using the `indicesDescriptor`.
+    func scatter(
+      value: Float,
+      to destination: UnsafeMutableBufferPointer<Float>
+    ) {
+      let srcDescriptor = BNNSNDArrayDescriptor.allocate(
+        repeating: value,
+        shape: .vector(indices.count)
+      )
+
+      guard let dstDescriptor = BNNSNDArrayDescriptor(
+        data: destination,
+        shape: .vector(dimension * dimension)
+      ) else {
+        print("Error with `dstDescriptor`, no value")
+        return
+      }
+
+      do {
+        try BNNS.scatter(
+          input: srcDescriptor,
+          indices: indicesDescriptor,
+          output: dstDescriptor,
+          axis: 0,
+          reductionFunction: .sum)
+
+      } catch {
+        print("Error scattering: \(error)")
+      }
+
+      srcDescriptor.deallocate()
+    }
+  }  // END centroid something
 }
 
 extension CGImage {
   /// A 1 x 1 Core Graphics image.
-  static var emptyCGImage: CGImage {
+  static var emptyCGImage: CGImage? {
     let buffer = vImage.PixelBuffer(
       pixelValues: [0],
       size: .init(width: 1, height: 1),
       pixelFormat: vImage.Planar8.self)
 
-    let fmt = vImage_CGImageFormat(
-      bitsPerComponent: 8,
-      bitsPerPixel: 8,
-      colorSpace: CGColorSpaceCreateDeviceGray(),
-      bitmapInfo: CGBitmapInfo(rawValue: CGImageAlphaInfo.none.rawValue),
-      renderingIntent: .defaultIntent)
+    guard
+      let fmt = vImage_CGImageFormat(
+        bitsPerComponent: 8,
+        bitsPerPixel: 8,
+        colorSpace: CGColorSpaceCreateDeviceGray(),
+        bitmapInfo: CGBitmapInfo(rawValue: CGImageAlphaInfo.none.rawValue),
+        renderingIntent: .defaultIntent
+      )
+    else {
+      print("No value for the `fmt` thing")
+      return nil
+    }
 
-    return buffer.makeCGImage(cgImageFormat: fmt!)!
+    return buffer.makeCGImage(cgImageFormat: fmt)
   }
 }

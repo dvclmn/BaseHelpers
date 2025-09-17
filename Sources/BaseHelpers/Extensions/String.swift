@@ -105,7 +105,7 @@ extension String {
     }
   }
 
-  public var url: URL? {
+  public var toURL: URL? {
     return URL(string: self)
   }
 
