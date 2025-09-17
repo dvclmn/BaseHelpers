@@ -11,66 +11,71 @@ import Accelerate
 
 struct ColourValueStorage {
   
-  let dimension: Int 
-
-  /// The storage and pixel buffer for each red value.
-  let redStorage = UnsafeMutableBufferPointer<Float>.allocate(capacity: dimension * dimension)
+  let dimension: Int
+  
+  /// The storage and pixel buffer for each colour value
+  let redStorage: UnsafeMutableBufferPointer<Float>
+  let greenStorage: UnsafeMutableBufferPointer<Float>
+  let blueStorage: UnsafeMutableBufferPointer<Float>
+  
   let redBuffer: vImage.PixelBuffer<vImage.PlanarF>
-  
-  /// The storage and pixel buffer for each green value.
-  let greenStorage = UnsafeMutableBufferPointer<Float>.allocate(capacity: dimension * dimension)
   let greenBuffer: vImage.PixelBuffer<vImage.PlanarF>
-  
-  /// The storage and pixel buffer for each blue value.
-  let blueStorage = UnsafeMutableBufferPointer<Float>.allocate(capacity: dimension * dimension)
   let blueBuffer: vImage.PixelBuffer<vImage.PlanarF>
   
-  /// The storage and pixel buffer for each quantized red value.
-  let redQuantizedStorage = UnsafeMutableBufferPointer<Float>.allocate(capacity: dimension * dimension)
+  /// The storage and pixel buffer for each *quantized* colour value.
+  let redQuantizedStorage: UnsafeMutableBufferPointer<Float>
+  let greenQuantizedStorage: UnsafeMutableBufferPointer<Float>
+  let blueQuantizedStorage: UnsafeMutableBufferPointer<Float>
+
   let redQuantizedBuffer: vImage.PixelBuffer<vImage.PlanarF>
-  
-  /// The storage and pixel buffer for each quantized green value.
-  let greenQuantizedStorage = UnsafeMutableBufferPointer<Float>.allocate(capacity: dimension * dimension)
   let greenQuantizedBuffer: vImage.PixelBuffer<vImage.PlanarF>
-  
-  /// The storage and pixel buffer for each quantized blue value.
-  let blueQuantizedStorage = UnsafeMutableBufferPointer<Float>.allocate(capacity: dimension * dimension)
   let blueQuantizedBuffer: vImage.PixelBuffer<vImage.PlanarF>
-  
+
+  // MARK: - Initialiser
   public init(dimension: Int) {
     self.dimension = dimension
     
-    redBuffer = vImage.PixelBuffer<vImage.PlanarF>(
+    // allocate all buffers now that dimension is known
+    self.redStorage = .allocate(capacity: dimension * dimension)
+    self.greenStorage = .allocate(capacity: dimension * dimension)
+    self.blueStorage = .allocate(capacity: dimension * dimension)
+    
+    self.redQuantizedStorage = .allocate(capacity: dimension * dimension)
+    self.greenQuantizedStorage = .allocate(capacity: dimension * dimension)
+    self.blueQuantizedStorage = .allocate(capacity: dimension * dimension)
+
+    
+    self.redBuffer = vImage.PixelBuffer<vImage.PlanarF>(
       data: redStorage.baseAddress!,
       width: dimension,
       height: dimension,
       byteCountPerRow: dimension * MemoryLayout<Float>.stride)
     
-    greenBuffer = vImage.PixelBuffer<vImage.PlanarF>(
+    self.greenBuffer = vImage.PixelBuffer<vImage.PlanarF>(
       data: greenStorage.baseAddress!,
       width: dimension,
       height: dimension,
       byteCountPerRow: dimension * MemoryLayout<Float>.stride)
     
-    blueBuffer = vImage.PixelBuffer<vImage.PlanarF>(
+    self.blueBuffer = vImage.PixelBuffer<vImage.PlanarF>(
       data: blueStorage.baseAddress!,
       width: dimension,
       height: dimension,
       byteCountPerRow: dimension * MemoryLayout<Float>.stride)
     
-    redQuantizedBuffer = vImage.PixelBuffer<vImage.PlanarF>(
+    self.redQuantizedBuffer = vImage.PixelBuffer<vImage.PlanarF>(
       data: redQuantizedStorage.baseAddress!,
       width: dimension,
       height: dimension,
       byteCountPerRow: dimension * MemoryLayout<Float>.stride)
     
-    greenQuantizedBuffer = vImage.PixelBuffer<vImage.PlanarF>(
+    self.greenQuantizedBuffer = vImage.PixelBuffer<vImage.PlanarF>(
       data: greenQuantizedStorage.baseAddress!,
       width: dimension,
       height: dimension,
       byteCountPerRow: dimension * MemoryLayout<Float>.stride)
     
-    blueQuantizedBuffer = vImage.PixelBuffer<vImage.PlanarF>(
+    self.blueQuantizedBuffer = vImage.PixelBuffer<vImage.PlanarF>(
       data: blueQuantizedStorage.baseAddress!,
       width: dimension,
       height: dimension,
@@ -121,10 +126,11 @@ struct DominantColor: Identifiable, Comparable {
 }
 
 /// A structure that represents a thumbnail.
-struct Thumbnail: Identifiable, Hashable {
+struct Thumbnail: Identifiable, Hashable, Sendable {
   var id = UUID()
-  
   let thumbnail: CGImage
-  var resource: String
-  var ext: String
+  let fileURL: URL
+//  var name: String
+//  var resource: String
+//  var ext: String
 }

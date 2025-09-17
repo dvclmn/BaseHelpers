@@ -18,77 +18,74 @@ let tolerance = 10
 
 class KMeansCalculator: ObservableObject {
   
-  let sourceImageNames: [(String, String)] = [
-    ("City_9_Building_with_Skybridge", "jpeg"),
-    ("City_5_Brick_Building", "jpeg"),
-    ("Flowers_5_Hydrangea", "jpeg"),
-    ("Plants_11_Plant_with_Dew", "jpeg"),
-    ("Food_8_Carrot", "jpeg"),
-    ("Food_21_Orange", "jpeg"),
-    ("Landscape_21_Rainbow", "JPG"),
-    ("Flowers_12_Assorted", "jpeg"),
-    ("Flowers_24_Lemon_Bloom", "jpeg"),
-    ("Landscape_22_Sailboats", "JPG"),
-    ("Animals_2_Butterfly", "jpeg"),
-    ("Landscape_3_Mountains_with_Snow", "jpeg")
-  ]
-  
-  /// The SceneKit scene that displays the RGB point cloud.
-  @Published var scene = SCNScene()
-  
-  /// A Boolean value that indicates whether the app is running.
-  @Published var isBusy = true
-  
-  /// The selected thumbnail.
-  @Published var selectedThumbnail: Thumbnail! {
-    didSet {
-      calculateKMeans()
-    }
-  }
-  
-  /// An array of source images.
-  @Published var sourceImages = [Thumbnail]() {
-    didSet {
-      if sourceImages.count == 1 {
-        selectedThumbnail = sourceImages.first!
-      }
-    }
-  }
-  
-  /// The number of centroids.
-  @Published var k = 5 {
-    didSet {
-      allocateDistancesBuffer()
-      calculateKMeans()
-    }
-  }
+//  let sourceImageNames: [(String, String)] = [
+//    ("City_9_Building_with_Skybridge", "jpeg"),
+//    ("City_5_Brick_Building", "jpeg"),
+//    ("Flowers_5_Hydrangea", "jpeg"),
+//    ("Plants_11_Plant_with_Dew", "jpeg"),
+//    ("Food_8_Carrot", "jpeg"),
+//    ("Food_21_Orange", "jpeg"),
+//    ("Landscape_21_Rainbow", "JPG"),
+//    ("Flowers_12_Assorted", "jpeg"),
+//    ("Flowers_24_Lemon_Bloom", "jpeg"),
+//    ("Landscape_22_Sailboats", "JPG"),
+//    ("Animals_2_Butterfly", "jpeg"),
+//    ("Landscape_3_Mountains_with_Snow", "jpeg")
+//  ]
+//  
+//  /// The SceneKit scene that displays the RGB point cloud.
+//  @Published var scene = SCNScene()
+//  
+//  /// A Boolean value that indicates whether the app is running.
+//  @Published var isBusy = true
+//  
+//  /// The selected thumbnail.
+//  @Published var selectedThumbnail: Thumbnail! {
+//    didSet {
+//      calculateKMeans()
+//    }
+//  }
+//  
+//  /// An array of source images.
+//  @Published var sourceImages = [Thumbnail]() {
+//    didSet {
+//      if sourceImages.count == 1 {
+//        selectedThumbnail = sourceImages.first!
+//      }
+//    }
+//  }
+//  
+//  /// The number of centroids.
+//  @Published var k = 5 {
+//    didSet {
+//      allocateDistancesBuffer()
+//      calculateKMeans()
+//    }
+//  }
   
   /// The current source image.
-  @Published var sourceImage = KMeansCalculator.emptyCGImage
+//  @Published var sourceImage = KMeansCalculator.emptyCGImage
   
-  @Published var quantizedImage = KMeansCalculator.emptyCGImage
+//  @Published var quantizedImage = KMeansCalculator.emptyCGImage
   
   /// The Core Graphics image format.
-  var rgbImageFormat = vImage_CGImageFormat(
-    bitsPerComponent: 32,
-    bitsPerPixel: 32 * 3,
-    colorSpace: CGColorSpaceCreateDeviceRGB(),
-    bitmapInfo: CGBitmapInfo(
-      rawValue: kCGBitmapByteOrder32Host.rawValue |
-      CGBitmapInfo.floatComponents.rawValue |
-      CGImageAlphaInfo.none.rawValue))!
+//  var rgbImageFormat = vImage_CGImageFormat(
+//    bitsPerComponent: 32,
+//    bitsPerPixel: 32 * 3,
+//    colorSpace: CGColorSpaceCreateDeviceRGB(),
+//    bitmapInfo: CGBitmapInfo(
+//      rawValue: kCGBitmapByteOrder32Host.rawValue |
+//      CGBitmapInfo.floatComponents.rawValue |
+//      CGImageAlphaInfo.none.rawValue))!
   
-  /// Storage for a matrix with `dimension * dimension` columns and `k` rows that stores the
-  /// distances squared of each pixel color for each centroid.
+  
   var distances: UnsafeMutableBufferPointer<Float>!
   
-  var storage = ColourValueStorage()
   
-  /// The array of `k` centroids.
-  var centroids = [Centroid]()
   
-  /// The array of `k` dominant colors that the app derives from `centroids` and displays  in the user interface.
-  @Published var dominantColors = [DominantColor.zero]
+  
+  
+
   
   /// The SceneKit nodes that correspond to the values in the `centroids` array.
   var centroidNodes = [SCNNode]()

@@ -8,24 +8,27 @@
 import Accelerate
 import SwiftUI
 
-public class DominantColourHandler {
+@Observable
+public final class DominantColourHandler {
   var isBusy: Bool = false
   let image: Image
 
-  public init(
-    image: Image
-  ) {
-    self.image = image
-  }
-
+  /// Storage for a matrix with `dimension * dimension` columns and `k` rows that stores the
+  /// distances squared of each pixel color for each centroid.
+  @ObservationIgnored
   var distances: UnsafeMutableBufferPointer<Float>!
 
   /// The number of centroids.
   var k = 5
 
+  /// An array of source images.
+  var sourceImages: [Thumbnail] = []
+  
+  
   var sourceImage = CGImage.emptyCGImage
   var quantizedImage = CGImage.emptyCGImage
 
+  @ObservationIgnored
   var rgbImageFormat = vImage_CGImageFormat(
     bitsPerComponent: 32,
     bitsPerPixel: 32 * 3,
@@ -36,13 +39,45 @@ public class DominantColourHandler {
         | CGImageAlphaInfo.none.rawValue
     )
   )!
-  
-  
+
+  @ObservationIgnored
+  var storage: ColourValueStorage
+
+  /// The array of `k` centroids.
+  @ObservationIgnored
+  var centroids = [Centroid]()
+
+  /// The array of `k` dominant colors that the app derives from `centroids` and displays  in the user interface.
+  var dominantColors = [DominantColor.zero]
+
   /// The BNNS array descriptor that receives the centroid indices.
+  @ObservationIgnored
   let centroidIndicesDescriptor: BNNSNDArrayDescriptor
-  
+
+  @ObservationIgnored
   let maximumIterations = 50
+
+  @ObservationIgnored
   var iterationCount = 0
+
+  public init(
+    image: Image,
+    dimension: Int = 256
+  ) {
+    self.image = image
+    self.storage = ColourValueStorage(dimension: dimension)
+    self.centroidIndicesDescriptor = BNNSNDArrayDescriptor.allocateUninitialized(
+      scalarType: Int32.self,
+      shape: .matrixRowMajor(dimension * dimension, 1)
+    )
+    allocateDistancesBuffer()
+
+    for sourceImageName in sourceImageNames {
+      generateThumbnailRepresentations(
+        forResource: sourceImageName.0,
+        withExtension: sourceImageName.1)
+    }
+  }
 
 }
 
@@ -54,11 +89,19 @@ extension DominantColourHandler {
     distances = UnsafeMutableBufferPointer<Float>.allocate(capacity: dimension * dimension * k)
   }
 
+  // MARK: - Did sets
   func didSetK() {
     //  didSet {
     allocateDistancesBuffer()
     calculateKMeans()
     //  }
+
+  }
+
+  func didSetSourceImages() {
+    if sourceImages.count == 1 {
+      selectedThumbnail = sourceImages.first!
+    }
 
   }
 }
