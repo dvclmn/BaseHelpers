@@ -7,16 +7,16 @@
 
 import Accelerate
 import Cocoa
+import QuickLookThumbnailing
 import SceneKit
 import SwiftUI
 import simd
-import QuickLookThumbnailing
 
 @MainActor
 public final class DominantColourHandler: ObservableObject {
   @Published var isBusy: Bool = false
 
-  var imageFileURL: URL?
+  var imageFileURL: URL? = nil
   @Published var image: Thumbnail?
 
   let dimension: Int
@@ -38,7 +38,7 @@ public final class DominantColourHandler: ObservableObject {
   @Published var scene = SCNScene()
 
   /// An array of source images.
-//    var sourceImages: [Thumbnail] = []
+  //    var sourceImages: [Thumbnail] = []
 
   @Published var sourceImage: CGImage? = .emptyCGImage
   @Published var quantizedImage: CGImage? = .emptyCGImage
@@ -76,13 +76,11 @@ public final class DominantColourHandler: ObservableObject {
   var iterationCount = 0
 
   public init(
-//    imageFileURL: URL?,
     dimension: Int = 256
   ) {
 
     print("Have started the DominantColourHandler initialiser — let's see how far we get.")
     self.dimension = dimension
-    self.imageFileURL = nil
     self.storage = ColourValueStorage(dimension: dimension)
 
     self.centroidIndicesDescriptor = BNNSNDArrayDescriptor.allocateUninitialized(
@@ -91,18 +89,6 @@ public final class DominantColourHandler: ObservableObject {
     )
     print("Successfully allocated the `BNNSNDArrayDescriptor`, `centroidIndicesDescriptor` is set up")
 
-    generateThumbnailRepresentations()
-    
-//    var imageResult: Thumbnail?
-//    Task { @MainActor in
-//      if let imageThumbnail = await ThumbnailGenerator.generateThumbnailRepresentation(imageURL: imageURL) {
-//        imageResult = imageThumbnail
-//      } else {
-//        print("No image was generated")
-//      }
-//    }  // REND task
-//    self.image = imageResult
-    print("We are proceeding; is there an image at this point? \(String(describing: self.image))")
     self.allocateDistancesBuffer()
   }
 
@@ -127,6 +113,12 @@ extension DominantColourHandler {
   func didSetCentroids() {
     allocateDistancesBuffer()
     calculateKMeans()
+  }
+
+  func setUp(_ fileURL: URL) {
+    print("Ran setup method once the image is downloaded. It should exist at \(fileURL)")
+    self.imageFileURL = fileURL
+    generateThumbnailRepresentations()
   }
 
   /// Updates centroids and returns true if pixel counts haven't changed (that is, the solution converged).
@@ -330,6 +322,8 @@ extension DominantColourHandler {
           green: storage.greenStorage[weightedRandomIndex],
           blue: storage.blueStorage[weightedRandomIndex]))
     }
+
+    // NOTE: If centroids count changes elsewhere, ensure `centroidNodes` are synchronized accordingly.
   }
 
   func distanceSquared(
@@ -488,15 +482,36 @@ extension DominantColourHandler {
   }
 
   /// Updates the centroid SceneKit nodes.
+  ///
+  /// Synchronizes the `centroidNodes` array with the current `centroids` array to avoid out-of-bounds
+  /// errors during updates. This includes adding or removing nodes to match the count of centroids.
   func updateCentroidNodes() {
-    for centroid in centroids.enumerated() {
+    // Ensure centroidNodes array is in sync with centroids
+    if centroidNodes.count != centroids.count {
+      // Remove excess nodes
+      if centroidNodes.count > centroids.count {
+        centroidNodes.removeLast(centroidNodes.count - centroids.count)
+      }
+      // Add new nodes as needed
+      while centroidNodes.count < centroids.count {
+        let node = SCNNode()
+        // Optionally, basic geometry for visualization
+        node.geometry = SCNSphere(radius: 0.02)
+        centroidNodes.append(node)
+      }
+    }
 
+    // Now update each node's position and color
+    for centroid in centroids.enumerated() {
+      guard centroid.offset < centroidNodes.count else {
+        print("[updateCentroidNodes] Error: centroidNodes index out of range for offset \(centroid.offset)")
+        continue
+      }
       let red = CGFloat(saturate(centroid.element.red))
       let green = CGFloat(saturate(centroid.element.green))
       let blue = CGFloat(saturate(centroid.element.blue))
 
       let node = centroidNodes[centroid.offset]
-
       node.position = .init(
         x: red,
         y: green,
@@ -594,8 +609,18 @@ extension DominantColourHandler {
     }
   }  // END centroid something
 
-  func generateThumbnailRepresentations(//    forResource resource: String,
-  //    withExtension ext: String
+  func thumbnailCGImageFromURL(_ url: URL, maxPixelSize: Int) -> CGImage? {
+    guard let source = CGImageSourceCreateWithURL(url as CFURL, nil) else { return nil }
+    let options =
+      [
+        kCGImageSourceCreateThumbnailFromImageAlways: true,
+        kCGImageSourceThumbnailMaxPixelSize: maxPixelSize,
+      ] as CFDictionary
+    return CGImageSourceCreateThumbnailAtIndex(source, 0, options)
+  }
+
+  func generateThumbnailRepresentations(  //    forResource resource: String,
+    //    withExtension ext: String
     )
   {
 
@@ -603,45 +628,53 @@ extension DominantColourHandler {
       assert(false, "The URL can't be nil")
       return
     }
-    // Set up the parameters of the request.
-    //    guard let url = Bundle.main.url(forResource: resource,
-    //                                    withExtension: ext) else {
 
-    //    guard let imageURL = await ThumbnailGenerator.downloadImageToDisk(from: imageFileURL) else {
-    //      print("Couldn't download the image and save it to disk")
-    //      return nil
-    //    }
+    //    let size: CGSize = CGSize(width: 100, height: 100)
+    //    let scale = NSScreen.main?.backingScaleFactor ?? 1
 
-    // Handle the error case.
-    //      assert(false, "The URL can't be nil")
+    /// This worked!
+    //    guard let source = CGImageSourceCreateWithURL(url as CFURL, nil),
+    //      let cgImage = CGImageSourceCreateImageAtIndex(source, 0, nil)
+    //    else {
+    //      print("Error with either `CGImageSourceCreateWithURL` or `CGImageSourceCreateImageAtIndex`")
     //      return
     //    }
-    let size: CGSize = CGSize(width: 100, height: 100)
-    let scale = NSScreen.main?.backingScaleFactor ?? 1
+
+    guard let cgImage = thumbnailCGImageFromURL(url, maxPixelSize: 90) else {
+      print("Error with either `CGImageSourceCreateWithURL` or `CGImageSourceCreateImageAtIndex`")
+      return
+    }
+
+    let thumb = Thumbnail(
+      thumbnail: cgImage,
+      fileURL: url
+    )
+
+    self.image = thumb
 
     // Create the thumbnail request.
-    let request = QLThumbnailGenerator.Request(
-      fileAt: url,
-      size: size,
-      scale: scale,
-      representationTypes: .thumbnail)
-
-    // Retrieve the singleton instance of the thumbnail generator and generate the thumbnails.
-    let generator = QLThumbnailGenerator.shared
-    generator.generateRepresentations(for: request) { (thumbnail, type, error) in
-      DispatchQueue.main.async {
-        if let thumbnail, let url = self.imageFileURL {
-          let x = Thumbnail(
-            thumbnail: thumbnail.cgImage,
-            fileURL: url
-//            resource: resource,
-//            ext: ext
-          )
-          self.image = x
-//          self.sourceImages.append(x)
-        }
-      }
-    }
+    //    let request = QLThumbnailGenerator.Request(
+    //      fileAt: url,
+    //      size: size,
+    //      scale: scale,
+    //      representationTypes: .thumbnail)
+    //
+    //    // Retrieve the singleton instance of the thumbnail generator and generate the thumbnails.
+    //    let generator = QLThumbnailGenerator.shared
+    //    generator.generateRepresentations(for: request) { (thumbnail, type, error) in
+    //      DispatchQueue.main.async {
+    //        if let thumbnail, let url = self.imageFileURL {
+    //          let x = Thumbnail(
+    //            thumbnail: thumbnail.cgImage,
+    //            fileURL: url
+    //              //            resource: resource,
+    //              //            ext: ext
+    //          )
+    //          self.image = x
+    //          //          self.sourceImages.append(x)
+    //        }
+    //      }
+    //    }
   }
 }
 
@@ -669,3 +702,4 @@ extension CGImage {
     return buffer.makeCGImage(cgImageFormat: fmt)
   }
 }
+

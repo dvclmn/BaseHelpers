@@ -91,6 +91,7 @@ struct ThumbnailGenerator {
       let savedURL = appSupportURL.appendingPathComponent(fileName)
       print("The url we'll save to is `\(savedURL)`")
       try data.write(to: savedURL)
+      print("Writing to disk was successful.")
       return savedURL
 
     } catch {
