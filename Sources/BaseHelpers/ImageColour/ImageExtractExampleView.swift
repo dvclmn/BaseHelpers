@@ -5,73 +5,85 @@
 //  Created by Dave Coleman on 17/9/2025.
 //
 
+import SwiftUI
+
 struct ImageExtractView: View {
-  
-  @EnvironmentObject var kMeansCalculator: KMeansCalculator
-  
+  @State private var store: DominantColourHandler
+
+  public init(imageURL: URL) {
+    self._store = State(initialValue: DominantColourHandler(imageURL: imageURL))
+  }
+
   var body: some View {
-    
+
     NavigationSplitView {
-      List(kMeansCalculator.sourceImages,
-           selection: $kMeansCalculator.selectedThumbnail) { thumbnail in
-        Image(decorative: thumbnail.thumbnail,
-              scale: 1)
+      List(
+        store.sourceImages,
+        selection: $store.selectedThumbnail
+      ) { thumbnail in
+        Image(
+          decorative: thumbnail.thumbnail,
+          scale: 1
+        )
         .resizable()
         .aspectRatio(contentMode: .fit)
         .onTapGesture {
-          kMeansCalculator.selectedThumbnail = thumbnail
+          store.selectedThumbnail = thumbnail
         }
-        .border(kMeansCalculator.selectedThumbnail == thumbnail ? .blue : .gray,
-                width: 4)
-        .disabled(kMeansCalculator.isBusy)
+        .border(
+          store.selectedThumbnail == thumbnail ? .blue : .gray,
+          width: 4
+        )
+        .disabled(store.isBusy)
       }
     } detail: {
-      
+
       Divider()
-      
+
       HStack {
         TabView {
-          Image(decorative: kMeansCalculator.sourceImage, scale: 1)
+          Image(decorative: store.sourceImage, scale: 1)
             .resizable()
             .aspectRatio(contentMode: .fit)
             .tabItem {
               Label("Original image", systemImage: "photo")
             }
-          
-          Image(decorative: kMeansCalculator.quantizedImage, scale: 1)
+
+          Image(decorative: store.quantizedImage, scale: 1)
             .resizable()
             .aspectRatio(contentMode: .fit)
             .tabItem {
-              Label("Quantized image (\(dimension) x \(dimension))",
-                    systemImage: "photo")
+              Label(
+                "Quantized image (\(dimension) x \(dimension))",
+                systemImage: "photo")
             }
         }
-        .opacity(kMeansCalculator.isBusy ? 0.5 : 1)
-        .disabled(kMeansCalculator.isBusy)
+        .opacity(store.isBusy ? 0.5 : 1)
+        .disabled(store.isBusy)
         .overlay {
           ProgressView()
-            .opacity(kMeansCalculator.isBusy ? 1 : 0)
+            .opacity(store.isBusy ? 1 : 0)
         }
-        
+
         Divider()
-        
+
         SceneView(
-          scene: kMeansCalculator.scene,
+          scene: store.scene,
           pointOfView: nil,
           options: [.allowsCameraControl, .autoenablesDefaultLighting]
         )
-        .opacity(kMeansCalculator.isBusy ? 0.5 : 1)
+        .opacity(store.isBusy ? 0.5 : 1)
         .overlay {
           ProgressView()
-            .opacity(kMeansCalculator.isBusy ? 1 : 0)
+            .opacity(store.isBusy ? 1 : 0)
         }
       }
       .padding()
-      
+
       Divider()
-      
+
       HStack {
-        ForEach(kMeansCalculator.dominantColors.sorted(by: >)) { dominantColor in
+        ForEach(store.dominantColors.sorted(by: >)) { dominantColor in
           VStack {
             RoundedRectangle(cornerSize: .init(width: 5, height: 5))
               .fill(dominantColor.color)
@@ -82,26 +94,26 @@ struct ImageExtractView: View {
         }
       }
       .padding()
-      .opacity(kMeansCalculator.isBusy ? 0 : 1)
-      
+      .opacity(store.isBusy ? 0 : 1)
+
       Divider()
-      
+
       HStack {
-        
-        Picker("Number of centroids", selection: $kMeansCalculator.k) {
+
+        Picker("Number of centroids", selection: $store.k) {
           ForEach([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], id: \.self) {
             Text("\($0)")
           }
         }
         .pickerStyle(.segmented)
-        .disabled(kMeansCalculator.isBusy)
-        
+        .disabled(store.isBusy)
+
         Spacer()
-        
+
         Button("Run again") {
-          kMeansCalculator.calculateKMeans()
+          store.calculateKMeans()
         }
-        .disabled(kMeansCalculator.isBusy)
+        .disabled(store.isBusy)
       }
       .padding()
     }

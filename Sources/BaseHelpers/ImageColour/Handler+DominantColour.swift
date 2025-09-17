@@ -11,7 +11,11 @@ import SwiftUI
 @Observable
 public final class DominantColourHandler {
   var isBusy: Bool = false
-  let image: Image
+
+  let image: Thumbnail?
+  let dimension: Int
+  //  let imageURL: URL
+  //  let image: Image
 
   /// Storage for a matrix with `dimension * dimension` columns and `k` rows that stores the
   /// distances squared of each pixel color for each centroid.
@@ -22,9 +26,8 @@ public final class DominantColourHandler {
   var k = 5
 
   /// An array of source images.
-  var sourceImages: [Thumbnail] = []
-  
-  
+  //  var sourceImages: [Thumbnail] = []
+
   var sourceImage = CGImage.emptyCGImage
   var quantizedImage = CGImage.emptyCGImage
 
@@ -61,10 +64,11 @@ public final class DominantColourHandler {
   var iterationCount = 0
 
   public init(
-    image: Image,
+    imageURL: URL,
+    //    image: Image,
     dimension: Int = 256
   ) {
-    self.image = image
+    self.dimension = dimension
     self.storage = ColourValueStorage(dimension: dimension)
     self.centroidIndicesDescriptor = BNNSNDArrayDescriptor.allocateUninitialized(
       scalarType: Int32.self,
@@ -72,16 +76,111 @@ public final class DominantColourHandler {
     )
     allocateDistancesBuffer()
 
-    for sourceImageName in sourceImageNames {
-      generateThumbnailRepresentations(
-        forResource: sourceImageName.0,
-        withExtension: sourceImageName.1)
-    }
+    var imageResult: Thumbnail?
+    Task { @MainActor in
+      if let imageThumbnail = await ThumbnailGenerator.generateThumbnailRepresentation(imageURL: imageURL) {
+        imageResult = imageThumbnail
+      }
+    }  // REND task
+    self.image = imageResult
   }
 
 }
 
 extension DominantColourHandler {
+  
+  /// Updates centroids and returns true if pixel counts haven't changed (that is, the solution converged).
+  ///
+  /// 1. Create k random centroids selected from the RGB colors in an image.
+  /// 2. Create a distances matrix that has pixel-count columns and k rows.
+  /// 3. For each centroid, populate the corresponding row in distances matrix with the distance-squared
+  /// between it and each matrix.
+  /// 4. Use BNNS reduction argMin on the distances matrix to create a vector with pixel-count elements.
+  /// Each element in the vector is the centroid that's the closest color to the corresponding pixel.
+  /// 5. For each centroid, use BNNS gather to create a new vector for each RGB channel of the pixel
+  /// colors for that centroid. Compute the mean value of that vector and set the centroid color to that average.
+  /// 6. Repeat steps 3, 4, and 5 until the solution converges.
+  /// - Tag: updateCentroids
+  func updateCentroids() -> Bool {
+    // The pixel counts per centroid before this iteration.
+    let pixelCounts = centroids.map { return $0.pixelCount }
+    
+    populateDistances()
+    let centroidIndices = makeCentroidIndices()
+    
+    for centroid in centroids.enumerated() {
+      
+      // The indices into the red, green, and blue descriptors for this centroid.
+      let indices = centroidIndices.enumerated().filter {
+        $0.element == centroid.offset
+      }.map {
+        // `vDSP.gather` uses one-based indices.
+        UInt($0.offset + 1)
+      }
+      
+      centroids[centroid.offset].pixelCount = indices.count
+      
+      if !indices.isEmpty {
+        let gatheredRed = vDSP.gather(redStorage,
+                                      indices: indices)
+        
+        let gatheredGreen = vDSP.gather(greenStorage,
+                                        indices: indices)
+        
+        let gatheredBlue = vDSP.gather(blueStorage,
+                                       indices: indices)
+        
+        centroids[centroid.offset].red = vDSP.mean(gatheredRed)
+        centroids[centroid.offset].green = vDSP.mean(gatheredGreen)
+        centroids[centroid.offset].blue = vDSP.mean(gatheredBlue)
+      }
+    }
+    
+    return pixelCounts.elementsEqual(centroids.map { return $0.pixelCount }) { a, b in
+      return abs(a - b) < tolerance
+    }
+  }
+
+  func calculateKMeans() {
+    //    let url = Bundle.main.url(forResource: selectedThumbnail.resource,
+    //                              withExtension: selectedThumbnail.ext)!
+
+    guard let url = self.image?.fileURL,
+      let cgImage = NSImage(contentsOf: url)?.cgImage(
+        forProposedRect: nil,
+        context: nil,
+        hints: nil
+      )
+    else {
+      fatalError("Couldn't get cg image?")
+      return
+    }
+
+    self.sourceImage = cgImage
+    self.quantizedImage = sourceImage
+
+    guard
+      let rgbSources: [vImage.PixelBuffer<vImage.PlanarF>] = try? vImage.PixelBuffer<vImage.InterleavedFx3>(
+        cgImage: sourceImage,
+        cgImageFormat: &rgbImageFormat
+      ).planarBuffers()
+    else {
+      fatalError("Couldn't get rgb sources?")
+    }
+
+    rgbSources[0].scale(destination: storage.redBuffer)
+    rgbSources[1].scale(destination: storage.greenBuffer)
+    rgbSources[2].scale(destination: storage.blueBuffer)
+
+    self.isBusy = true
+
+    initializeCentroids()
+//    populateHistogramPointCloud()
+//    updateCentroidNodes()
+
+    update()
+  }
+
   func allocateDistancesBuffer() {
     if distances != nil {
       distances.deallocate()
@@ -97,12 +196,134 @@ extension DominantColourHandler {
     //  }
 
   }
-
-  func didSetSourceImages() {
-    if sourceImages.count == 1 {
-      selectedThumbnail = sourceImages.first!
+  
+  /// Iterates over the `updateCentroids` function until the solution converges or the
+  /// iteration count equals `maximumIterations`.
+  func update() {
+    Task {
+      var converged = false
+      var iterationCount = 0
+      
+      while !converged && iterationCount < maximumIterations {
+        converged = updateCentroids()
+        iterationCount += 1
+      }
+      
+      NSLog("Converged in \(iterationCount) iterations.")
+      
+      DispatchQueue.main.async { [self] in
+        
+        dominantColors = centroids.map {
+          DominantColor($0)
+        }
+        
+        updateCentroidNodes()
+        makeQuantizedImage()
+        isBusy = false
+      }
     }
+  }
 
+  /// - Tag: initializeCentroids
+  func initializeCentroids() {
+    self.centroids.removeAll()
+
+    let randomIndex = Int.random(in: 0..<dimension * dimension)
+    centroids.append(
+      Centroid(
+        red: storage.redStorage[randomIndex],
+        green: storage.greenStorage[randomIndex],
+        blue: storage.blueStorage[randomIndex]))
+
+    // Use the first row of the `distances` buffer as temporary storage.
+    let tmp = UnsafeMutableBufferPointer(
+      start: distances.baseAddress!,
+      count: dimension * dimension
+    )
+    for i in 1..<k {
+      distanceSquared(
+        x0: storage.greenStorage.baseAddress!, x1: centroids[i - 1].green,
+        y0: storage.blueStorage.baseAddress!, y1: centroids[i - 1].blue,
+        z0: storage.redStorage.baseAddress!, z1: centroids[i - 1].red,
+        n: storage.greenStorage.count,
+        result: tmp.baseAddress!)
+
+      let randomIndex = weightedRandomIndex(tmp)
+
+      centroids.append(
+        Centroid(
+          red: storage.redStorage[randomIndex],
+          green: storage.greenStorage[randomIndex],
+          blue: storage.blueStorage[randomIndex]))
+    }
+  }
+
+  func distanceSquared(
+    x0: UnsafePointer<Float>, x1: Float,
+    y0: UnsafePointer<Float>, y1: Float,
+    z0: UnsafePointer<Float>, z1: Float,
+    n: Int,
+    result: UnsafeMutablePointer<Float>
+  ) {
+
+    var x = subtract(a: x0, b: x1, n: n)
+    vDSP.square(x, result: &x)
+
+    var y = subtract(a: y0, b: y1, n: n)
+    vDSP.square(y, result: &y)
+
+    var z = subtract(a: z0, b: z1, n: n)
+    vDSP.square(z, result: &z)
+
+    vDSP_vadd(x, 1, y, 1, result, 1, vDSP_Length(n))
+    vDSP_vadd(result, 1, z, 1, result, 1, vDSP_Length(n))
+  }
+
+  func subtract(a: UnsafePointer<Float>, b: Float, n: Int) -> [Float] {
+    return [Float](unsafeUninitializedCapacity: n) {
+      buffer, count in
+
+      vDSP_vsub(
+        a, 1,
+        [b], 0,
+        buffer.baseAddress!, 1,
+        vDSP_Length(n))
+
+      count = n
+    }
+  }
+
+  func saturate<T: FloatingPoint>(_ x: T) -> T {
+    return min(max(0, x), 1)
+  }
+  //  func didSetSourceImages() {
+  //    if sourceImages.count == 1 {
+  //      selectedThumbnail = sourceImages.first!
+  //    }
+  //  }
+  
+  func weightedRandomIndex(_ weights: UnsafeMutableBufferPointer<Float>) -> Int {
+    var outputDescriptor = BNNSNDArrayDescriptor.allocateUninitialized(
+      scalarType: Float.self,
+      shape: .vector(1))
+    
+    var probabilities = BNNSNDArrayDescriptor(
+      data: weights,
+      shape: .vector(weights.count))!
+    
+    let randomGenerator = BNNSCreateRandomGenerator(
+      BNNSRandomGeneratorMethodAES_CTR,
+      nil)
+    
+    BNNSRandomFillCategoricalFloat(
+      randomGenerator, &outputDescriptor, &probabilities, false)
+    
+    defer {
+      BNNSDestroyRandomGenerator(randomGenerator)
+      outputDescriptor.deallocate()
+    }
+    
+    return Int(outputDescriptor.makeArray(of: Float.self)!.first!)
   }
 }
 
