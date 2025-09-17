@@ -13,6 +13,7 @@ import SwiftUI
 public struct ImageExtractWrapperView: View {
   
   @StateObject private var store = DominantColourHandler(imageURL: "https://cdn2.steamgriddb.com/hero/9fb39fd910a6708e156d228c541bb278.png".toURL!)
+  public init() {}
 //  @Environment(AppHandler.self) private var store
   public var body: some View {
     

@@ -16,6 +16,7 @@ public final class DominantColourHandler: ObservableObject {
   @Published var isBusy: Bool = false
 
   @Published var image: Thumbnail?
+  
   let dimension: Int
   let tolerance = 10
   //  let imageURL: URL
@@ -27,7 +28,7 @@ public final class DominantColourHandler: ObservableObject {
   var distances: UnsafeMutableBufferPointer<Float>?
 
   /// The number of centroids.
-  @Published var k = 5
+  @Published var k: Int = 5
 
   /// The SceneKit nodes that correspond to the values in the `centroids` array.
   var centroidNodes = [SCNNode]()
@@ -74,23 +75,29 @@ public final class DominantColourHandler: ObservableObject {
 
   public init(
     imageURL: URL,
-    //    image: Image,
     dimension: Int = 256
   ) {
+    
+    print("Have started the DominantColourHandler initialiser — let's see how far we get.")
     self.dimension = dimension
     self.storage = ColourValueStorage(dimension: dimension)
+    
     self.centroidIndicesDescriptor = BNNSNDArrayDescriptor.allocateUninitialized(
       scalarType: Int32.self,
       shape: .matrixRowMajor(dimension * dimension, 1)
     )
+    print("Successfully allocated the `BNNSNDArrayDescriptor`, `centroidIndicesDescriptor` is set up")
 
     var imageResult: Thumbnail?
     Task { @MainActor in
       if let imageThumbnail = await ThumbnailGenerator.generateThumbnailRepresentation(imageURL: imageURL) {
         imageResult = imageThumbnail
+      } else {
+        print("No image was generated")
       }
     }  // REND task
     self.image = imageResult
+    print("We are proceeding; is there an image at this point? \(String(describing: self.image))")
     self.allocateDistancesBuffer()
   }
 
@@ -233,14 +240,20 @@ extension DominantColourHandler {
   }
 
   func allocateDistancesBuffer() {
+    print("Going to allocate distances buffer")
     if distances != nil {
       distances?.deallocate()
+    } else {
+      print("Distances is nil")
     }
-    distances = UnsafeMutableBufferPointer<Float>.allocate(capacity: dimension * dimension * k)
+    let capacity: Int = dimension * dimension * k
+    distances = UnsafeMutableBufferPointer<Float>.allocate(capacity: capacity)
+    print("Distances allocated, with capacity: \(capacity)")
   }
 
   // MARK: - Did sets
   func didSetK() {
+    print("`k` was updated, let's run the allocation and calculation methods")
     //  didSet {
     allocateDistancesBuffer()
     calculateKMeans()
