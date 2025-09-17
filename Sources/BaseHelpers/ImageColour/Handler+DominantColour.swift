@@ -13,36 +13,32 @@ import SwiftUI
 import simd
 
 @MainActor
-public final class DominantColourHandler: ObservableObject {
+@Observable
+public final class DominantColourHandler {
 
-  @Published var isBusy: Bool = false
-
+  var isBusy: Bool = false
   var imageFileURL: URL? = nil
-  @Published var image: Thumbnail?
+  var image: Thumbnail?
 
   let dimension: Int
   let tolerance = 10
 
   /// Storage for a matrix with `dimension * dimension` columns and `k` rows that stores the
   /// distances squared of each pixel color for each centroid.
-  //  @ObservationIgnored
+  @ObservationIgnored
   var distances: UnsafeMutableBufferPointer<Float>?
 
   /// The number of centroids.
-  @Published var k: Int = 2
+  var k: Int = 2
 
   /// The SceneKit nodes that correspond to the values in the `centroids` array.
+  @ObservationIgnored
   var centroidNodes = [SCNNode]()
-  /// The SceneKit scene that displays the RGB point cloud.
-  @Published var scene = SCNScene()
 
-  /// An array of source images.
-  //    var sourceImages: [Thumbnail] = []
+  var sourceImage: CGImage? = nil
+  var quantizedImage: CGImage? = nil
 
-  @Published var sourceImage: CGImage? = nil
-  @Published var quantizedImage: CGImage? = nil
-
-  //  @ObservationIgnored
+  @ObservationIgnored
   var rgbImageFormat: vImage_CGImageFormat? = vImage_CGImageFormat(
     bitsPerComponent: 32,
     bitsPerPixel: 32 * 3,
@@ -54,25 +50,24 @@ public final class DominantColourHandler: ObservableObject {
     )
   )
 
-  //  @ObservationIgnored
+    @ObservationIgnored
   var storage: ColourValueStorage
 
   /// The array of `k` centroids.
-  //  @ObservationIgnored
+    @ObservationIgnored
   var centroids = [Centroid]()
 
   /// The array of `k` dominant colors that the app derives from `centroids` and displays  in the user interface.
-  @Published var dominantColors: [DominantColor] = []
-  //  @Published var dominantColors = [DominantColor.zero]
+  var dominantColors: [DominantColor] = []
 
   /// The BNNS array descriptor that receives the centroid indices.
-  //  @ObservationIgnored
+    @ObservationIgnored
   let centroidIndicesDescriptor: BNNSNDArrayDescriptor
 
-  //  @ObservationIgnored
+    @ObservationIgnored
   let maximumIterations = 50
 
-  //  @ObservationIgnored
+    @ObservationIgnored
   var iterationCount = 0
 
   public init(
@@ -114,8 +109,6 @@ extension DominantColourHandler {
     allocateDistancesBuffer()
     calculateKMeans()
   }
-
-
 
   func setUp(_ fileURL: URL) {
     print("Ran setup method once the image is downloaded. It should exist at \(fileURL)")
@@ -602,7 +595,6 @@ extension DominantColourHandler {
       srcDescriptor.deallocate()
     }
   }  // END centroid something
-
 
   func generateThumbnailRepresentations() {
 
