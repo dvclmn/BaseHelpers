@@ -20,6 +20,7 @@ extension EnvironmentValues {
   @Entry public var isEmphasised: Bool = false
   @Entry public var isCompactMode: Bool = false
   @Entry public var isConnectedToInternet: Bool = false
+  @Entry public var isScrollAtStart: Bool = true
   
 //  @Entry public var networkMonitor: NetworkMonitor = .init()
 
