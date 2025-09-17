@@ -7,37 +7,25 @@
 
 import SwiftUI
 
-public struct CentroidsView: View {
-  @EnvironmentObject var store: DominantColourHandler
-//  @Environment(DominantColourHandler.self) private var store
-
-  public var body: some View {
-
-    HStack {
-
-      Picker("Number of centroids", selection: $store.k) {
-        ForEach([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], id: \.self) {
-          Text("\($0)")
-        }
-      }
-      .pickerStyle(.segmented)
-      .disabled(store.isBusy)
-
-      Spacer()
-
-      Button("Run again") {
-        store.calculateKMeans()
-      }
-      .disabled(store.isBusy)
-    } // END hstack
-    .padding()
-
-    .task(id: store.k) {
-      store.didSetCentroids()
-    }
-
-  }
-}
+//public struct CentroidsView: View {
+//  @EnvironmentObject var store: DominantColourHandler
+//
+//  public var body: some View {
+//
+//    HStack {
+//
+//      
+//
+//      Spacer()
+//
+//      
+//    }  // END hstack
+//    .padding()
+//
+//    
+//
+//  }
+//}
 //#if DEBUG
 //@available(macOS 15, iOS 18, *)
 //#Preview(traits: .size(.normal)) {

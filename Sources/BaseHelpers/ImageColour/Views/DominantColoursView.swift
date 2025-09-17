@@ -8,25 +8,31 @@
 import SwiftUI
 
 public struct DominantColoursView: View {
-//  @Environment(DominantColourHandler.self) private var store
-  
+  //  @Environment(DominantColourHandler.self) private var store
+
   let colours: [DominantColor]
   let isBusy: Bool
   public var body: some View {
-    
+
     HStack {
-      ForEach(colours.sorted(by: >)) { dominantColor in
-        VStack {
-          RoundedRectangle(cornerSize: .init(width: 5, height: 5))
-            .fill(dominantColor.color)
-            .frame(height: 50)
-          Text("\(dominantColor.percentage)%")
-            .opacity(dominantColor.percentage == 0 ? 0 : 1)
-        }
+      if !colours.isEmpty {
+        ForEach(colours.sorted(by: >)) { dominantColor in
+          VStack {
+            RoundedRectangle(cornerRadius: Styles.sizeSmall)
+              .fill(dominantColor.color)
+              .frame(height: 50)
+            Text("\(dominantColor.percentage)%")
+              .opacity(dominantColor.percentage == 0 ? 0 : 1)
+          }
+//          .aspectRatio(1, contentMode: .fit)
+        }  // ENd foreach
+
+      } else {
+        ContentUnavailableView("No colours extracted", systemImage: Icons.palette.icon)
       }
-    }
-    .padding()
+    } // END hstack
     .opacity(isBusy ? 0 : 1)
-    
+//    .frame(minWidth: 100)
+
   }
 }

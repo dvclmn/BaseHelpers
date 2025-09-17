@@ -124,6 +124,7 @@ extension DominantColourHandler {
     print("Ran setup method once the image is downloaded. It should exist at \(fileURL)")
     self.imageFileURL = fileURL
     generateThumbnailRepresentations()
+    calculateKMeans()
   }
 
   /// Updates centroids and returns true if pixel counts haven't changed (that is, the solution converged).
@@ -258,29 +259,29 @@ extension DominantColourHandler {
   /// Iterates over the `updateCentroids` function until the solution converges or the
   /// iteration count equals `maximumIterations`.
   func update() {
-    //    Task {
-    var converged = false
-    var iterationCount = 0
-
-    while !converged && iterationCount < maximumIterations {
-      converged = updateCentroids()
-      iterationCount += 1
-    }
-
-    NSLog("Converged in \(iterationCount) iterations.")
-
-    Task { @MainActor in
-      //      DispatchQueue.main.async { [self] in
-
-      dominantColors = centroids.map {
-        DominantColor($0, dimension: dimension)
+    Task {
+      var converged = false
+      var iterationCount = 0
+      
+      while !converged && iterationCount < maximumIterations {
+        converged = updateCentroids()
+        iterationCount += 1
       }
-
-      updateCentroidNodes()
-      makeQuantizedImage()
-      isBusy = false
+      
+      NSLog("Converged in \(iterationCount) iterations.")
+      
+      Task { @MainActor in
+        //      DispatchQueue.main.async { [self] in
+        
+        dominantColors = centroids.map {
+          DominantColor($0, dimension: dimension)
+        }
+        
+        updateCentroidNodes()
+        makeQuantizedImage()
+        isBusy = false
+      }
     }
-
   }
 
   /// - Tag: initializeCentroids
