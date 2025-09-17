@@ -10,13 +10,15 @@ import Cocoa
 import SceneKit
 import SwiftUI
 import simd
+import QuickLookThumbnailing
 
 @MainActor
 public final class DominantColourHandler: ObservableObject {
   @Published var isBusy: Bool = false
 
+  var imageFileURL: URL?
   @Published var image: Thumbnail?
-  
+
   let dimension: Int
   let tolerance = 10
   //  let imageURL: URL
@@ -24,7 +26,7 @@ public final class DominantColourHandler: ObservableObject {
 
   /// Storage for a matrix with `dimension * dimension` columns and `k` rows that stores the
   /// distances squared of each pixel color for each centroid.
-//  @ObservationIgnored
+  //  @ObservationIgnored
   var distances: UnsafeMutableBufferPointer<Float>?
 
   /// The number of centroids.
@@ -36,12 +38,12 @@ public final class DominantColourHandler: ObservableObject {
   @Published var scene = SCNScene()
 
   /// An array of source images.
-  //  var sourceImages: [Thumbnail] = []
+//    var sourceImages: [Thumbnail] = []
 
   @Published var sourceImage: CGImage? = .emptyCGImage
   @Published var quantizedImage: CGImage? = .emptyCGImage
 
-//  @ObservationIgnored
+  //  @ObservationIgnored
   var rgbImageFormat: vImage_CGImageFormat? = vImage_CGImageFormat(
     bitsPerComponent: 32,
     bitsPerPixel: 32 * 3,
@@ -53,50 +55,53 @@ public final class DominantColourHandler: ObservableObject {
     )
   )
 
-//  @ObservationIgnored
+  //  @ObservationIgnored
   var storage: ColourValueStorage
 
   /// The array of `k` centroids.
-//  @ObservationIgnored
+  //  @ObservationIgnored
   var centroids = [Centroid]()
 
   /// The array of `k` dominant colors that the app derives from `centroids` and displays  in the user interface.
   @Published var dominantColors = [DominantColor.zero]
 
   /// The BNNS array descriptor that receives the centroid indices.
-//  @ObservationIgnored
+  //  @ObservationIgnored
   let centroidIndicesDescriptor: BNNSNDArrayDescriptor
 
-//  @ObservationIgnored
+  //  @ObservationIgnored
   let maximumIterations = 50
 
-//  @ObservationIgnored
+  //  @ObservationIgnored
   var iterationCount = 0
 
   public init(
-    imageURL: URL,
+//    imageFileURL: URL?,
     dimension: Int = 256
   ) {
-    
+
     print("Have started the DominantColourHandler initialiser — let's see how far we get.")
     self.dimension = dimension
+    self.imageFileURL = nil
     self.storage = ColourValueStorage(dimension: dimension)
-    
+
     self.centroidIndicesDescriptor = BNNSNDArrayDescriptor.allocateUninitialized(
       scalarType: Int32.self,
       shape: .matrixRowMajor(dimension * dimension, 1)
     )
     print("Successfully allocated the `BNNSNDArrayDescriptor`, `centroidIndicesDescriptor` is set up")
 
-    var imageResult: Thumbnail?
-    Task { @MainActor in
-      if let imageThumbnail = await ThumbnailGenerator.generateThumbnailRepresentation(imageURL: imageURL) {
-        imageResult = imageThumbnail
-      } else {
-        print("No image was generated")
-      }
-    }  // REND task
-    self.image = imageResult
+    generateThumbnailRepresentations()
+    
+//    var imageResult: Thumbnail?
+//    Task { @MainActor in
+//      if let imageThumbnail = await ThumbnailGenerator.generateThumbnailRepresentation(imageURL: imageURL) {
+//        imageResult = imageThumbnail
+//      } else {
+//        print("No image was generated")
+//      }
+//    }  // REND task
+//    self.image = imageResult
     print("We are proceeding; is there an image at this point? \(String(describing: self.image))")
     self.allocateDistancesBuffer()
   }
@@ -563,10 +568,12 @@ extension DominantColourHandler {
         shape: .vector(indices.count)
       )
 
-      guard let dstDescriptor = BNNSNDArrayDescriptor(
-        data: destination,
-        shape: .vector(dimension * dimension)
-      ) else {
+      guard
+        let dstDescriptor = BNNSNDArrayDescriptor(
+          data: destination,
+          shape: .vector(dimension * dimension)
+        )
+      else {
         print("Error with `dstDescriptor`, no value")
         return
       }
@@ -586,6 +593,56 @@ extension DominantColourHandler {
       srcDescriptor.deallocate()
     }
   }  // END centroid something
+
+  func generateThumbnailRepresentations(//    forResource resource: String,
+  //    withExtension ext: String
+    )
+  {
+
+    guard let url = imageFileURL else {
+      assert(false, "The URL can't be nil")
+      return
+    }
+    // Set up the parameters of the request.
+    //    guard let url = Bundle.main.url(forResource: resource,
+    //                                    withExtension: ext) else {
+
+    //    guard let imageURL = await ThumbnailGenerator.downloadImageToDisk(from: imageFileURL) else {
+    //      print("Couldn't download the image and save it to disk")
+    //      return nil
+    //    }
+
+    // Handle the error case.
+    //      assert(false, "The URL can't be nil")
+    //      return
+    //    }
+    let size: CGSize = CGSize(width: 100, height: 100)
+    let scale = NSScreen.main?.backingScaleFactor ?? 1
+
+    // Create the thumbnail request.
+    let request = QLThumbnailGenerator.Request(
+      fileAt: url,
+      size: size,
+      scale: scale,
+      representationTypes: .thumbnail)
+
+    // Retrieve the singleton instance of the thumbnail generator and generate the thumbnails.
+    let generator = QLThumbnailGenerator.shared
+    generator.generateRepresentations(for: request) { (thumbnail, type, error) in
+      DispatchQueue.main.async {
+        if let thumbnail, let url = self.imageFileURL {
+          let x = Thumbnail(
+            thumbnail: thumbnail.cgImage,
+            fileURL: url
+//            resource: resource,
+//            ext: ext
+          )
+          self.image = x
+//          self.sourceImages.append(x)
+        }
+      }
+    }
+  }
 }
 
 extension CGImage {

@@ -12,14 +12,22 @@ import SwiftUI
 
 public struct ImageExtractWrapperView: View {
   
-  @StateObject private var store = DominantColourHandler(imageURL: "https://cdn2.steamgriddb.com/hero/9fb39fd910a6708e156d228c541bb278.png".toURL!)
+  @StateObject private var store = DominantColourHandler()
   public init() {}
-//  @Environment(AppHandler.self) private var store
+//    let fileURL = ThumbnailGenerator.downloadImageToDisk(from: "https://cdn2.steamgriddb.com/hero/9fb39fd910a6708e156d228c541bb278.png".toURL)
+//  }
+
   public var body: some View {
     
    ImageExtractView()
+      .task {
+        if store.imageFileURL == nil {
+          let fileURL = await ThumbnailGenerator.downloadImageToDisk(from: "https://cdn2.steamgriddb.com/hero/9fb39fd910a6708e156d228c541bb278.png".toURL)
+          store.imageFileURL = fileURL
+        }
+      }
       .environmentObject(store)
-    
+  
   }
 }
 
