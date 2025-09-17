@@ -8,7 +8,7 @@
 import SwiftUI
 
 /// A structure that represents a centroid.
-struct Centroid {
+public struct Centroid {
   /// The red channel value.
   var red: Float
 
@@ -23,12 +23,15 @@ struct Centroid {
 }
 
 /// A structure that represents a dominant color.
-struct DominantColor: Identifiable, Comparable {
-  var id = UUID()
-  let color: Color
-  let percentage: Int
+public struct DominantColor: Identifiable, Comparable {
+  public var id = UUID()
+  public let color: Color
+  public let percentage: Int
 
-  init(_ centroid: Centroid, dimension: Int) {
+  public init(
+    _ centroid: Centroid,
+    dimension: Int
+  ) {
     self.color = Color(
       red: Double(centroid.red),
       green: Double(centroid.green),
@@ -37,22 +40,22 @@ struct DominantColor: Identifiable, Comparable {
     self.percentage = Int(Float(centroid.pixelCount) / Float(dimension * dimension) * 100)
   }
 
-  init(color: Color, percentage: Int) {
+  public init(color: Color, percentage: Int) {
     self.color = color
     self.percentage = percentage
   }
 
-  static func < (lhs: DominantColor, rhs: DominantColor) -> Bool {
+  public static func < (lhs: DominantColor, rhs: DominantColor) -> Bool {
     return lhs.percentage < rhs.percentage
   }
 
-  static var zero: DominantColor {
+  public static var zero: DominantColor {
     return DominantColor(color: .clear, percentage: 0)
   }
 }
 
 /// A structure that represents a thumbnail.
-struct Thumbnail: Identifiable, Hashable, Sendable {
-  var id = UUID()
-  let thumbnail: CGImage
+public struct Thumbnail: Identifiable, Hashable, Sendable {
+  public var id = UUID()
+  public let thumbnail: CGImage
 }

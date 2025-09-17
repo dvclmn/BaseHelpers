@@ -16,9 +16,12 @@ import simd
 @Observable
 public final class DominantColourHandler {
 
-  var isBusy: Bool = false
-  var imageFileURL: URL? = nil
-  var image: Thumbnail?
+  public var isBusy: Bool = false
+  public var imageFileURL: URL? = nil
+  public var image: Thumbnail?
+
+  /// The array of `k` dominant colors that the app derives from `centroids` and displays  in the user interface.
+  public var dominantColors: [DominantColor] = []
 
   let dimension: Int
   let tolerance = 10
@@ -29,14 +32,14 @@ public final class DominantColourHandler {
   var distances: UnsafeMutableBufferPointer<Float>?
 
   /// The number of centroids.
-  var k: Int = 2
+  public var k: Int = 2
 
   /// The SceneKit nodes that correspond to the values in the `centroids` array.
   @ObservationIgnored
   var centroidNodes = [SCNNode]()
 
-  var sourceImage: CGImage? = nil
-  var quantizedImage: CGImage? = nil
+  public var sourceImage: CGImage? = nil
+  public var quantizedImage: CGImage? = nil
 
   @ObservationIgnored
   var rgbImageFormat: vImage_CGImageFormat? = vImage_CGImageFormat(
@@ -50,24 +53,21 @@ public final class DominantColourHandler {
     )
   )
 
-    @ObservationIgnored
+  @ObservationIgnored
   var storage: ColourValueStorage
 
   /// The array of `k` centroids.
-    @ObservationIgnored
+  @ObservationIgnored
   var centroids = [Centroid]()
 
-  /// The array of `k` dominant colors that the app derives from `centroids` and displays  in the user interface.
-  var dominantColors: [DominantColor] = []
-
   /// The BNNS array descriptor that receives the centroid indices.
-    @ObservationIgnored
+  @ObservationIgnored
   let centroidIndicesDescriptor: BNNSNDArrayDescriptor
 
-    @ObservationIgnored
+  @ObservationIgnored
   let maximumIterations = 50
 
-    @ObservationIgnored
+  @ObservationIgnored
   var iterationCount = 0
 
   public init(
@@ -105,7 +105,7 @@ public final class DominantColourHandler {
 
 extension DominantColourHandler {
 
-  func didSetCentroids() {
+  public func didSetCentroids() {
     allocateDistancesBuffer()
     calculateKMeans()
   }
@@ -173,26 +173,18 @@ extension DominantColourHandler {
     }
   }
 
-  func calculateKMeans() {
+  public func calculateKMeans() {
     print("Running `calculateKMeans`...")
     guard let url = self.imageFileURL else {
       print("No image file path yet")
       return
     }
 
-    guard let cgImage = ThumbnailGenerator.cgImageFromURL(url)
-    //    guard let cgImage = self.thumbnailCGImageFromURL(url, maxPixelSize: 120)
-    else {
+    guard let cgImage = ThumbnailGenerator.cgImageFromURL(url) else {
       print("Unable to create a CGImage from URL")
       return
-      ////      fatalError("Couldn't get cg image?")
     }
-    //    guard let cgImage = NSImage(contentsOf: url)?.cgImage(
-    //      forProposedRect: nil,
-    //      context: nil,
-    //      hints: nil
-    //    )
-
+    
     self.sourceImage = cgImage
     self.quantizedImage = sourceImage
 
@@ -238,11 +230,8 @@ extension DominantColourHandler {
   // MARK: - Did sets
   func didSetK() {
     print("`k` was updated, let's run the allocation and calculation methods")
-    //  didSet {
     allocateDistancesBuffer()
     calculateKMeans()
-    //  }
-
   }
 
   /// Iterates over the `updateCentroids` function until the solution converges or the
@@ -260,8 +249,6 @@ extension DominantColourHandler {
       NSLog("Converged in \(iterationCount) iterations.")
 
       Task { @MainActor in
-        //      DispatchQueue.main.async { [self] in
-
         dominantColors = centroids.map {
           DominantColor($0, dimension: dimension)
         }
@@ -345,8 +332,7 @@ extension DominantColourHandler {
     b: Float,
     n: Int
   ) -> [Float] {
-    //    guard let address = buff
-    //    return
+
     let result = [Float](unsafeUninitializedCapacity: n) {
       buffer, count in
 
@@ -364,11 +350,6 @@ extension DominantColourHandler {
   func saturate<T: FloatingPoint>(_ x: T) -> T {
     return min(max(0, x), 1)
   }
-  //  func didSetSourceImages() {
-  //    if sourceImages.count == 1 {
-  //      selectedThumbnail = sourceImages.first!
-  //    }
-  //  }
 
   func weightedRandomIndex(_ weights: UnsafeMutableBufferPointer<Float>) -> Int? {
     var outputDescriptor = BNNSNDArrayDescriptor.allocateUninitialized(
@@ -412,10 +393,6 @@ extension DominantColourHandler {
 
   func populateDistances() {
 
-    //    guard let distances, let address = distances.baseAddress else {
-    //      print("Couldn't get distances value or base address")
-    //      return
-    //    }
     for centroid in centroids.enumerated() {
       let result: UnsafeMutablePointer<Float>? = distances?.baseAddress?.advanced(
         by: dimension * dimension * centroid.offset
@@ -537,7 +514,6 @@ extension DominantColourHandler {
   }
 
   private func something(
-    //    _ centroid: Int32,
     _ centroid: (offset: Int, element: Centroid),
     indices centroidIndices: [Int32]
   ) {
@@ -611,28 +587,3 @@ extension DominantColourHandler {
     self.image = Thumbnail(thumbnail: cgImage)
   }
 }
-
-//extension CGImage {
-//  /// A 1 x 1 Core Graphics image.
-//  static var emptyCGImage: CGImage? {
-//    let buffer = vImage.PixelBuffer(
-//      pixelValues: [0],
-//      size: .init(width: 1, height: 1),
-//      pixelFormat: vImage.Planar8.self)
-//
-//    guard
-//      let fmt = vImage_CGImageFormat(
-//        bitsPerComponent: 8,
-//        bitsPerPixel: 8,
-//        colorSpace: CGColorSpaceCreateDeviceGray(),
-//        bitmapInfo: CGBitmapInfo(rawValue: CGImageAlphaInfo.none.rawValue),
-//        renderingIntent: .defaultIntent
-//      )
-//    else {
-//      print("No value for the `fmt` thing")
-//      return nil
-//    }
-//
-//    return buffer.makeCGImage(cgImageFormat: fmt)
-//  }
-//}
