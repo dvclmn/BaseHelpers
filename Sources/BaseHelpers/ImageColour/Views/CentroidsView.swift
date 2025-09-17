@@ -8,10 +8,11 @@
 import SwiftUI
 
 public struct CentroidsView: View {
-  @Environment(DominantColourHandler.self) private var store
+  @EnvironmentObject var store: DominantColourHandler
+//  @Environment(DominantColourHandler.self) private var store
 
   public var body: some View {
-    @Bindable var store = store
+
     HStack {
 
       Picker("Number of centroids", selection: $store.k) {

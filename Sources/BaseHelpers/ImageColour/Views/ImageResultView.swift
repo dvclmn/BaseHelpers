@@ -9,7 +9,8 @@ import SceneKit
 import SwiftUI
 
 public struct ImageResultView: View {
-  @Environment(DominantColourHandler.self) private var store
+  @EnvironmentObject var store: DominantColourHandler
+  
   public var body: some View {
 
     HStack {

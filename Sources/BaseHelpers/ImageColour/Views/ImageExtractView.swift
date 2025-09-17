@@ -8,26 +8,41 @@
 import SceneKit
 import SwiftUI
 
+import SwiftUI
+
+public struct ImageExtractWrapperView: View {
+  
+  @StateObject private var store = DominantColourHandler(imageURL: "https://cdn2.steamgriddb.com/hero/9fb39fd910a6708e156d228c541bb278.png".toURL!)
+//  @Environment(AppHandler.self) private var store
+  public var body: some View {
+    
+   ImageExtractView()
+      .environmentObject(store)
+    
+  }
+}
+
+
 public struct ImageExtractView: View {
-  @State private var store: DominantColourHandler
+//  @State private var store: DominantColourHandler
   
 //  @Bindable var store: DominantColourHandler
 
-  public init(imageURL: URL) {
-    self._store = State(initialValue: DominantColourHandler(imageURL: imageURL))
-  }
+//  public init(imageURL: URL) {
+//    self._store = State(initialValue: DominantColourHandler(imageURL: imageURL))
+//  }
+//  
+//  public init?(imageURLString: String) {
+//    if let url = imageURLString.toURL {
+//      self._store = State(initialValue: DominantColourHandler(imageURL: url))
+//    } else {
+//      return nil
+//    }
+//  }
   
-  public init?(imageURLString: String) {
-    if let url = imageURLString.toURL {
-      self._store = State(initialValue: DominantColourHandler(imageURL: url))
-    } else {
-      return nil
-    }
-  }
+  @EnvironmentObject var store: DominantColourHandler
 
   public var body: some View {
-
-    @Bindable var store = store
 
     HStack {
       if let img = store.image {
@@ -64,14 +79,13 @@ public struct ImageExtractView: View {
 //      CentroidsView()
 
     }  // END main vstack
-    .environment(store)
     .padding()
   }
 }
 
-#if DEBUG
-@available(macOS 15, iOS 18, *)
-#Preview {
-  ImageExtractView(imageURLString: "https://cdn2.steamgriddb.com/hero/9fb39fd910a6708e156d228c541bb278.png")
-}
-#endif
+//#if DEBUG
+//@available(macOS 15, iOS 18, *)
+//#Preview {
+//  ImageExtractView(imageURLString: "https://cdn2.steamgriddb.com/hero/9fb39fd910a6708e156d228c541bb278.png")
+//}
+//#endif

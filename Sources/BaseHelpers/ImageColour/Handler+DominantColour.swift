@@ -12,11 +12,10 @@ import SwiftUI
 import simd
 
 @MainActor
-@Observable
-public final class DominantColourHandler {
-  var isBusy: Bool = false
+public final class DominantColourHandler: ObservableObject {
+  @Published var isBusy: Bool = false
 
-  let image: Thumbnail?
+  @Published var image: Thumbnail?
   let dimension: Int
   let tolerance = 10
   //  let imageURL: URL
@@ -24,24 +23,24 @@ public final class DominantColourHandler {
 
   /// Storage for a matrix with `dimension * dimension` columns and `k` rows that stores the
   /// distances squared of each pixel color for each centroid.
-  @ObservationIgnored
+//  @ObservationIgnored
   var distances: UnsafeMutableBufferPointer<Float>?
 
   /// The number of centroids.
-  var k = 5
+  @Published var k = 5
 
   /// The SceneKit nodes that correspond to the values in the `centroids` array.
   var centroidNodes = [SCNNode]()
   /// The SceneKit scene that displays the RGB point cloud.
-  var scene = SCNScene()
+  @Published var scene = SCNScene()
 
   /// An array of source images.
   //  var sourceImages: [Thumbnail] = []
 
-  var sourceImage: CGImage? = .emptyCGImage
-  var quantizedImage: CGImage? = .emptyCGImage
+  @Published var sourceImage: CGImage? = .emptyCGImage
+  @Published var quantizedImage: CGImage? = .emptyCGImage
 
-  @ObservationIgnored
+//  @ObservationIgnored
   var rgbImageFormat: vImage_CGImageFormat? = vImage_CGImageFormat(
     bitsPerComponent: 32,
     bitsPerPixel: 32 * 3,
@@ -53,24 +52,24 @@ public final class DominantColourHandler {
     )
   )
 
-  @ObservationIgnored
+//  @ObservationIgnored
   var storage: ColourValueStorage
 
   /// The array of `k` centroids.
-  @ObservationIgnored
+//  @ObservationIgnored
   var centroids = [Centroid]()
 
   /// The array of `k` dominant colors that the app derives from `centroids` and displays  in the user interface.
-  var dominantColors = [DominantColor.zero]
+  @Published var dominantColors = [DominantColor.zero]
 
   /// The BNNS array descriptor that receives the centroid indices.
-  @ObservationIgnored
+//  @ObservationIgnored
   let centroidIndicesDescriptor: BNNSNDArrayDescriptor
 
-  @ObservationIgnored
+//  @ObservationIgnored
   let maximumIterations = 50
 
-  @ObservationIgnored
+//  @ObservationIgnored
   var iterationCount = 0
 
   public init(
