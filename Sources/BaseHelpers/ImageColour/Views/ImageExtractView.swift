@@ -49,16 +49,7 @@ public struct ImageExtractView: View {
         )
         .resizable()
         .aspectRatio(contentMode: .fit)
-        //        .onTapGesture {
-        //          store.selectedThumbnail = thumbnail
-        //        }
-        //        .border(
-        //          store.selectedThumbnail == thumbnail ? .blue : .gray,
-        //          width: 4
-        //        )
         .disabled(store.isBusy)
-
-
 
       } else {
         ContentUnavailableView("No Thumbnail image found", systemImage: Icons.warning.icon)
@@ -77,10 +68,3 @@ public struct ImageExtractView: View {
     .padding()
   }
 }
-
-//#if DEBUG
-//@available(macOS 15, iOS 18, *)
-//#Preview {
-//  ImageExtractView(imageURLString: "https://cdn2.steamgriddb.com/hero/9fb39fd910a6708e156d228c541bb278.png")
-//}
-//#endif

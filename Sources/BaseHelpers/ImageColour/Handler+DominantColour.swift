@@ -113,6 +113,12 @@ extension DominantColourHandler {
     allocateDistancesBuffer()
     calculateKMeans()
   }
+  
+  func cgImageFromURL(_ url: URL) -> CGImage? {
+    guard let nsImage = NSImage(contentsOf: url) else { return nil }
+    var rect = CGRect(origin: .zero, size: nsImage.size)
+    return nsImage.cgImage(forProposedRect: &rect, context: nil, hints: nil)
+  }
 
   func setUp(_ fileURL: URL) {
     print("Ran setup method once the image is downloaded. It should exist at \(fileURL)")
@@ -133,6 +139,7 @@ extension DominantColourHandler {
   /// 6. Repeat steps 3, 4, and 5 until the solution converges.
   /// - Tag: updateCentroids
   func updateCentroids() -> Bool {
+    print("Updating centroids.")
     // The pixel counts per centroid before this iteration.
     let pixelCounts = centroids.map { return $0.pixelCount }
 
@@ -177,15 +184,24 @@ extension DominantColourHandler {
 
   func calculateKMeans() {
     print("Running `calculateKMeans`...")
-    guard let url = self.image?.fileURL,
-      let cgImage = NSImage(contentsOf: url)?.cgImage(
-        forProposedRect: nil,
-        context: nil,
-        hints: nil
-      )
-    else {
-      fatalError("Couldn't get cg image?")
+    guard let url = self.imageFileURL else {
+      print("No image file path yet")
+      return
     }
+
+    
+    guard let cgImage = self.cgImageFromURL(url)
+//    guard let cgImage = self.thumbnailCGImageFromURL(url, maxPixelSize: 120)
+    else {
+      print("Unable to create a CGImage from URL")
+      return
+      ////      fatalError("Couldn't get cg image?")
+    }
+    //    guard let cgImage = NSImage(contentsOf: url)?.cgImage(
+    //      forProposedRect: nil,
+    //      context: nil,
+    //      hints: nil
+    //    )
 
     self.sourceImage = cgImage
     self.quantizedImage = sourceImage
@@ -621,15 +637,12 @@ extension DominantColourHandler {
     //      return
     //    }
 
-    guard let cgImage = thumbnailCGImageFromURL(url, maxPixelSize: 90) else {
+    guard let cgImage = thumbnailCGImageFromURL(url, maxPixelSize: 30) else {
       print("Error with either `CGImageSourceCreateWithURL` or `CGImageSourceCreateImageAtIndex`")
       return
     }
 
-    let thumb = Thumbnail(
-      thumbnail: cgImage,
-      fileURL: url
-    )
+    let thumb = Thumbnail(thumbnail: cgImage)
 
     self.image = thumb
 

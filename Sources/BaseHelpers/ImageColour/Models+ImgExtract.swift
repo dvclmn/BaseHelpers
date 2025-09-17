@@ -133,7 +133,7 @@ struct DominantColor: Identifiable, Comparable {
 struct Thumbnail: Identifiable, Hashable, Sendable {
   var id = UUID()
   let thumbnail: CGImage
-  let fileURL: URL
+//  let fileURL: URL
   //  var name: String
   //  var resource: String
   //  var ext: String
