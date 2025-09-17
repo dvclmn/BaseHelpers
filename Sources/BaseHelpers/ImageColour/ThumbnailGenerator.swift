@@ -10,8 +10,8 @@ import QuickLookThumbnailing
 import SwiftUI
 
 @MainActor
-struct ThumbnailGenerator {
-  static func downloadImageToDisk(from webURL: URL?) async -> URL? {
+public struct ThumbnailGenerator {
+  public static func downloadImageToDisk(from webURL: URL?) async -> URL? {
     guard let url = webURL else {
       return nil
     }
@@ -40,4 +40,22 @@ struct ThumbnailGenerator {
     }
   }
 
+  public static func thumbnailCGImageFromURL(
+    _ url: URL,
+    maxPixelSize: Int
+  ) -> CGImage? {
+    guard let source = CGImageSourceCreateWithURL(url as CFURL, nil) else { return nil }
+    let options =
+      [
+        kCGImageSourceCreateThumbnailFromImageAlways: true,
+        kCGImageSourceThumbnailMaxPixelSize: maxPixelSize,
+      ] as CFDictionary
+    return CGImageSourceCreateThumbnailAtIndex(source, 0, options)
+  }
+
+  public static func cgImageFromURL(_ url: URL) -> CGImage? {
+    guard let nsImage = NSImage(contentsOf: url) else { return nil }
+    var rect = CGRect(origin: .zero, size: nsImage.size)
+    return nsImage.cgImage(forProposedRect: &rect, context: nil, hints: nil)
+  }
 }

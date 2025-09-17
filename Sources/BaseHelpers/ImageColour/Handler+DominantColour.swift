@@ -115,11 +115,7 @@ extension DominantColourHandler {
     calculateKMeans()
   }
 
-  func cgImageFromURL(_ url: URL) -> CGImage? {
-    guard let nsImage = NSImage(contentsOf: url) else { return nil }
-    var rect = CGRect(origin: .zero, size: nsImage.size)
-    return nsImage.cgImage(forProposedRect: &rect, context: nil, hints: nil)
-  }
+
 
   func setUp(_ fileURL: URL) {
     print("Ran setup method once the image is downloaded. It should exist at \(fileURL)")
@@ -191,7 +187,7 @@ extension DominantColourHandler {
       return
     }
 
-    guard let cgImage = self.cgImageFromURL(url)
+    guard let cgImage = ThumbnailGenerator.cgImageFromURL(url)
     //    guard let cgImage = self.thumbnailCGImageFromURL(url, maxPixelSize: 120)
     else {
       print("Unable to create a CGImage from URL")
@@ -607,15 +603,6 @@ extension DominantColourHandler {
     }
   }  // END centroid something
 
-  func thumbnailCGImageFromURL(_ url: URL, maxPixelSize: Int) -> CGImage? {
-    guard let source = CGImageSourceCreateWithURL(url as CFURL, nil) else { return nil }
-    let options =
-      [
-        kCGImageSourceCreateThumbnailFromImageAlways: true,
-        kCGImageSourceThumbnailMaxPixelSize: maxPixelSize,
-      ] as CFDictionary
-    return CGImageSourceCreateThumbnailAtIndex(source, 0, options)
-  }
 
   func generateThumbnailRepresentations() {
 
@@ -624,7 +611,7 @@ extension DominantColourHandler {
       return
     }
 
-    guard let cgImage = thumbnailCGImageFromURL(url, maxPixelSize: 30) else {
+    guard let cgImage = ThumbnailGenerator.thumbnailCGImageFromURL(url, maxPixelSize: 30) else {
       print("Error with either `CGImageSourceCreateWithURL` or `CGImageSourceCreateImageAtIndex`")
       return
     }
