@@ -41,6 +41,7 @@ public struct DominantColoursView: View {
 
       } else {
         
+        MiniStateView("Extracted Colours")
 //        ContentUnavailableView("No colours extracted", systemImage: Icons.palette.icon)
 //          .font(.callout)
       }

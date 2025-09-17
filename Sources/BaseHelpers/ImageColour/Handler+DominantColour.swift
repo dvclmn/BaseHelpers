@@ -29,7 +29,7 @@ public final class DominantColourHandler: ObservableObject {
   var distances: UnsafeMutableBufferPointer<Float>?
 
   /// The number of centroids.
-  @Published var k: Int = 3
+  @Published var k: Int = 2
 
   /// The SceneKit nodes that correspond to the values in the `centroids` array.
   var centroidNodes = [SCNNode]()
@@ -63,7 +63,7 @@ public final class DominantColourHandler: ObservableObject {
 
   /// The array of `k` dominant colors that the app derives from `centroids` and displays  in the user interface.
   @Published var dominantColors: [DominantColor] = []
-//  @Published var dominantColors = [DominantColor.zero]
+  //  @Published var dominantColors = [DominantColor.zero]
 
   /// The BNNS array descriptor that receives the centroid indices.
   //  @ObservationIgnored
@@ -114,7 +114,7 @@ extension DominantColourHandler {
     allocateDistancesBuffer()
     calculateKMeans()
   }
-  
+
   func cgImageFromURL(_ url: URL) -> CGImage? {
     guard let nsImage = NSImage(contentsOf: url) else { return nil }
     var rect = CGRect(origin: .zero, size: nsImage.size)
@@ -191,9 +191,8 @@ extension DominantColourHandler {
       return
     }
 
-    
     guard let cgImage = self.cgImageFromURL(url)
-//    guard let cgImage = self.thumbnailCGImageFromURL(url, maxPixelSize: 120)
+    //    guard let cgImage = self.thumbnailCGImageFromURL(url, maxPixelSize: 120)
     else {
       print("Unable to create a CGImage from URL")
       return
@@ -263,21 +262,21 @@ extension DominantColourHandler {
     Task {
       var converged = false
       var iterationCount = 0
-      
+
       while !converged && iterationCount < maximumIterations {
         converged = updateCentroids()
         iterationCount += 1
       }
-      
+
       NSLog("Converged in \(iterationCount) iterations.")
-      
+
       Task { @MainActor in
         //      DispatchQueue.main.async { [self] in
-        
+
         dominantColors = centroids.map {
           DominantColor($0, dimension: dimension)
         }
-        
+
         updateCentroidNodes()
         makeQuantizedImage()
         isBusy = false
@@ -618,83 +617,43 @@ extension DominantColourHandler {
     return CGImageSourceCreateThumbnailAtIndex(source, 0, options)
   }
 
-  func generateThumbnailRepresentations(  //    forResource resource: String,
-    //    withExtension ext: String
-    )
-  {
+  func generateThumbnailRepresentations() {
 
     guard let url = imageFileURL else {
       assert(false, "The URL can't be nil")
       return
     }
 
-    //    let size: CGSize = CGSize(width: 100, height: 100)
-    //    let scale = NSScreen.main?.backingScaleFactor ?? 1
-
-    /// This worked!
-    //    guard let source = CGImageSourceCreateWithURL(url as CFURL, nil),
-    //      let cgImage = CGImageSourceCreateImageAtIndex(source, 0, nil)
-    //    else {
-    //      print("Error with either `CGImageSourceCreateWithURL` or `CGImageSourceCreateImageAtIndex`")
-    //      return
-    //    }
-
     guard let cgImage = thumbnailCGImageFromURL(url, maxPixelSize: 30) else {
       print("Error with either `CGImageSourceCreateWithURL` or `CGImageSourceCreateImageAtIndex`")
       return
     }
 
-    let thumb = Thumbnail(thumbnail: cgImage)
-
-    self.image = thumb
-
-    // Create the thumbnail request.
-    //    let request = QLThumbnailGenerator.Request(
-    //      fileAt: url,
-    //      size: size,
-    //      scale: scale,
-    //      representationTypes: .thumbnail)
-    //
-    //    // Retrieve the singleton instance of the thumbnail generator and generate the thumbnails.
-    //    let generator = QLThumbnailGenerator.shared
-    //    generator.generateRepresentations(for: request) { (thumbnail, type, error) in
-    //      DispatchQueue.main.async {
-    //        if let thumbnail, let url = self.imageFileURL {
-    //          let x = Thumbnail(
-    //            thumbnail: thumbnail.cgImage,
-    //            fileURL: url
-    //              //            resource: resource,
-    //              //            ext: ext
-    //          )
-    //          self.image = x
-    //          //          self.sourceImages.append(x)
-    //        }
-    //      }
-    //    }
+    self.image = Thumbnail(thumbnail: cgImage)
   }
 }
 
-extension CGImage {
-  /// A 1 x 1 Core Graphics image.
-  static var emptyCGImage: CGImage? {
-    let buffer = vImage.PixelBuffer(
-      pixelValues: [0],
-      size: .init(width: 1, height: 1),
-      pixelFormat: vImage.Planar8.self)
-
-    guard
-      let fmt = vImage_CGImageFormat(
-        bitsPerComponent: 8,
-        bitsPerPixel: 8,
-        colorSpace: CGColorSpaceCreateDeviceGray(),
-        bitmapInfo: CGBitmapInfo(rawValue: CGImageAlphaInfo.none.rawValue),
-        renderingIntent: .defaultIntent
-      )
-    else {
-      print("No value for the `fmt` thing")
-      return nil
-    }
-
-    return buffer.makeCGImage(cgImageFormat: fmt)
-  }
-}
+//extension CGImage {
+//  /// A 1 x 1 Core Graphics image.
+//  static var emptyCGImage: CGImage? {
+//    let buffer = vImage.PixelBuffer(
+//      pixelValues: [0],
+//      size: .init(width: 1, height: 1),
+//      pixelFormat: vImage.Planar8.self)
+//
+//    guard
+//      let fmt = vImage_CGImageFormat(
+//        bitsPerComponent: 8,
+//        bitsPerPixel: 8,
+//        colorSpace: CGColorSpaceCreateDeviceGray(),
+//        bitmapInfo: CGBitmapInfo(rawValue: CGImageAlphaInfo.none.rawValue),
+//        renderingIntent: .defaultIntent
+//      )
+//    else {
+//      print("No value for the `fmt` thing")
+//      return nil
+//    }
+//
+//    return buffer.makeCGImage(cgImageFormat: fmt)
+//  }
+//}

@@ -8,12 +8,12 @@
 import SwiftUI
 
 public struct ImageExtractWrapperView: View {
-  
+
   @StateObject private var store = DominantColourHandler()
   public init() {}
-  
+
   public var body: some View {
-    
+
     ImageExtractView()
       .task {
         if store.imageFileURL == nil {
@@ -24,13 +24,13 @@ public struct ImageExtractWrapperView: View {
             print("No value for the image File URL")
             return
           }
-          
-          if !isPreview {
+
+//          if !isPreview {
             store.setUp(fileURL)
-          }
+//          }
         }
       }
       .environmentObject(store)
-    
+
   }
 }
