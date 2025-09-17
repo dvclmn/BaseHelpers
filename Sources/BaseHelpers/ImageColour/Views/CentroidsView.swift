@@ -29,8 +29,12 @@ public struct CentroidsView: View {
         store.calculateKMeans()
       }
       .disabled(store.isBusy)
-    }
+    } // END hstack
     .padding()
+
+    .task(id: store.k) {
+      store.didSetCentroids()
+    }
 
   }
 }

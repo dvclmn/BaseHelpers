@@ -14,6 +14,7 @@ import simd
 
 @MainActor
 public final class DominantColourHandler: ObservableObject {
+
   @Published var isBusy: Bool = false
 
   var imageFileURL: URL? = nil
@@ -21,8 +22,6 @@ public final class DominantColourHandler: ObservableObject {
 
   let dimension: Int
   let tolerance = 10
-  //  let imageURL: URL
-  //  let image: Image
 
   /// Storage for a matrix with `dimension * dimension` columns and `k` rows that stores the
   /// distances squared of each pixel color for each centroid.
@@ -30,7 +29,7 @@ public final class DominantColourHandler: ObservableObject {
   var distances: UnsafeMutableBufferPointer<Float>?
 
   /// The number of centroids.
-  @Published var k: Int = 5
+  @Published var k: Int = 3
 
   /// The SceneKit nodes that correspond to the values in the `centroids` array.
   var centroidNodes = [SCNNode]()
@@ -177,9 +176,7 @@ extension DominantColourHandler {
   }
 
   func calculateKMeans() {
-    //    let url = Bundle.main.url(forResource: selectedThumbnail.resource,
-    //                              withExtension: selectedThumbnail.ext)!
-
+    print("Running `calculateKMeans`...")
     guard let url = self.image?.fileURL,
       let cgImage = NSImage(contentsOf: url)?.cgImage(
         forProposedRect: nil,
@@ -201,27 +198,13 @@ extension DominantColourHandler {
     var mutableRGBFormat = unwrappedRGBFormat
 
     guard let sourceImage,
-      let rgbSources: [vImage.PixelBuffer<vImage.PlanarF>] = try? vImage.PixelBuffer<vImage.InterleavedFx3>(
+      let rgbSources = try? vImage.PixelBuffer<vImage.InterleavedFx3>(
         cgImage: sourceImage,
         cgImageFormat: &mutableRGBFormat
       ).planarBuffers()
     else {
       fatalError("Couldn't get rgb sources?")
     }
-
-    //    guard let rgbImageFormat else {
-    //      print("Failed to get value for `rgbImageFormat`")
-    //      return
-    //    }
-    //
-    //    guard
-    //      let rgbSources: [vImage.PixelBuffer<vImage.PlanarF>] = try? vImage.PixelBuffer<vImage.InterleavedFx3>(
-    //        cgImage: sourceImage,
-    //        cgImageFormat: &rgbImageFormat
-    //      ).planarBuffers()
-    //    else {
-    //      fatalError("Couldn't get rgb sources?")
-    //    }
 
     rgbSources[0].scale(destination: storage.redBuffer)
     rgbSources[1].scale(destination: storage.greenBuffer)
@@ -230,9 +213,7 @@ extension DominantColourHandler {
     self.isBusy = true
 
     initializeCentroids()
-    //    populateHistogramPointCloud()
-    //    updateCentroidNodes()
-
+    updateCentroidNodes()
     update()
   }
 
@@ -702,4 +683,3 @@ extension CGImage {
     return buffer.makeCGImage(cgImageFormat: fmt)
   }
 }
-

@@ -28,7 +28,6 @@ public struct ImageExtractWrapperView: View {
             return
           }
           store.setUp(fileURL)
-          //          store.imageFileURL = fileURL
         }
       }
       .environmentObject(store)
@@ -59,9 +58,7 @@ public struct ImageExtractView: View {
         //        )
         .disabled(store.isBusy)
 
-        .task(id: store.k) {
-          store.didSetCentroids()
-        }
+
 
       } else {
         ContentUnavailableView("No Thumbnail image found", systemImage: Icons.warning.icon)
