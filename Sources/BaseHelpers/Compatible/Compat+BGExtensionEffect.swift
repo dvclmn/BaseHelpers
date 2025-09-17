@@ -9,17 +9,18 @@ import SwiftUI
 
 public struct CompatibleBGExtensionEffectModifier: ViewModifier {
   
+  let isEnabled: Bool
   public func body(content: Content) -> some View {
     if #available(macOS 26, iOS 26, *) {
       content
-        .backgroundExtensionEffect()
+        .backgroundExtensionEffect(isEnabled: isEnabled)
     } else {
       content
     }
   }
 }
 extension View {
-  public func backgroundExtensionCompatible() -> some View {
-    self.modifier(CompatibleBGExtensionEffectModifier())
+  public func backgroundExtensionCompatible(isEnabled: Bool = true) -> some View {
+    self.modifier(CompatibleBGExtensionEffectModifier(isEnabled: isEnabled))
   }
 }

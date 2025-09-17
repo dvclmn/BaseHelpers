@@ -18,19 +18,4 @@ extension EnvironmentValues {
   @Entry public var isHoverEnabled: Bool = true
   @Entry public var isDragEnabled: Bool = true
   @Entry public var shouldRenderDragRect: Bool = true
-
-}
-
-extension View {
-
-  public func isDragEnabled(_ isEnabled: Bool) -> some View {
-    self.environment(\.isDragEnabled, isEnabled)
-  }
-
-  public func setIsHoverEnabled(_ isEnabled: Bool) -> some View {
-    self.environment(\.isHoverEnabled, isEnabled)
-  }
-  public func setShouldRenderDragRect(_ shouldRender: Bool) -> some View {
-    self.environment(\.shouldRenderDragRect, shouldRender)
-  }
 }
