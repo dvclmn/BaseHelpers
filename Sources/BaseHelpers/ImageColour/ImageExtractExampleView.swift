@@ -6,36 +6,45 @@
 //
 
 import SwiftUI
+import SceneKit
 
-struct ImageExtractView: View {
+public struct ImageExtractView: View {
   @State private var store: DominantColourHandler
 
   public init(imageURL: URL) {
     self._store = State(initialValue: DominantColourHandler(imageURL: imageURL))
   }
 
-  var body: some View {
+  public var body: some View {
 
+    @Bindable var store = store
     NavigationSplitView {
-      List(
-        store.sourceImages,
-        selection: $store.selectedThumbnail
-      ) { thumbnail in
+//      List(
+//        store.sourceImages,
+//        selection: $store.selectedThumbnail
+//      ) { thumbnail in
+        
+      if let img = store.image {
         Image(
-          decorative: thumbnail.thumbnail,
+          decorative: img.thumbnail,
+          //          decorative: thumbnail.thumbnail,
           scale: 1
         )
         .resizable()
         .aspectRatio(contentMode: .fit)
-        .onTapGesture {
-          store.selectedThumbnail = thumbnail
-        }
-        .border(
-          store.selectedThumbnail == thumbnail ? .blue : .gray,
-          width: 4
-        )
+//        .onTapGesture {
+//          store.selectedThumbnail = thumbnail
+//        }
+//        .border(
+//          store.selectedThumbnail == thumbnail ? .blue : .gray,
+//          width: 4
+//        )
         .disabled(store.isBusy)
+        
+      } else {
+        ContentUnavailableView("No Thumbnail image found", systemImage: Icons.warning.icon)
       }
+//      }
     } detail: {
 
       Divider()
@@ -54,7 +63,7 @@ struct ImageExtractView: View {
             .aspectRatio(contentMode: .fit)
             .tabItem {
               Label(
-                "Quantized image (\(dimension) x \(dimension))",
+                "Quantized image (\(store.dimension) x \(store.dimension))",
                 systemImage: "photo")
             }
         }

@@ -7,9 +7,10 @@
 
 import CoreGraphics
 import SwiftUI
-import Accelerate
+@preconcurrency import Accelerate
 
-struct ColourValueStorage {
+//@MainActor
+final class ColourValueStorage {
   
   let dimension: Int
   
@@ -101,7 +102,7 @@ struct Centroid {
 /// A structure that represents a dominant color.
 struct DominantColor: Identifiable, Comparable {
   
-  init(_ centroid: Centroid) {
+  init(_ centroid: Centroid, dimension: Int) {
     self.color = Color(red: Double(centroid.red), green: Double(centroid.green), blue: Double(centroid.blue))
     self.percentage = Int(Float(centroid.pixelCount) / Float(dimension * dimension) * 100)
   }

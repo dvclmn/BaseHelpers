@@ -6,14 +6,19 @@
 //
 
 import Accelerate
+import Cocoa
+import SceneKit
 import SwiftUI
+import simd
 
+@MainActor
 @Observable
 public final class DominantColourHandler {
   var isBusy: Bool = false
 
   let image: Thumbnail?
   let dimension: Int
+  let tolerance = 10
   //  let imageURL: URL
   //  let image: Image
 
@@ -24,6 +29,11 @@ public final class DominantColourHandler {
 
   /// The number of centroids.
   var k = 5
+
+  /// The SceneKit nodes that correspond to the values in the `centroids` array.
+  var centroidNodes = [SCNNode]()
+  /// The SceneKit scene that displays the RGB point cloud.
+  var scene = SCNScene()
 
   /// An array of source images.
   //  var sourceImages: [Thumbnail] = []
@@ -74,7 +84,6 @@ public final class DominantColourHandler {
       scalarType: Int32.self,
       shape: .matrixRowMajor(dimension * dimension, 1)
     )
-    allocateDistancesBuffer()
 
     var imageResult: Thumbnail?
     Task { @MainActor in
@@ -83,12 +92,27 @@ public final class DominantColourHandler {
       }
     }  // REND task
     self.image = imageResult
+    self.allocateDistancesBuffer()
+  }
+
+  @MainActor
+  deinit {
+    storage.redStorage.deallocate()
+    storage.greenStorage.deallocate()
+    storage.blueStorage.deallocate()
+
+    storage.redQuantizedStorage.deallocate()
+    storage.greenQuantizedStorage.deallocate()
+    storage.blueQuantizedStorage.deallocate()
+
+    centroidIndicesDescriptor.deallocate()
+    distances.deallocate()
   }
 
 }
 
 extension DominantColourHandler {
-  
+
   /// Updates centroids and returns true if pixel counts haven't changed (that is, the solution converged).
   ///
   /// 1. Create k random centroids selected from the RGB colors in an image.
@@ -104,12 +128,12 @@ extension DominantColourHandler {
   func updateCentroids() -> Bool {
     // The pixel counts per centroid before this iteration.
     let pixelCounts = centroids.map { return $0.pixelCount }
-    
+
     populateDistances()
     let centroidIndices = makeCentroidIndices()
-    
+
     for centroid in centroids.enumerated() {
-      
+
       // The indices into the red, green, and blue descriptors for this centroid.
       let indices = centroidIndices.enumerated().filter {
         $0.element == centroid.offset
@@ -117,25 +141,28 @@ extension DominantColourHandler {
         // `vDSP.gather` uses one-based indices.
         UInt($0.offset + 1)
       }
-      
+
       centroids[centroid.offset].pixelCount = indices.count
-      
+
       if !indices.isEmpty {
-        let gatheredRed = vDSP.gather(redStorage,
-                                      indices: indices)
-        
-        let gatheredGreen = vDSP.gather(greenStorage,
-                                        indices: indices)
-        
-        let gatheredBlue = vDSP.gather(blueStorage,
-                                       indices: indices)
-        
+        let gatheredRed = vDSP.gather(
+          storage.redStorage,
+          indices: indices)
+
+        let gatheredGreen = vDSP.gather(
+          storage.greenStorage,
+          indices: indices)
+
+        let gatheredBlue = vDSP.gather(
+          storage.blueStorage,
+          indices: indices)
+
         centroids[centroid.offset].red = vDSP.mean(gatheredRed)
         centroids[centroid.offset].green = vDSP.mean(gatheredGreen)
         centroids[centroid.offset].blue = vDSP.mean(gatheredBlue)
       }
     }
-    
+
     return pixelCounts.elementsEqual(centroids.map { return $0.pixelCount }) { a, b in
       return abs(a - b) < tolerance
     }
@@ -153,7 +180,6 @@ extension DominantColourHandler {
       )
     else {
       fatalError("Couldn't get cg image?")
-      return
     }
 
     self.sourceImage = cgImage
@@ -175,8 +201,8 @@ extension DominantColourHandler {
     self.isBusy = true
 
     initializeCentroids()
-//    populateHistogramPointCloud()
-//    updateCentroidNodes()
+    //    populateHistogramPointCloud()
+    //    updateCentroidNodes()
 
     update()
   }
@@ -196,32 +222,33 @@ extension DominantColourHandler {
     //  }
 
   }
-  
+
   /// Iterates over the `updateCentroids` function until the solution converges or the
   /// iteration count equals `maximumIterations`.
   func update() {
-    Task {
-      var converged = false
-      var iterationCount = 0
-      
-      while !converged && iterationCount < maximumIterations {
-        converged = updateCentroids()
-        iterationCount += 1
-      }
-      
-      NSLog("Converged in \(iterationCount) iterations.")
-      
-      DispatchQueue.main.async { [self] in
-        
-        dominantColors = centroids.map {
-          DominantColor($0)
-        }
-        
-        updateCentroidNodes()
-        makeQuantizedImage()
-        isBusy = false
-      }
+    //    Task {
+    var converged = false
+    var iterationCount = 0
+
+    while !converged && iterationCount < maximumIterations {
+      converged = updateCentroids()
+      iterationCount += 1
     }
+
+    NSLog("Converged in \(iterationCount) iterations.")
+
+    Task { @MainActor in
+      //      DispatchQueue.main.async { [self] in
+
+      dominantColors = centroids.map {
+        DominantColor($0, dimension: dimension)
+      }
+
+      updateCentroidNodes()
+      makeQuantizedImage()
+      isBusy = false
+    }
+
   }
 
   /// - Tag: initializeCentroids
@@ -301,29 +328,149 @@ extension DominantColourHandler {
   //      selectedThumbnail = sourceImages.first!
   //    }
   //  }
-  
+
   func weightedRandomIndex(_ weights: UnsafeMutableBufferPointer<Float>) -> Int {
     var outputDescriptor = BNNSNDArrayDescriptor.allocateUninitialized(
       scalarType: Float.self,
       shape: .vector(1))
-    
+
     var probabilities = BNNSNDArrayDescriptor(
       data: weights,
       shape: .vector(weights.count))!
-    
+
     let randomGenerator = BNNSCreateRandomGenerator(
       BNNSRandomGeneratorMethodAES_CTR,
       nil)
-    
+
     BNNSRandomFillCategoricalFloat(
       randomGenerator, &outputDescriptor, &probabilities, false)
-    
+
     defer {
       BNNSDestroyRandomGenerator(randomGenerator)
       outputDescriptor.deallocate()
     }
-    
+
     return Int(outputDescriptor.makeArray(of: Float.self)!.first!)
+  }
+
+  func populateDistances() {
+    for centroid in centroids.enumerated() {
+      distanceSquared(
+        x0: storage.greenStorage.baseAddress!,
+        x1: centroid.element.green,
+        y0: storage.blueStorage.baseAddress!,
+        y1: centroid.element.blue,
+        z0: storage.redStorage.baseAddress!,
+        z1: centroid.element.red,
+        n: storage.greenStorage.count,
+        result: distances.baseAddress!.advanced(
+          by: dimension * dimension * centroid.offset
+        )
+      )
+    }
+  }
+
+  /// Returns the index of the closest centroid for each color.
+  func makeCentroidIndices() -> [Int32] {
+    let distancesDescriptor = BNNSNDArrayDescriptor(
+      data: distances,
+      shape: .matrixRowMajor(dimension * dimension, k))!
+
+    let reductionLayer = BNNS.ReductionLayer(
+      function: .argMin,
+      input: distancesDescriptor,
+      output: centroidIndicesDescriptor,
+      weights: nil)
+
+    try! reductionLayer?.apply(
+      batchSize: 1,
+      input: distancesDescriptor,
+      output: centroidIndicesDescriptor)
+
+    return centroidIndicesDescriptor.makeArray(of: Int32.self)!
+  }
+
+  /// Updates the centroid SceneKit nodes.
+  func updateCentroidNodes() {
+    for centroid in centroids.enumerated() {
+
+      let red = CGFloat(saturate(centroid.element.red))
+      let green = CGFloat(saturate(centroid.element.green))
+      let blue = CGFloat(saturate(centroid.element.blue))
+
+      let node = centroidNodes[centroid.offset]
+
+      node.position = .init(
+        x: red,
+        y: green,
+        z: blue)
+
+      node.geometry?.firstMaterial?.diffuse.contents = NSColor(
+        red: red,
+        green: green,
+        blue: blue,
+        alpha: 1.0)
+    }
+  }
+
+  /// Produces a quantized image based on the dominant colors.
+  func makeQuantizedImage() {
+    storage.redQuantizedBuffer.overwriteChannels(withScalar: 0)
+    storage.greenQuantizedBuffer.overwriteChannels(withScalar: 0)
+    storage.blueQuantizedBuffer.overwriteChannels(withScalar: 0)
+
+    populateDistances()
+    let centroidIndices = makeCentroidIndices()
+
+    for centroid in centroids.enumerated() {
+      let indices = centroidIndices.enumerated().filter {
+        $0.element == centroid.offset
+      }.map {
+        Int32($0.offset)
+      }
+
+      let indicesDescriptor = BNNSNDArrayDescriptor.allocate(
+        initializingFrom: indices,
+        shape: .vector(indices.count))
+
+      defer {
+        indicesDescriptor.deallocate()
+      }
+
+      scatter(value: centroid.element.red, to: storage.redQuantizedStorage)
+      scatter(value: centroid.element.green, to: storage.greenQuantizedStorage)
+      scatter(value: centroid.element.blue, to: storage.blueQuantizedStorage)
+
+      /// Scatters the repeated `value` to the `destination` using the `indicesDescriptor`.
+      func scatter(
+        value: Float,
+        to destination: UnsafeMutableBufferPointer<Float>
+      ) {
+        let srcDescriptor = BNNSNDArrayDescriptor.allocate(
+          repeating: value,
+          shape: .vector(indices.count))
+        let dstDescriptor = BNNSNDArrayDescriptor(
+          data: destination,
+          shape: .vector(dimension * dimension))!
+
+        try! BNNS.scatter(
+          input: srcDescriptor,
+          indices: indicesDescriptor,
+          output: dstDescriptor,
+          axis: 0,
+          reductionFunction: .sum)
+
+        srcDescriptor.deallocate()
+      }
+    }
+
+    let interleaved = vImage.PixelBuffer<vImage.InterleavedFx3>(planarBuffers: [
+      storage.redQuantizedBuffer,
+      storage.greenQuantizedBuffer,
+      storage.blueQuantizedBuffer,
+    ])
+
+    quantizedImage = interleaved.makeCGImage(cgImageFormat: rgbImageFormat)!
   }
 }
 
