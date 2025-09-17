@@ -62,7 +62,8 @@ public final class DominantColourHandler: ObservableObject {
   var centroids = [Centroid]()
 
   /// The array of `k` dominant colors that the app derives from `centroids` and displays  in the user interface.
-  @Published var dominantColors = [DominantColor.zero]
+  @Published var dominantColors: [DominantColor] = []
+//  @Published var dominantColors = [DominantColor.zero]
 
   /// The BNNS array descriptor that receives the centroid indices.
   //  @ObservationIgnored

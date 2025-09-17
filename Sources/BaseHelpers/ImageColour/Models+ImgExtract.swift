@@ -5,10 +5,7 @@
 //  Created by Dave Coleman on 17/9/2025.
 //
 
-@preconcurrency import Accelerate
-import CoreGraphics
 import SwiftUI
-
 
 /// A structure that represents a centroid.
 struct Centroid {

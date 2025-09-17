@@ -10,30 +10,42 @@ import SwiftUI
 public struct DominantColoursView: View {
   //  @Environment(DominantColourHandler.self) private var store
 
+  private let colourSize: CGFloat = 60
+
   let colours: [DominantColor]
   let isBusy: Bool
   public var body: some View {
 
-    HStack {
+    Group {
       if !colours.isEmpty {
-        
-        Text("Number of colours: \(colours.count)")
-        
-        ForEach(colours.sorted(by: >)) { dominantColor in
-          VStack {
-            RoundedRectangle(cornerRadius: Styles.sizeSmall)
+
+        LazyVGrid(
+          columns: .quickAdaptive(mode: .fill(min: 20, max: 120)),
+          alignment: .leading,
+          spacing: Styles.sizeSmall,
+        ) {
+          //    HStack {
+          ForEach(colours.sorted(by: >)) { dominantColor in
+
+            Rectangle()
               .fill(dominantColor.color)
-              .frame(height: 50)
-            Text("\(dominantColor.percentage)%")
-              .opacity(dominantColor.percentage == 0 ? 0 : 1)
-          }
-          //          .aspectRatio(1, contentMode: .fit)
-        }  // ENd foreach
+              .frame(width: colourSize, height: colourSize)
+              .overlay {
+                Text("\(dominantColor.percentage)%")
+              }
+              .background(Color.black.opacityFaint)
+              .clipShape(.rect(cornerRadius: Styles.sizeTiny))
+            //          .aspectRatio(1, contentMode: .fit)
+          }  // ENd foreach
+        }  // END lazy grid
 
       } else {
-        ContentUnavailableView("No colours extracted", systemImage: Icons.palette.icon)
+        
+//        ContentUnavailableView("No colours extracted", systemImage: Icons.palette.icon)
+//          .font(.callout)
       }
-    }  // END hstack
+    }
+    .frame(maxWidth: .infinity, maxHeight: .infinity)
     .opacity(isBusy ? 0 : 1)
     //    .frame(minWidth: 100)
 

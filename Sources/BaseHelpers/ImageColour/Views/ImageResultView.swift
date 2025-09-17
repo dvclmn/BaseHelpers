@@ -14,32 +14,51 @@ public struct ImageResultView: View {
   public var body: some View {
 
     VStack {
-      if let image = store.image {
-        Image(decorative: image.thumbnail, scale: 1)
-          .resizable()
-          .aspectRatio(contentMode: .fill)
+//      Group {
+      ImageView(store.image?.thumbnail, text: "Thumbnail Image")
+      
+      Divider()
 
-      } else {
-        ContentUnavailableView("Couldn't get Image", systemImage: Icons.image.icon)
-      }
-
-      if let quantImage = store.quantizedImage {
-        Image(decorative: quantImage, scale: 1)
-          .resizable()
-          .aspectRatio(contentMode: .fit)
-
-      } else {
-        ContentUnavailableView("Couldn't get quantised image", systemImage: Icons.image.icon)
-      }
+      ImageView(store.quantizedImage, text: "Quantised Image")
+//        if let quantImage = store.quantizedImage {
+//          Image(decorative: quantImage, scale: 1)
+//            .resizable()
+//            .aspectRatio(contentMode: .fill)
+//
+//        } else {
+//          PlaceholderText("No Image loaded")
+//          //        ContentUnavailableView("Couldn't get quantised image", systemImage: Icons.image.icon)
+//        }
+//      } // END group
     }
+    
     .opacity(store.isBusy ? 0.5 : 1)
     .disabled(store.isBusy)
     .overlay {
       ProgressView()
         .opacity(store.isBusy ? 1 : 0)
     }
-//    .padding()
+    //    .padding()
 
+  }
+}
+
+extension ImageResultView {
+  
+  @ViewBuilder
+  private func ImageView(_ image: CGImage?, text: String) -> some View {
+    Group {
+      if let image {
+        Image(decorative: image, scale: 1)
+          .resizable()
+          .aspectRatio(contentMode: .fill)
+        
+      } else {
+        MiniStateView(text)
+        //        ContentUnavailableView("Couldn't get Image", systemImage: Icons.image.icon)
+      }
+    }
+    .frame(maxWidth: .infinity, maxHeight: .infinity)
   }
 }
 #if DEBUG
