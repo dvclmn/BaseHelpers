@@ -16,6 +16,9 @@ public struct DominantColoursView: View {
 
     HStack {
       if !colours.isEmpty {
+        
+        Text("Number of colours: \(colours.count)")
+        
         ForEach(colours.sorted(by: >)) { dominantColor in
           VStack {
             RoundedRectangle(cornerRadius: Styles.sizeSmall)
@@ -24,15 +27,15 @@ public struct DominantColoursView: View {
             Text("\(dominantColor.percentage)%")
               .opacity(dominantColor.percentage == 0 ? 0 : 1)
           }
-//          .aspectRatio(1, contentMode: .fit)
+          //          .aspectRatio(1, contentMode: .fit)
         }  // ENd foreach
 
       } else {
         ContentUnavailableView("No colours extracted", systemImage: Icons.palette.icon)
       }
-    } // END hstack
+    }  // END hstack
     .opacity(isBusy ? 0 : 1)
-//    .frame(minWidth: 100)
+    //    .frame(minWidth: 100)
 
   }
 }

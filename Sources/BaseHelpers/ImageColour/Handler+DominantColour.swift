@@ -39,8 +39,8 @@ public final class DominantColourHandler: ObservableObject {
   /// An array of source images.
   //    var sourceImages: [Thumbnail] = []
 
-  @Published var sourceImage: CGImage? = .emptyCGImage
-  @Published var quantizedImage: CGImage? = .emptyCGImage
+  @Published var sourceImage: CGImage? = nil
+  @Published var quantizedImage: CGImage? = nil
 
   //  @ObservationIgnored
   var rgbImageFormat: vImage_CGImageFormat? = vImage_CGImageFormat(

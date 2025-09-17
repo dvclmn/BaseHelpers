@@ -14,13 +14,13 @@ public struct ImageResultView: View {
   public var body: some View {
 
     VStack {
-      if let image = store.sourceImage {
-        Image(decorative: image, scale: 1)
+      if let image = store.image {
+        Image(decorative: image.thumbnail, scale: 1)
           .resizable()
-          .aspectRatio(contentMode: .fit)
+          .aspectRatio(contentMode: .fill)
 
       } else {
-        ContentUnavailableView("Couldn't get source image", systemImage: Icons.image.icon)
+        ContentUnavailableView("Couldn't get Image", systemImage: Icons.image.icon)
       }
 
       if let quantImage = store.quantizedImage {
