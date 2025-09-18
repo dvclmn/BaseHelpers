@@ -110,7 +110,7 @@ extension DominantColourHandler {
     calculateKMeans()
   }
 
-  func setUp(_ fileURL: URL) {
+  public func setUp(_ fileURL: URL) {
     print("Ran setup method once the image is downloaded. It should exist at \(fileURL)")
     self.imageFileURL = fileURL
     generateThumbnailRepresentations()
