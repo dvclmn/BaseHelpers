@@ -7,7 +7,6 @@
 
 import SwiftUI
 
-
 public struct QuickLabel: Equatable, Hashable, Sendable, Codable {
   public let attributedText: AttributedString
   public let icon: IconLiteral?
