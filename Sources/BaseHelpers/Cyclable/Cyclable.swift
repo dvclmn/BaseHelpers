@@ -8,6 +8,7 @@
 import Foundation
 
 public protocol Cyclable: LabeledEnum where Self.AllCases.Index == Int {
+//public protocol Cyclable: LabeledEnum where Self.AllCases.Index == Int {
   static var defaultCase: Self { get }
 }
 

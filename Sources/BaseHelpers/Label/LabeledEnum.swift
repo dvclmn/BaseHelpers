@@ -18,18 +18,24 @@ extension LabeledItem {
 
 }
 
-public protocol LabeledEnum<Item>: CaseIterable, RawRepresentable
-where Self.AllCases: RandomAccessCollection, RawValue == String {
+public protocol LabeledEnum: LabeledItem where Self: CaseIterable, Self.AllCases: RandomAccessCollection, Self: RawRepresentable, Self.RawValue == String {
   associatedtype Item: LabeledItem
-  //  var id: String { get }
-  //  var label: QuickLabel { get }
-  //  var blurb: String? { get }
 }
 
-extension LabeledEnum {
+//public protocol LabeledEnum: CaseIterable, RawRepresentable
+//where Self.AllCases: RandomAccessCollection, RawValue == String {
+//  associatedtype Item: LabeledItem
+//}
+
+extension LabeledItem where Self: RawRepresentable, Self.RawValue == String {
+  
+//}
+
+/// `LabeledEnum` gets a few things 'for free' by having RawRep,
+/// and thus a `rawValue` string to use for some defaults.
+//extension LabeledEnum {
 
   
-
   /// Convenient default value for name and label,
   /// derived from raw value
   public var label: QuickLabel {
@@ -40,28 +46,3 @@ extension LabeledEnum {
     return self.rawValue.capitalized
   }
 }
-
-//public protocol LabeledItem: Equatable, Identifiable, Sendable, RawRepresentable, Hashable
-//where Self.RawValue == String {
-//
-//  var id: String { get }
-//  var label: QuickLabel { get }
-//  var blurb: String? { get }
-//}
-//
-//extension LabeledItem {
-//
-//  public var blurb: String? { nil }
-//  public var id: String { self.rawValue }
-//
-//  /// Convenient default value for name and label,
-//  /// derived from raw value
-//  public var label: QuickLabel {
-//    let title = self.rawValue.capitalized
-//    return QuickLabel(title)
-//  }
-//
-//  public var name: String {
-//    return self.rawValue.capitalized
-//  }
-//}
