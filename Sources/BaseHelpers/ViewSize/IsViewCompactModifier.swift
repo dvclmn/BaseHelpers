@@ -10,16 +10,16 @@ import SwiftUI
 public typealias IsViewCompactHandler = (Bool) -> Void
 
 public struct IsViewCompactModifier: ViewModifier {
+  @Environment(\.isDebugMode) private var isDebugMode
+
   @State private var isCompact: Bool = false
   let widthThreshold: CGFloat
-  //  let allowEnvironmentUpdate: Bool
   let didUpdateCompactStatus: IsViewCompactHandler
 
   public func body(content: Content) -> some View {
     content
       .onGeometryChange(for: Bool.self) { proxy in
         let isCompact = proxy.size.width < widthThreshold
-//        print("View width: \(proxy.size.width). Compact threshold: \(widthThreshold). Is compact?: \(isCompact)")
         return isCompact
 
       } action: { newValue in
@@ -28,6 +28,22 @@ public struct IsViewCompactModifier: ViewModifier {
         didUpdateCompactStatus(newValue)
       }
       .environment(\.isCompactMode, isCompact)
+      .overlay(alignment: .bottomLeading) {
+        DebugView()
+      }
+  }
+}
+extension IsViewCompactModifier {
+  @ViewBuilder
+  private func DebugView() -> some View {
+    if isDebugMode {
+      Text("Size: " + "\(isCompact ? "Compact" : "Normal")")
+        .font(.caption)
+        .foregroundStyle(.quaternary)
+        .weightedPadding(Styles.sizeNano, horizontalBias: 2.4)
+        .padding(Styles.sizeTiny)
+        .allowsHitTesting(false)
+    }
   }
 }
 extension View {

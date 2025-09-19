@@ -5,7 +5,6 @@
 //  Created by Dave Coleman on 2/11/2024.
 //
 
-
 import SwiftUI
 
 // MARK: - Visual effect
@@ -18,25 +17,25 @@ private struct VisualEffectView: NSViewRepresentable {
     view.material = .popover
     return view
   }
-  func updateNSView(_ view: NSView, context: Context) { }
+  func updateNSView(_ view: NSView, context: Context) {}
 }
 
 public struct VisualEffectModifier: ViewModifier {
-  
+
   public func body(content: Content) -> some View {
     content
-      .background(VisualEffectView())
+      .background {
+        VisualEffectView()
+      }
     /// Note: best to use `ignoresSafeArea` in app, as
     /// appearance in Previews can be troublesome
     // .ignoresSafeArea()
   }
 }
-public extension View {
-  func visualEffectBackground() -> some View {
+extension View {
+  public func visualEffectBackground() -> some View {
     self.modifier(VisualEffectModifier())
   }
 }
 
-
 #endif
-
