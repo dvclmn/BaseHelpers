@@ -7,17 +7,14 @@
 
 import Foundation
 
-public protocol Cyclable: LabeledItem where Self.AllCases.Index == Int {
-//public protocol Cyclable: LabeledEnum where Self.AllCases.Index == Int {
+public protocol Cyclable: LabeledEnum where Self.AllCases.Index == Int {
   static var defaultCase: Self { get }
 }
 
-
-
 extension Cyclable {
 
-//  public var isAtBeginning: Bool { self == Self.allCases.first }
-//  public var isAtEnd: Bool { self == Self.allCases.last }
+  public var isAtBeginning: Bool { self == Self.allCases.first }
+  public var isAtEnd: Bool { self == Self.allCases.last }
 
   public func toNext(wrapping: Bool = true) -> Self {
     let all = Self.allCases
@@ -44,24 +41,6 @@ extension Cyclable {
     else { return Self.defaultCase }
     return all[prev]
   }
-
-  //  public func toNext(wrapping: Bool = true) -> Self {
-  //    let allCases = Self.allCases
-  //    guard let currentIndex: Int = allCases.firstIndex(of: self) else {
-  //      return Self.defaultCase
-  //    }
-  //    let nextIndex: Int = allCases.nextIndexClamped(after: currentIndex, wrapping: wrapping)
-  //    return allCases[nextIndex]
-  //  }
-  //
-  //  public func toPrevious(wrapping: Bool = true) -> Self {
-  //    let allCases = Self.allCases
-  //    guard let currentIndex: Int = allCases.firstIndex(of: self) else {
-  //      return Self.defaultCase
-  //    }
-  //    let prevIndex: Int = allCases.previousIndexClamped(before: currentIndex, wrapping: wrapping)
-  //    return allCases[prevIndex]
-  //  }
 
   /// Useful for in-place mutation, allow more concise usage, e.g.:
   /// `modeHandler.currentMode.cycleForward()`

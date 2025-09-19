@@ -34,14 +34,14 @@ public struct CyclicIndex {
   }
 }
 
-public protocol CyclicNavigator {
-  var collection: CyclicCollection { get }
-  
-}
-extension CyclicNavigator {
-  public var isAtBeginning: Bool { self == Self.allCases.first }
-  public var isAtEnd: Bool { self == Self.allCases.last }
-}
+//public protocol CyclicNavigator {
+//  var collection: CyclicCollection { get }
+//  
+//}
+//extension CyclicNavigator {
+//  public var isAtBeginning: Bool { self == Self.allCases.first }
+//  public var isAtEnd: Bool { self == Self.allCases.last }
+//}
 
 public enum MoveDirection {
   case next
