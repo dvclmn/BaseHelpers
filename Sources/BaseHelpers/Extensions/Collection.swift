@@ -47,7 +47,7 @@ extension Collection {
     return (prevIdx + count) % count
   }
 
-  /// These have moved to BaseHelpers, in support of LabeledEnum, Cycable etc.
+  /// These have moved to BaseHelpers, in support of LabeledItem, Cycable etc.
 //  /// Clamped here means returns the same case, when reaching
 //  /// an edge, if wrapping is set to false
 //  ///

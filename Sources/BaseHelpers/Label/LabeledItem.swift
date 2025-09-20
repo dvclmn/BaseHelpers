@@ -1,5 +1,5 @@
 //
-//  LabeledEnum.swift
+//  LabeledItem.swift
 //  BaseHelpers
 //
 //  Created by Dave Coleman on 26/5/2025.
@@ -19,7 +19,7 @@ extension LabeledItem {
 }
 
 extension LabeledItem where Self: CaseIterable, Self.AllCases: RandomAccessCollection, Self: RawRepresentable, Self.RawValue == String {
-  //public protocol LabeledEnum: LabeledItem where Self: CaseIterable, Self.AllCases: RandomAccessCollection, Self: RawRepresentable, Self.RawValue == String {
+  //public protocol LabeledItem: LabeledItem where Self: CaseIterable, Self.AllCases: RandomAccessCollection, Self: RawRepresentable, Self.RawValue == String {
   //  associatedtype Item: LabeledItem
   /// Convenient default value for name and label,
   /// derived from raw value
@@ -32,19 +32,19 @@ extension LabeledItem where Self: CaseIterable, Self.AllCases: RandomAccessColle
   }
 }
 
-//public protocol LabeledEnum: CaseIterable, RawRepresentable
+//public protocol LabeledItem: CaseIterable, RawRepresentable
 //where Self.AllCases: RandomAccessCollection, RawValue == String {
 //  associatedtype Item: LabeledItem
 //}
 
-//extension LabeledEnum {
+//extension LabeledItem {
 //  
 //  
 ////}
 //
-///// `LabeledEnum` gets a few things 'for free' by having RawRep,
+///// `LabeledItem` gets a few things 'for free' by having RawRep,
 ///// and thus a `rawValue` string to use for some defaults.
-////extension LabeledEnum {
+////extension LabeledItem {
 //
 //  
 //

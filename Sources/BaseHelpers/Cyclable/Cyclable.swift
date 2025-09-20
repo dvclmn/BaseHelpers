@@ -7,8 +7,8 @@
 
 import Foundation
 
-public protocol Cyclable: LabeledEnum where Self.AllCases.Index == Int {
-//public protocol Cyclable: LabeledEnum where Self.AllCases.Index == Int {
+public protocol Cyclable: LabeledItem where Self.AllCases.Index == Int, Self: CaseIterable, Self.AllCases: RandomAccessCollection {
+//public protocol Cyclable: LabeledItem where Self.AllCases.Index == Int {
   static var defaultCase: Self { get }
 }
 
