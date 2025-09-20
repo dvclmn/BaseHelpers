@@ -7,8 +7,11 @@
 
 import SwiftUI
 
-public struct QuickLabel: Equatable, Hashable, Sendable, Codable {
-  public let attributedText: AttributedString
+//public struct StyledLabel: {
+//}
+
+public struct QuickLabel: ModelBase {
+  public var attributedText: AttributedString
   public let icon: IconLiteral?
   public let role: Role?
 
@@ -72,6 +75,18 @@ public struct QuickLabel: Equatable, Hashable, Sendable, Codable {
 }
 
 extension QuickLabel {
+  
+
+  
+//  public mutating func addStyle(
+//    _ rangesToStyle: [AttributedRange],
+//    container: AttributeContainer
+//  ) {
+//    for range in rangesToStyle {
+//      self.attributedText[range].mergeAttributes(container)
+//    }
+//  }
+  
   public enum Role: Equatable, Sendable, Codable {
     case success
     case destructive

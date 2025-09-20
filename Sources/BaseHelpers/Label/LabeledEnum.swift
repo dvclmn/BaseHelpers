@@ -18,24 +18,9 @@ extension LabeledItem {
 
 }
 
-public protocol LabeledEnum: LabeledItem where Self: CaseIterable, Self.AllCases: RandomAccessCollection, Self: RawRepresentable, Self.RawValue == String {
-  associatedtype Item: LabeledItem
-}
-
-//public protocol LabeledEnum: CaseIterable, RawRepresentable
-//where Self.AllCases: RandomAccessCollection, RawValue == String {
-//  associatedtype Item: LabeledItem
-//}
-
-extension LabeledItem where Self: RawRepresentable, Self.RawValue == String {
-  
-//}
-
-/// `LabeledEnum` gets a few things 'for free' by having RawRep,
-/// and thus a `rawValue` string to use for some defaults.
-//extension LabeledEnum {
-
-  
+extension LabeledItem where Self: CaseIterable, Self.AllCases: RandomAccessCollection, Self: RawRepresentable, Self.RawValue == String {
+  //public protocol LabeledEnum: LabeledItem where Self: CaseIterable, Self.AllCases: RandomAccessCollection, Self: RawRepresentable, Self.RawValue == String {
+  //  associatedtype Item: LabeledItem
   /// Convenient default value for name and label,
   /// derived from raw value
   public var label: QuickLabel {
@@ -46,3 +31,21 @@ extension LabeledItem where Self: RawRepresentable, Self.RawValue == String {
     return self.rawValue.capitalized
   }
 }
+
+//public protocol LabeledEnum: CaseIterable, RawRepresentable
+//where Self.AllCases: RandomAccessCollection, RawValue == String {
+//  associatedtype Item: LabeledItem
+//}
+
+//extension LabeledEnum {
+//  
+//  
+////}
+//
+///// `LabeledEnum` gets a few things 'for free' by having RawRep,
+///// and thus a `rawValue` string to use for some defaults.
+////extension LabeledEnum {
+//
+//  
+//
+//}
