@@ -52,12 +52,16 @@ extension AttributeContainer {
 
   public static func quickContainer(
     foreground: Color = .black,
-    background: Color = .white
+    background: Color = .white,
+//    underline: NSUnderlineStyle = []
   ) -> AttributeContainer {
 
     var container = AttributeContainer()
     container.foregroundColor = foreground
     container.backgroundColor = background
+//    container.underlineStyle = underline
+//    container.font?.weight(.heavy)
+//    container.underlineColor = Color.pink
 
     return container
 

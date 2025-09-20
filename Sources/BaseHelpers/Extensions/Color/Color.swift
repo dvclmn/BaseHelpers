@@ -23,6 +23,22 @@ extension ShapeStyle where Self == Color {
       in: colorSpace
     )
   }
+
+}
+
+extension Array where Element == Color {
+  
+  /// Mix an array of colours into a single colour by repeatedly blending.
+  public func mixMultiple(
+//    _ colours: [Color],
+    by fraction: Double = 0.5,
+    fallback: Color = .clear
+  ) -> Color {
+    guard let first = self.first else { return fallback }
+    return self.dropFirst().reduce(first) { accumulated, next in
+      accumulated.mixCompatible(with: next, by: fraction)
+    }
+  }
 }
 
 extension Color {
