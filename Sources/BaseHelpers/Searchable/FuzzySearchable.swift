@@ -7,6 +7,7 @@
 
 import Foundation
 
+public typealias FuzzyRanges = [CountableClosedRange<Int>]
 
 public protocol FuzzySearchable: LabeledItem, Sendable, Identifiable {
   associatedtype Provider: FuzzyProvider
