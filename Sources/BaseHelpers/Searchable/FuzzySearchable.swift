@@ -7,8 +7,6 @@
 
 import Foundation
 
-/// Avoiding importing iFrit as dependancy, it'll need to conform to this
-public protocol FuzzyProvider {}
 
 public protocol FuzzySearchable: LabeledItem, Sendable, Identifiable {
   associatedtype Provider: FuzzyProvider
@@ -33,10 +31,13 @@ public protocol FuzzySearchable: LabeledItem, Sendable, Identifiable {
 extension FuzzySearchable {
 
   public func fuzzyMatch(
-    using fuse: Fuse,
+    using provider: Provider,
     query: String
   ) -> FuzzyMatch<Self>? {
-    let scoredRanges: ScoredRanges? = fuse.searchSync(query, in: self.stringRepresentation)
+    let scoredRanges: ScoredRanges? = provider.searchSync(
+      query,
+      in: self.stringRepresentation
+    )
     guard let scoredRanges else { return nil }
     return FuzzyMatch(
       item: self,
