@@ -64,3 +64,25 @@ public enum LayoutType {
     }
   }
 }
+
+public enum LayoutMode: String, Cyclable, Codable, Sendable, RawRepresentable {
+  public static var defaultCase: LayoutMode { .list }
+  
+  case grid
+  case list
+  
+  public var label: QuickLabel {
+    switch self {
+      case .grid: QuickLabel(rawValue.capitalized, .symbol("circle.grid.2x2"))
+      case .list: QuickLabel(rawValue.capitalized, .symbol("checklist.unchecked"))
+    }
+  }
+  
+  public var isGrid: Bool {
+     self == .grid
+  }
+  public var isList: Bool {
+    self == .list
+  }
+}
+

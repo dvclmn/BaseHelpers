@@ -22,11 +22,6 @@ public protocol FuzzySearchable: LabeledItem, Sendable, Identifiable {
     with container: AttributeContainer
   ) -> QuickLabel
 
-  //  func styledItemText(
-  //    ranges: FuzzyRanges,
-  //    //    match: FuzzyMatch<Self>,
-  //    with container: AttributeContainer
-  //  ) -> AttributedString
 }
 
 extension FuzzySearchable {

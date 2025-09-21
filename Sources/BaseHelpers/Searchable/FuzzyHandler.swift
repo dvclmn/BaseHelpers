@@ -6,8 +6,6 @@
 //
 
 import Foundation
-//import IdentifiedCollections
-//import Ifrit
 
 @MainActor
 public protocol FuzzySearchHandler: Sendable, AnyObject {
@@ -18,7 +16,6 @@ public protocol FuzzySearchHandler: Sendable, AnyObject {
   var collection: [Item] { get }
   var searchString: String { get set }
   var searchDebouncer: AsyncDebouncer { get }
-  //  var searchResults: IdentifiedArrayOf<FuzzyMatch<Item>> { get set }
   var selectedResult: FuzzyMatch<Item>.ID? { get set }
   var isSearchPresented: Bool { get set }
   var searchState: SearchState<Item>? { get set }
@@ -27,30 +24,7 @@ public protocol FuzzySearchHandler: Sendable, AnyObject {
 }
 
 extension FuzzySearchHandler {
-  
-  //  public var noResultsFound: Bool {
-  //    /// If there's no search string, then it doesn't make sense to say nothing found
-  //    /// Only return true if there *is* a search query, *and* no items in the results
-  //    return !searchString.isEmpty && searchResults.isEmpty
-  //
-  //  }
-  
-  //  public var styledResults: Item {
-  //    let styled = self.searchResults.map { item in
-  //      item.ranges
-  //    }
-  //  }
-  
-  //  private func all(_ collection: [Item]) -> [FuzzyMatch<Item>] {
-  //    collection.map { item in
-  //      return FuzzyMatch(
-  //        item: item,
-  //        score: 0,
-  //        ranges: []
-  //      )
-  //    }
-  //  }
-  
+
   public func fetchResults() async -> SearchState<Item> {
     guard !searchString.isEmpty else {
       print("No search string")
