@@ -15,7 +15,7 @@ extension EnvironmentValues {
   /// I guess like in a graphics app, so maybe this is a bit domain-specific
   @Entry public var viewportSize: CGSize? = nil
   
-  @Entry public var isDebugMode: Bool = false
+  @Entry public var isPreviewOnlyDebugMode: Bool = false
 
   @Entry public var isEmphasised: Bool = false
   @Entry public var isCompactMode: Bool = false

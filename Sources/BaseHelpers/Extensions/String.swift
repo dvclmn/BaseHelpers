@@ -5,9 +5,13 @@
 //  Created by Dave Coleman on 9/10/2024.
 //
 
-import Foundation
+import SwiftUI
 
 extension String {
+  
+  public var toMarkdownCompatible: LocalizedStringKey {
+    LocalizedStringKey(self)
+  }
 
   public enum SubsequenceStrategy {
     case omitAllEmpty

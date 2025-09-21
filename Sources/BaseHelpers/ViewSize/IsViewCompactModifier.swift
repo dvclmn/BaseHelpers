@@ -10,7 +10,7 @@ import SwiftUI
 public typealias IsViewCompactHandler = (Bool) -> Void
 
 public struct IsViewCompactModifier: ViewModifier {
-  @Environment(\.isDebugMode) private var isDebugMode
+  @Environment(\.isPreviewOnlyDebugMode) private var isPreviewOnlyDebugMode
 
   @State private var isCompact: Bool = false
   let widthThreshold: CGFloat
@@ -36,7 +36,7 @@ public struct IsViewCompactModifier: ViewModifier {
 extension IsViewCompactModifier {
   @ViewBuilder
   private func DebugView() -> some View {
-    if isDebugMode {
+    if isPreviewOnlyDebugMode {
       Text("Size: " + "\(isCompact ? "Compact" : "Normal")")
         .font(.caption)
         .foregroundStyle(.quaternary)
