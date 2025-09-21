@@ -65,6 +65,8 @@ public struct Styles {
   public static let sizeHuge: Double = 55
   public static let sizeGiant: Double = 89
   public static let sizeMassive: Double = 144
+  
+  public static let glassRounding: Double = 26
 
   public static let paddingToolbarTrafficLightsWidth: Double = 82
   public static let paddingToMatchList: Double = 16
