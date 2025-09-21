@@ -7,7 +7,7 @@
 
 import Foundation
 
-public extension TestStrings {
+public extension DummyContent.Strings {
   
   struct Markdown {
     

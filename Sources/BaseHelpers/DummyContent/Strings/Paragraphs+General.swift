@@ -5,7 +5,7 @@
 //  Created by Dave Coleman on 28/2/2025.
 //
 
-extension TestStrings {
+extension DummyContent.Strings {
   public static let paragraphs: [String] = [
     """
     Could you come up
