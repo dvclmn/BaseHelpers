@@ -7,21 +7,26 @@
 
 import SwiftUI
 
-public struct CompatibleGlassModifier<S: Shape>: ViewModifier {
-  
-  let shape: S
-  public func body(content: Content) -> some View {
-    if #available(macOS 26, iOS 26, *) {
-      content
-        .glassEffect(.regular, in: shape)
-    } else {
-      content
-    }
-  }
-}
+//public struct CompatibleGlassModifier<S: Shape>: ViewModifier {
+//  
+//  let shape: S
+//  public func body(content: Content) -> some View {
+//    if #available(macOS 26, iOS 26, *) {
+//      content
+//        .glassEffect(.regular, in: shape)
+//    } else {
+//      content
+//    }
+//  }
+//}
 extension View {
+  @ViewBuilder
   public func compatibleGlass<S: Shape>(_ shape: S) -> some View {
-    self.modifier(CompatibleGlassModifier(shape: shape))
+    if #available(macOS 26, iOS 26, *) {
+      self.glassEffect(.regular, in: shape)
+    } else {
+      self
+    }
   }
 }
 
