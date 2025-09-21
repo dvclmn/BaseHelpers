@@ -18,30 +18,15 @@ extension EnvironmentValues {
   @Entry public var isPreviewOnlyDebugMode: Bool = false
 
   @Entry public var isEmphasised: Bool = false
+  
+  /// This is handy to have, for basic needs, but at times I need
+  /// more granualr control, so I should use `controlSize`
+  /// for that I think
   @Entry public var isCompactMode: Bool = false
+  
   @Entry public var isConnectedToInternet: Bool = false
   @Entry public var isScrollAtStart: Bool = true
 
-}
-
-/// Where `1.0` is original size, and reduction goes down from there
-public enum ReductionStrength: CGFloat {
-  case weeBit = 0.95
-  case slight = 0.85
-  case moderate = 0.7
-  case standard = 0.6
-  case strong = 0.45
-  case veryStrong = 0.3
-}
-
-extension Bool {
-  public func compact<T: BinaryFloatingPoint>(
-    _ value: T,
-    by strength: ReductionStrength = .standard
-  ) -> T {
-    let reduced = value * T(strength.rawValue)
-    return self ? reduced : value
-  }
 }
 
 //extension BinaryFloatingPoint {
