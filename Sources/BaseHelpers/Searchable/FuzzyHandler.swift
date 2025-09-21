@@ -34,7 +34,10 @@ extension FuzzySearchHandler {
     
     let results: [FuzzyMatch<Item>]? = await searchDebouncer.execute { @MainActor in
       let matches = self.collection.compactMap { item in
-        item.fuzzyMatch(using: self.provider, query: self.searchString)
+        item.fuzzyMatch(
+          using: self.provider,
+          query: self.searchString
+        )
       }
       let sorted = matches.sorted { $0.score < $1.score }
       return sorted

@@ -10,12 +10,11 @@ import Foundation
 public typealias FuzzyRanges = [CountableClosedRange<Int>]
 
 public protocol FuzzySearchable: LabeledItem, Sendable, Identifiable {
-  associatedtype Provider: FuzzyProvider
   var stringRepresentation: String { get }
 
   /// Called with the fuse instance and the query, returns a `FuzzyMatch` if this item matched.
   /// E.g. `provider: Fuse`
-  func fuzzyMatch(using provider: Provider, query: String) -> FuzzyMatch<Self>?
+  func fuzzyMatch(using provider: any FuzzyProvider, query: String) -> FuzzyMatch<Self>?
 
   func styledLabel(
     ranges: FuzzyRanges?,
@@ -27,7 +26,7 @@ public protocol FuzzySearchable: LabeledItem, Sendable, Identifiable {
 extension FuzzySearchable {
 
   public func fuzzyMatch(
-    using provider: Provider,
+    using provider: any FuzzyProvider,
     query: String
   ) -> FuzzyMatch<Self>? {
     let scoredRanges: ScoredRanges? = provider.searchSync(
