@@ -7,6 +7,11 @@
 
 import SwiftUI
 
+#warning("Important: The below is useful, even though turned off, don't delete")
+
+/// I think the below can work, but haven't been sure if and how to
+/// have both an `OptionSet` approach, and the seperate `Bool`s
+
 /// I think I stopped using this otherwise-helpful type, as I think
 /// it resulted in unintentionally setting other properties, when
 /// only wanting to set 'x' property. Like wanting to set a view
@@ -42,17 +47,17 @@ extension ViewModes: CustomStringConvertible {
 
 }
 
-public struct ViewModesModifier: ViewModifier {
-  @Environment(\.viewModes) private var existingModes
-
-  let newModes: ViewModes
-  public func body(content: Content) -> some View {
-    content.environment(\.viewModes, existingModes.union(newModes))
-  }
-}
-
-extension View {
-  public func setViewModes(_ modes: ViewModes) -> some View {
-    self.modifier(ViewModesModifier(newModes: modes))
-  }
-}
+//public struct ViewModesModifier: ViewModifier {
+//  @Environment(\.viewModes) private var existingModes
+//
+//  let newModes: ViewModes
+//  public func body(content: Content) -> some View {
+//    content.environment(\.viewModes, existingModes.union(newModes))
+//  }
+//}
+//
+//extension View {
+//  public func setViewModes(_ modes: ViewModes) -> some View {
+//    self.modifier(ViewModesModifier(newModes: modes))
+//  }
+//}
