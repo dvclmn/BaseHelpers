@@ -15,7 +15,8 @@ extension DummyContent {
     let category: Category
 
     public init(
-      _ label: QuickLabel,
+      id: UUID = UUID(),
+      label: QuickLabel,
       state: Bool,
       category: Category
     ) {
@@ -29,28 +30,33 @@ extension DummyContent {
 
 extension DummyContent.Animal {
 
+  public static func withEmojis(fallback: IconLiteral = .emoji("🐾")) -> [Self] {
+    return mapWithIcons(iconEmoji, transform: { $0 }, fallback: fallback)
+  }
+
+  public static func withSymbols(fallback: IconLiteral = .symbol("pawprint")) -> [Self] {
+    return mapWithIcons(iconSymbol, transform: { $0 }, fallback: fallback)
+  }
+
+  public static func withCustomSymbols(
+    _ customSymbols: [CustomSymbol], fallback: IconLiteral = .customSymbol(.artboard)
+  ) -> [Self] {
+    return mapWithIcons(customSymbols, transform: { .customSymbol($0) }, fallback: fallback)
+  }
+
   public static let data = [
-    Self("Giraffe", state: true, category: Category.cute),
-    Self("Tapir", state: false, category: Category.predator),
-    Self("Dog", state: true, category: Category.endangered),
-    Self("Cat", state: false, category: Category.cute),
-    Self("Orangutan", state: false, category: Category.extinct),
-    Self("Bearded Dragon", state: false, category: Category.predator),
-    Self("Goat", state: false, category: Category.cute),
-    Self("Ibis", state: true, category: Category.extinct),
-    Self("Zebra", state: false, category: Category.endangered),
-    //    Self(QuickLabel("Giraffe", icon: .emoji("🐶")), state: true, category: Category.cute),
-    //    Self(QuickLabel("Tapir", icon: .emoji("🐶")), state: false, category: Category.predator),
-    //    Self(QuickLabel("Dog", icon: .emoji("🐶")), state: true, category: Category.endangered),
-    //    Self(QuickLabel("Cat", icon: .emoji("🐶")), state: false, category: Category.cute),
-    //    Self(QuickLabel("Orangutan", icon: .emoji("🐶")), state: false, category: Category.extinct),
-    //    Self(QuickLabel("Bearded Dragon", icon: .emoji("🐶")), state: false, category: Category.predator),
-    //    Self(QuickLabel("Goat", icon: .emoji("🐶")), state: false, category: Category.cute),
-    //    Self(QuickLabel("Ibis", icon: .emoji("🐶")), state: true, category: Category.extinct),
-    //    Self(QuickLabel("Zebra", icon: .emoji("🐶")), state: false, category: Category.endangered),
+    Self(label: "Giraffe", state: true, category: Category.cute),
+    Self(label: "Tapir", state: false, category: Category.predator),
+    Self(label: "Dog", state: true, category: Category.endangered),
+    Self(label: "Cat", state: false, category: Category.cute),
+    Self(label: "Orangutan", state: false, category: Category.extinct),
+    Self(label: "Bearded Dragon", state: false, category: Category.predator),
+    Self(label: "Goat", state: false, category: Category.cute),
+    Self(label: "Ibis", state: true, category: Category.extinct),
+    Self(label: "Zebra", state: false, category: Category.endangered),
   ]
 
-  public static let iconSymbol: [IconLiteral] = [
+  static let iconSymbol: [IconLiteral] = [
     .symbol(Icons.binoculars.icon),
     .symbol(Icons.window.icon),
     .symbol(Icons.star.icon),
@@ -72,9 +78,63 @@ extension DummyContent.Animal {
     .emoji("🦖"),
     .emoji("🦗"),
     .emoji("🦘"),
-    //    .emoji("🦙"),
   ]
 }
+
+/// Generic helper method compatible with QuickLabel structure
+extension DummyContent.Animal {
+  static func mapWithIcons<T>(
+    _ icons: [T],
+    transform: (T) -> IconLiteral,
+    fallback: IconLiteral
+  ) -> [Self] {
+    return Self.data.enumerated().map { index, animal in
+      let iconIndex = index < icons.count ? index : index % max(icons.count, 1)
+      let newIcon = icons.isEmpty ? fallback : transform(icons[iconIndex])
+
+      /// Create new QuickLabel with the original attributedText and role, but new icon
+      let newLabel = QuickLabel(
+        attributedText: animal.label.attributedText,
+        icon: newIcon,
+        role: animal.label.role
+      )
+
+      return Self(
+        id: animal.id,
+        label: newLabel,
+        state: animal.state,
+        category: animal.category
+      )
+    }
+  }
+
+}
+
+//extension DummyContent.Animal {
+//  static func mapWithIcons(
+//    _ icons: [IconLiteral],
+//    transform: (IconLiteral) -> IconLiteral,
+//    fallback: IconLiteral
+//  ) -> [Self] {
+//    return Self.data.enumerated().map { index, animal in
+//      let iconIndex = index < icons.count ? index : index % max(icons.count, 1)
+//      let newIcon = icons.isEmpty ? fallback : transform(icons[iconIndex])
+//
+//      let newLabel = QuickLabel(animal.label.text, icon: newIcon)
+//
+//      return Self(
+//        id: animal.id,
+//        label: newLabel,
+//        state: animal.state,
+//        category: animal.category
+//      )
+//    }
+//  }
+//
+//  // Usage examples:
+//  // static let customEmojiData = mapWithIcons(iconEmoji, transform: { $0 }, fallback: .emoji("🐾"))
+//  // static let customSymbolData = mapWithIcons(iconSymbol, transform: { $0 }, fallback: .symbol(Icons.pawprint.icon))
+//}
 
 extension DummyContent.Animal {
   public enum Category: String, ModelBase {
