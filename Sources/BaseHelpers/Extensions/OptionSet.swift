@@ -25,3 +25,10 @@ public extension Binding where Value: OptionSet & Sendable, Value.Element: Senda
     )
   }
 }
+
+//extension OptionSet where Self: CustomStringConvertible {
+//  static func describe(_ mapping: [(Self, String)], for value: Self) -> String {
+//    let names = mapping.compactMap { value.contains($0.0) ? $0.1 : nil }
+//    return "\(Self.self)(\(names.joined(separator: ", ")))"
+//  }
+//}
