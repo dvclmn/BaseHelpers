@@ -7,7 +7,6 @@
 
 import Foundation
 
-#warning("This should be in BaseHelpers, right?")
 public protocol Pickable: LabeledItem, Shortcuttable where Self: CaseIterable, Self.AllCases: RandomAccessCollection {
   
   /// A label that describes the purpose of the whole enum.

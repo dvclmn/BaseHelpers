@@ -11,10 +11,6 @@ public var twoPi: CGFloat { .pi * 2 }
 
 /// Looking for `clamp` methods? See `Extrensions/Comparable`
 extension BinaryFloatingPoint {
-  
-  public static func omega(frequency: Self) -> Self {
-    return .pi * 2 * frequency
-  }
 
   public func incrementing(by amount: Self, in range: ClosedRange<Self>? = nil) -> Self {
     var result = self + amount
@@ -28,17 +24,15 @@ extension BinaryFloatingPoint {
     self = incrementing(by: amount, in: range)
   }
 
-
   public func hueWrapped() -> Self {
     let value = self.truncatingRemainder(dividingBy: 1.0)
     return value < 0 ? value + 1.0 : value
   }
 
   public var toUnitInterval: UnitInterval { return UnitInterval(Double(self)) }
-  
+
   public var toUnitIntervalCyclic: UnitIntervalCyclic { return UnitIntervalCyclic(Double(self)) }
 
-  
   /// Map distance to a scaled distance using atan
   public func scaledDistance(
     radius: Self,
@@ -48,7 +42,6 @@ extension BinaryFloatingPoint {
     let halfPi = Double.pi / 2
     return radius * Self(atan(tensionVaue / halfPi))
   }
-
 
   /// E.g. converting `0.8` to `0.2`
   public var inversePercentage: Self {
@@ -86,7 +79,6 @@ extension BinaryFloatingPoint {
     //    return min(1.0, max(0.0, self))
   }
 
-  
   /// Calculates height from width using the given aspect ratio
   /// - Parameter aspectRatio: The aspect ratio (width / height)
   /// - Returns: The calculated height value
@@ -94,7 +86,6 @@ extension BinaryFloatingPoint {
     return self / aspectRatio
   }
 
-  
   /// Returns the shortest angular distance between two angles
   public static func angleDelta(_ angle1: Self, _ angle2: Self) -> Self {
     var delta = angle1 - angle2

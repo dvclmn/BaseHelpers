@@ -7,10 +7,8 @@
 
 import SwiftUI
 
-#warning("These (even though they're examples) should be Pickable and Shortcuttable")
-enum ExampleTab: String {
-//enum ExampleTab: String, Pickable, Shortcuttable {
-  static let pickerLabel: QuickLabel = QuickLabel("Example Tab")
+public enum ExampleTab: String, Pickable, Shortcuttable {
+  public static let pickerLabel: QuickLabel = QuickLabel("Example Tab")
   case blim
   case fringent
   case sartim
@@ -18,11 +16,11 @@ enum ExampleTab: String {
   case blarm
   case frogney
 
-  var name: String {
+  public var name: String {
     self.rawValue.capitalized
   }
 
-  var keyboardShortcut: KeyboardShortcut? {
+  public var keyboardShortcut: KeyboardShortcut? {
     switch self {
       case .blim:
         KeyboardShortcut("1", modifiers: .command)

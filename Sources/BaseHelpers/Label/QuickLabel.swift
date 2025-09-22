@@ -11,12 +11,14 @@ public struct QuickLabel: ModelBase {
   public var attributedText: AttributedString
   public let icon: IconLiteral?
   public let role: Role?
-
+  
   public var text: String {
     return String(attributedText.characters)
   }
+}
 
-  public static let blank: QuickLabel = .init("")
+// MARK: - Initialisers
+extension QuickLabel {
 
   public init(
     _ text: String,
@@ -35,15 +37,9 @@ public struct QuickLabel: ModelBase {
   ) {
     self.attributedText = text
     self.icon = icon
-//    if let iconString {
-//      self.icon = .symbol(iconString)
-//    } else {
-//      self.icon = nil
-//    }
     self.role = role
   }
 
-  
   public init(
     _ text: AttributedString,
     iconString: String? = nil,
@@ -86,6 +82,13 @@ public struct QuickLabel: ModelBase {
     self.role = role
   }
 }
+extension QuickLabel: ExpressibleByStringLiteral {
+  public init(stringLiteral value: String) {
+    self.init(value)
+  }
+  
+}
+
 
 extension QuickLabel {
 

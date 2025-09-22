@@ -8,19 +8,24 @@
 import Foundation
 
 extension DummyContent {
-  public struct Animal: Identifiable, Sendable {
-    public let id = UUID()
-    let label: String
+  public struct Animal: Identifiable, Sendable, LabeledItem {
+    public let id: UUID
+    public let label: QuickLabel
     let state: Bool
     let category: AnimalCategory
 
-    public init(_ label: String, state: Bool, category: AnimalCategory) {
-      self.label = label
+    public init(
+      _ label: String,
+      state: Bool,
+      category: AnimalCategory
+    ) {
+      self.id = UUID()
+      self.label = QuickLabel(label)
       self.state = state
       self.category = category
     }
 
-    static let data = [
+    public static let data = [
       Self("Giraffe", state: true, category: AnimalCategory.cute),
       Self("Tapir", state: false, category: AnimalCategory.predator),
       Self("Dog", state: true, category: AnimalCategory.endangered),
@@ -32,7 +37,7 @@ extension DummyContent {
       Self("Zebra", state: false, category: AnimalCategory.endangered),
     ]
   }
-  public enum AnimalCategory: String, Sendable {
+  public enum AnimalCategory: String, ModelBase {
     case predator
     case cute
     case extinct

@@ -18,11 +18,8 @@ extension LabeledItem {
 
 }
 
-extension LabeledItem where Self: CaseIterable, Self.AllCases: RandomAccessCollection, Self: RawRepresentable, Self.RawValue == String {
-  //public protocol LabeledItem: LabeledItem where Self: CaseIterable, Self.AllCases: RandomAccessCollection, Self: RawRepresentable, Self.RawValue == String {
-  //  associatedtype Item: LabeledItem
-  /// Convenient default value for name and label,
-  /// derived from raw value
+extension LabeledItem
+where Self: CaseIterable, Self.AllCases: RandomAccessCollection, Self: RawRepresentable, Self.RawValue == String {
   public var label: QuickLabel {
     let title = self.rawValue.capitalized
     return QuickLabel(title)
@@ -30,22 +27,6 @@ extension LabeledItem where Self: CaseIterable, Self.AllCases: RandomAccessColle
   public var name: String {
     return self.rawValue.capitalized
   }
+  
+  public var blurb: String? { nil }
 }
-
-//public protocol LabeledItem: CaseIterable, RawRepresentable
-//where Self.AllCases: RandomAccessCollection, RawValue == String {
-//  associatedtype Item: LabeledItem
-//}
-
-//extension LabeledItem {
-//  
-//  
-////}
-//
-///// `LabeledItem` gets a few things 'for free' by having RawRep,
-///// and thus a `rawValue` string to use for some defaults.
-////extension LabeledItem {
-//
-//  
-//
-//}
