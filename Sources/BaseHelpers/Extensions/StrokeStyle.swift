@@ -7,6 +7,13 @@
 
 import SwiftUI
 
+public struct StrokeLighting: Sendable {
+  public var lightDirection: Alignment = .top
+  public var colour: Color = .white.opacity(0.1)
+  public var thickness: CGFloat = 1.0
+}
+
+
 extension StrokeStyle {
   public static var simple01: StrokeStyle {
     .init(lineWidth: 1)

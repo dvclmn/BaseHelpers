@@ -45,9 +45,9 @@ struct RoughnessExampleView: View {
         .frame(width: 200)
       
       
-//      SimpleSlider("Roughness", value: $roughness, range: 1...100)
-//      SimpleSlider("Segments", value: $segments, range: 1...100)
-//      SimpleSlider("Jitter", value: $jitter, range: 1...100)
+//      QuickSlider("Roughness", value: $roughness, range: 1...100)
+//      QuickSlider("Segments", value: $segments, range: 1...100)
+//      QuickSlider("Jitter", value: $jitter, range: 1...100)
     }
     .padding(60)
   }

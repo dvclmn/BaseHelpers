@@ -86,3 +86,21 @@ public enum LayoutMode: String, Cyclable, Codable, Sendable, RawRepresentable {
   }
 }
 
+#warning("Is the below still useful?")
+//public struct LayoutToggle: View {
+//  
+//  @Binding var mode: LayoutMode
+//  
+//  public init(_ mode: Binding<LayoutMode>) {
+//    self._mode = mode
+//  }
+//  public var body: some View {
+//    
+//    Button {
+//      mode.moveForward()
+//    } label: {
+//      MaybeLabel(mode.label)
+//    }
+//    
+//  }
+//}
