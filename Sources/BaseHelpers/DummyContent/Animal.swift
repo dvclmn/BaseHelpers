@@ -12,32 +12,38 @@ extension DummyContent {
     public let id: UUID
     public let label: QuickLabel
     let state: Bool
-    let category: AnimalCategory
+    let category: Category
 
     public init(
-      _ label: String,
+      _ label: QuickLabel,
       state: Bool,
-      category: AnimalCategory
+      category: Category
     ) {
       self.id = UUID()
-      self.label = QuickLabel(label)
+      self.label = label
       self.state = state
       self.category = category
     }
-
-    public static let data = [
-      Self("Giraffe", state: true, category: AnimalCategory.cute),
-      Self("Tapir", state: false, category: AnimalCategory.predator),
-      Self("Dog", state: true, category: AnimalCategory.endangered),
-      Self("Cat", state: false, category: AnimalCategory.cute),
-      Self("Orangutan", state: false, category: AnimalCategory.extinct),
-      Self("Bearded Dragon", state: false, category: AnimalCategory.predator),
-      Self("Goat", state: false, category: AnimalCategory.cute),
-      Self("Ibis", state: true, category: AnimalCategory.extinct),
-      Self("Zebra", state: false, category: AnimalCategory.endangered),
-    ]
   }
-  public enum AnimalCategory: String, ModelBase {
+}
+
+extension DummyContent.Animal {
+
+  public static let data = [
+    Self(QuickLabel("Giraffe", icon: .emoji("🐶")), state: true, category: Category.cute),
+    Self(QuickLabel("Tapir", icon: .emoji("🐶")), state: false, category: Category.predator),
+    Self(QuickLabel("Dog", icon: .emoji("🐶")), state: true, category: Category.endangered),
+    Self(QuickLabel("Cat", icon: .emoji("🐶")), state: false, category: Category.cute),
+    Self(QuickLabel("Orangutan", icon: .emoji("🐶")), state: false, category: Category.extinct),
+    Self(QuickLabel("Bearded Dragon", icon: .emoji("🐶")), state: false, category: Category.predator),
+    Self(QuickLabel("Goat", icon: .emoji("🐶")), state: false, category: Category.cute),
+    Self(QuickLabel("Ibis", icon: .emoji("🐶")), state: true, category: Category.extinct),
+    Self(QuickLabel("Zebra", icon: .emoji("🐶")), state: false, category: Category.endangered),
+  ]
+}
+
+extension DummyContent.Animal {
+  public enum Category: String, ModelBase {
     case predator
     case cute
     case extinct
@@ -56,5 +62,4 @@ extension DummyContent {
       }
     }
   }
-
 }
