@@ -11,9 +11,10 @@ let package = Package(
   ],
   products: [
     .library(name: "BaseHelpers", targets: ["BaseHelpers"]),
-    .library(name: "Networking", targets: ["Networking"]),
     .library(name: "ColourExtract", targets: ["ColourExtract"]),
-    .library(name: "2DGrid", targets: ["2DGrid"]),
+    .library(name: "CurveFunctions", targets: ["CurveFunctions"]),
+    .library(name: "GridCanvas", targets: ["GridCanvas"]),
+    .library(name: "Networking", targets: ["Networking"]),
   ],
 
   dependencies: [
@@ -25,6 +26,7 @@ let package = Package(
 
   targets: [
 
+
     .target(
       name: "BaseHelpers",
       dependencies: [
@@ -34,6 +36,10 @@ let package = Package(
       resources: [.process("Assets.xcassets")],
     ),
 
+    .target(name: "ColourExtract", dependencies: [], ),
+    .target(name: "CurveFunctions", dependencies: [], ),
+    .target(name: "GridCanvas", dependencies: ["BaseHelpers"], ),
+
     .target(
       name: "Networking",
       dependencies: [
@@ -42,7 +48,5 @@ let package = Package(
       ],
     ),
 
-    .target(name: "ColourExtract", dependencies: [],),
-    .target(name: "2DGrid", dependencies: [],),
   ],
 )

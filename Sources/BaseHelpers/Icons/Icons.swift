@@ -13,7 +13,7 @@ protocol IconGalleryViewable: Identifiable, RawRepresentable, CaseIterable where
 }
 
 // MARK: - Icons
-public enum Icons: String, IconGaller yViewable, Codable, Equatable {
+public enum Icons: String, IconGalleryViewable, Codable, Equatable {
   case stats = "chart.dots.scatter"
   case statsAlt = "chart.pie"
   case refresh = "arrow.triangle.2.circlepath"
