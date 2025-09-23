@@ -1,29 +1,30 @@
 // swift-tools-version: 6.1
 
-import PackageDescription
 import CompilerPluginSupport
+import PackageDescription
 
 let package = Package(
   name: "BaseHelpers",
   platforms: [
     .iOS("17.0"),
-    .macOS("14.0")
+    .macOS("14.0"),
   ],
   products: [
     .library(name: "BaseHelpers", targets: ["BaseHelpers"]),
     .library(name: "Networking", targets: ["Networking"]),
     .library(name: "ColourExtract", targets: ["ColourExtract"]),
+    .library(name: "2DGrid", targets: ["2DGrid"]),
   ],
-  
+
   dependencies: [
     .package(url: "https://github.com/swiftlang/swift-docc-plugin", from: "1.0.0"),
     .package(url: "https://github.com/mattmassicotte/nsui", from: "1.3.0"),
     .package(url: "https://github.com/pointfreeco/swift-identified-collections", from: "1.1.1"),
     .package(url: "https://github.com/evgenyneu/keychain-swift.git", from: "24.0.0"),
   ],
-  
+
   targets: [
-    
+
     .target(
       name: "BaseHelpers",
       dependencies: [
@@ -32,7 +33,7 @@ let package = Package(
       ],
       resources: [.process("Assets.xcassets")],
     ),
-    
+
     .target(
       name: "Networking",
       dependencies: [
@@ -40,13 +41,8 @@ let package = Package(
         .product(name: "KeychainSwift", package: "keychain-swift"),
       ],
     ),
-    
-      .target(
-        name: "ColourExtract",
-        dependencies: [
-          "BaseHelpers",
-          .product(name: "KeychainSwift", package: "keychain-swift"),
-        ],
-      ),
+
+    .target(name: "ColourExtract", dependencies: [],),
+    .target(name: "2DGrid", dependencies: [],),
   ],
 )
