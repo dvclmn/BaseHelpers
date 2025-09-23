@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import BaseHelpers
 
 public struct GridDimensions: ModelBase {
   public var columns: Int
@@ -169,3 +170,11 @@ extension GridDimensions: CustomStringConvertible {
 //
 //  }
 //}
+
+extension String {
+  public var gridDimensions: GridDimensions {
+    let columns: Int = longestLineLength
+    let rows: Int = substringLines().count
+    return GridDimensions(columns: columns, rows: rows)
+  }
+}

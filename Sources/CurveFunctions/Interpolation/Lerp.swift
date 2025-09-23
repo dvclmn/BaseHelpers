@@ -96,3 +96,10 @@ public func inverseLerp<V: BinaryFloatingPoint, T: BinaryFloatingPoint>(_ v0: V,
 }
 
 // swiftlint:enable identifier_name
+
+extension BinaryFloatingPoint {
+  public func lerpHue(from: Double, to: Double, strength: Double) -> Double {
+    let delta = ((to - from + 540).truncatingRemainder(dividingBy: 360)) - 180
+    return (from + delta * strength).truncatingRemainder(dividingBy: 360)
+  }
+}

@@ -7,15 +7,19 @@
 
 import SwiftUI
 
-public struct PointStyle: ModelBase {
+public protocol CodableColour: WaveBase {
+  static var `default`: Self { get }
+}
+
+public struct PointStyle<T: CodableColour>: WaveBase {
   let diameter: CGFloat
-  let shape: Shape
-  let colour: Swatch
+  let shape: Self.Shape
+  let colour: T
 
   public init(
     diameter: CGFloat = 4,
     shape: Shape = .circle,
-    colour: Swatch = .green50,
+    colour: T = .default
   ) {
     self.diameter = diameter
     self.shape = shape
@@ -26,21 +30,21 @@ public struct PointStyle: ModelBase {
   /// something that relates to performance
   //  var count: Double = 100
 
-  public static let sizeRange: ClosedRange<Double> = 1...120
-  public static let swatches: [Swatch] = [.yellow30, .purple20, .brown40]
+  public static var sizeRange: ClosedRange<Double> {1...120}
+//  public static let swatches: [Swatch] = [.yellow30, .purple20, .brown40]
 
-  public enum Shape: ModelBase, CaseIterable {
+  public enum Shape: WaveBase, CaseIterable {
     case none
     case circle
     case square
-    case diamond
+//    case diamond
 
     public var value: AnyShape? {
       switch self {
         case .none: nil
         case .circle: AnyShape(.circle)
         case .square: AnyShape(.rect)
-        case .diamond: AnyShape(Diamond())
+//        case .diamond: AnyShape(Diamond())
       }
     }
 
@@ -49,7 +53,7 @@ public struct PointStyle: ModelBase {
         case .none: "None"
         case .circle: "Circle"
         case .square: "Square"
-        case .diamond: "Diamond"
+//        case .diamond: "Diamond"
       }
     }
 
@@ -58,7 +62,7 @@ public struct PointStyle: ModelBase {
         case .none: "circle.slash"
         case .circle: "circle.fill"
         case .square: "square.fill"
-        case .diamond: "diamond.fill"
+//        case .diamond: "diamond.fill"
       }
     }
   }

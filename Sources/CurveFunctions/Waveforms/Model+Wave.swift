@@ -8,6 +8,10 @@
 import GameplayKit
 import SwiftUI
 
+public protocol WaveBase: Sendable, Codable, Equatable, Hashable {
+//  associatedtype Colour: CodableColour
+}
+
 /// The advantages of this “elapsed-only” engine:
 /// - Waves are fully self-contained: frequency, amplitude,
 ///   and phase offset are all local.
@@ -22,14 +26,16 @@ import SwiftUI
 /// The user has the choice to either specify a per-Wave
 /// cycles value here, or there is also a global setting
 /// if they are happy to keep it the same for all Waves.
-public struct Wave: ModelBase, Identifiable {
+public struct Wave<T: CodableColour>: WaveBase, Identifiable {
+//  public typealias Colour = T
+  
   public let id: UUID
   public var frequency: SmoothedProperty
   public var amplitude: SmoothedProperty
   public var phaseOffset: SmoothedProperty
   public var noise: SmoothedProperty
   public var cyclesAcross: CGFloat
-  public var colour: Swatch
+  public var colour: T
 
   public init(
     id: UUID = UUID(),
@@ -37,7 +43,7 @@ public struct Wave: ModelBase, Identifiable {
     amplitude: CGFloat,
     phaseOffset: CGFloat = 0,
     cyclesAcross: CGFloat = 2,
-    colour: Swatch = .blue20
+    colour: T
   ) {
     self.id = id
     self.frequency = SmoothedProperty(frequency)
@@ -87,6 +93,6 @@ extension Wave {
   //    return amplitude.displayed * raw
   //  }
 
-  private static let validRange: ClosedRange<CGFloat> = -1...1
+  private static var validRange: ClosedRange<CGFloat> { -1...1 }
 
 }

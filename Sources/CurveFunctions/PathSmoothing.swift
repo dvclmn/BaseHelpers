@@ -7,11 +7,9 @@
 
 import Foundation
 
-
-
 /// Not currently used by Animation Playground,
 /// but seems handy enough to keep around
-public enum PathSmoothing: ModelBase, CaseIterable, Identifiable {
+public enum PathSmoothing: WaveBase, CaseIterable, Identifiable {
   public static let allCases: [PathSmoothing] = [
     .linear,
     .quadCurve,
@@ -38,7 +36,7 @@ public enum PathSmoothing: ModelBase, CaseIterable, Identifiable {
   }
 }
 
-public struct CatmullRomConfiguration: ModelBase {
+public struct CatmullRomConfiguration: WaveBase {
   let tension: CGFloat
   let alpha: CGFloat  // Future: centripetal/chordal parameterization
   //  var endpointHandling: EndpointHandling = .clamp

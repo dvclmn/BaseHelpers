@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import
 
 /// This represents a closed unit interval `[0,1]`
 /// Useful for percentages, opacity, normalised values.

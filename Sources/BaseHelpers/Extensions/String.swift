@@ -118,11 +118,7 @@ extension String {
     return longestLine
   }
 
-  public var gridDimensions: GridDimensions {
-    let columns: Int = longestLineLength
-    let rows: Int = substringLines().count
-    return GridDimensions(columns: columns, rows: rows)
-  }
+
 
   public func indentingEachLine(_ level: Int = 1, indentChar: String = "\t") -> String {
     let indent = String(repeating: indentChar, count: level)

@@ -7,17 +7,17 @@
 
 import SwiftUI
 
-public struct WaveAppearance: ModelBase {
+public struct WaveAppearance<T: CodableColour>: WaveBase {
   let path: PathConfiguration
-  let points: PointStyle
+  let points: PointStyle<T>
   let cyclesAcross: CGFloat
 
-  static let windowOptions: [CGFloat] = [1, 2, 4, 8, 12, 24, 30]
-  static let timeRange: ClosedRange<CGFloat> = 1...30
+  static var windowOptions: [CGFloat] { [1, 2, 4, 8, 12, 24, 30] }
+  static var timeRange: ClosedRange<CGFloat> { 1...30 }
 
   public init(
     path: PathConfiguration = .init(),
-    points: PointStyle = .init(),
+    points: PointStyle<T> = .init(),
     cyclesAcross: CGFloat = 2
   ) {
     self.path = path
@@ -26,12 +26,12 @@ public struct WaveAppearance: ModelBase {
   }
 }
 
-public struct PathConfiguration: ModelBase {
+public struct PathConfiguration: WaveBase {
   let strokeStyle: StrokeStyle
   let smoothing: PathSmoothing
 
   public init(
-    strokeStyle: StrokeStyle = .simple01,
+    strokeStyle: StrokeStyle = .init(lineWidth: 1),
     smoothing: PathSmoothing = .linear
   ) {
     self.strokeStyle = strokeStyle

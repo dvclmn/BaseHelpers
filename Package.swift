@@ -26,18 +26,18 @@ let package = Package(
 
   targets: [
 
-
     .target(
       name: "BaseHelpers",
       dependencies: [
+        "CurveFunctions",
         .product(name: "NSUI", package: "nsui"),
         .product(name: "IdentifiedCollections", package: "swift-identified-collections"),
       ],
       resources: [.process("Assets.xcassets")],
     ),
 
-    .target(name: "ColourExtract", dependencies: [], ),
-    .target(name: "CurveFunctions", dependencies: [], ),
+    .target(name: "ColourExtract", dependencies: []),
+    .target(name: "CurveFunctions", dependencies: []),
     .target(name: "GridCanvas", dependencies: ["BaseHelpers"], ),
 
     .target(
