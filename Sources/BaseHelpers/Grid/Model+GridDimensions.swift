@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct GridDimensions: GridBase {
+public struct GridDimensions: ModelBase {
   public var columns: Int
   public var rows: Int
 

@@ -31,8 +31,6 @@ public struct FrameDimensions: Sendable {
   
   public init(
     fromSize size: CGSize,
-//    width: CGFloat? = nil,
-//    height: CGFloat? = nil,
     alignment: Alignment = .center
   ) {
     self.width = size.width

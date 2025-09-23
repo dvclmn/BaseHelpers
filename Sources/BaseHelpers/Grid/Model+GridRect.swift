@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct GridRect: GridBase {
+public struct GridRect: ModelBase {
   public let origin: GridPosition
   public let size: GridDimensions
   private let cellSize: CGSize

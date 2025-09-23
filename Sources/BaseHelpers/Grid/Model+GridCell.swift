@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct GridCell: GridBase {
+public struct GridCell: ModelBaseWithID {
   public var id: GridPosition { position }
   public var character: Character
   public var position: GridPosition

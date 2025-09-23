@@ -8,7 +8,6 @@
 import Foundation
 import SwiftUI
 
-// MARK: - Grain overlay
 public struct GrainOverlay: ViewModifier {
   var opacity: Double
 
@@ -23,7 +22,6 @@ public struct GrainOverlay: ViewModifier {
           .allowsHitTesting(false)
           .ignoresSafeArea()
       )
-
   }
 }
 extension View {

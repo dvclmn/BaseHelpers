@@ -12,6 +12,7 @@ let package = Package(
   products: [
     .library(name: "BaseHelpers", targets: ["BaseHelpers"]),
     .library(name: "Networking", targets: ["Networking"]),
+    .library(name: "ColourExtract", targets: ["ColourExtract"]),
   ],
   
   dependencies: [
@@ -39,5 +40,13 @@ let package = Package(
         .product(name: "KeychainSwift", package: "keychain-swift"),
       ],
     ),
+    
+      .target(
+        name: "ColourExtract",
+        dependencies: [
+          "BaseHelpers",
+          .product(name: "KeychainSwift", package: "keychain-swift"),
+        ],
+      ),
   ],
 )

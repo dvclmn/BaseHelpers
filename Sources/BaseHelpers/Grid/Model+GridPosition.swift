@@ -8,7 +8,7 @@
 import SwiftUI
 
 /// Represents a position in a 2D Grid (rows and columns).
-public struct GridPosition: GridBase {
+public struct GridPosition: ModelBase {
   public let column: Int
   public let row: Int
 

@@ -19,10 +19,6 @@ public struct ZoomViewModifier: ViewModifier {
 
   @State private var initialZoom: CGFloat?
 
-  //  @Binding var canvasHandler: CanvasHandler
-  ///
-  //  let zoom: CGFloat
-
   @Binding var zoom: CGFloat
   let zoomRange: ClosedRange<CGFloat>
   let isEnabled: Bool
@@ -35,9 +31,6 @@ public struct ZoomViewModifier: ViewModifier {
 }
 extension ZoomViewModifier {
 
-  //  var zoom: CGFloat { canvasHandler.transform.zoom }
-  //  var pan: CGSize { canvasHandler.transform.pan }
-
   func zoomGesture() -> some Gesture {
     MagnifyGesture()
       .updating($magnification) { value, state, _ in
@@ -45,36 +38,18 @@ extension ZoomViewModifier {
       }
       .onChanged { value in
 
-        //        canvasHandler.interactions.context.gestureType = .zoom
-        //        guard let hoverLocation = canvasHandler.hoverLocation else { return }
-
         if initialZoom == nil {
           initialZoom = zoom
         }
         guard let initialZoom else { return }
 
         let newZoom = (initialZoom) * value.magnification
-
         let clampedZoom = newZoom.clamped(to: zoomRange)
-
-        //        let anchorCanvasPositionBefore = CGPoint(
-        //          x: (hoverLocation.x - pan.width) / zoom,
-        //          y: (hoverLocation.y - pan.height) / zoom
-        //        )
-        //
-        //        let newPan = CGSize(
-        //          width: hoverLocation.x - anchorCanvasPositionBefore.x * clampedZoom,
-        //          height: hoverLocation.y - anchorCanvasPositionBefore.y * clampedZoom
-        //        )
-
-        //        canvasHandler.transform.zoom = clampedZoom
-        //        canvasHandler.transform.pan = newPan
 
         zoom = clampedZoom
         didUpdateZoom(.active(magnification: clampedZoom))
       }
       .onEnded { _ in
-        //        canvasHandler.interactions.context.gestureType = .none
         initialZoom = nil
         didUpdateZoom(.ended)
       }
@@ -82,7 +57,6 @@ extension ZoomViewModifier {
 }
 extension View {
   public func onZoomGesture(
-    //    canvasHandler: Binding<CanvasHandler>,
     zoom: Binding<CGFloat>,
     zoomRange: ClosedRange<CGFloat>,
     isEnabled: Bool = true,
@@ -90,7 +64,6 @@ extension View {
   ) -> some View {
     self.modifier(
       ZoomViewModifier(
-        //        canvasHandler: canvasHandler,
         zoom: zoom,
         zoomRange: zoomRange,
         isEnabled: isEnabled,

@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct GridDelta: GridBase {
+public struct GridDelta: ModelBase {
   public var columns: Int
   public var rows: Int
   

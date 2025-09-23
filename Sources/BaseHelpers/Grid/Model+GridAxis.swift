@@ -22,7 +22,7 @@ import SwiftUI
 ///       │   │   │   │   row 2
 ///
 /// ```
-public enum GridAxis: String, GridBase, CaseIterable, Identifiable {
+public enum GridAxis: String, ModelBase, CaseIterable, Identifiable {
   /// Horizontal
   case column
 
