@@ -14,7 +14,7 @@ let package = Package(
     .library(name: "ColourExtract", targets: ["ColourExtract"]),
     .library(name: "CurveFunctions", targets: ["CurveFunctions"]),
     .library(name: "GridCanvas", targets: ["GridCanvas"]),
-    .library(name: "Networking", targets: ["Networking"]),
+    .library(name: "BaseNetworking", targets: ["BaseNetworking"]),
   ],
 
   dependencies: [
@@ -41,7 +41,7 @@ let package = Package(
     .target(name: "GridCanvas", dependencies: ["BaseHelpers"], ),
 
     .target(
-      name: "Networking",
+      name: "BaseNetworking",
       dependencies: [
         "BaseHelpers",
         .product(name: "KeychainSwift", package: "keychain-swift"),
