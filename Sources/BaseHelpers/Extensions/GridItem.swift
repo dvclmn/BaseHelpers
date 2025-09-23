@@ -13,9 +13,10 @@ extension Array where Element == GridItem {
   public static func quickColumns(
     _ count: Int = 3,
     spacing: CGFloat? = nil,
+    alignment: Alignment? = nil
   ) -> Self {
     let result: Self = Array(
-      repeating: GridItem(.flexible(), spacing: spacing),
+      repeating: GridItem(.flexible(), spacing: spacing, alignment: alignment),
       count: count
     )
     return result
