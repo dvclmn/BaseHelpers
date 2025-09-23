@@ -11,19 +11,19 @@ public protocol CodableColour: WaveBase {
   static var `default`: Self { get }
 }
 
-public struct PointStyle<T: CodableColour>: WaveBase {
+public struct PointStyle: WaveBase {
   let diameter: CGFloat
   let shape: Self.Shape
-  let colour: T
+//  let colour: T
 
   public init(
     diameter: CGFloat = 4,
     shape: Shape = .circle,
-    colour: T = .default
+//    colour: T = .default
   ) {
     self.diameter = diameter
     self.shape = shape
-    self.colour = colour
+//    self.colour = colour
   }
 
   /// I don't think visual style should be concerned with

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import CurveFunctions
 
 /// Protocol for types that can be treated as "zero" when nil
 public protocol Zeroable {

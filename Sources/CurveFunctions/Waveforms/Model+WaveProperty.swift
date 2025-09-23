@@ -143,3 +143,4 @@ public enum WaveProperty: String, WavePropertyBase {
   //    }
   //  }
 }
+public var twoPi: CGFloat { .pi * 2 }

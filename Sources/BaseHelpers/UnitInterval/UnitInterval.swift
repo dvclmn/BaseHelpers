@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import
+import CurveFunctions
 
 /// This represents a closed unit interval `[0,1]`
 /// Useful for percentages, opacity, normalised values.

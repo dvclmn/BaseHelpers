@@ -7,9 +7,9 @@
 
 import SwiftUI
 
-public struct WaveAppearance<T: CodableColour>: WaveBase {
+public struct WaveAppearance: WaveBase {
   let path: PathConfiguration
-  let points: PointStyle<T>
+  let points: PointStyle
   let cyclesAcross: CGFloat
 
   static var windowOptions: [CGFloat] { [1, 2, 4, 8, 12, 24, 30] }
@@ -17,7 +17,7 @@ public struct WaveAppearance<T: CodableColour>: WaveBase {
 
   public init(
     path: PathConfiguration = .init(),
-    points: PointStyle<T> = .init(),
+    points: PointStyle = .init(),
     cyclesAcross: CGFloat = 2
   ) {
     self.path = path

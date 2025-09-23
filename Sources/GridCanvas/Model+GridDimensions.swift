@@ -5,8 +5,9 @@
 //  Created by Dave Coleman on 3/7/2025.
 //
 
-import Foundation
+import SwiftUI
 import BaseHelpers
+
 
 public struct GridDimensions: ModelBase {
   public var columns: Int
@@ -176,5 +177,21 @@ extension String {
     let columns: Int = longestLineLength
     let rows: Int = substringLines().count
     return GridDimensions(columns: columns, rows: rows)
+  }
+}
+
+extension View {
+  public func frameFromGridDimensions(
+    _ dimensions: GridDimensions,
+    cellSize: CGSize,
+    alignment: Alignment = .center
+  ) -> some View {
+    self.modifier(
+      FrameFromSizeModifier(
+        width: dimensions.width(with: cellSize),
+        height: dimensions.height(with: cellSize),
+        alignment: alignment
+      )
+    )
   }
 }

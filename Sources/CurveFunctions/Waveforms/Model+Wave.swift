@@ -26,7 +26,7 @@ public protocol WaveBase: Sendable, Codable, Equatable, Hashable {
 /// The user has the choice to either specify a per-Wave
 /// cycles value here, or there is also a global setting
 /// if they are happy to keep it the same for all Waves.
-public struct Wave<T: CodableColour>: WaveBase, Identifiable {
+public struct Wave: WaveBase, Identifiable {
 //  public typealias Colour = T
   
   public let id: UUID
@@ -35,7 +35,7 @@ public struct Wave<T: CodableColour>: WaveBase, Identifiable {
   public var phaseOffset: SmoothedProperty
   public var noise: SmoothedProperty
   public var cyclesAcross: CGFloat
-  public var colour: T
+//  public var colour: T
 
   public init(
     id: UUID = UUID(),
@@ -43,7 +43,7 @@ public struct Wave<T: CodableColour>: WaveBase, Identifiable {
     amplitude: CGFloat,
     phaseOffset: CGFloat = 0,
     cyclesAcross: CGFloat = 2,
-    colour: T
+//    colour: T
   ) {
     self.id = id
     self.frequency = SmoothedProperty(frequency)
@@ -51,7 +51,7 @@ public struct Wave<T: CodableColour>: WaveBase, Identifiable {
     self.phaseOffset = SmoothedProperty(phaseOffset)
     self.noise = SmoothedProperty(.zero)
     self.cyclesAcross = cyclesAcross
-    self.colour = colour
+//    self.colour = colour
 
   }
 }
