@@ -10,20 +10,19 @@ let package = Package(
     .macOS("14.0")
   ],
   products: [
-    .library(
-      name: "BaseHelpers",
-      targets: ["BaseHelpers"]
-    ),
+    .library(name: "BaseHelpers", targets: ["BaseHelpers"]),
+    .library(name: "Networking", targets: ["Networking"]),
   ],
   
   dependencies: [
     .package(url: "https://github.com/swiftlang/swift-docc-plugin", from: "1.0.0"),
     .package(url: "https://github.com/mattmassicotte/nsui", from: "1.3.0"),
     .package(url: "https://github.com/pointfreeco/swift-identified-collections", from: "1.1.1"),
-//    .package(url: "https://github.com/ukushu/Ifrit", from: "3.0.0"),
+    .package(url: "https://github.com/evgenyneu/keychain-swift.git", from: "24.0.0"),
   ],
   
   targets: [
+    
     .target(
       name: "BaseHelpers",
       dependencies: [
@@ -31,6 +30,14 @@ let package = Package(
         .product(name: "IdentifiedCollections", package: "swift-identified-collections"),
       ],
       resources: [.process("Assets.xcassets")],
+    ),
+    
+    .target(
+      name: "Networking",
+      dependencies: [
+        "BaseHelpers",
+        .product(name: "KeychainSwift", package: "keychain-swift"),
+      ],
     ),
   ],
 )
