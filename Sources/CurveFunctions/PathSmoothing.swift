@@ -47,5 +47,5 @@ public struct CatmullRomConfiguration: WaveBase {
     self.tension = tension
     self.alpha = alpha
   }
-  public static let standard = CatmullRomConfiguration()
+  public static var standard: CatmullRomConfiguration { CatmullRomConfiguration() }
 }

@@ -27,15 +27,18 @@ public struct WaveAppearance<T: CodableColour>: WaveBase {
 }
 
 public struct PathConfiguration: WaveBase {
-  let strokeStyle: StrokeStyle
-  let smoothing: PathSmoothing
+  let lineWidth: CGFloat
+//  let strokeStyle: StrokeStyle
+//  let smoothing: PathSmoothing
 
   public init(
-    strokeStyle: StrokeStyle = .init(lineWidth: 1),
-    smoothing: PathSmoothing = .linear
+    lineWidth: CGFloat = 1
+//    strokeStyle: StrokeStyle = .init(lineWidth: 1),
+//    smoothing: PathSmoothing = .linear
   ) {
-    self.strokeStyle = strokeStyle
-    self.smoothing = smoothing
+    self.lineWidth = lineWidth
+//    self.strokeStyle = strokeStyle
+//    self.smoothing = smoothing
   }
 }
 
