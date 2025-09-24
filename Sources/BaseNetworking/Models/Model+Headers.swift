@@ -24,10 +24,10 @@ public enum APIHeader: Identifiable, Sendable {
   
   /// A header specifying the Content-Type.
   /// E.g. `contentType(.json)`
-  case contentType(MediaType)
+  case contentType(HTTPContentType)
   
   /// A header specifying the Acceptable Media Types.
-  case accept([MediaType])
+  case accept([HTTPContentType])
   
   /// A header for passing a client identifier.
   /// E.g. `clientID("jiedgoaofo9efc")`
@@ -146,7 +146,7 @@ extension Array where Element == APIHeader {
 //  }
 }
 
-public enum MediaType: String, Sendable {
+public enum HTTPContentType: String, Sendable {
   case json = "application/json"
   case plainText = "text/plain"
   case formUrlEncoded = "application/x-www-form-urlencoded"

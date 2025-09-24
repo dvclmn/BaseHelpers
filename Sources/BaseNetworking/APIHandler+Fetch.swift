@@ -39,11 +39,13 @@ extension APIHandler {
 //      printDebugResponse(data)
 //    }
 
+    print("Decoding response, with type `\(T.self)`")
     let decoder = JSONDecoder()
 
     do {
       return try decoder.decode(T.self, from: data)
     } catch let decodingError as DecodingError {
+      print("There was a decoding error: \(decodingError)")
       let errorString = generateDecodingErrorString(
         decodingError,
         type: T.self,

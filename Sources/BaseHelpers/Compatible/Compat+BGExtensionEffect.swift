@@ -8,7 +8,7 @@
 import SwiftUI
 
 public struct CompatibleBGExtensionEffectModifier: ViewModifier {
-  
+
   let isEnabled: Bool
   public func body(content: Content) -> some View {
     if #available(macOS 26, iOS 26, *) {
