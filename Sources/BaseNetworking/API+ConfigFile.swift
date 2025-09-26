@@ -7,7 +7,7 @@
 
 import Foundation
 
-extension APIHandler {
+extension APIRequest {
 
   /// This requires the following set-up:
   /// 

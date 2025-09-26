@@ -5,40 +5,29 @@
 //  Created by Dave Coleman on 16/1/2025.
 //
 
-import Foundation
 import BaseHelpers
+import Foundation
 
-extension APIHandler {
-
-  // MARK: - Generic API fetch
-
-//  @MainActor
-  public static func fetch<T: Decodable>(
-    request: URLRequest,
-    /// This produces more verbose print statements
-    isDebugMode: Bool = false
-  ) async throws -> T {
+extension APIRequest {
+  //  @MainActor
+  func fetch(request: URLRequest) async throws -> T {
 
     let (data, response) = try await URLSession.shared.data(for: request)
 
-    let httpResponse = try validateHTTPResponse(response)
-    try checkContentTypeIsJSON(data: data, response: httpResponse)
-    try validateStatusCode(httpResponse, data: data)
+    let httpResponse = try Self.validateHTTPResponse(response)
+    try Self.checkContentTypeIsJSON(data: data, response: httpResponse)
+    try Self.validateStatusCode(httpResponse, data: data)
     printPadded("About to decode response:")
-    return try decodeResponse(data: data, type: T.self)
-//    return try decodeResponse(data: data, type: T.self, isDebugMode: isDebugMode)
+    return try Self.decodeResponse(data: data, type: T.self)
+    //    return try decodeResponse(data: data, type: T.self, isDebugMode: isDebugMode)
 
   }  // END API fetch
 
-  private static func decodeResponse<T: Decodable>(
+  private static func decodeResponse(
     data: Data,
     type: T.Type,
-//    isDebugMode: Bool
   ) throws -> T {
-//    if isDebugMode {
-//      printDebugResponse(data)
-//    }
-
+    
     print("Decoding response, with type `\(T.self)`")
     let decoder = JSONDecoder()
 
@@ -63,7 +52,7 @@ extension APIHandler {
     print("Raw response data:\n\(debugString)")
   }
 
-  private static func generateDecodingErrorString<T: Decodable>(
+  private static func generateDecodingErrorString(
     _ error: DecodingError,
     type: T.Type,
     data: Data
@@ -169,21 +158,20 @@ extension APIHandler {
       │   \(bodyString.split(separator: "\n").joined(separator: "\n│   "))
       └─────────────────────────────────────────────
       """
-    
-    
-//    let output = """
-//      ┌─────────────────────────────────────────────
-//      │ 🛑 API ERROR (\(response.statusCode))
-//      ├─────────────────────────────────────────────
-//      │ URL: \(urlString)
-//      ├─────────────────────────────────────────────
-//      │ HEADERS:
-//      \(headersString.split(separator: "\n").map { "│   \($0)" }.joined(separator: "\n"))
-//      ├─────────────────────────────────────────────
-//      │ BODY:
-//      │   \(bodyString.split(separator: "\n").joined(separator: "\n│   "))
-//      └─────────────────────────────────────────────
-//      """
+
+    //    let output = """
+    //      ┌─────────────────────────────────────────────
+    //      │ 🛑 API ERROR (\(response.statusCode))
+    //      ├─────────────────────────────────────────────
+    //      │ URL: \(urlString)
+    //      ├─────────────────────────────────────────────
+    //      │ HEADERS:
+    //      \(headersString.split(separator: "\n").map { "│   \($0)" }.joined(separator: "\n"))
+    //      ├─────────────────────────────────────────────
+    //      │ BODY:
+    //      │   \(bodyString.split(separator: "\n").joined(separator: "\n│   "))
+    //      └─────────────────────────────────────────────
+    //      """
 
     return output
   }

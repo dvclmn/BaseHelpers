@@ -8,14 +8,9 @@
 import BaseHelpers
 import Foundation
 
-extension APIHandler {
+extension APIRequest {
 
-  public static func createRequest(
-    url: URL?,
-    method: RequestMethod = .get,
-    body: (any Encodable)? = nil,
-    headers: [String: String]? = nil
-  ) throws -> URLRequest {
+  func createRequest() throws -> URLRequest {
 
     guard let url else {
       throw APIError.badURL

@@ -8,42 +8,43 @@
 import BaseHelpers
 import Foundation
 
-public struct APIHandler: Sendable {
+public final class APIRequest<T: Decodable> {
+  let url: URL?
+  let method: RequestMethod
+  let body: (any Encodable)?
+  let headers: [String: String]?
+  let dto: T.Type
 
-  public static func requestAndFetch<T: Decodable>(
+  let isDebugMode: Bool = false
+
+  public init(
     url: URL?,
     method: RequestMethod,
     body: (any Encodable)? = nil,
     headers: [String: String]? = nil,
-    dto: T.Type,
-    isDebugMode: Bool = false
-  ) async throws -> T {
+    dto: T.Type
+  ) {
+    self.url = url
+    self.method = method
+    self.body = body
+    self.headers = headers
+    self.dto = dto
+  }
+}
 
-    if isDebugMode {
-      let pretty = composePrettyString(url: url, method: method, body: body, headers: headers, dto: dto)
-      printPadded(pretty)
-    }
+extension APIRequest {
+  public func requestAndFetch() async throws -> T {
 
-    let request = try createRequest(
-      url: url,
-      method: method,
-      body: body,
-      headers: headers
-    )
-    let response: T = try await fetch(
-      request: request,
-      isDebugMode: isDebugMode
-    )
+    if isDebugMode { printPadded(displayString) }
+
+    let request = try createRequest()
+    let response: T = try await fetch(request: request)
     return response
   }
+}
 
-  private static func composePrettyString<T: Decodable>(
-    url: URL?,
-    method: RequestMethod,
-    body: (any Encodable)? = nil,
-    headers: [String: String]? = nil,
-    dto: T.Type,
-  ) -> String {
+extension APIRequest {
+  public var displayString: String {
 
     let bodyAdjusted: String = {
       guard let bodyString = body as? String else {
@@ -72,16 +73,4 @@ public struct APIHandler: Sendable {
     return result
 
   }
-
-  //  public static func encodeBody<T: Encodable>(_ body: T) -> Data? {
-  //    do {
-  //      let encoder = JSONEncoder()
-  //      let jsonData = try encoder.encode(body)
-  //      return jsonData
-  //    } catch {
-  //      print("Failed to encode request body: \(error)")
-  //      return nil
-  //    }
-  //  }
-
 }
