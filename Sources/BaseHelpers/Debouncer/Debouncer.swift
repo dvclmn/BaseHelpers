@@ -15,7 +15,7 @@ public final class Debouncer<T: Equatable & Sendable> {
   ///
   /// When updated to a new, different value, this property not only triggers the
   /// `valueChanged` callback (if set) but also yields the new value on `asyncStream`.
-  /// 
+  ///
   public private(set) var value: T {
     didSet {
       guard oldValue != value else { return }
@@ -71,6 +71,22 @@ public final class Debouncer<T: Equatable & Sendable> {
     self.value = value
     self.interval = interval
   }
+}
+
+extension Debouncer {
+  
+  public func execute<R: Sendable>(
+    action: @escaping @Sendable () async -> R?
+  ) async -> R? {
+    genericTask?.cancel()
+    return await withCheckedContinuation { cont in
+      genericTask = Task { [interval] in
+        try? await Task.sleep(for: interval)
+        guard !Task.isCancelled else { cont.resume(returning: nil); return }
+        cont.resume(returning: await action())
+      }
+    }
+  }
   
   /// Debounces a value update.
   ///
@@ -117,9 +133,9 @@ public final class Debouncer<T: Equatable & Sendable> {
     }
   }
   
-  deinit {
-    updateTask?.cancel()
-    genericTask?.cancel()
-    streamContinuation?.finish()
-  }
+//  deinit {
+//    updateTask?.cancel()
+//    genericTask?.cancel()
+//    streamContinuation?.finish()
+//  }
 }

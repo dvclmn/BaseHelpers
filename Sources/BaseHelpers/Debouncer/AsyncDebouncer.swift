@@ -9,6 +9,7 @@ import Foundation
 
 /// Important note: Don't use the one debouncer instance for
 /// two distinct tasks, or one may cancel the other. Use seperate instances.
+@available(*, deprecated, renamed: "Debouncer", message: "This is now retired in favour of the more robust `BaseHelpers/Debouncer`")
 @MainActor
 public final class AsyncDebouncer {
   private var task: Task<Void, Never>? = nil

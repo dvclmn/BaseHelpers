@@ -7,35 +7,34 @@
 
 import Foundation
 
-//@MainActor
-//final class RepeatingTask {
-//  /// Runs the given action repeatedly, with the given interval, until cancelled.
-//  func execute(
-//    interval: TimeInterval = 1,
-//    action: @escaping @MainActor () -> Void
-//  ) async {
-//    while !Task.isCancelled {
-//      try? await Task.sleep(for: .seconds(interval))
-//      action()
-//    }
-//  }
-//}
+// MARK: - Repeating Single Task
 
 public struct RepeatingTask {
+  
+  /// Synchronous action version
   public static func run(
     interval: TimeInterval = 1,
     action: @escaping @MainActor () -> Void
   ) async {
+    /// Run immediately for the first time
+    await action()
+
+    /// Then continue with the delayed loop
     while !Task.isCancelled {
       try? await Task.sleep(for: .seconds(interval))
       await action()
     }
   }
-  
+
+  /// Async action version
   public static func run(
     interval: TimeInterval = 1,
     action: @escaping @MainActor () async -> Void
   ) async {
+    /// Run immediately for the first time
+    await action()
+
+    /// Then continue with the delayed loop
     while !Task.isCancelled {
       try? await Task.sleep(for: .seconds(interval))
       await action()
@@ -43,6 +42,7 @@ public struct RepeatingTask {
   }
 }
 
+// MARK: - Repeating Stream
 public struct RepeatingStream {
   public static func stream<T: Sendable>(
     interval: TimeInterval = 1,
@@ -58,7 +58,7 @@ public struct RepeatingStream {
       }
     }
   }
-  
+
   public static func stream<T: Sendable>(
     interval: TimeInterval = 1,
     produce: @escaping @MainActor () async -> T
