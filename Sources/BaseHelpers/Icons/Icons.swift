@@ -88,10 +88,10 @@ public enum Icons: String, IconGalleryViewable, Codable, Equatable {
   case globe = "globe.asia.australia"
   case cross = "xmark"
   case crossSquare = "x.square"
-  case arrowDown = "arrow.down"
   case swirl = "glowplug"
   case dismissKeyboard = "keyboard.chevron.compact.down"
   case go = "arrow.up.right"
+  case goAlt = "arrow.forward"
   case sparkle = "sparkles"
   case empty = "light.max"
   case search = "magnifyingglass"  // zoom
@@ -146,6 +146,8 @@ public enum Icons: String, IconGalleryViewable, Codable, Equatable {
   case moreLayers = "square.3.layers.3d"
   case cursor = "cursorarrow"  // Pointer
   case character = "character.square"
+  case arrowUp = "arrow.up"
+  case arrowDown = "arrow.down"
 
   // Tags
   case tag = "tag"

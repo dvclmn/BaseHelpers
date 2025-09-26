@@ -14,7 +14,7 @@ public final class AsyncDebouncer {
   private var task: Task<Void, Never>? = nil
   private let interval: Duration
 
-  public init(interval: CGFloat) {
+  public init(interval: CGFloat = 0.2) {
     self.interval = Duration.seconds(interval)
   }
 

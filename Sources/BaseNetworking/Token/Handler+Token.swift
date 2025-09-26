@@ -102,7 +102,7 @@ extension TokenHandler {
 
   private func saveToken(_ token: AuthToken) throws {
     let data = try JSONEncoder().encode(token)
-    keychain.set(data, forKey: storageKey)
+    keychain.set(data, forKey: storageKey, withAccess: .accessibleAfterFirstUnlock)
   }
 
 }

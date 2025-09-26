@@ -46,7 +46,7 @@ public struct APIHandler: Sendable {
         URL: \(url?.absoluteString ?? "nil")
         Method: \(method)
         Body: \(bodyAdjusted)
-        Headers: \(headers?.description ?? "nil")
+        Headers: \(headersAdjusted)
 
 
         """)

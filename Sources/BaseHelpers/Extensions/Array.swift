@@ -16,12 +16,36 @@ extension Array where Element: Hashable {
   /// Performance characteristics change dramatically. Collections might be optimized for sequential access, while Sets are optimized for membership testing. The conversion itself is O(n), but the usage patterns afterward will be completely different.
   /// Ordering is lost. Collections maintain insertion/index order, but Sets don't guarantee any particular iteration order (though in practice Swift's Set maintains some ordering). Code that depends on element order will break.
   /// Identity vs equality considerations. If your collection contains reference types, the Set will use the Hashable implementation, which typically relies on equality rather than identity. Two different instances that are "equal" will be deduplicated.
-  
+
   public func toSet() -> Set<Element> {
     return Set(self)
   }
-  
-  
+
 }
 
+extension Array where Element: Identifiable {
 
+  public func isOnlyFirstElementSelected(
+    currentSelection: Element.ID?
+  ) -> Bool {
+    if let currentSelection {
+      return self.isOnlyFirstElementSelected(currentSelection: [currentSelection])
+    }
+    return false
+  }
+  
+  public func isOnlyFirstElementSelected(
+    currentSelection: Set<Element.ID>
+  ) -> Bool {
+    guard let firstResultID = self.first?.id else {
+      return false
+    }
+    
+    /// I only want a *single* result selected, and to know
+    /// if it's at the top/start of the list
+    guard currentSelection.count == 1, let firstSelected = currentSelection.first else {
+      return false
+    }
+    return firstResultID == firstSelected
+  }
+}
