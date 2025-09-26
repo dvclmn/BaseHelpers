@@ -14,7 +14,6 @@ extension EnvironmentValues {
   ///
   /// I guess like in a graphics app, so maybe this is a bit domain-specific
   @Entry public var viewportSize: CGSize? = nil
-  @Entry public var isConnectedToInternet: Bool = false
   @Entry public var isScrollAtStart: Bool = true
   
 }

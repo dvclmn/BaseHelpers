@@ -1,0 +1,85 @@
+//
+//  SmoothLinearGradient.swift
+//  SmoothGradientTests
+//
+//  Copyright (c) 2023-2024 Ramon Torres
+//
+//  This file is part of SmoothGradient which is released under the MIT license.
+//  See the LICENSE file in the root directory of this source tree for full details.
+//
+
+import SwiftUI
+
+#if compiler(>=5.9)
+/// A smooth linear gradient.
+@available(iOS 17.0, macOS 14.0, tvOS 17.0, watchOS 10.0, *)
+public struct SmoothLinearGradient: @preconcurrency ShapeStyle, View {
+  let from: Gradient.Stop
+  let to: Gradient.Stop
+  let startPoint: UnitPoint
+  let endPoint: UnitPoint
+  let curve: UnitCurve
+  let steps: Int
+
+  /// Creates a smooth gradient from two colors.
+  ///
+  /// - Parameters:
+  ///   - from: The start color.
+  ///   - to: The end color.
+  ///   - startPoint: Origin of the gradient.
+  ///   - endPoint: End point of the gradient. Together with `startPoint` defines the gradient's direction.
+  ///   - curve: Easing curve to use.
+  ///   - steps: Number of steps to use when generating the gradient. Defaults to 16.
+  public init(
+    from: Color,
+    to: Color,
+    startPoint: UnitPoint,
+    endPoint: UnitPoint,
+    curve: UnitCurve = .easeInOut,
+    steps: Int = 16
+  ) {
+    self.init(
+      from: Gradient.Stop(color: from, location: 0),
+      to: Gradient.Stop(color: to, location: 1),
+      startPoint: startPoint,
+      endPoint: endPoint,
+      curve: curve,
+      steps: steps
+    )
+  }
+
+  /// Creates a smooth gradient from two color stops.
+  ///
+  /// - Parameters:
+  ///   - from: The start color.
+  ///   - to: The end color.
+  ///   - startPoint: Origin of the gradient.
+  ///   - endPoint: End point of the gradient. Together with `startPoint` defines the gradient's direction.
+  ///   - curve: Easing curve to use.
+  ///   - steps: Number of steps to use when generating the gradient. Defaults to 16.
+  public init(
+    from: Gradient.Stop,
+    to: Gradient.Stop,
+    startPoint: UnitPoint,
+    endPoint: UnitPoint,
+    curve: UnitCurve = .easeInOut,
+    steps: Int = 16
+  ) {
+    self.from = from
+    self.to = to
+    self.startPoint = startPoint
+    self.endPoint = endPoint
+    self.curve = curve
+    self.steps = steps
+  }
+
+  public func resolve(in environment: EnvironmentValues) -> LinearGradient {
+    LinearGradient(
+      gradient: .smooth(from: from, to: to, curve: curve, steps: steps),
+      startPoint: startPoint,
+      endPoint: endPoint
+    )
+  }
+}
+
+#endif

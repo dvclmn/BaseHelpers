@@ -78,7 +78,7 @@ extension TokenHandler {
       return
     }
     guard shouldRefresh else {
-      print("No refresh needed")
+      print("No refresh needed. Token is valid until \(token?.expiryDate.formatted() ?? "unknown")")
       return
     }
 

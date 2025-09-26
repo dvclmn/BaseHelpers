@@ -8,6 +8,10 @@
 import Network
 import SwiftUI
 
+extension EnvironmentValues {
+  @Entry public var isConnectedToInternet: Bool = false
+}
+
 @MainActor
 @Observable
 public final class NetworkMonitor {

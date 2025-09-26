@@ -7,7 +7,6 @@
 
 import SwiftUI
 
-
 public enum PrintInfo {
   case userDefaultsURL
   case applicationSupport

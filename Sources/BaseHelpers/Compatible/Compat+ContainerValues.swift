@@ -28,7 +28,7 @@ extension ContainerValues {
   @Entry public var hasAlternatingRowStyle: Bool = false
   @Entry public var isFirst: Bool = false
   @Entry public var isLast: Bool = false
-  @Entry public var isShowingHeader: Bool = true
+  @Entry public var isShowingSectionHeader: Bool = true
 }
 
 public enum BooleanContainerValue: CompatibleContainerValue {
@@ -40,7 +40,7 @@ public enum BooleanContainerValue: CompatibleContainerValue {
   case hasAlternatingRowStyle
   case isFirst
   case isLast
-  case isShowingHeader
+  case isShowingSectionHeader
 }
 
 extension BooleanContainerValue {
@@ -57,7 +57,7 @@ extension BooleanContainerValue {
       case .hasAlternatingRowStyle: \ContainerValues.hasAlternatingRowStyle
       case .isFirst: \ContainerValues.isFirst
       case .isLast: \ContainerValues.isLast
-      case .isShowingHeader: \ContainerValues.isShowingHeader
+      case .isShowingSectionHeader: \ContainerValues.isShowingSectionHeader
     }
   }
 }
