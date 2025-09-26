@@ -16,7 +16,7 @@ extension APIHandler {
   public static func fetch<T: Decodable>(
     request: URLRequest,
     /// This produces more verbose print statements
-    isDebugMode: Bool = true
+    isDebugMode: Bool = false
   ) async throws -> T {
 
     let (data, response) = try await URLSession.shared.data(for: request)

@@ -5,8 +5,8 @@
 //  Created by Dave Coleman on 14/5/2024.
 //
 
-import Foundation
 import BaseHelpers
+import Foundation
 
 public struct APIHandler: Sendable {
 
@@ -20,36 +20,8 @@ public struct APIHandler: Sendable {
   ) async throws -> T {
 
     if isDebugMode {
-      
-      let bodyAdjusted: String = {
-        if let bodyString = body as? String {
-          let lines: [String.SubSequence] = bodyString.split(separator: "\n", omittingEmptySubsequences: true)
-          
-          let output: String = "\n  | " + lines.joined(separator: "\n  | ")
-          return output
-        } else {
-          return "\(body ?? "nil")"
-        }
-      }()
-      
-      let headersAdjusted = headers?.displayString() ?? "nil"
-
-
-      printPadded(
-        """
-
-        /// Request & Fetch ///
-
-        DTO: \(dto)
-
-        # Request
-        URL: \(url?.absoluteString ?? "nil")
-        Method: \(method)
-        Body: \(bodyAdjusted)
-        Headers: \(headersAdjusted)
-
-
-        """)
+      let pretty = composePrettyString(url: url, method: method, body: body, headers: headers, dto: dto)
+      printPadded(pretty)
     }
 
     let request = try createRequest(
@@ -65,15 +37,51 @@ public struct APIHandler: Sendable {
     return response
   }
 
-//  public static func encodeBody<T: Encodable>(_ body: T) -> Data? {
-//    do {
-//      let encoder = JSONEncoder()
-//      let jsonData = try encoder.encode(body)
-//      return jsonData
-//    } catch {
-//      print("Failed to encode request body: \(error)")
-//      return nil
-//    }
-//  }
+  private static func composePrettyString<T: Decodable>(
+    url: URL?,
+    method: RequestMethod,
+    body: (any Encodable)? = nil,
+    headers: [String: String]? = nil,
+    dto: T.Type,
+  ) -> String {
+
+    let bodyAdjusted: String = {
+      guard let bodyString = body as? String else {
+        return "\(body ?? "nil")"
+      }
+      return bodyString.indentingEachLine(level: 1, indentString: "  | ")
+    }()
+
+    let headersAdjusted = headers?.displayString() ?? "nil"
+
+    let result: String = """
+
+      /// Request & Fetch ///
+
+      DTO: \(dto)
+
+      # Request
+      URL: \(url?.absoluteString ?? "nil")
+      Method: \(method)
+      Body: \(bodyAdjusted)
+      Headers: \(headersAdjusted)
+
+
+      """
+
+    return result
+
+  }
+
+  //  public static func encodeBody<T: Encodable>(_ body: T) -> Data? {
+  //    do {
+  //      let encoder = JSONEncoder()
+  //      let jsonData = try encoder.encode(body)
+  //      return jsonData
+  //    } catch {
+  //      print("Failed to encode request body: \(error)")
+  //      return nil
+  //    }
+  //  }
 
 }

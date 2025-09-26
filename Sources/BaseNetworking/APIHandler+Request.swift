@@ -32,9 +32,6 @@ extension APIHandler {
     }
 
     if let body {
-      /// Printing body *before* it is encoded
-      //      print("Request Body:\n\(body)")
-
       if let bodyString = body as? String {
         request.httpBody = bodyString.data(using: .utf8)
       } else {
