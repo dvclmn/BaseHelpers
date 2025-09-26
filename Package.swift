@@ -20,7 +20,7 @@ let package = Package(
   dependencies: [
     .package(url: "https://github.com/swiftlang/swift-docc-plugin", from: "1.0.0"),
     .package(url: "https://github.com/mattmassicotte/nsui", from: "1.3.0"),
-    .package(url: "https://github.com/pointfreeco/swift-identified-collections", from: "1.1.1"),
+//    .package(url: "https://github.com/pointfreeco/swift-identified-collections", from: "1.1.1"),
     .package(url: "https://github.com/evgenyneu/keychain-swift.git", from: "24.0.0"),
   ],
 
@@ -31,14 +31,14 @@ let package = Package(
       dependencies: [
         "CurveFunctions",
         .product(name: "NSUI", package: "nsui"),
-        .product(name: "IdentifiedCollections", package: "swift-identified-collections"),
+//        .product(name: "IdentifiedCollections", package: "swift-identified-collections"),
       ],
       resources: [.process("Assets.xcassets")],
     ),
 
     .target(name: "ColourExtract", dependencies: []),
     .target(name: "CurveFunctions", dependencies: []),
-    .target(name: "GridCanvas", dependencies: ["BaseHelpers"], ),
+    .target(name: "GridCanvas", dependencies: ["BaseHelpers"]),
 
     .target(
       name: "BaseNetworking",
