@@ -31,7 +31,6 @@ let package = Package(
       dependencies: [
         "CurveFunctions",
         .product(name: "NSUI", package: "nsui"),
-//        .product(name: "IdentifiedCollections", package: "swift-identified-collections"),
       ],
       resources: [.process("Assets.xcassets")],
     ),
