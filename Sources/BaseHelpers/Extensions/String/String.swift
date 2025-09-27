@@ -12,6 +12,10 @@ extension String {
   public var toURL: URL? {
     return URL(string: self)
   }
+  
+  public var toAttributedString: AttributedString {
+    return AttributedString(self)
+  }
 
   public var toMarkdownCompatible: LocalizedStringKey {
     LocalizedStringKey(self)

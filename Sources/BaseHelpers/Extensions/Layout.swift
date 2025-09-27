@@ -73,7 +73,7 @@ public enum LayoutMode: String, Cyclable, Codable, Sendable, RawRepresentable {
   
   public var label: QuickLabel {
     switch self {
-      case .grid: QuickLabel(rawValue.capitalized, .symbol("circle.grid.2x2"))
+      case .grid: QuickLabel(rawValue.capitalized, icon: .symbol("circle.grid.2x2"))
       case .list: QuickLabel(rawValue.capitalized, .symbol("checklist.unchecked"))
     }
   }

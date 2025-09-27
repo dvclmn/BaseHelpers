@@ -22,11 +22,7 @@ public protocol NamedAction: LabeledItem {
 extension NamedAction {
 
   public var label: QuickLabel {
-    QuickLabel(
-      verb,
-      icon: .symbol(<#T##String#>),
-      role: <#T##QuickLabel.Role?#>
-    )
+    QuickLabel(verb, symbol: icon)
   }
 
   public static var itemPluralName: String? { nil }
