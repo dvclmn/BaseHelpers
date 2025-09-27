@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-public struct ContainerBackgroundModifier: ViewModifier {
+public struct ContainerBackgroundCompatibleModifier: ViewModifier {
 
   public func body(content: Content) -> some View {
 
@@ -23,6 +23,6 @@ public struct ContainerBackgroundModifier: ViewModifier {
 }
 extension View {
   public func containerBackgroundCompatible() -> some View {
-    self.modifier(ContainerBackgroundModifier())
+    self.modifier(ContainerBackgroundCompatibleModifier())
   }
 }

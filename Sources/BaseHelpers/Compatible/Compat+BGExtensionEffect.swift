@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-public struct CompatibleBGExtensionEffectModifier: ViewModifier {
+public struct BackgroundExtensionEffectCompatibleModifier: ViewModifier {
 
   let isEnabled: Bool
   public func body(content: Content) -> some View {
@@ -21,6 +21,6 @@ public struct CompatibleBGExtensionEffectModifier: ViewModifier {
 }
 extension View {
   public func backgroundExtensionCompatible(isEnabled: Bool = true) -> some View {
-    self.modifier(CompatibleBGExtensionEffectModifier(isEnabled: isEnabled))
+    self.modifier(BackgroundExtensionEffectCompatibleModifier(isEnabled: isEnabled))
   }
 }

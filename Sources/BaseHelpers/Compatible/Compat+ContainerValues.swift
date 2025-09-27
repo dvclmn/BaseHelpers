@@ -9,7 +9,7 @@ import SwiftUI
 
 // MARK: - Protocol
 
-public protocol CompatibleContainerValue {
+public protocol ContainerValueCompatible {
   associatedtype Value
 
   @available(macOS 15, iOS 18, *)
@@ -31,7 +31,7 @@ extension ContainerValues {
   @Entry public var isShowingSectionHeader: Bool = true
 }
 
-public enum BooleanContainerValue: CompatibleContainerValue {
+public enum ContainerValueBool: ContainerValueCompatible {
   case isGrouped
   case isHighlighted
   case shouldWiggle
@@ -43,11 +43,11 @@ public enum BooleanContainerValue: CompatibleContainerValue {
   case isShowingSectionHeader
 }
 
-extension BooleanContainerValue {
+extension ContainerValueBool {
   public typealias Value = Bool
 
   @available(macOS 15, iOS 18, *)
-  public var containerKeyPath: WritableKeyPath<ContainerValues, Value> {
+  public var containerKeyPath: WritableKeyPath<ContainerValues, Bool> {
     switch self {
       case .isGrouped: \ContainerValues.isGrouped
       case .isHighlighted: \ContainerValues.isHighlighted
@@ -64,7 +64,7 @@ extension BooleanContainerValue {
 
 // MARK: - ViewModifier
 
-public struct ContainerValueModifier<T: CompatibleContainerValue>: ViewModifier {
+public struct ContainerValueModifier<T: ContainerValueCompatible>: ViewModifier {
   let type: T
   let value: T.Value
 
@@ -78,7 +78,7 @@ public struct ContainerValueModifier<T: CompatibleContainerValue>: ViewModifier 
 }
 
 extension View {
-  public func containerValueBool(_ type: BooleanContainerValue, _ value: Bool) -> some View {
+  public func containerValueBool(_ type: ContainerValueBool, _ value: Bool) -> some View {
     modifier(ContainerValueModifier(type: type, value: value))
   }
 }

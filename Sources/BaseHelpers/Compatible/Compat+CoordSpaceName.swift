@@ -12,7 +12,7 @@ public enum CoordinateSpaceFrame {
   case visible(Color)
 }
 
-public struct CompatibleCoordinateSpaceNameModifier: ViewModifier {
+public struct CoordinateSpaceNameCompatibleModifier: ViewModifier {
 
   let name: AnyHashable
   let debugFrame: CoordinateSpaceFrame
@@ -29,7 +29,7 @@ public struct CompatibleCoordinateSpaceNameModifier: ViewModifier {
     }
   }
 }
-extension CompatibleCoordinateSpaceNameModifier {
+extension CoordinateSpaceNameCompatibleModifier {
   var borderColour: Color {
     switch debugFrame {
       case .none: return Color.clear
@@ -42,6 +42,6 @@ extension View {
     _ name: T,
     debugFrame: CoordinateSpaceFrame = .none
   ) -> some View {
-    self.modifier(CompatibleCoordinateSpaceNameModifier(name: name, debugFrame: debugFrame))
+    self.modifier(CoordinateSpaceNameCompatibleModifier(name: name, debugFrame: debugFrame))
   }
 }

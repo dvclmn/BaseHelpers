@@ -32,9 +32,9 @@ extension EnvironmentValues {
 }
 
 public typealias Keys = Set<KeyEquivalent>
-public typealias Modifiers = CompatibleModifierKeys
+public typealias Modifiers = ModifierKeysCompatible
 
-public struct CompatibleModifierKeys: OptionSet, Sendable, Hashable {
+public struct ModifierKeysCompatible: OptionSet, Sendable, Hashable {
   public init(rawValue: Int) {
     self.rawValue = rawValue
   }
@@ -48,19 +48,19 @@ public struct CompatibleModifierKeys: OptionSet, Sendable, Hashable {
 
 }
 
-extension CompatibleModifierKeys {
-#if canImport(AppKit)
+extension ModifierKeysCompatible {
+  #if canImport(AppKit)
   public init(from appKitKey: NSEvent.ModifierFlags) {
     self = appKitKey.toCompatibleModifier
   }
-#endif
+  #endif
 
   struct ModifierMetadata: Hashable {
     let name: String
     let symbol: String
   }
 
-  private static let metadata: [CompatibleModifierKeys: ModifierMetadata] = [
+  private static let metadata: [ModifierKeysCompatible: ModifierMetadata] = [
     .shift: .init(name: "Shift", symbol: "􀆝"),
     .control: .init(name: "Control", symbol: "􀆍"),
     .option: .init(name: "Option", symbol: "􀆕"),
@@ -68,7 +68,7 @@ extension CompatibleModifierKeys {
     .capsLock: .init(name: "Caps Lock", symbol: "􀆡"),
   ]
 
-  private var individualOptions: [CompatibleModifierKeys] {
+  private var individualOptions: [ModifierKeysCompatible] {
     Self.metadata.keys.filter { contains($0) }
   }
 
@@ -97,12 +97,12 @@ extension CompatibleModifierKeys {
 
 }
 
-extension CompatibleModifierKeys: CustomStringConvertible {
+extension ModifierKeysCompatible: CustomStringConvertible {
   public var description: String { displayName(elements: .name) }
 }
 
 @available(macOS 15, iOS 18, *)
-extension CompatibleModifierKeys {
+extension ModifierKeysCompatible {
   public init(from swiftUIKey: EventModifiers) {
     self = swiftUIKey.toCompatibleModifier
   }
@@ -115,8 +115,8 @@ extension EventModifiers {
     [.command, .shift, .option, .control, .capsLock]
   }
 
-  public var toCompatibleModifier: CompatibleModifierKeys {
-    var result: CompatibleModifierKeys = []
+  public var toCompatibleModifier: ModifierKeysCompatible {
+    var result: ModifierKeysCompatible = []
     if contains(.shift) { result.insert(.shift) }
     if contains(.control) { result.insert(.control) }
     if contains(.option) { result.insert(.option) }
@@ -128,8 +128,8 @@ extension EventModifiers {
 
 #if canImport(AppKit)
 extension NSEvent.ModifierFlags {
-  public var toCompatibleModifier: CompatibleModifierKeys {
-    var result: CompatibleModifierKeys = []
+  public var toCompatibleModifier: ModifierKeysCompatible {
+    var result: ModifierKeysCompatible = []
     if contains(.shift) { result.insert(.shift) }
     if contains(.control) { result.insert(.control) }
     if contains(.option) { result.insert(.option) }
@@ -150,52 +150,3 @@ public struct ModifierDisplayElement: OptionSet, Sendable {
   public static let icon = Self(rawValue: 1 << 1)
   public static let both: Self = [.name, .icon]
 }
-//#endif
-
-//public enum CompatibleModifierKey: String, CaseIterable, Identifiable, Hashable, Sendable {
-//  case command
-//  case shift
-//  case option
-//  case control
-//  case capsLock
-//
-//  public var id: String { self.rawValue }
-//
-//  public var name: String {
-//    switch self {
-//      case .command: "Command"
-//      case .shift: "Shift"
-//      case .option: "Option"
-//      case .control: "Control"
-//      case .capsLock: "Caps Lock"
-//    }
-//  }
-//
-//  public var symbol: String {
-//    switch self {
-//      case .shift: "􀆝"
-//      case .control: "􀆍"
-//      case .option: "􀆕"
-//      case .command: "􀆔"
-//      case .capsLock: "􀆡"
-//    }
-//  }
-//}
-
-//extension Modifiers {
-//  public var names: String? {
-//    guard !self.isEmpty else {
-//      return nil
-//    }
-//    return self.map(\.name).joined()
-//  }
-//
-//  public var symbols: String? {
-//    guard !self.isEmpty else {
-//      return nil
-//    }
-//    return self.map(\.symbol).joined()
-//  }
-//}
-
-//#if os(macOS)
