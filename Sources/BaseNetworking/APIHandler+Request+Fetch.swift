@@ -14,21 +14,22 @@ public final class APIRequest<T: Decodable> {
   let body: (any Encodable)?
   let headers: [String: String]?
   let dto: T.Type
-
-  let isDebugMode: Bool = false
+  let isDebugMode: Bool
 
   public init(
     url: URL?,
     method: RequestMethod,
     body: (any Encodable)? = nil,
     headers: [String: String]? = nil,
-    dto: T.Type
+    dto: T.Type,
+    isDebugMode: Bool = false
   ) {
     self.url = url
     self.method = method
     self.body = body
     self.headers = headers
     self.dto = dto
+    self.isDebugMode = isDebugMode
   }
 }
 

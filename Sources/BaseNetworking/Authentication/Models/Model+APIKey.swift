@@ -100,7 +100,7 @@ extension APIKeyAuthenticatable {
   }
 
   public func getKeyFromConfigFile() throws -> String {
-    let keyString = try APIHandler.getStringFromInfoDict(Self.key)
+    let keyString = try Bundle.getStringFromInfoDict(Self.key)
     return keyString
   }
 }

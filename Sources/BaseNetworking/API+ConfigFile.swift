@@ -7,7 +7,7 @@
 
 import Foundation
 
-extension APIRequest {
+extension Bundle {
 
   /// This requires the following set-up:
   /// 

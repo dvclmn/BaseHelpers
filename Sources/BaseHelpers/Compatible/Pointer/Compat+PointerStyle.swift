@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-public enum CompatibleFrameResizePosition: Int8, CaseIterable, Sendable {
+public enum FrameResizePositionCompatible: Int8, CaseIterable, Sendable {
   case top
   case leading
   case bottom
@@ -18,7 +18,7 @@ public enum CompatibleFrameResizePosition: Int8, CaseIterable, Sendable {
   case bottomTrailing
 }
 
-public enum CompatibleFrameResizeDirection: Int8, CaseIterable, Sendable {
+public enum FrameResizeDirectionCompatible: Int8, CaseIterable, Sendable {
 
   /// Indicates that the frame can be resized inwards to be smaller.
   case inward
@@ -29,7 +29,7 @@ public enum CompatibleFrameResizeDirection: Int8, CaseIterable, Sendable {
   case all
 }
 
-public enum CompatiblePointerStyle: Sendable {
+public enum PointerStyleCompatible: Sendable {
   case `default`
   case horizontalText
   case verticalText
@@ -43,13 +43,13 @@ public enum CompatiblePointerStyle: Sendable {
   case rowResize
   
 //#if canImport(AppKit)
-  case frameResize(position: CompatibleFrameResizePosition, directions: CompatibleFrameResizeDirection = .all)  //(position: FrameResizePosition, directions: FrameResizeDirection.Set = .all) -> PointerStyle
+  case frameResize(position: FrameResizePositionCompatible, directions: FrameResizeDirectionCompatible = .all)  //(position: FrameResizePosition, directions: FrameResizeDirection.Set = .all) -> PointerStyle
   case image(Image, hotSpot: UnitPoint)  // (_ image: Image, hotSpot: UnitPoint) -> PointerStyle
 //#endif
 }
 
 #if canImport(AppKit)
-extension CompatibleFrameResizePosition {
+extension FrameResizePositionCompatible {
   @available(macOS 15, *)
   var toResizePosition: FrameResizePosition {
     switch self {
@@ -64,7 +64,7 @@ extension CompatibleFrameResizePosition {
     }
   }
 }
-extension CompatibleFrameResizeDirection {
+extension FrameResizeDirectionCompatible {
   @available(macOS 15, *)
   var toResizeDirection: FrameResizeDirection.Set {
     switch self {
@@ -77,7 +77,7 @@ extension CompatibleFrameResizeDirection {
 #endif
 
 // MARK: - Private Extension for Conversion
-extension CompatiblePointerStyle {
+extension PointerStyleCompatible {
 #if canImport(AppKit)
   @available(macOS 15, *)
   var toPointerStyle: PointerStyle {

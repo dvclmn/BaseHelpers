@@ -45,8 +45,8 @@ public struct ClientCredentials {
     secretKey: String,
     from bundle: Bundle = .main
   ) throws -> Credentials {
-    let clientID = try APIHandler.getStringFromInfoDict(idKey, bundle: bundle)
-    let clientSecret = try APIHandler.getStringFromInfoDict(secretKey, bundle: bundle)
+    let clientID = try Bundle.getStringFromInfoDict(idKey, bundle: bundle)
+    let clientSecret = try Bundle.getStringFromInfoDict(secretKey, bundle: bundle)
     return Credentials(
       id: clientID,
       secret: clientSecret

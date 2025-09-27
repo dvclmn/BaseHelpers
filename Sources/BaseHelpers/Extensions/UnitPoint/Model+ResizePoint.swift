@@ -76,15 +76,15 @@ extension ResizePoint {
   }
 
 //#if canImport(AppKit)
-  public var toCompatPointerStyle: CompatiblePointerStyle {
-    let style = CompatiblePointerStyle.frameResize(
+  public var toCompatPointerStyle: PointerStyleCompatible {
+    let style = PointerStyleCompatible.frameResize(
       position: self.toCompatFrameResizePosition,
       directions: .all
     )
     return style
   }
 
-  public var toCompatFrameResizePosition: CompatibleFrameResizePosition {
+  public var toCompatFrameResizePosition: FrameResizePositionCompatible {
     switch self {
       case .topLeading: .topLeading
       case .topTrailing: .topTrailing

@@ -16,4 +16,14 @@ extension View {
       self
     }
   }
+
+  @ViewBuilder
+  public func presentationPreventsAppTerminationCompatible(_ prevents: Bool) -> some View {
+    if #available(macOS 15.4, iOS 18.0, *) {
+      self.presentationPreventsAppTermination(prevents)
+    } else {
+      self
+    }
+  }
 }
+
