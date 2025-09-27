@@ -7,10 +7,16 @@
 
 import Foundation
 
-public enum IconLiteral: Sendable, Equatable, Codable, Hashable {
+public enum IconLiteral: Sendable, Equatable, Codable, Hashable, ExpressibleByStringLiteral {
   case emoji(String)
   case symbol(String)
   case customSymbol(CustomSymbol)
+  
+  /// Have chosen `IconLiteral.symbol` as the
+  /// most logical path for a string literal init
+  public init(stringLiteral value: String) {
+    self = .symbol(value)
+  }
   
   public var toString: String {
     switch self {

@@ -7,21 +7,30 @@
 
 import Foundation
 
-public protocol AppAction: Hashable {
+public protocol NamedAction: LabeledItem {
   /// e.g. "Delete", "Mark Favourite"
   var verb: String { get }
-  
+  var icon: String? { get }
+
   /// Singular noun for the item, e.g. "Game"
   static var itemName: String { get }
-  
+
   /// Optional override for plural, e.g. "People" instead of "Persons"
   static var itemPluralName: String? { get }
 }
 
-extension AppAction {
-  
+extension NamedAction {
+
+  public var label: QuickLabel {
+    QuickLabel(
+      verb,
+      icon: .symbol(<#T##String#>),
+      role: <#T##QuickLabel.Role?#>
+    )
+  }
+
   public static var itemPluralName: String? { nil }
-  
+
   /// Example usage:
   /// ```
   /// let affectedCount = ContextSelection(
@@ -29,7 +38,7 @@ extension AppAction {
   ///   selectedIDs: selectedIDs
   /// ).affectedIDs().count
   ///
-  /// let label = EucalyptAction.delete.buttonLabel(
+  /// let label = Action.delete.buttonLabel(
   ///   count: affectedCount
   /// )
   /// ```
@@ -49,8 +58,3 @@ extension AppAction {
     return "\(verb) \(nounPart)"
   }
 }
-
-//public enum UndoStrategy<T: AppAction> {
-//  case registerUndo(action: T)
-//  case none
-//}
