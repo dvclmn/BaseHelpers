@@ -8,13 +8,14 @@
 import SwiftUI
 
 public struct QuickLabel: ModelBase {
-  public var attributedText: AttributedString
+  public let text: String
+  //  public var attributedText: AttributedString
   public let icon: IconLiteral?
   public let role: Role?
-  
-  public var text: String {
-    return String(attributedText.characters)
-  }
+
+  //  public var text: String {
+  //    return String(attributedText.characters)
+  //  }
 }
 
 // MARK: - Initialisers
@@ -25,7 +26,7 @@ extension QuickLabel {
     _ icon: IconLiteral? = nil,
     role: Role? = nil
   ) {
-    self.attributedText = AttributedString(text)
+    //    self.attributedText = AttributedString(text)
     self.icon = icon
     self.role = role
   }
@@ -35,7 +36,7 @@ extension QuickLabel {
     icon: IconLiteral? = nil,
     role: Role? = nil
   ) {
-    self.attributedText = text
+    //    self.attributedText = text
     self.icon = icon
     self.role = role
   }
@@ -82,21 +83,25 @@ extension QuickLabel {
     self.role = role
   }
 }
+
 extension QuickLabel: ExpressibleByStringLiteral {
   public init(stringLiteral value: String) {
     self.init(value)
   }
-  
 }
 
-
+extension QuickLabel: CustomStringConvertible {
+  public var description: String {
+    return "QuickLabel[\"\(text)\", icon: \"\(icon?.toString ?? "")\"]"
+  }
+}
 extension QuickLabel {
-
+  
   public enum Role: Equatable, Sendable, Codable {
     case success
     case destructive
     case warning
-
+    
     var colour: Color {
       switch self {
         case .success: .green
@@ -104,11 +109,5 @@ extension QuickLabel {
         case .warning: .yellow
       }
     }
-  }
-}
-
-extension QuickLabel: CustomStringConvertible {
-  public var description: String {
-    return "QuickLabel[\"\(text)\", icon: \"\(icon?.toString ?? "")\"]"
   }
 }
