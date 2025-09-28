@@ -148,6 +148,8 @@ case newWindow = "macwindow.on.rectangle"
   case character = "character.square"
   case arrowUp = "arrow.up"
   case arrowDown = "arrow.down"
+  case next = "arrow.right"
+  case previous = "arrow.left"
 
   // Tags
   case tag = "tag"

@@ -23,11 +23,12 @@ extension ControlSize {
 public func scale(
   _ value: CGFloat,
   for controlSize: ControlSize,
-  by strength: CGFloat = 1.0
+  by strength: CGFloat = 1.0,
+  min: CGFloat = 0
 ) -> CGFloat {
-  return value * controlSize.scaleFactor * strength
+  let result = value * controlSize.scaleFactor * strength
+  return result.clamped(min)
 }
-
 
 //extension Bool {
 //  public func compact<T: BinaryFloatingPoint>(

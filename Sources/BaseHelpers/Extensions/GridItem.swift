@@ -12,11 +12,21 @@ extension Array where Element == GridItem {
   /// When the desired number of columns is fixed/known
   public static func quickColumns(
     _ count: Int = 3,
+    mode: GridFitMode = .fill(min: 10, max: .infinity),
     spacing: CGFloat? = nil,
     alignment: Alignment? = nil
   ) -> Self {
+    
+    let (min, max) = mode.minAndMax
     let result: Self = Array(
-      repeating: GridItem(.flexible(), spacing: spacing, alignment: alignment),
+      repeating: GridItem(
+        .flexible(
+          minimum: min,
+          maximum: max
+        ),
+        spacing: spacing,
+        alignment: alignment
+      ),
       count: count
     )
     return result

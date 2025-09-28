@@ -8,9 +8,22 @@
 import SwiftUI
 
 extension String {
+  
+  public enum QuotesType: String {
+    case single = "'"
+    case double = "\""
+  }
 
   public var toURL: URL? {
     return URL(string: self)
+  }
+  
+  public var withQuotes: String {
+    self.withQuotes(.double)
+  }
+  
+  public func withQuotes(_ type: QuotesType = .double) -> String {
+    return "\(type.rawValue)\(self)\(type.rawValue)"
   }
   
   public var toAttributedString: AttributedString {
