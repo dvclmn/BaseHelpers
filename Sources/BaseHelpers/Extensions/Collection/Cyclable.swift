@@ -18,18 +18,18 @@ public protocol Cyclable: LabeledItem {
 //{
 extension Cyclable
 where
-  Self.AllCases.Index == Int,
   Self: CaseIterable,
-  Self.AllCases: RandomAccessCollection
+  Self.AllCases: RandomAccessCollection,
+  Self.AllCases.Index == Int
 {
-//  private static var all: AllCases { allCases }
+  //  private static var all: AllCases { allCases }
 
   public var isAtBeginning: Bool { self == Self.allCases.first }
   public var isAtEnd: Bool { self == Self.allCases.last }
 
   public func toNext(wrapping: Bool = true) -> Self {
-    
-//    Self.allCases.nextElement(after: self, wrapping: wrapping) ?? Self.defaultCase
+    //    Self.allCases.element(after: i, wrapping: wrapping)
+    Self.allCases.nextElement(after: self, wrapping: wrapping) ?? Self.defaultCase
   }
 
   public func toPrevious(wrapping: Bool = true) -> Self {
