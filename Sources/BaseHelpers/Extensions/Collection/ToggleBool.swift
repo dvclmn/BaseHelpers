@@ -32,79 +32,100 @@ public enum ToggleStrategy {
 /// }
 /// ```
 extension Collection where Element == Bool {
-
-  /// Convenience method that combines the logic for easy use
-  func shouldToggleIndividually(strategy: ToggleStrategy = .preferTrue) -> Bool {
-    return toggleAction(strategy: strategy) == nil
-  }
-
-  /// Determines what boolean value to set all items to based on current states
-  /// - Parameter strategy: How to handle mixed states
-  /// - Returns: The target boolean value for all items
-  private func toggleTarget(strategy: ToggleStrategy = .preferTrue) -> Bool {
+  
+  /// Decide a single “target” value if the strategy calls for it.
+  /// Returns `nil` when each element must be flipped individually (the `.invert` case).
+  fileprivate func target(for strategy: ToggleStrategy) -> Bool? {
     guard !isEmpty else { return true }
-
-    let trueCount = filter { $0 }.count
+    
+    let trueCount  = filter { $0 }.count
     let falseCount = count - trueCount
-    let allTrue = trueCount == count
+    
+    let allTrue  = trueCount  == count
     let allFalse = falseCount == count
-
+    
     switch strategy {
       case .preferTrue:
         return allTrue ? false : true
-
+        
       case .preferFalse:
         return allFalse ? true : false
-
+        
       case .followMajority:
-        if allTrue { return false }
-        if allFalse { return true }
-        return trueCount > falseCount ? true : false
-
+        if allTrue  { return false }
+        if allFalse { return true  }
+        return trueCount >= falseCount
+        
       case .invert:
-        fatalError("The `invert` strategy requires individual toggling, and doesn't return a single target value")
-    }
-  }
-
-  /// Determines whether items should be toggled individually or set to a uniform value
-  /// - Parameter strategy: How to handle the toggle operation
-  /// - Returns: nil if items should toggle individually, Bool value if all should be set to that value
-  public static func toggleAction<T>(
-    strategy: ToggleStrategy = .preferTrue,
-    collection: T,
-    keyPath: WritableKeyPath<T, Bool>,
-//    collection: inout [Bool],
-    transform: (Bool) -> Bool
-  ) {
-//  ) -> Bool? {
-
-    guard !collection.isEmpty else { return }
-//    guard !collection.isEmpty else { return true }
-
-    /// This is the same as saying, `if this isn't invert`
-//    if let targetValue = current.toggleAction(strategy: toggleStrategy) {
-      /// Set all to the same target value
-      
-    for item in collection {
-
-      
-//        lib.userData[id, default: UserData.defaultData(for: id)][keyPath: keyPath] = targetValue
-      }
-    } else {
-      /// Toggle each individually (only for .toggleAll strategy)
-      
-//      for id in affectedIDs {
-//        let defaultData = UserData(id: id, isInLibrary: false)
-//        lib.userData[id, default: defaultData][keyPath: keyPath].toggle()
-//      }
-    }
-
-    switch strategy {
-      case .toggleAll:
-        return nil  // Indicates: toggle each individually
-
-      case .preferTrue, .preferFalse, .followMajority:
-        return toggleTarget(strategy: strategy)
+        return nil   // signal: toggle each item individually
     }
   }
 }
+
+/// Usage example:
+///
+/// ```
+/// var items = [Item(flag: true), Item(flag: false)]
+/// items.toggleAll(at: \.flag, strategy: .invert)
+/// ```
+extension MutableCollection {
+  public mutating func toggleAll(
+    at keyPath: WritableKeyPath<Element, Bool>,
+    strategy: ToggleStrategy
+  ) {
+    let states = self.map { $0[keyPath: keyPath] }
+    
+    if let target = states.target(for: strategy) {
+      for i in indices {
+        self[i][keyPath: keyPath] = target
+      }
+    } else {
+      for i in indices {
+        self[i][keyPath: keyPath].toggle()
+      }
+    }
+  }
+}
+
+//  /// Determines whether items should be toggled individually or set to a uniform value
+//  /// - Parameter strategy: How to handle the toggle operation
+//  /// - Returns: nil if items should toggle individually, Bool value if all should be set to that value
+//  public static func toggleAction<T>(
+//    strategy: ToggleStrategy = .preferTrue,
+//    collection: T,
+//    keyPath: WritableKeyPath<T, Bool>,
+////    collection: inout [Bool],
+//    transform: (Bool) -> Bool
+//  ) {
+////  ) -> Bool? {
+//
+//    guard !collection.isEmpty else { return }
+////    guard !collection.isEmpty else { return true }
+//
+//    /// This is the same as saying, `if this isn't invert`
+////    if let targetValue = current.toggleAction(strategy: toggleStrategy) {
+//      /// Set all to the same target value
+//      
+//    for item in collection {
+//
+//      
+////        lib.userData[id, default: UserData.defaultData(for: id)][keyPath: keyPath] = targetValue
+//      }
+//    } else {
+//      /// Toggle each individually (only for .toggleAll strategy)
+//      
+////      for id in affectedIDs {
+////        let defaultData = UserData(id: id, isInLibrary: false)
+////        lib.userData[id, default: defaultData][keyPath: keyPath].toggle()
+////      }
+//    }
+//
+//    switch strategy {
+//      case .toggleAll:
+//        return nil  // Indicates: toggle each individually
+//
+//      case .preferTrue, .preferFalse, .followMajority:
+//        return toggleTarget(strategy: strategy)
+//    }
+//  }
+//}
