@@ -10,17 +10,11 @@ import Foundation
 public protocol Cyclable: LabeledItem {
   static var defaultItem: Self { get }
 }
- 
+
 extension Cyclable where Self.AllCases.Index == Int, Self: CaseIterable, Self.AllCases: RandomAccessCollection {
-  
+
   public var isAtBeginning: Bool { self == Self.allCases.first }
   public var isAtEnd: Bool { self == Self.allCases.last }
-  
-}
-
-extension Cyclable {
-
-  
 
   public func toNext(wrapping: Bool = true) -> Self {
     let all = Self.allCases
@@ -31,7 +25,7 @@ extension Cyclable {
         count: all.count,
         wrapping: wrapping
       )
-    else { return Self.defaultCase }
+    else { return Self.defaultItem }
     return all[next]
   }
 
@@ -44,7 +38,7 @@ extension Cyclable {
         count: all.count,
         wrapping: wrapping
       )
-    else { return Self.defaultCase }
+    else { return Self.defaultItem }
     return all[prev]
   }
 
@@ -63,9 +57,10 @@ extension Cyclable {
     precondition(Self.allCases.count == 2, "toggle() is only valid for two-case enums")
     self = toNext(wrapping: true)
   }
+
 }
 
-extension Collection {
+extension Cyclable where Self: Collection {
   /// Clamped here means returns the same case, when reaching
   /// an edge, if wrapping is set to false
   ///
