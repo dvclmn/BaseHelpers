@@ -118,7 +118,7 @@ public enum Icons: String, IconGalleryViewable, Codable, Equatable {
   case logOut = "rectangle.portrait.and.arrow.right"
   case developer = "keyboard"
   case token = "hockey.puck"
-
+case newWindow = "macwindow.on.rectangle"
   case sliders = "switch.2"
   case minus = "minus"
   case qrCode = "qrcode"

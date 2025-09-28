@@ -35,10 +35,10 @@ extension UIPasteboard: PasteboardCopying {
 /// Usage
 public func copyStringToClipboard(_ contents: String) {
   let pasteboard: PasteboardCopying
-#if canImport(AppKit)
+  #if canImport(AppKit)
   pasteboard = NSPasteboard.general
-#elseif canImport(UIKit)
+  #elseif canImport(UIKit)
   pasteboard = UIPasteboard.general
-#endif
+  #endif
   pasteboard.setString(contents)
 }
