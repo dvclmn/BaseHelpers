@@ -45,30 +45,6 @@ extension Collection {
     return (prevIdx + count) % count
   }
 
-  /// These have moved to BaseHelpers, in support of LabeledItem, Cycable etc.
-  //  /// Clamped here means returns the same case, when reaching
-  //  /// an edge, if wrapping is set to false
-  //  ///
-  //  /// Suitable for enums, such as `Cyclable`
-  //  public func nextIndexClamped(after index: Int, wrapping: Bool = true) -> Int {
-  //    guard !isEmpty else { return 0 }
-  //    let nextIdx = index + 1
-  //    guard wrapping else {
-  //      return Swift.min(nextIdx, count - 1)  // Clamp to last index
-  //    }
-  //    return nextIdx % count
-  //  }
-  //
-  //  public func previousIndexClamped(before index: Int, wrapping: Bool = true) -> Int {
-  //    guard !isEmpty else { return 0 }
-  //    let prevIdx = index - 1
-  //    guard wrapping else {
-  //      return Swift.max(prevIdx, 0)  // Clamp to first index
-  //    }
-  //    return (prevIdx + count) % count
-  //  }
-  //
-
 }
 
 /// Determines the target state when toggling a collection of boolean values

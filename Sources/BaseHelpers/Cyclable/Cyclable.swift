@@ -7,15 +7,20 @@
 
 import Foundation
 
-public protocol Cyclable: LabeledItem where Self.AllCases.Index == Int, Self: CaseIterable, Self.AllCases: RandomAccessCollection {
-//public protocol Cyclable: LabeledItem where Self.AllCases.Index == Int {
-  static var defaultCase: Self { get }
+public protocol Cyclable: LabeledItem {
+  static var defaultItem: Self { get }
+}
+ 
+extension Cyclable where Self.AllCases.Index == Int, Self: CaseIterable, Self.AllCases: RandomAccessCollection {
+  
+  public var isAtBeginning: Bool { self == Self.allCases.first }
+  public var isAtEnd: Bool { self == Self.allCases.last }
+  
 }
 
 extension Cyclable {
 
-  public var isAtBeginning: Bool { self == Self.allCases.first }
-  public var isAtEnd: Bool { self == Self.allCases.last }
+  
 
   public func toNext(wrapping: Bool = true) -> Self {
     let all = Self.allCases
