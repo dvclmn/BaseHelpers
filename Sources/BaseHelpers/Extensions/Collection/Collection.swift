@@ -6,10 +6,7 @@
 //
 
 extension Collection {
-  //  func hasIndex(_ index: Int) -> Bool {
-  //    self.indices.contains(index)
-  //  }
-
+  
   public func hasIndex(_ offset: Int) -> Bool {
     let startIndex = self.startIndex
     let endIndex = self.endIndex
@@ -18,11 +15,15 @@ extension Collection {
     }
     return index < endIndex
   }
-
+  
   public var toArray: [Element] {
     return Array(self)
   }
+}
 
+extension Collection where Index == Int {
+
+  /// Core index calculation logic - reusable across different collection types
   public func nextIndex(
     after index: Int,
     wrapping: Bool = true
@@ -33,7 +34,7 @@ extension Collection {
     }
     return nextIdx % count
   }
-
+  
   public func previousIndex(
     before index: Int,
     wrapping: Bool = true
@@ -44,7 +45,6 @@ extension Collection {
     }
     return (prevIdx + count) % count
   }
-
 }
 
 /// Determines the target state when toggling a collection of boolean values
@@ -107,10 +107,12 @@ extension Collection where Element == Bool {
   /// Determines whether items should be toggled individually or set to a uniform value
   /// - Parameter strategy: How to handle the toggle operation
   /// - Returns: nil if items should toggle individually, Bool value if all should be set to that value
-  public func toggleAction(strategy: ToggleStrategy = .preferTrue) -> Bool? {
+  public func toggleAction(
+    strategy: ToggleStrategy = .preferTrue
+  ) -> Bool? {
     guard !isEmpty else { return true }
 
-    let allSameState = allSatisfy { $0 == first }
+//    let allSameState: Bool = allSatisfy { $0 == first }
 
     switch strategy {
       case .toggleAll:
