@@ -87,6 +87,58 @@ extension MutableCollection {
   }
 }
 
+extension Collection {
+  func toggled(
+    at keyPath: WritableKeyPath<Element, Bool>,
+    strategy: ToggleStrategy
+  ) -> [Element] {
+    let states = self.map { $0[keyPath: keyPath] }
+    return map { element in
+      var copy = element
+      if let target = states.target(for: strategy) {
+        copy[keyPath: keyPath] = target
+      } else {
+        copy[keyPath: keyPath].toggle()
+      }
+      return copy
+    }
+  }
+}
+
+extension Dictionary where Value: Any {
+  
+  /// Toggle a Bool inside each value for a given set of keys,
+  /// using the same ToggleStrategy rules as the collection helpers.
+  ///
+  /// - Parameters:
+  ///   - keys:      The subset of keys to affect.
+  ///   - keyPath:   The Bool property to mutate inside each Value.
+  ///   - default:   A factory to supply a value when a key is missing.
+  ///   - strategy:  How to decide the on/off behaviour.
+  public mutating func toggleValues(
+    for keys: Set<Key>,
+    at keyPath: WritableKeyPath<Value, Bool>,
+    default defaultValue: (Key) -> Value,
+    strategy: ToggleStrategy
+  ) {
+    /// capture the current states (providing defaults for missing keys)
+    let states: [Bool] = keys.map { self[$0, default: defaultValue($0)][keyPath: keyPath] }
+    
+    if let target = states.target(for: strategy) {
+      // single uniform value
+      for k in keys {
+        self[k, default: defaultValue(k)][keyPath: keyPath] = target
+      }
+    } else {
+      // invert each individually
+      for k in keys {
+        self[k, default: defaultValue(k)][keyPath: keyPath].toggle()
+      }
+    }
+  }
+}
+//extension MutableIndexable
+
 //  /// Determines whether items should be toggled individually or set to a uniform value
 //  /// - Parameter strategy: How to handle the toggle operation
 //  /// - Returns: nil if items should toggle individually, Bool value if all should be set to that value
