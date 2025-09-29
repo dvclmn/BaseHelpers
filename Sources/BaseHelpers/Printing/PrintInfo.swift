@@ -7,14 +7,14 @@
 
 import SwiftUI
 
-public enum PrintInfo {
+public enum LocationInfo {
   case userDefaultsURL
   case applicationSupport
 }
 
 public struct PrintInfoModifier: ViewModifier {
 
-  let info: PrintInfo
+  let info: LocationInfo
 
   public func body(content: Content) -> some View {
     content
@@ -42,7 +42,7 @@ public struct PrintInfoModifier: ViewModifier {
   }
 }
 extension View {
-  public func printInfo(_ info: PrintInfo) -> some View {
+  public func printInfo(_ info: LocationInfo) -> some View {
     self.modifier(PrintInfoModifier(info: info))
   }
 }

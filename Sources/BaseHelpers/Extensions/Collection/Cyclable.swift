@@ -34,9 +34,5 @@ extension Cyclable {
   public mutating func moveBackward(wrapping: Bool = true) {
     self = toPrevious(wrapping: wrapping)
   }
-
-  public mutating func toggle() {
-    precondition(Self.allCases.count == 2, "toggle() requires exactly two cases")
-    self = toNext()  // wrapping is fine: only 2 elements
-  }
 }
+

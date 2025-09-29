@@ -9,6 +9,8 @@ import SwiftUI
 
 extension Array where Element == GridItem {
 
+  public static let `default` = Self.quickAdaptive(mode: .fill(min: 60, max: 140))
+  
   /// When the desired number of columns is fixed/known
   public static func quickColumns(
     _ count: Int = 3,

@@ -23,29 +23,3 @@ extension Array where Element: Hashable {
 
 }
 
-extension Array where Element: Identifiable {
-
-  public func isOnlyFirstElementSelected(
-    currentSelection: Element.ID?
-  ) -> Bool {
-    if let currentSelection {
-      return self.isOnlyFirstElementSelected(currentSelection: [currentSelection])
-    }
-    return false
-  }
-  
-  public func isOnlyFirstElementSelected(
-    currentSelection: Set<Element.ID>
-  ) -> Bool {
-    guard let firstResultID = self.first?.id else {
-      return false
-    }
-    
-    /// I only want a *single* result selected, and to know
-    /// if it's at the top/start of the list
-    guard currentSelection.count == 1, let firstSelected = currentSelection.first else {
-      return false
-    }
-    return firstResultID == firstSelected
-  }
-}
