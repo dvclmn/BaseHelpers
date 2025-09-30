@@ -1,5 +1,5 @@
 //
-//  Cyclable.swift
+//  CaseCyclable.swift
 //  BaseHelpers
 //
 //  Created by Dave Coleman on 31/8/2025.
@@ -7,16 +7,15 @@
 
 import Foundation
 
-public protocol Cyclable: LabeledItem
+public protocol CaseCyclable: CaseIterable, LabeledItem
 where
-  Self: CaseIterable,
-  Self.AllCases: RandomAccessCollection,
-  Self.AllCases.Index == Int
+  AllCases: RandomAccessCollection,
+  AllCases.Index == Int
 {
   static var defaultCase: Self { get }
 }
 
-extension Cyclable {
+extension CaseCyclable {
   public var isAtBeginning: Bool { self == Self.allCases.first }
   public var isAtEnd: Bool { self == Self.allCases.last }
 

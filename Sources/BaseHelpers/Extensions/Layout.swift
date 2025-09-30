@@ -65,7 +65,7 @@ public enum LayoutType {
   }
 }
 
-public enum LayoutMode: String, Cyclable, Codable, Sendable, RawRepresentable {
+public enum LayoutMode: String, CaseCyclable, CaseTogglable, Codable, Sendable, RawRepresentable {
   public static var defaultCase: LayoutMode { .list }
   
   case grid
