@@ -27,3 +27,15 @@ extension View {
   }
 }
 
+/// See docs: ``SwiftUI/PresentationSizing``
+public enum PresentationSizingCompatible {
+  case automatic
+  
+  /// Handles both `fitted: FittedPresentationSizing`
+  /// and the `fitted()` method on extension of
+  /// the `PresentationSizing` protocol
+  case fitted
+  case fitted(horizontal: Bool, vertical: Bool)
+  case form
+  case page
+}
