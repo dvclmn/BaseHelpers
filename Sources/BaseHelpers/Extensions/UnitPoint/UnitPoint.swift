@@ -138,22 +138,7 @@ extension UnitPoint {
       default: return .center
     }
   }
-  
-  
-  //  public var toAlignment: Alignment {
-  //    switch self {
-  //      case .topLeading: .topLeading
-  //      case .top: .top
-  //      case .topTrailing: .topTrailing
-  //      case .trailing: .trailing
-  //      case .bottomTrailing: .bottomTrailing
-  //      case .bottom: .bottom
-  //      case .bottomLeading: .bottomLeading
-  //      case .leading: .leading
-  //      case .center: .center
-  //      default: .center
-  //    }
-  //  }
+
 
   /// This is just for visual debugging
   public var debugColour: Color {
