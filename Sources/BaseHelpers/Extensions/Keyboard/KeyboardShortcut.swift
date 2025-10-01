@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-public enum KeyboardDisplayStyle {
+public enum KeyboardElementDisplayStyle {
   case name(isAbbreviated: Bool = true) // E.g. Return
   case symbolLiteral // E.g. 􀅇
   
@@ -26,8 +26,8 @@ public enum KeyboardDisplayStyle {
 
 extension KeyboardShortcut {
   public func displayString(
-    keyStyle: KeyboardDisplayStyle = .symbolLiteral,
-    modifierStyle: KeyboardDisplayStyle = .symbolLiteral,
+    keyStyle: KeyboardElementDisplayStyle = .symbolLiteral,
+    modifierStyle: KeyboardElementDisplayStyle = .symbolLiteral,
   ) -> String {
     let modifiers: String = modifierStyle.isSymbol ? modifiers.symbols : modifiers.names
     let key: String = keyStyle.isSymbol ? key.symbolLiteral.toString.uppercased() : key.name(isAbbreviated: keyStyle.isAbbreviated)

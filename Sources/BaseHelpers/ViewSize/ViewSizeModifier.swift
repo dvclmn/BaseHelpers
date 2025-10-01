@@ -36,9 +36,8 @@ public struct ViewSizeModifier<CaptureType: GeometryCapturable>: ViewModifier {
   public func body(content: Content) -> some View {
     content
       .onGeometryChange(for: capture.type) { proxy in
-//      .onGeometryChange(for: CGSize.self) { proxy in
         return capture.transform(proxy)
-//        return proxy.size
+
       } action: { newValue in
         Task {
           if let debouncer {
@@ -55,7 +54,6 @@ public struct ViewSizeModifier<CaptureType: GeometryCapturable>: ViewModifier {
 
 // MARK: - View Extension
 extension View {
-
   /// Previously had default value for `debounceMode`, but this felt
   /// too risky for domains that may be tripped up by immediate vs debounced
   public func viewSize<T: GeometryCapturable>(

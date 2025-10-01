@@ -34,6 +34,12 @@ extension GeometryCapture {
       $0.frame(in: .scrollView(axis: .vertical))
     }
   }
+  
+//  public static var scrollGeometry: GeometryCapture<CGRect> {
+//    .init(type: CGRect.self) {
+//      $0.frame(in: .scrollView(axis: .vertical))
+//    }
+//  }
 }
 
 //enum GeometryCaptureKind {

@@ -7,7 +7,8 @@
 
 import Foundation
 
-public protocol NamedAction: LabeledItem {
+public protocol NamedAction {
+//public protocol NamedAction: LabeledItem {
   /// e.g. "Delete", "Mark Favourite"
   var verb: String { get }
   var icon: String? { get }
@@ -21,9 +22,9 @@ public protocol NamedAction: LabeledItem {
 
 extension NamedAction {
 
-  public var label: QuickLabel {
-    QuickLabel(verb, symbol: icon)
-  }
+//  public var label: QuickLabel {
+//    QuickLabel(verb, symbol: icon)
+//  }
 
   public static var itemPluralName: String? { nil }
 
@@ -47,10 +48,12 @@ extension NamedAction {
   public func actionName(
     count: Int,
     countStrategy: CountStrategy = .showCount(always: false)
-  ) -> String {
+  ) -> QuickLabel {
+//  ) -> String {
     let noun = Self.itemName
     let pluralOverride = Self.itemPluralName
     let nounPart = pluralise(noun, count: count, countStrategy: countStrategy, irregularPlural: pluralOverride)
-    return "\(verb) \(nounPart)"
+    let label = QuickLabel("\(verb) \(nounPart)", symbol: self.icon)
+    return label
   }
 }
