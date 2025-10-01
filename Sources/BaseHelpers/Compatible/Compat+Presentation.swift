@@ -9,9 +9,9 @@ import SwiftUI
 
 extension View {
   @ViewBuilder
-  public func resizableSheet() -> some View {
+  public func presentationSizingCompatible(_ sizing: PresentationSizingCompatible = .fitted) -> some View {
     if #available(macOS 15.0, iOS 18.0, *) {
-      self.presentationSizing(.fitted)
+      self.presentationSizing(sizing.sizingValue)
     } else {
       self
     }
@@ -28,14 +28,37 @@ extension View {
 }
 
 /// See docs: ``SwiftUI/PresentationSizing``
+/// Doesn't yet handle e.g. `PresentationSizing/fitted()`
+/// Only static properties for now.
+///
+/// Note: Place any `.frame()` modifier *after* a
+/// `.presentationSizingCompatible()`.
+///
+/// E.g.
+/// ```
+/// .frame(
+///   minWidth: 180,
+///   idealWidth: 330,
+///   maxWidth: 580,
+/// )
+/// .presentationSizingCompatible()
+///
+/// ```
 public enum PresentationSizingCompatible {
   case automatic
-  
-  /// Handles both `fitted: FittedPresentationSizing`
-  /// and the `fitted()` method on extension of
-  /// the `PresentationSizing` protocol
   case fitted
-  case fitted(horizontal: Bool, vertical: Bool)
   case form
   case page
+}
+
+@available(macOS 15.0, iOS 18.0, *)
+extension PresentationSizingCompatible {
+  var sizingValue: PresentationSizing {
+    switch self {
+      case .automatic: .automatic
+      case .fitted: .fitted
+      case .form: .form
+      case .page: .page
+    }
+  }
 }

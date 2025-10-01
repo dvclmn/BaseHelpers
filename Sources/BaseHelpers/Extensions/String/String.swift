@@ -173,3 +173,10 @@ extension Array where Element == String {
     self.joined(separator: separator)
   }
 }
+
+extension String {
+//extension Optional where Wrapped == String {
+  public var toDescribing: String {
+    return String(describing: self)
+  }
+}

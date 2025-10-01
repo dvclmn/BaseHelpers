@@ -7,6 +7,10 @@
 
 import SwiftUI
 
+/// Good to remember: `Alignment` always describes
+/// *two* things; a `HorizontalAlignment` *and*
+/// a `VerticalAlignment`. It is not one or the other,
+/// it is a composite of both.
 extension Alignment {
 
   public var toTextAlignment: TextAlignment {
@@ -33,54 +37,6 @@ extension Alignment {
       default: .center
     }
   }
-  
-//  public var isHorizontal: Bool {
-//    switch self {
-//      case .top: 
-//      case .topLeading: false
-//      case .topTrailing: false
-//      case .bottom: false
-//      case .bottomLeading: false
-//      case .bottomTrailing: false
-//      case .center: false
-//      case .centerFirstTextBaseline: false
-//      case .centerLastTextBaseline: false
-//      case .leading: false
-//      case .leadingFirstTextBaseline: false
-//      case .leadingLastTextBaseline: false
-//      case .trailing: false
-//      case .trailingFirstTextBaseline: false
-//      case .trailingLastTextBaseline: false
-//      default: false
-//    }
-//  }
-  
-//  extension HorizontalAlignment {
-//    public var displayName: String {
-//      switch self {
-//        case .leading: "Leading"
-//        case .center: "Center"
-//        case .trailing: "Trailing"
-//        case .listRowSeparatorLeading: "List Row Separator Leading"
-//        case .listRowSeparatorTrailing: "List Row Separator Trailing"
-//          
-//        default: "Unknown"
-//      }
-//    }
-//  }
-//  extension VerticalAlignment {
-//    public var displayName: String {
-//      switch self {
-//        case .bottom: "Bottom"
-//        case .center: "Center"
-//        case .top: "Top"
-//        case .firstTextBaseline: "First Text Baseline"
-//        case .lastTextBaseline: "Last Text Baseline"
-//        default: "Unknown"
-//      }
-//    }
-//  }
-//
 
   public var displayName: (abbreviated: String, standard: String, full: String) {
     switch self {
@@ -145,7 +101,7 @@ extension Alignment {
     }
   }
 
-  public var opposing: Alignment {
+  public var opposite: Alignment {
     switch self {
       case .topLeading: .bottomTrailing
       case .top: .bottom
@@ -173,6 +129,17 @@ extension HorizontalAlignment {
       default: "Unknown"
     }
   }
+
+  /// Returns `.center` as default if case is unknown
+  public var opposite: HorizontalAlignment {
+    switch self {
+      case .leading: .trailing
+      case .trailing: .leading
+      case .listRowSeparatorLeading: .listRowSeparatorTrailing
+      case .listRowSeparatorTrailing: .listRowSeparatorLeading
+      default: .center
+    }
+  }
 }
 extension VerticalAlignment {
   public var displayName: String {
@@ -183,6 +150,16 @@ extension VerticalAlignment {
       case .firstTextBaseline: "First Text Baseline"
       case .lastTextBaseline: "Last Text Baseline"
       default: "Unknown"
+    }
+  }
+  /// Returns `.center` as default if case is unknown
+  public var opposite: VerticalAlignment {
+    switch self {
+      case .top: .bottom
+      case .bottom: .top
+      case .firstTextBaseline: .lastTextBaseline
+      case .lastTextBaseline: .firstTextBaseline
+      default: .center
     }
   }
 }

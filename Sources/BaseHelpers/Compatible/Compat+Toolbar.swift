@@ -21,3 +21,33 @@ extension View {
     }
   }
 }
+
+extension ToolbarContent {
+  @ToolbarContentBuilder
+  public func ToolbarSpacerCompatible(
+    _ sizing: SpacerSizingCompatible = .flexible,
+    placement: ToolbarItemPlacement = .automatic
+  ) -> some ToolbarContent {
+    if #available(macOS 26.0, *) {
+      ToolbarSpacer(sizing.sizingCompatible, placement: placement)
+    } else {
+      ToolbarItem {
+        Spacer()
+      }
+    }
+  }
+}
+
+public enum SpacerSizingCompatible: Sendable {
+  case flexible
+  case fixed
+}
+@available(macOS 26.0, *)
+extension SpacerSizingCompatible {
+  public var sizingCompatible: SpacerSizing {
+    switch self {
+      case .flexible: .flexible
+      case .fixed: .fixed
+    }
+  }
+}

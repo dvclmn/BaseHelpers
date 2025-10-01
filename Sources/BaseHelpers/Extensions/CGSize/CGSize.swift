@@ -16,6 +16,10 @@ extension CGSize: @retroactive Hashable {
 
 extension CGSize {
 
+  public subscript(axis: Axis, convention: DimensionToAxisConvention = .widthIsHorizontal) -> CGFloat {
+    return axis.length(fromSize: self, convention: convention)
+  }
+
   /// Euclidean magnitude of the vector?
   public var length: CGFloat { sqrt(width * width + height * height) }
 
@@ -87,38 +91,39 @@ extension CGSize {
       height: max(0, height - (inset * 2))
     )
   }
-  
+
   public func clampBothDimensions(toMin length: CGFloat) -> CGSize {
     let width = self.width.clamped(length)
     let height = self.height.clamped(length)
     return CGSize(width: width, height: height)
   }
 
-  #warning("I want to see if and where I need to use these, to make sure behaviour is predictable and standardised enough.")
-//  public func clamped(
-//    max maxSize: CGSize,
-//    min minSize: CGSize
-//  ) -> CGSize {
-//    let clampedWidth: CGFloat = width.clamped(
-//      minSize.width,
-//      maxSize.width
-//    )
-//    let clampedHeight: CGFloat = height.clamped(
-//      minSize.height,
-//      maxSize.height
-//    )
-//    return CGSize(width: clampedWidth, height: clampedHeight)
-//  }
+  #warning(
+    "I want to see if and where I need to use these, to make sure behaviour is predictable and standardised enough.")
+  //  public func clamped(
+  //    max maxSize: CGSize,
+  //    min minSize: CGSize
+  //  ) -> CGSize {
+  //    let clampedWidth: CGFloat = width.clamped(
+  //      minSize.width,
+  //      maxSize.width
+  //    )
+  //    let clampedHeight: CGFloat = height.clamped(
+  //      minSize.height,
+  //      maxSize.height
+  //    )
+  //    return CGSize(width: clampedWidth, height: clampedHeight)
+  //  }
 
-//  public func clamped(
-//    max maxValue: CGFloat,
-//    min minValue: CGFloat
-//  ) -> CGSize {
-//    let maxSize = CGSize(fromLength: maxValue)
-//    let minSize = CGSize(fromLength: minValue)
-//
-//    return self.clamped(max: maxSize, min: minSize)
-//  }
+  //  public func clamped(
+  //    max maxValue: CGFloat,
+  //    min minValue: CGFloat
+  //  ) -> CGSize {
+  //    let maxSize = CGSize(fromLength: maxValue)
+  //    let minSize = CGSize(fromLength: minValue)
+  //
+  //    return self.clamped(max: maxSize, min: minSize)
+  //  }
 
   /// Returns the centre point of the size
   public var midpoint: CGPoint {
