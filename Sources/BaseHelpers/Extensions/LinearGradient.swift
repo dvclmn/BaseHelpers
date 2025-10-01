@@ -11,16 +11,16 @@ extension LinearGradient {
   public static func lightFalloff(
     _ colour: Color = .white.opacity(0.1),
     direction: Alignment = .top,
-    fallofAmount: CGFloat = 0.9
+    falloffAmount: CGFloat = 0.9
   ) -> LinearGradient {
     
     LinearGradient(
       colors: [
         colour,
-        colour.opacity(fallofAmount.inversePercentage)
+        colour.opacity(falloffAmount.inversePercentage)
       ],
-      startPoint: direction.toUnitPoint,
-      endPoint: direction.opposing.toUnitPoint
+      startPoint: direction.toUnitPoint(),
+      endPoint: direction.opposite.toUnitPoint()
     )
   }
   

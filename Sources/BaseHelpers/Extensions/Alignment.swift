@@ -22,19 +22,38 @@ extension Alignment {
     }
   }
 
-  public var toUnitPoint: UnitPoint {
+  /// Returns a sensible corresponding `UnitPoint`, with optional
+  /// fallback. Text baseline alignments are ignored and use the fallback.
+  public func toUnitPoint(fallback: UnitPoint = .center) -> UnitPoint {
 
     switch self {
-      case .topLeading: .topLeading
-      case .top: .top
-      case .topTrailing: .topTrailing
-      case .trailing: .trailing
-      case .bottomTrailing: .bottomTrailing
-      case .bottom: .bottom
-      case .bottomLeading: .bottomLeading
+//      case .topLeading: .topLeading
+//      case .top: .top
+//      case .topTrailing: .topTrailing
+//      case .trailing: .trailing
+//      case .bottomTrailing: .bottomTrailing
+//      case .bottom: .bottom
+//      case .bottomLeading: .bottomLeading
+//      case .leading: .leading
+////      case .center: .center
+//        
+//      case .center:
       case .leading: .leading
-      case .center: .center
-      default: .center
+      case .trailing: .trailing
+      case .top: .top
+      case .bottom: .bottom
+      case .topLeading: .topLeading
+      case .topTrailing: .topTrailing
+      case .bottomLeading: .bottomLeading
+      case .bottomTrailing: .bottomTrailing
+//      case .centerFirstTextBaseline: .leading
+//      case .centerLastTextBaseline: .leading
+//      case .leadingFirstTextBaseline: .leading
+//      case .leadingLastTextBaseline: .leading
+//      case .trailingFirstTextBaseline: .leading
+//      case .trailingLastTextBaseline: .leading
+        
+      default: fallback
     }
   }
 

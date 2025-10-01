@@ -10,8 +10,8 @@ import SwiftUI
 /// Pair of two positions in unit space.
 /// Describes a start and end point
 public struct UnitSpan: Hashable, Sendable {
-  var start: UnitPoint
-  var end: UnitPoint
+  public var start: UnitPoint
+  public var end: UnitPoint
   
   public init(start: UnitPoint, end: UnitPoint) {
     self.start = start
