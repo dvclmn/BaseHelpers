@@ -42,12 +42,22 @@ extension GridConfig {
 }
 
 extension GridConfig.FitMode: CustomStringConvertible {
+  //  public var description: String {
+  //    let base: String = "GridConfig.FitMode: "
+  //    let content: String = switch self {
+  //      case .fill(let min, let max): "Fill [min: \(min), max: \(max)]"
+  //      case .fixedWidth(let width): "Fixed Width [width: \(width)]"
+  //    }
+  //    return base + content
+  //  }
+
   public var description: String {
-    let base: String = "GridConfig.FitMode: "
-    let content: String = switch self {
-      case .fill(let min, let max): "Fill [min: \(min), max: \(max)]"
-      case .fixedWidth(let width): "Fixed Width [width: \(width)]"
-    }
-    return base + content
+    return MultiLine {
+      "GridConfig.FitMode"
+      switch self {
+        case .fill(let min, let max): "Fill [min: \(min), max: \(max)]"
+        case .fixedWidth(let width): "Fixed Width [width: \(width)]"
+      }
+    }.output
   }
 }

@@ -30,3 +30,9 @@ extension CGFloat: StringConvertible {
 extension Double: StringConvertible {
   var stringValue: String { self.displayString }
 }
+
+extension Array: StringConvertible where Element: StringConvertible {
+  var stringValue: String {
+    self.map(\.stringValue).joined(separator: ", ")
+  }
+}

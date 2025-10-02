@@ -20,6 +20,9 @@ public struct MultiLine {
     self.content = content()
   }
 }
+extension MultiLine {
+  var output: String { self.description }
+}
 
 extension MultiLine: CustomStringConvertible {
   public var description: String {
