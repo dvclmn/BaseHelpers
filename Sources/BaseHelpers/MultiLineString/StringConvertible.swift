@@ -7,32 +7,32 @@
 
 import Foundation
 
-protocol StringConvertible {
+public protocol StringConvertible {
   var stringValue: String { get }
 }
 
 extension String: StringConvertible {
-  var stringValue: String { self }
+  public var stringValue: String { self }
 }
 
 extension Int: StringConvertible {
-  var stringValue: String { String(self) }
+  public var stringValue: String { String(self) }
 }
 
 extension Bool: StringConvertible {
-  var stringValue: String { self ? "true" : "false" }
+  public var stringValue: String { self ? "true" : "false" }
 }
 
 extension CGFloat: StringConvertible {
-  var stringValue: String { self.displayString }
+  public var stringValue: String { self.displayString }
 }
 
 extension Double: StringConvertible {
-  var stringValue: String { self.displayString }
+  public var stringValue: String { self.displayString }
 }
 
 extension Array: StringConvertible where Element: StringConvertible {
-  var stringValue: String {
+  public var stringValue: String {
     self.map(\.stringValue).joined(separator: ", ")
   }
 }

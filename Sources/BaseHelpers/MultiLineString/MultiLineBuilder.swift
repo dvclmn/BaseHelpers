@@ -8,25 +8,35 @@
 import Foundation
 
 @resultBuilder
-struct MultiLineBuilder {
+public struct MultiLineBuilder {
   
-  static func buildBlock(_ components: StringConvertible...) -> [String] {
+  public static func buildBlock(
+    _ components: StringConvertible...
+  ) -> [String] {
     components.map { $0.stringValue }
   }
   
-  static func buildOptional(_ component: StringConvertible?) -> [String] {
+  public static func buildOptional(
+    _ component: StringConvertible?
+  ) -> [String] {
     component.map { [$0.stringValue] } ?? []
   }
   
-  static func buildEither(first component: StringConvertible) -> [String] {
+  public static func buildEither(
+    first component: StringConvertible
+  ) -> [String] {
     [component.stringValue]
   }
   
-  static func buildEither(second component: StringConvertible) -> [String] {
+  public static func buildEither(
+    second component: StringConvertible
+  ) -> [String] {
     [component.stringValue]
   }
   
-  static func buildArray(_ components: [[StringConvertible]]) -> [String] {
+  public static func buildArray(
+    _ components: [[StringConvertible]]
+  ) -> [String] {
     components.flatMap { $0.map { $0.stringValue } }
   }
 }

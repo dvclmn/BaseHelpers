@@ -45,10 +45,10 @@ extension GridConfig.ColumnMode {
 extension GridConfig.ColumnMode: CustomStringConvertible {
   public var description: String {
     return MultiLine {
-      "GridConfig.ColumnMode"
+      "ColumnMode"
       switch self {
-        case .fixedColumns(let count, let fitMode): "\t|\tFixed Columns [count: \(count), mode: \(fitMode)]"
-        case .adaptive(let fitMode): "\t|\tAdaptive [mode: \(fitMode)]"
+        case .fixedColumns(let count, let fitMode): "Fixed Columns [count: \(count), mode: \(fitMode)]"
+        case .adaptive(let fitMode): "Adaptive [mode: \(fitMode)]"
       }
     }.output
   }

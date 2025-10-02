@@ -12,7 +12,7 @@ public struct MultiLine {
   let separator: String
   let content: [String]
 
-  init(
+  public init(
     separator: String = "\n",
     @MultiLineBuilder content: () -> [String]
   ) {
@@ -21,7 +21,7 @@ public struct MultiLine {
   }
 }
 extension MultiLine {
-  var output: String { self.description }
+  public var output: String { self.description }
 }
 
 extension MultiLine: CustomStringConvertible {

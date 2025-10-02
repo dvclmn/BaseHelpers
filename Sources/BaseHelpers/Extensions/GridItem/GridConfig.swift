@@ -58,12 +58,19 @@ extension GridConfig {
 
 extension GridConfig: CustomStringConvertible {
   public var description: String {
-    """
-    GridConfig [
-      Column mode: \(columnMode)
-      Spacing: Item[\(spacingItem.displayString)], Grid[\(spacingGrid?.displayString ?? "nil")]
-      Alignnment: Item[\(alignmentItem?.displayName.standard ?? "nil")], Grid[\(alignmentGrid.displayName)]
-    ]
-    """
+    return MultiLine {
+      "GridConfig"
+      columnMode.description
+      "Spacing(Item: \(spacingItem.displayString(.fractionLength(0))), Grid: \(spacingGrid?.displayString(.fractionLength(0)) ?? "nil"))"
+      "Alignnment(Item: \(alignmentItem?.displayName.standard ?? "nil"), Grid: \(alignmentGrid.displayName))"
+    }.output
+    
+//    """
+//    GridConfig [
+//      Column mode: \(columnMode)
+//      Spacing: Item[\(spacingItem.displayString)], Grid[\(spacingGrid?.displayString ?? "nil")]
+//      Alignnment: Item[\(alignmentItem?.displayName.standard ?? "nil")], Grid[\(alignmentGrid.displayName)]
+//    ]
+//    """
   }
 }

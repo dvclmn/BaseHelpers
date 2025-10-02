@@ -11,27 +11,45 @@ import SwiftUI
 // MARK: - @AttrString function builder attribute
 @resultBuilder
 public struct AttrString {
-  public static func buildBlock(_ components: AttributedString...) -> AttributedString {
-    components.reduce(AttributedString(), +)
+  public static func buildBlock(
+    _ components: AttributedString...
+  ) -> AttributedString {
+    components.reduce(
+      AttributedString(),
+      +
+    )
   }
-
-  public static func buildArray(_ components: [AttributedString]) -> AttributedString {
-    components.reduce(AttributedString(), +)
+  
+  public static func buildArray(
+    _ components: [AttributedString]
+  ) -> AttributedString {
+    components.reduce(
+      AttributedString(),
+      +
+    )
   }
-
-  public static func buildOptional(_ component: AttributedString?) -> AttributedString {
+  
+  public static func buildOptional(
+    _ component: AttributedString?
+  ) -> AttributedString {
     component ?? AttributedString()
   }
-
-  public static func buildEither(first component: AttributedString) -> AttributedString {
+  
+  public static func buildEither(
+    first component: AttributedString
+  ) -> AttributedString {
     component
   }
-
-  public static func buildEither(second component: AttributedString) -> AttributedString {
+  
+  public static func buildEither(
+    second component: AttributedString
+  ) -> AttributedString {
     component
   }
-
-  public static func buildExpression(_ expression: AttributedString) -> AttributedString {
+  
+  public static func buildExpression(
+    _ expression: AttributedString
+  ) -> AttributedString {
     expression
   }
 
