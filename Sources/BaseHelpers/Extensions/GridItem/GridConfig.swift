@@ -14,10 +14,14 @@ public struct GridConfig: Sendable {
   public let columnMode: ColumnMode
   
   /// Based on `GridItem/spacing`
-  public let spacingHorizontal: CGFloat?
+  /// This is the Horizontal spacing
+  /// Note: Will need to make this non-optional, as it's
+  /// a pivotal part of `GridContext`'s item frame calculations
+  public let spacingItem: CGFloat
   
   /// Based on `LazyVStack/spacing`
-  public let spacingVertical: CGFloat?
+  /// This is the Vertical spacing
+  public let spacingGrid: CGFloat?
   
   /// The per-item alignment
   /// Based on `GridItem/alignment`
@@ -29,34 +33,49 @@ public struct GridConfig: Sendable {
   
   public init(
     columnMode: ColumnMode = .default,
-    spacingHorizontal: CGFloat? = nil,
-    spacingVertical: CGFloat? = nil,
+    spacingItem: CGFloat? = nil,
+    spacingGrid: CGFloat? = nil,
     alignmentItem: Alignment? = nil,
     alignmentGrid: HorizontalAlignment = .center
   ) {
     self.columnMode = columnMode
-    self.spacingHorizontal = spacingHorizontal
-    self.spacingVertical = spacingVertical
+    self.spacingItem = spacingItem ?? 8
+    self.spacingGrid = spacingGrid
     self.alignmentItem = alignmentItem
     self.alignmentGrid = alignmentGrid
   }
 }
 
 extension GridConfig {
+  
+//  public func columnCount() -> Int {
+//    switch columnMode {
+//      case .fixedColumns(let count, _):
+//        return count
+//        
+//      case .adaptive(let mode):
+//        return [GridItem].adaptive(
+//          mode: mode,
+//          spacing: spacingItem,
+//          alignment: alignmentItem
+//        )
+//    }
+//  }
+//  
   public var columns: [GridItem] {
     switch columnMode {
       case .fixedColumns(let count, let mode):
         return [GridItem].columns(
           count,
           mode: mode,
-          spacing: spacingHorizontal,
+          spacing: spacingItem,
           alignment: alignmentItem
         )
         
       case .adaptive(let mode):
         return [GridItem].adaptive(
           mode: mode,
-          spacing: spacingHorizontal,
+          spacing: spacingItem,
           alignment: alignmentItem
         )
     }
