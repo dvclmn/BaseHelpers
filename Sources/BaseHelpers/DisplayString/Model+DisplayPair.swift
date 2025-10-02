@@ -11,15 +11,15 @@ import Foundation
 /// ```
 /// valueA = self.x // The actual x float value
 /// valueB = self.y
-/// valueALabel = "X" // The property's label: This is the "X" value
-/// valueBLabel = "Y"
+/// labelA = "X" // The property's label: This is the "X" value
+/// labelB = "Y"
 /// ```
 public protocol DisplayPair {
   associatedtype Value: StringConvertibleFloat
   var valueA: Value { get }
   var valueB: Value { get }
-  var valueALabel: DisplayPairValueLabel { get }
-  var valueBLabel: DisplayPairValueLabel { get }
+  var labelA: DisplayPairValueLabel { get }
+  var labelB: DisplayPairValueLabel { get }
 
   var displayString: String { get }
   var displayStringStyled: AttributedString { get }
@@ -90,9 +90,9 @@ extension DisplayPair {
         /// Note the inclusion of intentional spaces after labels in the below
         switch style {
           case .abbreviated:
-            result = "\(valueALabel.abbreviated) \(valA)\(separator)\(valueBLabel.abbreviated) \(valB)"
+            result = "\(labelA.abbreviated) \(valA)\(separator)\(labelB.abbreviated) \(valB)"
           case .full:
-            result = "\(valueALabel.full) \(valA)\(separator)\(valueBLabel.full) \(valB)"
+            result = "\(labelA.full) \(valA)\(separator)\(labelB.full) \(valB)"
         }
       case .plain:
         result = "\(valA)\(separator)\(valB)"
