@@ -17,32 +17,32 @@ extension CGFloat: StringConvertibleFloat {
 extension CGPoint: DisplayPair {
   public var valueA: Double { x }
   public var valueB: Double { y }
-  public var labelA: DisplayPairValueLabel { .init("X") }
-  public var labelB: DisplayPairValueLabel { .init("Y") }
+  public var labelA: PropertyLabel { .init("X") }
+  public var labelB: PropertyLabel { .init("Y") }
 }
 
 extension CGSize: DisplayPair {
   public var valueA: Double { width }
   public var valueB: Double { height }
-  public var labelA: DisplayPairValueLabel { .init("W", "Width") }
-  public var labelB: DisplayPairValueLabel { .init("H", "Height") }
+  public var labelA: PropertyLabel { .init("W", "Width") }
+  public var labelB: PropertyLabel { .init("H", "Height") }
 }
 extension CGVector: DisplayPair {
   public var valueA: Double { dx }
   public var valueB: Double { dy }
-  public var labelA: DisplayPairValueLabel { .init("DX") }
-  public var labelB: DisplayPairValueLabel { .init("DY") }
+  public var labelA: PropertyLabel { .init("DX") }
+  public var labelB: PropertyLabel { .init("DY") }
 
 }
 extension UnitPoint: DisplayPair {
   public var valueA: Double { x }
   public var valueB: Double { y }
-  public var labelA: DisplayPairValueLabel { .init("X") }
-  public var labelB: DisplayPairValueLabel { .init("Y") }
+  public var labelA: PropertyLabel { .init("X") }
+  public var labelB: PropertyLabel { .init("Y") }
 }
 extension UnitPoint: DisplayPair {
   public var valueA: Double { x }
   public var valueB: Double { y }
-  public var labelA: DisplayPairValueLabel { .init("X") }
-  public var labelB: DisplayPairValueLabel { .init("Y") }
+  public var labelA: PropertyLabel { .init("X") }
+  public var labelB: PropertyLabel { .init("Y") }
 }

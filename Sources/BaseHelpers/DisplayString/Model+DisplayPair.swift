@@ -7,6 +7,20 @@
 
 import Foundation
 
+// Keep DisplayPair for common cases
+extension CGPoint: DisplayValues {
+  public var values: [CGFloat] { [x, y] }
+  public var labels: [DisplayPairValueLabel] { [.x, .y] }
+}
+
+// But also support more values
+extension CGRect: DisplayValues {
+  public var values: [CGFloat] { [origin.x, origin.y, size.width, size.height] }
+  public var labels: [DisplayPairValueLabel] { [.x, .y, .width, .height] }
+}
+
+
+
 /// A good example is `CGPoint`:
 /// ```
 /// valueA = self.x // The actual x float value
@@ -15,11 +29,11 @@ import Foundation
 /// labelB = "Y"
 /// ```
 public protocol DisplayPair {
-  associatedtype Value: StringConvertibleFloat
+  associatedtype Value: DisplayString.Float
   var valueA: Value { get }
   var valueB: Value { get }
-  var labelA: DisplayPairValueLabel { get }
-  var labelB: DisplayPairValueLabel { get }
+  var labelA: DisplayString.PropertyLabel { get }
+  var labelB: DisplayString.PropertyLabel { get }
 
   var displayString: String { get }
   var displayStringStyled: AttributedString { get }
@@ -41,25 +55,28 @@ public protocol DisplayPair {
   ) -> AttributedString
 }
 
-public struct DisplayPairValueLabel {
-  let abbreviated: String
-  let full: String
-
-  public init(abbreviated: String, full: String) {
-    self.abbreviated = abbreviated
-    self.full = full
-  }
-
-  public init(_ abbreviated: String, _ full: String) {
-    self.abbreviated = abbreviated
-    self.full = full
-  }
-
-  public init(_ abbreviated: String, full: String? = nil) {
-    self.abbreviated = abbreviated
-    self.full = full ?? abbreviated
+extension DisplayString {
+  public struct PropertyLabel {
+    let abbreviated: String
+    let full: String
+    
+    public init(abbreviated: String, full: String) {
+      self.abbreviated = abbreviated
+      self.full = full
+    }
+    
+    public init(_ abbreviated: String, _ full: String) {
+      self.abbreviated = abbreviated
+      self.full = full
+    }
+    
+    public init(_ abbreviated: String, full: String? = nil) {
+      self.abbreviated = abbreviated
+      self.full = full ?? abbreviated
+    }
   }
 }
+
 
 extension DisplayPair {
 
@@ -110,5 +127,4 @@ extension DisplayPair {
     let pair = valuePair(self, places: places, separator: separator)
     return pair
   }
-
 }
