@@ -63,21 +63,25 @@ extension GridConfig {
 //  }
 //  
   public var columns: [GridItem] {
-    switch columnMode {
-      case .fixedColumns(let count, let mode):
-        return [GridItem].columns(
-          count,
-          mode: mode,
-          spacing: spacingItem,
-          alignment: alignmentItem
-        )
-        
-      case .adaptive(let mode):
-        return [GridItem].adaptive(
-          mode: mode,
-          spacing: spacingItem,
-          alignment: alignmentItem
-        )
-    }
+    self.columnMode.columns(
+      spacing: spacingItem,
+      alignment: alignmentItem
+    )
+//    switch columnMode {
+//      case .fixedColumns(let count, let mode):
+//        return [GridItem].columns(
+//          count,
+//          mode: mode,
+//          spacing: spacingItem,
+//          alignment: alignmentItem
+//        )
+//        
+//      case .adaptive(let mode):
+//        return [GridItem].adaptive(
+//          mode: mode,
+//          spacing: spacingItem,
+//          alignment: alignmentItem
+//        )
+//    }
   }
 }

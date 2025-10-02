@@ -17,6 +17,30 @@ extension GridConfig {
   }
 }
 
+extension GridConfig.ColumnMode {
+  public func columns(
+    spacing: CGFloat?,
+    alignment: Alignment?
+  ) -> [GridItem] {
+    switch self {
+      case .fixedColumns(let count, let mode):
+        return [GridItem].columns(
+          count,
+          mode: mode,
+          spacing: spacing,
+          alignment: alignment
+        )
+        
+      case .adaptive(let mode):
+        return [GridItem].adaptive(
+          mode: mode,
+          spacing: spacing,
+          alignment: alignment
+        )
+    }
+  }
+}
+
 extension Array where Element == GridItem {
 
   /// When the desired number of columns is fixed/known
