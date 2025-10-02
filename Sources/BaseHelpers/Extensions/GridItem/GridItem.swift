@@ -7,14 +7,22 @@
 
 import SwiftUI
 
+extension GridConfig {
+
+  public enum ColumnMode: Sendable {
+    public static let `default`: Self = .adaptive(.fill(min: 60, max: 140))
+
+    case fixedColumns(Int, FitMode)
+    case adaptive(FitMode)
+  }
+}
+
 extension Array where Element == GridItem {
 
-  public static let `default` = Self.adaptive(mode: .fill(min: 60, max: 140))
-
   /// When the desired number of columns is fixed/known
-  public static func quickColumns(
+  public static func columns(
     _ count: Int = 3,
-    mode: GridFitMode = .fill(min: 10, max: .infinity),
+    mode: GridConfig.FitMode = .fill(min: 10, max: .infinity),
     spacing: CGFloat? = nil,
     alignment: Alignment? = nil
   ) -> Self {
@@ -37,7 +45,7 @@ extension Array where Element == GridItem {
   /// Adaptive allows not specifying an explicit number of columns.
   /// Instead allowing the column count to change based on availble width
   public static func adaptive(
-    mode: GridFitMode,
+    mode: GridConfig.FitMode,
     spacing: CGFloat? = nil,
     alignment: Alignment? = nil
   ) -> Self {
@@ -48,34 +56,5 @@ extension Array where Element == GridItem {
       alignment: alignment
     )
     return [result]
-  }
-}
-
-public enum GridFitMode: RawRepresentable, ModelBase {
-  case fill(min: CGFloat, max: CGFloat = .infinity)
-  case fixedWidth(width: CGFloat)
-
-  public init?(rawValue: String) {
-    switch rawValue {
-      case "Fill": self = .fill(min: 100)
-      case "Fixed": self = .fixedWidth(width: 0)
-      default: return nil
-    }
-  }
-
-  public var rawValue: String {
-    switch self {
-      case .fill: "Fill"
-      case .fixedWidth: "Fixed"
-    }
-  }
-
-  public var minAndMax: (min: CGFloat, max: CGFloat) {
-    switch self {
-      case .fill(let min, let max):
-        return (min, max)
-      case .fixedWidth(let width):
-        return (width, width)
-    }
   }
 }

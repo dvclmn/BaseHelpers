@@ -15,18 +15,18 @@ import SwiftUI
 
 extension View {
 
-  public func focusBinding<ModelValue: _Bindable, ViewValue: _Bindable>(
-    _ modelValue: ModelValue,
+  public func bind<HandlerValue: _Bindable, ViewValue: _Bindable>(
+    _ handlerValue: HandlerValue,
     to viewValue: ViewValue
   ) -> some View
-  where ModelValue.Value == ViewValue.Value, ModelValue.Value: Equatable {
-    self.modifier(Bind(modelValue: modelValue, viewValue: viewValue))
+  where HandlerValue.Value == ViewValue.Value, HandlerValue.Value: Equatable {
+    self.modifier(Bind(handlerValue: handlerValue, viewValue: viewValue))
   }
 }
 
-private struct Bind<ModelValue: _Bindable, ViewValue: _Bindable>: ViewModifier
-where ModelValue.Value == ViewValue.Value, ModelValue.Value: Equatable {
-  let modelValue: ModelValue
+private struct Bind<HandlerValue: _Bindable, ViewValue: _Bindable>: ViewModifier
+where HandlerValue.Value == ViewValue.Value, HandlerValue.Value: Equatable {
+  let handlerValue: HandlerValue
   let viewValue: ViewValue
 
   @State var hasAppeared = false
@@ -36,13 +36,13 @@ where ModelValue.Value == ViewValue.Value, ModelValue.Value: Equatable {
       .onAppear {
         guard !self.hasAppeared else { return }
         self.hasAppeared = true
-        guard self.viewValue.wrappedValue != self.modelValue.wrappedValue else { return }
-        self.viewValue.wrappedValue = self.modelValue.wrappedValue
+        guard self.viewValue.wrappedValue != self.handlerValue.wrappedValue else { return }
+        self.viewValue.wrappedValue = self.handlerValue.wrappedValue
         print(
-          "View focus value `\(self.viewValue.wrappedValue)` updated to match Model focus value `\(self.modelValue.wrappedValue)`."
+          "View focus value `\(self.viewValue.wrappedValue)` updated to match Model focus value `\(self.handlerValue.wrappedValue)`."
         )
       }
-      .onChange(of: self.modelValue.wrappedValue) { _, newValue in
+      .onChange(of: self.handlerValue.wrappedValue) { _, newValue in
         guard self.viewValue.wrappedValue != newValue
         else { return }
         self.viewValue.wrappedValue = newValue
@@ -51,11 +51,11 @@ where ModelValue.Value == ViewValue.Value, ModelValue.Value: Equatable {
         )
       }
       .onChange(of: self.viewValue.wrappedValue) { _, newValue in
-        guard self.modelValue.wrappedValue != newValue
+        guard self.handlerValue.wrappedValue != newValue
         else { return }
-        self.modelValue.wrappedValue = newValue
+        self.handlerValue.wrappedValue = newValue
         print(
-          "View focus value changed. Updated Model focus value (previously `\(self.modelValue.wrappedValue)`) to match: `\(newValue)`."
+          "View focus value changed. Updated Model focus value (previously `\(self.handlerValue.wrappedValue)`) to match: `\(newValue)`."
         )
       }
   }
