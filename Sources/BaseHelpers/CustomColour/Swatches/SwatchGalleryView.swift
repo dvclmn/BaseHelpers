@@ -14,7 +14,7 @@
 //  public var body: some View {
 //    
 //    LazyVGrid(
-//      columns: .quickAdaptiveColumns(min: 20),
+//      columns: .adaptiveColumns(min: 20),
 //      alignment: .center,
 //      spacing: 20,
 //    ) {

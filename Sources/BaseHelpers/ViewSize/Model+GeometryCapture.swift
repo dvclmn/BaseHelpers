@@ -34,47 +34,4 @@ extension GeometryCapture {
       $0.frame(in: .scrollView(axis: .vertical))
     }
   }
-  
-//  public static var scrollGeometry: GeometryCapture<CGRect> {
-//    .init(type: CGRect.self) {
-//      $0.frame(in: .scrollView(axis: .vertical))
-//    }
-//  }
 }
-
-//enum GeometryCaptureKind {
-//  case size
-//  case frameInScrollView
-//  
-//  func capture<T: GeometryCapturable>() -> GeometryCapture<T> {
-//    switch self {
-//      case .size:
-//        return GeometryCapture.size as! GeometryCapture<T>
-//      case .frameInScrollView:
-//        return GeometryCapture.frameInScrollView as! GeometryCapture<T>
-//    }
-//  }
-//}
-
-//
-//public enum GeometryCapture {
-//  case size
-//  case frameInScrollView
-//
-//  var type: any GeometryCapturable.Type {
-//    switch self {
-//      case .size: CGSize.self
-//      case .frameInScrollView: CGRect.self
-//    }
-//  }
-//
-//  func transform(proxy: GeometryProxy) -> any GeometryCapturable {
-//    switch self {
-//      case .size:
-//        return proxy.size
-//
-//      case .frameInScrollView:
-//        return proxy.frame(in: .scrollView(axis: .vertical))
-//    }
-//  }
-//}

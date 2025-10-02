@@ -7,33 +7,24 @@
 
 import SwiftUI
 
-/// Note: This is directly inspired by Point-Free's implementation in
+/// Note: This is directly taken from Point-Free's implementation in
 /// https://github.com/pointfreeco/swift-composable-architecture
+/// https://github.com/pointfreeco/swift-composable-architecture/blob/20089ee985b04b1ae82e9742aa9d9c8f044700c5/Examples/CaseStudies/SwiftUICaseStudies/01-GettingStarted-FocusState.swift#L71
 ///
 /// I make no claim over the logic behind this solution.
 
-public protocol FocusBindable {
-  associatedtype Value
-  var wrappedValue: Value { get nonmutating set }
-}
-
-extension Binding: FocusBindable {}
-extension FocusedBinding: FocusBindable {}
-extension FocusState: FocusBindable {}
-extension FocusState.Binding: FocusBindable {}
-
 extension View {
 
-  public func focusBinding<ModelValue: FocusBindable, ViewValue: FocusBindable>(
+  public func focusBinding<ModelValue: _Bindable, ViewValue: _Bindable>(
     _ modelValue: ModelValue,
     to viewValue: ViewValue
   ) -> some View
   where ModelValue.Value == ViewValue.Value, ModelValue.Value: Equatable {
-    self.modifier(BindFocus(modelValue: modelValue, viewValue: viewValue))
+    self.modifier(Bind(modelValue: modelValue, viewValue: viewValue))
   }
 }
 
-private struct BindFocus<ModelValue: FocusBindable, ViewValue: FocusBindable>: ViewModifier
+private struct Bind<ModelValue: _Bindable, ViewValue: _Bindable>: ViewModifier
 where ModelValue.Value == ViewValue.Value, ModelValue.Value: Equatable {
   let modelValue: ModelValue
   let viewValue: ViewValue
@@ -69,3 +60,34 @@ where ModelValue.Value == ViewValue.Value, ModelValue.Value: Equatable {
       }
   }
 }
+
+
+public protocol _Bindable {
+  associatedtype Value
+  var wrappedValue: Value { get nonmutating set }
+}
+
+@available(iOS 15, macOS 12, tvOS 15, watchOS 8, *)
+extension AccessibilityFocusState: _Bindable {}
+
+@available(iOS 15, macOS 12, tvOS 15, watchOS 8, *)
+extension AccessibilityFocusState.Binding: _Bindable {}
+
+@available(iOS 14, macOS 11, tvOS 14, watchOS 7, *)
+extension AppStorage: _Bindable {}
+
+extension Binding: _Bindable {}
+
+@available(iOS 14, macOS 11, tvOS 14, watchOS 7, *)
+extension FocusedBinding: _Bindable {}
+
+@available(iOS 15, macOS 12, tvOS 15, watchOS 8, *)
+extension FocusState: _Bindable {}
+
+@available(iOS 15, macOS 12, tvOS 15, watchOS 8, *)
+extension FocusState.Binding: _Bindable {}
+
+@available(iOS 14, macOS 11, tvOS 14, watchOS 7, *)
+extension SceneStorage: _Bindable {}
+
+extension State: _Bindable {}
