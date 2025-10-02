@@ -14,6 +14,7 @@ extension GridConfig {
 
     case fixedColumns(Int, FitMode)
     case adaptive(FitMode)
+
   }
 }
 
@@ -30,7 +31,7 @@ extension GridConfig.ColumnMode {
           spacing: spacing,
           alignment: alignment
         )
-        
+
       case .adaptive(let mode):
         return [GridItem].adaptive(
           mode: mode,
@@ -38,6 +39,21 @@ extension GridConfig.ColumnMode {
           alignment: alignment
         )
     }
+  }
+}
+
+extension GridConfig.ColumnMode: CustomStringConvertible {
+  public var description: String {
+    var parts: [String] = []
+    parts.append("GridConfig.ColumnMode")
+    let content =
+      switch self {
+        case .fixedColumns(let count, let fitMode): "\t|\tFixed Columns [count: \(count), mode: \(fitMode)]"
+        case .adaptive(let fitMode): "\t|\tAdaptive [mode: \(fitMode)]"
+      }
+    parts.append(content)
+
+    return parts.joined("\n")
   }
 }
 
