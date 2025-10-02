@@ -14,10 +14,10 @@ public typealias Grouping = FloatingPointFormatStyle<Double>.Configuration.Group
 
 /// This is the single-value counterpart to `DisplayPair`.
 /// `DisplayPair` uses the below `displayString`
-/// method to drive it's *own* pair-focused equivalent method.
-public protocol SingleValueStringable {
-
-  var value: Double { get }
+/// method in it's *own* pair-focused equivalent method.
+public protocol StringConvertibleFloat {
+  associatedtype Value: BinaryFloatingPoint
+  var value: Value { get }
   var displayString: String { get }
 
   func displayString(
@@ -26,11 +26,11 @@ public protocol SingleValueStringable {
   ) -> String
 }
 
-/// `SingleValueStringable` doesn't concern itself with
+/// ``StringConvertibleFloat`` doesn't concern itself with
 /// properties like `valueLabel`s (e.g. "W" for width etc).
 /// Just formatting a single value, and returning it for
 /// any further processing required
-extension SingleValueStringable {
+extension StringConvertibleFloat {
 
   /// A convenience that just returns the `displayString()`
   /// method with it's default values
@@ -39,6 +39,9 @@ extension SingleValueStringable {
   /// I like the API of `NumberFormatStyleConfiguration.Precision`,
   /// so I've chosen not to abstract over it, but use it directly, to
   /// express the decimal/integer places.
+  ///
+  /// Albeit via typeliases ``Grouping``
+  /// and ``DecimalPlaces``
   public func displayString(
     _ places: DecimalPlaces = .fractionLength(2),
     grouping: Grouping = .automatic

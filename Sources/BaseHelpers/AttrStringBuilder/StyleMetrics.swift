@@ -7,68 +7,24 @@
 
 import Foundation
 
-//public struct ValueModel: Equatable, Sendable, Identifiable {
-//
-//  public let id: UUID
-//  public var value: Double
-//  public var range: ClosedRange<Double>?
-//  public var units: ValueUnits
-//  public var config: ValueConfiguration?
-//
-//  public init(
-//    value: Double,
-//    range: ClosedRange<Double>?,
-//    units: ValueUnits,
-//    config: ValueConfiguration? = nil
-//  ) {
-//    self.id = UUID()
-//    self.value = value
-//    self.range = range
-//    self.units = units
-//    self.config = config
-//  }
-//
-//  static let example = Self(
-//    value: 28.40,
-//    range: 1...30,
-//    units: .degrees,
-//    config: .float
-//  )
-//
-//}
-//
-//extension ValueModel {
-//  public var output: AttributedString {
-//    let effectiveConfig = config ?? units.defaultConfiguration
-//    let processedValue = units.processValue(value)
-//
-//    return units.formatValue(
-//      processedValue,
-//      configuration: effectiveConfig
-//    )
-//  }
-//}
-
 typealias MetricsRegex = Regex<(Substring, styleTarget: Substring)>
 
 struct Metrics: Equatable {
 
   struct Item: Equatable, Identifiable {
-
-    var id = UUID()
+    let id: UUID
     let label: String
-//    let label: QuickLabel
     let type: ValueType?
     let category: Category
     let value: AttributedString
 
     init(
       label: String,
-//      label: QuickLabel,
       type: ValueType? = nil,
       category: Category = .general,
       value: AttributedString
     ) {
+      self.id = UUID()
       self.label = label
       self.type = type
       self.category = category
@@ -138,7 +94,6 @@ extension Metrics {
     var container = AttributeContainer()
 
     container.backgroundColor = .clear
-    //    container.foregroundColor = .green
     container.foregroundColor = .secondary.opacity(0.6)
     container.font = .caption.weight(.medium)
 

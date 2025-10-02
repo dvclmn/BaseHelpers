@@ -7,10 +7,10 @@
 
 import SwiftUI
 
-extension Double: SingleValueStringable {
+extension Double: StringConvertibleFloat {
   public var value: Double { self }
 }
-extension CGFloat: SingleValueStringable {
+extension CGFloat: StringConvertibleFloat {
   public var value: Double { self.toDouble }
 }
 
@@ -20,7 +20,6 @@ extension CGPoint: DisplayPair {
   public var valueALabel: DisplayPairValueLabel { .init("X") }
   public var valueBLabel: DisplayPairValueLabel { .init("Y") }
 }
-
 
 extension CGSize: DisplayPair {
   public var valueA: Double { width }
@@ -34,6 +33,12 @@ extension CGVector: DisplayPair {
   public var valueALabel: DisplayPairValueLabel { .init("DX") }
   public var valueBLabel: DisplayPairValueLabel { .init("DY") }
 
+}
+extension UnitPoint: DisplayPair {
+  public var valueA: Double { x }
+  public var valueB: Double { y }
+  public var valueALabel: DisplayPairValueLabel { .init("X") }
+  public var valueBLabel: DisplayPairValueLabel { .init("Y") }
 }
 extension UnitPoint: DisplayPair {
   public var valueA: Double { x }

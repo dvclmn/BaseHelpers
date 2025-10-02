@@ -9,13 +9,13 @@ import Foundation
 
 /// A good example is `CGPoint`:
 /// ```
-/// valueA = self.x
+/// valueA = self.x // The actual x float value
 /// valueB = self.y
-/// valueALabel = "X"
+/// valueALabel = "X" // The property's label: This is the "X" value
 /// valueBLabel = "Y"
 /// ```
 public protocol DisplayPair {
-  associatedtype Value: SingleValueStringable
+  associatedtype Value: StringConvertibleFloat
   var valueA: Value { get }
   var valueB: Value { get }
   var valueALabel: DisplayPairValueLabel { get }
@@ -25,7 +25,7 @@ public protocol DisplayPair {
   var displayStringStyled: AttributedString { get }
 
   /// This is the value pair counterpart to
-  /// `SingleValueStringable` method of the same name.
+  /// `StringConvertibleFloat` method of the same name.
   func displayString(
     _ places: DecimalPlaces,
     separator: String,
