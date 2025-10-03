@@ -8,18 +8,23 @@
 import Foundation
 
 // MARK: - DSL Functions
+
+/// This should be improved to also accept bare Strings,
+/// as well as `StyledText` aka `AttributedString`?
 @AttrString
-public func valuePair<T: DisplayPair>(
+public func valuePair<T: DisplayString.Values>(
   _ value: T,
   places: DecimalPlaces = .fractionLength(2),
   separator: String = "x",
 //  hasSpace: Bool = false
 ) -> AttributedString {
-  StyledText(value.valueA.displayString(places))
+  StyledText(value.displayString(places, separator: separator))
+//  StyledText(value.valueA.displayString(places))
   StyledText(separator)
     .colour(.secondary)
     .bold()
   StyledText(value.valueB.displayString(places))
+//  StyledText(value.valueB.displayString(places))
 }
 
 @AttrString

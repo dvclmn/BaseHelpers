@@ -7,18 +7,6 @@
 
 import Foundation
 
-// Keep DisplayPair for common cases
-extension CGPoint: DisplayValues {
-  public var values: [CGFloat] { [x, y] }
-  public var labels: [DisplayPairValueLabel] { [.x, .y] }
-}
-
-// But also support more values
-extension CGRect: DisplayValues {
-  public var values: [CGFloat] { [origin.x, origin.y, size.width, size.height] }
-  public var labels: [DisplayPairValueLabel] { [.x, .y, .width, .height] }
-}
-
 
 
 /// A good example is `CGPoint`:
@@ -28,32 +16,32 @@ extension CGRect: DisplayValues {
 /// labelA = "X" // The property's label: This is the "X" value
 /// labelB = "Y"
 /// ```
-public protocol DisplayPair {
-  associatedtype Value: DisplayString.Float
-  var valueA: Value { get }
-  var valueB: Value { get }
-  var labelA: DisplayString.PropertyLabel { get }
-  var labelB: DisplayString.PropertyLabel { get }
-
-  var displayString: String { get }
-  var displayStringStyled: AttributedString { get }
-
-  /// This is the value pair counterpart to
-  /// `StringConvertibleFloat` method of the same name.
-  func displayString(
-    _ places: DecimalPlaces,
-    separator: String,
-    style: ValueDisplayStyle,
-    grouping: Grouping
-  ) -> String
-
-  func displayStringStyled(
-    _ places: DecimalPlaces,
-    separator: String,
-    style: ValueDisplayStyle,
-    grouping: Grouping
-  ) -> AttributedString
-}
+//public protocol DisplayPair {
+//  associatedtype Value: DisplayString.Float
+//  var valueA: Value { get }
+//  var valueB: Value { get }
+//  var labelA: DisplayString.PropertyLabel { get }
+//  var labelB: DisplayString.PropertyLabel { get }
+//
+//  var displayString: String { get }
+//  var displayStringStyled: AttributedString { get }
+//
+//  /// This is the value pair counterpart to
+//  /// `StringConvertibleFloat` method of the same name.
+//  func displayString(
+//    _ places: DecimalPlaces,
+//    separator: String,
+//    style: ValueDisplayStyle,
+//    grouping: Grouping
+//  ) -> String
+//
+//  func displayStringStyled(
+//    _ places: DecimalPlaces,
+//    separator: String,
+//    style: ValueDisplayStyle,
+//    grouping: Grouping
+//  ) -> AttributedString
+//}
 
 extension DisplayString {
   public struct PropertyLabel {
@@ -74,6 +62,12 @@ extension DisplayString {
       self.abbreviated = abbreviated
       self.full = full ?? abbreviated
     }
+  }
+}
+
+extension DisplayString.PropertyLabel: ExpressibleByStringLiteral {
+  public init(stringLiteral value: String) {
+    self.init(value, full: nil)
   }
 }
 

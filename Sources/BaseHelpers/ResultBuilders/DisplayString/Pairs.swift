@@ -20,6 +20,13 @@ extension DisplayString {
       style: ValueDisplayStyle,
       grouping: Grouping
     ) -> String
+    
+    func displayString(
+      _ places: DecimalPlaces,
+      separator: String,
+      style: ValueDisplayStyle,
+      grouping: Grouping
+    ) -> AttributedString
   }
 
 }
@@ -31,6 +38,7 @@ extension DisplayString.Values {
     grouping: Grouping = .automatic
   ) -> String {
 
+//    precondition(values.count == labels.count, "Each value must have a corresponding label")
     /// This is the counterpart to the older/previous `DisplayPair`
     /// approach, of:
     ///
@@ -51,5 +59,16 @@ extension DisplayString.Values {
       case .plain:
         return formattedValues.joined(separator: separator)
     }
+  }
+  
+  public func displayStringStyled(
+    _ places: DecimalPlaces = .fractionLength(2),
+    separator: String = "x",
+    style: ValueDisplayStyle = .plain,
+    grouping: Grouping = .automatic
+  ) -> AttributedString {
+    
+    let pair = valuePair(self, places: places, separator: separator)
+    return pair
   }
 }
