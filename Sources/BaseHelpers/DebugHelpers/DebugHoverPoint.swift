@@ -41,7 +41,8 @@ extension DebugHoverPointModifier {
       .fill(.brown)
       .frame(width: circleRadius, height: circleRadius)
       .overlay {
-        Text(point.displayString)
+        #warning("This shouldn't need a String(describing), need to fix DisplayString stuff")
+        Text(String(describing: point.displayString))
           .font(.caption.weight(.semibold))
           .monospaced()
           .foregroundStyle(.secondary)

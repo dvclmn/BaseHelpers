@@ -45,13 +45,13 @@ public struct AttributeSet: ExpressibleByDictionaryLiteral {
   }
 
   /// Add method to convert to AttributeContainer for SwiftUI
-  public func toAttributeContainer() -> AttributeContainer {
-    var container = AttributeContainer()
-    for (key, value) in attributes {
-      container[key] = value
-    }
-    return container
-  }
+//  public func toAttributeContainer() -> AttributeContainer {
+//    var container = AttributeContainer()
+//    for (key, value) in attributes {
+//      container[AttributeScopes.SwiftUIAttributes] = value
+//    }
+//    return container
+//  }
 }
 
 extension AttributeSet: Sequence {

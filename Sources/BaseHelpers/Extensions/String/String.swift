@@ -204,18 +204,7 @@ extension String {
     return "\n---\n\(text)\n---\n"
   }
 
-  public var camelToSnake: String {
-    var result = ""
-    for (index, ch) in self.enumerated() {
-      if ch.isUppercase {
-        if index > 0 { result.append("_") }
-        result.append(ch.lowercased())
-      } else {
-        result.append(ch)
-      }
-    }
-    return result
-  }
+
 
   //  public func newLinesIndented() -> String {
   //    let lines: [String.SubSequence] = self.split(separator: "\n", omittingEmptySubsequences: true)

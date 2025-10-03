@@ -33,39 +33,18 @@ extension DisplayString {
     grouping: Grouping = .automatic,
     labelStyle: DisplayLabelStyle = .standard
   ) -> String {
-    
+
     let pairs = components.map { component in
       let value = component.value.displayString(places, grouping: grouping)
       let label = labelStyle.labelString(for: component) ?? ""
       return "\(label) \(value)"
     }
-    return pairs.joined(separator: separator)
-
-    /// Prepares the basic formatting, from `Component`'s
-    /// `value: any FloatDisplay`
-//    let (values, labels) = components.map { component in
-//      let value: String = component.value.displayString(places, grouping: grouping)
-//      let label: String = labelStyle.labelString(for: component) ?? ""
-//      return (value, label)
-//    }
-//
-//    let pairs = zip(labels, values).map { "\($0) \($1)" }
-//    return pairs.joined(separator: separator)
-    
-    /// These labels have been assigned the correct abbreviation style
-    /// already, thanks to `DisplayLabelStyle/labelString(for:)`
-//    let labelStrings = components
-//    
-//    
-//    labelStyle.labelString(for: component) ?? ""
-//    let value = component.value.displayString(places, grouping: grouping)
-//
-//    let pairs = zip(labelStrings, formattedValues).map { "\($0) \($1)" }
-//    return pairs.joined(separator: separator)
-
+    let result = pairs.joined(separator: separator)
+    return result
   }
 }
 
 extension String {
+//  public static let defaultSeparator: String = " x "
   public static let defaultSeparator: String = " × "
 }

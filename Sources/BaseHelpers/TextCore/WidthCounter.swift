@@ -31,14 +31,14 @@ extension TextCore {
 
         let fullOutput = self.generateFullCounter(width)
 
-        result.appendString(fullOutput.tens, addsLineBreak: true)
-        result.appendString(fullOutput.ones, addsLineBreak: true)
+        result.append(fullOutput.tens, addsLineBreak: true)
+        result.append(fullOutput.ones, addsLineBreak: true)
 
       case .compact:
 
         let compactOutput = self.generateCompactCounter(width)
 
-        result.appendString(compactOutput, addsLineBreak: false)
+        result.append(compactOutput, addsLineBreak: false)
         result.addLineBreak()
         #warning("Need to go back to file String+Repeater, as I commented this out when something elsewhere was breaking")
         
@@ -50,7 +50,7 @@ extension TextCore {
 //          repeating(".", count: 4)
 //        }
 
-        result.appendString(
+        result.append(
           pattern, addsLineBreak: false
         )
         result.addLineBreak()
