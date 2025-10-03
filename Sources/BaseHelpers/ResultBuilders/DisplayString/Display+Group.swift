@@ -8,7 +8,7 @@
 extension DisplayString {
   
   public struct DisplayGroup {
-    let components: [Component]
+    let components: [Component<>]
     let separator: String
     
     public init(separator: String = " × ", @DisplayBuilder _ components: () -> [DisplayComponent]) {

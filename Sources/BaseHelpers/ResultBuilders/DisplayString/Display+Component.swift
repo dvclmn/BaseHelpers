@@ -9,20 +9,16 @@ import Foundation
 
 extension DisplayString {
 
-  /// Usage examples:
-  /// ```
-  /// let pointDisplay = DisplayGroup(components: [
-  ///     DisplayComponent(point.x, label: .x),
-  ///     DisplayComponent(point.y, label: .y)
-  ///   ]
-  /// )
+  /// More structured and type safe than previous array -> zip based
+  /// approach, as shown below.
   ///
-  /// let rectDisplay = DisplayGroup(components: [
-  ///   DisplayComponent(rect.width, label: .width),
-  ///   DisplayComponent(rect.height, label: .height)
-  /// ], separator: " × ")
+  /// Previous:
   /// ```
-  public struct Component<Value: DisplayString.Float> {
+  /// var values: [Value] { get }
+  /// var labels: [DisplayString.PropertyLabel] { get }
+  /// ```
+  ///
+  public struct Component<Value: FloatDisplay> {
     let value: Value
     let label: DisplayString.PropertyLabel?
 //    public let formatOptions: FormatOptions?
@@ -33,3 +29,18 @@ extension DisplayString {
     }
   }
 }
+
+
+/// Usage examples:
+/// ```
+/// let pointDisplay = DisplayGroup(components: [
+///     DisplayComponent(point.x, label: .x),
+///     DisplayComponent(point.y, label: .y)
+///   ]
+/// )
+///
+/// let rectDisplay = DisplayGroup(components: [
+///   DisplayComponent(rect.width, label: .width),
+///   DisplayComponent(rect.height, label: .height)
+/// ], separator: " × ")
+/// ```

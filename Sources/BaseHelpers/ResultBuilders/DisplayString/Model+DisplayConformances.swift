@@ -28,52 +28,52 @@ import SwiftUI
 /// ```
 
 /// Primitive conformances
-extension Double: DisplayString.Float {
+extension Double: FloatDisplay {
   public var value: Self { self }
 }
-extension CGFloat: DisplayString.Float {
+extension CGFloat: FloatDisplay {
   public var value: Self { self }
 }
 
-// Keep DisplayString.Values for common cases
-extension CGPoint: DisplayString.Values {
+// Keep FloatDisplay for common cases
+extension CGPoint: FloatDisplay {
   public var values: [CGFloat] { [x, y] }
   public var labels: [DisplayString.PropertyLabel] { [.x, .y] }
 }
 
 // But also support more values
-extension CGRect: DisplayString.Values {
+extension CGRect: FloatDisplay {
   public var values: [CGFloat] { [origin.x, origin.y, size.width, size.height] }
   public var labels: [DisplayString.PropertyLabel] { [.x, .y, .width, .height] }
 }
 
-extension CGPoint: DisplayString.Values {
+extension CGPoint: FloatDisplay {
   public var valueA: Double { x }
   public var valueB: Double { y }
   public var labelA: PropertyLabel { .init("X") }
   public var labelB: PropertyLabel { .init("Y") }
 }
 
-extension CGSize: DisplayString.Values {
+extension CGSize: FloatDisplay {
   public var valueA: Double { width }
   public var valueB: Double { height }
   public var labelA: PropertyLabel { .init("W", "Width") }
   public var labelB: PropertyLabel { .init("H", "Height") }
 }
-extension CGVector: DisplayString.Values {
+extension CGVector: FloatDisplay {
   public var valueA: Double { dx }
   public var valueB: Double { dy }
   public var labelA: PropertyLabel { .init("DX") }
   public var labelB: PropertyLabel { .init("DY") }
 
 }
-extension UnitPoint: DisplayString.Values {
+extension UnitPoint: FloatDisplay {
   public var valueA: Double { x }
   public var valueB: Double { y }
   public var labelA: PropertyLabel { .init("X") }
   public var labelB: PropertyLabel { .init("Y") }
 }
-extension UnitPoint: DisplayString.Values {
+extension UnitPoint: FloatDisplay {
   public var valueA: Double { x }
   public var valueB: Double { y }
   public var labelA: PropertyLabel { .init("X") }

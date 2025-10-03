@@ -9,7 +9,7 @@ import Foundation
 
 extension DisplayString {
   public protocol Values {
-    associatedtype Value: DisplayString.Float
+    associatedtype Value: FloatDisplay
     var values: [Value] { get }
     var labels: [DisplayString.PropertyLabel] { get }
 

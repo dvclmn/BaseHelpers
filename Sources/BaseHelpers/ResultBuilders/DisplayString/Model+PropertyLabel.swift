@@ -7,43 +7,7 @@
 
 import Foundation
 
-/// A good example is `CGPoint`:
-/// ```
-/// valueA = self.x // The actual x float value
-/// valueB = self.y
-/// labelA = "X" // The property's label: This is the "X" value
-/// labelB = "Y"
-/// ```
-//public protocol DisplayPair {
-//  associatedtype Value: DisplayString.Float
-//  var valueA: Value { get }
-//  var valueB: Value { get }
-//  var labelA: DisplayString.PropertyLabel { get }
-//  var labelB: DisplayString.PropertyLabel { get }
-//
-//  var displayString: String { get }
-//  var displayStringStyled: AttributedString { get }
-//
-//  /// This is the value pair counterpart to
-//  /// `StringConvertibleFloat` method of the same name.
-//  func displayString(
-//    _ places: DecimalPlaces,
-//    separator: String,
-//    style: ValueDisplayStyle,
-//    grouping: Grouping
-//  ) -> String
-//
-//  func displayStringStyled(
-//    _ places: DecimalPlaces,
-//    separator: String,
-//    style: ValueDisplayStyle,
-//    grouping: Grouping
-//  ) -> AttributedString
-//}
-
 extension DisplayString {
-
-  ///
   public struct PropertyLabel {
 
     /// The standard / more verbose representation,

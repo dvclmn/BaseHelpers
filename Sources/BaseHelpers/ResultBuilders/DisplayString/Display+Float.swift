@@ -10,29 +10,25 @@ import SwiftUI
 public typealias DecimalPlaces = FloatingPointFormatStyle<Double>.Configuration.Precision
 public typealias Grouping = FloatingPointFormatStyle<Double>.Configuration.Grouping
 
-// MARK: - Single Values
-
-/// This is the single-value counterpart to `DisplayPair`.
-/// `DisplayPair` uses the below `displayString`
-/// method in it's *own* pair-focused equivalent method.
-extension DisplayString {
-  public protocol Float {
-    associatedtype Value: BinaryFloatingPoint
-    var value: Value { get }
-    var displayString: String { get }
-
-    func displayString(
-      _ places: DecimalPlaces,
-      grouping: Grouping
-    ) -> String
-  }
+public protocol FloatDisplay {
+  associatedtype Value: BinaryFloatingPoint
+  var value: Value { get }
+  var displayString: String { get }
+  
+  /// This is an early formatting pass, just to get the
+  /// decimal places and other numeric/float based
+  /// formatting sorted, before other touches.
+  func displayString(
+    _ places: DecimalPlaces,
+    grouping: Grouping
+  ) -> String
 }
 
 /// ``StringConvertibleFloat`` doesn't concern itself with
 /// properties like `valueLabel`s (e.g. "W" for width etc).
 /// Just formatting a single value, and returning it for
 /// any further processing required
-extension DisplayString.Float {
+extension FloatDisplay {
 
   /// A convenience that just returns the `displayString()`
   /// method with it's default values
