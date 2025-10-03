@@ -189,7 +189,7 @@ var count: Int = 0
 ## Regex
 
 
-The attributed range as described below, pairs with the `ThreePartRegex` above,
+The attributed range as described below, pairs with the `Regex.TripleCapture` above,
 and provides a mechism through which to identify where in the
 `AttributedString` the resulting matches are located.
 
@@ -203,5 +203,5 @@ in whatever way makes sense. E.g. for content surrounded by syntax, such as `*it
 In that example, substrings 2, 3 and 4 would hold the leading asterisk, text content,
 and trailing asterisk respectively.
 
-`public typealias ThreePartRegex = Regex<(Substring, Substring, Substring, Substring)>`
+`public typealias Regex.TripleCapture = Regex<(Substring, Substring, Substring, Substring)>`
 

@@ -8,28 +8,28 @@
 import SwiftUI
 
 extension AttributedString {
-  
-//  public static func valuePair(
-//    _ value: any FloatPair,
-//    seperator: String = "x"
-//  ) -> AttributedString {
-//    let string =
-//    let attrString = AttributedString(value.valueA.displayString)
-//    
-//  }
-  
+
+  //  public static func valuePair(
+  //    _ value: any FloatPair,
+  //    seperator: String = "x"
+  //  ) -> AttributedString {
+  //    let string =
+  //    let attrString = AttributedString(value.valueA.displayString)
+  //
+  //  }
+
   public func index(at offset: Int) -> AttributedString.Index? {
     guard offset >= 0 && offset <= characters.count else {
       return nil
     }
     return index(startIndex, offsetByCharacters: offset)
   }
-  
+
   ///
   /// ```
   /// var output = attrString
   ///
-  /// let numberByNumberPattern: ThreePartRegex = /([\d\.]+)(x)([\d\.]+)/
+  /// let numberByNumberPattern: Regex.TripleCapture = /([\d\.]+)(x)([\d\.]+)/
   ///
   /// if let ranges = getRange(for: numberByNumberPattern, in: output) {
   ///   output[ranges.0].setAttributes(style(for: part, subPart: .number))
@@ -62,7 +62,7 @@ extension AttributedString {
     return ranges
   }
 
-  public func getRange(for pattern: ThreePartRegex) -> ThreePartRange? {
+  public func getRange(for pattern: TripleCapture) -> TripleCaptureRange? {
 
     let string = String(self.characters)
 
@@ -119,7 +119,6 @@ extension AttributedString {
     return string.split(separator: "\n", omittingEmptySubsequences: false)
       .map { String($0) }
   }
-  
 
   public var toString: String {
     String(self.characters)
@@ -151,4 +150,3 @@ extension AttributedString {
   }
 
 }
-
