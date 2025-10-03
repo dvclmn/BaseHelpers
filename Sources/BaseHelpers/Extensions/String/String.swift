@@ -36,6 +36,37 @@ extension String {
     return attributedString.getRange(for: matches)
   }
 
+  public func getAllRanges(
+    for attributedString: AttributedString,
+    matching pattern: Regex<Substring>
+  ) -> [AttributedRange] {
+    let matches = findMatches(for: pattern)
+    return attributedString.getAllRanges(for: matches)
+    //    let matches = findMatches(for: pattern)
+    //    return matches.compactMap { match in
+    //      self.range(of: match.output)
+    //    }
+  }
+
+  @discardableResult
+  public mutating func findRangesAndApplyAttributes(
+    to attributedString: inout AttributedString,
+    matching pattern: Regex<Substring>,
+    attributes: AttributeContainer
+  ) -> [AttributedRange] {
+    let matches = findMatches(for: pattern)
+    return attributedString.findRangesAndApplyAttributes(for: matches, attributes: attributes)
+//    var ranges: [AttributedRange] = []
+//
+//    for match in matches {
+//      if let range = attributedString.range(of: match.output) {
+//        attributedString[range].setAttributes(attributes)
+//        ranges.append(range)
+//      }
+//    }
+//    return ranges
+  }
+
   public func withQuotes(_ type: QuotesType = .double) -> String {
     return "\(type.rawValue)\(self)\(type.rawValue)"
   }

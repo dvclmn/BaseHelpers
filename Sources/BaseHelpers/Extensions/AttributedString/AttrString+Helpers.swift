@@ -15,11 +15,7 @@ extension AttributedString {
     return matches
   }
 
-  public func getRange(
-    for matches: [RegexMatch],
-//    matching pattern: Regex<Substring>
-  ) -> AttributedRange? {
-//    let matches = findMatches(for: pattern)
+  public func getRange(for matches: [RegexMatch]) -> AttributedRange? {
     return matches.lazy
       .compactMap { self.range(of: $0.output) }
       .first
@@ -27,16 +23,41 @@ extension AttributedString {
   
   public func getRange(matching pattern: Regex<Substring>) -> AttributedRange? {
     let matches = findMatches(for: pattern)
-    return matches.lazy
-      .compactMap { self.range(of: $0.output) }
-      .first
+    return getRange(for: matches)
   }
 
-  public func getAllRanges(matching pattern: Regex<Substring>) -> [AttributedRange] {
-    let matches = findMatches(for: pattern)
+  public func getAllRanges(
+    for matches: [RegexMatch]
+//    matching pattern: Regex<Substring>
+  ) -> [AttributedRange] {
     return matches.compactMap { match in
       self.range(of: match.output)
     }
+  }
+  
+  public func getAllRanges(matching pattern: Regex<Substring>) -> [AttributedRange] {
+    let matches = findMatches(for: pattern)
+    return getAllRanges(for: matches)
+//    return matches.compactMap { match in
+//      self.range(of: match.output)
+//    }
+  }
+  
+  @discardableResult
+  public mutating func findRangesAndApplyAttributes(
+    for matches: [RegexMatch],
+//    matching pattern: Regex<Substring>,
+    attributes: AttributeContainer
+  ) -> [AttributedRange] {
+//    let matches = findMatches(for: pattern)
+    var ranges: [AttributedRange] = []
+    for match in matches {
+      if let range = self.range(of: match.output) {
+        self[range].setAttributes(attributes)
+        ranges.append(range)
+      }
+    }
+    return ranges
   }
   
   @discardableResult
@@ -45,15 +66,16 @@ extension AttributedString {
     attributes: AttributeContainer
   ) -> [AttributedRange] {
     let matches = findMatches(for: pattern)
-    var ranges: [AttributedRange] = []
+    return findRangesAndApplyAttributes(for: matches, attributes: attributes)
+//    var ranges: [AttributedRange] = []
     
-    for match in matches {
-      if let range = self.range(of: match.output) {
-        self[range].setAttributes(attributes)
-        ranges.append(range)
-      }
-    }
-    return ranges
+//    for match in matches {
+//      if let range = self.range(of: match.output) {
+//        self[range].setAttributes(attributes)
+//        ranges.append(range)
+//      }
+//    }
+//    return ranges
   }
 
   #warning("Find way to write similar code for Single, Double, Triple captures, without redundancy etc")

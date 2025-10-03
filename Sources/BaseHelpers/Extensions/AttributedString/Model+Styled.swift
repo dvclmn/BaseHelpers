@@ -30,6 +30,7 @@ extension Styled {
   
   private func apply(
     runStyle: RunStyle,
+    in sourceText: String,
     to attributedString: inout AttributedString
   ) {
 //    let pattern: Regex<AnyRegexOutput> = runStyle.pattern
