@@ -7,7 +7,7 @@
 
 import Foundation
 
-extension DisplayString {
+//extension DisplayString {
 
   /// More structured and type safe than previous array -> zip based
   /// approach, as shown below.
@@ -18,18 +18,17 @@ extension DisplayString {
   /// var labels: [DisplayString.PropertyLabel] { get }
   /// ```
   ///
-  public struct Component<Value: FloatDisplay> {
-    let value: Value
-    let label: DisplayString.PropertyLabel?
-//    public let formatOptions: FormatOptions?
-
-    public init(_ value: Value, label: DisplayString.PropertyLabel? = nil) {
-      self.value = value
-      self.label = label
-    }
+//}
+public struct Component {
+  let value: Value
+  let label: DisplayString.PropertyLabel?
+  //    public let formatOptions: FormatOptions?
+  
+  public init(_ value: Value, label: DisplayString.PropertyLabel? = nil) {
+    self.value = value
+    self.label = label
   }
 }
-
 
 /// Usage examples:
 /// ```
