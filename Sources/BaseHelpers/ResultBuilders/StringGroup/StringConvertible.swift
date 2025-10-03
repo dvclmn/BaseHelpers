@@ -53,7 +53,11 @@ extension Labeled: StringConvertible {
 extension Indented: StringConvertible {
   
   public var stringValue: String {
-    content.map { prefix + $0.stringValue }
+    let indentedItems = content.map { prefix + $0.stringValue }
       .joined(separator: "\n")
+    guard let title else {
+      return indentedItems
+    }
+    return title + "\n" + indentedItems
   }
 }

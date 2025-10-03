@@ -30,17 +30,19 @@ extension StringGroup {
 }
 
 public struct Indented {
+  public let title: String?
   public let prefix: String
   public let content: [any StringConvertible]
 
   public init(
+    _ title: String? = nil,
     prefix: String = "  | ",
     @StringGroupBuilder _ content: () -> [any StringConvertible]
   ) {
+    self.title = title
     self.prefix = prefix
     self.content = content()
   }
-
 }
 
 public struct Labeled {
@@ -58,3 +60,22 @@ public struct Labeled {
     self.separator = separator
   }
 }
+
+//public struct Section {
+//  public let title: String
+//  public let indented: Bool
+//  public let content: [any StringConvertible]
+//  
+////  public let prefix: String
+////  public let content: [any StringConvertible]
+//  
+//  public init(
+//    _ title: String,
+//    indented: Bool = true,
+//    @StringGroupBuilder content: () -> [any StringConvertible]
+//  ) {
+//    self.title = title
+//    self.indented = indented
+//    self.content = content()
+//  }
+//}

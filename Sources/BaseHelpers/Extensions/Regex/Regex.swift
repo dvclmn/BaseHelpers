@@ -36,51 +36,32 @@ public typealias TripleCaptureRange = (AttributedRange, AttributedRange, Attribu
 extension SingleCapture.Match {
 
   public var displayString: String {
-    //  public var prettyDescription: String {
     StringGroup {
-      "Match"
-      Indented {
+      Indented("Match") {
         Labeled("Range", value: self.range)
-        Labeled("Matched", value: self.0)
-        
-//        if !self.1.isEmpty {
-//          Label("Captured group", value: self.1)
-//          result += "  : \"\(self.1)\"\n"
-//        }
+        Labeled("Matched text", value: self.0)
+        Labeled("Captured group", value: self.1)
+      }
+      Indented("Output") {
+        Labeled("Full match", value: self.output.0)
+        Labeled("Capture", value: self.output.1)
       }
 
     }.output
-
-    //    var result = "Match:\n"
-    //    result += "  Range: \(self.range)\n"
-    //    result += "  Matched text: \"\(self.0)\"\n"
-    //
-    //    if !self.1.isEmpty {
-    //      result += "  Captured group: \"\(self.1)\"\n"
-    //    }
-    //
-    //    result += "  Output:\n"
-    //    result += "    Full match: \"\(self.output.0)\"\n"
-    //    result += "    Capture: \"\(self.output.1)\"\n"
-    //    return result
   }
-
-  //  public func boxedDescription(header: String) -> String {
-  //
-  //    fatalError("Need to implement this")
-  //    return SwiftBox.draw(header: header, content: self.prettyDescription)
-  //  }
-  //
 }
 
 extension Regex<Regex<Substring>.RegexOutput>.Match {
   public var prettyDescription: String {
-    var result = "Match:\n"
-    result += "  Range: \(self.range)\n"
-    result += "  Matched text: \"\(self)\"\n"
-
-    result += "  Output:\n"
-    result += "  Full match: \"\(self.output)\"\n"
-    return result
+    StringGroup {
+      Indented("Match") {
+        Labeled("Range", value: self.range)
+        Labeled("Matched text", value: self.0)
+      }
+      Indented("Output") {
+        Labeled("Full match", value: self.output)
+      }
+      
+    }.output
   }
 }

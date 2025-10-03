@@ -7,74 +7,75 @@
 
 import Foundation
 
+#warning("Bring all this back, based on new work with result builders, look to StringGroup etc")
 // MARK: - DSL Functions
 
 /// This should be improved to also accept bare Strings,
 /// as well as `StyledText` aka `AttributedString`?
-@AttrString
-public func valuePair<T: DisplayString.Values>(
-  _ value: T,
-  places: DecimalPlaces = .fractionLength(2),
-  separator: String = "x",
-//  hasSpace: Bool = false
-) -> AttributedString {
-  StyledText(value.displayString(places, separator: separator))
-//  StyledText(value.valueA.displayString(places))
-  StyledText(separator)
-    .colour(.secondary)
-    .bold()
-  StyledText(value.valueB.displayString(places))
+//@AttrString
+//public func valuePair<T: DisplayString.Values>(
+//  _ value: T,
+//  places: DecimalPlaces = .fractionLength(2),
+//  separator: String = "x",
+////  hasSpace: Bool = false
+//) -> AttributedString {
+//  StyledText(value.displayString(places, separator: separator))
+////  StyledText(value.valueA.displayString(places))
+//  StyledText(separator)
+//    .colour(.secondary)
+//    .bold()
 //  StyledText(value.valueB.displayString(places))
-}
-
-@AttrString
-public func styledTitle(_ title: String, subtitle: String?) -> AttributedString {
-  StyledText(title)
-  //    .font(.title)
-    .bold()
-  
-  if let subtitle {
-    StyledText("\n")
-    StyledText(subtitle)
-      .fontStyle(.caption)
-      .colour(.secondary)
-  }
-}
-
-@AttrString
-public func highlightedText(_ text: String, highlight: String) -> AttributedString {
-  let parts = text.components(separatedBy: highlight)
-  
-  for (index, part) in parts.enumerated() {
-    StyledText(part)
-    
-    if index < parts.count - 1 {
-      StyledText(highlight)
-        .background(.yellow)
-        .bold()
-    }
-  }
-}
-
-// MARK: - Advanced Example with Loops
-
-/// Usage:
-/// `let list = bulletList(["First item", "Second item", "Third item"])`
-
-@AttrString
-public func bulletList(_ items: [String]) -> AttributedString {
-  for (index, item) in items.enumerated() {
-    StyledText("• ")
-      .colour(.blue)
-      .bold()
-    
-    StyledText(item)
-    
-    if index < items.count - 1 {
-      StyledText("\n")
-    }
-  }
-}
+////  StyledText(value.valueB.displayString(places))
+//}
+//
+//@AttrString
+//public func styledTitle(_ title: String, subtitle: String?) -> AttributedString {
+//  StyledText(title)
+//  //    .font(.title)
+//    .bold()
+//  
+//  if let subtitle {
+//    StyledText("\n")
+//    StyledText(subtitle)
+//      .fontStyle(.caption)
+//      .colour(.secondary)
+//  }
+//}
+//
+//@AttrString
+//public func highlightedText(_ text: String, highlight: String) -> AttributedString {
+//  let parts = text.components(separatedBy: highlight)
+//  
+//  for (index, part) in parts.enumerated() {
+//    StyledText(part)
+//    
+//    if index < parts.count - 1 {
+//      StyledText(highlight)
+//        .background(.yellow)
+//        .bold()
+//    }
+//  }
+//}
+//
+//// MARK: - Advanced Example with Loops
+//
+///// Usage:
+///// `let list = bulletList(["First item", "Second item", "Third item"])`
+//
+//@AttrString
+//public func bulletList(_ items: [String]) -> AttributedString {
+//  for (index, item) in items.enumerated() {
+//    StyledText("• ")
+//      .colour(.blue)
+//      .bold()
+//    
+//    StyledText(item)
+//    
+//    if index < items.count - 1 {
+//      StyledText("\n")
+//    }
+//  }
+//}
 
 // MARK: - Usage Examples
 //func exampleUsage() {
