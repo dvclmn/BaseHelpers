@@ -9,94 +9,32 @@ import Foundation
 
 // MARK: - Typealiases
 
-/// Reminder: The first `Substring` is always the whole match,
-/// then subsequent are those specifically defined/named.
+/// A `Regex` with captures created from a regex literal or the
+///   ``init(_:as:)`` initializer.
 ///
-/// As per the docs:
-/// - A `Regex` with captures created from a regex literal or the
-///   ``init(_:as:)`` initializer has a tuple of substrings as its output
-///   type. The first component of the tuple is the full portion of the string
-///   that was matched, with the remaining components holding the captures.
-public typealias MarkdownRegex = Regex<
-  (
-    Substring,
-    leading: Substring,
-    content: Substring,
-    trailing: Substring
-  )
->
-public typealias MarkdownRegexOutput = MarkdownRegex.RegexOutput
-public typealias MarkdownRegexMatch = Regex<MarkdownRegexOutput>.Match
-
-/// Note: Despite what the name `TwoPartRegex` implies,  the three
-/// `Substring`s here are intentional. One for the *whole* match
-/// combined, and the other two for the defined matches.
-public typealias TwoPartRegex = Regex<
-  (
-    Substring,
-    Substring,
-    Substring
-  )
->
-public typealias ThreePartRegex = Regex<
-  (
-    Substring,
-    Substring,
-    Substring,
-    Substring
-  )
->
+/// The output type is a tuple of substrings.
+///
+/// Important: The *first* component of the tuple is the full portion of the string
+/// that was matched, with the remaining components holding the captures.
+///
+/// That's why each of these has one more than it's name implies,
+/// as the first handles the whole match.
+extension Regex {
+  public typealias SingleCapture = Regex<(Substring, Substring)>
+  public typealias DoubleCapture = Regex<(Substring, Substring, Substring)>
+  public typealias TripleCapture = Regex<(Substring, Substring, Substring, Substring)>
+}
 
 /// Ranges
 public typealias AttributedRange = Range<AttributedString.Index>
 
-public typealias TwoPartRange = (
-  AttributedRange,
-  AttributedRange
-)
-
-public typealias ThreePartRange = (
-  AttributedRange,
-  AttributedRange,
-  AttributedRange
-)
-
 // MARK: - Extensions
-extension MarkdownRegexMatch {
 
-  public var prettyDescription: String {
-
-    var result = "Match:\n"
-    result += "  Range: Lower bound: \(self.range.lowerBound), Upper bound: \(self.range.upperBound)\n"
-    result += "  Matched text: \"\(self.0)\"\n"
-    result += "  Output:\n"
-    result += "    Full match: \"\(self.0)\"\n"
-    result += "    Leading: \"\(self.leading)\"\n"
-    result += "    Content: \"\(self.content)\"\n"
-    result += "    Trailing: \"\(self.trailing)\"\n"
-    return result
-
-  }
-
-  public var briefDescription: String {
-
-    let result =
-      "Matches (leading, content, trailing):  ░░░░░\"\(self.output.leading)\"░░░░░\"\(self.output.content)\"░░░░░\"\(self.output.trailing)\"░░░░░\n"
-    return result
-
-  }
-
-  public func boxedDescription(header: String) -> String {
-    fatalError("Need to implement this")
-
-    //    return SwiftBox.drawBox(
-    //      header: header,
-    //      content: self.prettyDescription
-    //    )
-  }
+extension Regex where Self.RegexOutput == (Substring, Substring) {
+  
 }
 
-extension Regex<Regex<(Substring, Substring)>.RegexOutput>.Match {
+extension Regex<Regex.SingleCapture.RegexOutput>.Match {
 
   public var prettyDescription: String {
     var result = "Match:\n"
