@@ -58,7 +58,7 @@ extension GridConfig {
 
 extension GridConfig: CustomStringConvertible {
   public var description: String {
-    return MultiLine {
+    return StringGroup {
       "GridConfig"
       columnMode.description
       "Spacing(Item: \(spacingItem.displayString(.fractionLength(0))), Grid: \(spacingGrid?.displayString(.fractionLength(0)) ?? "nil"))"

@@ -27,39 +27,33 @@ public typealias TripleCapture = Regex<(Substring, Substring, Substring, Substri
 
 /// Ranges
 public typealias AttributedRange = Range<AttributedString.Index>
-
-
-public typealias DoubleCaptureRange = (
-  AttributedRange,
-  AttributedRange,
-)
-//extension DoubleCapture {
-//}
-
-public typealias TripleCaptureRange = (
-  AttributedRange,
-  AttributedRange,
-  AttributedRange,
-)
+public typealias DoubleCaptureRange = (AttributedRange, AttributedRange)
+public typealias TripleCaptureRange = (AttributedRange, AttributedRange, AttributedRange)
 
 // MARK: - Extensions
 
 // extension Regex<Regex.SingleCapture.RegexOutput>.Match {
 extension SingleCapture.Match {
 
-  public var prettyDescription: String {
-    var result = "Match:\n"
-    result += "  Range: \(self.range)\n"
-    result += "  Matched text: \"\(self.0)\"\n"
-
-    if !self.1.isEmpty {
-      result += "  Captured group: \"\(self.1)\"\n"
-    }
-
-    result += "  Output:\n"
-    result += "    Full match: \"\(self.output.0)\"\n"
-    result += "    Capture: \"\(self.output.1)\"\n"
-    return result
+  public var displayString: String {
+//  public var prettyDescription: String {
+    StringGroup {
+      "Match"
+      self.range.description
+    }.output
+    
+//    var result = "Match:\n"
+//    result += "  Range: \(self.range)\n"
+//    result += "  Matched text: \"\(self.0)\"\n"
+//
+//    if !self.1.isEmpty {
+//      result += "  Captured group: \"\(self.1)\"\n"
+//    }
+//
+//    result += "  Output:\n"
+//    result += "    Full match: \"\(self.output.0)\"\n"
+//    result += "    Capture: \"\(self.output.1)\"\n"
+//    return result
   }
 
   //  public func boxedDescription(header: String) -> String {

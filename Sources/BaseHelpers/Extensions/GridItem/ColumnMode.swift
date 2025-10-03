@@ -44,7 +44,7 @@ extension GridConfig.ColumnMode {
 
 extension GridConfig.ColumnMode: CustomStringConvertible {
   public var description: String {
-    return MultiLine {
+    return StringGroup {
       "ColumnMode"
       switch self {
         case .fixedColumns(let count, let fitMode): "Fixed Columns [count: \(count), mode: \(fitMode)]"
