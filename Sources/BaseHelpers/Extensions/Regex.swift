@@ -9,7 +9,14 @@ import Foundation
 
 // MARK: - Typealiases
 
-/// Regex
+/// Reminder: The first `Substring` is always the whole match,
+/// then subsequent are those specifically defined/named.
+///
+/// As per the docs:
+/// - A `Regex` with captures created from a regex literal or the
+///   ``init(_:as:)`` initializer has a tuple of substrings as its output
+///   type. The first component of the tuple is the full portion of the string
+///   that was matched, with the remaining components holding the captures.
 public typealias MarkdownRegex = Regex<
   (
     Substring,

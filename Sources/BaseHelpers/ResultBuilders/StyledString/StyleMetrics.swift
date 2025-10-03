@@ -7,67 +7,67 @@
 
 import Foundation
 
-typealias MetricsRegex = Regex<(Substring, styleTarget: Substring)>
 
-struct Metrics: Equatable {
-
-  struct Item: Equatable, Identifiable {
-    let id: UUID
-    let label: String
-    let type: ValueType?
-    let category: Category
-    let value: AttributedString
-
-    init(
-      label: String,
-      type: ValueType? = nil,
-      category: Category = .general,
-      value: AttributedString
-    ) {
-      self.id = UUID()
-      self.label = label
-      self.type = type
-      self.category = category
-      self.value = value
-    }
-
-  }
-
-  enum ValueType {
-    case int
-    case cgFloat
-
-    var name: String {
-      switch self {
-        case .int:
-          "Int"
-        case .cgFloat:
-          "CGFloat"
-      }
-    }
-  }
-
-  enum Category: String, CaseIterable, Identifiable {
-    case general
-    case sidebar
-    case window
-    case grid
-
-    var id: String {
-      self.rawValue
-    }
-
-    var name: String {
-      self.rawValue.capitalized
-    }
-  }
-
-  var items: [Item]
-
-  init(items: [Item]) {
-    self.items = items
-  }
-}
+//typealias MetricsRegex = Regex<(Substring, styleTarget: Substring)>
+//
+//struct Metrics: Equatable {
+//
+//  struct Item: Equatable, Identifiable {
+//    let id: UUID
+//    let label: String
+//    let type: ValueType?
+//    let category: Category
+//    let value: AttributedString
+//
+//    init(
+//      label: String,
+//      type: ValueType? = nil,
+//      category: Category = .general,
+//      value: AttributedString
+//    ) {
+//      self.id = UUID()
+//      self.label = label
+//      self.type = type
+//      self.category = category
+//      self.value = value
+//    }
+//  }
+//
+//  enum ValueType {
+//    case int
+//    case cgFloat
+//
+//    var name: String {
+//      switch self {
+//        case .int:
+//          "Int"
+//        case .cgFloat:
+//          "CGFloat"
+//      }
+//    }
+//  }
+//
+//  enum Category: String, CaseIterable, Identifiable {
+//    case general
+//    case sidebar
+//    case window
+//    case grid
+//
+//    var id: String {
+//      self.rawValue
+//    }
+//
+//    var name: String {
+//      self.rawValue.capitalized
+//    }
+//  }
+//
+//  var items: [Item]
+//
+//  init(items: [Item]) {
+//    self.items = items
+//  }
+//}
 
 extension Metrics {
 
