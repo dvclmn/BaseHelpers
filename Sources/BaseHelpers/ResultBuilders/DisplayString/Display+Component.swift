@@ -19,12 +19,12 @@ import Foundation
   /// ```
   ///
 //}
-public struct Component {
-  let value: Value
-  let label: DisplayString.PropertyLabel?
+public struct DisplayComponent {
+  let value: any FloatDisplay
+  let label: PropertyLabel?
   //    public let formatOptions: FormatOptions?
   
-  public init(_ value: Value, label: DisplayString.PropertyLabel? = nil) {
+  public init(_ value: any FloatDisplay, label: PropertyLabel? = nil) {
     self.value = value
     self.label = label
   }

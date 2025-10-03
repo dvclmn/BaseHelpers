@@ -7,7 +7,7 @@
 
 import Foundation
 
-extension DisplayString {
+//extension DisplayString {
   public struct PropertyLabel {
 
     /// The standard / more verbose representation,
@@ -27,10 +27,10 @@ extension DisplayString {
       self.abbreviated = abbreviated
     }
   }
-}
+//}
 
 /// Enables 'skipping'
-extension DisplayString.PropertyLabel: ExpressibleByStringLiteral {
+extension PropertyLabel: ExpressibleByStringLiteral {
   public init(stringLiteral value: String) {
     self.init(value)
   }

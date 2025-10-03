@@ -8,21 +8,21 @@
 import Foundation
 
 /// Purely for namespace
-public struct DisplayString<Value> where Value: FloatDisplay {
-  let components: [Component]
+public struct DisplayString {
+  let components: [DisplayComponent]
   let separator: String
-  
+
   public init(
     separator: String = " × ",
-    @DisplayString.Builder _ components: () -> [Component]
+    @DisplayStringBuilder _ components: () -> String
+//    @DisplayString.Builder _ components: () -> [DisplayComponent]
   ) {
-    self.components = components()
+    self.components = components().joi
     self.separator = separator
   }
-  
-  public init(components: [Component], separator: String = " × ") {
+
+  public init(components: [DisplayComponent], separator: String = " × ") {
     self.components = components
     self.separator = separator
   }
 }
-  

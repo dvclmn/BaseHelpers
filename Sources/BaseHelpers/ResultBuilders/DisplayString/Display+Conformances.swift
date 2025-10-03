@@ -38,7 +38,7 @@ extension CGFloat: FloatDisplay {
 extension CGPoint {
   public func displayString() -> String {
     DisplayString {
-      DisplayString.Component(
+      DisplayComponent(self.x, label: "X")
     }
   }
 }
