@@ -15,6 +15,16 @@ extension AttributedString {
     return matches
   }
 
+  public func getRange(
+    for matches: [RegexMatch],
+//    matching pattern: Regex<Substring>
+  ) -> AttributedRange? {
+//    let matches = findMatches(for: pattern)
+    return matches.lazy
+      .compactMap { self.range(of: $0.output) }
+      .first
+  }
+  
   public func getRange(matching pattern: Regex<Substring>) -> AttributedRange? {
     let matches = findMatches(for: pattern)
     return matches.lazy

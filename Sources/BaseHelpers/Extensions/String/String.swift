@@ -8,7 +8,7 @@
 import SwiftUI
 
 extension String {
-  
+
   public enum QuotesType: String {
     case single = "'"
     case double = "\""
@@ -17,17 +17,29 @@ extension String {
   public var toURL: URL? {
     return URL(string: self)
   }
-  
+
   public var withQuotes: String {
     self.withQuotes(.double)
   }
-  
-  
-  
+
+  public func findMatches(for pattern: Regex<Substring>) -> [RegexMatch] {
+    //    let string = String(self.characters)
+    let matches = self.matches(of: pattern)
+    return matches
+  }
+
+  public func getRange(
+    for attributedString: AttributedString,
+    matching pattern: Regex<Substring>
+  ) -> AttributedRange? {
+    let matches = findMatches(for: pattern)
+    return attributedString.getRange(for: matches)
+  }
+
   public func withQuotes(_ type: QuotesType = .double) -> String {
     return "\(type.rawValue)\(self)\(type.rawValue)"
   }
-  
+
   public var toAttributedString: AttributedString {
     return AttributedString(self)
   }
@@ -82,7 +94,7 @@ extension String {
     guard let range = self.range(from: nsRange) else { return nil }
     return self[range]
   }
-  
+
   /// ```
   /// let test1 =   "a[b]c".slice(from: "[", to: "]") // "b"
   /// let test2 =     "abc".slice(from: "[", to: "]") // nil
@@ -189,7 +201,7 @@ extension Array where Element == String {
 }
 
 extension String {
-//extension Optional where Wrapped == String {
+  //extension Optional where Wrapped == String {
   public var toDescribing: String {
     return String(describing: self)
   }
