@@ -49,7 +49,7 @@ extension String {
   }
 
   @discardableResult
-  public mutating func findRangesAndApplyAttributes(
+  public func findRangesAndApplyAttributes(
     to attributedString: inout AttributedString,
     matching pattern: Regex<Substring>,
     attributes: AttributeContainer
