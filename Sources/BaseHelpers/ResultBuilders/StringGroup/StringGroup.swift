@@ -61,6 +61,25 @@ public struct Labeled {
   }
 }
 
+// MARK: - StringConvertible Conformance
+extension Labeled: StringConvertible {
+  public var stringValue: String {
+    "\(key)\(separator)\(value.stringValue)"
+  }
+}
+extension Indented: StringConvertible {
+  
+  public var stringValue: String {
+    let indentedItems = content.map { prefix + $0.stringValue }
+      .joined(separator: "\n")
+    guard let title else {
+      return indentedItems
+    }
+    return title + "\n" + indentedItems
+  }
+}
+
+
 //public struct Section {
 //  public let title: String
 //  public let indented: Bool

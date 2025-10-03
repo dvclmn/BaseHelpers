@@ -51,8 +51,9 @@ extension SingleCapture.Match {
   }
 }
 
-extension Regex<Regex<Substring>.RegexOutput>.Match {
-  public var prettyDescription: String {
+extension Regex<AnyRegexOutput>.Match {
+//extension Regex<Regex<Substring>.RegexOutput>.Match {
+  public var displayString: String {
     StringGroup {
       Indented("Match") {
         Labeled("Range", value: self.range)

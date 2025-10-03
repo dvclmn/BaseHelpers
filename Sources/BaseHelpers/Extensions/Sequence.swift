@@ -25,11 +25,12 @@ extension Sequence where Element: Hashable {
 }
 
 extension Sequence {
-  public func summarise<T: CustomStringConvertible>(
-    key: KeyPath<Element, T>,
+  public func summarise(
+    key: PartialKeyPath<Element>,
+    //    key: KeyPath<Element, T>,
     delimiter: Character? = ","
   ) -> String {
-    return self.map { $0[keyPath: key].description }
+    return self.map { String(describing: $0[keyPath: key]) }
       .enumerated()
       .reduce(into: "") { (result, element) in
         let (index, value) = element
