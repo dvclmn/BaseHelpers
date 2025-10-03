@@ -32,19 +32,23 @@ extension Styled {
     runStyle: RunStyle,
     to attributedString: inout AttributedString
   ) {
-    let pattern: Regex<AnyRegexOutput> = runStyle.pattern
+//    let pattern: Regex<AnyRegexOutput> = runStyle.pattern
     
-    let string = String(attributedString.characters)
-    let matches = string.matches(of: pattern)
+//    let string = String(attributedString.characters)
+//    let matches = string.matches(of: pattern)
     
-    var ranges: [AttributedRange] = []
+    attributedString.findRangesAndApplyAttributes(
+      matching: runStyle.pattern,
+      attributes: runStyle.attributes
+    )
+//    var ranges: [AttributedRange] = []
     
-    for match in matches {
-      attributedString.getRange(matching: <#T##Regex<Substring>#>)
+//    for match in matches {
+//      attributedString.getRange(matching: <#T##Regex<Substring>#>)
 //      guard let range = attributedString.range(of: match.output) else { continue }
 //      attrString[fullRange].setAttributes(AttributeContainer.fromTheme(theme, for: type))
 //      ranges.append(fullRange)
-    }
+//    }
   }
 }
 
