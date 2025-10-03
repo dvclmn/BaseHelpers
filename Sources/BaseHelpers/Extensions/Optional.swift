@@ -20,11 +20,11 @@ extension Optional {
   }
 }
 
-extension Optional where Wrapped: DisplayPair {
-  public var displayIfAvailable: String {
-    return self?.displayString ?? "nil"
-  }
-}
+//extension Optional where Wrapped: DisplayPair {
+//  public var displayIfAvailable: String {
+//    return self?.displayString ?? "nil"
+//  }
+//}
 
 // MARK: - Optional bindings
 /// By SwiftfulThinking

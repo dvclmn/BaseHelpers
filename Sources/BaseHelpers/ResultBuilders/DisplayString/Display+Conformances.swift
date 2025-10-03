@@ -36,10 +36,19 @@ extension CGFloat: FloatDisplay {
 }
 
 extension CGPoint {
-  public func displayString() -> String {
-    DisplayString {
-      DisplayComponent(self.x, label: "X")
+  public func displayString(
+    _ places: DecimalPlaces = .fractionLength(2),
+    grouping: Grouping = .automatic,
+    labelStyle: DisplayLabelStyle = .standard
+  ) -> String {
+    DisplayString(separator: ", ") {
+      Component(self.x, label: "X")
     }
+    .formatted(
+      places,
+      grouping: grouping,
+      labelStyle: labelStyle
+    )
   }
 }
 

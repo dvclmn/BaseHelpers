@@ -10,32 +10,32 @@ import Foundation
 @resultBuilder
 public struct DisplayStringBuilder {
   public static func buildBlock(
-    _ components: DisplayComponent...
-  ) -> [DisplayComponent] {
+    _ components: Component...
+  ) -> [Component] {
     components
   }
   
   public static func buildArray(
-    _ components: [DisplayComponent]
-  ) -> [DisplayComponent] {
+    _ components: [Component]
+  ) -> [Component] {
     components
   }
   
   public static func buildOptional(
-    _ component: [DisplayComponent]?
-  ) -> [DisplayComponent] {
+    _ component: [Component]?
+  ) -> [Component] {
     component ?? []
   }
   
   public static func buildEither(
-    first component: [DisplayComponent]
-  ) -> [DisplayComponent] {
+    first component: [Component]
+  ) -> [Component] {
     component
   }
   
   public static func buildEither(
-    second component: [DisplayComponent]
-  ) -> [DisplayComponent] {
+    second component: [Component]
+  ) -> [Component] {
     component
   }
 }

@@ -7,34 +7,24 @@
 
 import Foundation
 
-extension DisplayString {
-  
-  public enum ValueLabelStyle: Equatable {
-    case abbreviated
-    case full
-    
-    public var isFull: Bool { self == .full }
-  }
+public enum DisplayLabelStyle: Equatable {
+  case none
+  case standard
+  case abbreviated
 
-  @available(
-    *, deprecated,
-    message: "Favour omitting the `label` property on `DisplayString.Component`, to represent 'plain'."
-  )
-  public enum ValueDisplayStyle: Equatable {
-    case labels(ValueLabelStyle = .abbreviated)
-
-    /// I think plain could be covered (replaced) by the
-    /// optionality of the `DisplayString/Component/label`
-    /// property. Omitting this  == `plain`.
-    case plain
-
-    var labelStyle: ValueLabelStyle? {
-      switch self {
-        case .labels(let style): style
-        case .plain: nil
-      }
+  public var keyPath: KeyPath<PropertyLabel, String>? {
+    switch self {
+      case .none: nil
+      case .standard: \.label
+      case .abbreviated: \.abbreviated
     }
   }
 
-  
+  /// This will be composed together with float values
+  /// within `DisplayString/formatted()`.
+  /// Returning nil allows expressing "No label please"
+  public func labelString(for component: Component) -> String? {
+    guard let keyPath else { return nil }
+    return component.label?[keyPath: keyPath]
+  }
 }

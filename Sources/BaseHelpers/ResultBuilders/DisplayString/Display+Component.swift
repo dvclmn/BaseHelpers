@@ -19,27 +19,30 @@ import Foundation
   /// ```
   ///
 //}
-public struct DisplayComponent {
-  let value: any FloatDisplay
-  let label: PropertyLabel?
-  //    public let formatOptions: FormatOptions?
-  
-  public init(_ value: any FloatDisplay, label: PropertyLabel? = nil) {
-    self.value = value
-    self.label = label
+public typealias Component = DisplayString.Component
+extension DisplayString {
+  public struct Component {
+    let value: any FloatDisplay
+    let label: PropertyLabel?
+    //    public let formatOptions: FormatOptions?
+    
+    public init(_ value: any FloatDisplay, label: PropertyLabel? = nil) {
+      self.value = value
+      self.label = label
+    }
   }
+  
+  /// Usage examples:
+  /// ```
+  /// let pointDisplay = DisplayGroup(components: [
+  ///     Component(point.x, label: .x),
+  ///     Component(point.y, label: .y)
+  ///   ]
+  /// )
+  ///
+  /// let rectDisplay = DisplayGroup(components: [
+  ///   Component(rect.width, label: .width),
+  ///   Component(rect.height, label: .height)
+  /// ], separator: " × ")
+  /// ```
 }
-
-/// Usage examples:
-/// ```
-/// let pointDisplay = DisplayGroup(components: [
-///     DisplayComponent(point.x, label: .x),
-///     DisplayComponent(point.y, label: .y)
-///   ]
-/// )
-///
-/// let rectDisplay = DisplayGroup(components: [
-///   DisplayComponent(rect.width, label: .width),
-///   DisplayComponent(rect.height, label: .height)
-/// ], separator: " × ")
-/// ```
