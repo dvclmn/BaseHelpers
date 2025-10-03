@@ -15,7 +15,7 @@ let package = Package(
     /// This could afford to be handled or named better — this exists
     /// because I'm trying to avoid a circular dependancy between
     /// BaseMacros and BaseHelpers
-    .library(name: "PrimitiveHelpers", targets: ["PrimitiveHelpers"]),
+//    .library(name: "PrimitiveHelpers", targets: ["PrimitiveHelpers"]),
     
     .library(name: "ColourExtract", targets: ["ColourExtract"]),
     .library(name: "CurveFunctions", targets: ["CurveFunctions"]),
@@ -43,9 +43,6 @@ let package = Package(
       ],
       resources: [.process("Assets.xcassets")],
     ),
-
-    .target(name: "PrimitiveHelpers", dependencies: []),
-    
     .target(name: "ColourExtract", dependencies: []),
     .target(name: "CurveFunctions", dependencies: []),
     .target(name: "GridCanvas", dependencies: ["BaseHelpers"]),

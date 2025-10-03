@@ -3,25 +3,19 @@
 import PackageDescription
 
 let package = Package(
-  name: "BaseTools",
+  name: "BasePrimitives",
   platforms: [
     .iOS("17.0"),
     .macOS("14.0")
   ],
   products: [
-    .library(name: "BaseTools", targets: ["BaseTools"])
+    .library(name: "BasePrimitives", targets: ["BasePrimitives"])
   ],
-  dependencies: [
-    .package(url: "https://github.com/dvclmn/BaseComponents", branch: "main"),
-    .package(url: "https://github.com/dvclmn/BaseHelpers", branch: "main"),
-  ],
+//  dependencies: [],
   targets: [
     .target(
-      name: "BaseTools",
-      dependencies: [
-        .product(name: "BaseComponents", package: "BaseComponents"),
-        .product(name: "BaseHelpers", package: "BaseHelpers"),
-      ]
+      name: "BasePrimitives",
+//      dependencies: []
     )
   ]
 )
