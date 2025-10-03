@@ -25,6 +25,10 @@ public typealias TripleCapture = Regex<(Substring, Substring, Substring, Substri
 //extension Regex {
 //}
 
+/// The below, for some reason, can also be expressed as:
+/// `Regex<Regex<Substring>.RegexOutput>.Match`
+public typealias RegexMatch = Regex<Regex<Substring>.RegexOutput>.Match
+
 /// Ranges
 public typealias AttributedRange = Range<AttributedString.Index>
 public typealias DoubleCaptureRange = (AttributedRange, AttributedRange)

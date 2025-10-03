@@ -22,6 +22,8 @@ extension String {
     self.withQuotes(.double)
   }
   
+  
+  
   public func withQuotes(_ type: QuotesType = .double) -> String {
     return "\(type.rawValue)\(self)\(type.rawValue)"
   }
@@ -79,6 +81,18 @@ extension String {
   public func substring(with nsRange: NSRange) -> Substring? {
     guard let range = self.range(from: nsRange) else { return nil }
     return self[range]
+  }
+  
+  /// ```
+  /// let test1 =   "a[b]c".slice(from: "[", to: "]") // "b"
+  /// let test2 =     "abc".slice(from: "[", to: "]") // nil
+  /// let test3 =   "a]b[c".slice(from: "[", to: "]") // nil
+  /// let test4 = "[a[b]c]".slice(from: "[", to: "]") // "a[b"
+  /// ```
+  public func slice(from: String, to: String) -> String? {
+    guard let rangeFrom = range(of: from)?.upperBound else { return nil }
+    guard let rangeTo = self[rangeFrom...].range(of: to)?.lowerBound else { return nil }
+    return String(self[rangeFrom..<rangeTo])
   }
 
   /// Truncates a string to show a maximum number of content characters with ellipsis in the middle.

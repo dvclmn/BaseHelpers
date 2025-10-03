@@ -51,8 +51,13 @@ extension AnyRegexOutput: StringConvertible {
   public var stringValue: String {
     StringGroup {
       self.summarise(key: \.name)
+      self.summarise(key: \.range)
+      self.summarise(key: \.type)
+      self.summarise(key: \.value)
+//      self.formatted(.list(memberStyle: .list(type: .and, width: .short), type: .and, width: .standard))
       
     }
+    .output
     
   }
 }

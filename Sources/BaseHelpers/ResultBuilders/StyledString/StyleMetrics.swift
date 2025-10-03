@@ -69,34 +69,34 @@ import Foundation
 //  }
 //}
 
-extension Metrics {
-
-  static func metricContent(_ attrString: AttributedString) -> AttributedString {
-    var output = attrString
-
-    let pattern: MetricsRegex = /(?<styleTarget>x|y|X|Y|:\s|,\s|W|H|Column|COL|Row|ROW|ROWS|COLS)/
-
-    /// Get matches and their named captures
-    let string = String(output.characters)
-    let matches = string.matches(of: pattern)
-
-    for match in matches {
-      guard let range = output.range(of: match.output.styleTarget) else {
-        break
-      }
-      output[range].setAttributes(style)
-    }
-
-    return output
-  }
-
-  private static var style: AttributeContainer {
-    var container = AttributeContainer()
-
-    container.backgroundColor = .clear
-    container.foregroundColor = .secondary.opacity(0.6)
-    container.font = .caption.weight(.medium)
-
-    return container
-  }
-}
+//extension Metrics {
+//
+//  static func metricContent(_ attrString: AttributedString) -> AttributedString {
+//    var output = attrString
+//
+//    let pattern: MetricsRegex = /(?<styleTarget>x|y|X|Y|:\s|,\s|W|H|Column|COL|Row|ROW|ROWS|COLS)/
+//
+//    /// Get matches and their named captures
+//    let string = String(output.characters)
+//    let matches = string.matches(of: pattern)
+//
+//    for match in matches {
+//      guard let range = output.range(of: match.output.styleTarget) else {
+//        break
+//      }
+//      output[range].setAttributes(style)
+//    }
+//
+//    return output
+//  }
+//
+//  private static var style: AttributeContainer {
+//    var container = AttributeContainer()
+//
+//    container.backgroundColor = .clear
+//    container.foregroundColor = .secondary.opacity(0.6)
+//    container.font = .caption.weight(.medium)
+//
+//    return container
+//  }
+//}
