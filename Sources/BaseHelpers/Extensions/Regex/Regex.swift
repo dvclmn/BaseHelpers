@@ -36,24 +36,33 @@ public typealias TripleCaptureRange = (AttributedRange, AttributedRange, Attribu
 extension SingleCapture.Match {
 
   public var displayString: String {
-//  public var prettyDescription: String {
+    //  public var prettyDescription: String {
     StringGroup {
       "Match"
-      self.range.description
+      Indented {
+        Labeled("Range", value: self.range)
+        Labeled("Matched", value: self.0)
+        
+//        if !self.1.isEmpty {
+//          Label("Captured group", value: self.1)
+//          result += "  : \"\(self.1)\"\n"
+//        }
+      }
+
     }.output
-    
-//    var result = "Match:\n"
-//    result += "  Range: \(self.range)\n"
-//    result += "  Matched text: \"\(self.0)\"\n"
-//
-//    if !self.1.isEmpty {
-//      result += "  Captured group: \"\(self.1)\"\n"
-//    }
-//
-//    result += "  Output:\n"
-//    result += "    Full match: \"\(self.output.0)\"\n"
-//    result += "    Capture: \"\(self.output.1)\"\n"
-//    return result
+
+    //    var result = "Match:\n"
+    //    result += "  Range: \(self.range)\n"
+    //    result += "  Matched text: \"\(self.0)\"\n"
+    //
+    //    if !self.1.isEmpty {
+    //      result += "  Captured group: \"\(self.1)\"\n"
+    //    }
+    //
+    //    result += "  Output:\n"
+    //    result += "    Full match: \"\(self.output.0)\"\n"
+    //    result += "    Capture: \"\(self.output.1)\"\n"
+    //    return result
   }
 
   //  public func boxedDescription(header: String) -> String {

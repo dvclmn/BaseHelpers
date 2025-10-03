@@ -40,3 +40,11 @@ public struct SequenceBuilder<Element> {
     components.flatMap { $0 }
   }
 }
+
+//extension SequenceBuilder where Element == StringConvertible {
+//  public static func buildExpression<T: CustomStringConvertible>(
+//    _ expression: T
+//  ) -> [StringConvertible] {
+//    [expression.description]
+//  }
+//}

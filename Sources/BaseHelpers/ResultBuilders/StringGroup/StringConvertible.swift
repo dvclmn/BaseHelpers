@@ -36,3 +36,24 @@ extension Array: StringConvertible where Element: StringConvertible {
     self.map(\.stringValue).joined(separator: ", ")
   }
 }
+
+extension Range<String.Index>: StringConvertible {
+  public var stringValue: String { self.description }
+}
+
+extension Substring: StringConvertible {
+  public var stringValue: String { String(self) }
+}
+
+extension Labeled: StringConvertible {
+  public var stringValue: String {
+    "\(key)\(separator)\(value.stringValue)"
+  }
+}
+extension Indented: StringConvertible {
+  
+  public var stringValue: String {
+    content.map { prefix + $0.stringValue }
+      .joined(separator: "\n")
+  }
+}

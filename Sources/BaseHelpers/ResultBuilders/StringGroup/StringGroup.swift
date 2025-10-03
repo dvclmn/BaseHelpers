@@ -29,6 +29,32 @@ extension StringGroup {
   }
 }
 
-extension StringGroup: CustomStringConvertible {
-  public var description: String { output }
+public struct Indented {
+  public let prefix: String
+  public let content: [any StringConvertible]
+
+  public init(
+    prefix: String = "  | ",
+    @StringGroupBuilder _ content: () -> [any StringConvertible]
+  ) {
+    self.prefix = prefix
+    self.content = content()
+  }
+
+}
+
+public struct Labeled {
+  public let key: String
+  public let value: any StringConvertible
+  public let separator: String
+
+  public init(
+    _ key: String,
+    value: any StringConvertible,
+    separator: String = ": "
+  ) {
+    self.key = key
+    self.value = value
+    self.separator = separator
+  }
 }
