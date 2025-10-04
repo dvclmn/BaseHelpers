@@ -29,10 +29,10 @@ public struct PropertyLabel {
     self.abbreviated = abbreviated ?? label
   }
 
-  public init(_ label: String, _ abbreviated: String) {
-    self.label = label
-    self.abbreviated = abbreviated
-  }
+//  public init(_ label: String, _ abbreviated: String) {
+//    self.label = label
+//    self.abbreviated = abbreviated
+//  }
 }
 
 extension PropertyLabel: ExpressibleByStringLiteral {

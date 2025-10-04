@@ -10,7 +10,11 @@ public protocol FloatGroup {
   var components: [Component] { get }
 
   /// This is separator of type `component`
-  var separator: SeparatorType { get }
+  var componentSeparator: String { get }
+  
+  /// This allows setting the same consistent
+  /// property separator, no need to do it per-component
+  var propertyLabelSeparator: String? { get }
 
   func output() -> String
 }
@@ -20,7 +24,6 @@ extension FloatGroup {
   public func output(
     labelStyle: PropertyLabel.Style,
   ) -> String {
-    let sepString = separator.stringValue
     let labels = components.map { component in
       let labelSep = component.separator.stringValue
       let labelString = labelStyle.labelString(for: component.label) ?? ""
@@ -28,7 +31,22 @@ extension FloatGroup {
 
       return labelString + labelSep + valueString
     }
-    return labels.joined(separator.stringValue)
+    return labels.joined(componentSeparator.stringValue)
+  }
+  
+  public func buildComponent(
+    _ label: String,
+    abbreviation: String? = nil,
+    valuePath: KeyPath<Self, any StringConvertible>,
+//    value: any StringConvertible,
+//    labelSeparator: String? = nil
+  ) -> Component {
+    let propertyLabel = PropertyLabel(label, abbreviated: abbreviation)
+    return Component(
+      propertyLabel,
+      value: self[keyPath: valuePath],
+      separator: self.propertyLabelSeparator
+    )
   }
 }
 

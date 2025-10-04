@@ -13,6 +13,16 @@ public struct Component {
   
   /// This is separator of type `propertyLabel`
   let separator: String
+  
+  public init(
+    _ label: PropertyLabel,
+    value: any StringConvertible,
+    separator: String? = nil
+  ) {
+    self.label = label
+    self.value = value
+    self.separator = separator ?? ": "
+  }
 }
 
 /// Separators:
