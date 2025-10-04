@@ -7,71 +7,15 @@
 
 import Foundation
 
-public struct ComponentGroup {
-  let components: [Component]
-  let propertyLabelSeparator: String
-  let componentSeparator: String
-  
-  public init(
-//    components: [Component],
-    labelSep propertyLabelSeparator: String,
-    componentSep componentSeparator: String,
-    components: () -> [Component]
-  ) {
-    self.components = components()
-    self.propertyLabelSeparator = propertyLabelSeparator
-    self.componentSeparator = componentSeparator
-  }
-}
-extension ComponentGroup {
-  
-  /// In the moment / case-by-case properties, put into the
-  /// function signature, for flexibility
-  func output(
-    labelStyle: PropertyLabel.Style = .standard
-  ) -> String {
-    let labels = components.map {
-      $0.output(
-        separator: propertyLabelSeparator,
-        labelStyle: labelStyle
-      )
-    }
-    return labels.joined(componentSeparator)
-  }
-}
 
-extension CGPoint {
-
-  /// Baked in / static properties relating to the type, like CGPoint
-//  var propertyLabelSeparator: String { ": " }
-//  var componentSeparator: String { ", " }
-//
-//  var components: [Component] {
-//    [
-//      Component("X", value: self.x),
-//      Component("Y", value: self.y),
-//    ]
-//  }
-//
-//  /// In the moment / case-by-case properties, put into the
-//  /// function signature, for flexibility
-//  func displayString(
-//    labelStyle: PropertyLabel.Style = .standard
-//  ) -> String {
-//    let labels = components.map {
-//      $0.output(
-//        separator: propertyLabelSeparator,
-//        labelStyle: labelStyle
-//      )
-//    }
-//    return labels.joined(componentSeparator)
-//  }
-}
 
 /// Types like `CGPoint` that have floats as it's properties
 public protocol FloatGroup {
   var components: ComponentGroup { get }
+  
+  /// Specified at the group level, so all floats have the same config
   var config: FloatConfig { get }
+  var labelStyle: PropertyLabel.Style { get }
 //  var decimalPlaces: Int { get }
 //  var grouping: Grouping { get }
 //  var components: [Component] { get }

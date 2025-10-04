@@ -24,6 +24,7 @@ public protocol FloatDisplay {
   associatedtype Value: BinaryFloatingPoint
   var value: Value { get }
   var config: FloatConfig { get }
+  
   var displayString: String { get }
 
   /// This is an early formatting pass, just to get the

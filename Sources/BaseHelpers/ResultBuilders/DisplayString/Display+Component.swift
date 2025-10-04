@@ -7,36 +7,102 @@
 
 import Foundation
 
+// MARK: - Single Component
 
+/// A key-value pair
 public struct Component {
   let label: PropertyLabel
   let value: any FloatDisplay
 
-  /// This is separator of type `propertyLabel`
-  //  let separator: String
-
   public init(
     _ label: PropertyLabel,
     value: any FloatDisplay,
-    //    separator: String? = nil
   ) {
     self.label = label
     self.value = value
-    //    self.separator = separator ?? ": "
   }
 }
 
 extension Component {
+  /// Putting the property label separator here,
+  /// rather than on the `Component` type itself,
+  /// makes it easier to specify the same sep for
+  /// multiple Components
   func output(
-    separator: String = ": ",
+    propertyLabelSeparator separator: String = ": ",
     labelStyle: PropertyLabel.Style
   ) -> String {
     let labelString = label.stringValue(from: labelStyle) ?? ""
     let valueString = value.displayString(
-      <#T##places: DecimalPlaces##DecimalPlaces#>,
-      grouping: <#T##Grouping#>
+      value.config.decimalPlaces,
+      grouping: value.config.grouping
     )
     return labelString + separator + valueString
+  }
+}
+
+// MARK: - Component Group
+public struct ComponentGroup {
+  public let separators: Separators
+  public let components: [Component]
+  //  let propertyLabelSeparator: String
+  //  let componentSeparator: String
+
+  public init(
+    separators: Separators = .default,
+    //    components: [Component],
+    //    labelSep propertyLabelSeparator: String,
+    //    componentSep componentSeparator: String,
+    _ components: Component...
+//    components: () -> [Component]
+  ) {
+    self.separators = separators
+    self.components = components
+    //    self.propertyLabelSeparator = propertyLabelSeparator
+    //    self.componentSeparator = componentSeparator
+  }
+}
+extension ComponentGroup {
+
+  /// In the moment / case-by-case properties, put into the
+  /// function signature, for flexibility
+  func output(
+    labelStyle: PropertyLabel.Style = .standard
+  ) -> String {
+    let labels = components.map { component in
+      component.output(
+        propertyLabelSeparator: separators.propertyLabel,
+        labelStyle: labelStyle
+      )
+    }
+    return labels.joined(separators.component)
+  }
+}
+
+public struct Separators {
+  let propertyLabel: String
+  let component: String
+
+  public init(
+    propertyLabel: String = ": ",
+    component: String = " x "
+  ) {
+    self.propertyLabel = propertyLabel
+    self.component = component
+  }
+}
+
+extension Separators {
+  public static var `default`: Separators {
+    .init()
+  }
+  
+  public static var cgPoint: Separators {
+    .init(propertyLabel: ": ", component: ", ")
+  }
+
+  public static var cgSize: Separators {
+    .init(propertyLabel: ": ", component: " x ")
   }
 }
 
