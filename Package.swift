@@ -12,24 +12,20 @@ let package = Package(
   products: [
     .library(name: "BaseHelpers", targets: ["BaseHelpers"]),
     .library(
-      name: "BaseMacros",
+      name: "BaseMacrosPackage",
       targets: [
+        "AssociatedValues",
         "CaseDetection",
         "MetaEnum",
         "Persistable",
         "SetOfOptions",
       ]
     ),
-    //    .executable(
-    //      name: "BaseMacrosClient",
-    //      targets: ["BaseMacrosClient"]
-    //    ),
+    .executable(
+      name: "BaseMacrosClient",
+      targets: ["BaseMacrosClient"]
+    ),
     .library(name: "BaseNetworking", targets: ["BaseNetworking"]),
-
-    /// Forwards / re-exports `BaseHelpers`, `BaseMacros` and `BaseComponents`,
-    /// allowing writing `import BaseTools` to import all three at once
-    .library(name: "BaseTools", targets: ["BaseTools"]),
-
     .library(name: "ColourExtract", targets: ["ColourExtract"]),
     .library(name: "CurveFunctions", targets: ["CurveFunctions"]),
     .library(name: "GridCanvas", targets: ["GridCanvas"]),
@@ -47,38 +43,42 @@ let package = Package(
     .package(url: "https://github.com/mattmassicotte/nsui", from: "1.3.0"),
     .package(url: "https://github.com/evgenyneu/keychain-swift.git", from: "24.0.0"),
   ],
-
   targets: [
     // MARK: - BaseMacro targets
     .macro(
       name: "BaseMacros",
       dependencies: [
-        .product(name: "SharedHelpers", package: "SharedHelpers"),
+        .sharedHelpers,
         .product(name: "SwiftSyntaxMacros", package: "swift-syntax"),
         .product(name: "SwiftCompilerPlugin", package: "swift-syntax"),
-      ]
+      ],
+      path: "Sources/BaseMacros/MacroExpansions",
     ),
-    .target(name: "CaseDetection", dependencies: ["UtilityMacros"]),
-    .target(name: "MetaEnum", dependencies: ["UtilityMacros"]),
-    .target(name: "Persistable", dependencies: ["UtilityMacros"]),
-    .target(name: "SetOfOptions", dependencies: ["UtilityMacros"]),
+    .target(name: "AssociatedValues", dependencies: ["BaseMacros"], path: "BaseMacros/MacroDeclarations/AssociatedValues"),
+    .target(name: "CaseDetection", dependencies: ["BaseMacros"], path: "BaseMacros/MacroExpansions"),
+    .target(name: "MetaEnum", dependencies: ["BaseMacros"], path: "BaseMacros/MacroExpansions"),
+    .target(name: "Persistable", dependencies: ["BaseMacros"], path: "BaseMacros/MacroExpansions"),
+    .target(name: "SetOfOptions", dependencies: ["BaseMacros"], path: "BaseMacros/MacroExpansions"),
 
     .executableTarget(
       name: "BaseMacrosClient",
       dependencies: [
+        "AssociatedValues",
         "CaseDetection",
         "MetaEnum",
         "Persistable",
         "SetOfOptions",
-      ]),
+      ],
+      path: "BaseMacros/BaseMacrosClient",
+    ),
 
     // MARK: - Other targets
     .target(
       name: "BaseHelpers",
       dependencies: [
+        .sharedHelpers,
+        .baseMacros,
         "CurveFunctions",
-        "SharedHelpers",
-        "BaseMacros",
         .product(name: "NSUI", package: "nsui"),
       ],
       resources: [.process("Assets.xcassets")],
@@ -86,25 +86,16 @@ let package = Package(
     .target(
       name: "BaseNetworking",
       dependencies: [
-        "BaseHelpers",
+        .baseHelpers,
         .product(name: "KeychainSwift", package: "keychain-swift"),
       ],
     ),
-    .target(
-      name: "BaseTools",
-      dependencies: [
-        .product(name: "BaseComponents", package: "BaseComponents"),
-        "BaseHelpers",
-        "SharedHelpers",
-        "BaseMacros",
-      ]
-    ),
-    .target(name: "ColourExtract", dependencies: []),
-    .target(name: "CurveFunctions", dependencies: []),
-    .target(name: "GridCanvas", dependencies: ["BaseHelpers"]),
-    .target(name: "LilyPad", dependencies: ["BaseHelpers"]),
-    .target(name: "SharedHelpers", dependencies: []),
-    .target(name: "Wrecktangle", dependencies: []),
+    .target(name: "ColourExtract"),
+    .target(name: "CurveFunctions"),
+    .target(name: "GridCanvas", dependencies: [.baseHelpers]),
+    .target(name: "LilyPad", dependencies: [.baseHelpers]),
+    .target(name: "SharedHelpers"),
+    .target(name: "Wrecktangle"),
 
   ],
 )
@@ -113,5 +104,4 @@ extension Target.Dependency {
   static var baseHelpers: Self { "BaseHelpers" }
   static var sharedHelpers: Self { "SharedHelpers" }
   static var baseMacros: Self { "BaseMacros" }
-  
 }
