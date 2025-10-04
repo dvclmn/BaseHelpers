@@ -11,15 +11,24 @@ let package = Package(
   ],
   products: [
     .library(name: "BaseHelpers", targets: ["BaseHelpers"]),
+    .library(name: "BaseMacros", targets: ["BaseMacros"]),
+    .library(name: "BaseNetworking", targets: ["BaseNetworking"]),
+    
+    /// Forwards / re-exports `BaseHelpers`, `BaseMacros` and `BaseComponents`,
+    /// allowing writing `import BaseTools` to import all three at once
+    .library(name: "BaseTools", targets: ["BaseTools"]),
+    
     .library(name: "ColourExtract", targets: ["ColourExtract"]),
     .library(name: "CurveFunctions", targets: ["CurveFunctions"]),
     .library(name: "GridCanvas", targets: ["GridCanvas"]),
-    .library(name: "BaseNetworking", targets: ["BaseNetworking"]),
+    .library(name: "LilyPad", targets: ["LilyPad"]),
+    
+    /// Common resources shared between `BaseHelpers` and `BaseMacros`
+    .library(name: "SharedHelpers", targets: ["SharedHelpers"]),
+    .library(name: "Wrecktangle", targets: ["Wrecktangle"]),
   ],
 
   dependencies: [
-    .package(url: "https://github.com/dvclmn/BasePrimitives", branch: "main"),
-    .package(url: "https://github.com/dvclmn/BaseMacros", branch: "main"),
     .package(url: "https://github.com/swiftlang/swift-docc-plugin", from: "1.0.0"),
     .package(url: "https://github.com/mattmassicotte/nsui", from: "1.3.0"),
     .package(url: "https://github.com/evgenyneu/keychain-swift.git", from: "24.0.0"),
