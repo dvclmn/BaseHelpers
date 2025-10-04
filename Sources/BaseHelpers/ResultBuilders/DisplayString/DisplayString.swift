@@ -70,55 +70,29 @@ extension DisplayString {
   ///   )
   /// }
   /// ```
-  func formatted(
-    _ places: DecimalPlaces,
-    grouping: Grouping,
-    labelStyle: PropertyLabel.Style
-  ) -> String {
-    
-    if let floatValues = content as? [any FloatDisplay] {
-      
-      let labelValuePairs = floatValues.map { component in
-        let labelSep = component.
-        let label = labelStyle.labelString(for: component)
-        let value = component.value.displayString(places, grouping: grouping)
-        guard let label else {
-          return value
-        }
-        return label + labelSep + value
-      }
-      let result = labelValuePairs.joined(separator: separator)
-      return result
-      
-    } else {
-      return output
-    }
-  }
+//  func formatted(
+//    _ places: DecimalPlaces,
+//    grouping: Grouping,
+//    labelStyle: PropertyLabel.Style
+//  ) -> String {
+//    
+//    if let floatValues = content as? [any FloatDisplay] {
+//      
+//      let labelValuePairs = floatValues.map { component in
+//        let labelSep = component
+//        let label = labelStyle.labelString(for: component)
+//        let value = component.value.displayString(places, grouping: grouping)
+//        guard let label else {
+//          return value
+//        }
+//        return label + labelSep + value
+//      }
+//      let result = labelValuePairs.joined(separator: separator)
+//      return result
+//      
+//    } else {
+//      return output
+//    }
+//  }
 }
 
-public enum SeparatorType {
-  public static let defaultBuilderElement: String = "\n"
-  public static let defaultComponent: String = " × "
-  public static let defaultPropertyLabel: String = ": "
-  
-  /// Seperates elements from a result builder
-  /// E.g. often `"\n"`, but can be anything
-  case builderElement(String = Self.defaultBuilderElement)
-  
-  /// Seperates two (or more) `key-value` pairs
-  /// E.g. the `" x "` from `800 x 600px`
-  /// Or the `", "` from `X: 10, Y: -20`
-  case component(String = Self.defaultComponent)
-  
-  /// Seperates the `key` from the `value`
-  /// E.g. the `", "` from `X: 10, Y: -20`
-  case propertyLabel(String = Self.defaultPropertyLabel)
-  
-  public var stringValue: String {
-    switch self {
-      case .builderElement(let string): string
-      case .component(let string): string
-      case .propertyLabel(let string): string
-    }
-  }
-}

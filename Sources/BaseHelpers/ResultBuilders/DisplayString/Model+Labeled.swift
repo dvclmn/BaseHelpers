@@ -14,9 +14,10 @@ import Foundation
 /// Or also support `FloatDisplay`/`FloatGroup`, like
 /// `Labeled()`
 public struct Labeled {
-  public let label: PropertyLabel
+  
+//  public let label: PropertyLabel
 
-//  public let key: String
+  public let key: String
   public let value: (any StringConvertible)?
   
   /// E.g. for `CGPoint`
@@ -30,45 +31,46 @@ public struct Labeled {
     value: (any StringConvertible)?,
     separator: String = ": "
   ) {
-    self.label = PropertyLabel(key)
+    self.key = key
+//    self.label = PropertyLabel(key)
     self.value = value
     self.separator = separator
   }
   
-  public init(
-    label: PropertyLabel,
-//    propertyLabel: PropertyLabel,
-    value: (any StringConvertible)?,
-    separator: String = ": "
-  ) {
-    self.label = label
-//    self.key = label.label ?? "??"
-    self.value = value
-    self.separator = separator
-  }
+//  public init(
+//    label: PropertyLabel,
+////    propertyLabel: PropertyLabel,
+//    value: (any StringConvertible)?,
+//    separator: String = ": "
+//  ) {
+//    self.label = label
+////    self.key = label.label ?? "??"
+//    self.value = value
+//    self.separator = separator
+//  }
 }
 
 extension Labeled {
-  public func output(
-    _ places: DecimalPlaces = .fractionLength(2),
-    grouping: Grouping = .automatic
-  ) -> String {
-    if let float = self.value as? (any FloatDisplay) {
-      
-//    if value is (any FloatDisplay) {
-      return float.displayString(
-        places,
-        grouping: grouping
-      )
-    } else {
-      return self.stringValue
-    }
-  }
+//  public func output(
+//    _ places: DecimalPlaces = .fractionLength(2),
+//    grouping: Grouping = .automatic
+//  ) -> String {
+//    if let float = self.value as? (any FloatDisplay) {
+//      
+////    if value is (any FloatDisplay) {
+//      return float.displayString(
+//        places,
+//        grouping: grouping
+//      )
+//    } else {
+//      return self.stringValue
+//    }
+//  }
 }
 
 // MARK: - StringConvertible Conformance
 extension Labeled: StringConvertible {
   public var stringValue: String {
-    "\(label)\(separator)\(String(describing: value?.stringValue))"
+    "\(key)\(separator)\(String(describing: value?.stringValue))"
   }
 }

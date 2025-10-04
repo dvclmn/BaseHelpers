@@ -15,10 +15,6 @@ extension CGFloat: FloatDisplay, StringConvertible {
   public var value: Self { self }
 }
 
-extension CGPoint: FloatGroup {
-  public var
-}
-
 //extension CGPoint {
 //  public func displayString(
 //    _ places: DecimalPlaces = .fractionLength(2),

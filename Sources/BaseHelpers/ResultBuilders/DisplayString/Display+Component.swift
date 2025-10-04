@@ -7,6 +7,14 @@
 
 import Foundation
 
+public struct Component {
+  let label: PropertyLabel
+  let value: any StringConvertible
+  
+  /// This is separator of type `propertyLabel`
+  let separator: String
+}
+
 /// Separators:
 /// Between new lines in a builder
 /// Between a group of values relating to a type, like 2 values for CGPoint, three for CGRect etc
