@@ -12,7 +12,7 @@ import SwiftUI
 public struct GridConfig: Sendable {
 
   public let columns: ColumnConfig
-//  public let columnMode: ColumnConfig.Mode
+  //  public let columnMode: ColumnConfig.Mode
 
   /// Based on `LazyVStack/spacing`
   /// This is the Vertical spacing
@@ -24,17 +24,17 @@ public struct GridConfig: Sendable {
 
   public init(
     columnMode: ColumnConfig.Mode,
-//    columns: columns: ColumnConfig,
+    //    columns: columns: ColumnConfig,
     spacingItem: CGFloat = 8,
     spacingGrid: CGFloat? = nil,
     alignmentItem: Alignment? = nil,
     alignmentGrid: HorizontalAlignment = .center
   ) {
-//    self.columnMode = columnMode
+    //    self.columnMode = columnMode
     self.spacingGrid = spacingGrid
     self.alignmentGrid = alignmentGrid
-    
-    let columns = ColumnConfig(
+
+    self.columns = ColumnConfig(
       mode: columnMode,
       spacing: spacingItem,
       alignment: alignmentItem
@@ -44,21 +44,22 @@ public struct GridConfig: Sendable {
 
 extension GridConfig {
 
-//  public var columns: [GridItem] {
-//    self.columnMode.columns(
-//      spacing: spacingItem,
-//      alignment: alignmentItem
-//    )
-//  }
+  public var gridItems: [GridItem] { self.columns.output }
+  //    self.columnMode.columns(
+  //      spacing: spacingItem,
+  //      alignment: alignmentItem
+  //    )
+  //  }
 }
 
 extension GridConfig: CustomStringConvertible {
   public var description: String {
     return StringGroup {
       "GridConfig"
-      columnMode.description
-      "Spacing(Item: \(spacingItem.displayString(.fractionLength(0))), Grid: \(spacingGrid?.displayString(.fractionLength(0)) ?? "nil"))"
-      "Alignnment(Item: \(alignmentItem?.displayName.standard ?? "nil"), Grid: \(alignmentGrid.displayName))"
+      columns
+      Labeled(<#T##key: String##String#>, value: <#T##any StringConvertible#>)
+      "Spacing: \(spacingGrid?.displayString(.fractionLength(0)) ?? "nil"))"
+      "Alignnment: \(alignmentGrid.displayName))"
     }.output
 
     //    """

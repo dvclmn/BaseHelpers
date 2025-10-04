@@ -47,12 +47,12 @@ public struct Indented {
 
 public struct Labeled {
   public let key: String
-  public let value: any StringConvertible
+  public let value: (any StringConvertible)?
   public let separator: String
 
   public init(
     _ key: String,
-    value: any StringConvertible,
+    value: (any StringConvertible)?,
     separator: String = ": "
   ) {
     self.key = key
@@ -64,11 +64,11 @@ public struct Labeled {
 // MARK: - StringConvertible Conformance
 extension Labeled: StringConvertible {
   public var stringValue: String {
-    "\(key)\(separator)\(value.stringValue)"
+    "\(key)\(separator)\(String(describing: value?.stringValue))"
   }
 }
 extension Indented: StringConvertible {
-  
+
   public var stringValue: String {
     let indentedItems = content.map { prefix + $0.stringValue }
       .joined(separator: "\n")
@@ -78,23 +78,3 @@ extension Indented: StringConvertible {
     return title + "\n" + indentedItems
   }
 }
-
-
-//public struct Section {
-//  public let title: String
-//  public let indented: Bool
-//  public let content: [any StringConvertible]
-//  
-////  public let prefix: String
-////  public let content: [any StringConvertible]
-//  
-//  public init(
-//    _ title: String,
-//    indented: Bool = true,
-//    @StringGroupBuilder content: () -> [any StringConvertible]
-//  ) {
-//    self.title = title
-//    self.indented = indented
-//    self.content = content()
-//  }
-//}

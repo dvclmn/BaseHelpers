@@ -41,3 +41,21 @@ extension ColumnConfig {
     self.mode.columns(spacing: spacing, alignment: alignment)
   }
 }
+extension ColumnConfig: CustomStringConvertible {
+  public var description: String {
+    return StringGroup {
+      "ColumnConfig"
+      mode.description
+      Labeled("Spacing", value: spacing)
+      Labeled("Alignment", value: alignment)
+    }.output
+    
+    //    """
+    //    GridConfig [
+    //      Column mode: \(columnMode)
+    //      Spacing: Item[\(spacingItem.displayString)], Grid[\(spacingGrid?.displayString ?? "nil")]
+    //      Alignnment: Item[\(alignmentItem?.displayName.standard ?? "nil")], Grid[\(alignmentGrid.displayName)]
+    //    ]
+    //    """
+  }
+}

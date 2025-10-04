@@ -8,6 +8,8 @@
 import Foundation
 
 public struct DisplayString {
+  /// E.g. `", "` for `CGPoint`:
+  /// `X: 10, Y: -20`
   let separator: String
   let components: [Component]
 
@@ -45,6 +47,5 @@ extension DisplayString {
 }
 
 extension String {
-//  public static let defaultSeparator: String = " x "
   public static let defaultSeparator: String = " × "
 }
