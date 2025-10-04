@@ -12,6 +12,11 @@ public struct Labeled {
 
 //  public let key: String
   public let value: (any StringConvertible)?
+  
+  /// E.g. for `CGPoint`
+  /// ```
+  /// Label separator: ": "
+  /// Result: X: 10
   public let separator: String
   
   public init(

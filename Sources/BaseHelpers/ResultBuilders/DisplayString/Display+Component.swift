@@ -7,6 +7,10 @@
 
 import Foundation
 
+/// Separators:
+/// Between new lines in a builder
+/// Between a group of values relating to a type, like 2 values for CGPoint, three for CGRect etc
+
 /// More structured and type safe than previous array -> zip based
 /// approach, as shown below.
 ///

@@ -40,7 +40,7 @@ public typealias TripleCaptureRange = (AttributedRange, AttributedRange, Attribu
 extension SingleCapture.Match {
 
   public var displayString: String {
-    StringGroup {
+    DisplayString {
       Indented("Match") {
         Labeled("Range", value: self.range)
         Labeled("Matched text", value: self.0)
@@ -58,7 +58,7 @@ extension SingleCapture.Match {
 extension Regex<AnyRegexOutput>.Match {
 //extension Regex<Regex<Substring>.RegexOutput>.Match {
   public var displayString: String {
-    StringGroup {
+    DisplayString {
       Indented("Match") {
         Labeled("Range", value: self.range)
         Labeled("Matched text", value: self.0)

@@ -45,7 +45,7 @@ extension GridConfig.FitMode: CustomStringConvertible {
 
   public var description: String {
 //    assert(false, "Fix this")
-    return StringGroup {
+    return DisplayString {
       "FitMode"
 //      switch self {
 //        case .fill(let min, let max): "Fill [min: \(min), max: \(max)]"

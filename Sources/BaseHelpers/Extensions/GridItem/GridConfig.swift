@@ -54,7 +54,7 @@ extension GridConfig {
 
 extension GridConfig: CustomStringConvertible {
   public var description: String {
-    return StringGroup {
+    return DisplayString {
       "GridConfig"
       columns
       Labeled(<#T##key: String##String#>, value: <#T##any StringConvertible#>)

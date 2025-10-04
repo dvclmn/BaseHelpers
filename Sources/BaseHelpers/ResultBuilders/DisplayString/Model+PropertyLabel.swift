@@ -5,8 +5,8 @@
 //  Created by Dave Coleman on 10/7/2025.
 //
 
-import Foundation
 import AssociatedValues
+import Foundation
 
 /// A property label is aimed at expressing the
 /// string representaiton for a property, such as
@@ -49,7 +49,7 @@ extension PropertyLabel {
     case abbreviated
     //  case standard(String)
     //  case abbreviated(String)
-    
+
     public var keyPath: KeyPath<PropertyLabel, String>? {
       switch self {
         case .none: nil
@@ -57,24 +57,24 @@ extension PropertyLabel {
         case .abbreviated: \.abbreviated
       }
     }
-    
-//    public var label: String? {
-//      switch self {
-//        case .none: nil
-//        case .standard(let string): string
-//        case .abbreviated(let string): string
-//      }
-//    }
+
+    //    public var label: String? {
+    //      switch self {
+    //        case .none: nil
+    //        case .standard(let string): string
+    //        case .abbreviated(let string): string
+    //      }
+    //    }
     /// This will be composed together with float values
     /// within `DisplayString/formatted()`.
     /// Returning nil allows expressing "No label please"
-      public func labelString(
-        label: Labeled,
-//        for component: Component
-      ) -> String? {
-    
-        guard let keyPath else { return nil }
-        return component.label?[keyPath: keyPath]
-      }
+    public func labelString(
+      for label: PropertyLabel
+        //        for component: Component
+    ) -> String? {
+
+      guard let keyPath else { return nil }
+      return label[keyPath: keyPath]
+    }
   }
 }

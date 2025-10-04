@@ -43,7 +43,7 @@ extension ColumnConfig {
 }
 extension ColumnConfig: CustomStringConvertible {
   public var description: String {
-    return StringGroup {
+    return DisplayString {
       "ColumnConfig"
       mode.description
       Labeled("Spacing", value: spacing)
