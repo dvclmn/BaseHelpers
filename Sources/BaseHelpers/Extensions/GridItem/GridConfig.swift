@@ -7,27 +7,12 @@
 
 import SwiftUI
 
-struct ColumnsConfig {
-  /// Based on `GridItem/spacing`
-  /// This is the Horizontal spacing
-  /// Note: Will need to make this non-optional, as it's
-  /// a pivotal part of `GridContext`'s item frame calculations
-  ///
-  /// Private because only used by `self.columns`?
-
-  private let spacingItem: CGFloat
-
-  /// The per-item alignment
-  /// Based on `GridItem/alignment`
-
-  public let alignmentItem: Alignment?
-}
-
 /// Note: this is specifically geared toward `LazyVGrid`,
 /// `LazyHGrid` is not supported.
 public struct GridConfig: Sendable {
 
-  public let columnMode: ColumnMode
+  public let columns: ColumnConfig
+//  public let columnMode: ColumnConfig.Mode
 
   /// Based on `LazyVStack/spacing`
   /// This is the Vertical spacing
@@ -38,28 +23,33 @@ public struct GridConfig: Sendable {
   public let alignmentGrid: HorizontalAlignment
 
   public init(
-    columnMode: ColumnMode = .default,
-    spacingItem: CGFloat? = nil,
+    columnMode: ColumnConfig.Mode,
+//    columns: columns: ColumnConfig,
+    spacingItem: CGFloat = 8,
     spacingGrid: CGFloat? = nil,
     alignmentItem: Alignment? = nil,
     alignmentGrid: HorizontalAlignment = .center
   ) {
-    self.columnMode = columnMode
-    self.spacingItem = spacingItem ?? 8
+//    self.columnMode = columnMode
     self.spacingGrid = spacingGrid
-    self.alignmentItem = alignmentItem
     self.alignmentGrid = alignmentGrid
+    
+    let columns = ColumnConfig(
+      mode: columnMode,
+      spacing: spacingItem,
+      alignment: alignmentItem
+    )
   }
 }
 
 extension GridConfig {
 
-  public var columns: [GridItem] {
-    self.columnMode.columns(
-      spacing: spacingItem,
-      alignment: alignmentItem
-    )
-  }
+//  public var columns: [GridItem] {
+//    self.columnMode.columns(
+//      spacing: spacingItem,
+//      alignment: alignmentItem
+//    )
+//  }
 }
 
 extension GridConfig: CustomStringConvertible {

@@ -7,18 +7,18 @@
 
 import SwiftUI
 
-extension GridConfig {
+extension ColumnConfig {
 
-  public enum ColumnMode: Sendable {
+  public enum Mode: Sendable {
     public static let `default`: Self = .adaptive(.fill(min: 60, max: 140))
 
-    case fixedColumns(Int, FitMode)
-    case adaptive(FitMode)
+    case fixedColumns(Int, GridConfig.FitMode)
+    case adaptive(GridConfig.FitMode)
 
   }
 }
 
-extension GridConfig.ColumnMode {
+extension ColumnConfig.Mode {
   public func columns(
     spacing: CGFloat?,
     alignment: Alignment?
@@ -43,7 +43,7 @@ extension GridConfig.ColumnMode {
 }
 
 #warning("Come back to this asap")
-extension GridConfig.ColumnMode: CustomStringConvertible {
+extension ColumnConfig.Mode: CustomStringConvertible {
   public var description: String {
 //    assert(false, "Fix this")
     return StringGroup {
