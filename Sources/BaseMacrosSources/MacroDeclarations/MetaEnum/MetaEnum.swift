@@ -7,6 +7,6 @@
 
 @attached(member, names: named(Meta))
 public macro MetaEnum() = #externalMacro(
-  module: "UtilityMacros",
+  module: "BaseMacros",
   type: "MetaEnumMacro"
 )

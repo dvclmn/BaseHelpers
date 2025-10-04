@@ -34,6 +34,6 @@
 @attached(member, names: arbitrary)
 @attached(extension, conformances: OptionSet, Sendable)
 public macro SetOfOptions<RawType>() = #externalMacro(
-  module: "UtilityMacros",
+  module: "BaseMacros",
   type: "SetOfOptionsMacro"
 )

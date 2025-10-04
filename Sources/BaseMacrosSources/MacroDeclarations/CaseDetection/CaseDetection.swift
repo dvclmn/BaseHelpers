@@ -5,6 +5,6 @@
 @attached(member, names: arbitrary)
 public macro CaseDetection() =
   #externalMacro(
-    module: "UtilityMacros",
+    module: "BaseMacros",
     type: "CaseDetectionMacro"
   )
