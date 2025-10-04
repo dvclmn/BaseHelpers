@@ -10,23 +10,21 @@ import Foundation
 public struct DisplayString {
 
   /// A Component is a `label` and `value` pair
-  let components: [any StringConvertible]
+  let content: [any StringConvertible]
 //  let components: [Component<Value>]
 
-  /// E.g. for `CGPoint`
-  /// ```
-  /// Component separator: ", "
-  /// Result: X: 10, Y: -20
-  /// ```
+  /// This is the *top-level* seperator, that appears between
+  /// each element in the builder (defined on a new line in
+  /// the source code). Defaults to and is frequently set to
+  /// a new line character `"\n"`
   let separator: String
 
   public init(
-    separator: String = .defaultComponentSeparator,
-    @DisplayStringBuilder _ components: () -> [any StringConvertible]
-//    @DisplayStringBuilder _ components: () -> [Component<Value>]
+    separator: String = .defaultBuilderElementSeparator,
+    @DisplayStringBuilder _ content: () -> [any StringConvertible]
   ) {
     self.separator = separator
-    self.components = components()
+    self.content = content()
   }
 
   //  public init(
@@ -44,7 +42,7 @@ extension DisplayString {
   
   /// Trying this out as a default output value
   public var output: String {
-    let stringValue = components.map { convertible in
+    let stringValue = content.map { convertible in
       convertible.stringValue
     }.joined(separator: separator)
     
@@ -77,21 +75,49 @@ extension DisplayString {
     grouping: Grouping,
     labelStyle: PropertyLabel.Style
   ) -> String {
-    let labelValuePairs = components.map { component in
-      let labelSep = component.separator
-      let label = labelStyle.labelString(for: component)
-      let value = component.value.displayString(places, grouping: grouping)
-      guard let label else {
-        return value
+    
+    if let floatValues = content as? [any FloatDisplay] {
+      
+      let labelValuePairs = floatValues.map { component in
+        let labelSep = component.separator
+        let label = labelStyle.labelString(for: component)
+        let value = component.value.displayString(places, grouping: grouping)
+        guard let label else {
+          return value
+        }
+        return label + labelSep + value
       }
-      return label + labelSep + value
+      let result = labelValuePairs.joined(separator: separator)
+      return result
+      
+    } else {
+      return output
     }
-    let result = labelValuePairs.joined(separator: separator)
-    return result
+    
+
   }
 }
 
-extension String {
-  public static let defaultComponentSeparator: String = " × "
-  public static let defaultLabelSeparator: String = ": "
+public enum SeparatorType {
+  
+  /// Seperates elements from a result builder
+  /// E.g. often `"\n"`, but can be anything
+  case builderElement(String)
+  
+  /// Seperates two (or more) `key-value` pairs
+  /// E.g. the `" x "` from `800 x 600px`
+  /// Or the `", "` from `X: 10, Y: -20`
+  case component(String)
+  
+  /// Seperates the `key` from the `value`
+  /// E.g. the `", "` from `X: 10, Y: -20`
+  case propertyLabel(String)
+  
+  public var `default`: String {
+    switch self {
+      case .builderElement: "\n"
+      case .component: " × "
+      case .propertyLabel: ": "
+    }
+  }
 }

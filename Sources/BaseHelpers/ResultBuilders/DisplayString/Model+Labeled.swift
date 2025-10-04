@@ -42,6 +42,24 @@ public struct Labeled {
   }
 }
 
+extension Labeled {
+  public func output(
+    _ places: DecimalPlaces = .fractionLength(2),
+    grouping: Grouping = .automatic
+  ) -> String {
+    if let float = self.value as? (any FloatDisplay) {
+      
+//    if value is (any FloatDisplay) {
+      return float.displayString(
+        places,
+        grouping: grouping
+      )
+    } else {
+      return self.stringValue
+    }
+  }
+}
+
 // MARK: - StringConvertible Conformance
 extension Labeled: StringConvertible {
   public var stringValue: String {

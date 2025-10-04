@@ -17,6 +17,7 @@ public protocol StringConvertible {
 //  }
 //}
 
-public protocol PropertiesLabeled {
+/// Types like `CGPoint` that have floats as it's properties
+public protocol FloatDisplayable {
   
 }

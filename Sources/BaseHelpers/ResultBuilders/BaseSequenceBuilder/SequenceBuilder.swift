@@ -6,7 +6,6 @@
 //
 
 public typealias DisplayStringBuilder = SequenceBuilder<StringConvertible>
-//public typealias StringGroupBuilder = SequenceBuilder<StringConvertible>
 
 /// Good to remember:
 /// The `{Example}Builder` (the type decorated directly with
@@ -32,7 +31,6 @@ public typealias DisplayStringBuilder = SequenceBuilder<StringConvertible>
 ///   }
 /// }
 /// ```
-
 @resultBuilder
 public struct SequenceBuilder<Element> {
   public static func buildBlock(
