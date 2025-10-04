@@ -7,25 +7,31 @@
 
 import SwiftUI
 
+struct ColumnsConfig {
+  /// Based on `GridItem/spacing`
+  /// This is the Horizontal spacing
+  /// Note: Will need to make this non-optional, as it's
+  /// a pivotal part of `GridContext`'s item frame calculations
+  ///
+  /// Private because only used by `self.columns`?
+
+  private let spacingItem: CGFloat
+
+  /// The per-item alignment
+  /// Based on `GridItem/alignment`
+
+  public let alignmentItem: Alignment?
+}
+
 /// Note: this is specifically geared toward `LazyVGrid`,
 /// `LazyHGrid` is not supported.
 public struct GridConfig: Sendable {
 
   public let columnMode: ColumnMode
 
-  /// Based on `GridItem/spacing`
-  /// This is the Horizontal spacing
-  /// Note: Will need to make this non-optional, as it's
-  /// a pivotal part of `GridContext`'s item frame calculations
-  public let spacingItem: CGFloat
-
   /// Based on `LazyVStack/spacing`
   /// This is the Vertical spacing
   public let spacingGrid: CGFloat?
-
-  /// The per-item alignment
-  /// Based on `GridItem/alignment`
-  public let alignmentItem: Alignment?
 
   /// The alignment of the grid within its parent view
   /// Based on `LazyVStack/alignment`
@@ -64,13 +70,13 @@ extension GridConfig: CustomStringConvertible {
       "Spacing(Item: \(spacingItem.displayString(.fractionLength(0))), Grid: \(spacingGrid?.displayString(.fractionLength(0)) ?? "nil"))"
       "Alignnment(Item: \(alignmentItem?.displayName.standard ?? "nil"), Grid: \(alignmentGrid.displayName))"
     }.output
-    
-//    """
-//    GridConfig [
-//      Column mode: \(columnMode)
-//      Spacing: Item[\(spacingItem.displayString)], Grid[\(spacingGrid?.displayString ?? "nil")]
-//      Alignnment: Item[\(alignmentItem?.displayName.standard ?? "nil")], Grid[\(alignmentGrid.displayName)]
-//    ]
-//    """
+
+    //    """
+    //    GridConfig [
+    //      Column mode: \(columnMode)
+    //      Spacing: Item[\(spacingItem.displayString)], Grid[\(spacingGrid?.displayString ?? "nil")]
+    //      Alignnment: Item[\(alignmentItem?.displayName.standard ?? "nil")], Grid[\(alignmentGrid.displayName)]
+    //    ]
+    //    """
   }
 }
