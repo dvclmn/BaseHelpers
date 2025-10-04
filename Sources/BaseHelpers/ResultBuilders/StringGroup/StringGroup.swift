@@ -7,41 +7,24 @@
 
 import Foundation
 
-public struct StringGroup {
-  let separator: String
-  let content: [any StringConvertible]
-
-  public init(
-    separator: String = "\n",
-    @StringGroupBuilder content: () -> [any StringConvertible]
-  ) {
-    self.separator = separator
-    self.content = content()
-  }
-}
-extension StringGroup {
-  public var output: String {
-    let stringValue = content.map { convertible in
-      convertible.stringValue
-    }.joined(separator: separator)
-
-    return stringValue
-  }
-}
-
-public struct Indented {
-  public let title: String?
-  public let prefix: String
-  public let content: [any StringConvertible]
-
-  public init(
-    _ title: String? = nil,
-    prefix: String = "  | ",
-    @StringGroupBuilder _ content: () -> [any StringConvertible]
-  ) {
-    self.title = title
-    self.prefix = prefix
-    self.content = content()
-  }
-}
-
+//public struct StringGroup {
+//  let separator: String
+//  let content: [any StringConvertible]
+//
+//  public init(
+//    separator: String = "\n",
+//    @StringGroupBuilder content: () -> [any StringConvertible]
+//  ) {
+//    self.separator = separator
+//    self.content = content()
+//  }
+//}
+//extension StringGroup {
+//  public var output: String {
+//    let stringValue = content.map { convertible in
+//      convertible.stringValue
+//    }.joined(separator: separator)
+//
+//    return stringValue
+//  }
+//}

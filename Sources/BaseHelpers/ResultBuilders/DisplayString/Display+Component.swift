@@ -25,27 +25,27 @@ import Foundation
 //public typealias Component = DisplayString.Component
 
 //extension DisplayString {
-public struct Component<Value: StringConvertible> {
-  let label: PropertyLabel?
+//public struct Component<Value: StringConvertible> {
 //  let label: PropertyLabel?
-  let value: Value
-  //    let value: any FloatDisplay
-
-  /// E.g. for `CGPoint`
-  /// ```
-  /// Label separator: ": "
-  /// Result: X: 10
-  /// ```
-  let separator: String
-
-  public init(
-//    _ label: PropertyLabel?,
-    value: Value,
-    separator: String = .defaultLabelSeparator
-  ) {
-//    self.label = label
-    self.value = value
-    self.separator = separator
-  }
-}
+////  let label: PropertyLabel?
+//  let value: Value
+//  //    let value: any FloatDisplay
+//
+//  /// E.g. for `CGPoint`
+//  /// ```
+//  /// Label separator: ": "
+//  /// Result: X: 10
+//  /// ```
+//  let separator: String
+//
+//  public init(
+////    _ label: PropertyLabel?,
+//    value: Value,
+//    separator: String = .defaultLabelSeparator
+//  ) {
+////    self.label = label
+//    self.value = value
+//    self.separator = separator
+//  }
+//}
 //}

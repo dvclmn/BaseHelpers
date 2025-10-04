@@ -7,10 +7,11 @@
 
 import Foundation
 
-public struct DisplayString<Value: StringConvertible> {
+public struct DisplayString {
 
   /// A Component is a `label` and `value` pair
-  let components: [Component<Value>]
+  let components: [any StringConvertible]
+//  let components: [Component<Value>]
 
   /// E.g. for `CGPoint`
   /// ```
@@ -21,7 +22,8 @@ public struct DisplayString<Value: StringConvertible> {
 
   public init(
     separator: String = .defaultComponentSeparator,
-    @DisplayStringBuilder _ components: () -> [Component<Value>]
+    @DisplayStringBuilder _ components: () -> [any StringConvertible]
+//    @DisplayStringBuilder _ components: () -> [Component<Value>]
   ) {
     self.separator = separator
     self.components = components()
@@ -37,7 +39,19 @@ public struct DisplayString<Value: StringConvertible> {
   //    self.labelSeparator = labelSeparator
   //  }
 }
-extension DisplayString where Value: FloatDisplay {
+
+extension DisplayString {
+  
+  /// Trying this out as a default output value
+  public var output: String {
+    let stringValue = components.map { convertible in
+      convertible.stringValue
+    }.joined(separator: separator)
+    
+    return stringValue
+  }
+}
+extension DisplayString {
 
   /// This allows customisation at the conformance site,
   /// e.g. for `CGPoint`:
@@ -61,7 +75,7 @@ extension DisplayString where Value: FloatDisplay {
   func formatted(
     _ places: DecimalPlaces,
     grouping: Grouping,
-    labelStyle: DisplayLabelStyle
+    labelStyle: PropertyLabel.Style
   ) -> String {
     let labelValuePairs = components.map { component in
       let labelSep = component.separator
