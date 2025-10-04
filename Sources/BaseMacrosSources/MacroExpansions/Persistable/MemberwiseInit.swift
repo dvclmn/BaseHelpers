@@ -8,7 +8,7 @@
 import SwiftSyntax
 import SwiftSyntaxBuilder
 import SwiftSyntaxMacros
-import BaseMacroHelpers
+//import BaseMacroHelpers
 
 extension PersistableMacro {
   static func generateMemberwiseInitializer(properties: [ExtractableProperty]) throws -> DeclSyntax {

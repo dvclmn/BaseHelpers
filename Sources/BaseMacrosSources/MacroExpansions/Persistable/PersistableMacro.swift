@@ -8,7 +8,7 @@
 import SwiftSyntax
 import SwiftSyntaxBuilder
 import SwiftSyntaxMacros
-import BaseMacroHelpers
+//import BaseMacroHelpers
 
 public struct PersistableMacro: MemberMacro, ExtensionMacro {
 

@@ -12,7 +12,7 @@ let package = Package(
   products: [
     .library(name: "BaseHelpers", targets: ["BaseHelpers"]),
     .library(
-      name: "BaseMacrosPackage",
+      name: "BaseMacrosLibrary",
       targets: [
         "AssociatedValues",
         "CaseDetection",
@@ -52,13 +52,33 @@ let package = Package(
         .product(name: "SwiftSyntaxMacros", package: "swift-syntax"),
         .product(name: "SwiftCompilerPlugin", package: "swift-syntax"),
       ],
-      path: "BaseMacros/MacroExpansions",
+      path: "Sources/BaseMacrosSources/MacroExpansions",
     ),
-    .target(name: "AssociatedValues", dependencies: ["BaseMacros"], path: "BaseMacros/MacroDeclarations/AssociatedValues"),
-    .target(name: "CaseDetection", dependencies: ["BaseMacros"], path: "BaseMacros/MacroDeclarations/AssociatedValues"),
-    .target(name: "MetaEnum", dependencies: ["BaseMacros"], path: "BaseMacros/MacroDeclarations/AssociatedValues"),
-    .target(name: "Persistable", dependencies: ["BaseMacros"], path: "BaseMacros/MacroDeclarations/AssociatedValues"),
-    .target(name: "SetOfOptions", dependencies: ["BaseMacros"], path: "BaseMacros/MacroDeclarations/AssociatedValues"),
+    .target(
+      name: "AssociatedValues",
+      dependencies: ["BaseMacros"],
+      path: "Sources/BaseMacrosSources/MacroDeclarations/AssociatedValues"
+    ),
+    .target(
+      name: "CaseDetection",
+      dependencies: ["BaseMacros"],
+      path: "Sources/BaseMacrosSources/MacroDeclarations/CaseDetection"
+    ),
+    .target(
+      name: "MetaEnum",
+      dependencies: ["BaseMacros"],
+      path: "Sources/BaseMacrosSources/MacroDeclarations/MetaEnum"
+    ),
+    .target(
+      name: "Persistable",
+      dependencies: ["BaseMacros"],
+      path: "Sources/BaseMacrosSources/MacroDeclarations/Persistable"
+    ),
+    .target(
+      name: "SetOfOptions",
+      dependencies: ["BaseMacros"],
+      path: "Sources/BaseMacrosSources/MacroDeclarations/SetOfOptions"
+    ),
 
     .executableTarget(
       name: "BaseMacrosClient",
@@ -69,7 +89,7 @@ let package = Package(
         "Persistable",
         "SetOfOptions",
       ],
-      path: "BaseMacros/BaseMacrosClient",
+      path: "Sources/BaseMacrosSources/BaseMacrosClient",
     ),
 
     // MARK: - Other targets
