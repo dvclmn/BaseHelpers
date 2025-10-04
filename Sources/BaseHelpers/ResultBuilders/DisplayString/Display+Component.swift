@@ -10,18 +10,29 @@ import Foundation
 public struct Component {
   let label: PropertyLabel
   let value: any StringConvertible
-  
+
   /// This is separator of type `propertyLabel`
-  let separator: String
-  
+  //  let separator: String
+
   public init(
     _ label: PropertyLabel,
     value: any StringConvertible,
-    separator: String? = nil
+    //    separator: String? = nil
   ) {
     self.label = label
     self.value = value
-    self.separator = separator ?? ": "
+    //    self.separator = separator ?? ": "
+  }
+}
+
+extension Component {
+  func output(
+    separator: String = ": ",
+    labelStyle: PropertyLabel.Style
+  ) -> String {
+    let labelString = label.stringValue(from: labelStyle) ?? ""
+    let valueString = value.stringValue
+    return labelString + separator + valueString
   }
 }
 

@@ -28,20 +28,21 @@ public struct PropertyLabel {
     self.label = label
     self.abbreviated = abbreviated ?? label
   }
-
-//  public init(_ label: String, _ abbreviated: String) {
-//    self.label = label
-//    self.abbreviated = abbreviated
-//  }
 }
 
 extension PropertyLabel: ExpressibleByStringLiteral {
+  
   public init(stringLiteral value: String) {
     self.init(value)
   }
 }
 
 extension PropertyLabel {
+  
+  public func stringValue(from style: PropertyLabel.Style) -> String? {
+    return style.labelString(for: self)
+  }
+  
   //@AssociatedValues
   public enum Style: Equatable {
     case none
