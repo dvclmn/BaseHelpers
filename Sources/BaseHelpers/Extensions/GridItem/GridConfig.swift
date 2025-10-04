@@ -56,8 +56,7 @@ extension GridConfig: CustomStringConvertible {
   public var description: String {
     return DisplayString {
       "GridConfig"
-      columns
-      Labeled(<#T##key: String##String#>, value: <#T##any StringConvertible#>)
+      columns.description
       "Spacing: \(spacingGrid?.displayString(.fractionLength(0)) ?? "nil"))"
       "Alignnment: \(alignmentGrid.displayName))"
     }.output

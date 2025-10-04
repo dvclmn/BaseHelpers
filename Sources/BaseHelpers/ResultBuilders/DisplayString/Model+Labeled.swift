@@ -35,6 +35,7 @@ public struct Labeled {
     value: (any StringConvertible)?,
     separator: String = ": "
   ) {
+    self.label = label
 //    self.key = label.label ?? "??"
     self.value = value
     self.separator = separator

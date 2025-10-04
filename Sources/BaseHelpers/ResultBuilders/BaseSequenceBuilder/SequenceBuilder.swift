@@ -8,6 +8,31 @@
 public typealias DisplayStringBuilder = SequenceBuilder<StringConvertible>
 //public typealias StringGroupBuilder = SequenceBuilder<StringConvertible>
 
+/// Good to remember:
+/// The `{Example}Builder` (the type decorated directly with
+/// `@resultBuilder`), is not the right place to have various
+/// parameters passed in, like a function would.
+///
+/// The place for this is on the *function or type* that *uses*
+/// the builder. Such as the below `DisplayString`.
+///
+/// It accepts a parameter, `separator`, making this type
+/// the place that can be configured. Not the builder itself.
+/// ```
+/// public struct DisplayString {
+///   let content: [any StringConvertible]
+///   let separator: String
+///
+///   public init(
+///     separator: String = .defaultComponentSeparator,
+///     @DisplayStringBuilder _ content: () -> [any StringConvertible]
+///   ) {
+///     self.separator = separator
+///     self.content = content()
+///   }
+/// }
+/// ```
+
 @resultBuilder
 public struct SequenceBuilder<Element> {
   public static func buildBlock(
@@ -41,10 +66,11 @@ public struct SequenceBuilder<Element> {
   }
 }
 
-//extension SequenceBuilder where Element == StringConvertible {
-//  public static func buildExpression<T: CustomStringConvertible>(
-//    _ expression: T
-//  ) -> [StringConvertible] {
-//    [expression.description]
-//  }
-//}
+extension SequenceBuilder where Element: FloatDisplay {
+  public static func buildExpression(
+    _ expression: Element
+  ) -> [StringConvertible] {
+    [expression.displayString(<#T##places: DecimalPlaces##DecimalPlaces#>, grouping: <#T##Grouping#>)]
+  }
+}
+

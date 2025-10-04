@@ -11,8 +11,12 @@ public protocol StringConvertible {
   var stringValue: String { get }
 }
 
-extension StringConvertible where Self == Labeled {
-  public func labeledStringValue(separator: String = ": ") -> String {
-    self.stringValue
-  }
+//extension StringConvertible where Self == Labeled {
+//  public func labeledStringValue(separator: String = ": ") -> String {
+//    self.stringValue
+//  }
+//}
+
+public protocol PropertiesLabeled {
+  
 }

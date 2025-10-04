@@ -19,29 +19,11 @@ extension CGPoint {
   public func displayString(
     _ places: DecimalPlaces = .fractionLength(2),
     grouping: Grouping = .automatic,
-    labelStyle: DisplayLabelStyle = .standard
-  ) -> String {
-    DisplayString<CGFloat>(separator: ", ") {
-      Component("X", value: self.x)
-      Component("Y", value: self.y)
-    }
-    .formatted(
-      places,
-      grouping: grouping,
-      labelStyle: labelStyle
-    )
-  }
-}
-
-extension CGPoint {
-  public func displayString(
-    _ places: DecimalPlaces = .fractionLength(2),
-    grouping: Grouping = .automatic,
-    labelStyle: DisplayLabelStyle = .standard
+    labelStyle: PropertyLabel.Style = .standard
   ) -> String {
     DisplayString(separator: ", ") {
-      Component("X", value: self.x)
-      Component("Y", value: self.y)
+      Labeled("X", value: self.x)
+      Labeled("Y", value: self.y)
     }
     .formatted(
       places,
