@@ -52,13 +52,13 @@ let package = Package(
         .product(name: "SwiftSyntaxMacros", package: "swift-syntax"),
         .product(name: "SwiftCompilerPlugin", package: "swift-syntax"),
       ],
-      path: "Sources/BaseMacros/MacroExpansions",
+      path: "BaseMacros/MacroExpansions",
     ),
     .target(name: "AssociatedValues", dependencies: ["BaseMacros"], path: "BaseMacros/MacroDeclarations/AssociatedValues"),
-    .target(name: "CaseDetection", dependencies: ["BaseMacros"], path: "BaseMacros/MacroExpansions"),
-    .target(name: "MetaEnum", dependencies: ["BaseMacros"], path: "BaseMacros/MacroExpansions"),
-    .target(name: "Persistable", dependencies: ["BaseMacros"], path: "BaseMacros/MacroExpansions"),
-    .target(name: "SetOfOptions", dependencies: ["BaseMacros"], path: "BaseMacros/MacroExpansions"),
+    .target(name: "CaseDetection", dependencies: ["BaseMacros"], path: "BaseMacros/MacroDeclarations/AssociatedValues"),
+    .target(name: "MetaEnum", dependencies: ["BaseMacros"], path: "BaseMacros/MacroDeclarations/AssociatedValues"),
+    .target(name: "Persistable", dependencies: ["BaseMacros"], path: "BaseMacros/MacroDeclarations/AssociatedValues"),
+    .target(name: "SetOfOptions", dependencies: ["BaseMacros"], path: "BaseMacros/MacroDeclarations/AssociatedValues"),
 
     .executableTarget(
       name: "BaseMacrosClient",
