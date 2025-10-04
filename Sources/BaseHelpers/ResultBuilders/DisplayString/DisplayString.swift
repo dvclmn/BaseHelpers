@@ -7,48 +7,38 @@
 
 import Foundation
 
-public struct DisplayString {
-  
+public struct DisplayString<Value: StringConvertible> {
+
   /// A Component is a `label` and `value` pair
-  let components: [Component]
-  
+  let components: [Component<Value>]
+
   /// E.g. for `CGPoint`
   /// ```
   /// Component separator: ", "
   /// Result: X: 10, Y: -20
   /// ```
-  let componentSeparator: String
-  
-  /// E.g. for `CGPoint`
-  /// ```
-  /// Label separator: ": "
-  /// Result: X: 10
-  /// ```
-  let labelSeparator: String
-  
+  let separator: String
+
   public init(
-    componentSeparator: String = .defaultComponentSeparator,
-    labelSeparator: String = .defaultLabelSeparator,
-    @DisplayStringBuilder _ components: () -> [Component]
+    separator: String = .defaultComponentSeparator,
+    @DisplayStringBuilder _ components: () -> [Component<Value>]
   ) {
+    self.separator = separator
     self.components = components()
-    self.componentSeparator = componentSeparator
-    self.labelSeparator = labelSeparator
-//    self.separator = separator
   }
 
-//  public init(
-//    components: [Component],
-//    componentSeparator: String = .defaultComponentSeparator,
-//    labelSeparator: String = .defaultLabelSeparator
-//  ) {
-//    self.components = components
-//    self.componentSeparator = componentSeparator
-//    self.labelSeparator = labelSeparator
-//  }
+  //  public init(
+  //    components: [Component],
+  //    componentSeparator: String = .defaultComponentSeparator,
+  //    labelSeparator: String = .defaultLabelSeparator
+  //  ) {
+  //    self.components = components
+  //    self.componentSeparator = componentSeparator
+  //    self.labelSeparator = labelSeparator
+  //  }
 }
-extension DisplayString {
-  
+extension DisplayString where Value: FloatDisplay {
+
   /// This allows customisation at the conformance site,
   /// e.g. for `CGPoint`:
   /// ```
@@ -74,12 +64,13 @@ extension DisplayString {
     labelStyle: DisplayLabelStyle
   ) -> String {
     let labelValuePairs = components.map { component in
+      let labelSep = component.separator
       let label = labelStyle.labelString(for: component)
       let value = component.value.displayString(places, grouping: grouping)
-      if let label {
-        return "\(label)\(value)"
+      guard let label else {
+        return value
       }
-      return "\(label) \(value)"
+      return label + labelSep + value
     }
     let result = labelValuePairs.joined(separator: separator)
     return result

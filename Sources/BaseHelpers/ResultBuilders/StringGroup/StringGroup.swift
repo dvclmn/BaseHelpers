@@ -45,36 +45,3 @@ public struct Indented {
   }
 }
 
-public struct Labeled {
-  public let key: String
-  public let value: (any StringConvertible)?
-  public let separator: String
-
-  public init(
-    _ key: String,
-    value: (any StringConvertible)?,
-    separator: String = ": "
-  ) {
-    self.key = key
-    self.value = value
-    self.separator = separator
-  }
-}
-
-// MARK: - StringConvertible Conformance
-extension Labeled: StringConvertible {
-  public var stringValue: String {
-    "\(key)\(separator)\(String(describing: value?.stringValue))"
-  }
-}
-extension Indented: StringConvertible {
-
-  public var stringValue: String {
-    let indentedItems = content.map { prefix + $0.stringValue }
-      .joined(separator: "\n")
-    guard let title else {
-      return indentedItems
-    }
-    return title + "\n" + indentedItems
-  }
-}

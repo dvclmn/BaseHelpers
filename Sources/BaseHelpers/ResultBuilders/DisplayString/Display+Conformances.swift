@@ -8,11 +8,29 @@
 import SwiftUI
 
 /// Primitive conformances
-extension Double: FloatDisplay {
+extension Double: FloatDisplay, StringConvertible {
   public var value: Self { self }
 }
-extension CGFloat: FloatDisplay {
+extension CGFloat: FloatDisplay, StringConvertible {
   public var value: Self { self }
+}
+
+extension CGPoint {
+  public func displayString(
+    _ places: DecimalPlaces = .fractionLength(2),
+    grouping: Grouping = .automatic,
+    labelStyle: DisplayLabelStyle = .standard
+  ) -> String {
+    DisplayString<CGFloat>(separator: ", ") {
+      Component("X", value: self.x)
+      Component("Y", value: self.y)
+    }
+    .formatted(
+      places,
+      grouping: grouping,
+      labelStyle: labelStyle
+    )
+  }
 }
 
 extension CGPoint {

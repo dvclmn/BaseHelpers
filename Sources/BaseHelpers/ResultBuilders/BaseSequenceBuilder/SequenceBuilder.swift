@@ -5,7 +5,7 @@
 //  Created by Dave Coleman on 3/10/2025.
 //
 
-public typealias DisplayStringBuilder = SequenceBuilder<DisplayString.Component>
+public typealias DisplayStringBuilder = SequenceBuilder<Component<<#Value: StringConvertible#>>>
 public typealias StringGroupBuilder = SequenceBuilder<StringConvertible>
 
 @resultBuilder

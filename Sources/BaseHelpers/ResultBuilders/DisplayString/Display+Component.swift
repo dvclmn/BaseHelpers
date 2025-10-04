@@ -22,19 +22,30 @@ import Foundation
 ///   Component("Y", value: self.y)
 /// }
 /// ```
-public typealias Component = DisplayString.Component
+//public typealias Component = DisplayString.Component
 
-extension DisplayString {
-  public struct Component {
-    let label: PropertyLabel?
-    let value: any FloatDisplay
+//extension DisplayString {
+public struct Component<Value: StringConvertible> {
+  let label: PropertyLabel?
+//  let label: PropertyLabel?
+  let value: Value
+  //    let value: any FloatDisplay
 
-    public init(
-      _ label: PropertyLabel?,
-      value: any FloatDisplay,
-    ) {
-      self.label = label
-      self.value = value
-    }
+  /// E.g. for `CGPoint`
+  /// ```
+  /// Label separator: ": "
+  /// Result: X: 10
+  /// ```
+  let separator: String
+
+  public init(
+//    _ label: PropertyLabel?,
+    value: Value,
+    separator: String = .defaultLabelSeparator
+  ) {
+//    self.label = label
+    self.value = value
+    self.separator = separator
   }
 }
+//}
