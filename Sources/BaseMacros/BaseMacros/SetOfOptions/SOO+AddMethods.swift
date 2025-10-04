@@ -5,7 +5,7 @@
 //  Created by Dave Coleman on 18/9/2025.
 //
 
-import BasePrimitives
+import SharedHelpers
 import SwiftDiagnostics
 import SwiftSyntax
 import SwiftSyntaxBuilder

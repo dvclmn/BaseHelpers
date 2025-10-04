@@ -11,7 +11,6 @@ let package = Package(
   ],
   products: [
     .library(name: "BaseHelpers", targets: ["BaseHelpers"]),
-    //    .library(name: "BaseMacros", targets: ["BaseMacros"]),
     .library(
       name: "BaseMacros",
       targets: [
@@ -78,9 +77,9 @@ let package = Package(
       name: "BaseHelpers",
       dependencies: [
         "CurveFunctions",
+        "SharedHelpers",
+        "BaseMacros",
         .product(name: "NSUI", package: "nsui"),
-        .product(name: "BasePrimitives", package: "BasePrimitives"),
-        .product(name: "BaseMacros", package: "BaseMacros"),
       ],
       resources: [.process("Assets.xcassets")],
     ),
@@ -95,8 +94,9 @@ let package = Package(
       name: "BaseTools",
       dependencies: [
         .product(name: "BaseComponents", package: "BaseComponents"),
-        .product(name: "BaseHelpers", package: "BaseHelpers"),
-        .product(name: "BasePrimitives", package: "BasePrimitives"),
+        "BaseHelpers",
+        "SharedHelpers",
+        "BaseMacros",
       ]
     ),
     .target(name: "ColourExtract", dependencies: []),
@@ -108,3 +108,10 @@ let package = Package(
 
   ],
 )
+// MARK: - Convenient type-safe extensions
+extension Target.Dependency {
+  static var baseHelpers: Self { "BaseHelpers" }
+  static var sharedHelpers: Self { "SharedHelpers" }
+  static var baseMacros: Self { "BaseMacros" }
+  
+}
