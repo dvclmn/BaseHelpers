@@ -8,7 +8,7 @@
 import AppKit
 import BaseHelpers
 import Foundation
-import MemberwiseInit
+//import MemberwiseInit
 
 public struct TouchPoint: TimestampedPosition, Identifiable, Sendable, Hashable, Equatable, Codable {
   public let id: Int
