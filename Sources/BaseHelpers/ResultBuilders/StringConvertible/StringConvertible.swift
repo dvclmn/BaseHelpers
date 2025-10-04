@@ -18,6 +18,20 @@ public protocol StringConvertible {
 //}
 
 /// Types like `CGPoint` that have floats as it's properties
-public protocol FloatDisplayable {
+public protocol FloatGroup {
+//  var labels: [Labeled] { get }
+//  var separator: SeparatorType { get }
   
+  func output() -> String
+}
+
+extension FloatGroup {
+  public func output(
+    labels: Labeled...,
+    separator: String
+  ) -> String {
+    let separator = SeparatorType.component(separator)
+    
+    
+  }
 }

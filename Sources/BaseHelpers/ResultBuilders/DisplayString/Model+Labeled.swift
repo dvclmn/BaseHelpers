@@ -7,6 +7,12 @@
 
 import Foundation
 
+/// Aiming to allow this to be either *any* key-value
+/// stlye builder element, such as
+/// `Labeled("Name", value: model.name)`
+///
+/// Or also support `FloatDisplay`/`FloatGroup`, like
+/// `Labeled()`
 public struct Labeled {
   public let label: PropertyLabel
 

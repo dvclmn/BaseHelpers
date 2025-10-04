@@ -15,23 +15,27 @@ extension CGFloat: FloatDisplay, StringConvertible {
   public var value: Self { self }
 }
 
-extension CGPoint {
-  public func displayString(
-    _ places: DecimalPlaces = .fractionLength(2),
-    grouping: Grouping = .automatic,
-    labelStyle: PropertyLabel.Style = .standard
-  ) -> String {
-    DisplayString(separator: ", ") {
-      Labeled("X", value: self.x)
-      Labeled("Y", value: self.y)
-    }
-    .formatted(
-      places,
-      grouping: grouping,
-      labelStyle: labelStyle
-    )
-  }
+extension CGPoint: FloatGroup {
+  public var
 }
+
+//extension CGPoint {
+//  public func displayString(
+//    _ places: DecimalPlaces = .fractionLength(2),
+//    grouping: Grouping = .automatic,
+//    labelStyle: PropertyLabel.Style = .standard
+//  ) -> String {
+//    DisplayString(separator: ", ") {
+//      Labeled("X", value: self.x)
+//      Labeled("Y", value: self.y)
+//    }
+//    .formatted(
+//      places,
+//      grouping: grouping,
+//      labelStyle: labelStyle
+//    )
+//  }
+//}
 
 //// Keep FloatDisplay for common cases
 //extension CGPoint: FloatDisplay {
