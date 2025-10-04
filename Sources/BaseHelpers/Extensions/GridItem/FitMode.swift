@@ -44,7 +44,7 @@ extension GridConfig {
 extension GridConfig.FitMode: CustomStringConvertible {
 
   public var description: String {
-    assert(false, "Fix this")
+//    assert(false, "Fix this")
     return StringGroup {
       "FitMode"
 //      switch self {

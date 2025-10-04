@@ -45,7 +45,7 @@ extension GridConfig.ColumnMode {
 #warning("Come back to this asap")
 extension GridConfig.ColumnMode: CustomStringConvertible {
   public var description: String {
-    assert(false, "Fix this")
+//    assert(false, "Fix this")
     return StringGroup {
       "ColumnMode"
 //      switch self {
