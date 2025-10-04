@@ -7,26 +7,6 @@
 
 import SwiftUI
 
-/// Notes on balance between flexibility and semantic / pre-defined
-/// display strings. E.g. allowing any arbitrary number of
-/// `values: [DisplayString.Float]` and
-/// `labels: [DisplayString.PropertyLabel]`
-/// (which has no semantic meaning at all, or guidelines)
-/// v.s. strongly typed protocols that allow per-type logical
-/// semantic encodings. Such as `PointDisplayable`,
-/// which would enforce something like the below:
-/// ```
-/// // This is right
-/// // X: 20, y: -10
-///
-/// // This is also right
-/// // X 20 Y -10
-///
-/// // This doesn't make sense
-/// // X: 20 x Y: -10
-///
-/// ```
-
 /// Primitive conformances
 extension Double: FloatDisplay {
   public var value: Self { self }
@@ -42,7 +22,8 @@ extension CGPoint {
     labelStyle: DisplayLabelStyle = .standard
   ) -> String {
     DisplayString(separator: ", ") {
-      Component(self.x, label: "X")
+      Component("X", value: self.x)
+      Component("Y", value: self.y)
     }
     .formatted(
       places,

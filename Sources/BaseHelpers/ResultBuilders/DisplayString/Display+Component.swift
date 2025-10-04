@@ -17,21 +17,24 @@ import Foundation
 /// ```
 /// Usage example:
 /// ```
-/// DisplayGroup(components: [
-///     Component(point.x, label: .x),
-///     Component(point.y, label: .y)
-///   ]
-/// )
+/// DisplayString(separator: ", ") {
+///   Component("X", value: self.x)
+///   Component("Y", value: self.y)
+/// }
 /// ```
 public typealias Component = DisplayString.Component
+
 extension DisplayString {
   public struct Component {
-    let value: any FloatDisplay
     let label: PropertyLabel?
+    let value: any FloatDisplay
 
-    public init(_ value: any FloatDisplay, label: PropertyLabel? = nil) {
-      self.value = value
+    public init(
+      _ label: PropertyLabel?,
+      value: any FloatDisplay,
+    ) {
       self.label = label
+      self.value = value
     }
   }
 }

@@ -29,7 +29,7 @@ import Foundation
   }
 //}
 
-/// Enables 'skipping'
+/// Enables 'skipping' ...
 extension PropertyLabel: ExpressibleByStringLiteral {
   public init(stringLiteral value: String) {
     self.init(value)

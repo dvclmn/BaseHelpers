@@ -8,44 +8,85 @@
 import Foundation
 
 public struct DisplayString {
-  /// E.g. `", "` for `CGPoint`:
-  /// `X: 10, Y: -20`
-  let separator: String
+  
+  /// A Component is a `label` and `value` pair
   let components: [Component]
-
+  
+  /// E.g. for `CGPoint`
+  /// ```
+  /// Component separator: ", "
+  /// Result: X: 10, Y: -20
+  /// ```
+  let componentSeparator: String
+  
+  /// E.g. for `CGPoint`
+  /// ```
+  /// Label separator: ": "
+  /// Result: X: 10
+  /// ```
+  let labelSeparator: String
+  
   public init(
-    separator: String = .defaultSeparator,
+    componentSeparator: String = .defaultComponentSeparator,
+    labelSeparator: String = .defaultLabelSeparator,
     @DisplayStringBuilder _ components: () -> [Component]
   ) {
     self.components = components()
-    self.separator = separator
+    self.componentSeparator = componentSeparator
+    self.labelSeparator = labelSeparator
+//    self.separator = separator
   }
 
-  public init(
-    components: [Component],
-    separator: String = .defaultSeparator
-  ) {
-    self.components = components
-    self.separator = separator
-  }
+//  public init(
+//    components: [Component],
+//    componentSeparator: String = .defaultComponentSeparator,
+//    labelSeparator: String = .defaultLabelSeparator
+//  ) {
+//    self.components = components
+//    self.componentSeparator = componentSeparator
+//    self.labelSeparator = labelSeparator
+//  }
 }
 extension DisplayString {
-  public func formatted(
-    _ places: DecimalPlaces = .fractionLength(2),
-    grouping: Grouping = .automatic,
-    labelStyle: DisplayLabelStyle = .standard
+  
+  /// This allows customisation at the conformance site,
+  /// e.g. for `CGPoint`:
+  /// ```
+  /// func displayString(
+  ///   _ places: DecimalPlaces = .fractionLength(2),
+  ///   grouping: Grouping = .automatic,
+  ///   labelStyle: DisplayLabelStyle = .standard
+  /// ) -> String {
+  ///   DisplayString(separator: ", ") {
+  ///     Component("X", value: self.x)
+  ///     Component("Y", value: self.y)
+  ///   }
+  ///   .formatted(
+  ///     places,
+  ///     grouping: grouping,
+  ///     labelStyle: labelStyle
+  ///   )
+  /// }
+  /// ```
+  func formatted(
+    _ places: DecimalPlaces,
+    grouping: Grouping,
+    labelStyle: DisplayLabelStyle
   ) -> String {
-
-    let pairs = components.map { component in
+    let labelValuePairs = components.map { component in
+      let label = labelStyle.labelString(for: component)
       let value = component.value.displayString(places, grouping: grouping)
-      let label = labelStyle.labelString(for: component) ?? ""
+      if let label {
+        return "\(label)\(value)"
+      }
       return "\(label) \(value)"
     }
-    let result = pairs.joined(separator: separator)
+    let result = labelValuePairs.joined(separator: separator)
     return result
   }
 }
 
 extension String {
-  public static let defaultSeparator: String = " × "
+  public static let defaultComponentSeparator: String = " × "
+  public static let defaultLabelSeparator: String = ": "
 }
