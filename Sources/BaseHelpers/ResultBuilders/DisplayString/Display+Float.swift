@@ -7,22 +7,36 @@
 
 import SwiftUI
 
-public typealias DecimalPlaces = FloatingPointFormatStyle<Double>.Configuration.Precision
-public typealias Grouping = FloatingPointFormatStyle<Double>.Configuration.Grouping
+public struct FloatConfig {
+  let decimalPlaces: Int
+  let grouping: Grouping
+  
+  public init(
+    places: Int = 2,
+    grouping: Grouping = .automatic
+  ) {
+    self.decimalPlaces = places
+    self.grouping = grouping
+  }
+}
 
 public protocol FloatDisplay {
   associatedtype Value: BinaryFloatingPoint
   var value: Value { get }
+  var config: FloatConfig { get }
   var displayString: String { get }
-  
+
   /// This is an early formatting pass, just to get the
   /// decimal places and other numeric/float based
   /// formatting sorted, before other touches.
   func displayString(
-    _ places: DecimalPlaces,
+    _ places: Int,
     grouping: Grouping
   ) -> String
 }
+
+//public typealias DecimalPlaces = FloatingPointFormatStyle<Double>.Configuration.Precision
+public typealias Grouping = FloatingPointFormatStyle<Double>.Configuration.Grouping
 
 /// ``StringConvertibleFloat`` doesn't concern itself with
 /// properties like `valueLabel`s (e.g. "W" for width etc).
@@ -41,7 +55,7 @@ extension FloatDisplay {
   /// Albeit via typeliases ``Grouping``
   /// and ``DecimalPlaces``
   public func displayString(
-    _ places: DecimalPlaces = .fractionLength(2),
+    _ places: Int = 2,
     grouping: Grouping = .automatic
   ) -> String {
 
@@ -50,7 +64,7 @@ extension FloatDisplay {
     let valueToFormat = Double(self.value)
 
     let formatted = valueToFormat.formatted(
-      .number.precision(places)
+      .number.precision(.fractionLength(places))
         .grouping(grouping)
     )
 

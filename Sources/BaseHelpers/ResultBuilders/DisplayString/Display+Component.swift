@@ -7,16 +7,17 @@
 
 import Foundation
 
+
 public struct Component {
   let label: PropertyLabel
-  let value: any StringConvertible
+  let value: any FloatDisplay
 
   /// This is separator of type `propertyLabel`
   //  let separator: String
 
   public init(
     _ label: PropertyLabel,
-    value: any StringConvertible,
+    value: any FloatDisplay,
     //    separator: String? = nil
   ) {
     self.label = label
@@ -31,7 +32,10 @@ extension Component {
     labelStyle: PropertyLabel.Style
   ) -> String {
     let labelString = label.stringValue(from: labelStyle) ?? ""
-    let valueString = value.stringValue
+    let valueString = value.displayString(
+      <#T##places: DecimalPlaces##DecimalPlaces#>,
+      grouping: <#T##Grouping#>
+    )
     return labelString + separator + valueString
   }
 }
